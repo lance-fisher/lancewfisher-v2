@@ -1,0 +1,2601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lance W. Fisher</title>
+<meta name="description" content="Leader. Builder. Father. Husband. Full-stack architect, trading systems engineer, game developer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0a0a0b">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%E2%9A%93</text></svg>">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0b;
+  --warm-white: #f0ebe0;
+  --warm-white-dim: rgba(240, 235, 224, 0.35);
+  --warm-white-ghost: rgba(240, 235, 224, 0.08);
+  --warm-white-breath: rgba(240, 235, 224, 0.04);
+  --warm-white-soft: rgba(240, 235, 224, 0.12);
+  --accent: rgba(240, 235, 224, 0.6);
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--warm-white);
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(240, 235, 224, 0.15);
+  color: var(--warm-white);
+}
+
+/* Ship Watermark */
+.ship-watermark {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 0;
+  filter: grayscale(1) brightness(1.5);
+  transition: opacity 3s ease;
+}
+
+/* Ultra-thin line */
+.thin-line {
+  width: 1px;
+  background: var(--warm-white-ghost);
+  margin: 0 auto;
+}
+
+/* Main Container */
+.page {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== HERO ===== */
+.hero {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 0 40px;
+}
+
+.hero-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(80px, 15vw, 220px);
+  letter-spacing: clamp(10px, 3vw, 40px);
+  text-transform: uppercase;
+  line-height: 0.85;
+  text-align: center;
+  color: var(--warm-white);
+  opacity: 0;
+  animation: heroReveal 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s;
+}
+
+.hero-name .line {
+  display: block;
+}
+
+.hero-name .line:nth-child(2) {
+  font-size: 0.35em;
+  letter-spacing: clamp(15px, 4vw, 50px);
+  font-weight: 400;
+  margin-top: 0.3em;
+}
+
+@keyframes heroReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+    letter-spacing: clamp(20px, 5vw, 60px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: clamp(10px, 3vw, 40px);
+  }
+}
+
+.hero-rule {
+  width: 60px;
+  height: 1px;
+  background: var(--warm-white-dim);
+  margin: 40px auto 30px;
+  opacity: 0;
+  animation: fadeIn 1.5s ease forwards 1.5s;
+}
+
+.hero-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 13px;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  color: var(--warm-white-dim);
+  text-align: center;
+  opacity: 0;
+  animation: fadeIn 1.5s ease forwards 2s;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  animation: fadeIn 1.5s ease forwards 3s;
+  transition: opacity 0.6s ease;
+}
+
+.scroll-indicator.hidden { opacity: 0 !important; }
+
+.scroll-indicator .scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--warm-white-dim), transparent);
+  margin: 0 auto;
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { transform: scaleY(1); opacity: 0.5; }
+  50% { transform: scaleY(0.5); opacity: 0.2; }
+}
+
+/* ===== SECTION COMMON ===== */
+.section {
+  padding: 0 40px;
+  max-width: 900px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.spacer { height: 200px; }
+.spacer-lg { height: 300px; }
+
+.section-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 10px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--warm-white-dim);
+  margin-bottom: 60px;
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(36px, 5vw, 56px);
+  letter-spacing: 4px;
+  line-height: 1.2;
+  color: var(--warm-white);
+  margin-bottom: 40px;
+}
+
+.body-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 2;
+  color: var(--warm-white-dim);
+  max-width: 600px;
+}
+
+.body-text em {
+  font-style: normal;
+  color: var(--warm-white);
+  font-weight: 400;
+}
+
+/* ===== PORTRAIT ===== */
+.portrait-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 80px;
+}
+
+.portrait-frame {
+  width: 240px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.portrait-frame img {
+  width: 100%;
+  filter: grayscale(0.3) contrast(1.05);
+  opacity: 0.85;
+}
+
+.portrait-frame::after {
+  content: '';
+  position: absolute;
+  top: -8px; left: -8px; right: -8px; bottom: -8px;
+  border: 1px solid var(--warm-white-ghost);
+}
+
+/* ===== STATS ===== */
+.stats-row {
+  display: flex;
+  gap: 80px;
+  margin-top: 50px;
+}
+
+.stat { text-align: left; }
+
+.stat .s-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 42px;
+  letter-spacing: 2px;
+  color: var(--warm-white);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat .s-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(240, 235, 224, 0.2);
+}
+
+/* ===== PROJECT GALLERY ===== */
+.project-gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.project-card {
+  padding: 48px 0;
+  border-bottom: 1px solid var(--warm-white-breath);
+  cursor: default;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+  transition: background 0.6s ease;
+}
+
+.project-card:first-child {
+  border-top: 1px solid var(--warm-white-breath);
+}
+
+.project-card:hover {
+  background: rgba(240, 235, 224, 0.01);
+}
+
+/* Alternating layout */
+.project-card:nth-child(even) .project-info { order: 2; }
+.project-card:nth-child(even) .project-thumb-wrap { order: 1; }
+
+.project-card .p-number {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: rgba(240, 235, 224, 0.15);
+  margin-bottom: 14px;
+}
+
+.project-card .p-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing: 3px;
+  color: var(--warm-white);
+  margin-bottom: 12px;
+  transition: letter-spacing 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
+}
+
+.project-card:hover .p-title {
+  letter-spacing: 5px;
+  color: #fff;
+}
+
+.project-card .p-desc {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--warm-white-dim);
+  margin-bottom: 14px;
+  max-width: 420px;
+  transition: color 0.4s ease;
+}
+
+.project-card:hover .p-desc {
+  color: rgba(240, 235, 224, 0.45);
+}
+
+.project-card .p-tech {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: rgba(240, 235, 224, 0.2);
+  text-transform: uppercase;
+}
+
+.project-card .p-status {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  margin-top: 10px;
+  border: 1px solid rgba(240, 235, 224, 0.08);
+  color: rgba(240, 235, 224, 0.35);
+}
+
+.p-status.active {
+  border-color: rgba(130, 200, 160, 0.2);
+  color: rgba(130, 200, 160, 0.5);
+  background: rgba(130, 200, 160, 0.03);
+}
+.p-status.shipped {
+  border-color: rgba(200, 180, 130, 0.2);
+  color: rgba(200, 180, 130, 0.5);
+  background: rgba(200, 180, 130, 0.03);
+}
+
+/* Thumbnail container */
+.project-thumb-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--warm-white-breath);
+  background: rgba(240, 235, 224, 0.01);
+  transition: border-color 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+}
+
+.project-card:hover .project-thumb-wrap {
+  border-color: rgba(240, 235, 224, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+}
+
+.project-thumb-wrap::after {
+  content: '';
+  position: absolute;
+  top: -6px; left: -6px; right: -6px; bottom: -6px;
+  border: 1px solid var(--warm-white-breath);
+  pointer-events: none;
+  transition: border-color 0.6s ease;
+}
+
+.project-card:hover .project-thumb-wrap::after {
+  border-color: var(--warm-white-ghost);
+}
+
+.project-thumb-wrap canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Thumbnail label overlay */
+.thumb-label {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 8px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(240, 235, 224, 0.2);
+  pointer-events: none;
+  transition: color 0.4s ease;
+}
+
+.project-card:hover .thumb-label {
+  color: rgba(240, 235, 224, 0.35);
+}
+
+/* ===== PROJECT DETAIL PANEL (expand on hover) ===== */
+.project-detail {
+  grid-column: 1 / -1;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, padding 0.4s ease;
+  opacity: 0;
+  padding: 0 0;
+}
+
+.project-card:hover .project-detail,
+.project-card.expanded .project-detail {
+  max-height: 600px;
+  opacity: 1;
+  padding: 24px 0 8px;
+}
+
+.detail-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--warm-white-breath);
+}
+
+.detail-col h4 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 9px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(240, 235, 224, 0.2);
+  margin-bottom: 14px;
+}
+
+.detail-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.detail-col ul li {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(240, 235, 224, 0.4);
+  padding: 4px 0;
+  padding-left: 16px;
+  position: relative;
+}
+
+.detail-col ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 6px;
+  height: 1px;
+  background: rgba(240, 235, 224, 0.15);
+}
+
+.detail-col ul li em {
+  font-style: normal;
+  color: rgba(240, 235, 224, 0.6);
+  font-weight: 400;
+}
+
+.detail-status-row {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 30px;
+  padding-top: 16px;
+  margin-top: 4px;
+  border-top: 1px solid var(--warm-white-breath);
+}
+
+.detail-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.detail-stat .ds-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 20px;
+  color: rgba(240, 235, 224, 0.6);
+  letter-spacing: 1px;
+}
+
+.detail-stat .ds-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(240, 235, 224, 0.15);
+}
+
+/* Mobile: stack detail panel */
+@media (max-width: 768px) {
+  .detail-inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .detail-status-row {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+}
+
+/* ===== VENTURES LIST ===== */
+.ventures-list {
+  list-style: none;
+}
+
+.venture-item {
+  padding: 40px 0;
+  border-bottom: 1px solid var(--warm-white-breath);
+  cursor: default;
+  transition: padding-left 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.venture-item:first-child {
+  border-top: 1px solid var(--warm-white-breath);
+}
+
+.venture-item:hover {
+  padding-left: 16px;
+}
+
+.venture-item .v-number {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: rgba(240, 235, 224, 0.15);
+  margin-bottom: 14px;
+}
+
+.venture-item .v-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: 3px;
+  color: var(--warm-white);
+  margin-bottom: 10px;
+  transition: letter-spacing 0.6s ease;
+}
+
+.venture-item:hover .v-title {
+  letter-spacing: 5px;
+  color: #fff;
+}
+
+.venture-item .v-desc {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--warm-white-dim);
+  margin-bottom: 8px;
+  max-width: 520px;
+}
+
+.venture-item .v-tech {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: rgba(240, 235, 224, 0.2);
+  text-transform: uppercase;
+}
+
+/* ===== PRINCIPLES ===== */
+.principle {
+  margin-bottom: 60px;
+}
+
+.principle:last-child {
+  margin-bottom: 0;
+}
+
+.principle .p-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: var(--warm-white);
+  margin-bottom: 12px;
+}
+
+.principle .p-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 14px;
+  line-height: 1.9;
+  color: rgba(240, 235, 224, 0.3);
+  max-width: 500px;
+}
+
+/* ===== CONTACT ===== */
+.contact-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--warm-white-breath);
+  text-decoration: none;
+  color: inherit;
+  transition: padding-left 0.4s ease, background 0.4s ease;
+}
+
+.contact-row:first-child {
+  border-top: 1px solid var(--warm-white-breath);
+}
+
+.contact-row:hover {
+  padding-left: 12px;
+  background: rgba(240, 235, 224, 0.01);
+}
+
+.contact-row .c-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 11px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: rgba(240, 235, 224, 0.2);
+}
+
+.contact-row .c-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: var(--warm-white-dim);
+  transition: color 0.4s ease;
+}
+
+.contact-row:hover .c-value {
+  color: var(--warm-white);
+}
+
+/* ===== CONCEPT GALLERY (other splash concepts) ===== */
+.concept-gallery {
+  margin-top: 30px;
+}
+
+.concept-row {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 4px 0 20px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(240,235,224,0.08) transparent;
+}
+
+.concept-row::-webkit-scrollbar { height: 4px; }
+.concept-row::-webkit-scrollbar-track { background: transparent; }
+.concept-row::-webkit-scrollbar-thumb { background: rgba(240,235,224,0.08); border-radius: 2px; }
+
+.concept-card {
+  flex-shrink: 0;
+  width: 200px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.4s ease;
+}
+
+.concept-card:hover {
+  transform: translateY(-4px);
+}
+
+.concept-thumb {
+  width: 200px;
+  height: 120px;
+  background: rgba(240, 235, 224, 0.02);
+  border: 1px solid var(--warm-white-breath);
+  overflow: hidden;
+  transition: border-color 0.4s ease;
+}
+
+.concept-card:hover .concept-thumb {
+  border-color: var(--warm-white-ghost);
+}
+
+.concept-thumb canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.concept-name {
+  margin-top: 8px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(240, 235, 224, 0.25);
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  text-align: center;
+  padding: 100px 40px;
+}
+
+.footer-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: 12px;
+  text-transform: uppercase;
+  color: rgba(240, 235, 224, 0.15);
+}
+
+.footer-year {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: rgba(240, 235, 224, 0.08);
+  margin-top: 16px;
+}
+
+/* ===== NAV DOTS ===== */
+.nav-dots {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.nav-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--warm-white);
+  opacity: 0.12;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.nav-dot.active {
+  opacity: 0.6;
+  transform: scale(2);
+}
+
+.nav-dot:hover {
+  opacity: 0.4;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .hero-name {
+    font-size: clamp(50px, 12vw, 120px);
+  }
+
+  .portrait-section {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .portrait-frame {
+    width: 180px;
+  }
+
+  .stats-row {
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .project-card {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .project-card:nth-child(even) .project-info { order: 1; }
+  .project-card:nth-child(even) .project-thumb-wrap { order: 2; }
+
+  .section { padding: 0 24px; }
+  .spacer { height: 120px; }
+  .spacer-lg { height: 180px; }
+
+  .ship-watermark { width: 350px; }
+  .nav-dots { display: none; }
+  .concept-card { width: 160px; }
+  .concept-thumb { width: 160px; height: 96px; }
+}
+
+@media (max-width: 480px) {
+  .hero-name {
+    font-size: clamp(40px, 14vw, 80px);
+    letter-spacing: 8px;
+  }
+
+  .stats-row {
+    gap: 30px;
+  }
+
+  .contact-row {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Ship Watermark -->
+<img class="ship-watermark" src="ship.png" alt="">
+
+<div class="page">
+
+  <!-- Hero -->
+  <section class="hero" id="sec-hero">
+    <h1 class="hero-name">
+      <span class="line">Lance</span>
+      <span class="line">Fisher</span>
+    </h1>
+    <div class="hero-rule"></div>
+    <p class="hero-subtitle">Leader &middot; Builder &middot; Father &middot; Husband</p>
+    <div class="scroll-indicator" id="scrollIndicator">
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <div class="spacer-lg"></div>
+
+  <!-- About -->
+  <section class="section" id="sec-about" data-reveal>
+    <div class="section-label">About</div>
+    <div class="portrait-section">
+      <div class="portrait-frame">
+        <img src="portrait.jpg" alt="Lance W. Fisher">
+      </div>
+      <div>
+        <div class="section-title">Building<br>from the<br>ground up</div>
+        <div class="body-text">
+          Based in <em>Cheyenne, Wyoming</em>. Full-stack architect, trading systems engineer, game developer, and maker of things that work. Father and husband first. Builder of <em>production software</em>, <em>autonomous trading infrastructure</em>, <em>real-time games</em>, and <em>encrypted communication platforms</em>.
+        </div>
+        <div class="stats-row">
+          <div class="stat">
+            <div class="s-value">80k+</div>
+            <div class="s-label">Lines of Code</div>
+          </div>
+          <div class="stat">
+            <div class="s-value">20+</div>
+            <div class="s-label">Projects</div>
+          </div>
+          <div class="stat">
+            <div class="s-value">6</div>
+            <div class="s-label">Languages</div>
+          </div>
+          <div class="stat">
+            <div class="s-value">15+</div>
+            <div class="s-label">Years Leading</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="spacer-lg"></div>
+  <div class="thin-line" style="height:100px;"></div>
+  <div class="spacer-lg"></div>
+
+  <!-- Projects — the main showcase -->
+  <section class="section" id="sec-projects" data-reveal style="max-width:1100px;">
+    <div class="section-label">Projects</div>
+    <div class="section-title">Selected Work</div>
+
+    <div class="project-gallery">
+
+      <!-- 01 Booking Platform -->
+      <div class="project-card">
+        <div class="project-info">
+          <div class="p-number">01</div>
+          <div class="p-title">Harmony Booking Platform</div>
+          <div class="p-desc">Production mobile booking system built for Harmony Skin &amp; Wellness, a medical spa practice in Cheyenne. Full client-facing app with provider scheduling, Stripe payments, and admin analytics.</div>
+          <div class="p-tech">React Native / Expo / NestJS / PostgreSQL / Stripe</div>
+          <div class="p-status active">In Development</div>
+        </div>
+        <div class="project-thumb-wrap">
+          <canvas data-project="booking"></canvas>
+          <div class="thumb-label">Preview</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>15+ production screens</em> covering onboarding, booking, checkout, and profile management</li>
+                <li>Integrated <em>Stripe payment processing</em> with tokenized card storage and receipt generation</li>
+                <li>Real-time <em>provider calendar</em> with conflict detection and availability windows</li>
+                <li>Push notification system for <em>appointment reminders</em>, cancellations, and promotions</li>
+                <li>Dedicated <em>admin dashboard</em> with revenue analytics, booking metrics, and provider management</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li>Cross-platform mobile app using <em>Expo + React Native</em> targeting iOS and Android</li>
+                <li>REST API backend on <em>NestJS</em> with role-based authentication and JWT sessions</li>
+                <li><em>PostgreSQL</em> database with normalized schema for services, providers, and appointments</li>
+                <li>Built for a <em>real business</em> with actual providers, services, and live client workflows</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">15+</div><div class="ds-label">Screens</div></div>
+              <div class="detail-stat"><div class="ds-value">5</div><div class="ds-label">Providers</div></div>
+              <div class="detail-stat"><div class="ds-value">30+</div><div class="ds-label">Services</div></div>
+              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">User Roles</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 Trading Engine -->
+      <div class="project-card">
+        <div class="project-info">
+          <div class="p-number">02</div>
+          <div class="p-title">Multi-Chain Trading Engine</div>
+          <div class="p-desc">Unified execution layer spanning six engines across five exchanges and blockchains. Real-time WebSocket dashboard with autonomous operation, paper-first discipline, and live P&amp;L tracking.</div>
+          <div class="p-tech">TypeScript / ccxt / ethers.js / WebSocket / Claude AI</div>
+          <div class="p-status active">Active</div>
+        </div>
+        <div class="project-thumb-wrap">
+          <canvas data-project="trading"></canvas>
+          <div class="thumb-label">Dashboard</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>Six independent engines</em> &mdash; Solana (Jupiter/DexScreener), Polymarket CLOB, Binance, Coinbase, Kraken, and ETH DeFi</li>
+                <li>Real-time <em>WebSocket dashboard</em> streaming live market data, positions, and P&amp;L</li>
+                <li><em>Claude AI integration</em> for strategy analysis, market commentary, and continuous learning</li>
+                <li><em>Paper-first discipline</em> &mdash; every engine defaults to DRY_RUN; live trading requires explicit promotion</li>
+                <li>Cross-chain order execution with <em>sub-second latency</em> on supported venues</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li>Modular engine architecture &mdash; each exchange runs <em>independently</em> with its own config and state</li>
+                <li>Unified <em>ccxt abstraction</em> for centralized exchanges with custom adapters for DeFi</li>
+                <li><em>ethers.js</em> for on-chain operations including Polymarket CLOB and Uniswap/1inch routing</li>
+                <li>Event-driven design with <em>WebSocket pub/sub</em> for real-time UI updates</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">6</div><div class="ds-label">Engines</div></div>
+              <div class="detail-stat"><div class="ds-value">5</div><div class="ds-label">Exchanges</div></div>
+              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Chains</div></div>
+              <div class="detail-stat"><div class="ds-value">24/7</div><div class="ds-label">Uptime</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 AI Trading Desk -->
+      <div class="project-card">
+        <div class="project-info">
+          <div class="p-number">03</div>
+          <div class="p-title">Autonomous Trading Desk</div>
+          <div class="p-desc">Multi-agent AI system with six specialized agents orchestrating four independent trading strategies. Rigorous backtesting and risk gates required before any strategy goes live.</div>
+          <div class="p-tech">Python / asyncio / NumPy / YAML / EventBus</div>
+          <div class="p-status active">Active</div>
+        </div>
+        <div class="project-thumb-wrap">
+          <canvas data-project="profitdesk"></canvas>
+          <div class="thumb-label">Agents</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>Six autonomous agents</em> &mdash; Portfolio Manager, Researcher, Backtester, Risk Manager, Execution Trader, Ops Monitor</li>
+                <li>Four independent strategies: <em>Momentum</em> (EMA crossover), <em>Mean Reversion</em> (Bollinger Bands + RSI), <em>Breakout</em> (Donchian), <em>Whale Flow</em></li>
+                <li><em>Promotion gates</em> before live: PF &ge; 1.35, max drawdown &le; 6%, 80+ trades, 10+ days of paper results</li>
+                <li>Three operating modes: <em>BACKTEST</em>, <em>PAPER</em> (default), and <em>LIVE</em> &mdash; disciplined pipeline</li>
+                <li>Wraps the Multi-Chain Trading Engine for <em>end-to-end autonomous execution</em></li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li><em>EventBus pub/sub</em> architecture &mdash; agents communicate asynchronously via typed events</li>
+                <li>Each agent runs as an <em>independent asyncio task</em> with its own state and decision loop</li>
+                <li>YAML-driven configuration for <em>risk limits</em>, universe selection, and strategy parameters</li>
+                <li>Comprehensive <em>journal and audit trail</em> for every trade decision and agent action</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">6</div><div class="ds-label">Agents</div></div>
+              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Strategies</div></div>
+              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Modes</div></div>
+              <div class="detail-stat"><div class="ds-value">&le;6%</div><div class="ds-label">Max Drawdown</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 RTS Game -->
+      <div class="project-card">
+        <div class="project-info">
+          <div class="p-number">04</div>
+          <div class="p-title">Crown &amp; Conquest</div>
+          <div class="p-desc">Browser-based real-time strategy game with 2.5D isometric rendering, ECS architecture, A* pathfinding, and deterministic lockstep simulation. Zero runtime dependencies.</div>
+          <div class="p-tech">TypeScript / Canvas 2D / Vite / Fixed-Point Math</div>
+          <div class="p-status active">In Development</div>
+        </div>
+        <div class="project-thumb-wrap">
+          <canvas data-project="rts"></canvas>
+          <div class="thumb-label">Gameplay</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>2.5D isometric engine</em> with tile-based terrain, elevation, and dynamic fog of war</li>
+                <li><em>Deterministic simulation</em> at 20 TPS using fixed-point math (FP_SCALE=100) for multiplayer-ready replay</li>
+                <li><em>A* pathfinding</em> with terrain cost weights and unit collision avoidance</li>
+                <li>ECS-inspired architecture &mdash; entities, components, systems cleanly separated</li>
+                <li>Resource gathering, building placement, <em>unit production</em>, and combat systems</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li><em>Zero runtime dependencies</em> &mdash; pure TypeScript with Canvas 2D rendering</li>
+                <li>Seeded RNG for <em>deterministic replay</em> &mdash; same inputs always produce same game state</li>
+                <li>Isometric projection: tile W=64, H=32, <em>elevation offset 16px</em> per level</li>
+                <li>Vite for development with <em>hot module reload</em> and instant builds</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">20</div><div class="ds-label">TPS Sim Rate</div></div>
+              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Dependencies</div></div>
+              <div class="detail-stat"><div class="ds-value">2.5D</div><div class="ds-label">Isometric</div></div>
+              <div class="detail-stat"><div class="ds-value">~90%</div><div class="ds-label">Iso Transform</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 Platformer -->
+      <div class="project-card">
+        <div class="project-info">
+          <div class="p-number">05</div>
+          <div class="p-title">Jump Quest!</div>
+          <div class="p-desc">Fully realized 3D platformer built as a gift for my six-year-old son. Xbox controller support, XP leveling, skill trees, cosmetics shop, and a procedural Level Draft Wizard.</div>
+          <div class="p-tech">Unity / C# / Three.js / Xbox Controller</div>
+          <div class="p-status shipped">Playable</div>
+        </div>
+        <div class="project-thumb-wrap">
+          <canvas data-project="platformer"></canvas>
+          <div class="thumb-label">Gameplay</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li>Built as a personal gift &mdash; a <em>real, playable game</em> my son plays on his iPad and in the browser</li>
+                <li><em>Xbox controller support</em> (A=Jump, RT=Run, X=Boost, Y=Shield) plus WASD + touch joystick</li>
+                <li><em>XP leveling system</em> with progression, skill tree (8 unlockable nodes), and cosmetics shop</li>
+                <li><em>Level Draft Wizard</em> for procedural level generation &mdash; infinite replayability</li>
+                <li>Dual platform: <em>Unity native</em> (iOS) and <em>Three.js web version</em> playable in any browser</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li>All UI built <em>programmatically</em> &mdash; no prefab dependencies, JSON-driven level data</li>
+                <li>Singleton <em>GameManager</em> pattern with state machine for scenes and transitions</li>
+                <li>Web version is a <em>single HTML file</em> with the same JSON levels and controller support</li>
+                <li>Designed for children ages 4&ndash;10 with <em>colorful visuals</em> and forgiving mechanics</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">8</div><div class="ds-label">Skill Nodes</div></div>
+              <div class="detail-stat"><div class="ds-value">2</div><div class="ds-label">Platforms</div></div>
+              <div class="detail-stat"><div class="ds-value">&infin;</div><div class="ds-label">Levels</div></div>
+              <div class="detail-stat"><div class="ds-value">1</div><div class="ds-label">Happy Kid</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 06 E2EE Messenger -->
+      <div class="project-card">
+        <div class="project-info">
+          <div class="p-number">06</div>
+          <div class="p-title">E2EE Messenger</div>
+          <div class="p-desc">End-to-end encrypted peer-to-peer messaging platform with Signal-grade cryptography. X3DH key exchange, Double Ratchet forward secrecy, and passwordless WebAuthn vault.</div>
+          <div class="p-tech">TypeScript / Next.js / libsodium / WebAuthn / Vitest</div>
+          <div class="p-status active">In Development</div>
+        </div>
+        <div class="project-thumb-wrap">
+          <canvas data-project="messenger"></canvas>
+          <div class="thumb-label">Interface</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>Signal-grade cryptography</em> &mdash; X3DH key exchange with Double Ratchet for forward secrecy on every message</li>
+                <li><em>Passwordless authentication</em> using WebAuthn (biometrics/hardware keys) &mdash; no passwords to steal</li>
+                <li><em>Zero-knowledge architecture</em> &mdash; server is a relay only, never sees plaintext content</li>
+                <li>Full <em>peer-to-peer</em> messaging with encrypted key vault stored client-side</li>
+                <li>Comprehensive <em>test suite</em> with Vitest covering crypto primitives and protocol flows</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li>Monorepo: <em>packages/crypto</em> (X3DH, Double Ratchet, vault), <em>apps/server</em> (relay), <em>apps/web</em> (Next.js)</li>
+                <li><em>libsodium</em> for all cryptographic operations &mdash; proven, audited library</li>
+                <li>Express relay server with <em>minimal surface area</em> &mdash; stores only encrypted blobs</li>
+                <li>Next.js client with <em>Tailwind CSS</em> for responsive, modern interface</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">E2EE</div><div class="ds-label">Encryption</div></div>
+              <div class="detail-stat"><div class="ds-value">X3DH</div><div class="ds-label">Key Exchange</div></div>
+              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Passwords</div></div>
+              <div class="detail-stat"><div class="ds-value">P2P</div><div class="ds-label">Architecture</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 07 Polymarket Bot -->
+      <div class="project-card">
+        <div class="project-info">
+          <div class="p-number">07</div>
+          <div class="p-title">Prediction Market Assistant</div>
+          <div class="p-desc">Real-time technical analysis assistant for Polymarket BTC 15-minute markets. Chainlink and Binance price feeds, full indicator suite, and an autonomous copy-trading bot.</div>
+          <div class="p-tech">JavaScript / ethers.js / Chainlink / WebSocket</div>
+          <div class="p-status active">Active</div>
+        </div>
+        <div class="project-thumb-wrap">
+          <canvas data-project="polymarket"></canvas>
+          <div class="thumb-label">Terminal</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li>Real-time <em>Polymarket contract prices</em> alongside Chainlink BTC/USD and Binance spot feeds</li>
+                <li>Full indicator suite: <em>Heiken Ashi</em>, RSI(14), MACD, VWAP &mdash; all computed locally in real-time</li>
+                <li>Generates <em>directional signals</em> with confidence scoring for BTC Up/Down 15-minute markets</li>
+                <li>Includes an autonomous <em>copy-trading bot</em> that mirrors profitable target traders via Polymarket Data API</li>
+                <li>Console-based TA dashboard with <em>live streaming output</em> and color-coded signals</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li>Direct <em>Chainlink oracle</em> reads via ethers.js for trustless BTC price data</li>
+                <li><em>WebSocket streams</em> from Binance for sub-second price updates</li>
+                <li>CopyBot subdirectory with <em>independent execution</em> &mdash; monitors and mirrors target wallets</li>
+                <li>Originally built on <em>iOS via Claude</em>, extracted and expanded on desktop</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">15m</div><div class="ds-label">Market Window</div></div>
+              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Indicators</div></div>
+              <div class="detail-stat"><div class="ds-value">2</div><div class="ds-label">Price Feeds</div></div>
+              <div class="detail-stat"><div class="ds-value">Auto</div><div class="ds-label">Copy Trading</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 08 Galleon Splash -->
+      <div class="project-card">
+        <div class="project-info">
+          <div class="p-number">08</div>
+          <div class="p-title">Galleon Splash Page</div>
+          <div class="p-desc">The original cinematic concept for lancewfisher.com. Storm lightning, matrix rain, HUD overlays, scroll-reveal dossier cards, and a dawn color transition &mdash; all in a single HTML file with zero dependencies.</div>
+          <div class="p-tech">HTML / CSS / Canvas 2D / Zero Dependencies</div>
+          <div class="p-status shipped">Shipped</div>
+        </div>
+        <div class="project-thumb-wrap">
+          <canvas data-project="galleon"></canvas>
+          <div class="thumb-label">Live</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>Cinematic experience</em> &mdash; storm lightning, matrix rain, parallax ship watermark, dawn transition on scroll</li>
+                <li><em>12 original concept designs</em> explored before selecting the final direction for this site</li>
+                <li>Full <em>scroll-reveal dossier</em> with animated stat counters and section transitions</li>
+                <li>Canvas-rendered effects with <em>no JavaScript libraries</em> &mdash; pure browser APIs only</li>
+                <li>Served as the <em>creative foundation</em> for the current Minimalist Luxury design you're viewing now</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li><em>Single HTML file</em> &mdash; inline CSS and JavaScript, completely self-contained</li>
+                <li>requestAnimationFrame loop for <em>60fps canvas effects</em> (lightning, rain, particles)</li>
+                <li>IntersectionObserver for <em>scroll-reveal</em> with staggered section animations</li>
+                <li>All 12 concept variants preserved in <em>/concepts</em> directory as a design archive</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">12</div><div class="ds-label">Concepts</div></div>
+              <div class="detail-stat"><div class="ds-value">1</div><div class="ds-label">HTML File</div></div>
+              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Dependencies</div></div>
+              <div class="detail-stat"><div class="ds-value">60</div><div class="ds-label">FPS</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="spacer-lg"></div>
+  <div class="thin-line" style="height:100px;"></div>
+  <div class="spacer-lg"></div>
+
+  <!-- Ventures -->
+  <section class="section" id="sec-ventures" data-reveal>
+    <div class="section-label">Ventures</div>
+    <div class="section-title">Three ventures,<br>one builder</div>
+    <ul class="ventures-list">
+      <li class="venture-item">
+        <div class="v-number">01</div>
+        <div class="v-title">Custom App Development</div>
+        <div class="v-desc">Production mobile applications built for real businesses. Booking systems, payment processing, admin dashboards, push notifications.</div>
+        <div class="v-tech">React Native / NestJS / Stripe</div>
+      </li>
+      <li class="venture-item">
+        <div class="v-number">02</div>
+        <div class="v-title">Nautical Lifestyle Brand</div>
+        <div class="v-desc">Original apparel line with 24 hand-designed graphics. One part land, three parts sea.</div>
+        <div class="v-tech">Brand / Apparel / E-Commerce</div>
+      </li>
+      <li class="venture-item">
+        <div class="v-number">03</div>
+        <div class="v-title">Autonomous Trading Systems</div>
+        <div class="v-desc">Multi-agent algorithmic trading desk with four independent strategies and paper-first discipline.</div>
+        <div class="v-tech">Python / TypeScript / asyncio</div>
+      </li>
+    </ul>
+  </section>
+
+  <div class="spacer-lg"></div>
+  <div class="thin-line" style="height:100px;"></div>
+  <div class="spacer-lg"></div>
+
+  <!-- Principles -->
+  <section class="section" id="sec-principles" data-reveal>
+    <div class="section-label">Principles</div>
+    <div class="section-title">Convictions</div>
+    <div class="principle">
+      <div class="p-title">Build With Purpose</div>
+      <div class="p-text">Every line of code serves a mission. No vanity projects. Ship solutions that matter to real people.</div>
+    </div>
+    <div class="principle">
+      <div class="p-title">Own the Full Stack</div>
+      <div class="p-text">Mastery across every layer. From schema to screen. No blind spots in the architecture.</div>
+    </div>
+    <div class="principle">
+      <div class="p-title">Lead by Example</div>
+      <div class="p-text">Father, husband, builder. Show up for the work and for the people who depend on you.</div>
+    </div>
+    <div class="principle">
+      <div class="p-title">Never Stop Shipping</div>
+      <div class="p-text">Velocity compounds. Deploy fast, iterate faster, learn fastest. Twenty projects and accelerating.</div>
+    </div>
+    <div class="principle">
+      <div class="p-title">Security First</div>
+      <div class="p-text">End-to-end encryption is a foundation, not a feature. Zero trust by default.</div>
+    </div>
+  </section>
+
+  <div class="spacer-lg"></div>
+  <div class="thin-line" style="height:100px;"></div>
+  <div class="spacer-lg"></div>
+
+  <!-- Contact -->
+  <section class="section" id="sec-contact" data-reveal>
+    <div class="section-label">Contact</div>
+    <div class="section-title">Reach Out</div>
+    <div class="contact-grid">
+      <a href="mailto:lance@lancewfisher.com" class="contact-row">
+        <span class="c-label">Email</span>
+        <span class="c-value">lance@lancewfisher.com</span>
+      </a>
+      <a href="tel:+19189066963" class="contact-row">
+        <span class="c-label">Phone</span>
+        <span class="c-value">(918) 906-6963</span>
+      </a>
+      <a href="https://x.com/lancefisher_" target="_blank" rel="noopener" class="contact-row">
+        <span class="c-label">X</span>
+        <span class="c-value">@lancefisher_</span>
+      </a>
+      <a href="https://github.com/lance-fisher" target="_blank" rel="noopener" class="contact-row">
+        <span class="c-label">GitHub</span>
+        <span class="c-value">lance-fisher</span>
+      </a>
+      <div class="contact-row" style="cursor:default;">
+        <span class="c-label">Location</span>
+        <span class="c-value">Cheyenne, Wyoming</span>
+      </div>
+    </div>
+
+    <!-- Other Splash Concepts -->
+    <div class="concept-gallery" style="margin-top:80px;">
+      <div class="section-label" style="margin-bottom:24px;">Splash Page Concepts</div>
+      <div class="concept-row" id="conceptRow">
+        <a class="concept-card" href="concepts/01-noir-dossier.html">
+          <div class="concept-thumb"><canvas data-concept="noir"></canvas></div>
+          <div class="concept-name">Noir Dossier</div>
+        </a>
+        <a class="concept-card" href="concepts/02-star-chart.html">
+          <div class="concept-thumb"><canvas data-concept="star"></canvas></div>
+          <div class="concept-name">Star Chart</div>
+        </a>
+        <a class="concept-card" href="concepts/03-sonar-pulse.html">
+          <div class="concept-thumb"><canvas data-concept="sonar"></canvas></div>
+          <div class="concept-name">Sonar Pulse</div>
+        </a>
+        <a class="concept-card" href="concepts/04-blueprint.html">
+          <div class="concept-thumb"><canvas data-concept="blueprint"></canvas></div>
+          <div class="concept-name">Blueprint</div>
+        </a>
+        <a class="concept-card" href="concepts/05-ocean-depth.html">
+          <div class="concept-thumb"><canvas data-concept="ocean"></canvas></div>
+          <div class="concept-name">Ocean Depth</div>
+        </a>
+        <a class="concept-card" href="concepts/06-forge.html">
+          <div class="concept-thumb"><canvas data-concept="forge"></canvas></div>
+          <div class="concept-name">The Forge</div>
+        </a>
+        <a class="concept-card" href="concepts/07-cartographer.html">
+          <div class="concept-thumb"><canvas data-concept="map"></canvas></div>
+          <div class="concept-name">Cartographer</div>
+        </a>
+        <a class="concept-card" href="concepts/08-terminal.html">
+          <div class="concept-thumb"><canvas data-concept="terminal"></canvas></div>
+          <div class="concept-name">Terminal</div>
+        </a>
+        <a class="concept-card" href="concepts/09-northern-lights.html">
+          <div class="concept-thumb"><canvas data-concept="aurora"></canvas></div>
+          <div class="concept-name">Northern Lights</div>
+        </a>
+        <a class="concept-card" href="concepts/10-war-room.html">
+          <div class="concept-thumb"><canvas data-concept="warroom"></canvas></div>
+          <div class="concept-name">War Room</div>
+        </a>
+        <a class="concept-card" href="concepts/11-shipwreck.html">
+          <div class="concept-thumb"><canvas data-concept="shipwreck"></canvas></div>
+          <div class="concept-name">Shipwreck</div>
+        </a>
+        <a class="concept-card" href="concepts/12-constellation.html">
+          <div class="concept-thumb"><canvas data-concept="luxury"></canvas></div>
+          <div class="concept-name">Minimalist Luxury</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="spacer-lg"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-name">Lance W. Fisher</div>
+    <div class="footer-year">MMXXVI</div>
+  </footer>
+
+</div>
+
+<!-- Nav dots -->
+<nav class="nav-dots" id="navDots">
+  <div class="nav-dot active" data-target="sec-hero"></div>
+  <div class="nav-dot" data-target="sec-about"></div>
+  <div class="nav-dot" data-target="sec-projects"></div>
+  <div class="nav-dot" data-target="sec-ventures"></div>
+  <div class="nav-dot" data-target="sec-principles"></div>
+  <div class="nav-dot" data-target="sec-contact"></div>
+</nav>
+
+<script>
+(function() {
+  'use strict';
+
+  // ===== SCROLL REVEAL =====
+  var sections = document.querySelectorAll('[data-reveal]');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+  sections.forEach(function(s) { observer.observe(s); });
+
+  // ===== SCROLL INDICATOR =====
+  var scrollInd = document.getElementById('scrollIndicator');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 120) scrollInd.classList.add('hidden');
+    else scrollInd.classList.remove('hidden');
+  }, { passive: true });
+
+  // ===== SHIP PARALLAX =====
+  var ship = document.querySelector('.ship-watermark');
+  window.addEventListener('scroll', function() {
+    if (ship) ship.style.transform = 'translate(-50%, calc(-50% + ' + (window.scrollY * 0.05) + 'px))';
+  }, { passive: true });
+
+  // ===== NAV DOTS =====
+  var dots = document.querySelectorAll('.nav-dot');
+  var sectionIds = [];
+  dots.forEach(function(d) { sectionIds.push(d.getAttribute('data-target')); });
+  dots.forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      var target = document.getElementById(dot.getAttribute('data-target'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+  function updateDots() {
+    var scrollY = window.scrollY, vh = window.innerHeight, active = 0;
+    for (var i = sectionIds.length - 1; i >= 0; i--) {
+      var el = document.getElementById(sectionIds[i]);
+      if (el && el.getBoundingClientRect().top < vh * 0.5) { active = i; break; }
+    }
+    if (scrollY < 200) active = 0;
+    dots.forEach(function(d, idx) { d.classList.toggle('active', idx === active); });
+  }
+  window.addEventListener('scroll', updateDots, { passive: true });
+  updateDots();
+
+  // ===== IMAGE PRELOADER =====
+  var imgCache = {};
+  function loadImg(src, cb) {
+    if (imgCache[src]) { cb(imgCache[src]); return; }
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = function() { imgCache[src] = img; cb(img); };
+    img.onerror = function() { cb(null); };
+    img.src = src;
+  }
+
+  // ===== HELPERS =====
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function drawCorners(ctx, w, h, c, color) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(1, c); ctx.lineTo(1, 1); ctx.lineTo(c, 1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(w-c, 1); ctx.lineTo(w-1, 1); ctx.lineTo(w-1, c); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(1, h-c); ctx.lineTo(1, h-1); ctx.lineTo(c, h-1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(w-c, h-1); ctx.lineTo(w-1, h-1); ctx.lineTo(w-1, h-c); ctx.stroke();
+  }
+
+  // ===== PROJECT THUMBNAIL RENDERERS =====
+  // Each project gets a unique, detailed mockup
+
+  function setupCanvas(canvas) {
+    var dpr = 2;
+    var pw = canvas.parentElement.offsetWidth;
+    var ph = canvas.parentElement.offsetHeight;
+    var w = (pw > 10 ? pw : 400) * dpr;
+    var h = (ph > 10 ? ph : 250) * dpr;
+    canvas.width = w; canvas.height = h;
+    canvas.style.width = '100%'; canvas.style.height = '100%';
+    return { ctx: canvas.getContext('2d'), w: w, h: h, s: dpr };
+  }
+
+  function drawBg(ctx, w, h, r, g, b) {
+    var bg = ctx.createLinearGradient(0, 0, 0, h);
+    bg.addColorStop(0, '#0d0d0e'); bg.addColorStop(1, '#080809');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+    var glow = ctx.createRadialGradient(w*0.5, h*0.5, 0, w*0.5, h*0.5, w*0.55);
+    glow.addColorStop(0, 'rgba('+r+','+g+','+b+',0.05)');
+    glow.addColorStop(1, 'transparent');
+    ctx.fillStyle = glow; ctx.fillRect(0, 0, w, h);
+  }
+
+  // ---- BOOKING: Phone mockup with real Harmony content ----
+  function drawBooking(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    drawBg(ctx, w, h, 184, 156, 92);
+
+    // Subtle grid pattern
+    ctx.strokeStyle = 'rgba(184,156,92,0.02)'; ctx.lineWidth = 0.5*s;
+    for (var gi = 0; gi < w; gi += 20*s) { ctx.beginPath(); ctx.moveTo(gi, 0); ctx.lineTo(gi, h); ctx.stroke(); }
+    for (var gj = 0; gj < h; gj += 20*s) { ctx.beginPath(); ctx.moveTo(0, gj); ctx.lineTo(w, gj); ctx.stroke(); }
+
+    // Phone frame — larger, more prominent
+    var pw = 140*s, ph = 240*s;
+    var px = w*0.12, py = (h - ph)/2;
+
+    // Phone shadow
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.4)'; ctx.shadowBlur = 30*s; ctx.shadowOffsetX = 6*s; ctx.shadowOffsetY = 8*s;
+    roundRect(ctx, px, py, pw, ph, 18*s);
+    ctx.fillStyle = '#1a1a1c'; ctx.fill();
+    ctx.restore();
+
+    // Phone bezel
+    roundRect(ctx, px, py, pw, ph, 18*s);
+    ctx.strokeStyle = 'rgba(184,156,92,0.3)'; ctx.lineWidth = 1.5*s; ctx.stroke();
+
+    // Dynamic island
+    roundRect(ctx, px + pw*0.28, py+4*s, pw*0.44, 10*s, 5*s);
+    ctx.fillStyle = '#000'; ctx.fill();
+
+    // Screen area
+    var sx = px + 5*s, sy = py + 18*s, sw = pw - 10*s, sh = ph - 26*s;
+    roundRect(ctx, sx, sy, sw, sh, 4*s);
+    ctx.fillStyle = '#faf6f0'; ctx.fill();
+
+    // Status bar
+    ctx.fillStyle = '#efe9e0'; ctx.fillRect(sx, sy, sw, 14*s);
+    ctx.fillStyle = 'rgba(80,60,30,0.5)'; ctx.font = '500 '+(6*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('9:41', sx+sw/2, sy+10*s);
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(80,60,30,0.3)'; ctx.font = (5*s)+'px Inter, sans-serif';
+    ctx.fillText('LTE', sx+4*s, sy+10*s);
+
+    // Harmony header
+    ctx.fillStyle = '#f4ede4'; ctx.fillRect(sx, sy+14*s, sw, 24*s);
+    ctx.fillStyle = '#8b7b60'; ctx.font = '600 '+(7*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('HARMONY', sx+sw/2, sy+28*s);
+    ctx.fillStyle = '#b0a088'; ctx.font = '300 '+(4.5*s)+'px Inter, sans-serif';
+    ctx.fillText('SKIN & WELLNESS CLINIC', sx+sw/2, sy+35*s);
+
+    // Promo banner placeholder (gets replaced by real image)
+    var bannerY = sy+42*s, bannerH = 44*s;
+    roundRect(ctx, sx+5*s, bannerY, sw-10*s, bannerH, 4*s);
+    ctx.fillStyle = '#d8cfc0'; ctx.fill();
+
+    loadImg('thumbs/harmony-promo.jpg', function(img) {
+      if (!img) return;
+      ctx.save();
+      roundRect(ctx, sx+5*s, bannerY, sw-10*s, bannerH, 4*s); ctx.clip();
+      var ar = img.width/img.height, bw = sw-10*s, bh = bw/ar;
+      if (bh < bannerH) { bh = bannerH; bw = bh*ar; }
+      ctx.drawImage(img, sx+5*s+(sw-10*s-bw)/2, bannerY+(bannerH-bh)/2, bw, bh);
+      ctx.restore();
+    });
+
+    // Service category cards — 2x2 grid
+    var services = [{t:'Facials', icon:'\u2728'}, {t:'Laser', icon:'\u26A1'}, {t:'Injectables', icon:'\u{1F489}'}, {t:'Body', icon:'\u2B50'}];
+    var cardW = (sw - 16*s) / 2, cardH = 22*s;
+    for (var si = 0; si < 4; si++) {
+      var ccx = sx + 5*s + (si % 2) * (cardW + 6*s);
+      var ccy = sy + 92*s + Math.floor(si / 2) * (cardH + 5*s);
+      roundRect(ctx, ccx, ccy, cardW, cardH, 4*s);
+      ctx.fillStyle = '#f0e9df'; ctx.fill();
+      ctx.strokeStyle = 'rgba(184,156,92,0.12)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+      ctx.fillStyle = '#6b5e4a'; ctx.font = '400 '+(5.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText(services[si].t, ccx+cardW/2, ccy+14*s);
+    }
+
+    // Provider row with heading
+    ctx.fillStyle = '#7a6c55'; ctx.font = '500 '+(5*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText('Our Providers', sx+7*s, sy+150*s);
+    var provColors = ['#c4b09a','#b8a894','#a89a88','#beae9c'];
+    for (var pi = 0; pi < 4; pi++) {
+      var pcx = sx + 16*s + pi*24*s, pcy = sy+162*s;
+      ctx.beginPath(); ctx.arc(pcx, pcy, 10*s, 0, Math.PI*2);
+      ctx.fillStyle = provColors[pi]; ctx.fill();
+      ctx.strokeStyle = 'rgba(184,156,92,0.25)'; ctx.lineWidth = 0.8*s; ctx.stroke();
+    }
+    loadImg('thumbs/harmony-provider.jpg', function(img) {
+      if (!img) return;
+      ctx.save();
+      ctx.beginPath(); ctx.arc(sx+16*s, sy+162*s, 10*s, 0, Math.PI*2); ctx.clip();
+      ctx.drawImage(img, sx+16*s-10*s, sy+162*s-10*s, 20*s, 20*s);
+      ctx.restore();
+    });
+
+    // Book Now CTA
+    roundRect(ctx, sx+5*s, sy+182*s, sw-10*s, 18*s, 6*s);
+    var btnGrad = ctx.createLinearGradient(0, sy+182*s, 0, sy+200*s);
+    btnGrad.addColorStop(0, 'rgba(184,156,92,0.9)'); btnGrad.addColorStop(1, 'rgba(160,136,72,0.9)');
+    ctx.fillStyle = btnGrad; ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = '600 '+(6*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('Book Appointment', sx+sw/2, sy+194*s);
+
+    // Tab bar
+    ctx.fillStyle = '#f4ede4'; ctx.fillRect(sx, sy+sh-18*s, sw, 18*s);
+    ctx.strokeStyle = 'rgba(184,156,92,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(sx, sy+sh-18*s); ctx.lineTo(sx+sw, sy+sh-18*s); ctx.stroke();
+    var tabs = ['Home','Services','Book','Profile'];
+    ctx.font = (4.5*s)+'px Inter, sans-serif';
+    for (var ti = 0; ti < tabs.length; ti++) {
+      var tx = sx + sw/(tabs.length*2) + ti*(sw/tabs.length);
+      ctx.fillStyle = ti === 0 ? '#8b7b60' : '#b8a898';
+      ctx.fillText(tabs[ti], tx, sy+sh-6*s);
+    }
+
+    // === Right side: elegant feature showcase ===
+    var rx = w*0.5;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(184,156,92,0.4)'; ctx.font = '200 '+(8*s)+'px Inter, sans-serif';
+    ctx.letterSpacing = '3px';
+    ctx.fillText('HARMONY SKIN & WELLNESS', rx, h*0.18);
+    ctx.fillStyle = 'rgba(240,235,224,0.75)'; ctx.font = '300 '+(18*s)+'px Cormorant Garamond, serif';
+    ctx.fillText('Mobile', rx, h*0.29);
+    ctx.fillText('Booking', rx, h*0.39);
+
+    // Thin rule
+    ctx.fillStyle = 'rgba(184,156,92,0.2)'; ctx.fillRect(rx, h*0.43, 40*s, 1);
+
+    // Feature list with better alignment
+    var features = [
+      {t:'15+ Screens', d:'Complete booking flow'},
+      {t:'Stripe Integration', d:'Secure payment processing'},
+      {t:'Provider Calendar', d:'Real-time availability'},
+      {t:'Push Alerts', d:'Appointment reminders'},
+      {t:'Admin Panel', d:'Analytics & management'}
+    ];
+    ctx.font = (7.5*s)+'px Inter, sans-serif';
+    for (var fi = 0; fi < features.length; fi++) {
+      var fy = h*0.48 + fi*20*s;
+      // Bullet dash
+      ctx.fillStyle = 'rgba(184,156,92,0.4)'; ctx.fillText('—', rx, fy+4*s);
+      ctx.fillStyle = 'rgba(240,235,224,0.55)'; ctx.font = '400 '+(7*s)+'px Inter, sans-serif';
+      ctx.fillText(features[fi].t, rx+14*s, fy+4*s);
+      ctx.fillStyle = 'rgba(240,235,224,0.2)'; ctx.font = '200 '+(6.5*s)+'px Inter, sans-serif';
+      ctx.fillText(features[fi].d, rx+100*s, fy+4*s);
+      ctx.font = (7.5*s)+'px Inter, sans-serif';
+    }
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(184,156,92,0.15)');
+  }
+
+  // ---- TRADING: Real dashboard with live-looking charts ----
+  function drawTrading(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    drawBg(ctx, w, h, 58, 143, 212);
+
+    // Header bar
+    ctx.fillStyle = 'rgba(58,143,212,0.06)'; ctx.fillRect(0, 0, w, 26*s);
+    ctx.strokeStyle = 'rgba(58,143,212,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 26*s); ctx.lineTo(w, 26*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(58,143,212,0.5)'; ctx.fillRect(0, 0, 3*s, 26*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.75)'; ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText('Master Trade Bot', 14*s, 17*s);
+    // Connection badge
+    ctx.beginPath(); ctx.arc(w-12*s, 13*s, 3*s, 0, Math.PI*2);
+    ctx.fillStyle = '#4ade80'; ctx.fill();
+    ctx.fillStyle = 'rgba(58,143,212,0.4)'; ctx.font = (7*s)+'px monospace';
+    ctx.textAlign = 'right'; ctx.fillText('LIVE', w-20*s, 17*s);
+    ctx.textAlign = 'left';
+
+    // Left panel - Engine status
+    var lw = w * 0.28, lx = 6*s, ly = 32*s;
+    ctx.fillStyle = 'rgba(58,143,212,0.025)'; ctx.fillRect(lx, ly, lw, h-ly-6*s);
+    ctx.strokeStyle = 'rgba(58,143,212,0.05)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(lx, ly, lw, h-ly-6*s);
+    ctx.fillStyle = 'rgba(58,143,212,0.35)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.letterSpacing = '2px'; ctx.fillText('ENGINES', lx+8*s, ly+12*s);
+
+    var engines = [
+      {name:'Solana Jupiter', status:'LIVE', color:'#4ade80'},
+      {name:'Polymarket CLOB', status:'LIVE', color:'#4ade80'},
+      {name:'Binance', status:'LIVE', color:'#4ade80'},
+      {name:'Coinbase', status:'PAPER', color:'#fbbf24'},
+      {name:'ETH DeFi', status:'IDLE', color:'#64748b'},
+      {name:'Kraken', status:'PAPER', color:'#fbbf24'}
+    ];
+    for (var ei = 0; ei < engines.length; ei++) {
+      var ey = ly + 22*s + ei * 16*s;
+      ctx.beginPath(); ctx.arc(lx+12*s, ey+4*s, 2*s, 0, Math.PI*2);
+      ctx.fillStyle = engines[ei].color; ctx.fill();
+      ctx.fillStyle = 'rgba(240,235,224,0.45)'; ctx.font = (6.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'left'; ctx.fillText(engines[ei].name, lx+20*s, ey+7*s);
+      ctx.fillStyle = engines[ei].color === '#4ade80' ? 'rgba(74,222,128,0.4)' : 'rgba(240,235,224,0.15)';
+      ctx.font = (5.5*s)+'px monospace';
+      ctx.textAlign = 'right'; ctx.fillText(engines[ei].status, lx+lw-6*s, ey+7*s);
+      ctx.textAlign = 'left';
+    }
+
+    // Center - Candlestick chart (deterministic seeded)
+    var cx = lx + lw + 6*s, cw = w*0.44, cy = 32*s, ch = h*0.54;
+    ctx.fillStyle = 'rgba(58,143,212,0.025)'; ctx.fillRect(cx, cy, cw, ch);
+    ctx.strokeStyle = 'rgba(58,143,212,0.05)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(cx, cy, cw, ch);
+
+    // Chart header
+    ctx.fillStyle = 'rgba(58,143,212,0.35)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.fillText('BTC/USD', cx+8*s, cy+12*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.65)'; ctx.font = '500 '+(10*s)+'px monospace';
+    ctx.fillText('$62,441.20', cx+55*s, cy+12*s);
+    ctx.fillStyle = '#4ade80'; ctx.font = (7*s)+'px monospace';
+    ctx.textAlign = 'right'; ctx.fillText('+1.24%', cx+cw-8*s, cy+12*s);
+    ctx.textAlign = 'left';
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(58,143,212,0.03)'; ctx.lineWidth = 0.5*s;
+    for (var gl = 0; gl < 5; gl++) {
+      var gy = cy + 20*s + gl * (ch-30*s)/4;
+      ctx.beginPath(); ctx.moveTo(cx, gy); ctx.lineTo(cx+cw, gy); ctx.stroke();
+    }
+
+    // Deterministic candlesticks
+    var chartY = cy + 20*s, chartH = ch - 32*s;
+    var candles = 40, seed = 62000;
+    var priceData = [];
+    for (var ci = 0; ci < candles; ci++) {
+      seed += Math.sin(ci*1.3+0.5)*180 + Math.cos(ci*0.7+1.2)*120 + Math.sin(ci*2.1)*60;
+      var open = seed, close = seed + Math.sin(ci*2.3)*280 + Math.cos(ci*1.1)*150;
+      var hi = Math.max(open, close) + Math.abs(Math.sin(ci*3.1))*180;
+      var lo = Math.min(open, close) - Math.abs(Math.cos(ci*2.7))*180;
+      priceData.push({o:open,c:close,h:hi,l:lo});
+    }
+    var allPrices = priceData.reduce(function(a,c){ return a.concat([c.h,c.l]); }, []);
+    var pMin = Math.min.apply(null, allPrices), pMax = Math.max.apply(null, allPrices);
+    var norm = function(v) { return chartY + chartH - ((v - pMin) / (pMax - pMin)) * chartH; };
+
+    // EMA overlay
+    ctx.strokeStyle = 'rgba(58,143,212,0.25)'; ctx.lineWidth = 1*s;
+    ctx.beginPath();
+    var ema = priceData[0].c;
+    for (var em = 0; em < candles; em++) {
+      ema = ema * 0.85 + priceData[em].c * 0.15;
+      var emx = cx + 8*s + em * (cw-16*s)/candles + (cw-16*s)/candles/2;
+      if (em === 0) ctx.moveTo(emx, norm(ema)); else ctx.lineTo(emx, norm(ema));
+    }
+    ctx.stroke();
+
+    for (var ci2 = 0; ci2 < candles; ci2++) {
+      var d = priceData[ci2], isGreen = d.c > d.o;
+      var cxp = cx + 8*s + ci2 * (cw-16*s)/candles;
+      var barW = Math.max(1.5*s, (cw-16*s)/candles * 0.55);
+      ctx.strokeStyle = isGreen ? 'rgba(74,222,128,0.35)' : 'rgba(248,113,113,0.35)';
+      ctx.lineWidth = 0.8*s;
+      ctx.beginPath(); ctx.moveTo(cxp+barW/2, norm(d.h)); ctx.lineTo(cxp+barW/2, norm(d.l)); ctx.stroke();
+      ctx.fillStyle = isGreen ? 'rgba(74,222,128,0.55)' : 'rgba(248,113,113,0.45)';
+      var bodyTop = norm(Math.max(d.o, d.c));
+      ctx.fillRect(cxp, bodyTop, barW, Math.max(1, Math.abs(norm(d.o) - norm(d.c))));
+    }
+
+    // Volume bars below chart
+    var vy = cy + ch + 3*s, vh = h - vy - 6*s;
+    ctx.fillStyle = 'rgba(58,143,212,0.025)'; ctx.fillRect(cx, vy, cw, vh);
+    ctx.strokeStyle = 'rgba(58,143,212,0.05)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(cx, vy, cw, vh);
+    for (var vi = 0; vi < candles; vi++) {
+      var vx = cx + 8*s + vi * (cw-16*s)/candles;
+      var vBarW = Math.max(1.5*s, (cw-16*s)/candles * 0.55);
+      var vBarH = (0.15 + Math.abs(Math.sin(vi*1.7))*0.85) * vh * 0.75;
+      var isUp = priceData[vi].c > priceData[vi].o;
+      ctx.fillStyle = isUp ? 'rgba(74,222,128,0.12)' : 'rgba(248,113,113,0.1)';
+      ctx.fillRect(vx, vy + vh - vBarH, vBarW, vBarH);
+    }
+
+    // Right panel - P&L + positions
+    var rx = cx + cw + 6*s, rw = w - rx - 6*s;
+    ctx.fillStyle = 'rgba(58,143,212,0.025)'; ctx.fillRect(rx, cy, rw, h-cy-6*s);
+    ctx.strokeStyle = 'rgba(58,143,212,0.05)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(rx, cy, rw, h-cy-6*s);
+
+    // Total P&L
+    ctx.fillStyle = 'rgba(58,143,212,0.35)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.fillText('DAILY P&L', rx+8*s, cy+12*s);
+    ctx.fillStyle = '#4ade80'; ctx.font = '500 '+(13*s)+'px monospace';
+    ctx.fillText('+$2,847', rx+8*s, cy+30*s);
+    ctx.fillStyle = 'rgba(74,222,128,0.4)'; ctx.font = (7*s)+'px monospace';
+    ctx.fillText('+2.41%', rx+8*s, cy+42*s);
+
+    // Divider
+    ctx.fillStyle = 'rgba(58,143,212,0.06)'; ctx.fillRect(rx+6*s, cy+50*s, rw-12*s, 0.5*s);
+
+    // Open positions
+    ctx.fillStyle = 'rgba(58,143,212,0.3)'; ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillText('OPEN POSITIONS', rx+8*s, cy+62*s);
+    var positions = [
+      {pair:'BTC/USD', side:'LONG', pnl:'+1.8%', c:'#4ade80'},
+      {pair:'SOL/USD', side:'LONG', pnl:'+3.2%', c:'#4ade80'},
+      {pair:'ETH/USD', side:'FLAT', pnl:'0.0%', c:'#64748b'},
+      {pair:'MATIC', side:'SHORT', pnl:'-0.4%', c:'#f87171'}
+    ];
+    for (var pi = 0; pi < positions.length; pi++) {
+      var py = cy + 72*s + pi * 14*s;
+      ctx.fillStyle = 'rgba(240,235,224,0.35)'; ctx.font = (6*s)+'px monospace';
+      ctx.textAlign = 'left'; ctx.fillText(positions[pi].pair, rx+8*s, py);
+      ctx.fillStyle = positions[pi].c; ctx.font = (5.5*s)+'px monospace';
+      ctx.textAlign = 'right'; ctx.fillText(positions[pi].pnl, rx+rw-6*s, py);
+      ctx.textAlign = 'left';
+    }
+
+    // WebSocket indicator
+    ctx.fillStyle = 'rgba(58,143,212,0.06)'; ctx.fillRect(rx+6*s, h-22*s, rw-12*s, 14*s);
+    ctx.fillStyle = 'rgba(58,143,212,0.3)'; ctx.font = (5*s)+'px monospace';
+    ctx.textAlign = 'center'; ctx.fillText('WS CONNECTED', rx+rw/2, h-13*s);
+    ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(58,143,212,0.15)');
+  }
+
+  // ---- PROFITDESK: Agent orchestration diagram ----
+  function drawProfitDesk(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    drawBg(ctx, w, h, 180, 120, 80);
+
+    // Title bar
+    ctx.fillStyle = 'rgba(180,120,80,0.05)'; ctx.fillRect(0, 0, w, 26*s);
+    ctx.strokeStyle = 'rgba(180,120,80,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 26*s); ctx.lineTo(w, 26*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(180,120,80,0.5)'; ctx.fillRect(0, 0, 3*s, 26*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.7)'; ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText('Profit Desk', 14*s, 17*s);
+    ctx.fillStyle = 'rgba(180,120,80,0.35)'; ctx.font = '200 '+(7*s)+'px Inter, sans-serif';
+    ctx.fillText('Multi-Agent Orchestration', 90*s, 17*s);
+
+    // Central PM agent — larger, glowing
+    var pmx = w*0.5, pmy = h*0.44;
+    // Glow ring
+    ctx.beginPath(); ctx.arc(pmx, pmy, 34*s, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(180,120,80,0.04)'; ctx.fill();
+    // Outer ring
+    ctx.beginPath(); ctx.arc(pmx, pmy, 28*s, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(180,120,80,0.1)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(180,120,80,0.35)'; ctx.lineWidth = 1.5*s; ctx.stroke();
+    // Inner ring
+    ctx.beginPath(); ctx.arc(pmx, pmy, 20*s, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(180,120,80,0.15)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+    ctx.fillStyle = 'rgba(240,235,224,0.75)'; ctx.font = '600 '+(10*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('PM', pmx, pmy+4*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.25)'; ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillText('Portfolio Manager', pmx, pmy+16*s);
+
+    // Agent nodes with animated-looking connections
+    var agents = [
+      {name:'Researcher', icon:'R', x:0.18, y:0.32, c:'rgba(120,180,220,'},
+      {name:'Backtester', icon:'B', x:0.18, y:0.68, c:'rgba(160,200,120,'},
+      {name:'Risk Mgr', icon:'$', x:0.82, y:0.32, c:'rgba(220,160,100,'},
+      {name:'Exec Trader', icon:'E', x:0.82, y:0.68, c:'rgba(200,130,130,'},
+      {name:'Ops Monitor', icon:'M', x:0.5, y:0.86, c:'rgba(160,140,200,'}
+    ];
+    for (var ai = 0; ai < agents.length; ai++) {
+      var ax = w*agents[ai].x, ay = h*agents[ai].y, ac = agents[ai].c;
+      // Connection line with gradient
+      ctx.strokeStyle = 'rgba(180,120,80,0.08)'; ctx.lineWidth = 1*s;
+      ctx.setLineDash([3*s, 5*s]);
+      ctx.beginPath(); ctx.moveTo(pmx, pmy); ctx.lineTo(ax, ay); ctx.stroke();
+      ctx.setLineDash([]);
+      // Data flow dots along the line
+      for (var dd = 0; dd < 3; dd++) {
+        var t = 0.3 + dd * 0.2;
+        var dx = pmx + (ax - pmx) * t, dy = pmy + (ay - pmy) * t;
+        ctx.beginPath(); ctx.arc(dx, dy, 1.5*s, 0, Math.PI*2);
+        ctx.fillStyle = ac + (0.15 + dd*0.1) + ')'; ctx.fill();
+      }
+      // Node glow
+      ctx.beginPath(); ctx.arc(ax, ay, 22*s, 0, Math.PI*2);
+      ctx.fillStyle = ac + '0.03)'; ctx.fill();
+      // Node
+      ctx.beginPath(); ctx.arc(ax, ay, 16*s, 0, Math.PI*2);
+      ctx.fillStyle = ac + '0.06)'; ctx.fill();
+      ctx.strokeStyle = ac + '0.25)'; ctx.lineWidth = 1*s; ctx.stroke();
+      ctx.fillStyle = ac + '0.7)'; ctx.font = '600 '+(8*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText(agents[ai].icon, ax, ay+3*s);
+      ctx.fillStyle = 'rgba(240,235,224,0.3)'; ctx.font = '300 '+(5.5*s)+'px Inter, sans-serif';
+      ctx.fillText(agents[ai].name, ax, ay+26*s);
+    }
+
+    // Strategy pills at bottom
+    ctx.textAlign = 'left';
+    var strats = [
+      {t:'Momentum', d:'EMA Crossover', c:'#4ade80'},
+      {t:'Mean Rev', d:'BB + RSI', c:'#60a5fa'},
+      {t:'Breakout', d:'Donchian', c:'#fbbf24'},
+      {t:'Whale Flow', d:'UW Tracking', c:'#c084fc'}
+    ];
+    var stratW = (w - 24*s) / 4;
+    for (var si = 0; si < strats.length; si++) {
+      var sx = 8*s + si * (stratW + 4*s), sy = h - 30*s;
+      roundRect(ctx, sx, sy, stratW - 4*s, 22*s, 3*s);
+      ctx.fillStyle = 'rgba(180,120,80,0.04)'; ctx.fill();
+      ctx.strokeStyle = 'rgba(180,120,80,0.06)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+      // Status dot
+      ctx.beginPath(); ctx.arc(sx+8*s, sy+11*s, 2*s, 0, Math.PI*2);
+      ctx.fillStyle = strats[si].c; ctx.fill();
+      ctx.fillStyle = 'rgba(240,235,224,0.45)'; ctx.font = '400 '+(6*s)+'px Inter, sans-serif';
+      ctx.fillText(strats[si].t, sx+14*s, sy+10*s);
+      ctx.fillStyle = 'rgba(240,235,224,0.18)'; ctx.font = '200 '+(5*s)+'px Inter, sans-serif';
+      ctx.fillText(strats[si].d, sx+14*s, sy+18*s);
+    }
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(180,120,80,0.15)');
+  }
+
+  // ---- RTS: Isometric game view ----
+  function drawRTS(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    drawBg(ctx, w, h, 192, 160, 80);
+
+    // Isometric grid — deterministic terrain
+    var tileW = 30*s, tileH = 15*s;
+    var ox = w*0.48, oy = h*0.15;
+    for (var gy = 0; gy < 9; gy++) {
+      for (var gx = 0; gx < 9; gx++) {
+        var ix = ox + (gx - gy) * tileW/2;
+        var iy = oy + (gx + gy) * tileH/2;
+        ctx.beginPath();
+        ctx.moveTo(ix, iy); ctx.lineTo(ix+tileW/2, iy+tileH/2);
+        ctx.lineTo(ix, iy+tileH); ctx.lineTo(ix-tileW/2, iy+tileH/2);
+        ctx.closePath();
+        // Deterministic terrain
+        var terrain = Math.sin(gx*2.3+gy*1.7) * 0.5 + 0.5;
+        if (terrain > 0.7) {
+          ctx.fillStyle = 'rgba(60,100,45,' + (0.06 + terrain*0.06) + ')'; ctx.fill(); // Forest
+        } else if (terrain > 0.4) {
+          ctx.fillStyle = 'rgba(80,110,50,' + (0.03 + terrain*0.03) + ')'; ctx.fill(); // Grass
+        } else {
+          ctx.fillStyle = 'rgba(120,105,70,0.03)'; ctx.fill(); // Sand
+        }
+        ctx.strokeStyle = 'rgba(192,160,80,0.04)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+
+        // Elevation blocks for buildings (deterministic)
+        if ((gx === 2 && gy === 2) || (gx === 6 && gy === 5)) {
+          var bx = ix, by = iy - 8*s;
+          ctx.fillStyle = 'rgba(160,140,100,0.15)';
+          ctx.beginPath();
+          ctx.moveTo(bx, by); ctx.lineTo(bx+tileW/2, by+tileH/2);
+          ctx.lineTo(bx+tileW/2, by+tileH/2+8*s); ctx.lineTo(bx, by+tileH+8*s);
+          ctx.lineTo(bx-tileW/2, by+tileH/2+8*s); ctx.lineTo(bx-tileW/2, by+tileH/2);
+          ctx.closePath(); ctx.fill();
+          ctx.strokeStyle = 'rgba(192,160,80,0.12)'; ctx.stroke();
+        }
+      }
+    }
+
+    // Units — blue team and red team (deterministic positions)
+    var blueUnits = [[2,3],[3,3],[2,4],[3,4],[1,3]];
+    var redUnits = [[6,5],[5,6],[6,6],[7,5],[7,6]];
+    function drawUnit(gx, gy, color, outline) {
+      var ux = ox + (gx - gy) * tileW/2;
+      var uy = oy + (gx + gy) * tileH/2 + tileH/2;
+      // Shadow
+      ctx.beginPath(); ctx.ellipse(ux, uy+2*s, 3*s, 1.5*s, 0, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(0,0,0,0.2)'; ctx.fill();
+      // Unit body
+      ctx.beginPath(); ctx.arc(ux, uy-2*s, 3*s, 0, Math.PI*2);
+      ctx.fillStyle = color; ctx.fill();
+      ctx.strokeStyle = outline; ctx.lineWidth = 0.5*s; ctx.stroke();
+    }
+    for (var bi2 = 0; bi2 < blueUnits.length; bi2++) drawUnit(blueUnits[bi2][0], blueUnits[bi2][1], 'rgba(80,160,255,0.7)', 'rgba(120,190,255,0.5)');
+    for (var ri = 0; ri < redUnits.length; ri++) drawUnit(redUnits[ri][0], redUnits[ri][1], 'rgba(255,90,90,0.7)', 'rgba(255,140,140,0.5)');
+
+    // Selection box around blue units
+    var selX = ox + (1-4)*tileW/2, selY = oy + (1+3)*tileH/2;
+    ctx.strokeStyle = 'rgba(80,160,255,0.3)'; ctx.lineWidth = 1*s;
+    ctx.setLineDash([3*s, 2*s]);
+    ctx.strokeRect(selX-10*s, selY-6*s, 80*s, 50*s);
+    ctx.setLineDash([]);
+
+    // HUD — top bar
+    ctx.fillStyle = 'rgba(0,0,0,0.65)'; ctx.fillRect(0, 0, w, 22*s);
+    ctx.fillStyle = 'rgba(192,160,80,0.8)'; ctx.font = '600 '+(8*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText('Crown & Conquest', 10*s, 15*s);
+    // Resource icons
+    ctx.textAlign = 'right'; ctx.font = (6.5*s)+'px monospace';
+    ctx.fillStyle = '#ffd700'; ctx.fillText('1,250', w-10*s, 10*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.3)'; ctx.fillText('Gold', w-50*s, 10*s);
+    ctx.fillStyle = '#87ceeb'; ctx.fillText('48', w-10*s, 20*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.3)'; ctx.fillText('Units', w-30*s, 20*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.25)'; ctx.fillText('Pop: 32/50', w-60*s, 20*s);
+
+    // Minimap corner
+    var mmx = w-65*s, mmy = h-55*s, mmw = 56*s, mmh = 46*s;
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fillRect(mmx, mmy, mmw, mmh);
+    ctx.strokeStyle = 'rgba(192,160,80,0.25)'; ctx.lineWidth = 1*s; ctx.strokeRect(mmx, mmy, mmw, mmh);
+    // Terrain blotches
+    ctx.fillStyle = 'rgba(60,100,45,0.2)'; ctx.fillRect(mmx+8*s, mmy+6*s, 18*s, 14*s);
+    ctx.fillStyle = 'rgba(60,100,45,0.15)'; ctx.fillRect(mmx+28*s, mmy+20*s, 16*s, 12*s);
+    // Unit clusters
+    for (var md = 0; md < 5; md++) {
+      ctx.beginPath(); ctx.arc(mmx+12*s+md*3*s, mmy+18*s, 1.5*s, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(80,160,255,0.6)'; ctx.fill();
+    }
+    for (var md2 = 0; md2 < 5; md2++) {
+      ctx.beginPath(); ctx.arc(mmx+34*s+md2*3*s, mmy+30*s, 1.5*s, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,90,90,0.6)'; ctx.fill();
+    }
+    // Viewport indicator
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeRect(mmx+8*s, mmy+10*s, 20*s, 16*s);
+
+    // Bottom action bar
+    ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(0, h-26*s, w*0.65, 26*s);
+    var actions = ['Move', 'Attack', 'Build', 'Gather', 'Patrol', 'Stop'];
+    ctx.font = (6*s)+'px Inter, sans-serif'; ctx.textAlign = 'center';
+    for (var ab = 0; ab < actions.length; ab++) {
+      var abx = 28*s + ab * 38*s;
+      roundRect(ctx, abx-15*s, h-21*s, 30*s, 14*s, 2*s);
+      ctx.fillStyle = ab === 0 ? 'rgba(192,160,80,0.15)' : 'rgba(192,160,80,0.06)'; ctx.fill();
+      ctx.strokeStyle = ab === 0 ? 'rgba(192,160,80,0.3)' : 'rgba(192,160,80,0.12)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+      ctx.fillStyle = ab === 0 ? 'rgba(240,235,224,0.6)' : 'rgba(240,235,224,0.3)'; ctx.fillText(actions[ab], abx, h-11*s);
+    }
+    ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(192,160,80,0.15)');
+  }
+
+  // ---- PLATFORMER: 3D game scene ----
+  function drawPlatformer(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+
+    // Rich sky gradient
+    var sky = ctx.createLinearGradient(0, 0, 0, h);
+    sky.addColorStop(0, '#0c1628'); sky.addColorStop(0.3, '#1a2d4a'); sky.addColorStop(0.6, '#243a58'); sky.addColorStop(1, '#162a1e');
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
+
+    // Stars (deterministic)
+    for (var si = 0; si < 40; si++) {
+      var sx2 = (Math.sin(si*7.3+2.1)*0.5+0.5)*w;
+      var sy2 = (Math.sin(si*3.7+1.4)*0.5+0.5)*h*0.4;
+      var sr = (0.4 + Math.sin(si*4.2)*0.3)*s;
+      ctx.beginPath(); ctx.arc(sx2, sy2, sr, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,255,255,' + (0.1+Math.sin(si*2.9)*0.15) + ')'; ctx.fill();
+    }
+
+    // Background mountains
+    ctx.beginPath(); ctx.moveTo(0, h*0.55);
+    for (var mi = 0; mi <= 10; mi++) {
+      var mx = mi/10*w, my = h*0.55 - Math.sin(mi*1.2+0.5)*h*0.12 - Math.cos(mi*0.8)*h*0.05;
+      ctx.lineTo(mx, my);
+    }
+    ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath();
+    ctx.fillStyle = 'rgba(20,40,30,0.4)'; ctx.fill();
+
+    // Ground platforms with 3D depth
+    var platforms = [
+      {x:0.02, y:0.78, w:0.28, main:true}, {x:0.34, y:0.62, w:0.22}, {x:0.62, y:0.5, w:0.16},
+      {x:0.8, y:0.66, w:0.18}, {x:0.18, y:0.42, w:0.14}, {x:0.48, y:0.36, w:0.12}
+    ];
+    for (var pi = 0; pi < platforms.length; pi++) {
+      var p = platforms[pi];
+      var ppx = p.x*w, ppy = p.y*h, ppw = p.w*w, pph = 10*s;
+      var depth = 6*s;
+      // Front face (depth)
+      ctx.fillStyle = '#1e4a16'; ctx.fillRect(ppx, ppy+pph, ppw, depth);
+      // Top surface
+      var pg = ctx.createLinearGradient(0, ppy, 0, ppy+pph);
+      pg.addColorStop(0, '#4a9a38'); pg.addColorStop(1, '#2a7020');
+      ctx.fillStyle = pg; ctx.fillRect(ppx, ppy, ppw, pph);
+      // Grass highlights
+      ctx.fillStyle = '#6ad44a'; ctx.fillRect(ppx, ppy, ppw, 2*s);
+      // Grass detail tufts
+      for (var gt = 0; gt < ppw/(6*s); gt++) {
+        var gx = ppx + gt*6*s + 3*s;
+        ctx.fillStyle = 'rgba(110,220,70,0.3)';
+        ctx.fillRect(gx, ppy-1*s, 1*s, 2*s);
+      }
+    }
+
+    // Player character — more detailed
+    var playerX = w*0.37, playerY = h*0.54;
+    // Shadow
+    ctx.beginPath(); ctx.ellipse(playerX, playerY+14*s, 6*s, 2*s, 0, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.fill();
+    // Legs
+    ctx.fillStyle = '#2255aa'; ctx.fillRect(playerX-4*s, playerY+8*s, 3*s, 6*s);
+    ctx.fillRect(playerX+1*s, playerY+8*s, 3*s, 6*s);
+    // Body
+    ctx.fillStyle = '#4488ff'; ctx.fillRect(playerX-5*s, playerY, 10*s, 10*s);
+    // Cape/trail
+    ctx.fillStyle = 'rgba(255,80,80,0.5)';
+    ctx.beginPath(); ctx.moveTo(playerX+5*s, playerY+2*s); ctx.lineTo(playerX+12*s, playerY+8*s);
+    ctx.lineTo(playerX+5*s, playerY+10*s); ctx.closePath(); ctx.fill();
+    // Head
+    ctx.beginPath(); ctx.arc(playerX, playerY-4*s, 6*s, 0, Math.PI*2);
+    ctx.fillStyle = '#ffcc88'; ctx.fill();
+    ctx.strokeStyle = 'rgba(200,160,100,0.3)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+    // Eyes
+    ctx.fillStyle = '#333'; ctx.fillRect(playerX-3*s, playerY-5*s, 2*s, 2.5*s);
+    ctx.fillRect(playerX+1*s, playerY-5*s, 2*s, 2.5*s);
+    // Eye shine
+    ctx.fillStyle = '#fff'; ctx.fillRect(playerX-2.5*s, playerY-5*s, 1*s, 1*s);
+    ctx.fillRect(playerX+1.5*s, playerY-5*s, 1*s, 1*s);
+
+    // Collectible coins with glow
+    var coins = [[0.55, 0.43], [0.60, 0.43], [0.65, 0.43], [0.20, 0.34], [0.26, 0.34]];
+    for (var ci = 0; ci < coins.length; ci++) {
+      var ccx = coins[ci][0]*w, ccy = coins[ci][1]*h;
+      // Glow
+      ctx.beginPath(); ctx.arc(ccx, ccy, 6*s, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,215,0,0.1)'; ctx.fill();
+      // Coin
+      ctx.beginPath(); ctx.arc(ccx, ccy, 4*s, 0, Math.PI*2);
+      ctx.fillStyle = '#ffd700'; ctx.fill();
+      ctx.strokeStyle = '#daa520'; ctx.lineWidth = 0.8*s; ctx.stroke();
+      // $ symbol
+      ctx.fillStyle = '#b8860b'; ctx.font = 'bold '+(4*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText('$', ccx, ccy+1.5*s);
+    }
+
+    // HUD overlay — top bar
+    var hudGrad = ctx.createLinearGradient(0, 0, 0, 28*s);
+    hudGrad.addColorStop(0, 'rgba(0,0,0,0.7)'); hudGrad.addColorStop(1, 'rgba(0,0,0,0.3)');
+    ctx.fillStyle = hudGrad; ctx.fillRect(0, 0, w, 28*s);
+
+    ctx.fillStyle = '#6ad44a'; ctx.font = 'bold '+(9*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText('Jump Quest!', 10*s, 17*s);
+
+    // XP bar with rounded edges
+    var xpX = w*0.32, xpW = w*0.32;
+    roundRect(ctx, xpX, 7*s, xpW, 12*s, 6*s);
+    ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fill();
+    roundRect(ctx, xpX, 7*s, xpW*0.65, 12*s, 6*s);
+    ctx.fillStyle = 'rgba(106,212,74,0.5)'; ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = '500 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('LVL 7 — 1,240 / 1,900 XP', xpX+xpW/2, 15.5*s);
+
+    // Coins and hearts
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#ffd700'; ctx.font = '600 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('350', w-12*s, 13*s);
+    ctx.fillStyle = '#ff4466'; ctx.font = (8*s)+'px Inter, sans-serif';
+    ctx.fillText('\u2764 \u2764 \u2764', w-12*s, 24*s);
+
+    // Controller hints — bottom right
+    roundRect(ctx, w-85*s, h-22*s, 78*s, 16*s, 4*s);
+    ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.font = (5.5*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('A Jump   X Boost   Y Shield', w-46*s, h-11.5*s);
+    ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(106,196,74,0.15)');
+  }
+
+  // ---- MESSENGER: Chat UI ----
+  function drawMessenger(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    drawBg(ctx, w, h, 138, 106, 212);
+
+    // App header bar
+    ctx.fillStyle = 'rgba(138,106,212,0.05)'; ctx.fillRect(0, 0, w, 26*s);
+    ctx.strokeStyle = 'rgba(138,106,212,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 26*s); ctx.lineTo(w, 26*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(138,106,212,0.5)'; ctx.fillRect(0, 0, 3*s, 26*s);
+
+    // Contact avatar + name
+    ctx.beginPath(); ctx.arc(22*s, 13*s, 8*s, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(138,106,212,0.2)'; ctx.fill();
+    ctx.fillStyle = 'rgba(240,235,224,0.5)'; ctx.font = '500 '+(7*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('A', 22*s, 16*s);
+    ctx.textAlign = 'left';
+
+    ctx.fillStyle = 'rgba(240,235,224,0.7)'; ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
+    ctx.fillText('Alex Chen', 36*s, 11*s);
+    ctx.fillStyle = 'rgba(138,106,212,0.4)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.fillText('Online', 36*s, 21*s);
+    // Online dot
+    ctx.beginPath(); ctx.arc(58*s, 18*s, 2*s, 0, Math.PI*2);
+    ctx.fillStyle = '#4ade80'; ctx.fill();
+
+    // Lock badge
+    ctx.fillStyle = 'rgba(138,106,212,0.4)'; ctx.font = (7*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('\uD83D\uDD12 Encrypted', w-12*s, 16*s);
+    ctx.textAlign = 'left';
+
+    // Chat area with better-spaced bubbles
+    var chatY = 32*s;
+    var msgs = [
+      {in:true, text:'Hey, the new build looks solid', time:'2:41 PM'},
+      {in:false, text:'Thanks! Just pushed the auth flow', time:'2:42 PM'},
+      {in:true, text:'X3DH handshake working perfectly', time:'2:42 PM'},
+      {in:true, text:'Forward secrecy is verified', time:'2:43 PM'},
+      {in:false, text:'Double Ratchet rekeying every msg', time:'2:44 PM'},
+      {in:true, text:'Ship it', time:'2:44 PM'},
+    ];
+    var my = chatY + 8*s;
+    for (var mi = 0; mi < msgs.length; mi++) {
+      var msg = msgs[mi];
+      ctx.font = (7*s)+'px Inter, sans-serif';
+      var textW = ctx.measureText(msg.text).width;
+      var mw = Math.min(w*0.55, textW + 24*s);
+      mw = Math.max(mw, 60*s);
+      var mh = 20*s;
+      var mx = msg.in ? 12*s : w - mw - 12*s;
+
+      // Bubble
+      roundRect(ctx, mx, my, mw, mh, msg.in ? [2*s, 8*s, 8*s, 8*s] : [8*s, 2*s, 8*s, 8*s]);
+      // Use simple roundRect since custom radii not supported, just use uniform
+      roundRect(ctx, mx, my, mw, mh, 6*s);
+      ctx.fillStyle = msg.in ? 'rgba(138,106,212,0.07)' : 'rgba(138,106,212,0.16)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(138,106,212,0.06)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+
+      // Text
+      ctx.fillStyle = msg.in ? 'rgba(240,235,224,0.5)' : 'rgba(240,235,224,0.6)';
+      ctx.font = '300 '+(7*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'left'; ctx.fillText(msg.text, mx+8*s, my+13*s);
+
+      // Timestamp
+      ctx.fillStyle = 'rgba(240,235,224,0.12)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'right'; ctx.fillText(msg.time, mx+mw-6*s, my+13*s);
+      ctx.textAlign = 'left';
+
+      // Read receipt for outgoing
+      if (!msg.in) {
+        ctx.fillStyle = 'rgba(138,106,212,0.3)'; ctx.font = (4*s)+'px Inter, sans-serif';
+        ctx.textAlign = 'right'; ctx.fillText('\u2713\u2713', mx+mw-4*s, my+mh-2*s);
+        ctx.textAlign = 'left';
+      }
+
+      my += mh + 6*s;
+    }
+
+    // Input bar
+    roundRect(ctx, 10*s, h-30*s, w-20*s, 22*s, 8*s);
+    ctx.fillStyle = 'rgba(138,106,212,0.04)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(138,106,212,0.08)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+    ctx.fillStyle = 'rgba(240,235,224,0.15)'; ctx.font = '200 '+(7*s)+'px Inter, sans-serif';
+    ctx.fillText('Message...', 22*s, h-16*s);
+    // Send button
+    ctx.beginPath(); ctx.arc(w-22*s, h-19*s, 8*s, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(138,106,212,0.2)'; ctx.fill();
+    ctx.fillStyle = 'rgba(138,106,212,0.5)'; ctx.font = (7*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('\u2191', w-22*s, h-16*s);
+    ctx.textAlign = 'left';
+
+    // Encryption protocol badge at bottom
+    roundRect(ctx, 10*s, h-52*s, w-20*s, 16*s, 4*s);
+    ctx.fillStyle = 'rgba(138,106,212,0.04)'; ctx.fill();
+    ctx.fillStyle = 'rgba(138,106,212,0.25)'; ctx.font = '200 '+(5*s)+'px monospace';
+    ctx.textAlign = 'center'; ctx.fillText('X3DH \u00B7 Double Ratchet \u00B7 WebAuthn \u00B7 libsodium', w/2, h-41.5*s);
+    ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(138,106,212,0.15)');
+  }
+
+  // ---- POLYMARKET: Terminal view ----
+  function drawPolymarket(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    ctx.fillStyle = '#020204'; ctx.fillRect(0, 0, w, h);
+
+    // CRT scanline effect
+    for (var sl = 0; sl < h; sl += 3*s) {
+      ctx.fillStyle = 'rgba(0,255,100,0.006)'; ctx.fillRect(0, sl, w, 1.5*s);
+    }
+    // CRT vignette
+    var vig = ctx.createRadialGradient(w/2, h/2, w*0.25, w/2, h/2, w*0.7);
+    vig.addColorStop(0, 'transparent'); vig.addColorStop(1, 'rgba(0,0,0,0.3)');
+    ctx.fillStyle = vig; ctx.fillRect(0, 0, w, h);
+
+    // Terminal content
+    ctx.font = (7*s)+'px monospace'; ctx.textAlign = 'left';
+    var lh = 11*s;
+    var lines = [
+      {c:'rgba(0,200,128,0.8)',  t:'[PolyBTC] 15-Min Market Analysis'},
+      {c:'rgba(100,100,100,0.4)',t:'────────────────────────────────────────'},
+      {c:'rgba(0,170,100,0.6)', t:'  Chainlink BTC/USD   $62,441.20'},
+      {c:'rgba(0,170,100,0.6)', t:'  Binance Spot        $62,438.50  (-$2.70)'},
+      {c:'rgba(80,80,80,0.4)',  t:''},
+      {c:'rgba(0,200,128,0.7)', t:'  Polymarket Contracts:'},
+      {c:'rgba(74,222,128,0.7)',t:'    BTC Up   \u2192  0.54  \u25B2 +0.02  [65% conf]'},
+      {c:'rgba(248,113,113,0.6)',t:'    BTC Down \u2192  0.46  \u25BC -0.02  [35% conf]'},
+      {c:'rgba(80,80,80,0.4)',  t:''},
+      {c:'rgba(0,200,128,0.6)', t:'  Indicators:'},
+      {c:'rgba(140,140,140,0.5)',t:'    RSI(14)   58.2   Neutral'},
+      {c:'rgba(74,222,128,0.6)',t:'    MACD      Bullish crossover \u2713'},
+      {c:'rgba(140,140,140,0.5)',t:'    VWAP      $62,300 (above)'},
+      {c:'rgba(74,222,128,0.5)',t:'    H.Ashi    Green forming'},
+      {c:'rgba(80,80,80,0.4)',  t:''},
+      {c:'rgba(251,191,36,0.7)',t:'  \u25B6 Signal: LEAN UP  |  Confidence: 65%'},
+      {c:'rgba(80,80,80,0.4)',  t:''},
+      {c:'rgba(0,200,128,0.5)', t:'  [CopyBot] Watching whale_0x7a...'},
+      {c:'rgba(0,200,128,0.4)', t:'  [CopyBot] Last mirror: BUY 0.54 @ 12:45'},
+    ];
+    for (var li = 0; li < lines.length; li++) {
+      ctx.fillStyle = lines[li].c; ctx.fillText(lines[li].t, 8*s, 12*s + li*lh);
+    }
+
+    // Blinking cursor
+    ctx.fillStyle = 'rgba(0,200,80,0.5)'; ctx.fillRect(8*s, 12*s + lines.length*lh, 5*s, 8*s);
+
+    // Mini sparkline chart in top-right
+    var spx = w-90*s, spy = 8*s, spw = 82*s, sph = 40*s;
+    ctx.fillStyle = 'rgba(0,200,80,0.03)'; ctx.fillRect(spx, spy, spw, sph);
+    ctx.strokeStyle = 'rgba(0,200,80,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(spx, spy, spw, sph);
+    ctx.fillStyle = 'rgba(0,200,80,0.25)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillText('BTC 15m', spx+2*s, spy+8*s);
+    // Sparkline
+    ctx.strokeStyle = 'rgba(0,200,80,0.35)'; ctx.lineWidth = 1*s;
+    ctx.beginPath();
+    for (var sp = 0; sp < 30; sp++) {
+      var spXp = spx + 4*s + sp * (spw-8*s)/30;
+      var spYp = spy + sph*0.3 + Math.sin(sp*0.4+1)*sph*0.15 + Math.cos(sp*0.7)*sph*0.1;
+      if (sp === 0) ctx.moveTo(spXp, spYp); else ctx.lineTo(spXp, spYp);
+    }
+    ctx.stroke();
+    // Fill under
+    ctx.lineTo(spx+spw-4*s, spy+sph); ctx.lineTo(spx+4*s, spy+sph); ctx.closePath();
+    ctx.fillStyle = 'rgba(0,200,80,0.04)'; ctx.fill();
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(0,200,80,0.15)');
+  }
+
+  // ---- GALLEON: Loads real ship image ----
+  function drawGalleon(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+
+    // Deep storm sky
+    var sky = ctx.createLinearGradient(0, 0, 0, h);
+    sky.addColorStop(0, '#060a10'); sky.addColorStop(0.3, '#0e141c'); sky.addColorStop(0.7, '#101820'); sky.addColorStop(1, '#060a0e');
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
+
+    // Storm clouds
+    for (var ci = 0; ci < 5; ci++) {
+      var cx2 = (Math.sin(ci*2.3)*0.3+0.5)*w, cy2 = ci*h*0.08;
+      var cg = ctx.createRadialGradient(cx2, cy2, 0, cx2, cy2, w*0.2);
+      cg.addColorStop(0, 'rgba(30,40,55,0.15)'); cg.addColorStop(1, 'transparent');
+      ctx.fillStyle = cg; ctx.fillRect(0, 0, w, h*0.5);
+    }
+
+    // Lightning bolt with glow
+    ctx.save();
+    // Broad glow
+    ctx.strokeStyle = 'rgba(180,200,240,0.04)'; ctx.lineWidth = 16*s;
+    ctx.beginPath(); ctx.moveTo(w*0.72, 0); ctx.lineTo(w*0.66, h*0.22);
+    ctx.lineTo(w*0.73, h*0.18); ctx.lineTo(w*0.58, h*0.48); ctx.stroke();
+    // Tight glow
+    ctx.strokeStyle = 'rgba(200,215,240,0.08)'; ctx.lineWidth = 6*s; ctx.stroke();
+    // Core
+    ctx.strokeStyle = 'rgba(220,230,255,0.2)'; ctx.lineWidth = 1.5*s; ctx.stroke();
+    ctx.restore();
+
+    // Matrix rain (deterministic)
+    for (var mi = 0; mi < 20; mi++) {
+      var mx = (Math.sin(mi*5.7+0.3)*0.5+0.5)*w;
+      var my = (Math.sin(mi*3.2+1.1)*0.5+0.5)*h*0.25;
+      var ml = (0.2+Math.sin(mi*2.1)*0.2)*h;
+      var mg = ctx.createLinearGradient(mx, my, mx, my+ml);
+      mg.addColorStop(0, 'rgba(64,200,160,0)');
+      mg.addColorStop(0.5, 'rgba(64,200,160,'+(0.03+Math.sin(mi*1.7)*0.02)+')');
+      mg.addColorStop(1, 'rgba(64,200,160,0)');
+      ctx.strokeStyle = mg; ctx.lineWidth = 0.8*s;
+      ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(mx, my+ml); ctx.stroke();
+    }
+
+    // Ocean water
+    var ocean = ctx.createLinearGradient(0, h*0.75, 0, h);
+    ocean.addColorStop(0, 'rgba(10,30,50,0.3)'); ocean.addColorStop(1, 'rgba(5,15,25,0.8)');
+    ctx.fillStyle = ocean; ctx.fillRect(0, h*0.75, w, h*0.25);
+    // Wave lines
+    ctx.strokeStyle = 'rgba(80,120,160,0.06)'; ctx.lineWidth = 0.5*s;
+    for (var wv = 0; wv < 4; wv++) {
+      ctx.beginPath();
+      for (var wx = 0; wx < w; wx += 2*s) {
+        var wy = h*0.78 + wv*10*s + Math.sin(wx/(20*s)+wv*1.5)*3*s;
+        if (wx === 0) ctx.moveTo(wx, wy); else ctx.lineTo(wx, wy);
+      }
+      ctx.stroke();
+    }
+
+    // Load real ship image
+    loadImg('thumbs/galleon-ship.png', function(img) {
+      if (!img) return;
+      var iw = w*0.55, ih = iw * (img.height/img.width);
+      ctx.globalAlpha = 0.45;
+      ctx.drawImage(img, (w-iw)/2, h-ih-5*s, iw, ih);
+      ctx.globalAlpha = 1.0;
+      // Fade bottom into ocean
+      var fade = ctx.createLinearGradient(0, h-50*s, 0, h);
+      fade.addColorStop(0, 'rgba(6,10,14,0)'); fade.addColorStop(1, 'rgba(6,10,14,1)');
+      ctx.fillStyle = fade; ctx.fillRect(0, h-50*s, w, 50*s);
+      // Re-draw corners after async
+      drawCorners(ctx, w, h, 14*s, 'rgba(120,150,180,0.15)');
+    });
+
+    // HUD overlay
+    ctx.fillStyle = 'rgba(64,200,160,0.06)'; ctx.fillRect(0, 0, w, 20*s);
+    ctx.strokeStyle = 'rgba(64,200,160,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 20*s); ctx.lineTo(w, 20*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(64,200,160,0.35)'; ctx.font = '200 '+(6*s)+'px monospace';
+    ctx.textAlign = 'left'; ctx.fillText('CLASSIFIED // ARCHIVAL SCAN', 8*s, 13*s);
+    ctx.textAlign = 'right'; ctx.fillText('STORM ACTIVE', w-8*s, 13*s);
+    ctx.textAlign = 'left';
+
+    // Name watermark
+    ctx.fillStyle = 'rgba(240,235,224,0.35)'; ctx.font = '300 italic '+(20*s)+'px Cormorant Garamond, serif';
+    ctx.textAlign = 'center'; ctx.fillText('Lance Fisher', w/2, h*0.38);
+    // Subtitle
+    ctx.fillStyle = 'rgba(240,235,224,0.12)'; ctx.font = '200 '+(7*s)+'px Inter, sans-serif';
+    ctx.fillText('The Original Concept', w/2, h*0.45);
+    ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(120,150,180,0.15)');
+  }
+
+  // ===== DISPATCH =====
+  var renderers = {
+    booking: drawBooking, trading: drawTrading, profitdesk: drawProfitDesk,
+    rts: drawRTS, platformer: drawPlatformer, messenger: drawMessenger,
+    polymarket: drawPolymarket, galleon: drawGalleon
+  };
+
+  function initProjectCanvases() {
+    document.querySelectorAll('canvas[data-project]').forEach(function(cv) {
+      var key = cv.getAttribute('data-project');
+      if (renderers[key]) renderers[key](cv);
+    });
+  }
+
+  // ===== CONCEPT THUMBNAILS =====
+  var conceptColors = {
+    noir: { bg: '#1a1610', accent: [180, 150, 100] },
+    star: { bg: '#060818', accent: [80, 120, 200] },
+    sonar: { bg: '#001a0a', accent: [60, 200, 120] },
+    blueprint: { bg: '#0a1628', accent: [80, 140, 220] },
+    ocean: { bg: '#001824', accent: [40, 140, 180] },
+    forge: { bg: '#1a0c04', accent: [220, 120, 40] },
+    map: { bg: '#d4c8a0', accent: [80, 60, 30] },
+    terminal: { bg: '#000000', accent: [0, 200, 80] },
+    aurora: { bg: '#040818', accent: [120, 80, 200] },
+    warroom: { bg: '#1a1418', accent: [200, 60, 60] },
+    shipwreck: { bg: '#041820', accent: [60, 160, 200] },
+    luxury: { bg: '#0a0a0b', accent: [200, 195, 180] }
+  };
+
+  var conceptNames = {
+    noir:'Noir Dossier', star:'Star Chart', sonar:'Sonar Pulse', blueprint:'Blueprint',
+    ocean:'Ocean Depth', forge:'The Forge', map:'Cartographer', terminal:'Terminal',
+    aurora:'Northern Lights', warroom:'War Room', shipwreck:'Shipwreck', luxury:'Minimalist Luxury'
+  };
+
+  function drawConceptThumb(canvas, key) {
+    var cd = conceptColors[key]; if (!cd) return;
+    canvas.width = 400; canvas.height = 240;
+    canvas.style.width = '100%'; canvas.style.height = '100%';
+    var ctx = canvas.getContext('2d');
+    var r = cd.accent[0], g = cd.accent[1], b = cd.accent[2];
+    var isLight = (key === 'map');
+
+    // Background
+    ctx.fillStyle = cd.bg; ctx.fillRect(0, 0, 400, 240);
+
+    // Distinctive per-concept pattern
+    if (key === 'noir') {
+      // Typewriter lines
+      for (var i = 0; i < 6; i++) { ctx.fillStyle = 'rgba('+r+','+g+','+b+',0.04)'; ctx.fillRect(40, 70+i*22, 320, 1); }
+      ctx.fillStyle = 'rgba('+r+','+g+','+b+',0.08)'; ctx.fillRect(60, 80, 140, 10); ctx.fillRect(60, 102, 80, 10);
+    } else if (key === 'star') {
+      // Star dots
+      for (var i2 = 0; i2 < 25; i2++) { ctx.beginPath(); ctx.arc((Math.sin(i2*3.7)*0.4+0.5)*400, (Math.cos(i2*2.3)*0.4+0.5)*240, 1.5, 0, Math.PI*2); ctx.fillStyle = 'rgba('+r+','+g+','+b+','+(0.1+Math.sin(i2)*0.1)+')'; ctx.fill(); }
+      // Constellation lines
+      ctx.strokeStyle = 'rgba('+r+','+g+','+b+',0.06)'; ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(100,60); ctx.lineTo(180,100); ctx.lineTo(250,80); ctx.lineTo(300,130); ctx.stroke();
+    } else if (key === 'sonar') {
+      // Radar rings
+      for (var i3 = 1; i3 <= 3; i3++) { ctx.beginPath(); ctx.arc(200, 120, i3*50, 0, Math.PI*2); ctx.strokeStyle = 'rgba('+r+','+g+','+b+','+(0.06/i3)+')'; ctx.lineWidth = 1; ctx.stroke(); }
+      ctx.beginPath(); ctx.moveTo(200,120); ctx.lineTo(300,60); ctx.strokeStyle = 'rgba('+r+','+g+','+b+',0.12)'; ctx.stroke();
+    } else if (key === 'blueprint') {
+      // Grid pattern
+      ctx.strokeStyle = 'rgba('+r+','+g+','+b+',0.04)'; ctx.lineWidth = 0.5;
+      for (var bx = 0; bx < 400; bx += 20) { ctx.beginPath(); ctx.moveTo(bx,0); ctx.lineTo(bx,240); ctx.stroke(); }
+      for (var by = 0; by < 240; by += 20) { ctx.beginPath(); ctx.moveTo(0,by); ctx.lineTo(400,by); ctx.stroke(); }
+      ctx.strokeStyle = 'rgba('+r+','+g+','+b+',0.1)'; ctx.strokeRect(80, 60, 240, 120);
+    } else if (key === 'ocean') {
+      // Wave lines
+      for (var wv2 = 0; wv2 < 5; wv2++) { ctx.beginPath(); for (var wx2=0; wx2<400; wx2+=4) { var wy2 = 100+wv2*20+Math.sin(wx2/30+wv2)*8; if(wx2===0) ctx.moveTo(wx2,wy2); else ctx.lineTo(wx2,wy2); } ctx.strokeStyle = 'rgba('+r+','+g+','+b+','+(0.04+wv2*0.01)+')'; ctx.lineWidth = 0.5; ctx.stroke(); }
+    } else if (key === 'forge') {
+      // Ember particles
+      for (var em2=0; em2<15; em2++) { ctx.beginPath(); ctx.arc((Math.sin(em2*4.1)*0.3+0.5)*400, 240-(Math.sin(em2*2.7)*0.5+0.5)*200, 2+Math.sin(em2)*1.5, 0, Math.PI*2); ctx.fillStyle = 'rgba('+r+','+g+','+b+','+(0.05+Math.sin(em2)*0.04)+')'; ctx.fill(); }
+    } else if (key === 'map') {
+      // Dotted routes on parchment
+      ctx.setLineDash([3,4]); ctx.strokeStyle = 'rgba('+r+','+g+','+b+',0.15)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(60,180); ctx.lineTo(150,100); ctx.lineTo(280,120); ctx.lineTo(340,70); ctx.stroke(); ctx.setLineDash([]);
+      ctx.beginPath(); ctx.arc(150,100,4,0,Math.PI*2); ctx.fillStyle='rgba('+r+','+g+','+b+',0.15)'; ctx.fill();
+      ctx.beginPath(); ctx.arc(280,120,4,0,Math.PI*2); ctx.fill();
+    } else if (key === 'terminal') {
+      // Green text lines
+      ctx.fillStyle = 'rgba('+r+','+g+','+b+',0.15)'; ctx.font = '10px monospace';
+      ctx.fillText('$ whoami', 20, 50); ctx.fillText('lance@fisher ~', 20, 66);
+      ctx.fillText('$ ls projects/', 20, 90); ctx.fillStyle = 'rgba('+r+','+g+','+b+',0.08)';
+      ctx.fillText('trading/  games/  apps/', 20, 106);
+    } else if (key === 'aurora') {
+      // Gradient ribbons
+      var ag = ctx.createLinearGradient(0, 60, 400, 100);
+      ag.addColorStop(0, 'rgba(80,200,160,0.04)'); ag.addColorStop(0.5, 'rgba('+r+','+g+','+b+',0.06)'); ag.addColorStop(1, 'rgba(60,160,220,0.04)');
+      ctx.fillStyle = ag; ctx.fillRect(0, 50, 400, 80);
+    } else if (key === 'warroom') {
+      // Alert bars
+      ctx.fillStyle = 'rgba('+r+','+g+','+b+',0.06)'; ctx.fillRect(0, 0, 400, 24);
+      ctx.fillStyle = 'rgba('+r+','+g+','+b+',0.04)'; ctx.fillRect(10, 40, 180, 80); ctx.fillRect(210, 40, 180, 80);
+    } else if (key === 'shipwreck') {
+      // Light rays
+      ctx.save(); ctx.globalAlpha = 0.04;
+      ctx.beginPath(); ctx.moveTo(200,0); ctx.lineTo(120,240); ctx.lineTo(280,240); ctx.closePath();
+      ctx.fillStyle = 'rgba('+r+','+g+','+b+',1)'; ctx.fill(); ctx.restore();
+    } else if (key === 'luxury') {
+      // Thin cross
+      ctx.strokeStyle = 'rgba('+r+','+g+','+b+',0.06)'; ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(100,120); ctx.lineTo(300,120); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(200,60); ctx.lineTo(200,180); ctx.stroke();
+    }
+
+    // Radial glow
+    var glow = ctx.createRadialGradient(200, 120, 0, 200, 120, 160);
+    glow.addColorStop(0, 'rgba('+r+','+g+','+b+',0.08)');
+    glow.addColorStop(1, 'transparent');
+    ctx.fillStyle = glow; ctx.fillRect(0, 0, 400, 240);
+
+    // Concept name label
+    ctx.fillStyle = isLight ? 'rgba('+r+','+g+','+b+',0.25)' : 'rgba('+r+','+g+','+b+',0.2)';
+    ctx.font = '500 13px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText(conceptNames[key] || key, 200, 126);
+    ctx.textAlign = 'left';
+
+    // Corner brackets
+    ctx.strokeStyle = 'rgba('+r+','+g+','+b+',0.2)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(4, 14); ctx.lineTo(4, 4); ctx.lineTo(14, 4); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(386, 4); ctx.lineTo(396, 4); ctx.lineTo(396, 14); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(4, 226); ctx.lineTo(4, 236); ctx.lineTo(14, 236); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(396, 226); ctx.lineTo(396, 236); ctx.lineTo(386, 236); ctx.stroke();
+  }
+
+  function initConceptCanvases() {
+    document.querySelectorAll('canvas[data-concept]').forEach(function(cv) {
+      drawConceptThumb(cv, cv.getAttribute('data-concept'));
+    });
+  }
+
+  // Init
+  window.addEventListener('load', function() {
+    initProjectCanvases();
+    initConceptCanvases();
+  });
+  var resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() { initProjectCanvases(); initConceptCanvases(); }, 300);
+  });
+
+})();
+</script>
+
+</body>
+</html>

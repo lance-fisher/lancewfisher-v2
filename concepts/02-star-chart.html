@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lance W. Fisher — Star Chart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --navy: #0a0e1a;
+  --deep: #060a14;
+  --star-gold: #e8d5a3;
+  --star-bright: #fff8e7;
+  --blue-glow: #4a7ab5;
+  --blue-faint: #2a4a7a;
+  --line-blue: rgba(74, 122, 181, 0.3);
+  --text-primary: #c8d8e8;
+  --text-secondary: #7a8a9a;
+  --text-gold: #d4b87a;
+  --horizon: #0d1525;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Cormorant Garamond', serif;
+  background: var(--deep);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Star field canvas - fixed background */
+#starfield {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+}
+
+/* Grid overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background:
+    linear-gradient(0deg, rgba(74, 122, 181, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74, 122, 181, 0.02) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Main content wrapper */
+.chart {
+  position: relative;
+  z-index: 10;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 30px 120px;
+}
+
+/* Polaris / Name anchor */
+.polaris-section {
+  text-align: center;
+  padding: 100px 0 60px;
+  position: relative;
+}
+
+.polaris-star {
+  width: 8px; height: 8px;
+  background: var(--star-bright);
+  border-radius: 50%;
+  margin: 0 auto 30px;
+  box-shadow:
+    0 0 10px var(--star-bright),
+    0 0 30px var(--star-gold),
+    0 0 60px rgba(232, 213, 163, 0.3),
+    0 0 120px rgba(232, 213, 163, 0.1);
+  animation: polarisPulse 3s ease-in-out infinite;
+  position: relative;
+}
+
+.polaris-star::after {
+  content: 'POLARIS';
+  position: absolute;
+  bottom: -25px; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 4px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+@keyframes polarisPulse {
+  0%, 100% { box-shadow: 0 0 10px var(--star-bright), 0 0 30px var(--star-gold), 0 0 60px rgba(232, 213, 163, 0.3); }
+  50% { box-shadow: 0 0 15px var(--star-bright), 0 0 40px var(--star-gold), 0 0 80px rgba(232, 213, 163, 0.4); }
+}
+
+.navigator-name {
+  font-size: clamp(40px, 7vw, 80px);
+  font-weight: 300;
+  color: var(--star-gold);
+  letter-spacing: 12px;
+  text-shadow: 0 0 40px rgba(232, 213, 163, 0.2);
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
+.navigator-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 6px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.coordinates-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--blue-faint);
+  letter-spacing: 2px;
+  margin-top: 25px;
+}
+
+/* Portrait as celestial body */
+.celestial-portrait {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  margin: 40px auto 20px;
+  position: relative;
+  animation: floatGentle 6s ease-in-out infinite;
+}
+
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.celestial-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid rgba(232, 213, 163, 0.3);
+}
+
+.celestial-portrait::before {
+  content: '';
+  position: absolute;
+  top: -6px; left: -6px;
+  right: -6px; bottom: -6px;
+  border-radius: 50%;
+  border: 1px solid rgba(74, 122, 181, 0.2);
+  animation: orbitRing 20s linear infinite;
+}
+
+.celestial-portrait::after {
+  content: '';
+  position: absolute;
+  top: -12px; left: -12px;
+  right: -12px; bottom: -12px;
+  border-radius: 50%;
+  border: 1px dashed rgba(74, 122, 181, 0.1);
+  animation: orbitRing 35s linear infinite reverse;
+}
+
+@keyframes orbitRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Compass Rose */
+.compass-rose {
+  width: 120px; height: 120px;
+  margin: 30px auto;
+  position: relative;
+  animation: compassSpin 60s linear infinite;
+}
+
+@keyframes compassSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.compass-rose svg {
+  width: 100%; height: 100%;
+}
+
+/* Section styling - observation log */
+.observation {
+  margin: 70px 0;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.observation.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.observation-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.constellation-dot {
+  width: 6px; height: 6px;
+  background: var(--star-gold);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--star-gold), 0 0 20px rgba(232, 213, 163, 0.3);
+  flex-shrink: 0;
+}
+
+.constellation-line {
+  flex: 0 0 40px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--star-gold), rgba(74, 122, 181, 0.3));
+}
+
+.observation-title {
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--star-gold);
+  letter-spacing: 6px;
+  text-transform: uppercase;
+}
+
+.observation-coords {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--blue-faint);
+  letter-spacing: 2px;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.observation-body {
+  padding: 25px 30px;
+  border-left: 1px solid var(--line-blue);
+  margin-left: 3px;
+  position: relative;
+}
+
+.observation-body::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -3px;
+  width: 5px; height: 5px;
+  background: var(--blue-faint);
+  border-radius: 50%;
+}
+
+/* Log entry text */
+.log-text {
+  font-size: 18px;
+  line-height: 1.9;
+  color: var(--text-primary);
+  font-weight: 300;
+  font-style: italic;
+}
+
+.log-note {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 15px;
+  letter-spacing: 1px;
+  line-height: 1.8;
+}
+
+/* Venture entries */
+.venture-log {
+  margin: 15px 0;
+  padding: 15px 20px;
+  border: 1px solid rgba(74, 122, 181, 0.1);
+  background: rgba(10, 14, 26, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.venture-log:hover {
+  border-color: rgba(74, 122, 181, 0.3);
+  background: rgba(10, 14, 26, 0.8);
+}
+
+.venture-name {
+  font-size: 17px;
+  color: var(--text-primary);
+  font-weight: 400;
+}
+
+.venture-designation {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--blue-faint);
+  letter-spacing: 2px;
+}
+
+/* Project cards - celestial catalog */
+.catalog-grid {
+  display: grid;
+  gap: 25px;
+  margin-top: 10px;
+}
+
+.catalog-entry {
+  padding: 25px;
+  border: 1px solid rgba(74, 122, 181, 0.12);
+  background: rgba(10, 14, 26, 0.5);
+  backdrop-filter: blur(4px);
+  position: relative;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.catalog-entry:hover {
+  border-color: rgba(232, 213, 163, 0.25);
+  box-shadow: 0 0 30px rgba(74, 122, 181, 0.05);
+}
+
+.catalog-entry::before {
+  content: attr(data-designation);
+  position: absolute;
+  top: -8px; right: 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--blue-faint);
+  letter-spacing: 3px;
+  background: var(--deep);
+  padding: 0 8px;
+}
+
+.catalog-name {
+  font-size: 22px;
+  color: var(--star-gold);
+  font-weight: 400;
+  margin-bottom: 6px;
+  letter-spacing: 2px;
+}
+
+.catalog-tech {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.catalog-desc {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text-primary);
+  font-weight: 300;
+}
+
+/* Principles - star wisdom */
+.wisdom-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.wisdom-card {
+  padding: 25px;
+  border: 1px solid rgba(74, 122, 181, 0.1);
+  text-align: center;
+  position: relative;
+  transition: border-color 0.3s ease;
+}
+
+.wisdom-card:hover {
+  border-color: rgba(232, 213, 163, 0.2);
+}
+
+.wisdom-star {
+  width: 4px; height: 4px;
+  background: var(--star-gold);
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  box-shadow: 0 0 6px var(--star-gold);
+}
+
+.wisdom-card h4 {
+  font-size: 16px;
+  color: var(--star-gold);
+  font-weight: 400;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.wisdom-card p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  font-weight: 300;
+}
+
+/* Contact - signal channels */
+.signal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.signal-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 14px 18px;
+  border: 1px solid rgba(74, 122, 181, 0.1);
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.signal-item:hover {
+  border-color: rgba(232, 213, 163, 0.25);
+  background: rgba(74, 122, 181, 0.05);
+}
+
+.signal-icon {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--blue-faint);
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.signal-item a {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+}
+
+.signal-item a:hover {
+  color: var(--star-gold);
+}
+
+/* Horizon line with ship */
+.horizon-section {
+  position: relative;
+  height: 200px;
+  margin-top: 80px;
+  overflow: hidden;
+}
+
+.horizon-line {
+  position: absolute;
+  bottom: 80px;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blue-faint), var(--line-blue), var(--blue-faint), transparent);
+}
+
+.horizon-ship {
+  position: absolute;
+  bottom: 75px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  opacity: 0.4;
+  filter: brightness(0.6) contrast(0.8);
+  animation: shipBob 5s ease-in-out infinite;
+}
+
+@keyframes shipBob {
+  0%, 100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
+  25% { transform: translateX(-50%) translateY(-3px) rotate(0.5deg); }
+  75% { transform: translateX(-50%) translateY(-1px) rotate(-0.3deg); }
+}
+
+.horizon-reflection {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) scaleY(-0.3);
+  width: 120px;
+  opacity: 0.1;
+  filter: blur(3px) brightness(0.4);
+}
+
+/* Footer */
+.chart-footer {
+  text-align: center;
+  padding: 40px 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text-secondary);
+  letter-spacing: 4px;
+}
+
+.chart-footer .copyright {
+  margin-top: 8px;
+  color: var(--blue-faint);
+  letter-spacing: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .chart { padding: 0 20px 80px; }
+  .navigator-name { letter-spacing: 6px; }
+  .observation-header { flex-wrap: wrap; }
+  .observation-coords { margin-left: 0; margin-top: 5px; width: 100%; }
+  .observation-body { padding: 20px 15px; }
+  .wisdom-grid { grid-template-columns: 1fr; }
+  .signal-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+
+<div class="chart">
+  <!-- Polaris / Name -->
+  <header class="polaris-section">
+    <div class="polaris-star"></div>
+    <div class="celestial-portrait">
+      <img src="../portrait.jpg" alt="Lance W. Fisher">
+    </div>
+    <h1 class="navigator-name">Lance W. Fisher</h1>
+    <p class="navigator-title">Leader &middot; Builder &middot; Father &middot; Husband</p>
+    <p class="coordinates-label">RA 06h 49m 42s &nbsp;|&nbsp; DEC +40&deg; 35&prime; 12&Prime; &nbsp;|&nbsp; Cheyenne, WY</p>
+
+    <!-- Compass Rose -->
+    <div class="compass-rose">
+      <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="60" cy="60" r="55" stroke="rgba(74,122,181,0.15)" stroke-width="0.5"/>
+        <circle cx="60" cy="60" r="40" stroke="rgba(74,122,181,0.1)" stroke-width="0.5"/>
+        <circle cx="60" cy="60" r="25" stroke="rgba(74,122,181,0.08)" stroke-width="0.5"/>
+        <!-- N -->
+        <polygon points="60,5 64,25 60,18 56,25" fill="rgba(232,213,163,0.6)"/>
+        <!-- S -->
+        <polygon points="60,115 64,95 60,102 56,95" fill="rgba(74,122,181,0.3)"/>
+        <!-- E -->
+        <polygon points="115,60 95,56 102,60 95,64" fill="rgba(74,122,181,0.3)"/>
+        <!-- W -->
+        <polygon points="5,60 25,56 18,60 25,64" fill="rgba(74,122,181,0.3)"/>
+        <!-- Diagonals -->
+        <line x1="60" y1="10" x2="60" y2="110" stroke="rgba(74,122,181,0.08)" stroke-width="0.5"/>
+        <line x1="10" y1="60" x2="110" y2="60" stroke="rgba(74,122,181,0.08)" stroke-width="0.5"/>
+        <line x1="20" y1="20" x2="100" y2="100" stroke="rgba(74,122,181,0.05)" stroke-width="0.5"/>
+        <line x1="100" y1="20" x2="20" y2="100" stroke="rgba(74,122,181,0.05)" stroke-width="0.5"/>
+        <circle cx="60" cy="60" r="2" fill="rgba(232,213,163,0.5)"/>
+      </svg>
+    </div>
+  </header>
+
+  <!-- About -->
+  <section class="observation">
+    <div class="observation-header">
+      <div class="constellation-dot"></div>
+      <div class="constellation-line"></div>
+      <h2 class="observation-title">About</h2>
+      <span class="observation-coords">RA 04h 12m &middot; DEC +38&deg;</span>
+    </div>
+    <div class="observation-body">
+      <p class="log-text">
+        A full-spectrum builder charting courses through uncharted technological waters from Cheyenne, Wyoming. Front-end to firmware, trading algorithms to game engines, encrypted protocols to booking platforms &mdash; the entire stack is the domain.
+      </p>
+      <p class="log-text" style="margin-top: 15px;">
+        Over 80,000 lines of production code across more than 20 active projects. Every system built serves a real purpose for real people &mdash; a son's game, a wife's business, traders who need an edge, users who need privacy.
+      </p>
+      <p class="log-note">
+        OBS. NOTE: Subject demonstrates uncommon range. Operates simultaneously across trading systems, mobile platforms, real-time simulations, and cryptographic protocols. Pattern consistent with relentless, mission-driven engineering.
+      </p>
+    </div>
+  </section>
+
+  <!-- Ventures -->
+  <section class="observation">
+    <div class="observation-header">
+      <div class="constellation-dot"></div>
+      <div class="constellation-line"></div>
+      <h2 class="observation-title">Ventures</h2>
+      <span class="observation-coords">RA 07h 45m &middot; DEC +42&deg;</span>
+    </div>
+    <div class="observation-body">
+      <div class="venture-log">
+        <span class="venture-name">Full-Stack Software Engineer</span>
+        <span class="venture-designation">PRIMARY HEADING</span>
+      </div>
+      <div class="venture-log">
+        <span class="venture-name">Autonomous Trading Systems Architect</span>
+        <span class="venture-designation">ACTIVE VECTOR</span>
+      </div>
+      <div class="venture-log">
+        <span class="venture-name">Game Developer &mdash; Unity &amp; Web</span>
+        <span class="venture-designation">CHARTED COURSE</span>
+      </div>
+      <div class="venture-log">
+        <span class="venture-name">Platform Builder &mdash; Mobile &amp; Cloud</span>
+        <span class="venture-designation">ACTIVE VECTOR</span>
+      </div>
+      <div class="venture-log">
+        <span class="venture-name">Husband &amp; Father of Three</span>
+        <span class="venture-designation">TRUE NORTH</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="observation">
+    <div class="observation-header">
+      <div class="constellation-dot"></div>
+      <div class="constellation-line"></div>
+      <h2 class="observation-title">Projects</h2>
+      <span class="observation-coords">RA 12h 30m &middot; DEC +55&deg;</span>
+    </div>
+    <div class="observation-body">
+      <div class="catalog-grid">
+        <div class="catalog-entry" data-designation="LWF-ALPHA">
+          <div class="catalog-name">Production Booking Platform</div>
+          <div class="catalog-tech">React Native / Expo / NestJS / PostgreSQL / Stripe</div>
+          <div class="catalog-desc">Full-scale medical spa booking application with provider management, real-time scheduling, integrated payment processing, and admin dashboard. Built for a live business. Cross-platform mobile with native-quality experience.</div>
+        </div>
+        <div class="catalog-entry" data-designation="LWF-BETA">
+          <div class="catalog-name">Multi-Chain Trading Engine</div>
+          <div class="catalog-tech">TypeScript / ccxt / ethers.js / WebSocket / Node.js</div>
+          <div class="catalog-desc">Six-engine execution layer spanning Solana DEX, Polymarket prediction markets, Binance, Coinbase, Kraken, and Ethereum DeFi. Real-time streaming dashboard. Multi-agent AI orchestration for autonomous strategy execution and continuous learning.</div>
+        </div>
+        <div class="catalog-entry" data-designation="LWF-GAMMA">
+          <div class="catalog-name">Real-Time Strategy Game</div>
+          <div class="catalog-tech">TypeScript / Canvas 2D / Vite / Fixed-Point Math</div>
+          <div class="catalog-desc">2.5D isometric RTS with zero runtime dependencies. Deterministic 20 TPS simulation with seeded RNG. Custom rendering engine with elevation support. ECS-inspired architecture built entirely from scratch.</div>
+        </div>
+        <div class="catalog-entry" data-designation="LWF-DELTA">
+          <div class="catalog-name">3D Platformer &mdash; Jump Quest!</div>
+          <div class="catalog-tech">Unity / C# / Three.js / JSON Level System</div>
+          <div class="catalog-desc">3D obby platformer built for his six-year-old son. XP leveling, eight-node skill tree, cosmetics shop, and procedural level generation via Level Draft Wizard. Dual deployment across Unity native and Three.js web. Full Xbox controller support.</div>
+        </div>
+        <div class="catalog-entry" data-designation="LWF-EPSILON">
+          <div class="catalog-name">Encrypted Messaging Platform</div>
+          <div class="catalog-tech">TypeScript / Next.js / libsodium / WebAuthn / Express</div>
+          <div class="catalog-desc">End-to-end encrypted peer-to-peer messaging with X3DH key agreement and Double Ratchet protocol for forward secrecy. Encrypted vault storage. Passwordless WebAuthn authentication. Full monorepo architecture with dedicated crypto package.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Principles -->
+  <section class="observation">
+    <div class="observation-header">
+      <div class="constellation-dot"></div>
+      <div class="constellation-line"></div>
+      <h2 class="observation-title">Principles</h2>
+      <span class="observation-coords">RA 18h 22m &middot; DEC +72&deg;</span>
+    </div>
+    <div class="observation-body">
+      <div class="wisdom-grid">
+        <div class="wisdom-card">
+          <div class="wisdom-star"></div>
+          <h4>Ship It</h4>
+          <p>Working software over perfect blueprints. Deploy early, iterate constantly, let reality shape the course.</p>
+        </div>
+        <div class="wisdom-card">
+          <div class="wisdom-star"></div>
+          <h4>Own the Stack</h4>
+          <p>Front-end to database, mobile to infrastructure. No black boxes allowed. Understand every layer you rely on.</p>
+        </div>
+        <div class="wisdom-card">
+          <div class="wisdom-star"></div>
+          <h4>Build for People</h4>
+          <p>Every line of code serves someone real. A son, a wife, a user. The human need is the north star.</p>
+        </div>
+        <div class="wisdom-card">
+          <div class="wisdom-star"></div>
+          <h4>Stay Dangerous</h4>
+          <p>New domains are open waters, not walls. Trading systems, game engines, cryptography &mdash; if the mission demands it, chart the course.</p>
+        </div>
+        <div class="wisdom-card">
+          <div class="wisdom-star"></div>
+          <h4>Pragmatism</h4>
+          <p>No architecture astronautics. Solve the problem directly with the right tool at the right moment.</p>
+        </div>
+        <div class="wisdom-card">
+          <div class="wisdom-star"></div>
+          <h4>Family First</h4>
+          <p>Technology is the vessel, not the destination. The destination is always the people who matter most.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="observation">
+    <div class="observation-header">
+      <div class="constellation-dot"></div>
+      <div class="constellation-line"></div>
+      <h2 class="observation-title">Contact</h2>
+      <span class="observation-coords">RA 23h 58m &middot; DEC +89&deg;</span>
+    </div>
+    <div class="observation-body">
+      <p class="log-note" style="margin-bottom: 15px;">SIGNAL CHANNELS // OPEN FREQUENCIES</p>
+      <div class="signal-grid">
+        <div class="signal-item">
+          <span class="signal-icon">@</span>
+          <a href="mailto:lance@lancewfisher.com">lance@lancewfisher.com</a>
+        </div>
+        <div class="signal-item">
+          <span class="signal-icon">#</span>
+          <a href="tel:+19189066963">(918) 906-6963</a>
+        </div>
+        <div class="signal-item">
+          <span class="signal-icon">X</span>
+          <a href="https://x.com/lancefisher_" target="_blank" rel="noopener">@lancefisher_</a>
+        </div>
+        <div class="signal-item">
+          <span class="signal-icon">&lt;/&gt;</span>
+          <a href="https://github.com/lance-fisher" target="_blank" rel="noopener">github.com/lance-fisher</a>
+        </div>
+        <div class="signal-item">
+          <span class="signal-icon">&loz;</span>
+          <a href="#">Cheyenne, Wyoming</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Horizon with ship -->
+  <div class="horizon-section">
+    <div class="horizon-line"></div>
+    <img class="horizon-ship" src="../ship.png" alt="Ship on horizon">
+    <img class="horizon-reflection" src="../ship.png" alt="" aria-hidden="true">
+  </div>
+
+  <!-- Footer -->
+  <footer class="chart-footer">
+    CELESTIAL NAVIGATION CHART &nbsp;&bull;&nbsp; EPOCH 2026.0
+    <div class="copyright">&copy; 2026 Lance W. Fisher &mdash; All Rights Reserved</div>
+  </footer>
+</div>
+
+<script>
+// ---- Star Field Canvas ----
+const canvas = document.getElementById('starfield');
+const ctx = canvas.getContext('2d');
+let stars = [];
+let constellationStars = [];
+const STAR_COUNT = 400;
+const CONSTELLATION_COUNT = 30;
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function initStars() {
+  stars = [];
+  constellationStars = [];
+  for (let i = 0; i < STAR_COUNT; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      size: Math.random() * 1.5 + 0.3,
+      brightness: Math.random() * 0.6 + 0.2,
+      twinkleSpeed: Math.random() * 0.02 + 0.005,
+      twinkleOffset: Math.random() * Math.PI * 2,
+      parallaxFactor: Math.random() * 0.3 + 0.05
+    });
+  }
+  // Constellation stars (brighter, connected)
+  for (let i = 0; i < CONSTELLATION_COUNT; i++) {
+    constellationStars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      size: Math.random() * 1.2 + 1,
+      brightness: Math.random() * 0.3 + 0.5
+    });
+  }
+}
+
+let scrollY = 0;
+window.addEventListener('scroll', () => { scrollY = window.scrollY; });
+
+function drawStars(time) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  grad.addColorStop(0, '#060a14');
+  grad.addColorStop(0.5, '#0a0e1a');
+  grad.addColorStop(1, '#0d1525');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Draw regular stars with twinkle
+  stars.forEach(star => {
+    const twinkle = Math.sin(time * star.twinkleSpeed + star.twinkleOffset);
+    const alpha = star.brightness + twinkle * 0.15;
+    const offsetY = scrollY * star.parallaxFactor;
+    const drawY = ((star.y - offsetY) % canvas.height + canvas.height) % canvas.height;
+
+    ctx.beginPath();
+    ctx.arc(star.x, drawY, star.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(200, 210, 230, ${Math.max(0.05, alpha)})`;
+    ctx.fill();
+
+    // Glow for brighter stars
+    if (star.size > 1) {
+      ctx.beginPath();
+      ctx.arc(star.x, drawY, star.size * 3, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200, 210, 230, ${alpha * 0.05})`;
+      ctx.fill();
+    }
+  });
+
+  // Draw constellation connections
+  ctx.strokeStyle = 'rgba(74, 122, 181, 0.06)';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i < constellationStars.length - 1; i += 2) {
+    const a = constellationStars[i];
+    const b = constellationStars[i + 1];
+    if (!b) break;
+    const dist = Math.hypot(a.x - b.x, a.y - b.y);
+    if (dist < 300) {
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+    }
+  }
+
+  // Draw constellation stars
+  constellationStars.forEach(star => {
+    ctx.beginPath();
+    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(232, 213, 163, ${star.brightness})`;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(star.x, star.y, star.size * 4, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(232, 213, 163, ${star.brightness * 0.06})`;
+    ctx.fill();
+  });
+
+  requestAnimationFrame(drawStars);
+}
+
+resize();
+initStars();
+drawStars(0);
+window.addEventListener('resize', () => { resize(); initStars(); });
+
+// ---- Intersection Observer ----
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+document.querySelectorAll('.observation').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
