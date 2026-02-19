@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lance Fisher — Cartographer's Chart</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+DW+Pica+SC&family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --parchment: #f4e8c1;
+  --parchment-dark: #d4c49a;
+  --ink: #2c1810;
+  --ink-light: #5a3a28;
+  --ink-faded: #8b7355;
+  --sea-blue: #6b8fa3;
+  --sea-dark: #3d5a6e;
+  --territory-green: #7a9b6d;
+  --territory-gold: #b8943e;
+  --red-marker: #8b2500;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Spectral', serif;
+  background: var(--parchment);
+  color: var(--ink);
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+/* Aged paper texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(139, 115, 85, 0.03) 2px,
+      rgba(139, 115, 85, 0.03) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 3px,
+      rgba(139, 115, 85, 0.02) 3px,
+      rgba(139, 115, 85, 0.02) 6px
+    );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Burnt edges */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at top left, rgba(80, 40, 10, 0.4) 0%, transparent 40%),
+    radial-gradient(ellipse at top right, rgba(80, 40, 10, 0.35) 0%, transparent 35%),
+    radial-gradient(ellipse at bottom left, rgba(80, 40, 10, 0.45) 0%, transparent 45%),
+    radial-gradient(ellipse at bottom right, rgba(80, 40, 10, 0.3) 0%, transparent 30%),
+    linear-gradient(to right, rgba(80, 40, 10, 0.25) 0%, transparent 8%, transparent 92%, rgba(80, 40, 10, 0.25) 100%),
+    linear-gradient(to bottom, rgba(80, 40, 10, 0.2) 0%, transparent 5%, transparent 95%, rgba(80, 40, 10, 0.2) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Latitude / Longitude grid */
+.lat-lng-grid {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.12;
+}
+
+.grid-line-h, .grid-line-v {
+  position: absolute;
+  background: var(--ink-faded);
+}
+.grid-line-h {
+  left: 0; right: 0;
+  height: 1px;
+}
+.grid-line-v {
+  top: 0; bottom: 0;
+  width: 1px;
+}
+.grid-label {
+  position: absolute;
+  font-family: 'IM Fell English', serif;
+  font-size: 10px;
+  color: var(--ink-faded);
+  opacity: 0.6;
+}
+
+/* Compass Rose */
+.compass-rose {
+  position: fixed;
+  top: 30px;
+  right: 40px;
+  width: 140px;
+  height: 140px;
+  z-index: 10;
+  opacity: 0.85;
+  animation: compassSpin 120s linear infinite;
+}
+
+@keyframes compassSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.compass-rose svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Header / Title Cartouche */
+.cartouche {
+  position: relative;
+  text-align: center;
+  padding: 80px 20px 60px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.cartouche-frame {
+  position: relative;
+  padding: 50px 60px;
+  max-width: 800px;
+}
+
+.cartouche-frame::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border: 3px double var(--ink);
+  border-radius: 8px;
+}
+
+.cartouche-frame::after {
+  content: '';
+  position: absolute;
+  top: 6px; left: 6px; right: 6px; bottom: 6px;
+  border: 1px solid var(--ink-light);
+  border-radius: 4px;
+}
+
+.cartouche-ornament {
+  font-family: 'IM Fell DW Pica SC', serif;
+  font-size: 14px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--ink-faded);
+  margin-bottom: 20px;
+}
+
+.cartouche h1 {
+  font-family: 'IM Fell DW Pica SC', serif;
+  font-size: clamp(36px, 6vw, 72px);
+  letter-spacing: 4px;
+  color: var(--ink);
+  line-height: 1.1;
+  margin-bottom: 12px;
+  text-shadow: 1px 1px 0 rgba(244, 232, 193, 0.8);
+}
+
+.cartouche-subtitle {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: clamp(16px, 2.5vw, 22px);
+  color: var(--ink-light);
+  margin-bottom: 24px;
+}
+
+.cartouche-location {
+  font-family: 'Spectral', serif;
+  font-size: 14px;
+  color: var(--ink-faded);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.cartouche-location::before { content: '~ '; }
+.cartouche-location::after { content: ' ~'; }
+
+/* Portrait as map medallion */
+.portrait-medallion {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 3px solid var(--ink);
+  overflow: hidden;
+  margin: 30px auto 20px;
+  position: relative;
+  box-shadow: 0 0 0 6px var(--parchment), 0 0 0 8px var(--ink-faded);
+}
+
+.portrait-medallion img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: sepia(0.6) contrast(1.1) brightness(0.95);
+}
+
+/* Ship as map illustration */
+.ship-illustration {
+  position: relative;
+  width: 300px;
+  height: auto;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.ship-illustration img {
+  width: 100%;
+  height: auto;
+  filter: sepia(0.8) contrast(1.2) brightness(0.9);
+  opacity: 0.85;
+}
+
+.ship-illustration .caption {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-faded);
+  margin-top: 8px;
+}
+
+/* Dotted travel routes */
+.travel-route {
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.travel-route svg {
+  overflow: visible;
+}
+
+.route-path {
+  fill: none;
+  stroke: var(--red-marker);
+  stroke-width: 1.5;
+  stroke-dasharray: 6, 6;
+  stroke-linecap: round;
+  opacity: 0.6;
+}
+
+.route-path-animated {
+  stroke-dashoffset: 0;
+  animation: routeDash 20s linear infinite;
+}
+
+@keyframes routeDash {
+  to { stroke-dashoffset: -200; }
+}
+
+/* Territory sections */
+.map-section {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 60px 40px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.map-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.territory {
+  position: relative;
+  padding: 40px;
+  margin: 40px 0;
+  border: 2px solid var(--ink-light);
+  border-radius: 4px;
+  background: linear-gradient(135deg,
+    rgba(244, 232, 193, 0.5),
+    rgba(212, 196, 154, 0.3)
+  );
+}
+
+.territory::before {
+  content: attr(data-territory);
+  position: absolute;
+  top: -12px;
+  left: 30px;
+  background: var(--parchment);
+  padding: 0 15px;
+  font-family: 'IM Fell DW Pica SC', serif;
+  font-size: 12px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--ink-faded);
+}
+
+/* Section headings */
+.section-heading {
+  font-family: 'IM Fell DW Pica SC', serif;
+  font-size: clamp(24px, 4vw, 40px);
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 10px;
+  letter-spacing: 3px;
+  position: relative;
+}
+
+.section-heading::after {
+  content: '';
+  display: block;
+  width: 120px;
+  height: 2px;
+  background: var(--ink-light);
+  margin: 12px auto 0;
+}
+
+.section-subheading {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  text-align: center;
+  color: var(--ink-faded);
+  margin-bottom: 30px;
+  font-size: 15px;
+}
+
+/* Wind rose / direction indicators */
+.wind-indicator {
+  position: absolute;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 11px;
+  color: var(--ink-faded);
+  opacity: 0.5;
+}
+
+.wind-indicator::before {
+  content: '';
+  display: inline-block;
+  width: 30px;
+  height: 1px;
+  background: var(--ink-faded);
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+/* Here Be Dragons illustration */
+.dragons-area {
+  position: relative;
+  text-align: center;
+  padding: 30px;
+  margin: 40px auto;
+  max-width: 500px;
+}
+
+.dragons-text {
+  font-family: 'IM Fell DW Pica SC', serif;
+  font-size: 18px;
+  color: var(--red-marker);
+  letter-spacing: 4px;
+  opacity: 0.7;
+}
+
+.dragon-illustration {
+  font-size: 60px;
+  margin: 15px 0;
+  filter: sepia(1) hue-rotate(-10deg);
+  opacity: 0.4;
+}
+
+/* Sea monster illustrations (CSS art) */
+.sea-monster {
+  position: absolute;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.sea-monster svg {
+  width: 80px;
+  height: 80px;
+}
+
+/* About section */
+.about-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.about-text {
+  font-family: 'Spectral', serif;
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--ink-light);
+}
+
+.about-text p { margin-bottom: 16px; }
+
+.about-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 16px;
+  border: 1px solid var(--ink-faded);
+  border-radius: 4px;
+  background: rgba(244, 232, 193, 0.4);
+}
+
+.stat-number {
+  font-family: 'IM Fell DW Pica SC', serif;
+  font-size: 28px;
+  color: var(--ink);
+  display: block;
+}
+
+.stat-label {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink-faded);
+  margin-top: 4px;
+}
+
+/* Ventures */
+.venture-card {
+  padding: 24px;
+  margin: 20px 0;
+  border-left: 3px solid var(--territory-gold);
+  background: rgba(184, 148, 62, 0.06);
+  position: relative;
+}
+
+.venture-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -3px;
+  width: 10px; height: 10px;
+  background: var(--territory-gold);
+  border-radius: 50%;
+  transform: translate(-4px, -50%);
+}
+
+.venture-name {
+  font-family: 'IM Fell DW Pica SC', serif;
+  font-size: 18px;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.venture-role {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-faded);
+  margin-bottom: 10px;
+}
+
+.venture-desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-light);
+}
+
+/* Projects as map territories */
+.project-territories {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.project-territory {
+  position: relative;
+  padding: 28px;
+  border: 1.5px solid var(--ink-faded);
+  border-radius: 3px;
+  background: linear-gradient(160deg,
+    rgba(244, 232, 193, 0.6),
+    rgba(212, 196, 154, 0.2)
+  );
+  transition: all 0.4s ease;
+}
+
+.project-territory:hover {
+  border-color: var(--ink);
+  background: linear-gradient(160deg,
+    rgba(244, 232, 193, 0.9),
+    rgba(212, 196, 154, 0.5)
+  );
+  transform: translateY(-3px);
+  box-shadow: 4px 4px 0 rgba(44, 24, 16, 0.1);
+}
+
+.project-territory::after {
+  content: '';
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 12px; height: 12px;
+  border: 1px solid var(--red-marker);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--red-marker) 30%, transparent 31%);
+  opacity: 0.5;
+}
+
+.project-name {
+  font-family: 'IM Fell DW Pica SC', serif;
+  font-size: 17px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.project-stack {
+  font-family: 'Spectral', serif;
+  font-size: 12px;
+  color: var(--ink-faded);
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.project-desc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-light);
+}
+
+/* Principles as cardinal directions */
+.principles-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  position: relative;
+}
+
+.principles-grid::before {
+  content: '+';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40px;
+  color: var(--ink-faded);
+  opacity: 0.2;
+}
+
+.principle-item {
+  padding: 24px;
+  text-align: center;
+  border: 1px dashed var(--ink-faded);
+  border-radius: 4px;
+}
+
+.principle-direction {
+  font-family: 'IM Fell DW Pica SC', serif;
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: var(--ink-faded);
+  margin-bottom: 8px;
+}
+
+.principle-title {
+  font-family: 'IM Fell DW Pica SC', serif;
+  font-size: 18px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.principle-text {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-light);
+  line-height: 1.6;
+}
+
+/* Contact as port of call */
+.port-of-call {
+  text-align: center;
+  padding: 40px;
+  border: 2px double var(--ink);
+  border-radius: 4px;
+  position: relative;
+}
+
+.port-of-call::before {
+  content: 'PORT OF CALL';
+  position: absolute;
+  top: -12px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--parchment);
+  padding: 0 20px;
+  font-family: 'IM Fell DW Pica SC', serif;
+  font-size: 11px;
+  letter-spacing: 5px;
+  color: var(--ink-faded);
+}
+
+.contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--ink-light);
+  font-family: 'Spectral', serif;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: 1px solid var(--ink-faded);
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.contact-link:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+  background: rgba(44, 24, 16, 0.05);
+}
+
+.contact-link svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+/* Scroll explorer indicator */
+.scroll-explorer {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-faded);
+  text-align: center;
+  transition: opacity 0.5s;
+}
+
+.scroll-explorer .arrow {
+  display: block;
+  animation: scrollBounce 2s ease-in-out infinite;
+  font-size: 18px;
+  margin-top: 4px;
+}
+
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* Map coordinates display */
+.coordinates {
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+  font-family: 'IM Fell English', serif;
+  font-size: 12px;
+  color: var(--ink-faded);
+  z-index: 20;
+  opacity: 0.6;
+}
+
+/* Decorative flourishes */
+.flourish {
+  text-align: center;
+  font-size: 24px;
+  color: var(--ink-faded);
+  opacity: 0.4;
+  margin: 30px 0;
+  letter-spacing: 12px;
+}
+
+/* Divider with ornament */
+.map-divider {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 50px auto;
+  max-width: 600px;
+}
+
+.map-divider::before,
+.map-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--ink-faded);
+}
+
+.map-divider .ornament {
+  font-family: 'IM Fell DW Pica SC', serif;
+  font-size: 16px;
+  color: var(--ink-faded);
+}
+
+/* Stains / coffee rings */
+.stain {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(139, 100, 50, 0.08) 40%,
+    rgba(139, 100, 50, 0.15) 60%,
+    rgba(139, 100, 50, 0.05) 70%,
+    transparent 71%
+  );
+  pointer-events: none;
+}
+
+/* Footer */
+.map-footer {
+  text-align: center;
+  padding: 60px 20px 40px;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink-faded);
+}
+
+.map-footer .year {
+  font-family: 'IM Fell DW Pica SC', serif;
+  font-size: 14px;
+  letter-spacing: 4px;
+  display: block;
+  margin-top: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .about-content { grid-template-columns: 1fr; }
+  .project-territories { grid-template-columns: 1fr; }
+  .principles-grid { grid-template-columns: 1fr; }
+  .compass-rose { width: 80px; height: 80px; top: 15px; right: 15px; }
+  .cartouche-frame { padding: 30px; }
+  .territory { padding: 24px; }
+  .contact-links { flex-direction: column; align-items: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- Latitude/Longitude Grid -->
+<div class="lat-lng-grid" id="gridContainer"></div>
+
+<!-- Compass Rose -->
+<div class="compass-rose">
+  <svg viewBox="0 0 200 200">
+    <g transform="translate(100,100)">
+      <!-- Outer circle -->
+      <circle r="90" fill="none" stroke="#2c1810" stroke-width="1.5" opacity="0.4"/>
+      <circle r="85" fill="none" stroke="#2c1810" stroke-width="0.5" opacity="0.3"/>
+      <!-- Degree marks -->
+      <g opacity="0.3">
+        <line x1="0" y1="-92" x2="0" y2="-82" stroke="#2c1810" stroke-width="1.5"/>
+        <line x1="92" y1="0" x2="82" y2="0" stroke="#2c1810" stroke-width="1.5"/>
+        <line x1="0" y1="92" x2="0" y2="82" stroke="#2c1810" stroke-width="1.5"/>
+        <line x1="-92" y1="0" x2="-82" y2="0" stroke="#2c1810" stroke-width="1.5"/>
+      </g>
+      <!-- Main star points -->
+      <polygon points="0,-80 8,-15 0,0 -8,-15" fill="#2c1810" opacity="0.7"/>
+      <polygon points="0,80 8,15 0,0 -8,15" fill="#5a3a28" opacity="0.5"/>
+      <polygon points="80,0 15,8 0,0 15,-8" fill="#5a3a28" opacity="0.5"/>
+      <polygon points="-80,0 -15,8 0,0 -15,-8" fill="#5a3a28" opacity="0.5"/>
+      <!-- Secondary points -->
+      <polygon points="56,-56 10,-10 0,0 -3,-13" fill="#8b7355" opacity="0.35" transform="rotate(0)"/>
+      <polygon points="56,56 10,10 0,0 13,3" fill="#8b7355" opacity="0.35"/>
+      <polygon points="-56,56 -10,10 0,0 -13,3" fill="#8b7355" opacity="0.35"/>
+      <polygon points="-56,-56 -10,-10 0,0 3,-13" fill="#8b7355" opacity="0.35"/>
+      <!-- Center -->
+      <circle r="4" fill="#2c1810" opacity="0.6"/>
+      <!-- Direction labels -->
+      <text y="-68" text-anchor="middle" font-family="IM Fell DW Pica SC, serif" font-size="14" fill="#2c1810" opacity="0.7">N</text>
+      <text x="68" y="5" text-anchor="middle" font-family="IM Fell DW Pica SC, serif" font-size="12" fill="#5a3a28" opacity="0.5">E</text>
+      <text y="76" text-anchor="middle" font-family="IM Fell DW Pica SC, serif" font-size="12" fill="#5a3a28" opacity="0.5">S</text>
+      <text x="-68" y="5" text-anchor="middle" font-family="IM Fell DW Pica SC, serif" font-size="12" fill="#5a3a28" opacity="0.5">W</text>
+    </g>
+  </svg>
+</div>
+
+<!-- Scroll Explorer -->
+<div class="scroll-explorer" id="scrollExplorer">
+  Explore the Map
+  <span class="arrow">V</span>
+</div>
+
+<!-- Coordinates Display -->
+<div class="coordinates" id="coordsDisplay">40.5853&deg; N, 105.0844&deg; W</div>
+
+<!-- Coffee stains -->
+<div class="stain" style="width:120px;height:120px;top:15%;right:12%;"></div>
+<div class="stain" style="width:80px;height:80px;top:55%;left:5%;"></div>
+<div class="stain" style="width:100px;height:100px;bottom:20%;right:8%;"></div>
+
+<!-- ====== HEADER CARTOUCHE ====== -->
+<header class="cartouche">
+  <div class="cartouche-frame">
+    <div class="cartouche-ornament">A Charting of the Known Works of</div>
+    <h1>Lance Fisher</h1>
+    <div class="cartouche-subtitle">Leader, Builder, Father, Husband</div>
+
+    <div class="portrait-medallion">
+      <img src="../portrait.jpg" alt="Lance Fisher" />
+    </div>
+
+    <div class="cartouche-location">Cheyenne, Wyoming</div>
+  </div>
+
+  <div class="ship-illustration">
+    <img src="../ship.png" alt="The Builder's Vessel" />
+    <div class="caption">"The Builder's Vessel" &mdash; Bearing provisions of code &amp; craft</div>
+  </div>
+</header>
+
+<!-- ====== ABOUT TERRITORY ====== -->
+<section class="map-section" data-section>
+  <div class="territory" data-territory="Terra Cognita">
+    <h2 class="section-heading">The Known Lands</h2>
+    <p class="section-subheading">An accounting of the cartographer himself</p>
+
+    <div class="about-content">
+      <div class="about-text">
+        <p>In the territories of Cheyenne, Wyoming, there resides a builder of considerable works. Lance Fisher charts his course through the digital frontier, commanding fleets of applications, trading systems, and interactive experiences.</p>
+        <p>A father who builds games for his son. A husband who builds platforms for his wife's practice. A leader who builds systems that run day and night. Every line of code is a mark on the map of what's possible.</p>
+        <p>From full-stack applications to autonomous trading engines, from real-time strategy games to encrypted communications, these are the territories he has charted.</p>
+      </div>
+      <div class="about-stats">
+        <div class="stat-item">
+          <span class="stat-number">80K+</span>
+          <span class="stat-label">Lines of Code</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">20+</span>
+          <span class="stat-label">Projects Charted</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">6</span>
+          <span class="stat-label">Trading Engines</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">5</span>
+          <span class="stat-label">Active Ventures</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="map-divider"><span class="ornament">&#x2767;</span></div>
+
+<!-- ====== VENTURES TERRITORY ====== -->
+<section class="map-section" data-section>
+  <div class="territory" data-territory="Mare Enterprisum">
+    <h2 class="section-heading">Ventures & Expeditions</h2>
+    <p class="section-subheading">Territories under active development</p>
+
+    <div class="venture-card">
+      <div class="venture-name">Profit Desk &mdash; Autonomous Trading</div>
+      <div class="venture-role">Captain & Architect</div>
+      <div class="venture-desc">A multi-agent autonomous trading desk orchestrating strategies across crypto markets. Six specialized agents work in concert: research, risk management, backtesting, and execution. The brain that commands the fleet.</div>
+    </div>
+
+    <div class="venture-card">
+      <div class="venture-name">Master Trade Bot &mdash; Execution Layer</div>
+      <div class="venture-role">Chief Engineer</div>
+      <div class="venture-desc">Six execution engines spanning Solana, Polymarket, Binance, Coinbase, Kraken, and Ethereum DeFi. Real-time dashboard streaming at port 4000. The hands that execute the brain's commands.</div>
+    </div>
+
+    <div class="venture-card">
+      <div class="venture-name">Harmony Skin & Wellness</div>
+      <div class="venture-role">Builder for Family</div>
+      <div class="venture-desc">A production booking platform for his wife's medspa practice. Mobile-first experience with provider scheduling, service catalog, and payment processing. Built with love, deployed with care.</div>
+    </div>
+  </div>
+</section>
+
+<div class="flourish">&bull; &bull; &bull;</div>
+
+<!-- ====== PROJECTS TERRITORY ====== -->
+<section class="map-section" data-section>
+  <div class="territory" data-territory="Archipelago Codex">
+    <h2 class="section-heading">Charted Territories</h2>
+    <p class="section-subheading">A survey of completed and ongoing works</p>
+
+    <div class="project-territories">
+      <div class="project-territory">
+        <div class="project-name">Production Booking Platform</div>
+        <div class="project-stack">React Native / NestJS / PostgreSQL</div>
+        <div class="project-desc">Full-stack medspa booking system with mobile app, admin dashboard, provider management, and Stripe payment integration.</div>
+      </div>
+
+      <div class="project-territory">
+        <div class="project-name">Multi-Chain Trading Engine</div>
+        <div class="project-stack">TypeScript / ccxt / ethers.js</div>
+        <div class="project-desc">Six execution engines across multiple blockchains and exchanges with real-time WebSocket streaming and AI-powered strategy analysis.</div>
+      </div>
+
+      <div class="project-territory">
+        <div class="project-name">Real-Time Strategy Game</div>
+        <div class="project-stack">TypeScript / Canvas 2D / Vite</div>
+        <div class="project-desc">Crown & Conquest: a 2.5D isometric RTS with fixed-point deterministic simulation, ECS architecture, and seeded RNG.</div>
+      </div>
+
+      <div class="project-territory">
+        <div class="project-name">3D Platformer for His Son</div>
+        <div class="project-stack">Unity / C# / Three.js</div>
+        <div class="project-desc">Jump Quest: a 3D obby platformer with procedural level generation, XP progression, skill trees, and Xbox controller support. Built for Jamison.</div>
+      </div>
+
+      <div class="project-territory" style="grid-column: 1 / -1;">
+        <div class="project-name">Encrypted Messaging Platform</div>
+        <div class="project-stack">TypeScript / Next.js / libsodium</div>
+        <div class="project-desc">End-to-end encrypted peer-to-peer messaging with X3DH key exchange, Double Ratchet protocol, WebAuthn authentication, and zero-knowledge architecture.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Here Be Dragons -->
+<div class="dragons-area">
+  <div class="dragon-illustration">&#x1F409;</div>
+  <div class="dragons-text">Here Be Dragons</div>
+  <p style="font-family:'IM Fell English',serif;font-style:italic;font-size:13px;color:var(--ink-faded);margin-top:8px;">
+    Beyond these charted territories lie autonomous agents,<br>AI-powered systems, and experiments yet unnamed.
+  </p>
+</div>
+
+<div class="map-divider"><span class="ornament">&#x2056;</span></div>
+
+<!-- ====== PRINCIPLES TERRITORY ====== -->
+<section class="map-section" data-section>
+  <div class="territory" data-territory="Lex Navigatoria">
+    <h2 class="section-heading">The Navigator's Code</h2>
+    <p class="section-subheading">Principles by which the course is set</p>
+
+    <div class="principles-grid">
+      <div class="principle-item">
+        <div class="principle-direction">NORTH</div>
+        <div class="principle-title">Build for People</div>
+        <div class="principle-text">A game for his son. A platform for his wife. Code is never just code. It's an act of service to the people who matter most.</div>
+      </div>
+
+      <div class="principle-item">
+        <div class="principle-direction">EAST</div>
+        <div class="principle-title">Ship Relentlessly</div>
+        <div class="principle-text">Twenty projects charted, eighty thousand lines written. Progress is measured in working software, not in plans or promises.</div>
+      </div>
+
+      <div class="principle-item">
+        <div class="principle-direction">SOUTH</div>
+        <div class="principle-title">Own the Stack</div>
+        <div class="principle-text">From mobile to backend, from blockchain to game engine, from encryption to AI. Know every layer. Master every tool.</div>
+      </div>
+
+      <div class="principle-item">
+        <div class="principle-direction">WEST</div>
+        <div class="principle-title">Lead by Building</div>
+        <div class="principle-text">Leadership isn't delegation. It's being the first one in the codebase, the last one debugging, the one who ships when it matters.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="flourish">&diams; &mdash; &diams;</div>
+
+<!-- ====== CONTACT TERRITORY ====== -->
+<section class="map-section" data-section>
+  <div class="port-of-call">
+    <h2 class="section-heading">Make Port</h2>
+    <p class="section-subheading">Coordinates for correspondence &amp; collaboration</p>
+
+    <div class="contact-links">
+      <a href="mailto:lance@lancewfisher.com" class="contact-link">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        lance@lancewfisher.com
+      </a>
+      <a href="tel:+19189066963" class="contact-link">
+        <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        (918) 906-6963
+      </a>
+      <a href="https://x.com/lancefisher_" class="contact-link" target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        @lancefisher_
+      </a>
+      <a href="https://github.com/lance-fisher" class="contact-link" target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        lance-fisher
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="map-footer">
+  Charted and compiled in the year of our code
+  <span class="year">MMXXVI</span>
+  <br><br>
+  <span style="opacity:0.5;">Drawn by hand, built by machine, guided by purpose.</span>
+</footer>
+
+<script>
+// Latitude/Longitude Grid
+(function() {
+  const container = document.getElementById('gridContainer');
+  const spacing = 150;
+  const vh = Math.max(document.documentElement.scrollHeight, 5000);
+
+  for (let y = spacing; y < vh; y += spacing) {
+    const line = document.createElement('div');
+    line.className = 'grid-line-h';
+    line.style.top = y + 'px';
+    container.appendChild(line);
+
+    const label = document.createElement('div');
+    label.className = 'grid-label';
+    label.style.top = (y - 14) + 'px';
+    label.style.left = '8px';
+    const lat = (90 - (y / vh) * 180).toFixed(1);
+    label.textContent = Math.abs(lat) + '\u00B0' + (lat >= 0 ? 'N' : 'S');
+    container.appendChild(label);
+  }
+
+  const vw = window.innerWidth;
+  for (let x = spacing; x < vw; x += spacing) {
+    const line = document.createElement('div');
+    line.className = 'grid-line-v';
+    line.style.left = x + 'px';
+    container.appendChild(line);
+  }
+})();
+
+// Scroll reveal
+const sections = document.querySelectorAll('[data-section]');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+sections.forEach(s => observer.observe(s));
+
+// Hide scroll explorer on scroll
+window.addEventListener('scroll', function() {
+  const explorer = document.getElementById('scrollExplorer');
+  if (window.scrollY > 200) {
+    explorer.style.opacity = '0';
+  } else {
+    explorer.style.opacity = '1';
+  }
+});
+
+// Coordinates display - track mouse as lat/lng
+document.addEventListener('mousemove', function(e) {
+  const display = document.getElementById('coordsDisplay');
+  const lat = (40.5853 + (0.5 - e.clientY / window.innerHeight) * 0.5).toFixed(4);
+  const lng = (105.0844 + (e.clientX / window.innerWidth - 0.5) * 0.5).toFixed(4);
+  display.textContent = lat + '\u00B0 N, ' + lng + '\u00B0 W';
+});
+
+// Wind direction indicators (scattered decorative)
+const windLabels = ['NNW', 'WSW', 'ESE', 'NNE', 'SSW'];
+const mapSections = document.querySelectorAll('.territory');
+mapSections.forEach((section, i) => {
+  if (i < windLabels.length) {
+    const wind = document.createElement('div');
+    wind.className = 'wind-indicator';
+    wind.textContent = windLabels[i] + ' wind';
+    wind.style.top = '12px';
+    wind.style.right = '12px';
+    section.appendChild(wind);
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>lance@fisher:~$ whoami</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --green: #00ff41;
+  --green-dim: #00cc33;
+  --green-dark: #009922;
+  --green-glow: rgba(0, 255, 65, 0.15);
+  --green-faint: rgba(0, 255, 65, 0.06);
+  --amber: #ffb000;
+  --red: #ff3333;
+  --cyan: #00ffff;
+  --white: #cccccc;
+  --bg: #000000;
+  --bg-panel: rgba(0, 255, 65, 0.03);
+  --scanline: rgba(0, 255, 65, 0.03);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'IBM Plex Mono', monospace;
+  background: var(--bg);
+  color: var(--green);
+  overflow-x: hidden;
+  font-size: 14px;
+  line-height: 1.6;
+  position: relative;
+}
+
+/* CRT Scanlines */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    var(--scanline) 2px,
+    var(--scanline) 4px
+  );
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* CRT screen curve / vignette */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 60%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  pointer-events: none;
+  z-index: 101;
+}
+
+/* Matrix rain canvas */
+#matrixCanvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.07;
+}
+
+/* System stats header bar */
+.system-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 28px;
+  background: rgba(0, 255, 65, 0.08);
+  border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  font-size: 11px;
+  color: var(--green-dim);
+  z-index: 50;
+  backdrop-filter: blur(4px);
+}
+
+.system-bar .left { display: flex; gap: 20px; }
+.system-bar .right { display: flex; gap: 20px; }
+
+.stat-value { color: var(--green); }
+.stat-label { color: var(--green-dark); }
+.uptime { color: var(--amber); }
+
+/* Main container */
+.terminal {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 50px 24px 60px;
+}
+
+/* Boot sequence */
+.boot-sequence {
+  padding-top: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.boot-line {
+  opacity: 0;
+  transform: translateY(4px);
+  margin-bottom: 2px;
+  white-space: pre-wrap;
+  font-size: 13px;
+}
+
+.boot-line.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.1s, transform 0.1s;
+}
+
+.boot-line.ok { color: var(--green); }
+.boot-line.warn { color: var(--amber); }
+.boot-line.error { color: var(--red); }
+.boot-line.info { color: var(--cyan); }
+.boot-line.dim { color: var(--green-dark); }
+
+.boot-line .bracket-ok::before { content: '[ '; color: var(--green-dark); }
+.boot-line .bracket-ok::after { content: ' ]'; color: var(--green-dark); }
+.boot-line .bracket-ok { color: var(--green); }
+
+/* ASCII Art Ship */
+.ascii-art {
+  color: var(--green-dim);
+  font-size: 11px;
+  line-height: 1.3;
+  margin: 20px 0;
+  white-space: pre;
+  text-align: center;
+  text-shadow: 0 0 10px var(--green-glow);
+}
+
+/* Access granted animation */
+.access-granted {
+  text-align: center;
+  padding: 40px 0;
+  opacity: 0;
+}
+
+.access-granted.visible {
+  opacity: 1;
+  animation: accessFlash 0.8s ease-out;
+}
+
+@keyframes accessFlash {
+  0% { opacity: 0; text-shadow: 0 0 40px var(--green); }
+  30% { opacity: 1; text-shadow: 0 0 60px var(--green), 0 0 100px var(--green); }
+  60% { opacity: 0.6; }
+  100% { opacity: 1; text-shadow: 0 0 10px var(--green-glow); }
+}
+
+.access-granted h1 {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  color: var(--green);
+  text-shadow: 0 0 20px var(--green-glow);
+}
+
+.access-granted .subtitle {
+  font-size: 12px;
+  color: var(--green-dark);
+  letter-spacing: 4px;
+  margin-top: 8px;
+}
+
+/* Blinking cursor */
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 16px;
+  background: var(--green);
+  animation: blink 1s step-end infinite;
+  vertical-align: text-bottom;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* Command prompt */
+.prompt {
+  color: var(--green-dim);
+  margin-bottom: 2px;
+}
+
+.prompt .user { color: var(--cyan); }
+.prompt .at { color: var(--green-dark); }
+.prompt .host { color: var(--green); }
+.prompt .path { color: var(--amber); }
+.prompt .dollar { color: var(--green); }
+
+/* Content sections */
+.section {
+  margin: 50px 0;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-command {
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.section-output {
+  padding-left: 0;
+  border-left: 2px solid rgba(0, 255, 65, 0.15);
+  padding-left: 20px;
+  margin-left: 4px;
+}
+
+/* File listing style */
+.file-listing {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 4px 30px;
+}
+
+.file-entry {
+  display: flex;
+  gap: 8px;
+}
+
+.file-perms { color: var(--green-dark); font-size: 12px; }
+.file-name { color: var(--green); }
+.file-name.dir { color: var(--cyan); font-weight: 500; }
+.file-name.exec { color: var(--green); font-weight: 500; }
+
+/* Cat file output */
+.cat-output {
+  background: var(--bg-panel);
+  border: 1px solid rgba(0, 255, 65, 0.1);
+  padding: 20px;
+  margin: 8px 0;
+  border-radius: 2px;
+}
+
+.cat-output .line-num {
+  display: inline-block;
+  width: 30px;
+  text-align: right;
+  color: var(--green-dark);
+  margin-right: 12px;
+  user-select: none;
+  font-size: 12px;
+}
+
+.cat-line {
+  margin-bottom: 2px;
+}
+
+/* Typing animation container */
+.typing-text {
+  overflow: hidden;
+  white-space: pre-wrap;
+}
+
+.typing-text .typed-char {
+  opacity: 0;
+  display: inline;
+}
+
+.typing-text .typed-char.visible {
+  opacity: 1;
+}
+
+/* Stats table */
+.stats-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.stats-table td {
+  padding: 4px 16px 4px 0;
+  border-bottom: 1px solid rgba(0, 255, 65, 0.08);
+  font-size: 13px;
+}
+
+.stats-table td:first-child {
+  color: var(--green-dark);
+  width: 180px;
+}
+
+.stats-table td:last-child {
+  color: var(--green);
+}
+
+/* Project cards as directory entries */
+.project-entry {
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid rgba(0, 255, 65, 0.1);
+  background: var(--bg-panel);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.project-entry:hover {
+  border-color: rgba(0, 255, 65, 0.3);
+  background: rgba(0, 255, 65, 0.05);
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.05);
+}
+
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.project-name {
+  color: var(--cyan);
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.project-stack {
+  color: var(--green-dark);
+  font-size: 11px;
+}
+
+.project-desc {
+  color: var(--green-dim);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Principles */
+.principle-block {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-left: 2px solid var(--green-dark);
+}
+
+.principle-name {
+  color: var(--amber);
+  font-weight: 500;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.principle-text {
+  color: var(--green-dim);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Contact info */
+.contact-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 20px;
+  margin: 10px 0;
+}
+
+.contact-key { color: var(--green-dark); }
+.contact-val { color: var(--green); }
+.contact-val a {
+  color: var(--cyan);
+  text-decoration: none;
+  transition: text-shadow 0.3s;
+}
+.contact-val a:hover {
+  text-shadow: 0 0 8px var(--cyan);
+}
+
+/* Glitch effect */
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.glitch:hover::before {
+  animation: glitch1 0.3s linear;
+  color: var(--red);
+  opacity: 0.8;
+}
+
+.glitch:hover::after {
+  animation: glitch2 0.3s linear;
+  color: var(--cyan);
+  opacity: 0.8;
+}
+
+@keyframes glitch1 {
+  0% { clip-path: inset(20% 0 60% 0); transform: translateX(-3px); opacity: 0.8; }
+  25% { clip-path: inset(60% 0 10% 0); transform: translateX(3px); }
+  50% { clip-path: inset(30% 0 40% 0); transform: translateX(-2px); }
+  75% { clip-path: inset(70% 0 5% 0); transform: translateX(2px); }
+  100% { clip-path: inset(40% 0 30% 0); transform: translateX(0); opacity: 0; }
+}
+
+@keyframes glitch2 {
+  0% { clip-path: inset(60% 0 20% 0); transform: translateX(3px); opacity: 0.8; }
+  25% { clip-path: inset(10% 0 60% 0); transform: translateX(-3px); }
+  50% { clip-path: inset(40% 0 30% 0); transform: translateX(2px); }
+  75% { clip-path: inset(5% 0 70% 0); transform: translateX(-2px); }
+  100% { clip-path: inset(30% 0 40% 0); transform: translateX(0); opacity: 0; }
+}
+
+/* Horizontal rule */
+.term-hr {
+  border: none;
+  border-top: 1px solid rgba(0, 255, 65, 0.15);
+  margin: 30px 0;
+}
+
+/* Progress bar */
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0;
+  font-size: 12px;
+}
+
+.progress-track {
+  width: 200px;
+  height: 10px;
+  border: 1px solid var(--green-dark);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green-glow);
+  transition: width 1s ease;
+}
+
+.progress-label { color: var(--green-dark); width: 120px; }
+.progress-pct { color: var(--green); }
+
+/* Footer */
+.terminal-footer {
+  margin-top: 60px;
+  padding: 20px 0;
+  border-top: 1px solid rgba(0, 255, 65, 0.1);
+  text-align: center;
+  font-size: 11px;
+  color: var(--green-dark);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--green-dark); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--green-dim); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .terminal { padding: 40px 16px 40px; }
+  .system-bar { font-size: 9px; padding: 0 8px; }
+  .ascii-art { font-size: 7px; }
+  .project-header { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .contact-grid { grid-template-columns: 1fr; gap: 2px; }
+  .contact-key { font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Matrix Rain Canvas -->
+<canvas id="matrixCanvas"></canvas>
+
+<!-- System Stats Bar -->
+<div class="system-bar">
+  <div class="left">
+    <span><span class="stat-label">PID:</span> <span class="stat-value">1337</span></span>
+    <span><span class="stat-label">CPU:</span> <span class="stat-value" id="cpuVal">12%</span></span>
+    <span><span class="stat-label">MEM:</span> <span class="stat-value" id="memVal">2.4G/16G</span></span>
+    <span><span class="stat-label">LOAD:</span> <span class="stat-value" id="loadVal">0.42</span></span>
+  </div>
+  <div class="right">
+    <span class="uptime" id="uptimeVal">uptime: 0:00:00</span>
+    <span><span class="stat-label">TTY:</span> <span class="stat-value">pts/0</span></span>
+  </div>
+</div>
+
+<div class="terminal">
+
+  <!-- ====== BOOT SEQUENCE ====== -->
+  <div class="boot-sequence" id="bootSequence">
+    <div class="boot-line dim" data-delay="100">BIOS Date: 02/16/2026 Ver: 1.0.0</div>
+    <div class="boot-line dim" data-delay="200">Checking RAM: 16384 MB ... OK</div>
+    <div class="boot-line dim" data-delay="350">Detecting drives ... NVMe 2TB [OK]</div>
+    <div class="boot-line" data-delay="500"></div>
+    <div class="boot-line ok" data-delay="600">  _____ _     _               ___  ____  </div>
+    <div class="boot-line ok" data-delay="620"> |  ___(_)___| |__   ___ _ __/ _ \/ ___| </div>
+    <div class="boot-line ok" data-delay="640"> | |_  | / __| '_ \ / _ \ '__| | | \___ \ </div>
+    <div class="boot-line ok" data-delay="660"> |  _| | \__ \ | | |  __/ |  | |_| |___) |</div>
+    <div class="boot-line ok" data-delay="680"> |_|   |_|___/_| |_|\___|_|   \___/|____/ </div>
+    <div class="boot-line" data-delay="700"></div>
+    <div class="boot-line info" data-delay="800">FisherOS v2.0.26 (Kernel 6.1.0-lance)</div>
+    <div class="boot-line dim" data-delay="900">Copyright (c) 2026 Lance Fisher. All rights reserved.</div>
+    <div class="boot-line" data-delay="1000"></div>
+    <div class="boot-line" data-delay="1100">[<span class="bracket-ok">  OK  </span>] Starting system logger...</div>
+    <div class="boot-line" data-delay="1250">[<span class="bracket-ok">  OK  </span>] Loading personality matrix...</div>
+    <div class="boot-line" data-delay="1400">[<span class="bracket-ok">  OK  </span>] Mounting /home/lance/projects (20+ projects found)</div>
+    <div class="boot-line" data-delay="1550">[<span class="bracket-ok">  OK  </span>] Initializing trading engines (6 engines online)</div>
+    <div class="boot-line" data-delay="1700">[<span class="bracket-ok">  OK  </span>] Starting creative subsystems...</div>
+    <div class="boot-line warn" data-delay="1850">[<span style="color:var(--amber)"> WARN </span>] Ambition levels exceed normal parameters</div>
+    <div class="boot-line" data-delay="2000">[<span class="bracket-ok">  OK  </span>] Loading 80,000+ lines of code into memory</div>
+    <div class="boot-line" data-delay="2150">[<span class="bracket-ok">  OK  </span>] All systems nominal</div>
+    <div class="boot-line" data-delay="2300"></div>
+    <div class="boot-line info" data-delay="2450">Authenticating...</div>
+    <div class="boot-line" data-delay="2600">Password: **************</div>
+    <div class="boot-line" data-delay="2800"></div>
+
+    <!-- Access Granted -->
+    <div class="access-granted" id="accessGranted">
+      <h1 class="glitch" data-text="ACCESS GRANTED">ACCESS GRANTED</h1>
+      <div class="subtitle">Welcome back, Lance Fisher</div>
+    </div>
+
+    <!-- ASCII Ship -->
+    <div class="ascii-art" id="asciiShip" style="opacity:0;">
+                        |    |    |
+                       )_)  )_)  )_)
+                      )___))___))___)\
+                     )____)____)_____)\\
+                   _____|____|____|____\\\__
+          ---------\                   /---------
+            ^^^^^ ^^^^^^^^^^^^^^^^^^^^^
+              ^^^^      ^^^^     ^^^    ^^
+                   ^^^^      ^^^
+    </div>
+  </div>
+
+  <!-- ====== ABOUT / WHOAMI ====== -->
+  <div class="section" data-section>
+    <div class="section-command">
+      <span class="prompt"><span class="user">lance</span><span class="at">@</span><span class="host">fisher</span>:<span class="path">~</span><span class="dollar">$</span></span> whoami --verbose
+    </div>
+    <div class="section-output">
+      <div class="cat-output">
+        <div class="cat-line"><span class="line-num">1</span><span style="color:var(--cyan)">// identity.conf</span></div>
+        <div class="cat-line"><span class="line-num">2</span></div>
+        <div class="cat-line"><span class="line-num">3</span><span style="color:var(--amber)">name</span>     = "Lance Fisher"</div>
+        <div class="cat-line"><span class="line-num">4</span><span style="color:var(--amber)">role</span>     = "Leader, Builder, Father, Husband"</div>
+        <div class="cat-line"><span class="line-num">5</span><span style="color:var(--amber)">location</span> = "Cheyenne, Wyoming"</div>
+        <div class="cat-line"><span class="line-num">6</span><span style="color:var(--amber)">shell</span>    = "/bin/build-everything"</div>
+        <div class="cat-line"><span class="line-num">7</span></div>
+        <div class="cat-line"><span class="line-num">8</span><span style="color:var(--cyan)">// Full-stack engineer who builds trading systems,</span></div>
+        <div class="cat-line"><span class="line-num">9</span><span style="color:var(--cyan)">// games for his son, platforms for his wife's</span></div>
+        <div class="cat-line"><span class="line-num">10</span><span style="color:var(--cyan)">// practice, and encrypted messaging for everyone.</span></div>
+        <div class="cat-line"><span class="line-num">11</span><span style="color:var(--cyan)">// 80K+ lines of code. 20+ projects. Zero quit.</span></div>
+      </div>
+
+      <table class="stats-table" style="margin-top:16px;">
+        <tr><td>lines_of_code</td><td>80,000+</td></tr>
+        <tr><td>projects_active</td><td>20+</td></tr>
+        <tr><td>trading_engines</td><td>6</td></tr>
+        <tr><td>languages</td><td>TypeScript, Python, C#, JavaScript</td></tr>
+        <tr><td>uptime</td><td>99.97%</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <hr class="term-hr">
+
+  <!-- ====== VENTURES ====== -->
+  <div class="section" data-section>
+    <div class="section-command">
+      <span class="prompt"><span class="user">lance</span><span class="at">@</span><span class="host">fisher</span>:<span class="path">~/ventures</span><span class="dollar">$</span></span> ls -la
+    </div>
+    <div class="section-output">
+      <div style="margin-bottom:12px;color:var(--green-dark);font-size:12px;">total 5 &nbsp;&nbsp; drwxr-xr-x lance staff</div>
+      <div class="file-listing">
+        <div class="file-entry"><span class="file-perms">drwxr-xr-x</span> <span class="file-name dir">profit-desk/</span></div>
+        <div class="file-entry"><span class="file-perms">drwxr-xr-x</span> <span class="file-name dir">master-trade-bot/</span></div>
+        <div class="file-entry"><span class="file-perms">drwxr-xr-x</span> <span class="file-name dir">harmony-medspa/</span></div>
+        <div class="file-entry"><span class="file-perms">-rwxr-xr-x</span> <span class="file-name exec">dispatch.sh*</span></div>
+        <div class="file-entry"><span class="file-perms">-rw-r--r--</span> <span class="file-name">README.md</span></div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;">
+      <div class="section-command">
+        <span class="prompt"><span class="user">lance</span><span class="at">@</span><span class="host">fisher</span>:<span class="path">~/ventures</span><span class="dollar">$</span></span> cat profit-desk/README.md
+      </div>
+      <div class="section-output">
+        <div class="cat-output">
+          <div class="cat-line"><span class="line-num">1</span><span style="color:var(--cyan)"># Profit Desk - Autonomous Trading</span></div>
+          <div class="cat-line"><span class="line-num">2</span></div>
+          <div class="cat-line"><span class="line-num">3</span>Multi-agent autonomous trading desk orchestrating</div>
+          <div class="cat-line"><span class="line-num">4</span>strategies across crypto markets. Six specialized</div>
+          <div class="cat-line"><span class="line-num">5</span>agents: research, risk, backtest, execution.</div>
+          <div class="cat-line"><span class="line-num">6</span></div>
+          <div class="cat-line"><span class="line-num">7</span><span style="color:var(--amber)">STATUS:</span> <span style="color:var(--green)">ACTIVE</span> | <span style="color:var(--amber)">MODE:</span> PAPER</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <div class="section-command">
+        <span class="prompt"><span class="user">lance</span><span class="at">@</span><span class="host">fisher</span>:<span class="path">~/ventures</span><span class="dollar">$</span></span> cat master-trade-bot/README.md
+      </div>
+      <div class="section-output">
+        <div class="cat-output">
+          <div class="cat-line"><span class="line-num">1</span><span style="color:var(--cyan)"># Master Trade Bot - Execution Layer</span></div>
+          <div class="cat-line"><span class="line-num">2</span></div>
+          <div class="cat-line"><span class="line-num">3</span>6 execution engines: Solana, Polymarket,</div>
+          <div class="cat-line"><span class="line-num">4</span>Binance, Coinbase, Kraken, ETH DeFi.</div>
+          <div class="cat-line"><span class="line-num">5</span>Real-time WebSocket trading dashboard.</div>
+          <div class="cat-line"><span class="line-num">6</span></div>
+          <div class="cat-line"><span class="line-num">7</span><span style="color:var(--amber)">ENGINES:</span> 6/6 <span style="color:var(--green)">ONLINE</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <div class="section-command">
+        <span class="prompt"><span class="user">lance</span><span class="at">@</span><span class="host">fisher</span>:<span class="path">~/ventures</span><span class="dollar">$</span></span> cat harmony-medspa/README.md
+      </div>
+      <div class="section-output">
+        <div class="cat-output">
+          <div class="cat-line"><span class="line-num">1</span><span style="color:var(--cyan)"># Harmony Skin & Wellness</span></div>
+          <div class="cat-line"><span class="line-num">2</span></div>
+          <div class="cat-line"><span class="line-num">3</span>Production booking platform for his wife's</div>
+          <div class="cat-line"><span class="line-num">4</span>medspa practice. Mobile-first with provider</div>
+          <div class="cat-line"><span class="line-num">5</span>scheduling, service catalog, payments.</div>
+          <div class="cat-line"><span class="line-num">6</span></div>
+          <div class="cat-line"><span class="line-num">7</span><span style="color:var(--amber)">BUILT FOR:</span> Family</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="term-hr">
+
+  <!-- ====== PROJECTS ====== -->
+  <div class="section" data-section>
+    <div class="section-command">
+      <span class="prompt"><span class="user">lance</span><span class="at">@</span><span class="host">fisher</span>:<span class="path">~/projects</span><span class="dollar">$</span></span> find . -name "*.project" -exec cat {} \;
+    </div>
+    <div class="section-output">
+
+      <div class="project-entry">
+        <div class="project-header">
+          <span class="project-name">./booking-platform.project</span>
+          <span class="project-stack">React Native | NestJS | PostgreSQL</span>
+        </div>
+        <div class="project-desc">Full-stack production booking platform. Mobile app, admin dashboard, provider management, Stripe payments. Built for Harmony Skin & Wellness.</div>
+        <div class="progress-bar" style="margin-top:10px;">
+          <span class="progress-label" style="color:var(--green-dark)">completion:</span>
+          <div class="progress-track"><div class="progress-fill" style="width:85%"></div></div>
+          <span class="progress-pct">85%</span>
+        </div>
+      </div>
+
+      <div class="project-entry">
+        <div class="project-header">
+          <span class="project-name">./multi-chain-engine.project</span>
+          <span class="project-stack">TypeScript | ccxt | ethers.js</span>
+        </div>
+        <div class="project-desc">Six execution engines spanning Solana, Polymarket, Binance, Coinbase, Kraken, and Ethereum DeFi. Real-time WebSocket streaming and AI strategy analysis.</div>
+        <div class="progress-bar" style="margin-top:10px;">
+          <span class="progress-label" style="color:var(--green-dark)">completion:</span>
+          <div class="progress-track"><div class="progress-fill" style="width:92%"></div></div>
+          <span class="progress-pct">92%</span>
+        </div>
+      </div>
+
+      <div class="project-entry">
+        <div class="project-header">
+          <span class="project-name">./rts-game.project</span>
+          <span class="project-stack">TypeScript | Canvas 2D | Vite</span>
+        </div>
+        <div class="project-desc">Crown & Conquest: 2.5D isometric real-time strategy game. Fixed-point deterministic simulation, ECS architecture, seeded RNG, 20 TPS.</div>
+        <div class="progress-bar" style="margin-top:10px;">
+          <span class="progress-label" style="color:var(--green-dark)">completion:</span>
+          <div class="progress-track"><div class="progress-fill" style="width:90%"></div></div>
+          <span class="progress-pct">90%</span>
+        </div>
+      </div>
+
+      <div class="project-entry">
+        <div class="project-header">
+          <span class="project-name">./jump-quest.project</span>
+          <span class="project-stack">Unity | C# | Three.js</span>
+        </div>
+        <div class="project-desc">3D obby platformer built for his son Jamison. Procedural level generation, XP progression, skill trees, Xbox controller support. Desktop + web.</div>
+        <div class="progress-bar" style="margin-top:10px;">
+          <span class="progress-label" style="color:var(--green-dark)">completion:</span>
+          <div class="progress-track"><div class="progress-fill" style="width:78%"></div></div>
+          <span class="progress-pct">78%</span>
+        </div>
+      </div>
+
+      <div class="project-entry">
+        <div class="project-header">
+          <span class="project-name">./e2ee-messenger.project</span>
+          <span class="project-stack">TypeScript | Next.js | libsodium</span>
+        </div>
+        <div class="project-desc">End-to-end encrypted P2P messaging. X3DH key exchange, Double Ratchet protocol, WebAuthn authentication, zero-knowledge architecture.</div>
+        <div class="progress-bar" style="margin-top:10px;">
+          <span class="progress-label" style="color:var(--green-dark)">completion:</span>
+          <div class="progress-track"><div class="progress-fill" style="width:70%"></div></div>
+          <span class="progress-pct">70%</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="term-hr">
+
+  <!-- ====== PRINCIPLES ====== -->
+  <div class="section" data-section>
+    <div class="section-command">
+      <span class="prompt"><span class="user">lance</span><span class="at">@</span><span class="host">fisher</span>:<span class="path">~</span><span class="dollar">$</span></span> cat /etc/principles.conf
+    </div>
+    <div class="section-output">
+      <div class="principle-block">
+        <div class="principle-name"># BUILD_FOR_PEOPLE</div>
+        <div class="principle-text">A game for his son. A platform for his wife. Code is never just code. It is an act of service to the people who matter most.</div>
+      </div>
+
+      <div class="principle-block">
+        <div class="principle-name"># SHIP_RELENTLESSLY</div>
+        <div class="principle-text">Twenty projects charted, eighty thousand lines written. Progress is measured in working software, not in plans or promises.</div>
+      </div>
+
+      <div class="principle-block">
+        <div class="principle-name"># OWN_THE_STACK</div>
+        <div class="principle-text">From mobile to backend, from blockchain to game engine, from encryption to AI. Know every layer. Master every tool in the chain.</div>
+      </div>
+
+      <div class="principle-block">
+        <div class="principle-name"># LEAD_BY_BUILDING</div>
+        <div class="principle-text">Leadership is not delegation. It is being the first one in the codebase, the last one debugging, the one who ships when it matters.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="term-hr">
+
+  <!-- ====== CONTACT ====== -->
+  <div class="section" data-section>
+    <div class="section-command">
+      <span class="prompt"><span class="user">lance</span><span class="at">@</span><span class="host">fisher</span>:<span class="path">~</span><span class="dollar">$</span></span> cat ~/.contact
+    </div>
+    <div class="section-output">
+      <div class="contact-grid">
+        <span class="contact-key">email:</span>
+        <span class="contact-val"><a href="mailto:lance@lancewfisher.com">lance@lancewfisher.com</a></span>
+
+        <span class="contact-key">phone:</span>
+        <span class="contact-val"><a href="tel:+19189066963">(918) 906-6963</a></span>
+
+        <span class="contact-key">github:</span>
+        <span class="contact-val"><a href="https://github.com/lance-fisher" target="_blank">github.com/lance-fisher</a></span>
+
+        <span class="contact-key">x/twitter:</span>
+        <span class="contact-val"><a href="https://x.com/lancefisher_" target="_blank">@lancefisher_</a></span>        <span class="contact-key">location:</span>
+        <span class="contact-val">Cheyenne, Wyoming</span>
+      </div>
+    </div>
+
+    <div style="margin-top:30px;">
+      <span class="prompt"><span class="user">lance</span><span class="at">@</span><span class="host">fisher</span>:<span class="path">~</span><span class="dollar">$</span></span> <span class="cursor"></span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="terminal-footer">
+    <div>FisherOS v2.0.26 | PID 1337 | Session active since 2026-02-16</div>
+    <div style="margin-top:4px;">Built with 80K+ lines of code and zero quit.</div>
+  </div>
+
+</div>
+
+<script>
+// Matrix Rain
+(function() {
+  const canvas = document.getElementById('matrixCanvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, columns, drops;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    columns = Math.floor(w / 16);
+    drops = new Array(columns).fill(1).map(() => Math.random() * -100);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*(){}[]|;:,.<>?/~`lancefisher';
+
+  function draw() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = '#00ff41';
+    ctx.font = '14px IBM Plex Mono';
+
+    for (let i = 0; i < columns; i++) {
+      const char = chars[Math.floor(Math.random() * chars.length)];
+      const x = i * 16;
+      const y = drops[i] * 16;
+
+      ctx.fillText(char, x, y);
+
+      if (y > h && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+})();
+
+// Boot Sequence
+(function() {
+  const bootLines = document.querySelectorAll('.boot-line');
+  const accessGranted = document.getElementById('accessGranted');
+  const asciiShip = document.getElementById('asciiShip');
+
+  bootLines.forEach(line => {
+    const delay = parseInt(line.dataset.delay) || 0;
+    setTimeout(() => {
+      line.classList.add('visible');
+    }, delay);
+  });
+
+  // Access granted after boot
+  setTimeout(() => {
+    accessGranted.classList.add('visible');
+  }, 3200);
+
+  // Show ASCII ship
+  setTimeout(() => {
+    asciiShip.style.opacity = '1';
+    asciiShip.style.transition = 'opacity 1s ease';
+  }, 3800);
+})();
+
+// Scroll reveal for sections
+const sections = document.querySelectorAll('[data-section]');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+sections.forEach(s => observer.observe(s));
+
+// Uptime counter
+(function() {
+  const startTime = Date.now();
+  const uptimeEl = document.getElementById('uptimeVal');
+
+  function updateUptime() {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const h = Math.floor(elapsed / 3600);
+    const m = Math.floor((elapsed % 3600) / 60);
+    const s = elapsed % 60;
+    uptimeEl.textContent = 'uptime: ' + h + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  }
+
+  setInterval(updateUptime, 1000);
+})();
+
+// Fake system stats fluctuation
+(function() {
+  const cpuEl = document.getElementById('cpuVal');
+  const memEl = document.getElementById('memVal');
+  const loadEl = document.getElementById('loadVal');
+
+  setInterval(() => {
+    const cpu = (8 + Math.random() * 15).toFixed(0);
+    const mem = (2.1 + Math.random() * 0.8).toFixed(1);
+    const load = (0.2 + Math.random() * 0.5).toFixed(2);
+    cpuEl.textContent = cpu + '%';
+    memEl.textContent = mem + 'G/16G';
+    loadEl.textContent = load;
+  }, 3000);
+})();
+
+// Animate progress bars on scroll
+const progressBars = document.querySelectorAll('.progress-fill');
+const progressObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const fill = entry.target;
+      const width = fill.style.width;
+      fill.style.width = '0%';
+      setTimeout(() => {
+        fill.style.width = width;
+      }, 200);
+      progressObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+progressBars.forEach(bar => progressObserver.observe(bar));
+</script>
+</body>
+</html>
