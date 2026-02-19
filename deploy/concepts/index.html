@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lance Fisher — Splash Page Concepts</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0b0e;color:#c8cdd4;font-family:'Inter',sans-serif;min-height:100vh;padding:60px 40px}
+h1{font-size:clamp(28px,4vw,42px);font-weight:300;letter-spacing:-0.02em;margin-bottom:8px}
+.sub{font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5a6474;letter-spacing:2px;text-transform:uppercase;margin-bottom:50px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+.card{
+  background:#12141a;border:1px solid #1a1e28;border-radius:6px;
+  overflow:hidden;transition:all 0.3s ease;cursor:pointer;
+  text-decoration:none;color:inherit;display:block;
+}
+.card:hover{border-color:#2a7a6a;transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,0.4)}
+.card-preview{
+  height:180px;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.card-num{
+  font-family:'IBM Plex Mono',monospace;font-size:64px;font-weight:600;
+  opacity:0.08;position:absolute;right:16px;bottom:8px;
+}
+.card-icon{font-size:48px;opacity:0.6}
+.card-body{padding:18px 20px}
+.card-title{font-size:16px;font-weight:500;margin-bottom:4px}
+.card-desc{font-size:12px;color:#6a7484;line-height:1.7}
+.card-tags{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.tag{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;
+  text-transform:uppercase;padding:3px 8px;
+  background:rgba(42,122,106,0.1);color:#40c8a0;border-radius:2px;
+}
+.tag.warm{background:rgba(192,144,80,0.1);color:#c09050}
+.tag.red{background:rgba(180,60,60,0.1);color:#d06060}
+.tag.blue{background:rgba(60,120,200,0.1);color:#6aa0e0}
+.tag.purple{background:rgba(130,90,200,0.1);color:#a080d0}
+.tag.white{background:rgba(200,200,200,0.08);color:#a0a8b0}
+
+/* Preview color themes */
+.prev-noir{background:linear-gradient(135deg,#1a1610,#0e0c08)}
+.prev-star{background:linear-gradient(135deg,#060818,#0a0c20)}
+.prev-sonar{background:linear-gradient(135deg,#001a0a,#000e05)}
+.prev-blue{background:linear-gradient(135deg,#0a1628,#061020)}
+.prev-ocean{background:linear-gradient(135deg,#001824,#000c14)}
+.prev-forge{background:linear-gradient(135deg,#1a0c04,#0e0804)}
+.prev-map{background:linear-gradient(135deg,#d4c8a0,#c0b488)}
+.prev-term{background:#000}
+.prev-aurora{background:linear-gradient(135deg,#040818,#0a0420)}
+.prev-war{background:linear-gradient(135deg,#1a1418,#0e0c10)}
+.prev-wreck{background:linear-gradient(135deg,#041820,#001014)}
+.prev-lux{background:#0a0a0b}
+
+.existing{margin-top:50px;padding-top:30px;border-top:1px solid #1a1e28}
+.existing h2{font-size:18px;font-weight:400;margin-bottom:16px;color:#6a7484}
+</style>
+</head>
+<body>
+<a href="../index.html" style="display:inline-block;margin-bottom:30px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#5a6474;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:color 0.3s">&larr; Back to Main</a>
+<h1>Splash Page Concepts</h1>
+<p class="sub">12 design directions for lancewfisher.com</p>
+
+<div class="grid">
+  <a class="card" href="01-noir-dossier.html">
+    <div class="card-preview prev-noir"><span class="card-icon">🔍</span><span class="card-num">01</span></div>
+    <div class="card-body">
+      <div class="card-title">Noir Dossier</div>
+      <div class="card-desc">Film noir classified dossier. Typewriter font, redacted documents, manila folder tabs, flickering desk lamp. Sepia muted tones.</div>
+      <div class="card-tags"><span class="tag warm">Sepia</span><span class="tag">Dark</span><span class="tag">Typewriter</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="02-star-chart.html">
+    <div class="card-preview prev-star"><span class="card-icon">⭐</span><span class="card-num">02</span></div>
+    <div class="card-body">
+      <div class="card-title">Star Chart</div>
+      <div class="card-desc">Celestial navigation with animated star field. Constellations connect headings. Compass rose. Coordinate-style labels. Deep navy palette.</div>
+      <div class="card-tags"><span class="tag blue">Navy</span><span class="tag">Canvas</span><span class="tag">Parallax</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="03-sonar-pulse.html">
+    <div class="card-preview prev-sonar"><span class="card-icon">📡</span><span class="card-num">03</span></div>
+    <div class="card-body">
+      <div class="card-title">Sonar Pulse</div>
+      <div class="card-desc">Submarine radar screen. Green-on-black phosphor aesthetic. Circular sweep, pulsing rings, depth gauge. CRT glow everything.</div>
+      <div class="card-tags"><span class="tag">Green CRT</span><span class="tag">Radar</span><span class="tag">Canvas</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="04-blueprint.html">
+    <div class="card-preview prev-blue"><span class="card-icon">📐</span><span class="card-num">04</span></div>
+    <div class="card-body">
+      <div class="card-title">Blueprint</div>
+      <div class="card-desc">Architectural blueprint / technical drawing. Dimension lines, annotation callouts, grid paper. Sections unroll like blueprint sheets.</div>
+      <div class="card-tags"><span class="tag blue">Blueprint</span><span class="tag">Technical</span><span class="tag">Lines</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="05-ocean-depth.html">
+    <div class="card-preview prev-ocean"><span class="card-icon">🌊</span><span class="card-num">05</span></div>
+    <div class="card-body">
+      <div class="card-title">Ocean Depth</div>
+      <div class="card-desc">Deep ocean descent. Scrolling = diving deeper. Light to twilight to midnight zone. Bioluminescent particles. Pressure gauge.</div>
+      <div class="card-tags"><span class="tag blue">Ocean</span><span class="tag">Immersive</span><span class="tag">Scroll-driven</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="06-forge.html">
+    <div class="card-preview prev-forge"><span class="card-icon">🔥</span><span class="card-num">06</span></div>
+    <div class="card-body">
+      <div class="card-title">The Forge</div>
+      <div class="card-desc">Blacksmith's forge with ember particles. Molten metal glow effects. Sparks on transitions. Temperature gauge. Hammered texture.</div>
+      <div class="card-tags"><span class="tag red">Ember</span><span class="tag warm">Forge</span><span class="tag">Particles</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="07-cartographer.html">
+    <div class="card-preview prev-map"><span class="card-icon">🗺️</span><span class="card-num">07</span></div>
+    <div class="card-body">
+      <div class="card-title">Cartographer's Map</div>
+      <div class="card-desc">Old world parchment map. Hand-drawn aesthetic. Territory sections. Dotted travel routes. Ink-style text. THE light theme option.</div>
+      <div class="card-tags"><span class="tag warm">Light Theme</span><span class="tag warm">Parchment</span><span class="tag">Antique</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="08-terminal.html">
+    <div class="card-preview prev-term"><span class="card-icon">&gt;_</span><span class="card-num">08</span></div>
+    <div class="card-body">
+      <div class="card-title">Terminal</div>
+      <div class="card-desc">Pure hacker terminal. Green monospace on black. Boot sequence. Typing animations. ASCII art ship. Matrix rain. No images.</div>
+      <div class="card-tags"><span class="tag">Monospace</span><span class="tag">ASCII</span><span class="tag">No Images</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="09-northern-lights.html">
+    <div class="card-preview prev-aurora"><span class="card-icon">🌌</span><span class="card-num">09</span></div>
+    <div class="card-body">
+      <div class="card-title">Northern Lights</div>
+      <div class="card-desc">Aurora borealis with flowing gradient ribbons. Snow particles. Frosted glass panels. Mountain horizon. Ethereal, peaceful, majestic.</div>
+      <div class="card-tags"><span class="tag purple">Aurora</span><span class="tag">Canvas</span><span class="tag">Glass</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="10-war-room.html">
+    <div class="card-preview prev-war"><span class="card-icon">🎖️</span><span class="card-num">10</span></div>
+    <div class="card-body">
+      <div class="card-title">War Room</div>
+      <div class="card-desc">Military command center. Multi-screen layout. Tactical displays. Status boards. Alert notifications. Red/amber accent lighting.</div>
+      <div class="card-tags"><span class="tag red">Military</span><span class="tag">Multi-panel</span><span class="tag">Tactical</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="11-shipwreck.html">
+    <div class="card-preview prev-wreck"><span class="card-icon">🤿</span><span class="card-num">11</span></div>
+    <div class="card-body">
+      <div class="card-title">Shipwreck Discovery</div>
+      <div class="card-desc">Underwater documentary. Volumetric light rays. Ghostly tilted ship. ROV camera frame. Discovery log entries. Marine particles.</div>
+      <div class="card-tags"><span class="tag blue">Underwater</span><span class="tag">Documentary</span><span class="tag">Cinematic</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="12-constellation.html">
+    <div class="card-preview prev-lux"><span class="card-icon">◯</span><span class="card-num">12</span></div>
+    <div class="card-body">
+      <div class="card-title">Minimalist Luxury</div>
+      <div class="card-desc">Maximum whitespace. Massive typography. Ultra-thin lines. No borders, no boxes. Feels like a luxury fashion brand. Pure elegance.</div>
+      <div class="card-tags"><span class="tag white">Minimal</span><span class="tag white">Luxury</span><span class="tag white">Typography</span></div>
+    </div>
+  </a>
+</div>
+
+<div class="existing">
+  <h2>Existing Versions</h2>
+  <div class="grid">
+    <a class="card" href="../index.html">
+      <div class="card-preview" style="background:linear-gradient(135deg,#0a1218,#060810)"><span class="card-icon">⚓</span><span class="card-num">V2</span></div>
+      <div class="card-body">
+        <div class="card-title">Primary — Minimalist Luxury</div>
+        <div class="card-desc">The current production splash page. Ultra-minimal dark luxury aesthetic with project gallery thumbnails.</div>
+      </div>
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

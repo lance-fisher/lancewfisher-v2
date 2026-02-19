@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lance W. Fisher // Deep Discovery</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --deep: #020a12;
+  --water: #051a2a;
+  --water-light: #0a2d45;
+  --cyan: #00ccaa;
+  --cyan-dim: #007766;
+  --cyan-glow: #33ffcc;
+  --teal: #1a8a7a;
+  --blue-light: #4488bb;
+  --text: #8ab4cc;
+  --text-bright: #c0dde8;
+  --text-dim: #3a6680;
+  --panel-bg: rgba(3, 15, 25, 0.85);
+  --panel-border: rgba(0, 204, 170, 0.15);
+  --sonar: rgba(0, 204, 170, 0.6);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--deep);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Volumetric Light Rays from Surface */
+.light-rays {
+  position: fixed;
+  top: -200px;
+  left: 0;
+  right: 0;
+  height: 120vh;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    linear-gradient(175deg, rgba(80,180,220,0.04) 0%, transparent 45%),
+    linear-gradient(168deg, rgba(60,160,200,0.03) 0%, transparent 40%),
+    linear-gradient(182deg, rgba(100,200,240,0.025) 0%, transparent 50%);
+  animation: lightShift 12s ease-in-out infinite;
+}
+
+.light-rays::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 20%; right: 40%;
+  height: 100%;
+  background: linear-gradient(178deg, rgba(120,200,240,0.06) 0%, transparent 60%);
+  animation: rayWaver 8s ease-in-out infinite alternate;
+}
+
+.light-rays::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%; right: 10%;
+  height: 100%;
+  background: linear-gradient(172deg, rgba(80,180,220,0.04) 0%, transparent 55%);
+  animation: rayWaver 10s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes lightShift {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes rayWaver {
+  0% { transform: skewX(-1deg); opacity: 0.8; }
+  100% { transform: skewX(1deg); opacity: 1; }
+}
+
+/* Bubbles */
+.bubbles {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.bubble {
+  position: absolute;
+  bottom: -20px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(120,220,255,0.25), rgba(60,160,200,0.05));
+  border: 1px solid rgba(120,220,255,0.1);
+  animation: bubbleRise linear infinite;
+}
+
+@keyframes bubbleRise {
+  0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.3; }
+  100% { transform: translateY(-110vh) translateX(30px) scale(1.4); opacity: 0; }
+}
+
+/* Marine Particles (Plankton) */
+.particles {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(120, 200, 240, 0.15);
+  border-radius: 50%;
+  animation: particleDrift linear infinite;
+}
+
+@keyframes particleDrift {
+  0% { transform: translate(0, 0); opacity: 0; }
+  20% { opacity: 0.5; }
+  80% { opacity: 0.3; }
+  100% { transform: translate(60px, -80px); opacity: 0; }
+}
+
+/* Water Caustic Overlay */
+.caustics {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.03;
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(100,200,240,1) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 60%, rgba(80,180,220,1) 0%, transparent 40%),
+    radial-gradient(ellipse at 40% 80%, rgba(60,160,200,1) 0%, transparent 45%);
+  animation: causticShift 15s ease-in-out infinite;
+}
+
+@keyframes causticShift {
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  33% { transform: scale(1.05) translate(10px, -5px); }
+  66% { transform: scale(0.98) translate(-8px, 8px); }
+}
+
+/* ROV Camera Frame Overlay */
+.rov-frame {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 9999;
+  border: 3px solid rgba(0, 204, 170, 0.08);
+}
+
+.rov-frame::before {
+  content: '';
+  position: absolute;
+  top: 20px; left: 20px; right: 20px; bottom: 20px;
+  border: 1px solid rgba(0, 204, 170, 0.06);
+  border-radius: 2px;
+}
+
+/* ROV Corner Markers */
+.rov-corner {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.rov-corner::before, .rov-corner::after {
+  content: '';
+  position: absolute;
+  background: rgba(0, 204, 170, 0.3);
+}
+
+.rov-corner.tl { top: 15px; left: 15px; }
+.rov-corner.tl::before { top: 0; left: 0; width: 20px; height: 1px; }
+.rov-corner.tl::after { top: 0; left: 0; width: 1px; height: 20px; }
+
+.rov-corner.tr { top: 15px; right: 15px; }
+.rov-corner.tr::before { top: 0; right: 0; width: 20px; height: 1px; }
+.rov-corner.tr::after { top: 0; right: 0; width: 1px; height: 20px; }
+
+.rov-corner.bl { bottom: 15px; left: 15px; }
+.rov-corner.bl::before { bottom: 0; left: 0; width: 20px; height: 1px; }
+.rov-corner.bl::after { bottom: 0; left: 0; width: 1px; height: 20px; }
+
+.rov-corner.br { bottom: 15px; right: 15px; }
+.rov-corner.br::before { bottom: 0; right: 0; width: 20px; height: 1px; }
+.rov-corner.br::after { bottom: 0; right: 0; width: 1px; height: 20px; }
+
+/* ROV HUD Info */
+.rov-hud {
+  position: fixed;
+  z-index: 10000;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: rgba(0, 204, 170, 0.4);
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+.rov-hud.top-left {
+  top: 25px;
+  left: 30px;
+}
+
+.rov-hud.top-right {
+  top: 25px;
+  right: 30px;
+  text-align: right;
+}
+
+.rov-hud.bottom-left {
+  bottom: 25px;
+  left: 30px;
+}
+
+.rov-hud.bottom-right {
+  bottom: 25px;
+  right: 30px;
+  text-align: right;
+}
+
+.rov-hud .rec {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #cc3333;
+}
+
+.rov-hud .rec::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #cc3333;
+  animation: recBlink 1.5s ease-in-out infinite;
+}
+
+@keyframes recBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* Depth Markers */
+.depth-markers {
+  position: fixed;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  pointer-events: none;
+}
+
+.depth-mark {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: rgba(0, 204, 170, 0.2);
+  margin-bottom: 60px;
+  position: relative;
+  padding-right: 20px;
+  text-align: right;
+}
+
+.depth-mark::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 10px;
+  height: 1px;
+  background: rgba(0, 204, 170, 0.15);
+}
+
+/* Sonar Ping */
+.sonar-ping {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  pointer-events: none;
+}
+
+.sonar-ring {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--sonar);
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: sonarExpand 3s ease-out infinite;
+}
+
+.sonar-ring:nth-child(2) { animation-delay: 1s; }
+.sonar-ring:nth-child(3) { animation-delay: 2s; }
+
+@keyframes sonarExpand {
+  0% { width: 10px; height: 10px; opacity: 0.8; }
+  100% { width: 120px; height: 120px; opacity: 0; }
+}
+
+.sonar-dot {
+  width: 4px;
+  height: 4px;
+  background: var(--cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--cyan-glow);
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Content Container */
+.content {
+  position: relative;
+  z-index: 10;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 120px 40px 160px;
+}
+
+/* Shipwreck Hero */
+.hero {
+  text-align: center;
+  margin-bottom: 120px;
+  position: relative;
+}
+
+.hero-ship {
+  position: relative;
+  width: 320px;
+  margin: 0 auto 50px;
+  transform: rotate(12deg);
+  opacity: 0;
+  animation: shipReveal 3s ease forwards 0.5s;
+}
+
+.hero-ship img {
+  width: 100%;
+  filter: brightness(0.3) sepia(0.3) hue-rotate(160deg) saturate(0.8) contrast(0.9);
+  opacity: 0.5;
+}
+
+/* Spotlight beam on ship */
+.hero-ship::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  left: 30%;
+  width: 120px;
+  height: 300px;
+  background: linear-gradient(
+    180deg,
+    rgba(120,200,240,0.08) 0%,
+    rgba(120,200,240,0.02) 50%,
+    transparent 100%
+  );
+  transform: rotate(-8deg);
+  clip-path: polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%);
+  animation: spotlightFlicker 6s ease-in-out infinite;
+}
+
+@keyframes spotlightFlicker {
+  0%, 100% { opacity: 1; }
+  30% { opacity: 0.7; }
+  60% { opacity: 0.9; }
+}
+
+@keyframes shipReveal {
+  0% { opacity: 0; transform: rotate(12deg) translateY(30px); }
+  100% { opacity: 1; transform: rotate(12deg) translateY(0); }
+}
+
+/* Hull Name */
+.hull-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 700;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(0, 204, 170, 0.3);
+  letter-spacing: 8px;
+  margin-bottom: 16px;
+  position: relative;
+  opacity: 0;
+  animation: hullEtch 2s ease forwards 1.5s;
+}
+
+.hull-name::after {
+  content: 'LANCE W. FISHER';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  color: var(--text-bright);
+  -webkit-text-stroke: 0;
+  clip-path: inset(0 100% 0 0);
+  animation: hullFill 2s ease forwards 2.5s;
+}
+
+@keyframes hullEtch {
+  to { opacity: 1; }
+}
+
+@keyframes hullFill {
+  to { clip-path: inset(0 0 0 0); }
+}
+
+.hero-subtitle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--cyan-dim);
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeUp 1.5s ease forwards 3s;
+}
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(15px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Discovery Log Entry (Section) */
+.discovery-log {
+  margin-bottom: 80px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.discovery-log.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.log-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.log-number {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--cyan);
+  background: rgba(0, 204, 170, 0.08);
+  border: 1px solid var(--panel-border);
+  padding: 4px 10px;
+  letter-spacing: 2px;
+}
+
+.log-timestamp {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+
+.log-divider {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--panel-border), transparent);
+}
+
+.log-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 16px;
+  letter-spacing: 2px;
+}
+
+/* Research Station Readout Panel */
+.readout-panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  padding: 28px;
+  position: relative;
+  backdrop-filter: blur(10px);
+}
+
+.readout-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan-dim), transparent);
+}
+
+.readout-panel::after {
+  content: 'DEEP-SEA RESEARCH STATION // DATA READOUT';
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  color: rgba(0, 204, 170, 0.2);
+  letter-spacing: 2px;
+}
+
+.readout-text {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text);
+  font-weight: 300;
+}
+
+.readout-text .highlight {
+  color: var(--cyan);
+  font-weight: 500;
+}
+
+/* Projects Grid */
+.projects-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.project-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  padding: 24px;
+  position: relative;
+  backdrop-filter: blur(10px);
+  transition: all 0.4s ease;
+}
+
+.project-card:hover {
+  border-color: rgba(0, 204, 170, 0.35);
+  background: rgba(5, 20, 35, 0.9);
+  transform: translateY(-2px);
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--cyan-dim);
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+
+.project-card:hover::before {
+  opacity: 1;
+  background: var(--cyan);
+}
+
+.project-card .artifact-id {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--cyan-dim);
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.project-card h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.project-card .tech-stack {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--cyan-dim);
+  margin-bottom: 10px;
+}
+
+.project-card p {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* Principles as Depth Findings */
+.principle-finding {
+  display: flex;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(0, 204, 170, 0.06);
+}
+
+.principle-finding:last-child { border-bottom: none; }
+
+.finding-depth {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--cyan);
+  width: 60px;
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+.finding-content h4 {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 6px;
+}
+
+.finding-content p {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* Contact as Comm Array */
+.comm-array {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.comm-node {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  padding: 20px;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.4s ease;
+  backdrop-filter: blur(10px);
+}
+
+.comm-node:hover {
+  border-color: rgba(0, 204, 170, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 204, 170, 0.08);
+}
+
+.comm-node .freq {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--cyan-dim);
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.comm-node .channel-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-bright);
+  margin-bottom: 6px;
+}
+
+.comm-node .channel-val {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* Sonar ping indicator next to sections */
+.section-ping {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 10px var(--cyan-glow);
+  display: inline-block;
+  animation: sectionPing 2s ease-in-out infinite;
+}
+
+@keyframes sectionPing {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+}
+
+/* Bottom Signature */
+.bottom-signature {
+  text-align: center;
+  margin-top: 100px;
+  padding-top: 40px;
+  border-top: 1px solid rgba(0, 204, 170, 0.06);
+}
+
+.bottom-signature .sig-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 4px;
+}
+
+.bottom-signature .sig-depth {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: rgba(0, 204, 170, 0.2);
+  margin-top: 8px;
+  letter-spacing: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .content { padding: 80px 20px 120px; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .comm-array { grid-template-columns: 1fr 1fr; }
+  .depth-markers { display: none; }
+  .hero-ship { width: 220px; }
+}
+
+@media (max-width: 480px) {
+  .comm-array { grid-template-columns: 1fr; }
+  .rov-hud { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Volumetric Light Rays -->
+<div class="light-rays"></div>
+
+<!-- Water Caustics -->
+<div class="caustics"></div>
+
+<!-- Bubbles Container -->
+<div class="bubbles" id="bubblesContainer"></div>
+
+<!-- Marine Particles -->
+<div class="particles" id="particlesContainer"></div>
+
+<!-- ROV Camera Frame -->
+<div class="rov-frame"></div>
+<div class="rov-corner tl"></div>
+<div class="rov-corner tr"></div>
+<div class="rov-corner bl"></div>
+<div class="rov-corner br"></div>
+
+<!-- ROV HUD -->
+<div class="rov-hud top-left">
+  <div><span class="rec">REC</span> <span id="rovTime">00:00:00</span></div>
+  <div style="margin-top:4px;">ROV-FISHER-01</div>
+</div>
+<div class="rov-hud top-right">
+  <div>40.5853&deg;N 105.0844&deg;W</div>
+  <div style="margin-top:4px;">FORT COLLINS SECTOR</div>
+</div>
+<div class="rov-hud bottom-left">
+  <div>DEPTH: <span id="depthReadout">2,847</span>m</div>
+  <div style="margin-top:4px;">PRESSURE: <span id="pressureReadout">284.7</span> atm</div>
+</div>
+<div class="rov-hud bottom-right">
+  <div>TEMP: 2.3&deg;C</div>
+  <div style="margin-top:4px;">VIS: 12m</div>
+</div>
+
+<!-- Depth Markers -->
+<div class="depth-markers">
+  <div class="depth-mark">500m</div>
+  <div class="depth-mark">1000m</div>
+  <div class="depth-mark">1500m</div>
+  <div class="depth-mark">2000m</div>
+  <div class="depth-mark">2500m</div>
+  <div class="depth-mark">3000m</div>
+</div>
+
+<!-- Sonar Ping -->
+<div class="sonar-ping">
+  <div class="sonar-ring"></div>
+  <div class="sonar-ring"></div>
+  <div class="sonar-ring"></div>
+  <div class="sonar-dot"></div>
+</div>
+
+<!-- Main Content -->
+<div class="content">
+
+  <!-- Hero: Shipwreck Discovery -->
+  <section class="hero">
+    <div class="hero-ship">
+      <img src="../ship.png" alt="Discovered Vessel">
+    </div>
+    <div class="hull-name">LANCE W. FISHER</div>
+    <div class="hero-subtitle">Leader &middot; Builder &middot; Father &middot; Husband</div>
+  </section>
+
+  <!-- Discovery Log 001: About -->
+  <section class="discovery-log" data-reveal>
+    <div class="log-header">
+      <span class="log-number">LOG-001</span>
+      <span class="log-timestamp">DISCOVERY // ABOUT</span>
+      <span class="section-ping"></span>
+      <div class="log-divider"></div>
+    </div>
+    <div class="log-title">Discovery Profile</div>
+    <div class="readout-panel">
+      <div class="readout-text">
+        Located at depth in <span class="highlight">Cheyenne, Wyoming</span>, subject <span class="highlight">Lance W. Fisher</span> represents a rare specimen: a leader who builds, a father who codes, a husband who ships. Operating across the full technology stack, from native mobile applications to autonomous trading infrastructure, Fisher has deployed over <span class="highlight">80,000 lines of production code</span> across <span class="highlight">20+ active projects</span>.<br><br>
+        Initial sonar readings indicate a complex architecture of interconnected systems spanning real-time games, encrypted communications, multi-chain trading engines, and production booking platforms. Further investigation reveals a builder who leads by example and a father who builds games for his son.
+      </div>
+    </div>
+  </section>
+
+  <!-- Discovery Log 002: Ventures / Projects -->
+  <section class="discovery-log" data-reveal>
+    <div class="log-header">
+      <span class="log-number">LOG-002</span>
+      <span class="log-timestamp">ARTIFACTS // VENTURES</span>
+      <span class="section-ping"></span>
+      <div class="log-divider"></div>
+    </div>
+    <div class="log-title">Recovered Artifacts</div>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="artifact-id">ARTIFACT-001</div>
+        <h3>Production Booking Platform</h3>
+        <div class="tech-stack">React Native // NestJS // PostgreSQL</div>
+        <p>Full-service booking and scheduling platform serving a production wellness practice.</p>
+      </div>
+      <div class="project-card">
+        <div class="artifact-id">ARTIFACT-002</div>
+        <h3>Multi-Chain Trading Engine</h3>
+        <div class="tech-stack">TypeScript // ccxt // ethers.js</div>
+        <p>Autonomous multi-exchange trading system spanning Solana, Ethereum, Polygon, and centralized exchanges.</p>
+      </div>
+      <div class="project-card">
+        <div class="artifact-id">ARTIFACT-003</div>
+        <h3>Real-Time Strategy Game</h3>
+        <div class="tech-stack">TypeScript // Canvas 2D // Vite</div>
+        <p>2.5D isometric RTS with deterministic simulation, fixed-point math, and seeded procedural generation.</p>
+      </div>
+      <div class="project-card">
+        <div class="artifact-id">ARTIFACT-004</div>
+        <h3>3D Platformer for His Son</h3>
+        <div class="tech-stack">Unity // C# // Three.js</div>
+        <p>A vibrant 3D obby platformer built as a gift, with Xbox controller support, skill trees, and web export.</p>
+      </div>
+      <div class="project-card" style="grid-column: 1 / -1;">
+        <div class="artifact-id">ARTIFACT-005</div>
+        <h3>Encrypted Messaging Platform</h3>
+        <div class="tech-stack">TypeScript // Next.js // libsodium</div>
+        <p>End-to-end encrypted peer-to-peer messaging with X3DH key exchange, Double Ratchet protocol, and WebAuthn authentication.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Discovery Log 003: Principles -->
+  <section class="discovery-log" data-reveal>
+    <div class="log-header">
+      <span class="log-number">LOG-003</span>
+      <span class="log-timestamp">ANALYSIS // PRINCIPLES</span>
+      <span class="section-ping"></span>
+      <div class="log-divider"></div>
+    </div>
+    <div class="log-title">Deep Analysis Findings</div>
+    <div class="readout-panel">
+      <div class="principle-finding">
+        <div class="finding-depth">1200m</div>
+        <div class="finding-content">
+          <h4>Build With Purpose</h4>
+          <p>Every system deployed serves a real mission. No vanity code. Solutions that solve genuine problems for genuine people.</p>
+        </div>
+      </div>
+      <div class="principle-finding">
+        <div class="finding-depth">1800m</div>
+        <div class="finding-content">
+          <h4>Own the Full Stack</h4>
+          <p>From database schema to pixel-perfect UI. No layer left unmastered. Complete operational awareness at every depth.</p>
+        </div>
+      </div>
+      <div class="principle-finding">
+        <div class="finding-depth">2200m</div>
+        <div class="finding-content">
+          <h4>Lead by Example</h4>
+          <p>Show up for the mission. Show up for the family. Build games for your son. Ship code that matters.</p>
+        </div>
+      </div>
+      <div class="principle-finding">
+        <div class="finding-depth">2600m</div>
+        <div class="finding-content">
+          <h4>Never Stop Shipping</h4>
+          <p>Velocity compounds. Deploy fast, iterate faster, learn fastest. Twenty projects deep and accelerating.</p>
+        </div>
+      </div>
+      <div class="principle-finding">
+        <div class="finding-depth">3000m</div>
+        <div class="finding-content">
+          <h4>Security by Design</h4>
+          <p>End-to-end encryption is not a feature, it is a foundation. Zero trust. Every layer hardened.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Discovery Log 004: Contact -->
+  <section class="discovery-log" data-reveal>
+    <div class="log-header">
+      <span class="log-number">LOG-004</span>
+      <span class="log-timestamp">COMMS // CONTACT</span>
+      <span class="section-ping"></span>
+      <div class="log-divider"></div>
+    </div>
+    <div class="log-title">Communication Array</div>
+    <div class="comm-array">
+      <a href="mailto:lance@lancewfisher.com" class="comm-node">
+        <div class="freq">FREQ-01</div>
+        <div class="channel-name">Email</div>
+        <div class="channel-val">lance@lancewfisher.com</div>
+      </a>
+      <a href="tel:+19189066963" class="comm-node">
+        <div class="freq">FREQ-02</div>
+        <div class="channel-name">Phone</div>
+        <div class="channel-val">(918) 906-6963</div>
+      </a>
+      <a href="https://x.com/lancefisher_" target="_blank" class="comm-node">
+        <div class="freq">FREQ-03</div>
+        <div class="channel-name">X (Twitter)</div>
+        <div class="channel-val">@lancefisher_</div>
+      </a>
+      <a href="https://github.com/lance-fisher" target="_blank" class="comm-node">
+        <div class="freq">FREQ-04</div>
+        <div class="channel-name">GitHub</div>
+        <div class="channel-val">lance-fisher</div>
+      </a>
+      <div class="comm-node" style="cursor:default;">
+        <div class="freq">LOC-01</div>
+        <div class="channel-name">Location</div>
+        <div class="channel-val">Cheyenne, Wyoming</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bottom Signature -->
+  <div class="bottom-signature">
+    <div class="sig-text">LANCE W. FISHER // DEEP DISCOVERY</div>
+    <div class="sig-depth">DEPTH: 3,200m // ALL SYSTEMS NOMINAL</div>
+  </div>
+
+</div>
+
+<script>
+// Generate Bubbles
+const bubblesContainer = document.getElementById('bubblesContainer');
+for (let i = 0; i < 25; i++) {
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.style.left = Math.random() * 100 + '%';
+  bubble.style.width = bubble.style.height = (3 + Math.random() * 6) + 'px';
+  bubble.style.animationDuration = (8 + Math.random() * 15) + 's';
+  bubble.style.animationDelay = Math.random() * 10 + 's';
+  bubblesContainer.appendChild(bubble);
+}
+
+// Generate Marine Particles
+const particlesContainer = document.getElementById('particlesContainer');
+for (let i = 0; i < 50; i++) {
+  const particle = document.createElement('div');
+  particle.className = 'particle';
+  particle.style.left = Math.random() * 100 + '%';
+  particle.style.top = Math.random() * 100 + '%';
+  particle.style.width = particle.style.height = (1 + Math.random() * 3) + 'px';
+  particle.style.animationDuration = (10 + Math.random() * 20) + 's';
+  particle.style.animationDelay = Math.random() * 15 + 's';
+  particlesContainer.appendChild(particle);
+}
+
+// ROV Timer
+let rovSeconds = 0;
+function updateROVTimer() {
+  rovSeconds++;
+  const h = String(Math.floor(rovSeconds / 3600)).padStart(2, '0');
+  const m = String(Math.floor((rovSeconds % 3600) / 60)).padStart(2, '0');
+  const s = String(rovSeconds % 60).padStart(2, '0');
+  document.getElementById('rovTime').textContent = `${h}:${m}:${s}`;
+}
+setInterval(updateROVTimer, 1000);
+
+// Depth readout fluctuation
+setInterval(() => {
+  const base = 2847;
+  const variation = Math.floor(Math.random() * 6) - 3;
+  document.getElementById('depthReadout').textContent = (base + variation).toLocaleString();
+  document.getElementById('pressureReadout').textContent = ((base + variation) / 10).toFixed(1);
+}, 2000);
+
+// Scroll reveal for discovery logs
+const revealElements = document.querySelectorAll('[data-reveal]');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+revealElements.forEach(el => observer.observe(el));
+
+// Parallax depth effect on scroll
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  const rays = document.querySelector('.light-rays');
+  if (rays) {
+    rays.style.transform = `translateY(${scrollY * 0.15}px)`;
+    rays.style.opacity = Math.max(0.3, 1 - scrollY / 2000);
+  }
+});
+</script>
+
+</body>
+</html>
