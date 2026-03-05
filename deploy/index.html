@@ -4,12 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lance W. Fisher</title>
-<meta name="description" content="Leader. Builder. Father. Husband. Full-stack architect, trading systems engineer, game developer.">
+<meta name="description" content="Leader. Builder. Father. Husband. Technical operations leader, culture architect, and full-stack builder shipping production systems across 20+ projects.">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://lancewfisher.com">
+<meta property="og:title" content="Lance W. Fisher — Leader. Builder. Father.">
+<meta property="og:description" content="Technical operations leader and full-stack builder. 20+ systems shipped. Multi-agent trading, encrypted messaging, games, local AI. The work speaks for itself.">
+<meta property="og:image" content="https://lancewfisher.com/portrait.jpg">
+<meta property="og:image:width" content="800">
+<meta property="og:image:height" content="800">
+<meta property="og:site_name" content="Lance W. Fisher">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@lancefisher_">
+<meta name="twitter:creator" content="@lancefisher_">
+<meta name="twitter:title" content="Lance W. Fisher — Leader. Builder. Father.">
+<meta name="twitter:description" content="Technical operations leader and full-stack builder. 20+ systems shipped solo. The work speaks for itself.">
+<meta name="twitter:image" content="https://lancewfisher.com/portrait.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@200;300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <meta name="theme-color" content="#0a0a0b">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%E2%9A%93</text></svg>">
+<link rel="stylesheet" href="ftda/ftda.css">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -100,6 +117,17 @@ body {
   padding: 0 40px;
 }
 
+/* Scripted name logo — subtle watermark behind hero text */
+.hero-script-logo {
+  display: block;
+  width: clamp(420px, 60vw, 780px);
+  margin: 0 auto -80px;
+  opacity: 0.55;
+  filter: brightness(1.6);
+  pointer-events: none;
+  animation: fadeIn 3s ease 0s both;
+}
+
 .hero-name {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 300;
@@ -187,6 +215,37 @@ body {
   to { opacity: 1; }
 }
 
+.hero-domains {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  margin-top: 28px;
+  opacity: 0;
+  animation: fadeIn 1.8s ease forwards 3s;
+}
+.hero-domains a {
+  text-decoration: none;
+}
+.hero-domains span {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 1.8px;
+  color: rgba(201, 168, 76, 0.4);
+  text-transform: lowercase;
+  transition: color 0.4s ease;
+}
+.hero-domains a:hover span {
+  color: rgba(201, 168, 76, 0.7);
+}
+span.hero-domain-dot {
+  margin: 0 14px;
+  font-size: 6px;
+  opacity: 0.35;
+  color: var(--gold-dim);
+}
+
 .scroll-indicator {
   position: absolute;
   bottom: 50px;
@@ -265,6 +324,25 @@ body {
   font-weight: 400;
 }
 
+/* ===== ABOUT CARD ===== */
+.about-card {
+  position: relative;
+  background: rgba(240, 235, 224, 0.018);
+  border: 1px solid rgba(201, 168, 76, 0.1);
+  border-radius: 14px;
+  padding: 48px 44px 44px;
+  margin-top: 16px;
+}
+.about-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.35), transparent);
+}
+
 /* ===== PORTRAIT ===== */
 .portrait-section {
   display: flex;
@@ -281,13 +359,13 @@ body {
   overflow: hidden;
 }
 
-.portrait-frame img {
+.portrait-frame img.portrait-primary {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center 15%;
-  filter: grayscale(0.2) contrast(1.05);
-  opacity: 0.85;
+  filter: grayscale(0.3) contrast(1.05);
+  opacity: 0.55;
 }
 
 .portrait-frame::after {
@@ -361,6 +439,15 @@ body {
 
 .project-card:hover {
   background: rgba(240, 235, 224, 0.01);
+}
+
+/* FTDA flagship hover — warm gold glow instead of white */
+.ftda-flagship:hover {
+  background:
+    linear-gradient(135deg, rgba(201,168,76,0.06) 0%, transparent 40%),
+    linear-gradient(315deg, rgba(201,168,76,0.04) 0%, transparent 40%),
+    linear-gradient(180deg, rgba(10,10,11,1) 0%, rgba(14,13,16,1) 100%) !important;
+  border-color: rgba(201, 168, 76, 0.3) !important;
 }
 
 /* Alternating layout */
@@ -439,6 +526,37 @@ body {
   background: rgba(200, 180, 130, 0.03);
 }
 
+/* Live demo link */
+.p-demo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 6px 16px;
+  margin-top: 10px;
+  margin-left: 8px;
+  border: 1px solid var(--gold-dim);
+  color: var(--gold-1776);
+  background: var(--gold-ghost);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.p-demo-link:hover {
+  background: rgba(201, 168, 76, 0.15);
+  border-color: rgba(201, 168, 76, 0.5);
+  color: #e0c56a;
+  transform: translateY(-1px);
+}
+.p-demo-link .demo-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
 /* Thumbnail container */
 .project-thumb-wrap {
   position: relative;
@@ -509,6 +627,13 @@ body {
   max-height: 800px;
   opacity: 1;
   padding: 24px 0 8px;
+}
+
+/* FTDA flagship: taller expansion, no outer padding (handled in ftda.css) */
+.ftda-flagship:hover .ftda-detail-expand,
+.ftda-flagship.expanded .ftda-detail-expand {
+  max-height: 500px;
+  padding: 0;
 }
 
 .detail-inner {
@@ -693,6 +818,111 @@ body {
   line-height: 1.9;
   color: rgba(240, 235, 224, 0.3);
   max-width: 500px;
+}
+
+/* ===== ARCHITECTURE DIAGRAM ===== */
+.arch-diagram {
+  width: 100%;
+  max-width: 800px;
+  margin: 40px auto 0;
+}
+.arch-diagram svg {
+  width: 100%;
+  height: auto;
+}
+.arch-caption {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 13px;
+  line-height: 1.8;
+  color: rgba(240, 235, 224, 0.25);
+  text-align: center;
+  margin-top: 30px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ===== BUILT WITH MY SON ===== */
+.son-callout {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin-top: 24px;
+  padding: 28px 32px;
+  border: 1px solid rgba(201, 168, 76, 0.12);
+  background: rgba(201, 168, 76, 0.02);
+}
+.son-callout-photo {
+  flex-shrink: 0;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(201, 168, 76, 0.2);
+  filter: grayscale(0.3) contrast(1.05);
+}
+.son-callout-text {
+  flex: 1;
+}
+.son-callout-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold-1776);
+  margin-bottom: 8px;
+}
+.son-callout-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1.6;
+  color: rgba(240, 235, 224, 0.45);
+}
+@media (max-width: 600px) {
+  .son-callout {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+    padding: 24px 20px;
+  }
+}
+
+/* ===== SOVEREIGNTY SECTION ===== */
+.sovereignty-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 32px;
+  margin-top: 40px;
+}
+.sov-item {
+  padding: 24px 0;
+}
+.sov-item-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: var(--gold-1776);
+  margin-bottom: 10px;
+}
+.sov-item-desc {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 13px;
+  line-height: 1.8;
+  color: rgba(240, 235, 224, 0.3);
+}
+.sov-intro {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 15px;
+  line-height: 2;
+  color: rgba(240, 235, 224, 0.35);
+  max-width: 600px;
 }
 
 /* ===== CONTACT ===== */
@@ -889,8 +1119,13 @@ body {
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-  .hero-name {
-    font-size: clamp(50px, 12vw, 120px);
+  .hero-script-logo {
+    width: clamp(300px, 85vw, 540px);
+    margin-bottom: -50px;
+  }
+
+  .about-card {
+    padding: 28px 20px 24px;
   }
 
   .portrait-section {
@@ -942,119 +1177,182 @@ body {
   }
 }
 
-/* ===== FEATURETTE ===== */
-.featurette {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 80px 40px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
-  border: 1px solid var(--warm-white-breath);
-  background: linear-gradient(135deg, rgba(201, 168, 76, 0.02) 0%, rgba(240, 235, 224, 0.01) 100%);
-  position: relative;
-}
-.featurette::before {
-  content: 'FEATURED';
-  position: absolute;
-  top: -8px;
-  left: 40px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 200;
-  font-size: 9px;
-  letter-spacing: 4px;
-  color: var(--gold-1776);
-  background: var(--bg);
-  padding: 0 12px;
-}
-.featurette-info {}
-.featurette-label {
-  font-family: 'Inter', sans-serif;
-  font-weight: 200;
-  font-size: 9px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: rgba(201, 168, 76, 0.5);
-  margin-bottom: 16px;
-}
-.featurette-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 400;
-  font-size: 32px;
-  letter-spacing: 3px;
-  color: var(--warm-white);
-  margin-bottom: 16px;
-}
-.featurette-desc {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 14px;
-  line-height: 1.9;
-  color: var(--warm-white-dim);
-  margin-bottom: 8px;
-}
-.featurette-sub {
-  font-family: 'Inter', sans-serif;
-  font-weight: 200;
-  font-size: 12px;
-  letter-spacing: 2px;
-  color: rgba(240, 235, 224, 0.25);
-  margin-bottom: 24px;
-}
-.featurette-stats {
-  display: flex;
-  gap: 28px;
-  margin-bottom: 28px;
-}
-.featurette-stat .fs-value {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 300;
-  font-size: 28px;
-  color: var(--gold-1776);
-}
-.featurette-stat .fs-label {
-  font-family: 'Inter', sans-serif;
-  font-weight: 200;
-  font-size: 9px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: rgba(240, 235, 224, 0.2);
-  margin-top: 2px;
-}
-.featurette-link {
+/* ===== FISHER MORPH — MATRIX DECODE EFFECT ===== */
+.morph-letter {
   display: inline-block;
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 12px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--gold-1776);
-  text-decoration: none;
-  padding: 10px 24px;
-  border: 1px solid rgba(201, 168, 76, 0.2);
-  transition: all 0.4s ease;
-}
-.featurette-link:hover {
-  background: rgba(201, 168, 76, 0.06);
-  border-color: rgba(201, 168, 76, 0.4);
-  letter-spacing: 5px;
-}
-.featurette-canvas-wrap {
   position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border: 1px solid var(--warm-white-breath);
-  background: rgba(240, 235, 224, 0.01);
+  font-style: normal;
 }
-@media (max-width: 768px) {
-  .featurette {
-    grid-template-columns: 1fr;
-    gap: 32px;
-    padding: 48px 24px;
+
+/* Scanning state — rapid character cycling */
+.morph-letter.scanning {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 300;
+  color: rgba(201, 168, 76, 0.5);
+  text-shadow: 0 0 6px rgba(201, 168, 76, 0.3);
+  animation: morphStatic 0.08s steps(1) infinite;
+}
+
+/* Decoded state — settled on final number */
+.morph-letter.decoded {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 300;
+  color: var(--gold-1776);
+  text-shadow:
+    0 0 6px rgba(201, 168, 76, 0.5),
+    0 0 18px rgba(201, 168, 76, 0.25),
+    0 0 36px rgba(201, 168, 76, 0.1);
+  animation: decodePulse 0.6s ease-out forwards;
+}
+
+/* Revert state — glitch back to letter */
+.morph-letter.reverting {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 300;
+  color: rgba(201, 168, 76, 0.4);
+  text-shadow: 0 0 4px rgba(201, 168, 76, 0.2);
+  animation: morphStatic 0.06s steps(1) infinite;
+}
+
+@keyframes morphStatic {
+  0% { opacity: 0.7; transform: translateX(0); }
+  25% { opacity: 1; transform: translateX(-1px); }
+  50% { opacity: 0.5; transform: translateX(1px); }
+  75% { opacity: 0.9; transform: translateX(0.5px); }
+  100% { opacity: 0.8; transform: translateX(-0.5px); }
+}
+
+@keyframes decodePulse {
+  0% { opacity: 1; transform: translateX(0); }
+  15% { opacity: 0.85; transform: translateX(0.5px); }
+  30% { opacity: 1; }
+  100% { opacity: 1; transform: translateX(0); text-shadow:
+    0 0 4px rgba(201, 168, 76, 0.35),
+    0 0 12px rgba(201, 168, 76, 0.15);
   }
 }
+
+/* Glitch line — horizontal scan artifact */
+.morph-letter .glitch-line {
+  position: absolute;
+  left: -20%;
+  width: 140%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.6), rgba(201, 168, 76, 0.8), rgba(201, 168, 76, 0.6), transparent);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 10;
+}
+.morph-letter.scanning .glitch-line,
+.morph-letter.reverting .glitch-line {
+  opacity: 1;
+  animation: glitchScan 0.15s linear infinite;
+}
+
+@keyframes glitchScan {
+  0% { top: 0%; opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* ===== PORTRAIT CAROUSEL — GLITCH TRANSITION ===== */
+.portrait-frame {
+  position: relative;
+}
+.portrait-frame .portrait-primary {
+  position: relative;
+  z-index: 2;
+}
+.portrait-frame .portrait-secondary {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  filter: grayscale(1) contrast(1.1) brightness(0.85);
+  opacity: 0;
+  z-index: 3;
+  border-radius: 50%;
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 45%, black 50%, transparent 80%);
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 45%, black 50%, transparent 80%);
+}
+/* Beach photo: shift left + down to include wife */
+.portrait-frame .portrait-beach {
+  object-position: 35% 40%;
+}
+/* Glitch overlay canvas sits on top */
+.portrait-glitch-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  border-radius: 50%;
+  pointer-events: none;
+}
+/* Scanline overlay */
+.portrait-scanline {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(201, 168, 76, 0.04) 2px,
+    rgba(201, 168, 76, 0.04) 3px
+  );
+}
+.portrait-scanline.active {
+  opacity: 1;
+  animation: scanlinePulse 0.4s ease-out forwards;
+}
+@keyframes scanlinePulse {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+/* RGB channel split effect classes */
+.portrait-frame .portrait-secondary.glitch-in {
+  opacity: 0.7;
+  animation: glitchReveal 0.5s linear forwards;
+}
+.portrait-frame .portrait-secondary.glitch-hold {
+  opacity: 0.7;
+}
+.portrait-frame .portrait-secondary.glitch-out {
+  animation: glitchDismiss 0.4s linear forwards;
+}
+@keyframes glitchReveal {
+  0%   { opacity: 0; clip-path: inset(0 0 100% 0); }
+  10%  { opacity: 0.5; clip-path: inset(0 0 80% 0); filter: grayscale(1) contrast(1.1) brightness(0.85) hue-rotate(10deg); }
+  15%  { clip-path: inset(20% 0 60% 0); transform: translateX(3px); }
+  20%  { clip-path: inset(0 0 50% 0); transform: translateX(-2px); }
+  25%  { clip-path: inset(30% 0 30% 0); transform: translateX(1px); }
+  35%  { clip-path: inset(0 0 20% 0); transform: translateX(-1px); filter: grayscale(1) contrast(1.1) brightness(0.85); }
+  50%  { clip-path: inset(10% 0 10% 0); transform: translateX(0); }
+  65%  { clip-path: inset(5% 0 5% 0); opacity: 0.65; }
+  80%  { clip-path: inset(2% 0 0 0); }
+  100% { opacity: 0.7; clip-path: inset(0 0 0 0); transform: translateX(0); filter: grayscale(1) contrast(1.1) brightness(0.85); }
+}
+@keyframes glitchDismiss {
+  0%   { opacity: 0.7; clip-path: inset(0 0 0 0); transform: translateX(0); }
+  10%  { clip-path: inset(5% 0 5% 0); transform: translateX(-2px); }
+  20%  { clip-path: inset(15% 0 15% 0); transform: translateX(3px); filter: grayscale(1) contrast(1.1) brightness(1.2); }
+  30%  { clip-path: inset(25% 0 30% 0); transform: translateX(-1px); }
+  45%  { clip-path: inset(40% 0 40% 0); transform: translateX(2px); }
+  60%  { clip-path: inset(50% 0 50% 0); opacity: 0.4; }
+  80%  { clip-path: inset(70% 0 70% 0); opacity: 0.2; }
+  100% { clip-path: inset(50% 0 50% 0); opacity: 0; transform: translateX(0); }
+}
+
 </style>
 </head>
 <body>
@@ -1066,13 +1364,23 @@ body {
 
   <!-- Hero -->
   <section class="hero" id="sec-hero">
+    <img class="hero-script-logo" src="thumbs/lance-fisher-script.png" alt="Lance Fisher">
     <h1 class="hero-name">
       <span class="line">Lance</span>
-      <span class="line">Fisher</span>
+      <span class="line">F<span class="morph-letter" id="morph-i"><span class="morph-char">i</span><span class="glitch-line"></span></span>sh<span class="morph-letter" id="morph-e"><span class="morph-char">e</span><span class="glitch-line"></span></span>r</span>
     </h1>
     <div class="hero-rule"></div>
     <p class="hero-subtitle">Leader &middot; Builder &middot; Father &middot; Husband</p>
     <p class="hero-motto">Mens clara in tenebris</p>
+    <div class="hero-domains">
+      <a href="https://lancewfisher.com" target="_blank"><span>lancewfisher.com</span></a>
+      <span class="hero-domain-dot">&middot;</span>
+      <a href="https://one-three.net" target="_blank"><span>one-three.net</span></a>
+      <span class="hero-domain-dot">&middot;</span>
+      <a href="https://fisher13.net" target="_blank"><span>fisher13.net</span></a>
+      <span class="hero-domain-dot">&middot;</span>
+      <a href="https://f1sh3r.net" target="_blank"><span>f1sh3r.net</span></a>
+    </div>
     <div class="scroll-indicator" id="scrollIndicator">
       <div class="scroll-line"></div>
     </div>
@@ -1083,31 +1391,42 @@ body {
   <!-- About -->
   <section class="section" id="sec-about" data-reveal>
     <div class="section-label">About</div>
-    <div class="portrait-section">
-      <div class="portrait-frame">
-        <img src="portrait.jpg" alt="Lance W. Fisher">
-      </div>
-      <div>
-        <div class="section-title">Building<br>from the<br>ground up</div>
-        <div class="body-text">
-          Based in <em>Cheyenne, Wyoming</em>. Full-stack architect, trading systems engineer, game developer, and maker of things that work. Father and husband first. Builder of <em>production software</em>, <em>autonomous trading infrastructure</em>, <em>real-time games</em>, and <em>encrypted communication platforms</em>.
+    <div class="about-card">
+      <div class="portrait-section">
+        <div class="portrait-frame" id="portrait-carousel">
+          <img class="portrait-primary" src="portrait.jpg" alt="Lance W. Fisher">
+          <img class="portrait-secondary portrait-beach" src="photo-beach.jpg" alt="">
+          <img class="portrait-secondary" src="photo-family1.jpg" alt="">
+          <img class="portrait-secondary" src="photo-family2.jpg" alt="">
+          <img class="portrait-secondary" src="photo-family3.jpg" alt="">
+          <img class="portrait-secondary" src="photo-portrait1.jpg" alt="">
+          <div class="portrait-scanline"></div>
         </div>
-        <div class="stats-row">
-          <div class="stat">
-            <div class="s-value">80k+</div>
-            <div class="s-label">Lines of Code</div>
+        <div>
+          <div class="section-title">The work<br>speaks<br>for itself</div>
+          <div class="body-text">
+            Lance Fisher operates with a quiet severity shaped by discipline and principle. He believes leadership without integrity is performance and participation without moral foundation is erosion. His standard is internal and fixed, untouched by pressure or applause. He moves deliberately and corrects what is corrupt. He does not build for attention. He builds for consequence. His decisions are measured against long-term impact rather than short-term approval. He builds with permanence in view and regards legacy as duty, not ambition. His pride is a clear mind in darkness, <em>mens clara in tenebris</em>, and his legacy is designed to endure.
           </div>
-          <div class="stat">
-            <div class="s-value">20+</div>
-            <div class="s-label">Projects</div>
+          <div class="body-text" style="margin-top:14px;">
+            On his own time, he builds. Full-stack production applications for real businesses. Multi-agent autonomous trading systems. Games for his son. Encrypted messaging platforms. An AI framework running on his own hardware. A nautical apparel brand. A custom app studio for local businesses. Over <em>80,000 lines of code</em> across <em>20+ projects</em>, all designed, architected, and shipped alone. Every tile on this page represents something he built from nothing, on his own time, because the work itself is the point.
           </div>
-          <div class="stat">
-            <div class="s-value">6</div>
-            <div class="s-label">Languages</div>
-          </div>
-          <div class="stat">
-            <div class="s-value">15+</div>
-            <div class="s-label">Years Leading</div>
+          <div class="stats-row">
+            <div class="stat">
+              <div class="s-value">15+</div>
+              <div class="s-label">Years Leading</div>
+            </div>
+            <div class="stat">
+              <div class="s-value">20+</div>
+              <div class="s-label">Systems Shipped</div>
+            </div>
+            <div class="stat">
+              <div class="s-value">6</div>
+              <div class="s-label">Domains</div>
+            </div>
+            <div class="stat">
+              <div class="s-value">80k+</div>
+              <div class="s-label">Lines Shipped</div>
+            </div>
           </div>
         </div>
       </div>
@@ -1121,9 +1440,48 @@ body {
   <!-- Projects — the main showcase -->
   <section class="section" id="sec-projects" data-reveal style="max-width:1100px;">
     <div class="section-label">Projects</div>
-    <div class="section-title">Selected Work</div>
+    <div class="section-title">Systems &amp; Leadership</div>
 
     <div class="project-gallery">
+
+      <!-- FTDA — Fisher Team Development Architecture (Premium Card) -->
+      <div class="project-card ftda-flagship" id="ftda-section">
+        <div class="project-info">
+          <div class="p-number ftda-accent">Featured</div>
+          <div class="p-title ftda-accent">Fisher Team Development Architecture</div>
+          <div class="p-desc">A comprehensive onboarding, shift integration, and team development playbook built from 15+ years of operational leadership. Tested in live operations. Refined through repeated cycles. Protected document.</div>
+          <div class="p-tech">Leadership Framework / Onboarding Architecture / Team Culture</div>
+          <div class="p-status ftda-protected">&#x1F512; Protected</div>
+        </div>
+        <div class="project-thumb-wrap ftda-thumb-border">
+          <canvas id="ftda-canvas"></canvas>
+          <div class="thumb-label">Protected</div>
+        </div>
+        <div class="project-detail ftda-detail-expand">
+          <div class="detail-inner">
+            <div class="ftda-summary-scroll">
+              <div class="ftda-summary-text"></div>
+            </div>
+            <div class="ftda-detail-right">
+              <div class="ftda-stats">
+                <div class="ftda-stat">
+                  <div class="ftda-stat-value">15+</div>
+                  <div class="ftda-stat-label">Years Leading</div>
+                </div>
+                <div class="ftda-stat">
+                  <div class="ftda-stat-value">17</div>
+                  <div class="ftda-stat-label">Sections</div>
+                </div>
+                <div class="ftda-stat">
+                  <div class="ftda-stat-value">2</div>
+                  <div class="ftda-stat-label">Documents</div>
+                </div>
+              </div>
+              <button class="ftda-cta"><span class="ftda-cta-lock">&#x1F512;</span>Open Architecture</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- 01 Booking Platform -->
       <div class="project-card">
@@ -1313,6 +1671,7 @@ body {
           <div class="p-desc">Fully realized 3D platformer built as a gift for my six-year-old son. Xbox controller support, XP leveling, skill trees, cosmetics shop, and a procedural Level Draft Wizard.</div>
           <div class="p-tech">Unity / C# / Three.js / Xbox Controller</div>
           <div class="p-status shipped">Playable</div>
+          <a class="p-demo-link" href="jumpquest/" target="_blank" rel="noopener"><span class="demo-icon">&#9654;</span> Play in Browser</a>
         </div>
         <div class="project-thumb-wrap">
           <canvas data-project="platformer"></canvas>
@@ -1345,6 +1704,14 @@ body {
               <div class="detail-stat"><div class="ds-value">2</div><div class="ds-label">Platforms</div></div>
               <div class="detail-stat"><div class="ds-value">&infin;</div><div class="ds-label">Levels</div></div>
               <div class="detail-stat"><div class="ds-value">1</div><div class="ds-label">Happy Kid</div></div>
+            </div>
+            <!-- Built With My Son -->
+            <div class="son-callout">
+              <img class="son-callout-photo" src="photo-family1.jpg" alt="Jamison" loading="lazy">
+              <div class="son-callout-text">
+                <div class="son-callout-label">Built With My Son</div>
+                <div class="son-callout-quote">Jamison is six. He doesn't know what a singleton pattern is or why the jump curve uses a quadratic easing function. He knows the coins sparkle when you grab them and the lava is red. He knows his dad made this for him. That's the whole point.</div>
+              </div>
             </div>
           </div>
         </div>
@@ -1620,31 +1987,185 @@ body {
         </div>
       </div>
 
-    </div>
-  </section>
-
-  <div class="spacer-lg"></div>
-  <div class="thin-line" style="height:100px;"></div>
-  <div class="spacer-lg"></div>
-
-  <!-- ProjectHub Featurette -->
-  <section class="section" data-reveal>
-    <div class="featurette">
-      <div class="featurette-info">
-        <div class="featurette-label">Control Center</div>
-        <div class="featurette-title">ProjectHub</div>
-        <div class="featurette-desc">A living index of everything I build. Local-first, GitHub-synced, and designed for velocity and clarity. Every project, every repo, every status in one place.</div>
-        <div class="featurette-sub">Single pane of glass for everything I build</div>
-        <div class="featurette-stats">
-          <div class="featurette-stat"><div class="fs-value">19</div><div class="fs-label">Repos</div></div>
-          <div class="featurette-stat"><div class="fs-value">5m</div><div class="fs-label">Sync</div></div>
-          <div class="featurette-stat"><div class="fs-value">0</div><div class="fs-label">Cloud</div></div>
+      <!-- Fisher One-Three: Nautical apparel brand (links to brand site) -->
+      <div class="project-card" onclick="window.open('brand/brand.html','_blank')" style="cursor:pointer;">
+        <div class="project-info">
+          <div class="p-number">12</div>
+          <div class="p-title">Fisher One-Three</div>
+          <div class="p-desc">Nautical-themed apparel and lifestyle brand. 24 original limited-run designs celebrating the spirit of coastal living and maritime adventure. One part land, three parts sea. Full brand website with integrated storefront.</div>
+          <div class="p-tech">Brand Design / Apparel / E-Commerce / HTML / CSS / JavaScript</div>
+          <div class="p-status active">Active &mdash; Visit Site &rarr;</div>
         </div>
-        <a href="https://github.com/lance-fisher/project-hub" class="featurette-link" target="_blank" rel="noopener">View on GitHub</a>
+        <div class="project-thumb-wrap">
+          <img src="thumbs/fisher13-sail.jpg" alt="Fisher One-Three" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.8) contrast(1.1);">
+          <div class="thumb-label">Brand</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <p class="p-opinion">This one is personal. Fisher One-Three started as a sketch on a napkin and became a full brand with its own ethos, website, and storefront. Every design is mine, every color choice deliberate, every run limited. The name encodes my last name and the maritime ratio that drives everything: one part land, three parts sea. It is wearable art for people who dream of the ocean even when they are nowhere near it.</p>
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>24 original founder designs</em>: every graphic hand-crafted from concept to final print</li>
+                <li><em>Full brand website</em> with collection gallery, category filters, brand story, and integrated store</li>
+                <li><em>Size-inclusive</em> range from XS to 5XL, because great style should be accessible to all</li>
+                <li><em>$1 per shirt donated</em> to ocean and waterway conservation efforts worldwide</li>
+                <li>Full brand identity system: <em>logo suite, typography, color palette</em>, and brand guidelines</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Brand Architecture</h4>
+              <ul>
+                <li><em>Design collections</em>: nautical emblems, coastal scenes, marine life, maritime adventure themes</li>
+                <li><em>Integrated storefront</em> with cart, sizing, and direct purchase flow built from scratch</li>
+                <li>Multi-domain presence: <em>fisher13.com, f1sh3r.net, one-three.net</em></li>
+                <li>Social channels on <em>X, Facebook, Instagram</em> with cohesive brand voice and visual identity</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">24</div><div class="ds-label">Designs</div></div>
+              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Domains</div></div>
+              <div class="detail-stat"><div class="ds-value">1:3</div><div class="ds-label">Land : Sea</div></div>
+              <div class="detail-stat"><div class="ds-value">5XL</div><div class="ds-label">Max Size</div></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="featurette-canvas-wrap">
-        <canvas data-project="projecthub"></canvas>
+
+      <!-- NoCo App Studio: Custom apps for Northern Colorado businesses -->
+      <div class="project-card" onclick="window.open('noco/index.html','_blank')" style="cursor:pointer;">
+        <div class="project-info">
+          <div class="p-number">13</div>
+          <div class="p-title">NoCo App Studio</div>
+          <div class="p-desc">Custom mobile app development studio for Northern Colorado businesses. 10 fully interactive live demos built for real med spas, salons, fitness studios, pet groomers, and chiropractors. Online booking, wallets, loyalty, push notifications, and branded mobile apps.</div>
+          <div class="p-tech">HTML / CSS / JavaScript / React Native / NestJS / Stripe</div>
+          <div class="p-status active">Active &mdash; See Demos &rarr;</div>
+        </div>
+        <div class="project-thumb-wrap">
+          <canvas data-project="noco"></canvas>
+          <div class="thumb-label">Demos</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <p class="p-opinion">Every local business deserves a branded mobile app. Not a Vagaro page. Not a Booksy listing. Their own app, with their name, their colors, on their clients' home screens. NoCo App Studio is the vehicle for that vision. I built 10 fully interactive phone mockup demos for real businesses across Northern Colorado, each with their actual services, branding, staff, and pricing. The pitch is simple: your clients will book from your app, not a third-party marketplace.</p>
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>10 live interactive demos</em> built for real NoCo businesses across 6 verticals</li>
+                <li><em>Phone mockup simulator</em> with real app UI, tabbed navigation, and business-specific branding</li>
+                <li><em>Category filters</em>: Med Spas, Nail Salons, Hair &amp; Barber, Fitness, Pet Grooming, Chiropractic</li>
+                <li><em>Transparent pricing</em>: $2,500 setup + $199/mo starter, scaling to enterprise custom</li>
+                <li>Every demo shows <em>real services, staff, scheduling</em>, and payment processing</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li><em>Zero-dependency frontend</em>: pure HTML/CSS/JS with modular business data architecture</li>
+                <li><em>35KB data layer</em> (businesses.js) powering all 10 business configurations</li>
+                <li>Interactive phone mockup: <em>300x600px viewport</em> with notch, home indicator, tab bar</li>
+                <li>Production apps built on <em>React Native + NestJS + Stripe + PostgreSQL</em> stack</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">10</div><div class="ds-label">Businesses</div></div>
+              <div class="detail-stat"><div class="ds-value">6</div><div class="ds-label">Verticals</div></div>
+              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Cities</div></div>
+              <div class="detail-stat"><div class="ds-value">$199</div><div class="ds-label">Per Month</div></div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- Market Dashboard: Real-time trading terminal -->
+      <div class="project-card">
+        <div class="project-info">
+          <div class="p-number">14</div>
+          <div class="p-title">Market Dashboard</div>
+          <div class="p-desc">Real-time multi-market trading terminal. Canvas-rendered candlestick charts, order book visualization, trade tape, configurable watchlist. Python server proxies live exchange data. Zero dependencies.</div>
+          <div class="p-tech">Python / Canvas 2D / WebSocket / Zero Dependencies</div>
+          <div class="p-status active">Active</div>
+          <a class="p-demo-link" href="dashboard/" target="_blank" rel="noopener"><span class="demo-icon">&#9654;</span> Live Demo</a>
+        </div>
+        <div class="project-thumb-wrap">
+          <canvas data-project="marketdash"></canvas>
+          <div class="thumb-label">Terminal</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <p class="p-opinion">Every trader needs a terminal they can trust, and trusting something means building it yourself. This dashboard pulls live data from crypto.com Exchange API through a Python proxy and renders it all on raw Canvas 2D. Candlestick charts, order book depth, live trade tape, multi-market watchlist. No charting library. No framework. Every pixel is mine.</p>
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>Canvas-rendered candlestick charts</em> with OHLCV data, volume bars, and crosshair tooltip</li>
+                <li><em>Order book visualization</em> with depth bars, spread indicator, and mid-price</li>
+                <li><em>Live trade tape</em> streaming buys and sells with color-coded direction</li>
+                <li><em>Multi-market watchlist</em> with configurable instruments and timeframes</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li><em>Python proxy server</em> handles exchange API auth, rate limiting, and WebSocket relay</li>
+                <li><em>Zero-dependency frontend</em>: vanilla HTML/CSS/JS with Canvas 2D rendering</li>
+                <li><em>60fps render loop</em> for smooth chart updates and interactive crosshair</li>
+                <li>Designed to feed into the <em>autonomous trading desk</em> as visual monitoring layer</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Dependencies</div></div>
+              <div class="detail-stat"><div class="ds-value">60</div><div class="ds-label">FPS</div></div>
+              <div class="detail-stat"><div class="ds-value">Live</div><div class="ds-label">Data Feed</div></div>
+              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Views</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Auton: Autonomous background worker -->
+      <div class="project-card">
+        <div class="project-info">
+          <div class="p-number">15</div>
+          <div class="p-title">Auton</div>
+          <div class="p-desc">Autonomous background worker that scans the entire workspace, learns from all projects, and proposes improvements, documentation, and maintenance. Multi-agent architecture with 6 agents, approval gates, and kill switch. DRY_RUN by default.</div>
+          <div class="p-tech">Python / asyncio / Ollama / Multi-Agent / Local AI</div>
+          <div class="p-status active">Active</div>
+        </div>
+        <div class="project-thumb-wrap">
+          <canvas data-project="auton"></canvas>
+          <div class="thumb-label">Agents</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <p class="p-opinion">Auton is the project that watches all other projects. It scans the entire workspace, reads every CLAUDE.md, every session log, every git history, and proposes improvements. It runs Qwen 2.5 14B on my local GPU through Ollama, so nothing ever leaves my machine. The multi-agent architecture mirrors the trading desk: Scanner, Planner, Executor, Tester, Reviewer, Monitor. DRY_RUN by default, promotion gates for any real changes. It is the future of how I maintain 20+ projects at scale.</p>
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>6 autonomous agents</em>: Scanner, Planner, Executor, Tester, Reviewer, Monitor</li>
+                <li><em>Local LLM</em> via Ollama (Qwen 2.5 14B) running on RTX 4070 GPU, fully private</li>
+                <li><em>4 strategy modes</em>: Documenter, Maintainer, Improver, Creator (opt-in only)</li>
+                <li><em>6-layer safety model</em>: DRY_RUN default, SafetyGuard, kill switch, credential isolation, audit log, rollback</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li><em>EventBus pub/sub</em> coordination between agents with async message passing</li>
+                <li><em>Journal + StateStore</em> for persistent audit trail and workspace state tracking</li>
+                <li>REST API at <em>localhost:8095</em> for health, task management, approve/reject/rollback</li>
+                <li><em>3 promotion modes</em>: DRY_RUN &rarr; SUPERVISED &rarr; AUTONOMOUS, each with gates</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">6</div><div class="ds-label">Agents</div></div>
+              <div class="detail-stat"><div class="ds-value">14B</div><div class="ds-label">LLM Params</div></div>
+              <div class="detail-stat"><div class="ds-value">20+</div><div class="ds-label">Projects Scanned</div></div>
+              <div class="detail-stat"><div class="ds-value">GPU</div><div class="ds-label">RTX 4070</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -1655,7 +2176,7 @@ body {
   <!-- Ventures -->
   <section class="section" id="sec-ventures" data-reveal>
     <div class="section-label">Ventures</div>
-    <div class="section-title">Three ventures,<br>one builder</div>
+    <div class="section-title">Three ventures,<br>one operator</div>
     <ul class="ventures-list">
       <li class="venture-item">
         <div class="v-number">01</div>
@@ -1682,6 +2203,102 @@ body {
   <div class="thin-line" style="height:100px;"></div>
   <div class="spacer-lg"></div>
 
+  <!-- Architecture -->
+  <section class="section" id="sec-architecture" data-reveal>
+    <div class="section-label">Architecture</div>
+    <div class="section-title">Trading Ecosystem</div>
+    <div class="arch-diagram">
+      <svg viewBox="0 0 800 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background grid lines -->
+        <line x1="0" y1="105" x2="800" y2="105" stroke="rgba(201,168,76,0.06)" stroke-dasharray="4 8"/>
+        <line x1="0" y1="210" x2="800" y2="210" stroke="rgba(201,168,76,0.06)" stroke-dasharray="4 8"/>
+        <line x1="0" y1="315" x2="800" y2="315" stroke="rgba(201,168,76,0.06)" stroke-dasharray="4 8"/>
+
+        <!-- Layer 0: Profit Desk (Brain) -->
+        <rect x="250" y="20" width="300" height="60" rx="4" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+        <text x="400" y="42" text-anchor="middle" fill="rgba(201,168,76,0.8)" font-family="Cormorant Garamond, serif" font-size="15" font-weight="400" letter-spacing="3">PROFIT DESK</text>
+        <text x="400" y="63" text-anchor="middle" fill="rgba(240,235,224,0.25)" font-family="Inter, sans-serif" font-size="10" font-weight="300">Multi-Agent Strategy Brain</text>
+        <!-- Agent labels -->
+        <text x="270" y="98" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">PM</text>
+        <text x="320" y="98" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">Researcher</text>
+        <text x="410" y="98" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">Backtester</text>
+        <text x="500" y="98" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">Risk Mgr</text>
+        <text x="580" y="98" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">Exec Trader</text>
+
+        <!-- Arrow down -->
+        <line x1="400" y1="80" x2="400" y2="125" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+        <polygon points="394,120 400,130 406,120" fill="rgba(201,168,76,0.3)"/>
+        <text x="418" y="113" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">signals</text>
+
+        <!-- Layer 1: Master Trade Bot (Execution) -->
+        <rect x="200" y="130" width="400" height="60" rx="4" fill="rgba(240,235,224,0.03)" stroke="rgba(240,235,224,0.12)" stroke-width="1"/>
+        <text x="400" y="152" text-anchor="middle" fill="rgba(240,235,224,0.6)" font-family="Cormorant Garamond, serif" font-size="15" font-weight="400" letter-spacing="3">MASTER TRADE BOT</text>
+        <text x="400" y="173" text-anchor="middle" fill="rgba(240,235,224,0.2)" font-family="Inter, sans-serif" font-size="10" font-weight="300">Unified Execution Layer &middot; 6 Engines</text>
+
+        <!-- Arrow down to engines -->
+        <line x1="250" y1="190" x2="250" y2="240" stroke="rgba(240,235,224,0.1)" stroke-width="1"/>
+        <line x1="400" y1="190" x2="400" y2="240" stroke="rgba(240,235,224,0.1)" stroke-width="1"/>
+        <line x1="550" y1="190" x2="550" y2="240" stroke="rgba(240,235,224,0.1)" stroke-width="1"/>
+
+        <!-- Layer 2: Engines -->
+        <rect x="60" y="240" width="130" height="50" rx="3" fill="rgba(130,200,160,0.04)" stroke="rgba(130,200,160,0.15)" stroke-width="1"/>
+        <text x="125" y="260" text-anchor="middle" fill="rgba(130,200,160,0.5)" font-family="Inter, sans-serif" font-size="10" font-weight="400">Solana</text>
+        <text x="125" y="276" text-anchor="middle" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">Jupiter / DexScreener</text>
+
+        <rect x="210" y="240" width="130" height="50" rx="3" fill="rgba(130,200,160,0.04)" stroke="rgba(130,200,160,0.15)" stroke-width="1"/>
+        <text x="275" y="260" text-anchor="middle" fill="rgba(130,200,160,0.5)" font-family="Inter, sans-serif" font-size="10" font-weight="400">Polymarket</text>
+        <text x="275" y="276" text-anchor="middle" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">CLOB Sniper</text>
+
+        <rect x="360" y="240" width="130" height="50" rx="3" fill="rgba(130,200,160,0.04)" stroke="rgba(130,200,160,0.15)" stroke-width="1"/>
+        <text x="425" y="260" text-anchor="middle" fill="rgba(130,200,160,0.5)" font-family="Inter, sans-serif" font-size="10" font-weight="400">CEX (ccxt)</text>
+        <text x="425" y="276" text-anchor="middle" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">Binance / Coinbase</text>
+
+        <rect x="510" y="240" width="130" height="50" rx="3" fill="rgba(130,200,160,0.04)" stroke="rgba(130,200,160,0.15)" stroke-width="1"/>
+        <text x="575" y="260" text-anchor="middle" fill="rgba(130,200,160,0.5)" font-family="Inter, sans-serif" font-size="10" font-weight="400">ETH DeFi</text>
+        <text x="575" y="276" text-anchor="middle" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">Uniswap / 1inch</text>
+
+        <!-- Connect lines from MTB to engines -->
+        <line x1="250" y1="220" x2="125" y2="240" stroke="rgba(240,235,224,0.08)" stroke-width="1"/>
+        <line x1="300" y1="220" x2="275" y2="240" stroke="rgba(240,235,224,0.08)" stroke-width="1"/>
+        <line x1="450" y1="220" x2="425" y2="240" stroke="rgba(240,235,224,0.08)" stroke-width="1"/>
+        <line x1="550" y1="220" x2="575" y2="240" stroke="rgba(240,235,224,0.08)" stroke-width="1"/>
+
+        <!-- Arrow down to exchanges -->
+        <line x1="125" y1="290" x2="125" y2="330" stroke="rgba(240,235,224,0.06)" stroke-width="1" stroke-dasharray="3 5"/>
+        <line x1="275" y1="290" x2="275" y2="330" stroke="rgba(240,235,224,0.06)" stroke-width="1" stroke-dasharray="3 5"/>
+        <line x1="425" y1="290" x2="425" y2="330" stroke="rgba(240,235,224,0.06)" stroke-width="1" stroke-dasharray="3 5"/>
+        <line x1="575" y1="290" x2="575" y2="330" stroke="rgba(240,235,224,0.06)" stroke-width="1" stroke-dasharray="3 5"/>
+
+        <!-- Layer 3: Exchanges/Markets -->
+        <text x="125" y="348" text-anchor="middle" fill="rgba(240,235,224,0.12)" font-family="JetBrains Mono, monospace" font-size="9">Raydium</text>
+        <text x="275" y="348" text-anchor="middle" fill="rgba(240,235,224,0.12)" font-family="JetBrains Mono, monospace" font-size="9">Polygon</text>
+        <text x="425" y="348" text-anchor="middle" fill="rgba(240,235,224,0.12)" font-family="JetBrains Mono, monospace" font-size="9">Binance</text>
+        <text x="575" y="348" text-anchor="middle" fill="rgba(240,235,224,0.12)" font-family="JetBrains Mono, monospace" font-size="9">Ethereum</text>
+
+        <!-- Side annotation: Dashboard -->
+        <rect x="660" y="130" width="120" height="50" rx="3" fill="rgba(0,212,255,0.03)" stroke="rgba(0,212,255,0.12)" stroke-width="1"/>
+        <text x="720" y="152" text-anchor="middle" fill="rgba(0,212,255,0.4)" font-family="Inter, sans-serif" font-size="10" font-weight="400">Dashboard</text>
+        <text x="720" y="167" text-anchor="middle" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">WebSocket :4000</text>
+        <line x1="600" y1="160" x2="660" y2="160" stroke="rgba(0,212,255,0.12)" stroke-width="1" stroke-dasharray="3 4"/>
+
+        <!-- Side annotation: Risk / Kill Switch -->
+        <rect x="20" y="130" width="120" height="50" rx="3" fill="rgba(255,61,87,0.03)" stroke="rgba(255,61,87,0.12)" stroke-width="1"/>
+        <text x="80" y="152" text-anchor="middle" fill="rgba(255,61,87,0.4)" font-family="Inter, sans-serif" font-size="10" font-weight="400">Risk Manager</text>
+        <text x="80" y="167" text-anchor="middle" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">Kill Switch</text>
+        <line x1="140" y1="160" x2="200" y2="160" stroke="rgba(255,61,87,0.12)" stroke-width="1" stroke-dasharray="3 4"/>
+
+        <!-- Safety annotation -->
+        <text x="400" y="390" text-anchor="middle" fill="rgba(201,168,76,0.15)" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="4">DRY_RUN=true BY DEFAULT</text>
+        <text x="400" y="410" text-anchor="middle" fill="rgba(240,235,224,0.1)" font-family="Inter, sans-serif" font-size="8">Paper-first discipline. No live execution without promotion gates.</text>
+      </svg>
+    </div>
+    <p class="arch-caption">Four engines, one orchestrator, one brain. Every trade flows from strategy research through risk validation to execution. DRY_RUN by default. Live requires promotion gates.</p>
+  </section>
+
+  <div class="spacer-lg"></div>
+  <div class="thin-line" style="height:100px;"></div>
+  <div class="spacer-lg"></div>
+
   <!-- Principles -->
   <section class="section" id="sec-principles" data-reveal>
     <div class="section-label">Principles</div>
@@ -1692,7 +2309,7 @@ body {
     </div>
     <div class="principle">
       <div class="p-title">Own the Full Stack</div>
-      <div class="p-text">Mastery across every layer. From schema to screen. No blind spots in the architecture.</div>
+      <div class="p-text">Mastery across every layer. From schema to screen, from onboarding to operations. No blind spots in the architecture or the team.</div>
     </div>
     <div class="principle">
       <div class="p-title">Lead by Example</div>
@@ -1700,11 +2317,44 @@ body {
     </div>
     <div class="principle">
       <div class="p-title">Never Stop Shipping</div>
-      <div class="p-text">Velocity compounds. Deploy fast, iterate faster, learn fastest. Twenty projects and accelerating.</div>
+      <div class="p-text">Velocity compounds. Deploy fast, iterate faster, learn fastest. Twenty systems shipped and accelerating. Build teams that ship the same way.</div>
     </div>
     <div class="principle">
       <div class="p-title">Security First</div>
       <div class="p-text">End-to-end encryption is a foundation, not a feature. Zero trust by default.</div>
+    </div>
+    <div class="principle">
+      <div class="p-title">Own Your Infrastructure</div>
+      <div class="p-text">If it runs on someone else's server, it's someone else's system. Local data, local AI, local control. Sovereignty is not a feature request.</div>
+    </div>
+  </section>
+
+  <div class="spacer-lg"></div>
+  <div class="thin-line" style="height:100px;"></div>
+  <div class="spacer-lg"></div>
+
+  <!-- Sovereignty -->
+  <section class="section" id="sec-sovereignty" data-reveal>
+    <div class="section-label">Philosophy</div>
+    <div class="section-title">Digital Sovereignty</div>
+    <p class="sov-intro">A throughline connects every project in this portfolio: the conviction that critical systems should run on hardware you own, process data that never leaves your network, and answer to no one's terms of service but your own.</p>
+    <div class="sovereignty-grid">
+      <div class="sov-item">
+        <div class="sov-item-title">Local AI</div>
+        <div class="sov-item-desc">Auton and MoltBot run Qwen 2.5 14B on a local RTX 4070. No API keys. No rate limits. No data leaving the machine. The GPU is the moat.</div>
+      </div>
+      <div class="sov-item">
+        <div class="sov-item-title">E2E Encryption</div>
+        <div class="sov-item-desc">The E2EE Messenger implements Signal-grade X3DH key exchange and Double Ratchet. Messages are plaintext only on sender and receiver devices. The relay server sees nothing.</div>
+      </div>
+      <div class="sov-item">
+        <div class="sov-item-title">Self-Hosted Bots</div>
+        <div class="sov-item-desc">Every trading bot runs locally. Market data streams through private WebSocket connections. No cloud functions. No third-party dashboards. The execution path is yours.</div>
+      </div>
+      <div class="sov-item">
+        <div class="sov-item-title">Home Hub</div>
+        <div class="sov-item-desc">Project Hub serves 22 projects from localhost. No SaaS project manager. No Jira. No Notion dependency. The workspace is a single machine with a single source of truth.</div>
+      </div>
     </div>
   </section>
 
@@ -1737,6 +2387,10 @@ body {
         <span class="c-label">Location</span>
         <span class="c-value">Cheyenne, Wyoming</span>
       </div>
+      <a href="one-pager.html" target="_blank" class="contact-row">
+        <span class="c-label">One-Pager</span>
+        <span class="c-value" style="color:var(--gold-1776);">Download PDF &rarr;</span>
+      </a>
     </div>
 
     <!-- Other Splash Concepts -->
@@ -1813,7 +2467,9 @@ body {
   <div class="nav-dot" data-target="sec-about"></div>
   <div class="nav-dot" data-target="sec-projects"></div>
   <div class="nav-dot" data-target="sec-ventures"></div>
+  <div class="nav-dot" data-target="sec-architecture"></div>
   <div class="nav-dot" data-target="sec-principles"></div>
+  <div class="nav-dot" data-target="sec-sovereignty"></div>
   <div class="nav-dot" data-target="sec-contact"></div>
 </nav>
 
@@ -1823,12 +2479,33 @@ body {
 
   // ===== SCROLL REVEAL =====
   var sections = document.querySelectorAll('[data-reveal]');
+  var isMobile = window.innerWidth <= 768;
+
+  // Use more aggressive threshold on mobile (1% vs 8%)
   var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       if (entry.isIntersecting) entry.target.classList.add('visible');
     });
-  }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+  }, { threshold: isMobile ? 0.01 : 0.08, rootMargin: isMobile ? '0px 0px 0px 0px' : '0px 0px -60px 0px' });
   sections.forEach(function(s) { observer.observe(s); });
+
+  // Mobile fallback: also check on scroll in case IntersectionObserver doesn't fire
+  if (isMobile) {
+    function mobileRevealCheck() {
+      var vh = window.innerHeight;
+      sections.forEach(function(s) {
+        var rect = s.getBoundingClientRect();
+        // If section top is within 1.2x viewport height, reveal it
+        if (rect.top < vh * 1.2) {
+          s.classList.add('visible');
+        }
+      });
+    }
+    window.addEventListener('scroll', mobileRevealCheck, { passive: true });
+    // Run once on load after a small delay
+    setTimeout(mobileRevealCheck, 500);
+    setTimeout(mobileRevealCheck, 1500);
+  }
 
   // ===== SCROLL INDICATOR =====
   var scrollInd = document.getElementById('scrollIndicator');
@@ -1864,6 +2541,171 @@ body {
   }
   window.addEventListener('scroll', updateDots, { passive: true });
   updateDots();
+
+  // ===== MOBILE TAP-TO-EXPAND PROJECT CARDS =====
+  if (isMobile) {
+    var projectCards = document.querySelectorAll('.project-card');
+    projectCards.forEach(function(card) {
+      // Skip cards with onclick (they navigate somewhere)
+      if (card.getAttribute('onclick')) return;
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', function(e) {
+        // Don't interfere with links inside
+        if (e.target.tagName === 'A') return;
+        // Close other cards
+        projectCards.forEach(function(c) {
+          if (c !== card) c.classList.remove('expanded');
+        });
+        card.classList.toggle('expanded');
+      });
+    });
+  }
+
+  // ===== FISHER MORPH — MATRIX DECODE EFFECT =====
+  var morphI = document.getElementById('morph-i');
+  var morphE = document.getElementById('morph-e');
+  if (morphI && morphE) {
+    var charI = morphI.querySelector('.morph-char');
+    var charE = morphE.querySelector('.morph-char');
+    var morphOrigI = charI.textContent;
+    var morphOrigE = charE.textContent;
+    var morphRunning = false;
+    var glyphPool = '0123456789!@#$%&*?><|/=+-~^';
+
+    function randomGlyph() {
+      return glyphPool.charAt(Math.floor(Math.random() * glyphPool.length));
+    }
+
+    function clearMorphState(el) {
+      el.classList.remove('scanning', 'decoded', 'reverting');
+    }
+
+    // Pre-schedule all character changes as absolute timeouts from t=0
+    // This avoids chaining/recursion and works under timer throttling
+    function scheduleScramble(charEl, wrapEl, startMs, count, gap, finalChar, startClass, finalClass) {
+      // Add scanning/reverting class at start
+      setTimeout(function() {
+        clearMorphState(wrapEl);
+        if (startClass) wrapEl.classList.add(startClass);
+      }, startMs);
+
+      // Schedule each random glyph
+      for (var i = 0; i < count; i++) {
+        (function(idx) {
+          setTimeout(function() {
+            charEl.textContent = randomGlyph();
+          }, startMs + (idx * gap));
+        })(i);
+      }
+
+      // Land on final character
+      var endMs = startMs + (count * gap);
+      setTimeout(function() {
+        charEl.textContent = finalChar;
+        clearMorphState(wrapEl);
+        if (finalClass) wrapEl.classList.add(finalClass);
+      }, endMs);
+
+      return endMs;
+    }
+
+    function runMorphCycle() {
+      if (morphRunning) return;
+      morphRunning = true;
+
+      // Phase 1: Decode I → 1 (7 glyphs at 55ms)
+      scheduleScramble(charI, morphI, 0, 7, 55, '1', 'scanning', 'decoded');
+
+      // Phase 1b: Decode E → 3 (staggered 300ms)
+      scheduleScramble(charE, morphE, 300, 7, 55, '3', 'scanning', 'decoded');
+
+      // Phase 2: Revert I (after 2.4s hold)
+      scheduleScramble(charI, morphI, 2400, 4, 50, morphOrigI, 'reverting', '');
+
+      // Phase 2b: Revert E (staggered)
+      scheduleScramble(charE, morphE, 2650, 4, 50, morphOrigE, 'reverting', '');
+
+      // Safety net: hard reset at 3.5s
+      setTimeout(function() {
+        clearMorphState(morphI);
+        clearMorphState(morphE);
+        charI.textContent = morphOrigI;
+        charE.textContent = morphOrigE;
+        morphRunning = false;
+      }, 3500);
+    }
+
+    // First morph after 4-6s, then every 10-15s
+    setTimeout(function() {
+      runMorphCycle();
+      setInterval(runMorphCycle, 10000 + Math.random() * 5000);
+    }, 4000 + Math.random() * 2000);
+  }
+
+  // ===== PORTRAIT CAROUSEL — GLITCH TRANSITION =====
+  var carouselFrame = document.getElementById('portrait-carousel');
+  if (carouselFrame) {
+    var carouselSecondary = carouselFrame.querySelectorAll('.portrait-secondary');
+    var carouselScanline = carouselFrame.querySelector('.portrait-scanline');
+    var carouselIndex = 0;
+    var carouselRunning = false;
+
+    function clearCarouselState(img) {
+      img.classList.remove('glitch-in', 'glitch-hold', 'glitch-out');
+      img.style.opacity = '';
+      img.style.clipPath = '';
+      img.style.transform = '';
+      img.style.filter = '';
+    }
+
+    function glitchPortrait() {
+      if (carouselRunning) return;
+      carouselRunning = true;
+
+      var img = carouselSecondary[carouselIndex];
+      carouselIndex = (carouselIndex + 1) % carouselSecondary.length;
+
+      // Clean state
+      clearCarouselState(img);
+
+      // Phase 1: Scanline flash + glitch reveal (0-500ms)
+      if (carouselScanline) {
+        carouselScanline.classList.remove('active');
+        void carouselScanline.offsetWidth;
+        carouselScanline.classList.add('active');
+      }
+      img.classList.add('glitch-in');
+
+      // Phase 2: Hold clean (500ms - 2000ms)
+      setTimeout(function() {
+        img.classList.remove('glitch-in');
+        img.classList.add('glitch-hold');
+      }, 500);
+
+      // Phase 3: Glitch dismiss (2000ms - 2400ms)
+      setTimeout(function() {
+        img.classList.remove('glitch-hold');
+        img.classList.add('glitch-out');
+        if (carouselScanline) {
+          carouselScanline.classList.remove('active');
+          void carouselScanline.offsetWidth;
+          carouselScanline.classList.add('active');
+        }
+      }, 2000);
+
+      // Phase 4: Cleanup (2500ms)
+      setTimeout(function() {
+        clearCarouselState(img);
+        carouselRunning = false;
+      }, 2500);
+    }
+
+    // First glitch after 5-7 seconds, then every 8-12 seconds
+    setTimeout(function() {
+      glitchPortrait();
+      setInterval(glitchPortrait, 8000 + Math.random() * 4000);
+    }, 5000 + Math.random() * 2000);
+  }
 
   // ===== IMAGE PRELOADER =====
   var imgCache = {};
@@ -3329,13 +4171,499 @@ body {
     drawCorners(ctx, w, h, 14*s, 'rgba(201,168,76,0.15)');
   }
 
+  // ---- FISHER ONE-THREE: Nautical brand showcase ----
+  function drawFisher13(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+
+    // Deep ocean night sky
+    var sky = ctx.createLinearGradient(0, 0, 0, h);
+    sky.addColorStop(0, '#050810'); sky.addColorStop(0.35, '#0a1020');
+    sky.addColorStop(0.7, '#0c1428'); sky.addColorStop(1, '#060a14');
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
+
+    // Subtle ocean waves pattern at bottom
+    var oceanY = h * 0.72;
+    var ocean = ctx.createLinearGradient(0, oceanY, 0, h);
+    ocean.addColorStop(0, 'rgba(15,30,60,0.0)');
+    ocean.addColorStop(0.3, 'rgba(15,30,60,0.2)');
+    ocean.addColorStop(1, 'rgba(8,16,32,0.6)');
+    ctx.fillStyle = ocean; ctx.fillRect(0, oceanY, w, h - oceanY);
+
+    // Animated-style wave lines
+    ctx.strokeStyle = 'rgba(140,170,210,0.04)'; ctx.lineWidth = 0.6*s;
+    for (var wv = 0; wv < 6; wv++) {
+      ctx.beginPath();
+      for (var wx = 0; wx < w; wx += 2*s) {
+        var wy = oceanY + 12*s + wv*8*s + Math.sin(wx/(18*s) + wv*1.8)*3*s;
+        if (wx === 0) ctx.moveTo(wx, wy); else ctx.lineTo(wx, wy);
+      }
+      ctx.stroke();
+    }
+
+    // Star field
+    for (var si = 0; si < 35; si++) {
+      var sx = (Math.sin(si*7.3+2.1)*0.5+0.5)*w;
+      var sy = (Math.sin(si*4.1+0.7)*0.3+0.05)*h;
+      var sa = 0.06 + Math.sin(si*3.7)*0.04;
+      ctx.fillStyle = 'rgba(200,215,240,'+sa+')';
+      ctx.fillRect(sx, sy, 1*s, 1*s);
+    }
+
+    // Compass rose (subtle background element)
+    ctx.save();
+    ctx.translate(w*0.82, h*0.25);
+    ctx.globalAlpha = 0.035;
+    ctx.strokeStyle = '#8caad2'; ctx.lineWidth = 1*s;
+    var cr = 30*s;
+    ctx.beginPath(); ctx.arc(0, 0, cr, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, cr*0.7, 0, Math.PI*2); ctx.stroke();
+    // N-S-E-W lines
+    for (var ci = 0; ci < 8; ci++) {
+      var ca = ci*Math.PI/4;
+      ctx.beginPath(); ctx.moveTo(0, 0);
+      ctx.lineTo(Math.cos(ca)*cr*1.15, Math.sin(ca)*cr*1.15); ctx.stroke();
+    }
+    // Cardinal points
+    ctx.fillStyle = '#8caad2'; ctx.font = '600 '+(5*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('N', 0, -cr*1.3);
+    ctx.fillText('S', 0, cr*1.3);
+    ctx.fillText('E', cr*1.3, 0);
+    ctx.fillText('W', -cr*1.3, 0);
+    ctx.restore();
+
+    // Header bar with brand accent
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, 'rgba(140,170,210,0.06)'); hGrad.addColorStop(1, 'rgba(140,170,210,0.01)');
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
+    ctx.strokeStyle = 'rgba(140,170,210,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
+    // Left accent bar
+    ctx.fillStyle = 'rgba(140,170,210,0.4)'; ctx.fillRect(0, 0, 3*s, 24*s);
+
+    // Header text
+    ctx.fillStyle = 'rgba(240,235,224,0.65)'; ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText('Fisher One-Three', 14*s, 16*s);
+    ctx.fillStyle = 'rgba(140,170,210,0.4)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('EST. 2024', w-14*s, 16*s);
+    ctx.textAlign = 'left';
+
+    // Load the brand crest image (winged anchor)
+    loadImg('thumbs/fisher13-crest.jpg', function(img) {
+      if (!img) return;
+      // Center the crest image
+      var maxW = w*0.48, maxH = h*0.52;
+      var ratio = img.width / img.height;
+      var iw, ih;
+      if (ratio > maxW/maxH) { iw = maxW; ih = iw / ratio; }
+      else { ih = maxH; iw = ih * ratio; }
+      var ix = (w - iw)/2, iy = h*0.18;
+      ctx.globalAlpha = 0.55;
+      ctx.drawImage(img, ix, iy, iw, ih);
+      ctx.globalAlpha = 1.0;
+      // Vignette fade around image
+      var vigTop = ctx.createLinearGradient(0, iy - 10*s, 0, iy + 20*s);
+      vigTop.addColorStop(0, 'rgba(5,8,16,1)'); vigTop.addColorStop(1, 'rgba(5,8,16,0)');
+      ctx.fillStyle = vigTop; ctx.fillRect(ix-5*s, iy-10*s, iw+10*s, 30*s);
+      var vigBot = ctx.createLinearGradient(0, iy+ih-25*s, 0, iy+ih+5*s);
+      vigBot.addColorStop(0, 'rgba(5,8,16,0)'); vigBot.addColorStop(1, 'rgba(5,8,16,0.9)');
+      ctx.fillStyle = vigBot; ctx.fillRect(ix-5*s, iy+ih-25*s, iw+10*s, 30*s);
+      // Re-draw corners after async
+      drawCorners(ctx, w, h, 14*s, 'rgba(140,170,210,0.12)');
+    });
+
+    // Brand tagline
+    ctx.fillStyle = 'rgba(240,235,224,0.28)'; ctx.font = '300 italic '+(9*s)+'px Cormorant Garamond, serif';
+    ctx.textAlign = 'center'; ctx.fillText('One Part Land, Three Parts Sea', w/2, h*0.78);
+
+    // Bottom info bar
+    var barY2 = h - 22*s;
+    ctx.fillStyle = 'rgba(140,170,210,0.03)'; ctx.fillRect(0, barY2, w, 22*s);
+    ctx.strokeStyle = 'rgba(140,170,210,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY2); ctx.lineTo(w, barY2); ctx.stroke();
+
+    // T-shirt size badges
+    var sizes = ['XS','S','M','L','XL','2XL','3XL','4XL','5XL'];
+    var badgeW = 18*s, gap2 = 3*s;
+    var totalW = sizes.length*(badgeW+gap2) - gap2;
+    var startX = (w - totalW)/2;
+    for (var bi = 0; bi < sizes.length; bi++) {
+      var bx2 = startX + bi*(badgeW+gap2);
+      ctx.fillStyle = 'rgba(140,170,210,0.04)'; ctx.fillRect(bx2, barY2+4*s, badgeW, 14*s);
+      ctx.strokeStyle = 'rgba(140,170,210,0.08)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(bx2, barY2+4*s, badgeW, 14*s);
+      ctx.fillStyle = 'rgba(240,235,224,0.3)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText(sizes[bi], bx2+badgeW/2, barY2+14*s);
+    }
+    ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(140,170,210,0.12)');
+  }
+
+  // ---- NOCO APP STUDIO: Phone mockup demos ----
+  function drawNoCo(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+
+    // Warm dark gradient (local business warmth)
+    var bg = ctx.createLinearGradient(0, 0, w*0.3, h);
+    bg.addColorStop(0, '#0c0a08'); bg.addColorStop(0.5, '#0e0b09');
+    bg.addColorStop(1, '#0a0907');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    // Subtle mountain silhouette (Northern Colorado)
+    ctx.beginPath();
+    ctx.moveTo(0, h*0.52);
+    ctx.lineTo(w*0.12, h*0.38); ctx.lineTo(w*0.22, h*0.42);
+    ctx.lineTo(w*0.35, h*0.28); ctx.lineTo(w*0.45, h*0.35);
+    ctx.lineTo(w*0.55, h*0.25); ctx.lineTo(w*0.68, h*0.32);
+    ctx.lineTo(w*0.78, h*0.3); ctx.lineTo(w*0.88, h*0.38);
+    ctx.lineTo(w, h*0.42); ctx.lineTo(w, h); ctx.lineTo(0, h);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(201,168,76,0.012)'; ctx.fill();
+
+    // Grid dots (app grid aesthetic)
+    for (var gx = 0; gx < w; gx += 16*s) {
+      for (var gy = 0; gy < h; gy += 16*s) {
+        ctx.fillStyle = 'rgba(201,168,76,0.015)';
+        ctx.fillRect(gx, gy, 1*s, 1*s);
+      }
+    }
+
+    // Header bar
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, 'rgba(201,168,76,0.06)'); hGrad.addColorStop(1, 'rgba(201,168,76,0.01)');
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
+    ctx.strokeStyle = 'rgba(201,168,76,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(201,168,76,0.5)'; ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.65)'; ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('NoCo App Studio', 14*s, 16*s);
+    ctx.fillStyle = 'rgba(201,168,76,0.4)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('10 CLIENTS', w-14*s, 16*s); ctx.textAlign = 'left';
+
+    // Phone mockup (centered)
+    var phoneW = 44*s, phoneH = 80*s;
+    var phoneX = (w - phoneW)/2, phoneY = h*0.2;
+    ctx.strokeStyle = 'rgba(201,168,76,0.18)'; ctx.lineWidth = 1.5*s;
+    ctx.beginPath();
+    ctx.roundRect(phoneX, phoneY, phoneW, phoneH, 4*s);
+    ctx.stroke();
+    // Screen
+    ctx.fillStyle = 'rgba(201,168,76,0.02)';
+    ctx.beginPath(); ctx.roundRect(phoneX+3*s, phoneY+8*s, phoneW-6*s, phoneH-16*s, 2*s);
+    ctx.fill();
+    // Notch
+    ctx.fillStyle = 'rgba(201,168,76,0.1)';
+    ctx.fillRect(phoneX + phoneW*0.3, phoneY+2*s, phoneW*0.4, 3*s);
+    // Screen content - app list items
+    var screenX = phoneX+6*s, screenW = phoneW-12*s;
+    var listItems = ['Bakery', 'CrossFit', 'Salon', 'Dental', 'Brewery'];
+    for (var li = 0; li < listItems.length; li++) {
+      var ly = phoneY + 16*s + li*12*s;
+      ctx.fillStyle = 'rgba(201,168,76,0.035)';
+      ctx.fillRect(screenX, ly, screenW, 10*s);
+      ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 0.5*s;
+      ctx.strokeRect(screenX, ly, screenW, 10*s);
+      // App icon dot
+      ctx.fillStyle = 'rgba(201,168,76,0.25)';
+      ctx.beginPath(); ctx.arc(screenX+4*s, ly+5*s, 2*s, 0, Math.PI*2); ctx.fill();
+      // Name
+      ctx.fillStyle = 'rgba(240,235,224,0.35)'; ctx.font = '300 '+(3.5*s)+'px Inter, sans-serif';
+      ctx.fillText(listItems[li], screenX+9*s, ly+6.5*s);
+    }
+
+    // Side floating cards (left & right of phone)
+    var verticals = [
+      {label: 'FOOD', x: w*0.06, y: h*0.32, color: '220,180,100'},
+      {label: 'FITNESS', x: w*0.06, y: h*0.52, color: '100,200,150'},
+      {label: 'BEAUTY', x: w*0.78, y: h*0.32, color: '200,140,180'},
+      {label: 'HEALTH', x: w*0.78, y: h*0.52, color: '140,180,220'},
+      {label: 'DRINKS', x: w*0.06, y: h*0.72, color: '180,160,120'},
+      {label: 'RETAIL', x: w*0.78, y: h*0.72, color: '160,200,180'}
+    ];
+    for (var vi = 0; vi < verticals.length; vi++) {
+      var v = verticals[vi];
+      var vw = 28*s, vh = 14*s;
+      ctx.fillStyle = 'rgba('+v.color+',0.025)'; ctx.fillRect(v.x, v.y, vw, vh);
+      ctx.strokeStyle = 'rgba('+v.color+',0.08)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(v.x, v.y, vw, vh);
+      ctx.fillStyle = 'rgba('+v.color+',0.35)'; ctx.font = '200 '+(3.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText(v.label, v.x+vw/2, v.y+vh/2+1.5*s); ctx.textAlign = 'left';
+    }
+
+    // Bottom bar - stats
+    var barY = h - 22*s;
+    ctx.fillStyle = 'rgba(201,168,76,0.03)'; ctx.fillRect(0, barY, w, 22*s);
+    ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY); ctx.lineTo(w, barY); ctx.stroke();
+    ctx.fillStyle = 'rgba(201,168,76,0.35)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillText('6 verticals', 10*s, barY+14*s);
+    ctx.textAlign = 'right'; ctx.fillText('$199/mo', w-10*s, barY+14*s); ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(201,168,76,0.15)');
+  }
+
+  // ---- MARKET DASHBOARD: Trading terminal ----
+  function drawMarketDash(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+
+    // Deep dark terminal bg
+    var bg = ctx.createLinearGradient(0, 0, 0, h);
+    bg.addColorStop(0, '#080a0c'); bg.addColorStop(0.5, '#060a0e');
+    bg.addColorStop(1, '#04080c');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    // Scanline overlay
+    ctx.fillStyle = 'rgba(0,255,180,0.003)';
+    for (var sl = 0; sl < h; sl += 2*s) { ctx.fillRect(0, sl, w, 1*s); }
+
+    // Header bar
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, 'rgba(0,220,160,0.06)'); hGrad.addColorStop(1, 'rgba(0,220,160,0.01)');
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
+    ctx.strokeStyle = 'rgba(0,220,160,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(0,220,160,0.5)'; ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.65)'; ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('Market Terminal', 14*s, 16*s);
+    // Live dot
+    ctx.beginPath(); ctx.arc(w-12*s, 12*s, 2.5*s, 0, Math.PI*2);
+    ctx.fillStyle = '#00dc96'; ctx.fill();
+    ctx.fillStyle = 'rgba(0,220,150,0.5)'; ctx.font = (5.5*s)+'px monospace';
+    ctx.textAlign = 'right'; ctx.fillText('LIVE', w-18*s, 15*s); ctx.textAlign = 'left';
+
+    // Candlestick chart (main area)
+    var chartX = 8*s, chartY = 32*s, chartW = w*0.62, chartH = h*0.52;
+    ctx.fillStyle = 'rgba(0,220,160,0.01)'; ctx.fillRect(chartX, chartY, chartW, chartH);
+    ctx.strokeStyle = 'rgba(0,220,160,0.04)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(chartX, chartY, chartW, chartH);
+
+    // Horizontal grid lines
+    for (var gl = 0; gl < 5; gl++) {
+      var gly = chartY + gl*(chartH/5);
+      ctx.strokeStyle = 'rgba(0,220,160,0.025)'; ctx.lineWidth = 0.5*s;
+      ctx.beginPath(); ctx.moveTo(chartX, gly); ctx.lineTo(chartX+chartW, gly); ctx.stroke();
+    }
+
+    // Candlesticks
+    var candleW = 4*s, gap = 1.5*s;
+    var nCandles = Math.floor(chartW / (candleW + gap));
+    var basePrice = chartH*0.5;
+    for (var ci = 0; ci < nCandles; ci++) {
+      var cx = chartX + 4*s + ci*(candleW+gap);
+      var noise = Math.sin(ci*0.8+1.2)*0.35 + Math.sin(ci*0.3+0.5)*0.2;
+      var open = basePrice + noise*chartH*0.3;
+      var close = open + (Math.sin(ci*1.7+2.3)*0.08)*chartH;
+      var high = Math.min(open, close) - Math.abs(Math.sin(ci*2.1))*10*s;
+      var low = Math.max(open, close) + Math.abs(Math.cos(ci*1.9))*10*s;
+      var bullish = close < open; // inverted because Y axis is flipped
+      ctx.strokeStyle = bullish ? 'rgba(0,220,150,0.3)' : 'rgba(248,113,113,0.3)';
+      ctx.lineWidth = 0.5*s;
+      // Wick
+      ctx.beginPath(); ctx.moveTo(cx+candleW/2, chartY+high); ctx.lineTo(cx+candleW/2, chartY+low); ctx.stroke();
+      // Body
+      ctx.fillStyle = bullish ? 'rgba(0,220,150,0.15)' : 'rgba(248,113,113,0.12)';
+      var bodyTop = chartY + Math.min(open, close), bodyH = Math.abs(close - open) || 1*s;
+      ctx.fillRect(cx, bodyTop, candleW, bodyH);
+      ctx.strokeRect(cx, bodyTop, candleW, bodyH);
+    }
+
+    // Order book (right side)
+    var obX = w*0.66, obY = 32*s, obW = w*0.32, obH = chartH;
+    ctx.fillStyle = 'rgba(0,220,160,0.01)'; ctx.fillRect(obX, obY, obW, obH);
+    ctx.strokeStyle = 'rgba(0,220,160,0.04)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(obX, obY, obW, obH);
+    ctx.fillStyle = 'rgba(0,220,160,0.3)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
+    ctx.fillText('ORDER BOOK', obX+6*s, obY+10*s);
+
+    // Asks (red) top half
+    for (var ai = 0; ai < 6; ai++) {
+      var ay = obY + 16*s + ai*7*s;
+      var aBarW = (0.3 + Math.sin(ai*1.7+0.5)*0.15)*obW*0.65;
+      ctx.fillStyle = 'rgba(248,113,113,0.06)'; ctx.fillRect(obX+obW-aBarW-4*s, ay, aBarW, 5*s);
+      ctx.fillStyle = 'rgba(248,113,113,0.3)'; ctx.font = (3.5*s)+'px monospace';
+      ctx.textAlign = 'right'; ctx.fillText((67200-ai*12).toFixed(0), obX+obW-6*s, ay+4*s);
+      ctx.textAlign = 'left';
+    }
+    // Spread line
+    var spreadY = obY + 16*s + 6*7*s + 2*s;
+    ctx.strokeStyle = 'rgba(201,168,76,0.15)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(obX+4*s, spreadY); ctx.lineTo(obX+obW-4*s, spreadY); ctx.stroke();
+    ctx.fillStyle = 'rgba(201,168,76,0.3)'; ctx.font = (3*s)+'px monospace';
+    ctx.textAlign = 'center'; ctx.fillText('SPREAD', obX+obW/2, spreadY-2*s); ctx.textAlign = 'left';
+    // Bids (green) bottom half
+    for (var bi = 0; bi < 6; bi++) {
+      var by = spreadY + 6*s + bi*7*s;
+      var bBarW = (0.3 + Math.sin(bi*2.1+1.2)*0.15)*obW*0.65;
+      ctx.fillStyle = 'rgba(0,220,150,0.06)'; ctx.fillRect(obX+4*s, by, bBarW, 5*s);
+      ctx.fillStyle = 'rgba(0,220,150,0.3)'; ctx.font = (3.5*s)+'px monospace';
+      ctx.fillText((67140-bi*12).toFixed(0), obX+6*s, by+4*s);
+    }
+
+    // Trade tape (bottom)
+    var tapeY = chartY + chartH + 8*s;
+    ctx.fillStyle = 'rgba(0,220,160,0.025)'; ctx.fillRect(8*s, tapeY, w-16*s, h-tapeY-28*s);
+    ctx.strokeStyle = 'rgba(0,220,160,0.04)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeRect(8*s, tapeY, w-16*s, h-tapeY-28*s);
+    ctx.fillStyle = 'rgba(0,220,160,0.3)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
+    ctx.fillText('TRADE TAPE', 14*s, tapeY+10*s);
+    // Tape entries
+    var trades = ['BUY 0.15 @ 67,148', 'SELL 0.42 @ 67,156', 'BUY 1.20 @ 67,144', 'SELL 0.08 @ 67,160'];
+    for (var ti = 0; ti < trades.length; ti++) {
+      var ty = tapeY + 16*s + ti*6.5*s;
+      var isBuy = trades[ti].indexOf('BUY') === 0;
+      ctx.fillStyle = isBuy ? 'rgba(0,220,150,0.25)' : 'rgba(248,113,113,0.25)';
+      ctx.font = (3.5*s)+'px monospace';
+      ctx.fillText(trades[ti], 14*s, ty);
+    }
+
+    // Bottom stat bar
+    var barY = h - 22*s;
+    ctx.fillStyle = 'rgba(0,220,160,0.03)'; ctx.fillRect(0, barY, w, 22*s);
+    ctx.strokeStyle = 'rgba(0,220,160,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY); ctx.lineTo(w, barY); ctx.stroke();
+    ctx.fillStyle = 'rgba(0,220,150,0.35)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillText('0 deps', 10*s, barY+14*s);
+    ctx.textAlign = 'center'; ctx.fillText('60 FPS', w/2, barY+14*s);
+    ctx.textAlign = 'right'; ctx.fillText('WebSocket', w-10*s, barY+14*s); ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(0,220,160,0.12)');
+  }
+
+  // ---- AUTON: Autonomous background worker ----
+  function drawAuton(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+
+    // Deep purple-tinted dark bg (AI aesthetic)
+    var bg = ctx.createLinearGradient(0, 0, w*0.4, h);
+    bg.addColorStop(0, '#090710'); bg.addColorStop(0.5, '#0b0912');
+    bg.addColorStop(1, '#07060c');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    // Neural network dots & connections (background pattern)
+    var nodes = [];
+    for (var ni = 0; ni < 30; ni++) {
+      nodes.push({
+        x: (Math.sin(ni*4.7+1.3)*0.4+0.5)*w,
+        y: (Math.sin(ni*3.2+0.8)*0.4+0.5)*h
+      });
+    }
+    // Connections
+    ctx.strokeStyle = 'rgba(160,120,220,0.015)'; ctx.lineWidth = 0.5*s;
+    for (var ci = 0; ci < nodes.length; ci++) {
+      for (var cj = ci+1; cj < nodes.length; cj++) {
+        var dx = nodes[ci].x - nodes[cj].x, dy = nodes[ci].y - nodes[cj].y;
+        if (dx*dx+dy*dy < (80*s)*(80*s)) {
+          ctx.beginPath(); ctx.moveTo(nodes[ci].x, nodes[ci].y); ctx.lineTo(nodes[cj].x, nodes[cj].y); ctx.stroke();
+        }
+      }
+    }
+    // Nodes
+    for (var nj = 0; nj < nodes.length; nj++) {
+      ctx.fillStyle = 'rgba(160,120,220,0.04)';
+      ctx.beginPath(); ctx.arc(nodes[nj].x, nodes[nj].y, 1.5*s, 0, Math.PI*2); ctx.fill();
+    }
+
+    // Header bar
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, 'rgba(160,120,220,0.06)'); hGrad.addColorStop(1, 'rgba(160,120,220,0.01)');
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
+    ctx.strokeStyle = 'rgba(160,120,220,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(160,120,220,0.5)'; ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.65)'; ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('Auton', 14*s, 16*s);
+    ctx.fillStyle = 'rgba(160,120,220,0.35)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('AUTONOMOUS', w-14*s, 16*s); ctx.textAlign = 'left';
+
+    // Agent pipeline (central feature)
+    var agents = [
+      {name: 'Scanner', icon: '\u25CE', color: '120,180,220'},
+      {name: 'Planner', icon: '\u25C7', color: '160,120,220'},
+      {name: 'Executor', icon: '\u25B7', color: '200,120,180'},
+      {name: 'Tester', icon: '\u25A1', color: '120,200,160'},
+      {name: 'Reviewer', icon: '\u25CB', color: '220,180,100'},
+      {name: 'Monitor', icon: '\u25C9', color: '100,180,200'}
+    ];
+    var pipeY = h*0.32;
+    var pipeH = 14*s;
+    var agentW = (w - 20*s) / agents.length;
+    for (var ai = 0; ai < agents.length; ai++) {
+      var ag = agents[ai];
+      var ax = 10*s + ai*agentW;
+      // Agent box
+      ctx.fillStyle = 'rgba('+ag.color+',0.025)';
+      ctx.fillRect(ax+1*s, pipeY, agentW-2*s, pipeH);
+      ctx.strokeStyle = 'rgba('+ag.color+',0.1)'; ctx.lineWidth = 0.5*s;
+      ctx.strokeRect(ax+1*s, pipeY, agentW-2*s, pipeH);
+      // Icon
+      ctx.fillStyle = 'rgba('+ag.color+',0.35)'; ctx.font = (6*s)+'px monospace';
+      ctx.textAlign = 'center'; ctx.fillText(ag.icon, ax+agentW/2, pipeY+6*s);
+      // Name
+      ctx.fillStyle = 'rgba('+ag.color+',0.4)'; ctx.font = '200 '+(3*s)+'px Inter, sans-serif';
+      ctx.fillText(ag.name, ax+agentW/2, pipeY+12*s);
+      // Arrow between agents
+      if (ai < agents.length-1) {
+        ctx.strokeStyle = 'rgba(160,120,220,0.08)'; ctx.lineWidth = 0.5*s;
+        ctx.beginPath(); ctx.moveTo(ax+agentW-1*s, pipeY+pipeH/2);
+        ctx.lineTo(ax+agentW+1*s, pipeY+pipeH/2); ctx.stroke();
+      }
+    }
+    ctx.textAlign = 'left';
+
+    // Safety model visualization
+    var safeY = pipeY + pipeH + 18*s;
+    ctx.fillStyle = 'rgba(160,120,220,0.02)'; ctx.fillRect(10*s, safeY, w-20*s, 28*s);
+    ctx.strokeStyle = 'rgba(160,120,220,0.05)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeRect(10*s, safeY, w-20*s, 28*s);
+    ctx.fillStyle = 'rgba(160,120,220,0.25)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
+    ctx.fillText('SAFETY LAYERS', 16*s, safeY+10*s);
+
+    var layers = ['DRY_RUN', 'SafetyGuard', 'Kill Switch', 'Cred Isolation', 'Audit', 'Rollback'];
+    var layerW = (w - 30*s) / layers.length;
+    for (var li = 0; li < layers.length; li++) {
+      var lx = 15*s + li*layerW;
+      ctx.fillStyle = 'rgba(0,220,150,0.04)'; ctx.fillRect(lx, safeY+14*s, layerW-3*s, 10*s);
+      ctx.strokeStyle = 'rgba(0,220,150,0.08)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(lx, safeY+14*s, layerW-3*s, 10*s);
+      ctx.fillStyle = 'rgba(0,220,150,0.35)'; ctx.font = (2.8*s)+'px monospace';
+      ctx.textAlign = 'center'; ctx.fillText(layers[li], lx+(layerW-3*s)/2, safeY+21*s);
+    }
+    ctx.textAlign = 'left';
+
+    // Activity log at bottom
+    var logY = safeY + 34*s;
+    var logEntries = [
+      {t:'14:22:01', msg:'Scanner → found 3 improvements in profit-desk/', color:'120,180,220'},
+      {t:'14:22:08', msg:'Planner → drafted PR #47: add retry logic', color:'160,120,220'},
+      {t:'14:22:15', msg:'Executor → applied patch (DRY_RUN)', color:'200,120,180'},
+      {t:'14:22:19', msg:'Tester → all 42 tests passing', color:'120,200,160'}
+    ];
+    for (var ei = 0; ei < logEntries.length; ei++) {
+      var entry = logEntries[ei];
+      var ey = logY + ei*7*s;
+      ctx.fillStyle = 'rgba('+entry.color+',0.06)'; ctx.font = (3*s)+'px monospace';
+      ctx.fillText(entry.t, 10*s, ey);
+      ctx.fillStyle = 'rgba('+entry.color+',0.25)'; ctx.font = (3*s)+'px monospace';
+      ctx.fillText(entry.msg, 36*s, ey);
+    }
+
+    // Bottom stat bar
+    var barY = h - 22*s;
+    ctx.fillStyle = 'rgba(160,120,220,0.03)'; ctx.fillRect(0, barY, w, 22*s);
+    ctx.strokeStyle = 'rgba(160,120,220,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY); ctx.lineTo(w, barY); ctx.stroke();
+    ctx.fillStyle = 'rgba(160,120,220,0.35)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillText('6 agents', 10*s, barY+14*s);
+    ctx.textAlign = 'center'; ctx.fillText('14B LLM', w/2, barY+14*s);
+    ctx.textAlign = 'right'; ctx.fillText('RTX 4070', w-10*s, barY+14*s); ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(160,120,220,0.12)');
+  }
+
   // ===== DISPATCH =====
   var renderers = {
     booking: drawBooking, trading: drawTrading, profitdesk: drawProfitDesk,
     rts: drawRTS, platformer: drawPlatformer, messenger: drawMessenger,
     polymarket: drawPolymarket, galleon: drawGalleon,
     bookmarkbot: drawBookmarkBot, homehub: drawHomeHub,
-    projecthub: drawProjectHub
+    projecthub: drawProjectHub, fisher13: drawFisher13,
+    noco: drawNoCo, marketdash: drawMarketDash, auton: drawAuton
   };
 
   function initProjectCanvases() {
@@ -3357,6 +4685,53 @@ body {
 
 })();
 </script>
+
+<!-- FTDA: Passkey Modal -->
+<div class="ftda-passkey-overlay" id="ftda-passkey-overlay" aria-hidden="true" role="dialog" aria-label="Passkey required">
+  <div class="ftda-passkey-box">
+    <button class="ftda-passkey-close" aria-label="Close">&times;</button>
+    <svg class="ftda-passkey-shield" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 2L4 10v12c0 11.1 6.8 21.4 16 24 9.2-2.6 16-12.9 16-24V10L20 2z" stroke="rgba(201,168,76,0.4)" stroke-width="1.5" fill="rgba(201,168,76,0.04)"/>
+      <path d="M20 8l-10 5v8c0 7.4 4.5 14.3 10 16 5.5-1.7 10-8.6 10-16v-8l-10-5z" stroke="rgba(201,168,76,0.15)" stroke-width="0.8" fill="none"/>
+    </svg>
+    <div class="ftda-passkey-heading">Protected Document</div>
+    <div class="ftda-passkey-sub">Enter passkey to access this framework</div>
+    <input type="password" class="ftda-passkey-input" placeholder="Passkey" autocomplete="off" spellcheck="false">
+    <button class="ftda-passkey-submit">Unlock</button>
+    <div class="ftda-passkey-error">Invalid passkey</div>
+  </div>
+</div>
+
+<!-- FTDA: Document Reader -->
+<div class="ftda-reader-overlay" id="ftda-reader-overlay" aria-hidden="true" role="dialog" aria-label="FTDA Document Reader">
+  <div class="ftda-reader-topbar">
+    <div class="ftda-reader-topbar-left">
+      <span class="ftda-reader-title-bar">FTDA Reader</span>
+      <span class="ftda-reader-status"><span class="ftda-reader-status-dot"></span>Unlocked</span>
+    </div>
+    <div class="ftda-reader-topbar-right">
+      <button class="ftda-reader-btn active" data-ftda-watermark>Watermark: On</button>
+      <button class="ftda-reader-btn" data-ftda-secure>Secure: Off</button>
+      <button class="ftda-reader-btn" data-ftda-lock>Lock</button>
+      <button class="ftda-reader-close" aria-label="Close reader">&times;</button>
+    </div>
+  </div>
+  <div class="ftda-reader-body">
+    <nav class="ftda-reader-toc" aria-label="Document navigation">
+      <div class="ftda-toc-heading">Contents</div>
+    </nav>
+    <div class="ftda-reader-content"></div>
+  </div>
+</div>
+
+<!-- FTDA: Watermark overlay -->
+<div class="ftda-watermark" style="display:none;">
+  <div class="ftda-watermark-inner"></div>
+</div>
+
+<!-- FTDA Scripts -->
+<script src="ftda/config.js"></script>
+<script src="ftda/ftda.js"></script>
 
 </body>
 </html>
