@@ -85,6 +85,9 @@ body {
   transition: opacity 3s ease;
 }
 
+/* Statue Watermark (hidden in dark, shown in light via theme overrides) */
+.statue-watermark { display: none; }
+
 /* Ultra-thin line with subtle gold accent */
 .thin-line {
   width: 1px;
@@ -2101,140 +2104,218 @@ span.hero-domain-dot {
 }
 
 /* ===== LIGHT THEME OVERRIDES ===== */
+/* Warm stone palette: not blinding white, more like aged marble/parchment */
 [data-theme="light"] {
-  --bg: #fafaf8;
-  --warm-white: #1a1a1d;
-  --warm-white-dim: rgba(26, 26, 29, 0.55);
-  --warm-white-ghost: rgba(26, 26, 29, 0.06);
-  --warm-white-breath: rgba(26, 26, 29, 0.06);
-  --warm-white-soft: rgba(26, 26, 29, 0.08);
-  --accent: rgba(26, 26, 29, 0.65);
-  --gold-1776: #7a7a85;
-  --navy-1776: #c8ccd4;
-  --gold-dim: rgba(100, 100, 115, 0.2);
-  --gold-ghost: rgba(100, 100, 115, 0.06);
+  --bg: #e8e4df;
+  --warm-white: #2c2a28;
+  --warm-white-dim: rgba(44, 42, 40, 0.50);
+  --warm-white-ghost: rgba(44, 42, 40, 0.07);
+  --warm-white-breath: rgba(44, 42, 40, 0.05);
+  --warm-white-soft: rgba(44, 42, 40, 0.09);
+  --accent: rgba(44, 42, 40, 0.6);
+  --gold-1776: #6b6560;
+  --navy-1776: #b8b2aa;
+  --gold-dim: rgba(90, 82, 74, 0.2);
+  --gold-ghost: rgba(90, 82, 74, 0.06);
 }
 
-[data-theme="light"] body { background: #fafaf8; color: #1a1a1d; }
-[data-theme="light"] ::selection { background: rgba(100,100,115,0.15); color: #1a1a1d; }
+[data-theme="light"] body {
+  background: #e8e4df;
+  color: #2c2a28;
+  background-image:
+    radial-gradient(ellipse 600px 800px at 50% 30%, rgba(210,205,198,0.5) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 600px at 80% 60%, rgba(200,195,188,0.3) 0%, transparent 60%);
+}
+[data-theme="light"] ::selection { background: rgba(90,82,74,0.18); color: #2c2a28; }
 
-/* Ship watermark on light */
-[data-theme="light"] .ship-watermark { filter: grayscale(1) brightness(0.7) contrast(0.6); opacity: 0.03; }
+/* Hide the ship watermark entirely, replace with CSS statue */
+[data-theme="light"] .ship-watermark { display: none; }
+
+/* Roman statue background watermark */
+[data-theme="light"] .statue-watermark {
+  display: block;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 700px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.04;
+  background:
+    /* Head/crown area */
+    radial-gradient(ellipse 120px 80px at 50% 12%, rgba(90,82,74,0.7) 0%, transparent 100%),
+    /* Face oval */
+    radial-gradient(ellipse 90px 120px at 50% 22%, rgba(90,82,74,0.6) 0%, transparent 100%),
+    /* Nose ridge */
+    radial-gradient(ellipse 12px 40px at 50% 24%, rgba(70,62,54,0.5) 0%, transparent 100%),
+    /* Left eye socket shadow */
+    radial-gradient(ellipse 22px 12px at 42% 19%, rgba(60,52,44,0.4) 0%, transparent 100%),
+    /* Right eye socket shadow */
+    radial-gradient(ellipse 22px 12px at 58% 19%, rgba(60,52,44,0.4) 0%, transparent 100%),
+    /* Jawline left */
+    radial-gradient(ellipse 40px 60px at 38% 28%, rgba(90,82,74,0.3) 0%, transparent 100%),
+    /* Jawline right */
+    radial-gradient(ellipse 40px 60px at 62% 28%, rgba(90,82,74,0.3) 0%, transparent 100%),
+    /* Neck */
+    radial-gradient(ellipse 50px 80px at 50% 36%, rgba(90,82,74,0.4) 0%, transparent 100%),
+    /* Left shoulder */
+    radial-gradient(ellipse 140px 70px at 30% 44%, rgba(90,82,74,0.35) 0%, transparent 100%),
+    /* Right shoulder */
+    radial-gradient(ellipse 140px 70px at 70% 44%, rgba(90,82,74,0.35) 0%, transparent 100%),
+    /* Chest/torso */
+    radial-gradient(ellipse 160px 200px at 50% 56%, rgba(90,82,74,0.3) 0%, transparent 100%),
+    /* Left drape fold */
+    radial-gradient(ellipse 30px 120px at 35% 60%, rgba(70,62,54,0.2) 0%, transparent 100%),
+    /* Right drape fold */
+    radial-gradient(ellipse 30px 120px at 65% 58%, rgba(70,62,54,0.2) 0%, transparent 100%),
+    /* Base/pedestal */
+    radial-gradient(ellipse 200px 60px at 50% 82%, rgba(90,82,74,0.25) 0%, transparent 100%);
+  transition: opacity 3s ease;
+}
 
 /* Hero script logo on light: swap to purpose-built light asset */
-[data-theme="light"] .hero-script-logo { content: url('img/namescript-light.png'); opacity: 0.55; filter: none; }
+[data-theme="light"] .hero-script-logo { content: url('img/namescript-light.png'); opacity: 0.45; filter: contrast(1.3); }
 
-/* Hero motto - no glow on light */
-[data-theme="light"] .hero-motto { text-shadow: none; }
+/* Hero motto */
+[data-theme="light"] .hero-motto { text-shadow: none; color: rgba(44,42,40,0.35); }
 
-/* Portrait - more visible on light */
-[data-theme="light"] .portrait-frame img.portrait-primary { filter: grayscale(0.15) contrast(1.1) brightness(1.05); opacity: 0.85; }
+/* Portrait - warmer, more visible */
+[data-theme="light"] .portrait-frame img.portrait-primary { filter: grayscale(0.1) contrast(1.05) brightness(1.0) sepia(0.08); opacity: 0.85; }
 
 /* Nav scrolled bg */
-[data-theme="light"] nav.scrolled { background: rgba(250,250,248,0.92); }
+[data-theme="light"] nav.scrolled { background: rgba(232,228,223,0.94); backdrop-filter: blur(8px); }
+
+/* Hero name: carved stone */
+[data-theme="light"] .hero-name {
+  color: #2c2a28;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+}
+
+/* Hero subtitle */
+[data-theme="light"] .hero-subtitle { color: rgba(44,42,40,0.5); }
+
+/* Section headings */
+[data-theme="light"] h2, [data-theme="light"] h3 { color: #2c2a28; }
 
 /* About card */
-[data-theme="light"] .about-card { background: rgba(26,26,29,0.02); border-color: rgba(100,100,115,0.12); }
-[data-theme="light"] .about-card::before { background: linear-gradient(90deg, transparent, rgba(100,100,115,0.2), transparent); }
+[data-theme="light"] .about-card {
+  background: rgba(255,255,255,0.35);
+  border-color: rgba(90,82,74,0.12);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.03);
+}
+[data-theme="light"] .about-card::before { background: linear-gradient(90deg, transparent, rgba(90,82,74,0.15), transparent); }
 
-/* Canvas thumb dark borders on light bg */
-[data-theme="light"] .project-thumb-wrap { border-color: rgba(26,26,29,0.1); border-radius: 4px; background: #111; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-[data-theme="light"] .project-card:hover .project-thumb-wrap { box-shadow: 0 8px 40px rgba(0,0,0,0.12); }
+/* Canvas thumbs: keep dark canvases framed */
+[data-theme="light"] .project-thumb-wrap {
+  border: 1px solid rgba(44,42,40,0.1);
+  border-radius: 4px;
+  background: #111;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+[data-theme="light"] .project-card:hover .project-thumb-wrap { box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
 
-/* CTA primary hover */
-[data-theme="light"] .hero-cta-primary:hover { background: #65656f; }
+/* CTA buttons: warm charcoal */
+[data-theme="light"] .hero-cta-primary {
+  background: #4a4540;
+  color: #e8e4df;
+  border-color: #4a4540;
+}
+[data-theme="light"] .hero-cta-primary:hover { background: #3a3530; }
 
-/* Active/shipped status badges */
-[data-theme="light"] .p-status.active { border-color: rgba(34,120,70,0.2); color: rgba(34,120,70,0.6); background: rgba(34,120,70,0.04); }
-[data-theme="light"] .p-status.shipped { border-color: rgba(160,120,40,0.2); color: rgba(160,120,40,0.6); background: rgba(160,120,40,0.04); }
+/* Status badges */
+[data-theme="light"] .p-status.active { border-color: rgba(50,110,70,0.25); color: rgba(40,95,55,0.7); background: rgba(50,110,70,0.06); }
+[data-theme="light"] .p-status.shipped { border-color: rgba(140,105,40,0.25); color: rgba(120,90,30,0.7); background: rgba(140,105,40,0.06); }
 
 /* Hover text emphasis */
 [data-theme="light"] .project-card:hover .p-title,
-[data-theme="light"] .venture-item:hover .v-title { color: #1a1a1d; }
+[data-theme="light"] .venture-item:hover .v-title { color: #2c2a28; }
+
+/* Stat values */
+[data-theme="light"] .ds-value { color: #3a3632; }
 
 /* FTDA flagship on light */
 [data-theme="light"] .ftda-flagship {
-  background: linear-gradient(135deg, rgba(100,100,115,0.04) 0%, transparent 40%),
-    linear-gradient(315deg, rgba(100,100,115,0.03) 0%, transparent 40%),
-    linear-gradient(180deg, rgba(245,244,242,1) 0%, rgba(250,250,248,1) 100%) !important;
-  border-color: rgba(100,100,115,0.15) !important;
+  background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 40%),
+    linear-gradient(315deg, rgba(255,255,255,0.2) 0%, transparent 40%),
+    linear-gradient(180deg, rgba(235,231,226,1) 0%, rgba(232,228,223,1) 100%) !important;
+  border-color: rgba(90,82,74,0.15) !important;
 }
 
-/* Booking form on light */
-[data-theme="light"] .booking-input { background: rgba(26,26,29,0.03); border-color: rgba(100,100,115,0.12); color: #1a1a1d; }
-[data-theme="light"] .booking-input::placeholder { color: rgba(26,26,29,0.3); }
-
-/* Thin line on light - marble vein feel */
-[data-theme="light"] .thin-line { background: linear-gradient(to bottom, transparent, rgba(160,160,170,0.15), rgba(120,120,130,0.08), rgba(160,160,170,0.15), transparent); }
-
-/* Roman marble sculpture watermark replacement */
-[data-theme="light"] .ship-watermark {
-  filter: grayscale(1) brightness(0.92) contrast(0.5);
-  opacity: 0.035;
-  mix-blend-mode: multiply;
+/* Booking form */
+[data-theme="light"] .booking-input {
+  background: rgba(255,255,255,0.4);
+  border-color: rgba(90,82,74,0.15);
+  color: #2c2a28;
 }
+[data-theme="light"] .booking-input:focus { border-color: rgba(90,82,74,0.35); background: rgba(255,255,255,0.6); }
+[data-theme="light"] .booking-input::placeholder { color: rgba(44,42,40,0.3); }
 
-/* Hero name: chiseled stone feel */
-[data-theme="light"] .hero-name {
-  color: #2a2a2e;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+/* Booking submit */
+[data-theme="light"] .booking-submit { background: #4a4540; color: #e8e4df; }
+[data-theme="light"] .booking-submit:hover { background: #3a3530; }
+
+/* Thin line: marble vein */
+[data-theme="light"] .thin-line { background: linear-gradient(to bottom, transparent, rgba(160,152,142,0.18), rgba(130,122,112,0.1), rgba(160,152,142,0.18), transparent); }
+
+/* Links */
+[data-theme="light"] a { color: #4a4540; }
+[data-theme="light"] a:hover { color: #2c2a28; }
+
+/* Filter buttons */
+[data-theme="light"] .pf-btn { border-color: rgba(90,82,74,0.15); color: rgba(44,42,40,0.5); }
+[data-theme="light"] .pf-btn.active { background: #4a4540; color: #e8e4df; border-color: #4a4540; }
+
+/* Venture items */
+[data-theme="light"] .venture-item {
+  border-color: rgba(90,82,74,0.1);
+  background: rgba(255,255,255,0.2);
 }
+[data-theme="light"] .venture-item:hover { background: rgba(255,255,255,0.4); border-color: rgba(90,82,74,0.2); }
 
-/* Hero subtitle: classical silver */
-[data-theme="light"] .hero-sub {
-  color: rgba(42,42,46,0.55);
-}
+/* Nav dots */
+[data-theme="light"] .nav-dot { background: rgba(44,42,40,0.15); }
+[data-theme="light"] .nav-dot.active { background: #6b6560; }
 
-/* Section headings: marble-carved weight */
-[data-theme="light"] h2, [data-theme="light"] h3 {
-  color: #1e1e22;
-}
+/* Contact row */
+[data-theme="light"] .contact-row { border-bottom-color: rgba(44,42,40,0.07); }
+[data-theme="light"] .contact-row:hover { background: rgba(255,255,255,0.25); }
 
-/* Stat values: polished silver */
-[data-theme="light"] .ds-value {
-  color: #3a3a40;
-}
+/* Detail section */
+[data-theme="light"] .project-detail { border-top-color: rgba(44,42,40,0.07); }
+[data-theme="light"] .detail-stat { border-color: rgba(90,82,74,0.1); }
 
-/* Gold accents become polished silver in light */
-[data-theme="light"] .hero-cta-primary {
-  background: #7a7a85;
-  color: #fafaf8;
-  border-color: #7a7a85;
-}
+/* Brand teaser */
+[data-theme="light"] .brand-teaser { background: rgba(255,255,255,0.2); border-color: rgba(90,82,74,0.1); }
 
-/* Link colors on light */
-[data-theme="light"] a { color: #4a4a55; }
-[data-theme="light"] a:hover { color: #1a1a1d; }
+/* NoCo section */
+[data-theme="light"] .noco-section { background: rgba(255,255,255,0.15); }
 
-/* Filter buttons on light */
-[data-theme="light"] .pf-btn { border-color: rgba(100,100,115,0.15); color: rgba(26,26,29,0.5); }
-[data-theme="light"] .pf-btn.active { background: #7a7a85; color: #fafaf8; border-color: #7a7a85; }
+/* Opinion paragraph */
+[data-theme="light"] .p-opinion { color: rgba(44,42,40,0.45); border-bottom-color: rgba(44,42,40,0.06); }
 
-/* Venture items on light */
-[data-theme="light"] .venture-item { border-color: rgba(100,100,115,0.1); background: rgba(26,26,29,0.015); }
-[data-theme="light"] .venture-item:hover { background: rgba(26,26,29,0.03); border-color: rgba(100,100,115,0.2); }
+/* Stats bar */
+[data-theme="light"] .stats-bar { border-color: rgba(44,42,40,0.06); }
 
-/* Booking submit button */
-[data-theme="light"] .booking-submit { background: #7a7a85; color: #fafaf8; }
-[data-theme="light"] .booking-submit:hover { background: #65656f; }
+/* Hero domains */
+[data-theme="light"] .hero-domains a { color: rgba(44,42,40,0.4); }
+[data-theme="light"] .hero-domains a:hover { color: #2c2a28; }
+[data-theme="light"] .hero-domain-dot { color: rgba(44,42,40,0.2); }
 
-/* Nav dots on light */
-[data-theme="light"] .nav-dot { background: rgba(26,26,29,0.12); }
-[data-theme="light"] .nav-dot.active { background: #7a7a85; }
+/* Glitch/morph letters */
+[data-theme="light"] .glitch-line { background: rgba(44,42,40,0.15); }
 
-/* Contact row on light */
-[data-theme="light"] .contact-row { border-bottom-color: rgba(26,26,29,0.06); }
-[data-theme="light"] .contact-row:hover { background: rgba(26,26,29,0.02); }
+/* Project descriptions and tech line */
+[data-theme="light"] .p-desc { color: rgba(44,42,40,0.65); }
+[data-theme="light"] .p-tech { color: rgba(44,42,40,0.4); }
 
-/* Detail section on light */
-[data-theme="light"] .project-detail { border-top-color: rgba(26,26,29,0.06); }
-[data-theme="light"] .detail-stat { border-color: rgba(100,100,115,0.1); }
+/* Detail column text */
+[data-theme="light"] .detail-col li { color: rgba(44,42,40,0.7); }
+[data-theme="light"] .detail-col em { color: #2c2a28; }
 
-/* Brand teaser on light */
-[data-theme="light"] .brand-teaser { background: rgba(26,26,29,0.02); border-color: rgba(100,100,115,0.1); }
-
-/* NoCo section on light */
-[data-theme="light"] .noco-section { background: rgba(26,26,29,0.02); }
+/* Hero rule line */
+[data-theme="light"] .hero-rule { background: rgba(44,42,40,0.12); }
 
 /* ===== THEME TOGGLE ===== */
 .theme-toggle {
@@ -2290,8 +2371,11 @@ span.hero-domain-dot {
 
 <a class="skip-nav" href="#sec-about">Skip to content</a>
 
-<!-- Ship Watermark -->
+<!-- Ship Watermark (dark mode) -->
 <img class="ship-watermark" src="img/ship.png" alt="" role="presentation" loading="lazy">
+
+<!-- Roman Statue Watermark (light mode only, hidden in dark via CSS) -->
+<div class="statue-watermark" role="presentation" aria-hidden="true"></div>
 
 <div class="page">
 
@@ -3837,10 +3921,13 @@ span.hero-domain-dot {
     else scrollInd.classList.remove('hidden');
   }, { passive: true });
 
-  // ===== SHIP PARALLAX =====
+  // ===== WATERMARK PARALLAX =====
   var ship = document.querySelector('.ship-watermark');
+  var statue = document.querySelector('.statue-watermark');
   window.addEventListener('scroll', function() {
-    if (ship) ship.style.transform = 'translate(-50%, calc(-50% + ' + (window.scrollY * 0.05) + 'px))';
+    var y = window.scrollY;
+    if (ship) ship.style.transform = 'translate(-50%, calc(-50% + ' + (y * 0.05) + 'px))';
+    if (statue) statue.style.transform = 'translate(-50%, calc(-50% + ' + (y * 0.03) + 'px))';
   }, { passive: true });
 
   // ===== NAV DOTS =====
