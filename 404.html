@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 | Lance W. Fisher</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0b;
+    --warm-white: #f0ebe0;
+    --gold-1776: #c9a84c;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--warm-white);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px;
+  }
+
+  .code {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(80px, 20vw, 160px);
+    letter-spacing: 16px;
+    color: rgba(201, 168, 76, 0.15);
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .message {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(24px, 5vw, 36px);
+    letter-spacing: 4px;
+    color: rgba(240, 235, 224, 0.5);
+    margin-bottom: 12px;
+  }
+
+  .sub {
+    font-weight: 200;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: rgba(240, 235, 224, 0.2);
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  .home-link {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--gold-1776);
+    border: 1px solid rgba(201, 168, 76, 0.2);
+    padding: 14px 36px;
+    border-radius: 2px;
+    transition: all 0.4s ease;
+  }
+
+  .home-link:hover {
+    background: rgba(201, 168, 76, 0.06);
+    border-color: rgba(201, 168, 76, 0.4);
+  }
+
+  .anchor {
+    margin-top: 60px;
+    font-size: 28px;
+    opacity: 0.08;
+  }
+</style>
+</head>
+<body>
+  <div class="code">404</div>
+  <div class="message">Off the charts</div>
+  <div class="sub">This page doesn't exist</div>
+  <a class="home-link" href="/">Return Home</a>
+  <div class="anchor">&#9875;</div>
+</body>
+</html>
