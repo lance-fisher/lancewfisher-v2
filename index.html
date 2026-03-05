@@ -2121,8 +2121,8 @@ span.hero-domain-dot {
 /* Ship watermark on light */
 [data-theme="light"] .ship-watermark { filter: grayscale(1) brightness(0.7) contrast(0.6); opacity: 0.03; }
 
-/* Hero script logo on light */
-[data-theme="light"] .hero-script-logo { opacity: 0.08; filter: brightness(0.2) contrast(1.2); }
+/* Hero script logo on light: swap to purpose-built light asset */
+[data-theme="light"] .hero-script-logo { content: url('img/namescript-light.png'); opacity: 0.55; filter: none; }
 
 /* Hero motto - no glow on light */
 [data-theme="light"] .hero-motto { text-shadow: none; }
@@ -2164,8 +2164,63 @@ span.hero-domain-dot {
 [data-theme="light"] .booking-input { background: rgba(26,26,29,0.03); border-color: rgba(100,100,115,0.12); color: #1a1a1d; }
 [data-theme="light"] .booking-input::placeholder { color: rgba(26,26,29,0.3); }
 
-/* Thin line on light */
-[data-theme="light"] .thin-line { background: linear-gradient(to bottom, transparent, rgba(100,100,115,0.1), rgba(26,26,29,0.06), rgba(100,100,115,0.1), transparent); }
+/* Thin line on light - marble vein feel */
+[data-theme="light"] .thin-line { background: linear-gradient(to bottom, transparent, rgba(160,160,170,0.15), rgba(120,120,130,0.08), rgba(160,160,170,0.15), transparent); }
+
+/* Roman marble sculpture watermark replacement */
+[data-theme="light"] .ship-watermark {
+  filter: grayscale(1) brightness(0.92) contrast(0.5);
+  opacity: 0.035;
+  mix-blend-mode: multiply;
+}
+
+/* Hero name: chiseled stone feel */
+[data-theme="light"] .hero-name {
+  color: #2a2a2e;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+}
+
+/* Hero subtitle: classical silver */
+[data-theme="light"] .hero-sub {
+  color: rgba(42,42,46,0.55);
+}
+
+/* Section headings: marble-carved weight */
+[data-theme="light"] h2, [data-theme="light"] h3 {
+  color: #1e1e22;
+}
+
+/* Stat values: polished silver */
+[data-theme="light"] .ds-value {
+  color: #3a3a40;
+}
+
+/* Gold accents become polished silver in light */
+[data-theme="light"] .hero-cta-primary {
+  background: #7a7a85;
+  color: #fafaf8;
+  border-color: #7a7a85;
+}
+
+/* Link colors on light */
+[data-theme="light"] a { color: #4a4a55; }
+[data-theme="light"] a:hover { color: #1a1a1d; }
+
+/* Filter buttons on light */
+[data-theme="light"] .pf-btn { border-color: rgba(100,100,115,0.15); color: rgba(26,26,29,0.5); }
+[data-theme="light"] .pf-btn.active { background: #7a7a85; color: #fafaf8; border-color: #7a7a85; }
+
+/* Venture items on light */
+[data-theme="light"] .venture-item { border-color: rgba(100,100,115,0.1); background: rgba(26,26,29,0.015); }
+[data-theme="light"] .venture-item:hover { background: rgba(26,26,29,0.03); border-color: rgba(100,100,115,0.2); }
+
+/* Booking submit button */
+[data-theme="light"] .booking-submit { background: #7a7a85; color: #fafaf8; }
+[data-theme="light"] .booking-submit:hover { background: #65656f; }
+
+/* Nav dots on light */
+[data-theme="light"] .nav-dot { background: rgba(26,26,29,0.12); }
+[data-theme="light"] .nav-dot.active { background: #7a7a85; }
 
 /* Contact row on light */
 [data-theme="light"] .contact-row { border-bottom-color: rgba(26,26,29,0.06); }
