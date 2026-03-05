@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Jump Quest!</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #1a1a2e; overflow: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; touch-action: none; }
+canvas#game { display: block; width: 100vw; height: 100vh; }
+
+/* HUD Overlay */
+#hud { position: fixed; top: 0; left: 0; width: 100%; pointer-events: none; z-index: 10; }
+#hud-top { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
+#coin-display { color: #FFD700; font-size: 28px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+#timer-display { color: #fff; font-size: 28px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+#pause-btn { pointer-events: all; background: rgba(50,50,50,0.6); color: #fff; border: none; font-size: 24px; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+/* Touch Controls */
+#touch-controls { position: fixed; bottom: 0; left: 0; width: 100%; height: 220px; pointer-events: none; z-index: 10; display: none; }
+#joystick-area { position: absolute; left: 30px; bottom: 30px; width: 160px; height: 160px; pointer-events: all; }
+#joystick-bg { width: 160px; height: 160px; background: rgba(255,255,255,0.2); border-radius: 50%; border: 3px solid rgba(255,255,255,0.3); }
+#joystick-handle { width: 60px; height: 60px; background: rgba(255,255,255,0.6); border-radius: 50%; position: absolute; top: 50px; left: 50px; transition: none; }
+#btn-jump { position: absolute; right: 40px; bottom: 50px; width: 110px; height: 110px; background: rgba(50,180,255,0.6); border-radius: 50%; pointer-events: all; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; font-weight: bold; border: 3px solid rgba(255,255,255,0.4); user-select: none; }
+#btn-run { position: absolute; right: 170px; bottom: 30px; width: 85px; height: 85px; background: rgba(255,140,50,0.6); border-radius: 50%; pointer-events: all; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; font-weight: bold; border: 3px solid rgba(255,255,255,0.3); user-select: none; }
+#btn-boost { position: absolute; right: 60px; bottom: 190px; width: 70px; height: 70px; background: rgba(255,80,180,0.6); border-radius: 50%; pointer-events: all; display: none; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: bold; border: 2px solid rgba(255,255,255,0.3); user-select: none; }
+#btn-shield { position: absolute; right: 170px; bottom: 150px; width: 70px; height: 70px; background: rgba(50,200,255,0.6); border-radius: 50%; pointer-events: all; display: none; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: bold; border: 2px solid rgba(255,255,255,0.3); user-select: none; }
+
+/* Menus */
+.menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 20; }
+.menu-overlay.hidden { display: none; }
+#main-menu { background: linear-gradient(135deg, #1a1a3e, #2d2d5e); }
+#world-select { background: linear-gradient(135deg, #141428, #1e1e44); }
+#results-screen { background: linear-gradient(135deg, #0f1525, #1a2540); }
+#pause-menu { background: rgba(0,0,0,0.75); }
+#skill-tree-screen { background: linear-gradient(135deg, #0f1020, #1a1a3a); }
+#cosmetics-screen { background: linear-gradient(135deg, #1a0f20, #2a1a3a); }
+#wizard-screen { background: linear-gradient(135deg, #0a0f18, #152030); }
+
+.menu-title { font-size: 56px; font-weight: bold; color: #FFD700; text-shadow: 3px 3px 6px rgba(0,0,0,0.5); margin-bottom: 10px; }
+.menu-subtitle { font-size: 22px; color: #ccc; margin-bottom: 30px; }
+.menu-btn { padding: 16px 48px; margin: 8px; font-size: 22px; font-weight: bold; color: #fff; border: none; border-radius: 12px; cursor: pointer; min-width: 260px; transition: transform 0.1s, filter 0.1s; }
+.menu-btn:hover { transform: scale(1.05); filter: brightness(1.15); }
+.menu-btn:active { transform: scale(0.97); }
+.btn-play { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+.btn-cosmetics { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+.btn-skills { background: linear-gradient(135deg, #3498db, #2980b9); }
+.btn-dev { background: linear-gradient(135deg, #555, #444); }
+.btn-orange { background: linear-gradient(135deg, #e67e22, #d35400); }
+.btn-red { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+.btn-gray { background: linear-gradient(135deg, #666, #555); }
+.btn-teal { background: linear-gradient(135deg, #1abc9c, #16a085); }
+.player-info { color: #aaa; font-size: 18px; position: absolute; bottom: 30px; }
+
+/* World Select */
+.world-card { width: 600px; max-width: 90vw; padding: 16px 24px; margin: 6px 0; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.1s; }
+.world-card:hover { transform: scale(1.02); }
+.world-card.locked { opacity: 0.4; cursor: default; }
+.world-name { color: #fff; font-size: 24px; font-weight: bold; }
+.world-lock { color: #aaa; font-size: 16px; }
+.level-btns { display: flex; gap: 8px; }
+.level-btn { width: 50px; height: 50px; border-radius: 10px; border: 2px solid rgba(255,255,255,0.3); background: rgba(80,80,80,0.7); color: #fff; font-size: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.level-btn.completed { background: rgba(46,204,113,0.7); }
+.level-btn:hover { transform: scale(1.1); }
+
+/* Results */
+.result-row { display: flex; justify-content: space-between; width: 400px; max-width: 90vw; padding: 8px 0; }
+.result-label { color: #888; font-size: 22px; }
+.result-value { font-size: 24px; font-weight: bold; }
+
+/* Skill Tree */
+.skill-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 700px; margin: 20px 0; }
+.skill-node { width: 160px; padding: 12px; border-radius: 10px; text-align: center; cursor: pointer; transition: transform 0.1s; }
+.skill-node:hover { transform: scale(1.05); }
+.skill-node.owned { border: 3px solid #2ecc71; }
+.skill-node.available { border: 3px solid rgba(255,255,255,0.5); }
+.skill-node.locked { opacity: 0.4; border: 2px solid rgba(100,100,100,0.4); cursor: default; }
+.skill-name { color: #fff; font-size: 16px; font-weight: bold; margin-bottom: 4px; }
+.skill-desc { color: #aaa; font-size: 12px; margin-bottom: 6px; }
+.skill-cost { color: #FFD700; font-size: 14px; font-weight: bold; }
+
+/* Cosmetics */
+.cosmetic-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 800px; margin: 20px 0; }
+.cosmetic-card { width: 150px; padding: 12px; border-radius: 10px; text-align: center; cursor: pointer; transition: transform 0.1s; }
+.cosmetic-card:hover { transform: scale(1.05); }
+.cosmetic-card.equipped { border: 3px solid #2ecc71; }
+.cosmetic-name { color: #fff; font-size: 14px; font-weight: bold; }
+.cosmetic-cost { color: #FFD700; font-size: 12px; }
+.cosmetic-preview { width: 40px; height: 40px; border-radius: 50%; margin: 8px auto; }
+
+/* Wizard */
+.wizard-choices { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+.wizard-btn { padding: 14px 40px; font-size: 20px; font-weight: bold; color: #fff; background: rgba(40,55,85,0.8); border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; cursor: pointer; min-width: 300px; transition: all 0.15s; }
+.wizard-btn:hover { background: rgba(60,80,120,0.9); transform: scale(1.03); }
+.wizard-question { color: #fff; font-size: 28px; font-weight: bold; margin-bottom: 10px; }
+.wizard-summary { color: #ccc; font-size: 18px; line-height: 1.6; margin: 20px 0; white-space: pre-line; }
+
+/* Scrollbar for menus */
+.scroll-content { overflow-y: auto; max-height: 70vh; padding: 10px; }
+.scroll-content::-webkit-scrollbar { width: 6px; }
+.scroll-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+
+.back-btn { position: absolute; top: 20px; left: 20px; padding: 10px 20px; background: rgba(80,80,80,0.7); color: #fff; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
+.currency-display { position: absolute; top: 20px; right: 20px; color: #FFD700; font-size: 22px; font-weight: bold; }
+
+@keyframes titlePulse {
+  0%, 100% { transform: scale(1); text-shadow: 3px 3px 6px rgba(0,0,0,0.5); }
+  50% { transform: scale(1.04); text-shadow: 3px 3px 20px rgba(255,215,0,0.4); }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="game"></canvas>
+
+<!-- HUD -->
+<div id="hud" class="hidden">
+  <div id="hud-top">
+    <div id="coin-display">0</div>
+    <div id="timer-display">00:00</div>
+    <button id="pause-btn" onclick="Game.pause()">| |</button>
+  </div>
+</div>
+
+<!-- Touch Controls -->
+<div id="touch-controls">
+  <div id="joystick-area">
+    <div id="joystick-bg"></div>
+    <div id="joystick-handle"></div>
+  </div>
+  <div id="btn-jump">JUMP</div>
+  <div id="btn-run">RUN</div>
+  <div id="btn-boost">BOOST</div>
+  <div id="btn-shield">SHIELD</div>
+</div>
+
+<!-- Welcome Splash (shows first, before main menu) -->
+<div id="welcome-splash" class="menu-overlay" style="background: linear-gradient(135deg, #0d0d2b, #1a1a4e, #2d1a5e); cursor:pointer;" onclick="dismissSplash()">
+  <div style="text-align:center; max-width:700px; padding:20px;">
+    <div style="font-size:20px; color:#aaa; letter-spacing:4px; margin-bottom:4px;">WELCOME TO</div>
+    <div style="font-size:28px; color:#ff9933; font-weight:bold; margin-bottom:6px; letter-spacing:2px;">FISHER GAMING'S</div>
+    <div class="menu-title" style="font-size:64px; margin-bottom:20px; animation: titlePulse 2s ease-in-out infinite;">JUMP QUEST!</div>
+
+    <div style="background:rgba(255,255,255,0.08); border-radius:16px; padding:24px 30px; margin:16px 0; text-align:left;">
+      <div style="color:#FFD700; font-size:22px; font-weight:bold; text-align:center; margin-bottom:16px;">HOW TO PLAY</div>
+
+      <div id="splash-controller-instructions" style="display:none;">
+        <div style="color:#fff; font-size:19px; line-height:1.9;">
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#80ccff;font-weight:bold;">Left Stick</span> Move around</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#4dff4d;font-weight:bold;">A Button</span> Jump!</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#ffaa44;font-weight:bold;">Right Trigger</span> Run fast!</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#ff66aa;font-weight:bold;">X Button</span> Speed Boost</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#66ddff;font-weight:bold;">Y Button</span> Shield</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#ccc;font-weight:bold;">Start</span> Pause</div>
+          <div><span style="display:inline-block;width:160px;color:#ff6666;font-weight:bold;">B Button</span> Go Back</div>
+        </div>
+      </div>
+
+      <div id="splash-keyboard-instructions">
+        <div style="color:#fff; font-size:19px; line-height:1.9;">
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#80ccff;font-weight:bold;">W A S D</span> Move around</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#4dff4d;font-weight:bold;">Space Bar</span> Jump!</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#ffaa44;font-weight:bold;">Shift</span> Run fast!</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#ccc;font-weight:bold;">Escape</span> Pause</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="color:#FFD700; font-size:20px; margin-top:14px; font-weight:bold;">
+      Collect coins! Jump across platforms!<br>Reach the finish to win!
+    </div>
+
+    <div id="splash-start-prompt" style="margin-top:28px; font-size:26px; color:#fff; font-weight:bold; animation: blink 1.2s ease-in-out infinite;">
+      Press A or click anywhere to start!
+    </div>
+  </div>
+</div>
+
+<!-- Main Menu -->
+<div id="main-menu" class="menu-overlay hidden">
+  <div style="font-size:18px; color:#aaa; letter-spacing:3px; margin-bottom:2px;">FISHER GAMING'S</div>
+  <div class="menu-title">JUMP QUEST!</div>
+  <div class="menu-subtitle">A Mountain Adventure</div>
+  <button class="menu-btn btn-play" onclick="Game.showScreen('world-select')">PLAY</button>
+  <button class="menu-btn btn-skills" onclick="Game.showScreen('skill-tree-screen')">SKILLS</button>
+  <button class="menu-btn btn-cosmetics" onclick="Game.showScreen('cosmetics-screen')">COSMETICS</button>
+  <button class="menu-btn btn-dev" onclick="Game.showScreen('wizard-screen')">DEV: LEVEL WIZARD</button>
+  <div class="player-info" id="main-player-info"></div>
+</div>
+
+<!-- World Select -->
+<div id="world-select" class="menu-overlay hidden"></div>
+
+<!-- Results -->
+<div id="results-screen" class="menu-overlay hidden"></div>
+
+<!-- Pause -->
+<div id="pause-menu" class="menu-overlay hidden">
+  <div class="menu-title" style="font-size:42px;">PAUSED</div>
+  <button class="menu-btn btn-play" onclick="Game.resume()">RESUME</button>
+  <button class="menu-btn btn-orange" onclick="Game.restartLevel()">RESTART</button>
+  <button class="menu-btn btn-red" onclick="Game.quitToMenu()">QUIT</button>
+</div>
+
+<!-- Skill Tree -->
+<div id="skill-tree-screen" class="menu-overlay hidden"></div>
+
+<!-- Cosmetics -->
+<div id="cosmetics-screen" class="menu-overlay hidden"></div>
+
+<!-- Level Wizard -->
+<div id="wizard-screen" class="menu-overlay hidden"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+// ===== SAVE SYSTEM =====
+const Save = {
+  KEY: 'jumpquest_save',
+  data: null,
+
+  defaults() {
+    return {
+      totalXp: 0, level: 1, currency: 0,
+      completedLevels: [], unlockedSkills: [], unlockedCosmetics: [],
+      equippedSkin: 'default', equippedHat: '', equippedTrail: '',
+      bestTimes: {}
+    };
+  },
+
+  load() {
+    try {
+      const raw = localStorage.getItem(this.KEY);
+      this.data = raw ? { ...this.defaults(), ...JSON.parse(raw) } : this.defaults();
+    } catch { this.data = this.defaults(); }
+    return this.data;
+  },
+
+  save() { localStorage.setItem(this.KEY, JSON.stringify(this.data)); },
+
+  xpForNext() { return 100 + (this.data.level - 1) * 50; },
+
+  addXp(amount) {
+    this.data.totalXp += amount;
+    while (this.data.totalXp >= this.xpForNext()) {
+      this.data.totalXp -= this.xpForNext();
+      this.data.level++;
+    }
+    this.save();
+  },
+
+  hasSkill(id) { return this.data.unlockedSkills.includes(id); },
+
+  buySkill(id, cost) {
+    if (this.hasSkill(id) || this.data.currency < cost) return false;
+    this.data.currency -= cost;
+    this.data.unlockedSkills.push(id);
+    this.save();
+    return true;
+  }
+};
+
+// ===== SKILL DEFINITIONS =====
+const SKILLS = [
+  { id:'featherstep_1', name:'Feather Step I', desc:'Unlock Double Jump', cost:50, reqLevel:2, prereq:'', color:'#4db8ff' },
+  { id:'featherstep_2', name:'Feather Step II', desc:'Higher second jump', cost:100, reqLevel:4, prereq:'featherstep_1', color:'#3399ff' },
+  { id:'swiftcurrent_1', name:'Swift Current I', desc:'Unlock Speed Burst', cost:50, reqLevel:3, prereq:'', color:'#ff80cc' },
+  { id:'swiftcurrent_2', name:'Swift Current II', desc:'Longer burst', cost:100, reqLevel:6, prereq:'swiftcurrent_1', color:'#ff66b3' },
+  { id:'deepguard_1', name:'Deepguard I', desc:'Unlock Shield', cost:75, reqLevel:5, prereq:'', color:'#4de6e6' },
+  { id:'deepguard_2', name:'Deepguard II', desc:'Longer shield', cost:120, reqLevel:8, prereq:'deepguard_1', color:'#33cccc' },
+  { id:'lucky_doubloon', name:'Lucky Doubloon', desc:'Bonus currency', cost:80, reqLevel:7, prereq:'', color:'#ffd933' },
+  { id:'cartographer', name:'Cartographer', desc:'Reveal hidden coins', cost:150, reqLevel:10, prereq:'lucky_doubloon', color:'#996633' },
+];
+
+// ===== COSMETIC DEFINITIONS =====
+const COSMETICS = [
+  { id:'default', name:'Blue', cat:'skin', cost:0, color:'#3399ff' },
+  { id:'skin_red', name:'Red Hot', cat:'skin', cost:30, color:'#ff3333' },
+  { id:'skin_green', name:'Forest', cat:'skin', cost:30, color:'#33cc55' },
+  { id:'skin_gold', name:'Golden', cat:'skin', cost:100, color:'#ffd700' },
+  { id:'skin_purple', name:'Royal', cat:'skin', cost:60, color:'#9933ff' },
+  { id:'skin_rainbow', name:'Rainbow', cat:'skin', cost:200, color:'#ff66cc' },
+  { id:'hat_crown', name:'Crown', cat:'hat', cost:75, color:'#ffd700' },
+  { id:'hat_wizard', name:'Wizard Hat', cat:'hat', cost:50, color:'#6633cc' },
+  { id:'hat_pirate', name:'Pirate', cat:'hat', cost:60, color:'#993333' },
+  { id:'trail_sparkle', name:'Sparkle', cat:'trail', cost:80, color:'#ffffff' },
+  { id:'trail_fire', name:'Fire', cat:'trail', cost:120, color:'#ff6600' },
+];
+
+// ===== WORLD DEFINITIONS =====
+const WORLDS = [
+  { id:'mountains', name:'The Mountains', color:'#6699bb', levels:3, reqLevel:1 },
+  { id:'jungle', name:'Jungle Ruins', color:'#339933', levels:3, reqLevel:5 },
+  { id:'space', name:'Space Station', color:'#2a1a4a', levels:3, reqLevel:10 },
+  { id:'candy', name:'Candy Castle', color:'#e66699', levels:3, reqLevel:15 },
+  { id:'pirate', name:'Pirate Cove', color:'#4d6699', levels:3, reqLevel:20 },
+];
+
+// ===== SAMPLE LEVEL DATA (embedded) =====
+const LEVELS = {};
+
+LEVELS['mountains_0'] = {"worldId":"mountains","levelName":"Foothill Trail","difficulty":1,"parTime":60,"setting":"foothills","finishType":"flag","playerSpawn":{"x":0,"y":2,"z":0},"platforms":[{"x":0,"y":0,"z":0,"sx":8,"sy":1,"sz":8,"color":"stone"},{"x":0,"y":0.5,"z":8,"sx":5,"sy":0.5,"sz":4,"color":"brown"},{"x":3,"y":1,"z":14,"sx":4,"sy":0.5,"sz":4,"color":"stone"},{"x":-1,"y":1.5,"z":20,"sx":5,"sy":0.5,"sz":4,"color":"brown"},{"x":2,"y":2,"z":26,"sx":4,"sy":0.5,"sz":4,"color":"stone"},{"x":-2,"y":2.5,"z":32,"sx":5,"sy":0.5,"sz":5,"color":"brown"},{"x":1,"y":3,"z":38,"sx":4,"sy":0.5,"sz":4,"color":"stone"},{"x":0,"y":3.5,"z":45,"sx":6,"sy":1,"sz":6,"color":"stone"}],"movingPlatforms":[],"rotatingObstacles":[],"jumpPads":[],"coins":[{"x":0,"y":2.5,"z":8,"value":1},{"x":3,"y":3,"z":14,"value":1},{"x":-1,"y":3.5,"z":20,"value":1},{"x":2,"y":4,"z":26,"value":1},{"x":-2,"y":4.5,"z":32,"value":1},{"x":1,"y":5,"z":38,"value":1}],"checkpoints":[{"x":-1,"y":2,"z":20,"index":0}],"hazards":[],"finish":{"x":0,"y":4.5,"z":45}};
+
+LEVELS['mountains_1'] = {"worldId":"mountains","levelName":"Rocky Ridge","difficulty":3,"parTime":75,"setting":"midclimb","finishType":"portal","playerSpawn":{"x":0,"y":2,"z":0},"platforms":[{"x":0,"y":0,"z":0,"sx":8,"sy":1,"sz":8,"color":"stone"},{"x":2,"y":1,"z":7,"sx":4,"sy":0.5,"sz":3,"color":"brown"},{"x":-2,"y":2,"z":13,"sx":3.5,"sy":0.5,"sz":3,"color":"stone"},{"x":3,"y":3.5,"z":21,"sx":4,"sy":0.5,"sz":4,"color":"brown"},{"x":-1,"y":4.5,"z":28,"sx":3.5,"sy":0.5,"sz":3,"color":"stone"},{"x":0,"y":5,"z":35,"sx":5,"sy":0.5,"sz":5,"color":"brown"},{"x":3,"y":6,"z":42,"sx":3,"sy":0.5,"sz":3,"color":"stone"},{"x":-2,"y":7,"z":48,"sx":3.5,"sy":0.5,"sz":3,"color":"brown"},{"x":1,"y":8,"z":55,"sx":4,"sy":0.5,"sz":4,"color":"stone"},{"x":0,"y":8.5,"z":62,"sx":6,"sy":1,"sz":6,"color":"stone"}],"movingPlatforms":[{"x":0,"y":2.5,"z":17,"sx":3,"sy":0.5,"sz":3,"waypoints":[{"x":0,"y":0,"z":0},{"x":5,"y":0,"z":0}],"speed":2.5,"loop":true}],"rotatingObstacles":[{"x":0,"y":7.5,"z":51,"sx":5,"sy":0.4,"sz":0.4,"ax":0,"ay":1,"az":0,"speed":70}],"jumpPads":[{"x":0,"y":5.3,"z":35,"force":16}],"coins":[{"x":2,"y":3,"z":7,"value":1},{"x":0,"y":4.5,"z":17,"value":1},{"x":3,"y":5.5,"z":21,"value":1},{"x":-1,"y":6.5,"z":28,"value":1},{"x":0,"y":7.5,"z":35,"value":2},{"x":3,"y":8,"z":42,"value":1},{"x":-2,"y":9,"z":48,"value":1},{"x":1,"y":10,"z":55,"value":2}],"checkpoints":[{"x":-2,"y":2.5,"z":13,"index":0},{"x":0,"y":5.5,"z":35,"index":1}],"hazards":[{"x":1,"y":3,"z":25,"sx":3,"sy":0.3,"sz":1,"type":"spike"}],"finish":{"x":0,"y":9.5,"z":62}};
+
+LEVELS['mountains_2'] = {"worldId":"mountains","levelName":"Summit Storm","difficulty":5,"parTime":100,"setting":"peak","finishType":"chest","playerSpawn":{"x":0,"y":2,"z":0},"platforms":[{"x":0,"y":0,"z":0,"sx":8,"sy":1,"sz":8,"color":"snow"},{"x":-2,"y":1.5,"z":6,"sx":3,"sy":0.5,"sz":3,"color":"snow"},{"x":3,"y":2.5,"z":12,"sx":3,"sy":0.5,"sz":2.5,"color":"stone"},{"x":-1,"y":4,"z":20,"sx":3,"sy":0.5,"sz":3,"color":"snow"},{"x":2,"y":5.5,"z":28,"sx":3.5,"sy":0.5,"sz":3,"color":"stone"},{"x":0,"y":6,"z":35,"sx":5,"sy":0.5,"sz":5,"color":"snow"},{"x":-3,"y":7.5,"z":42,"sx":3,"sy":0.5,"sz":3,"color":"stone"},{"x":3,"y":9,"z":50,"sx":2.5,"sy":0.5,"sz":2.5,"color":"snow"},{"x":0,"y":10,"z":56,"sx":3,"sy":0.5,"sz":3,"color":"stone"},{"x":-2,"y":11.5,"z":63,"sx":3,"sy":0.5,"sz":3,"color":"snow"},{"x":2,"y":12.5,"z":70,"sx":3,"sy":0.5,"sz":3,"color":"stone"},{"x":0,"y":13,"z":78,"sx":7,"sy":1,"sz":7,"color":"snow"}],"movingPlatforms":[{"x":1,"y":3,"z":16,"sx":3,"sy":0.5,"sz":3,"waypoints":[{"x":0,"y":0,"z":0},{"x":-4,"y":1,"z":0}],"speed":3,"loop":true},{"x":0,"y":8,"z":46,"sx":2.5,"sy":0.5,"sz":2.5,"waypoints":[{"x":0,"y":0,"z":0},{"x":4,"y":0,"z":0}],"speed":3.5,"loop":true}],"rotatingObstacles":[{"x":2,"y":6.5,"z":30,"sx":6,"sy":0.4,"sz":0.4,"ax":0,"ay":1,"az":0,"speed":90},{"x":0,"y":11,"z":60,"sx":5,"sy":0.4,"sz":0.4,"ax":0,"ay":1,"az":0,"speed":100}],"jumpPads":[{"x":0,"y":6.3,"z":35,"force":18},{"x":2,"y":13.3,"z":74,"force":14}],"coins":[{"x":-2,"y":3.5,"z":6,"value":1},{"x":1,"y":5,"z":16,"value":1},{"x":3,"y":4.5,"z":12,"value":1},{"x":-1,"y":6,"z":20,"value":1},{"x":2,"y":7.5,"z":28,"value":2},{"x":0,"y":8,"z":35,"value":1},{"x":-3,"y":9.5,"z":42,"value":1},{"x":0,"y":10,"z":46,"value":1},{"x":3,"y":11,"z":50,"value":2},{"x":0,"y":12,"z":56,"value":1},{"x":-2,"y":13.5,"z":63,"value":1},{"x":2,"y":14.5,"z":70,"value":2}],"checkpoints":[{"x":-1,"y":4.5,"z":20,"index":0},{"x":0,"y":6.5,"z":35,"index":1},{"x":0,"y":10.5,"z":56,"index":2}],"hazards":[{"x":0,"y":2,"z":9,"sx":6,"sy":0.3,"sz":1,"type":"spike"},{"x":1,"y":5,"z":24,"sx":4,"sy":0.3,"sz":1,"type":"spike"},{"x":-1,"y":10,"z":53,"sx":3,"sy":0.2,"sz":3,"type":"lava"}],"finish":{"x":0,"y":14,"z":78}};
+
+// ===== COLOR UTILS =====
+function parseColor(c) {
+  const map = {
+    gray: 0x808080, grey: 0x808080, brown: 0x8c5a33, stone: 0x999988,
+    snow: 0xeaeef5, white: 0xeaeef5, green: 0x4d994d, blue: 0x4d66cc,
+    red: 0xff3333, wood: 0x996633
+  };
+  return map[c?.toLowerCase()] ?? 0x808080;
+}
+
+function skinColor(id) {
+  const c = COSMETICS.find(c => c.id === id);
+  return c ? parseInt(c.color.replace('#',''), 16) : 0x3399ff;
+}
+
+// ===== THREE.JS SETUP =====
+const canvas = document.getElementById('game');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 500);
+camera.position.set(0, 8, -10);
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ===== GAME STATE =====
+const state = {
+  screen: 'main-menu',
+  worldId: 'mountains',
+  levelIndex: 0,
+  sessionCoins: 0,
+  sessionTime: 0,
+  running: false,
+  paused: false,
+  // Player physics
+  px: 0, py: 2, pz: 0,
+  vx: 0, vy: 0, vz: 0,
+  grounded: false,
+  coyoteTimer: 0,
+  jumpBuffer: 0,
+  doubleJumpUsed: false,
+  respawnX: 0, respawnY: 2, respawnZ: 0,
+  isRunning: false,
+  // Power-up timers
+  speedBurstTimer: 0, speedBurstCooldown: 0,
+  shieldTimer: 0, shieldCooldown: 0,
+  // Level objects
+  levelGroup: null,
+  coins: [],
+  checkpoints: [],
+  movingPlatforms: [],
+  rotatingObstacles: [],
+  jumpPads: [],
+  hazards: [],
+  finishObj: null,
+  playerMesh: null,
+  hatMesh: null,
+  // Results cache
+  lastCoins: 0, lastTime: 0, lastTimeBonus: 0, lastCurrency: 0, lastXp: 0,
+};
+
+// ===== INPUT =====
+const keys = {};
+const joystickInput = { x: 0, y: 0 };
+let jumpPressed = false;
+let runHeld = false;
+
+document.addEventListener('keydown', e => { keys[e.code] = true; if (e.code === 'Escape') Game.togglePause(); });
+document.addEventListener('keyup', e => { keys[e.code] = false; });
+
+// Touch joystick
+const joystickArea = document.getElementById('joystick-area');
+const joystickHandle = document.getElementById('joystick-handle');
+const joystickBg = document.getElementById('joystick-bg');
+let joystickTouchId = null;
+
+joystickArea.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const t = e.changedTouches[0];
+  joystickTouchId = t.identifier;
+  updateJoystick(t);
+}, { passive: false });
+
+joystickArea.addEventListener('touchmove', e => {
+  e.preventDefault();
+  for (const t of e.changedTouches) {
+    if (t.identifier === joystickTouchId) updateJoystick(t);
+  }
+}, { passive: false });
+
+joystickArea.addEventListener('touchend', e => {
+  for (const t of e.changedTouches) {
+    if (t.identifier === joystickTouchId) {
+      joystickTouchId = null;
+      joystickInput.x = 0;
+      joystickInput.y = 0;
+      joystickHandle.style.left = '50px';
+      joystickHandle.style.top = '50px';
+    }
+  }
+});
+
+function updateJoystick(touch) {
+  const rect = joystickBg.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  let dx = touch.clientX - cx;
+  let dy = touch.clientY - cy;
+  const maxR = 60;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+  if (dist > maxR) { dx = dx / dist * maxR; dy = dy / dist * maxR; }
+  joystickInput.x = dx / maxR;
+  joystickInput.y = -dy / maxR; // invert Y for forward
+  joystickHandle.style.left = (50 + dx) + 'px';
+  joystickHandle.style.top = (50 + dy) + 'px';
+}
+
+// Touch buttons
+const btnJump = document.getElementById('btn-jump');
+const btnRun = document.getElementById('btn-run');
+const btnBoost = document.getElementById('btn-boost');
+const btnShield = document.getElementById('btn-shield');
+
+btnJump.addEventListener('touchstart', e => { e.preventDefault(); jumpPressed = true; }, { passive: false });
+btnRun.addEventListener('touchstart', e => { e.preventDefault(); runHeld = true; }, { passive: false });
+btnRun.addEventListener('touchend', () => { runHeld = false; });
+btnRun.addEventListener('touchcancel', () => { runHeld = false; });
+btnBoost.addEventListener('touchstart', e => { e.preventDefault(); activateSpeedBurst(); }, { passive: false });
+btnShield.addEventListener('touchstart', e => { e.preventDefault(); activateShield(); }, { passive: false });
+
+// Detect touch device
+const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+// ===== GAMEPAD (Xbox Controller) =====
+const gamepad = {
+  connected: false,
+  index: -1,
+  // Stick values (raw, polled each frame)
+  lx: 0, ly: 0, rx: 0, ry: 0,
+  // Button states (current frame)
+  a: false, b: false, x: false, y: false,
+  lb: false, rb: false, lt: 0, rt: 0,
+  start: false, back: false,
+  dpadUp: false, dpadDown: false, dpadLeft: false, dpadRight: false,
+  // Previous frame (for edge detection)
+  _prev: {},
+  // Returns true only on the frame the button was first pressed
+  pressed(btn) { return this[btn] && !this._prev[btn]; },
+
+  poll() {
+    const gps = navigator.getGamepads ? navigator.getGamepads() : [];
+    let gp = null;
+    for (const g of gps) {
+      if (g && g.connected) { gp = g; this.index = g.index; break; }
+    }
+    if (!gp) { this.connected = false; return; }
+    this.connected = true;
+
+    // Save previous state
+    this._prev = {
+      a: this.a, b: this.b, x: this.x, y: this.y,
+      lb: this.lb, rb: this.rb, start: this.start, back: this.back,
+      dpadUp: this.dpadUp, dpadDown: this.dpadDown, dpadLeft: this.dpadLeft, dpadRight: this.dpadRight
+    };
+
+    // Standard gamepad mapping (Xbox layout):
+    // Buttons: 0=A, 1=B, 2=X, 3=Y, 4=LB, 5=RB, 6=LT, 7=RT, 8=Back, 9=Start
+    // 12=DpadUp, 13=DpadDown, 14=DpadLeft, 15=DpadRight
+    const b = gp.buttons;
+    this.a = b[0]?.pressed ?? false;
+    this.b = b[1]?.pressed ?? false;
+    this.x = b[2]?.pressed ?? false;
+    this.y = b[3]?.pressed ?? false;
+    this.lb = b[4]?.pressed ?? false;
+    this.rb = b[5]?.pressed ?? false;
+    this.lt = b[6]?.value ?? 0;
+    this.rt = b[7]?.value ?? 0;
+    this.back = b[8]?.pressed ?? false;
+    this.start = b[9]?.pressed ?? false;
+    this.dpadUp = b[12]?.pressed ?? false;
+    this.dpadDown = b[13]?.pressed ?? false;
+    this.dpadLeft = b[14]?.pressed ?? false;
+    this.dpadRight = b[15]?.pressed ?? false;
+
+    // Axes: 0=LStickX, 1=LStickY, 2=RStickX, 3=RStickY
+    const deadzone = 0.15;
+    const ax = gp.axes;
+    this.lx = Math.abs(ax[0]) > deadzone ? ax[0] : 0;
+    this.ly = Math.abs(ax[1]) > deadzone ? ax[1] : 0;
+    this.rx = Math.abs(ax[2]) > deadzone ? ax[2] : 0;
+    this.ry = Math.abs(ax[3]) > deadzone ? ax[3] : 0;
+  }
+};
+
+// Gamepad connection events
+window.addEventListener('gamepadconnected', e => {
+  gamepad.index = e.gamepad.index;
+  gamepad.connected = true;
+  showGamepadHint(true);
+});
+window.addEventListener('gamepaddisconnected', () => {
+  gamepad.connected = false;
+  showGamepadHint(false);
+});
+
+function showGamepadHint(connected) {
+  let hint = document.getElementById('gamepad-hint');
+  if (!hint) {
+    hint = document.createElement('div');
+    hint.id = 'gamepad-hint';
+    hint.style.cssText = 'position:fixed;bottom:10px;left:50%;transform:translateX(-50%);color:#aaa;font-size:14px;z-index:30;pointer-events:none;transition:opacity 0.5s;';
+    document.body.appendChild(hint);
+  }
+  if (connected) {
+    hint.textContent = 'Controller connected  |  A=Jump  B=Back  X=Boost  Y=Shield  RT=Run  Start=Pause';
+    hint.style.opacity = '1';
+    setTimeout(() => { hint.style.opacity = '0'; }, 5000);
+  } else {
+    hint.textContent = 'Controller disconnected';
+    hint.style.opacity = '1';
+    setTimeout(() => { hint.style.opacity = '0'; }, 3000);
+  }
+}
+
+// Menu navigation with gamepad
+let menuFocusIndex = 0;
+let menuNavCooldown = 0;
+
+function updateGamepadMenuNav() {
+  if (!gamepad.connected) return;
+  gamepad.poll();
+
+  menuNavCooldown -= 0.016; // ~60fps
+
+  // Find current visible menu
+  const screens = ['welcome-splash','main-menu','world-select','results-screen','pause-menu','skill-tree-screen','cosmetics-screen','wizard-screen'];
+  let activeScreen = null;
+  for (const s of screens) {
+    const el = document.getElementById(s);
+    if (el && !el.classList.contains('hidden')) { activeScreen = el; break; }
+  }
+  if (!activeScreen) return;
+
+  // Get all clickable buttons in the active menu
+  const buttons = Array.from(activeScreen.querySelectorAll('button, .level-btn, .skill-node:not(.locked), .cosmetic-card, .wizard-btn'));
+  if (buttons.length === 0) return;
+
+  // Clamp focus
+  if (menuFocusIndex >= buttons.length) menuFocusIndex = 0;
+  if (menuFocusIndex < 0) menuFocusIndex = buttons.length - 1;
+
+  // Navigate with D-pad or left stick
+  if (menuNavCooldown <= 0) {
+    if (gamepad.dpadDown || gamepad.ly > 0.5) {
+      menuFocusIndex = (menuFocusIndex + 1) % buttons.length;
+      menuNavCooldown = 0.2;
+    }
+    if (gamepad.dpadUp || gamepad.ly < -0.5) {
+      menuFocusIndex = (menuFocusIndex - 1 + buttons.length) % buttons.length;
+      menuNavCooldown = 0.2;
+    }
+    if (gamepad.dpadRight || gamepad.lx > 0.5) {
+      menuFocusIndex = Math.min(menuFocusIndex + 1, buttons.length - 1);
+      menuNavCooldown = 0.2;
+    }
+    if (gamepad.dpadLeft || gamepad.lx < -0.5) {
+      menuFocusIndex = Math.max(menuFocusIndex - 1, 0);
+      menuNavCooldown = 0.2;
+    }
+  }
+
+  // Highlight focused button
+  buttons.forEach((b, i) => {
+    if (i === menuFocusIndex) {
+      b.style.outline = '3px solid #FFD700';
+      b.style.outlineOffset = '2px';
+      b.scrollIntoView?.({ block: 'nearest' });
+    } else {
+      b.style.outline = '';
+      b.style.outlineOffset = '';
+    }
+  });
+
+  // A button = click
+  if (gamepad.pressed('a')) {
+    buttons[menuFocusIndex]?.click();
+    menuFocusIndex = 0;
+  }
+
+  // B button = back
+  if (gamepad.pressed('b')) {
+    const backBtn = activeScreen.querySelector('.back-btn');
+    if (backBtn) backBtn.click();
+    else if (activeScreen.id === 'pause-menu') Game.resume();
+    menuFocusIndex = 0;
+  }
+
+  // Start = play from main menu
+  if (gamepad.pressed('start')) {
+    if (activeScreen.id === 'main-menu') Game.showScreen('world-select');
+  }
+}
+
+// Run menu gamepad nav on its own rAF loop so it works even when game isn't running
+function menuGamepadLoop() {
+  requestAnimationFrame(menuGamepadLoop);
+  if (!state.running || state.paused) {
+    updateGamepadMenuNav();
+  }
+}
+requestAnimationFrame(menuGamepadLoop);
+
+// ===== LEVEL BUILDER =====
+function loadLevel(levelData) {
+  // Clear old level
+  if (state.levelGroup) {
+    scene.remove(state.levelGroup);
+    state.levelGroup.traverse(obj => {
+      if (obj.geometry) obj.geometry.dispose();
+      if (obj.material) {
+        if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
+        else obj.material.dispose();
+      }
+    });
+  }
+  state.coins = [];
+  state.checkpoints = [];
+  state.movingPlatforms = [];
+  state.rotatingObstacles = [];
+  state.jumpPads = [];
+  state.hazards = [];
+
+  const group = new THREE.Group();
+  state.levelGroup = group;
+
+  // Ground plane
+  const groundGeo = new THREE.PlaneGeometry(200, 200);
+  const groundMat = new THREE.MeshStandardMaterial({ color: 0x599950 });
+  const ground = new THREE.Mesh(groundGeo, groundMat);
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.y = -0.5;
+  ground.receiveShadow = true;
+  group.add(ground);
+
+  // Platforms
+  for (const p of (levelData.platforms || [])) {
+    const geo = new THREE.BoxGeometry(p.sx || 4, p.sy || 0.5, p.sz || 4);
+    const mat = new THREE.MeshStandardMaterial({ color: parseColor(p.color) });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(p.x, p.y, p.z);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    mesh.userData.type = 'platform';
+    mesh.userData.box = new THREE.Box3().setFromObject(mesh);
+    group.add(mesh);
+  }
+
+  // Moving platforms
+  for (const mp of (levelData.movingPlatforms || [])) {
+    const geo = new THREE.BoxGeometry(mp.sx || 3, mp.sy || 0.5, mp.sz || 3);
+    const mat = new THREE.MeshStandardMaterial({ color: 0x4db84d });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(mp.x, mp.y, mp.z);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    mesh.userData.type = 'platform';
+    const waypoints = (mp.waypoints || []).map(w => new THREE.Vector3(mp.x + w.x, mp.y + w.y, mp.z + w.z));
+    if (waypoints.length < 2) waypoints.push(new THREE.Vector3(mp.x, mp.y, mp.z), new THREE.Vector3(mp.x + 5, mp.y, mp.z));
+    state.movingPlatforms.push({ mesh, waypoints, speed: mp.speed || 3, idx: 0, loop: mp.loop !== false, prevPos: mesh.position.clone() });
+    group.add(mesh);
+  }
+
+  // Rotating obstacles
+  for (const ro of (levelData.rotatingObstacles || [])) {
+    const geo = new THREE.BoxGeometry(ro.sx || 6, ro.sy || 0.4, ro.sz || 0.4);
+    const mat = new THREE.MeshStandardMaterial({ color: 0xe63333 });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(ro.x, ro.y, ro.z);
+    mesh.castShadow = true;
+    mesh.userData.type = 'hazard';
+    const axis = new THREE.Vector3(ro.ax || 0, ro.ay || 1, ro.az || 0).normalize();
+    state.rotatingObstacles.push({ mesh, axis, speed: (ro.speed || 90) * Math.PI / 180 });
+    group.add(mesh);
+  }
+
+  // Jump pads
+  for (const jp of (levelData.jumpPads || [])) {
+    const geo = new THREE.CylinderGeometry(0.75, 0.75, 0.3, 16);
+    const mat = new THREE.MeshStandardMaterial({ color: 0xffcc00, emissive: 0x664400 });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(jp.x, jp.y, jp.z);
+    mesh.userData.type = 'jumppad';
+    mesh.userData.force = jp.force || 18;
+    state.jumpPads.push(mesh);
+    group.add(mesh);
+  }
+
+  // Coins
+  for (const c of (levelData.coins || [])) {
+    const geo = new THREE.CylinderGeometry(0.35, 0.35, 0.08, 16);
+    const mat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.8, roughness: 0.2 });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(c.x, c.y, c.z);
+    mesh.rotation.x = Math.PI / 2;
+    mesh.userData.type = 'coin';
+    mesh.userData.value = c.value || 1;
+    mesh.userData.baseY = c.y;
+    mesh.userData.collected = false;
+    state.coins.push(mesh);
+    group.add(mesh);
+  }
+
+  // Checkpoints
+  for (const cp of (levelData.checkpoints || [])) {
+    const geo = new THREE.BoxGeometry(0.3, 2, 0.3);
+    const mat = new THREE.MeshStandardMaterial({ color: 0xff8800 });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(cp.x, cp.y + 1, cp.z);
+    mesh.userData.type = 'checkpoint';
+    mesh.userData.activated = false;
+    mesh.userData.index = cp.index;
+    state.checkpoints.push(mesh);
+    group.add(mesh);
+  }
+
+  // Hazards
+  for (const h of (levelData.hazards || [])) {
+    const geo = new THREE.BoxGeometry(h.sx || 2, h.sy || 0.5, h.sz || 2);
+    const color = h.type === 'lava' ? 0xff4d00 : h.type === 'spike' ? 0x666666 : 0xff0000;
+    const mat = new THREE.MeshStandardMaterial({ color, emissive: h.type === 'lava' ? 0x661a00 : 0x000000 });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(h.x, h.y, h.z);
+    mesh.userData.type = 'hazard';
+    state.hazards.push(mesh);
+    group.add(mesh);
+  }
+
+  // Finish
+  if (levelData.finish) {
+    const f = levelData.finish;
+    let geo, mat;
+    if (levelData.finishType === 'portal') {
+      geo = new THREE.SphereGeometry(1, 24, 24);
+      geo.scale(1, 1.5, 0.3);
+      mat = new THREE.MeshStandardMaterial({ color: 0x8033ff, emissive: 0x4019cc, transparent: true, opacity: 0.85 });
+    } else if (levelData.finishType === 'chest') {
+      geo = new THREE.BoxGeometry(1.5, 1, 1);
+      mat = new THREE.MeshStandardMaterial({ color: 0xb38019, metalness: 0.5 });
+    } else {
+      geo = new THREE.BoxGeometry(0.15, 3, 1.2);
+      mat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+    }
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(f.x, f.y, f.z);
+    mesh.userData.type = 'finish';
+    state.finishObj = mesh;
+    group.add(mesh);
+  }
+
+  scene.add(group);
+
+  // Spawn player
+  const sp = levelData.playerSpawn || { x: 0, y: 2, z: 0 };
+  state.px = sp.x; state.py = sp.y; state.pz = sp.z;
+  state.vx = 0; state.vy = 0; state.vz = 0;
+  state.respawnX = sp.x; state.respawnY = sp.y; state.respawnZ = sp.z;
+  state.grounded = false;
+  state.doubleJumpUsed = false;
+
+  createPlayer();
+  setupLighting(levelData.worldId);
+}
+
+function createPlayer() {
+  if (state.playerMesh) { scene.remove(state.playerMesh); }
+  if (state.hatMesh) { scene.remove(state.hatMesh); state.hatMesh = null; }
+
+  const pColor = skinColor(Save.data.equippedSkin || 'default');
+  const bodyGeo = new THREE.CapsuleGeometry(0.4, 1.0, 8, 16);
+  const bodyMat = new THREE.MeshStandardMaterial({ color: pColor });
+  const body = new THREE.Mesh(bodyGeo, bodyMat);
+  body.castShadow = true;
+  body.position.set(state.px, state.py, state.pz);
+  state.playerMesh = body;
+  scene.add(body);
+
+  // Eyes
+  const eyeGeo = new THREE.SphereGeometry(0.08, 8, 8);
+  const eyeMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+  const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
+  eyeL.position.set(-0.15, 0.45, 0.35);
+  body.add(eyeL);
+  const eyeR = new THREE.Mesh(eyeGeo, eyeMat);
+  eyeR.position.set(0.15, 0.45, 0.35);
+  body.add(eyeR);
+
+  const pupilGeo = new THREE.SphereGeometry(0.04, 8, 8);
+  const pupilMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
+  const pupilL = new THREE.Mesh(pupilGeo, pupilMat);
+  pupilL.position.set(0, 0, 0.06);
+  eyeL.add(pupilL);
+  const pupilR = new THREE.Mesh(pupilGeo, pupilMat);
+  pupilR.position.set(0, 0, 0.06);
+  eyeR.add(pupilR);
+
+  // Hat
+  if (Save.data.equippedHat) {
+    const hatItem = COSMETICS.find(c => c.id === Save.data.equippedHat);
+    if (hatItem) {
+      let hatGeo, hatMat;
+      if (hatItem.id === 'hat_crown') {
+        hatGeo = new THREE.CylinderGeometry(0.25, 0.35, 0.3, 5);
+        hatMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.7 });
+      } else if (hatItem.id === 'hat_wizard') {
+        hatGeo = new THREE.ConeGeometry(0.3, 0.6, 8);
+        hatMat = new THREE.MeshStandardMaterial({ color: 0x6633cc });
+      } else {
+        hatGeo = new THREE.BoxGeometry(0.6, 0.1, 0.6);
+        hatMat = new THREE.MeshStandardMaterial({ color: parseInt(hatItem.color.replace('#',''),16) });
+      }
+      const hat = new THREE.Mesh(hatGeo, hatMat);
+      hat.position.set(0, 0.85, 0);
+      body.add(hat);
+      state.hatMesh = hat;
+    }
+  }
+}
+
+function setupLighting(worldId) {
+  // Remove old lights
+  scene.children.filter(c => c.isLight).forEach(l => scene.remove(l));
+
+  const ambient = new THREE.AmbientLight(0x9999bb, 0.6);
+  scene.add(ambient);
+
+  const sun = new THREE.DirectionalLight(0xfff5e0, 1.2);
+  sun.position.set(20, 30, -15);
+  sun.castShadow = true;
+  sun.shadow.mapSize.width = 2048;
+  sun.shadow.mapSize.height = 2048;
+  sun.shadow.camera.near = 0.5;
+  sun.shadow.camera.far = 100;
+  sun.shadow.camera.left = -40;
+  sun.shadow.camera.right = 40;
+  sun.shadow.camera.top = 40;
+  sun.shadow.camera.bottom = -10;
+  scene.add(sun);
+
+  // Sky color
+  const skyColors = {
+    mountains: 0x8cbbed, jungle: 0x66aa66, space: 0x0a0a2e,
+    candy: 0xffaacc, pirate: 0x6688aa
+  };
+  scene.background = new THREE.Color(skyColors[worldId] || 0x8cbbed);
+  scene.fog = new THREE.FogExp2(skyColors[worldId] || 0x8cbbed, 0.008);
+}
+
+// ===== PHYSICS & COLLISIONS =====
+const GRAVITY = -30;
+const WALK_SPEED = 6;
+const RUN_SPEED = 10;
+const JUMP_FORCE = 12;
+const DOUBLE_JUMP_FORCE = 10;
+const COYOTE_TIME = 0.15;
+const JUMP_BUFFER = 0.12;
+const PLAYER_RADIUS = 0.4;
+const PLAYER_HEIGHT = 2.0; // total capsule height
+
+function getCollisionBoxes() {
+  const boxes = [];
+  if (!state.levelGroup) return boxes;
+  state.levelGroup.traverse(obj => {
+    if (obj.isMesh && obj.userData.type === 'platform') {
+      obj.userData.box = new THREE.Box3().setFromObject(obj);
+      boxes.push(obj);
+    }
+  });
+  return boxes;
+}
+
+function playerAABB(px, py, pz) {
+  return new THREE.Box3(
+    new THREE.Vector3(px - PLAYER_RADIUS, py - 0.1, pz - PLAYER_RADIUS),
+    new THREE.Vector3(px + PLAYER_RADIUS, py + PLAYER_HEIGHT, pz + PLAYER_RADIUS)
+  );
+}
+
+function checkGround(px, py, pz, platforms) {
+  const feetBox = new THREE.Box3(
+    new THREE.Vector3(px - PLAYER_RADIUS * 0.8, py - 0.25, pz - PLAYER_RADIUS * 0.8),
+    new THREE.Vector3(px + PLAYER_RADIUS * 0.8, py + 0.05, pz + PLAYER_RADIUS * 0.8)
+  );
+  for (const p of platforms) {
+    if (feetBox.intersectsBox(p.userData.box)) return p;
+  }
+  // Ground plane check
+  if (py <= 0.05 && py >= -0.5) return 'ground';
+  return null;
+}
+
+function resolveCollisions(px, py, pz, platforms) {
+  const pBox = playerAABB(px, py, pz);
+  for (const p of platforms) {
+    const plBox = p.userData.box;
+    if (!pBox.intersectsBox(plBox)) continue;
+
+    // Find smallest overlap axis
+    const overlapX = Math.min(pBox.max.x - plBox.min.x, plBox.max.x - pBox.min.x);
+    const overlapY = Math.min(pBox.max.y - plBox.min.y, plBox.max.y - pBox.min.y);
+    const overlapZ = Math.min(pBox.max.z - plBox.min.z, plBox.max.z - pBox.min.z);
+
+    if (overlapY <= overlapX && overlapY <= overlapZ) {
+      if (py < p.position.y) { py = plBox.min.y - 0.1; state.vy = Math.min(state.vy, 0); }
+      else { py = plBox.max.y + 0.1; state.vy = Math.max(state.vy, 0); }
+    } else if (overlapX <= overlapZ) {
+      if (px < p.position.x) px -= overlapX; else px += overlapX;
+      state.vx = 0;
+    } else {
+      if (pz < p.position.z) pz -= overlapZ; else pz += overlapZ;
+      state.vz = 0;
+    }
+  }
+  return { px, py, pz };
+}
+
+// ===== GAME UPDATE =====
+let lastTime = 0;
+
+function update(dt) {
+  if (!state.running || state.paused) return;
+
+  state.sessionTime += dt;
+  updateHUD();
+
+  // Poll gamepad
+  gamepad.poll();
+
+  // Read input (keyboard + touch + gamepad)
+  let ix = 0, iz = 0;
+  if (keys['KeyA'] || keys['ArrowLeft']) ix -= 1;
+  if (keys['KeyD'] || keys['ArrowRight']) ix += 1;
+  if (keys['KeyW'] || keys['ArrowUp']) iz += 1;
+  if (keys['KeyS'] || keys['ArrowDown']) iz -= 1;
+  if (joystickInput.x !== 0 || joystickInput.y !== 0) {
+    ix = joystickInput.x;
+    iz = joystickInput.y;
+  }
+  // Gamepad left stick overrides if active
+  if (gamepad.connected && (Math.abs(gamepad.lx) > 0.01 || Math.abs(gamepad.ly) > 0.01)) {
+    ix = gamepad.lx;
+    iz = -gamepad.ly; // Y axis inverted on gamepad
+  }
+
+  const wantJump = keys['Space'] || jumpPressed || gamepad.pressed('a');
+  jumpPressed = false;
+  const wantRun = keys['ShiftLeft'] || keys['ShiftRight'] || runHeld || gamepad.rt > 0.3;
+
+  // Gamepad power-ups: X=Speed Burst, Y=Shield
+  if (gamepad.pressed('x')) activateSpeedBurst();
+  if (gamepad.pressed('y')) activateShield();
+
+  // Gamepad pause
+  if (gamepad.pressed('start')) Game.togglePause();
+
+  // Camera-relative movement
+  const camFwd = new THREE.Vector3();
+  camera.getWorldDirection(camFwd);
+  camFwd.y = 0;
+  camFwd.normalize();
+  const camRight = new THREE.Vector3().crossVectors(camFwd, new THREE.Vector3(0, 1, 0)).normalize();
+
+  const moveDir = new THREE.Vector3();
+  moveDir.addScaledVector(camRight, ix);
+  moveDir.addScaledVector(camFwd, iz);
+  if (moveDir.length() > 1) moveDir.normalize();
+
+  // Speed
+  let speed = wantRun ? RUN_SPEED : WALK_SPEED;
+  if (state.speedBurstTimer > 0) speed *= 1.6;
+
+  state.vx = moveDir.x * speed;
+  state.vz = moveDir.z * speed;
+
+  // Rotate player to face movement
+  if (moveDir.length() > 0.01 && state.playerMesh) {
+    const angle = Math.atan2(moveDir.x, moveDir.z);
+    state.playerMesh.rotation.y = angle;
+  }
+
+  // Gravity
+  state.vy += GRAVITY * dt;
+
+  // Ground check
+  const platforms = getCollisionBoxes();
+  const onGround = checkGround(state.px, state.py, state.pz, platforms);
+
+  if (onGround) {
+    state.grounded = true;
+    state.coyoteTimer = COYOTE_TIME;
+    state.doubleJumpUsed = false;
+    if (state.vy < 0) state.vy = 0;
+    if (onGround !== 'ground') {
+      // Snap to platform top
+      const topY = onGround.userData.box.max.y;
+      if (state.py < topY + 0.15) state.py = topY + 0.1;
+    } else {
+      if (state.py < 0.1) state.py = 0.1;
+    }
+  } else {
+    state.grounded = false;
+    state.coyoteTimer -= dt;
+  }
+
+  // Jump
+  if (wantJump) state.jumpBuffer = JUMP_BUFFER;
+  if (state.jumpBuffer > 0) {
+    state.jumpBuffer -= dt;
+    if (state.coyoteTimer > 0) {
+      state.vy = JUMP_FORCE;
+      state.coyoteTimer = 0;
+      state.jumpBuffer = 0;
+    } else if (!state.doubleJumpUsed && Save.hasSkill('featherstep_1')) {
+      const force = Save.hasSkill('featherstep_2') ? DOUBLE_JUMP_FORCE * 1.15 : DOUBLE_JUMP_FORCE;
+      state.vy = force;
+      state.doubleJumpUsed = true;
+      state.jumpBuffer = 0;
+    }
+  }
+
+  // Apply velocity
+  state.px += state.vx * dt;
+  state.py += state.vy * dt;
+  state.pz += state.vz * dt;
+
+  // Resolve collisions
+  const resolved = resolveCollisions(state.px, state.py, state.pz, platforms);
+  state.px = resolved.px;
+  state.py = resolved.py;
+  state.pz = resolved.pz;
+
+  // Update player mesh
+  if (state.playerMesh) {
+    state.playerMesh.position.set(state.px, state.py + 0.9, state.pz);
+  }
+
+  // Fall reset
+  if (state.py < -20) respawn();
+
+  // Moving platforms
+  for (const mp of state.movingPlatforms) {
+    mp.prevPos.copy(mp.mesh.position);
+    const target = mp.waypoints[mp.idx];
+    const dir = new THREE.Vector3().subVectors(target, mp.mesh.position);
+    const dist = dir.length();
+    if (dist < 0.1) {
+      mp.idx = (mp.idx + 1) % mp.waypoints.length;
+    } else {
+      dir.normalize();
+      mp.mesh.position.addScaledVector(dir, mp.speed * dt);
+    }
+    mp.mesh.userData.box = new THREE.Box3().setFromObject(mp.mesh);
+
+    // Carry player if standing on this platform
+    if (state.grounded) {
+      const platTop = mp.mesh.userData.box.max.y;
+      const playerBottom = state.py;
+      if (Math.abs(playerBottom - platTop) < 0.3) {
+        const dx = mp.mesh.position.x - mp.prevPos.x;
+        const dz = mp.mesh.position.z - mp.prevPos.z;
+        if (Math.abs(state.px - mp.mesh.position.x) < (mp.mesh.geometry?.parameters?.width || 3) / 2 + PLAYER_RADIUS &&
+            Math.abs(state.pz - mp.mesh.position.z) < (mp.mesh.geometry?.parameters?.depth || 3) / 2 + PLAYER_RADIUS) {
+          state.px += dx;
+          state.pz += dz;
+        }
+      }
+    }
+  }
+
+  // Rotating obstacles
+  for (const ro of state.rotatingObstacles) {
+    ro.mesh.rotateOnWorldAxis(ro.axis, ro.speed * dt);
+    // Hazard collision
+    const roBox = new THREE.Box3().setFromObject(ro.mesh);
+    if (playerAABB(state.px, state.py, state.pz).intersectsBox(roBox)) {
+      if (state.shieldTimer <= 0) respawn();
+      else state.shieldTimer = 0;
+    }
+  }
+
+  // Coins
+  for (const coin of state.coins) {
+    if (coin.userData.collected) continue;
+    coin.rotation.y += 3 * dt;
+    coin.position.y = coin.userData.baseY + Math.sin(Date.now() * 0.003) * 0.3;
+
+    const dx = state.px - coin.position.x;
+    const dy = (state.py + 0.9) - coin.position.y;
+    const dz = state.pz - coin.position.z;
+    if (dx*dx + dy*dy + dz*dz < 1.8) {
+      coin.userData.collected = true;
+      coin.visible = false;
+      state.sessionCoins += coin.userData.value;
+    }
+  }
+
+  // Checkpoints
+  for (const cp of state.checkpoints) {
+    if (cp.userData.activated) continue;
+    const dx = state.px - cp.position.x;
+    const dz = state.pz - cp.position.z;
+    if (dx*dx + dz*dz < 4 && Math.abs(state.py - (cp.position.y - 1)) < 3) {
+      cp.userData.activated = true;
+      cp.material.color.setHex(0x33cc33);
+      state.respawnX = cp.position.x;
+      state.respawnY = cp.position.y;
+      state.respawnZ = cp.position.z;
+    }
+  }
+
+  // Hazards
+  for (const h of state.hazards) {
+    const hBox = new THREE.Box3().setFromObject(h);
+    if (playerAABB(state.px, state.py, state.pz).intersectsBox(hBox)) {
+      if (state.shieldTimer <= 0) respawn();
+      else state.shieldTimer = 0;
+    }
+  }
+
+  // Jump pads
+  for (const jp of state.jumpPads) {
+    const dx = state.px - jp.position.x;
+    const dz = state.pz - jp.position.z;
+    if (dx*dx + dz*dz < 1.5 && Math.abs(state.py - jp.position.y) < 1.5) {
+      state.vy = jp.userData.force;
+      state.coyoteTimer = 0;
+      state.doubleJumpUsed = false;
+    }
+  }
+
+  // Finish
+  if (state.finishObj) {
+    state.finishObj.rotation.y += 1.5 * dt;
+    const dx = state.px - state.finishObj.position.x;
+    const dz = state.pz - state.finishObj.position.z;
+    if (dx*dx + dz*dz < 3 && Math.abs(state.py - state.finishObj.position.y) < 3) {
+      completeLevel();
+    }
+  }
+
+  // Power-up timers
+  if (state.speedBurstTimer > 0) state.speedBurstTimer -= dt;
+  if (state.speedBurstCooldown > 0) state.speedBurstCooldown -= dt;
+  if (state.shieldTimer > 0) state.shieldTimer -= dt;
+  if (state.shieldCooldown > 0) state.shieldCooldown -= dt;
+
+  // Shield visual
+  if (state.playerMesh) {
+    if (state.shieldTimer > 0) {
+      state.playerMesh.material.emissive = new THREE.Color(0x1a4d66);
+    } else if (state.speedBurstTimer > 0) {
+      state.playerMesh.material.emissive = new THREE.Color(0x4d1a33);
+    } else {
+      state.playerMesh.material.emissive = new THREE.Color(0x000000);
+    }
+  }
+
+  // Camera follow
+  const camOffset = new THREE.Vector3(0, 8, -10);
+  const desiredCamPos = new THREE.Vector3(state.px + camOffset.x, Math.max(state.py + camOffset.y, 5), state.pz + camOffset.z);
+  camera.position.lerp(desiredCamPos, 6 * dt);
+  const lookTarget = new THREE.Vector3(state.px, state.py + 2, state.pz + 2);
+  camera.lookAt(lookTarget);
+}
+
+function respawn() {
+  state.px = state.respawnX;
+  state.py = state.respawnY;
+  state.pz = state.respawnZ;
+  state.vx = 0; state.vy = 0; state.vz = 0;
+}
+
+function activateSpeedBurst() {
+  if (!Save.hasSkill('swiftcurrent_1') || state.speedBurstCooldown > 0) return;
+  const dur = Save.hasSkill('swiftcurrent_2') ? 4.5 : 3;
+  state.speedBurstTimer = dur;
+  state.speedBurstCooldown = 10;
+}
+
+function activateShield() {
+  if (!Save.hasSkill('deepguard_1') || state.shieldCooldown > 0) return;
+  const dur = Save.hasSkill('deepguard_2') ? 4 : 2.5;
+  state.shieldTimer = dur;
+  state.shieldCooldown = 15;
+}
+
+function completeLevel() {
+  state.running = false;
+  const parTime = 60 + state.levelIndex * 15;
+  const timeBonus = Math.max(0, Math.round((parTime - state.sessionTime) * 2));
+  const totalCurrency = state.sessionCoins + timeBonus;
+  const diffMult = Math.min(state.levelIndex + 1, 10);
+  const xp = Math.round((state.sessionCoins * 5 + 50) * (1 + diffMult * 0.1));
+
+  Save.data.currency += totalCurrency;
+  Save.addXp(xp);
+
+  const levelKey = `${state.worldId}_${state.levelIndex}`;
+  if (!Save.data.completedLevels.includes(levelKey)) Save.data.completedLevels.push(levelKey);
+
+  if (!Save.data.bestTimes[levelKey] || state.sessionTime < Save.data.bestTimes[levelKey])
+    Save.data.bestTimes[levelKey] = state.sessionTime;
+
+  Save.save();
+
+  state.lastCoins = state.sessionCoins;
+  state.lastTime = state.sessionTime;
+  state.lastTimeBonus = timeBonus;
+  state.lastCurrency = totalCurrency;
+  state.lastXp = xp;
+
+  Game.showScreen('results-screen');
+}
+
+// ===== HUD =====
+function updateHUD() {
+  document.getElementById('coin-display').textContent = `\u25CF ${state.sessionCoins}`;
+  const mins = Math.floor(state.sessionTime / 60);
+  const secs = Math.floor(state.sessionTime % 60);
+  document.getElementById('timer-display').textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+
+  // Gamepad indicator
+  let gpInd = document.getElementById('gamepad-indicator');
+  if (!gpInd) {
+    gpInd = document.createElement('div');
+    gpInd.id = 'gamepad-indicator';
+    gpInd.style.cssText = 'position:fixed;top:12px;left:50%;transform:translateX(-50%);color:#888;font-size:14px;z-index:11;pointer-events:none;';
+    document.body.appendChild(gpInd);
+  }
+  gpInd.textContent = gamepad.connected ? '\uD83C\uDFAE Controller' : '';
+}
+
+// ===== RENDER LOOP =====
+function gameLoop(time) {
+  requestAnimationFrame(gameLoop);
+  const dt = Math.min((time - lastTime) / 1000, 0.05);
+  lastTime = time;
+  update(dt);
+  renderer.render(scene, camera);
+}
+
+// ===== SCREEN MANAGEMENT =====
+const Game = {
+  showScreen(id) {
+    ['welcome-splash','main-menu','world-select','results-screen','pause-menu','skill-tree-screen','cosmetics-screen','wizard-screen'].forEach(s => {
+      document.getElementById(s).classList.add('hidden');
+    });
+    document.getElementById('hud').classList.add('hidden');
+    document.getElementById('touch-controls').style.display = 'none';
+
+    document.getElementById(id).classList.remove('hidden');
+    state.screen = id;
+
+    if (id === 'main-menu') this.buildMainMenu();
+    else if (id === 'world-select') this.buildWorldSelect();
+    else if (id === 'results-screen') this.buildResults();
+    else if (id === 'skill-tree-screen') this.buildSkillTree();
+    else if (id === 'cosmetics-screen') this.buildCosmetics();
+    else if (id === 'wizard-screen') this.buildWizard();
+  },
+
+  startLevel(worldId, levelIndex) {
+    state.worldId = worldId;
+    state.levelIndex = levelIndex;
+    state.sessionCoins = 0;
+    state.sessionTime = 0;
+    state.running = true;
+    state.paused = false;
+
+    const key = `${worldId}_${levelIndex}`;
+    const levelData = LEVELS[key];
+    if (!levelData) { alert(`Level ${key} not found!`); return; }
+
+    ['welcome-splash','main-menu','world-select','results-screen','pause-menu','skill-tree-screen','cosmetics-screen','wizard-screen'].forEach(s => {
+      document.getElementById(s).classList.add('hidden');
+    });
+
+    document.getElementById('hud').classList.remove('hidden');
+    if (isTouchDevice) document.getElementById('touch-controls').style.display = 'block';
+
+    // Show/hide power-up buttons
+    document.getElementById('btn-boost').style.display = Save.hasSkill('swiftcurrent_1') ? 'flex' : 'none';
+    document.getElementById('btn-shield').style.display = Save.hasSkill('deepguard_1') ? 'flex' : 'none';
+
+    loadLevel(levelData);
+  },
+
+  startCustomLevel(levelData) {
+    state.worldId = levelData.worldId || 'custom';
+    state.levelIndex = 0;
+    state.sessionCoins = 0;
+    state.sessionTime = 0;
+    state.running = true;
+    state.paused = false;
+
+    ['welcome-splash','main-menu','world-select','results-screen','pause-menu','skill-tree-screen','cosmetics-screen','wizard-screen'].forEach(s => {
+      document.getElementById(s).classList.add('hidden');
+    });
+    document.getElementById('hud').classList.remove('hidden');
+    if (isTouchDevice) document.getElementById('touch-controls').style.display = 'block';
+
+    document.getElementById('btn-boost').style.display = Save.hasSkill('swiftcurrent_1') ? 'flex' : 'none';
+    document.getElementById('btn-shield').style.display = Save.hasSkill('deepguard_1') ? 'flex' : 'none';
+
+    loadLevel(levelData);
+  },
+
+  pause() {
+    state.paused = true;
+    this.showScreen('pause-menu');
+    document.getElementById('hud').classList.remove('hidden');
+  },
+
+  resume() {
+    state.paused = false;
+    document.getElementById('pause-menu').classList.add('hidden');
+    document.getElementById('hud').classList.remove('hidden');
+    if (isTouchDevice) document.getElementById('touch-controls').style.display = 'block';
+  },
+
+  togglePause() {
+    if (!state.running) return;
+    if (state.paused) this.resume(); else this.pause();
+  },
+
+  restartLevel() {
+    this.startLevel(state.worldId, state.levelIndex);
+  },
+
+  quitToMenu() {
+    state.running = false;
+    state.paused = false;
+    this.showScreen('world-select');
+  },
+
+  buildMainMenu() {
+    const info = document.getElementById('main-player-info');
+    info.textContent = `Level ${Save.data.level}  |  ${Save.data.currency} Coins`;
+  },
+
+  buildWorldSelect() {
+    const el = document.getElementById('world-select');
+    let html = `<button class="back-btn" onclick="Game.showScreen('main-menu')">BACK</button>`;
+    html += `<div class="menu-title" style="font-size:40px; margin-bottom:20px;">SELECT WORLD</div>`;
+    html += `<div class="scroll-content">`;
+
+    for (const w of WORLDS) {
+      const unlocked = Save.data.level >= w.reqLevel;
+      html += `<div class="world-card ${unlocked ? '' : 'locked'}" style="background:${w.color}">`;
+      html += `<div class="world-name">${w.name}</div>`;
+
+      if (unlocked) {
+        html += `<div class="level-btns">`;
+        for (let i = 0; i < w.levels; i++) {
+          const lk = `${w.id}_${i}`;
+          const completed = Save.data.completedLevels.includes(lk);
+          const hasData = LEVELS[lk];
+          html += `<button class="level-btn ${completed ? 'completed' : ''}" ${hasData ? `onclick="Game.startLevel('${w.id}',${i})"` : 'disabled style="opacity:0.3"'}>${i+1}</button>`;
+        }
+        html += `</div>`;
+      } else {
+        html += `<div class="world-lock">Unlock at Level ${w.reqLevel}</div>`;
+      }
+      html += `</div>`;
+    }
+    html += `</div>`;
+    el.innerHTML = html;
+  },
+
+  buildResults() {
+    const el = document.getElementById('results-screen');
+    const mins = Math.floor(state.lastTime / 60);
+    const secs = Math.floor(state.lastTime % 60);
+
+    let html = `<div class="menu-title">LEVEL COMPLETE!</div>`;
+    const rows = [
+      ['Time', `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`, '#fff'],
+      ['Coins', state.lastCoins, '#FFD700'],
+      ['Time Bonus', `+${state.lastTimeBonus}`, '#80ff80'],
+      ['Total Currency', state.lastCurrency, '#FFD700'],
+      ['XP Gained', `+${state.lastXp}`, '#80ccff'],
+      ['Player Level', Save.data.level, '#ffb34d'],
+    ];
+    for (const [label, value, color] of rows) {
+      html += `<div class="result-row"><span class="result-label">${label}</span><span class="result-value" style="color:${color}">${value}</span></div>`;
+    }
+    html += `<div style="display:flex;gap:12px;margin-top:24px;">`;
+    html += `<button class="menu-btn btn-play" onclick="Game.startLevel('${state.worldId}',${state.levelIndex+1})">NEXT</button>`;
+    html += `<button class="menu-btn btn-orange" onclick="Game.restartLevel()">RETRY</button>`;
+    html += `<button class="menu-btn btn-gray" onclick="Game.showScreen('world-select')">MENU</button>`;
+    html += `</div>`;
+    el.innerHTML = html;
+  },
+
+  buildSkillTree() {
+    const el = document.getElementById('skill-tree-screen');
+    let html = `<button class="back-btn" onclick="Game.showScreen('main-menu')">BACK</button>`;
+    html += `<div class="currency-display">${Save.data.currency} Coins</div>`;
+    html += `<div class="menu-title" style="font-size:40px;">SKILL TREE</div>`;
+    html += `<div class="skill-grid">`;
+
+    for (const s of SKILLS) {
+      const owned = Save.hasSkill(s.id);
+      const prereqMet = !s.prereq || Save.hasSkill(s.prereq);
+      const levelMet = Save.data.level >= s.reqLevel;
+      const canBuy = !owned && prereqMet && levelMet && Save.data.currency >= s.cost;
+      const cls = owned ? 'owned' : canBuy ? 'available' : 'locked';
+
+      html += `<div class="skill-node ${cls}" style="background:${owned ? s.color+'33' : '#1a1a2e'}" onclick="Game.buySkill('${s.id}',${s.cost})">`;
+      html += `<div class="skill-name">${s.name}</div>`;
+      html += `<div class="skill-desc">${s.desc}</div>`;
+      html += `<div class="skill-cost">${owned ? 'OWNED' : `${s.cost} coins | Lv ${s.reqLevel}`}</div>`;
+      html += `</div>`;
+    }
+    html += `</div>`;
+    el.innerHTML = html;
+  },
+
+  buySkill(id, cost) {
+    if (Save.buySkill(id, cost)) this.buildSkillTree();
+  },
+
+  buildCosmetics() {
+    const el = document.getElementById('cosmetics-screen');
+    let html = `<button class="back-btn" onclick="Game.showScreen('main-menu')">BACK</button>`;
+    html += `<div class="currency-display">${Save.data.currency} Coins</div>`;
+    html += `<div class="menu-title" style="font-size:40px; color:#cc66ff;">COSMETICS</div>`;
+    html += `<div class="cosmetic-grid">`;
+
+    for (const item of COSMETICS) {
+      const owned = item.cost === 0 || Save.data.unlockedCosmetics.includes(item.id);
+      let equipped = false;
+      if (item.cat === 'skin') equipped = Save.data.equippedSkin === item.id;
+      else if (item.cat === 'hat') equipped = Save.data.equippedHat === item.id;
+      else if (item.cat === 'trail') equipped = Save.data.equippedTrail === item.id;
+
+      html += `<div class="cosmetic-card ${equipped ? 'equipped' : ''}" style="background:${owned ? item.color+'22' : '#1a1a2e'}" onclick="Game.buyCosmetic('${item.id}','${item.cat}',${item.cost})">`;
+      html += `<div class="cosmetic-preview" style="background:${item.color}"></div>`;
+      html += `<div class="cosmetic-name">${item.name}</div>`;
+      html += `<div class="cosmetic-cost">${equipped ? 'EQUIPPED' : owned ? 'EQUIP' : `${item.cost} coins`}</div>`;
+      html += `</div>`;
+    }
+    html += `</div>`;
+    el.innerHTML = html;
+  },
+
+  buyCosmetic(id, cat, cost) {
+    const owned = cost === 0 || Save.data.unlockedCosmetics.includes(id);
+    if (!owned) {
+      if (Save.data.currency < cost) return;
+      Save.data.currency -= cost;
+      Save.data.unlockedCosmetics.push(id);
+    }
+    if (cat === 'skin') Save.data.equippedSkin = id;
+    else if (cat === 'hat') Save.data.equippedHat = id;
+    else if (cat === 'trail') Save.data.equippedTrail = id;
+    Save.save();
+    this.buildCosmetics();
+  },
+
+  // ===== LEVEL DRAFT WIZARD =====
+  wizardStep: 0,
+  wizardData: { world:'mountains', setting:'foothills', difficulty:'easy', mechanic:'jumps', length:'short' },
+
+  buildWizard() {
+    this.wizardStep = 0;
+    this.showWizardStep();
+  },
+
+  showWizardStep() {
+    const el = document.getElementById('wizard-screen');
+    let html = `<button class="back-btn" onclick="Game.showScreen('main-menu')">BACK</button>`;
+
+    const steps = [
+      { q: 'Which world?', key: 'world', opts: [
+        ['The Mountains','mountains'], ['Jungle Ruins','jungle'], ['Space Station','space'], ['Candy Castle','candy'], ['Pirate Cove','pirate'] ]},
+      { q: `Where in the world?`, key: 'setting', opts:
+        this.wizardData.world === 'mountains' ?
+          [['Base & Foothills','foothills'], ['Mid Climb','midclimb'], ['Icy Peak','peak'], ['Inside Cavern','cavern']] :
+          [['Entrance','entrance'], ['Deep Interior','deep'], ['Summit','summit']] },
+      { q: 'Difficulty?', key: 'difficulty', opts: [['Easy','easy'], ['Medium','medium'], ['Hard','hard']] },
+      { q: 'Main mechanic?', key: 'mechanic', opts: [['Jumps & Gaps','jumps'], ['Moving Platforms','moving'], ['Rotating Bars','rotating'], ['Jump Pads','jumppad']] },
+      { q: 'Level length?', key: 'length', opts: [['Short (30-60s)','short'], ['Medium (1-2 min)','medium'], ['Long (3-5 min)','long']] },
+    ];
+
+    if (this.wizardStep < steps.length) {
+      const step = steps[this.wizardStep];
+      html += `<div class="wizard-question">${step.q}</div>`;
+      html += `<div class="wizard-choices">`;
+      for (const [label, val] of step.opts) {
+        html += `<button class="wizard-btn" onclick="Game.wizardSelect('${step.key}','${val}')">${label}</button>`;
+      }
+      html += `</div>`;
+    } else {
+      // Generate screen
+      const d = this.wizardData;
+      html += `<div class="wizard-question">Ready to generate!</div>`;
+      html += `<div class="wizard-summary">World: ${d.world}\nSetting: ${d.setting}\nDifficulty: ${d.difficulty}\nMechanic: ${d.mechanic}\nLength: ${d.length}</div>`;
+      html += `<button class="menu-btn btn-play" onclick="Game.wizardGenerate()">GENERATE & PLAY</button>`;
+    }
+    el.innerHTML = html;
+  },
+
+  wizardSelect(key, val) {
+    this.wizardData[key] = val;
+    this.wizardStep++;
+    this.showWizardStep();
+  },
+
+  wizardGenerate() {
+    const d = this.wizardData;
+    const diffNum = d.difficulty === 'easy' ? 2 : d.difficulty === 'medium' ? 5 : 8;
+    const platCount = d.length === 'short' ? 8 : d.length === 'medium' ? 14 : 22;
+    const parTime = d.length === 'short' ? 45 : d.length === 'medium' ? 90 : 180;
+    const gapBase = d.difficulty === 'easy' ? 3 : d.difficulty === 'medium' ? 4.5 : 6;
+    const heightVar = d.difficulty === 'easy' ? 1 : 2;
+
+    const level = {
+      worldId: d.world, levelName: `${d.world}_${d.setting}_${d.difficulty}`,
+      difficulty: diffNum, parTime, setting: d.setting, finishType: 'portal',
+      playerSpawn: { x: 0, y: 2, z: 0 },
+      platforms: [{ x: 0, y: 0, z: 0, sx: 6, sy: 1, sz: 6, color: 'stone' }],
+      movingPlatforms: [], rotatingObstacles: [], jumpPads: [],
+      coins: [], checkpoints: [], hazards: [],
+      finish: null
+    };
+
+    let x = 0, y = 0, z = 4;
+    const rng = () => Math.random();
+
+    for (let i = 0; i < platCount; i++) {
+      const gap = gapBase + rng() * 2;
+      const dy = rng() * heightVar * 2 - heightVar * 0.3;
+      z += gap;
+      y = Math.max(0.5, y + dy);
+      const px = (rng() - 0.5) * 4;
+      const pw = 3 + rng() * 2, pd = 3 + rng() * 2;
+
+      if (d.mechanic === 'moving' && rng() < 0.35) {
+        level.movingPlatforms.push({
+          x: px, y, z, sx: pw, sy: 0.5, sz: pd, speed: 2 + diffNum * 0.3, loop: true,
+          waypoints: [{ x: 0, y: 0, z: 0 }, { x: (rng() - 0.5) * 8, y: 0, z: 0 }]
+        });
+      } else {
+        level.platforms.push({ x: px, y, z, sx: pw, sy: 0.5, sz: pd, color: i % 3 === 0 ? 'stone' : 'brown' });
+      }
+
+      if (d.mechanic === 'rotating' && rng() < 0.3 && i > 1) {
+        level.rotatingObstacles.push({ x: px, y: y + 2, z: z - gap * 0.4, sx: 5, sy: 0.4, sz: 0.4, ax: 0, ay: 1, az: 0, speed: 60 + diffNum * 10 });
+      }
+      if (d.mechanic === 'jumppad' && rng() < 0.25) {
+        level.jumpPads.push({ x: px, y: y + 0.3, z, force: 15 + diffNum });
+      }
+      if (rng() < 0.6) {
+        level.coins.push({ x: px + (rng() - 0.5) * 2, y: y + 2, z, value: rng() < 0.2 ? 2 : 1 });
+      }
+      if (i > 0 && i % 5 === 0) {
+        level.checkpoints.push({ x: px, y: y + 0.5, z, index: level.checkpoints.length });
+      }
+    }
+
+    level.finish = { x: 0, y: y + 1, z: z + 5 };
+    level.platforms.push({ x: 0, y, z: z + 5, sx: 6, sy: 1, sz: 6, color: 'stone' });
+
+    this.startCustomLevel(level);
+  },
+};
+
+// Make Game global
+window.Game = Game;
+
+// ===== SPLASH SCREEN =====
+let splashDismissed = false;
+
+function dismissSplash() {
+  if (splashDismissed) return;
+  splashDismissed = true;
+  document.getElementById('welcome-splash').classList.add('hidden');
+  Game.showScreen('main-menu');
+}
+window.dismissSplash = dismissSplash;
+
+// Dismiss splash with any key, gamepad A, or click (click is on the div itself)
+document.addEventListener('keydown', function splashKey(e) {
+  if (!splashDismissed) { dismissSplash(); document.removeEventListener('keydown', splashKey); }
+});
+
+// Poll for gamepad A press to dismiss splash
+function splashGamepadPoll() {
+  if (splashDismissed) return;
+  const gps = navigator.getGamepads ? navigator.getGamepads() : [];
+  for (const gp of gps) {
+    if (gp && gp.connected && gp.buttons[0]?.pressed) {
+      dismissSplash();
+      return;
+    }
+  }
+  requestAnimationFrame(splashGamepadPoll);
+}
+requestAnimationFrame(splashGamepadPoll);
+
+// Detect controller on splash to show right instructions
+function updateSplashInstructions() {
+  if (splashDismissed) return;
+  const gps = navigator.getGamepads ? navigator.getGamepads() : [];
+  let hasController = false;
+  for (const gp of gps) { if (gp && gp.connected) { hasController = true; break; } }
+
+  const ctrlDiv = document.getElementById('splash-controller-instructions');
+  const kbDiv = document.getElementById('splash-keyboard-instructions');
+  const prompt = document.getElementById('splash-start-prompt');
+
+  if (hasController) {
+    ctrlDiv.style.display = 'block';
+    kbDiv.style.display = 'none';
+    prompt.textContent = 'Press A to start!';
+  } else {
+    ctrlDiv.style.display = 'none';
+    kbDiv.style.display = 'block';
+    prompt.textContent = 'Press any key or click to start!';
+  }
+  requestAnimationFrame(updateSplashInstructions);
+}
+requestAnimationFrame(updateSplashInstructions);
+
+// ===== INIT =====
+Save.load();
+// Main menu starts hidden; splash shows first
+requestAnimationFrame(gameLoop);
+
+</script>
+</body>
+</html>

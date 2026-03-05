@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <title>Playbook | Lance W. Fisher</title>
+  <link rel="stylesheet" href="../fonts/fonts.css">
+  <style>
+    :root {
+      --bg: #0a0a0b;
+      --warm-white: #f0ebe0;
+      --gold-1776: #c9a84c;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--warm-white);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* =========== PASSKEY GATE =========== */
+    .gate-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    .gate-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .gate-box {
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+      padding: 48px;
+    }
+
+    .gate-shield {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 28px;
+      opacity: 0.25;
+    }
+    .gate-shield svg { width: 100%; height: 100%; }
+
+    .gate-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: 24px;
+      letter-spacing: 3px;
+      color: var(--warm-white);
+      margin-bottom: 8px;
+    }
+    .gate-sub {
+      font-weight: 200;
+      font-size: 12px;
+      color: rgba(240, 235, 224, 0.25);
+      margin-bottom: 32px;
+      letter-spacing: 1px;
+    }
+
+    .gate-input {
+      width: 100%;
+      padding: 14px 20px;
+      background: rgba(240, 235, 224, 0.03);
+      border: 1px solid rgba(201, 168, 76, 0.12);
+      color: var(--warm-white);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      letter-spacing: 4px;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .gate-input:focus {
+      border-color: rgba(201, 168, 76, 0.35);
+    }
+    .gate-input::placeholder {
+      color: rgba(240, 235, 224, 0.12);
+      letter-spacing: 2px;
+    }
+
+    .gate-submit {
+      width: 100%;
+      margin-top: 16px;
+      padding: 14px;
+      background: rgba(201, 168, 76, 0.08);
+      border: 1px solid rgba(201, 168, 76, 0.2);
+      color: var(--gold-1776);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .gate-submit:hover {
+      background: rgba(201, 168, 76, 0.15);
+      border-color: rgba(201, 168, 76, 0.4);
+    }
+
+    .gate-error {
+      font-size: 11px;
+      color: #f87171;
+      margin-top: 12px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      letter-spacing: 1px;
+    }
+    .gate-error.visible { opacity: 1; }
+
+    .gate-back {
+      display: inline-block;
+      margin-top: 28px;
+      font-size: 11px;
+      font-weight: 200;
+      color: rgba(240, 235, 224, 0.2);
+      text-decoration: none;
+      letter-spacing: 2px;
+      transition: color 0.3s;
+    }
+    .gate-back:hover { color: rgba(240, 235, 224, 0.5); }
+
+
+    /* =========== READER =========== */
+    .reader-wrap {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+    .reader-wrap.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Top bar */
+    .reader-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      background: rgba(201, 168, 76, 0.03);
+      border-bottom: 1px solid rgba(201, 168, 76, 0.08);
+      flex-shrink: 0;
+    }
+    .reader-topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .reader-topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .reader-title-bar {
+      font-weight: 200;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(201, 168, 76, 0.5);
+    }
+    .reader-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: rgba(74, 222, 128, 0.5);
+      letter-spacing: 2px;
+    }
+    .reader-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(74, 222, 128, 0.6);
+    }
+
+    .reader-btn {
+      background: rgba(240, 235, 224, 0.04);
+      border: 1px solid rgba(240, 235, 224, 0.06);
+      color: rgba(240, 235, 224, 0.4);
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .reader-btn:hover {
+      background: rgba(240, 235, 224, 0.08);
+      color: rgba(240, 235, 224, 0.6);
+    }
+    .reader-btn.active {
+      background: rgba(201, 168, 76, 0.08);
+      border-color: rgba(201, 168, 76, 0.2);
+      color: var(--gold-1776);
+    }
+
+    .reader-close {
+      background: none;
+      border: 1px solid rgba(240, 235, 224, 0.06);
+      color: rgba(240, 235, 224, 0.4);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px 10px;
+      transition: all 0.3s;
+    }
+    .reader-close:hover {
+      border-color: rgba(248, 113, 113, 0.3);
+      color: #f87171;
+    }
+
+    /* Body: TOC + Content */
+    .reader-body {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* TOC Sidebar */
+    .reader-toc {
+      border-right: 1px solid rgba(201, 168, 76, 0.06);
+      padding: 32px 20px;
+      overflow-y: auto;
+      background: rgba(201, 168, 76, 0.01);
+    }
+    .toc-heading {
+      font-weight: 200;
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(201, 168, 76, 0.35);
+      margin-bottom: 20px;
+    }
+    .toc-item {
+      display: block;
+      padding: 10px 12px;
+      font-weight: 300;
+      font-size: 13px;
+      color: rgba(240, 235, 224, 0.3);
+      cursor: pointer;
+      border: none;
+      border-left: 2px solid transparent;
+      transition: all 0.3s;
+      margin-bottom: 4px;
+      background: none;
+      text-align: left;
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+    }
+    .toc-item:hover {
+      color: rgba(240, 235, 224, 0.6);
+      background: rgba(201, 168, 76, 0.03);
+    }
+    .toc-item.active {
+      color: var(--gold-1776);
+      border-left-color: var(--gold-1776);
+      background: rgba(201, 168, 76, 0.05);
+    }
+
+    /* Content Area */
+    .reader-content {
+      overflow-y: auto;
+      padding: 48px 60px 80px;
+      position: relative;
+    }
+
+    /* Watermark */
+    .watermark {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 200;
+      overflow: hidden;
+      opacity: 0.04;
+      display: none;
+    }
+    .watermark-inner {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      transform: rotate(-25deg);
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      gap: 60px 40px;
+    }
+    .watermark-text {
+      font-size: 11px;
+      font-weight: 200;
+      letter-spacing: 3px;
+      color: var(--warm-white);
+      white-space: nowrap;
+      padding: 20px;
+    }
+
+    /* Copyright notice */
+    .doc-copyright {
+      font-weight: 200;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: rgba(201, 168, 76, 0.3);
+      padding: 16px 0;
+      border-top: 1px solid rgba(201, 168, 76, 0.06);
+      border-bottom: 1px solid rgba(201, 168, 76, 0.06);
+      margin-bottom: 32px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    /* Signature */
+    .doc-signature {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: 13px;
+      color: rgba(201, 168, 76, 0.25);
+      text-align: right;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(201, 168, 76, 0.04);
+    }
+
+    /* Document content */
+    .doc-content {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.9;
+      color: rgba(240, 235, 224, 0.65);
+    }
+    .doc-content h1,
+    .doc-content h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      color: var(--warm-white);
+      letter-spacing: 2px;
+      margin: 40px 0 20px;
+    }
+    .doc-content h1 { font-size: 28px; }
+    .doc-content h2 { font-size: 22px; }
+    .doc-content h3 {
+      font-weight: 400;
+      font-size: 15px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(201, 168, 76, 0.6);
+      margin: 32px 0 12px;
+    }
+    .doc-content h4 {
+      font-weight: 400;
+      font-size: 14px;
+      color: rgba(240, 235, 224, 0.5);
+      margin: 24px 0 8px;
+    }
+    .doc-content p { margin-bottom: 16px; }
+    .doc-content ul, .doc-content ol { margin: 0 0 16px 24px; }
+    .doc-content li { margin-bottom: 8px; }
+    .doc-content em { color: rgba(240, 235, 224, 0.8); font-style: italic; }
+    .doc-content strong { color: var(--warm-white); font-weight: 500; }
+    .doc-content hr {
+      border: none;
+      border-top: 1px solid rgba(201, 168, 76, 0.08);
+      margin: 40px 0;
+    }
+    .doc-content a {
+      color: var(--gold-1776);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+      transition: border-color 0.3s;
+    }
+    .doc-content a:hover { border-bottom-color: var(--gold-1776); }
+
+    .ftda-note {
+      font-size: 13px;
+      color: rgba(201, 168, 76, 0.5);
+      padding: 12px 16px;
+      border-left: 2px solid rgba(201, 168, 76, 0.2);
+      margin-bottom: 24px;
+      background: rgba(201, 168, 76, 0.02);
+    }
+    .ftda-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 14px;
+      color: rgba(240, 235, 224, 0.4);
+      margin-bottom: 8px;
+    }
+    .ftda-byline {
+      font-family: 'Inter', sans-serif;
+      font-weight: 200;
+      font-size: 12px;
+      font-style: italic;
+      color: rgba(240, 235, 224, 0.3);
+      margin-bottom: 24px;
+    }
+
+    /* Chunk reveal */
+    .doc-chunk {
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .doc-chunk.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Secure mode */
+    .secure-mode .doc-content {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+
+    /* =========== RESPONSIVE =========== */
+    @media (max-width: 768px) {
+      .reader-body {
+        grid-template-columns: 1fr;
+      }
+      .reader-toc {
+        display: flex;
+        gap: 8px;
+        padding: 12px 16px;
+        border-right: none;
+        border-bottom: 1px solid rgba(201, 168, 76, 0.06);
+        overflow-x: auto;
+        overflow-y: visible;
+      }
+      .toc-heading { display: none; }
+      .toc-item {
+        white-space: nowrap;
+        border-left: none;
+        border-bottom: 2px solid transparent;
+        padding: 8px 16px;
+        font-size: 11px;
+      }
+      .toc-item.active {
+        border-left-color: transparent;
+        border-bottom-color: var(--gold-1776);
+      }
+      .reader-content {
+        padding: 24px 20px 60px;
+      }
+      .gate-box { padding: 32px 24px; }
+      .reader-topbar {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PASSKEY GATE -->
+  <div class="gate-overlay" id="gateOverlay">
+    <div class="gate-box">
+      <div class="gate-shield">
+        <svg viewBox="0 0 24 24" fill="none" stroke="rgba(201,168,76,0.5)" stroke-width="1">
+          <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+          <path d="M12 8v4M12 16h.01" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="gate-heading">Protected Content</div>
+      <div class="gate-sub">Enter passkey to continue</div>
+      <input type="password" class="gate-input" id="gateInput" placeholder="passkey" autocomplete="off" spellcheck="false">
+      <button class="gate-submit" id="gateSubmit">Unlock</button>
+      <div class="gate-error" id="gateError">Invalid passkey. Please try again.</div>
+      <a href="https://lancewfisher.com" class="gate-back">&larr; lancewfisher.com</a>
+    </div>
+  </div>
+
+  <!-- DOCUMENT READER -->
+  <div class="reader-wrap" id="readerWrap">
+    <!-- Top bar -->
+    <div class="reader-topbar">
+      <div class="reader-topbar-left">
+        <div class="reader-title-bar">Fisher Team Development Architecture</div>
+        <div class="reader-status">
+          <div class="reader-status-dot"></div>
+          Unlocked
+        </div>
+      </div>
+      <div class="reader-topbar-right">
+        <button class="reader-btn" id="btnSecure" data-secure>Secure: Off</button>
+        <button class="reader-btn" id="btnWatermark" data-watermark>Watermark: On</button>
+        <button class="reader-btn" id="btnLock" data-lock>Lock</button>
+        <button class="reader-close" id="btnClose" title="Close">&times;</button>
+      </div>
+    </div>
+    <!-- Body -->
+    <div class="reader-body">
+      <div class="reader-toc" id="readerToc"></div>
+      <div class="reader-content" id="readerContent"></div>
+    </div>
+  </div>
+
+  <!-- WATERMARK -->
+  <div class="watermark" id="watermark">
+    <div class="watermark-inner" id="watermarkInner"></div>
+  </div>
+
+  <!--
+    SECURITY NOTE: The innerHTML usage in this page renders content exclusively
+    from the local config.js file (FTDA_CONFIG object), which is authored and
+    controlled solely by the site owner (Lance Fisher). No user-supplied or
+    external content is ever rendered. This is safe for this static site context.
+  -->
+  <script src="config.js"></script>
+  <script>
+  (function() {
+    'use strict';
+
+    var secureMode = false;
+    var currentDocIndex = 0;
+    var chunkObserver = null;
+
+    // SHA-256 via WebCrypto
+    function sha256(str) {
+      var buf = new TextEncoder().encode(str);
+      return crypto.subtle.digest('SHA-256', buf).then(function(hash) {
+        return Array.from(new Uint8Array(hash)).map(function(b) {
+          return b.toString(16).padStart(2, '0');
+        }).join('');
+      });
+    }
+
+    // Session
+    function checkSession() { return sessionStorage.getItem('playbook_unlocked') === 'true'; }
+    function setSession() { sessionStorage.setItem('playbook_unlocked', 'true'); }
+    function clearSession() { sessionStorage.removeItem('playbook_unlocked'); }
+
+    // Gate
+    var gateOverlay = document.getElementById('gateOverlay');
+    var gateInput = document.getElementById('gateInput');
+    var gateSubmit = document.getElementById('gateSubmit');
+    var gateError = document.getElementById('gateError');
+
+    function submitPasskey() {
+      var val = gateInput.value.trim();
+      if (!val) { gateError.textContent = 'Please enter a passkey'; gateError.classList.add('visible'); return; }
+      sha256(val).then(function(hash) {
+        if (hash === FTDA_CONFIG.passkeySha256Hex) {
+          setSession();
+          gateOverlay.classList.add('hidden');
+          openReader();
+        } else {
+          gateError.textContent = 'Invalid passkey. Please try again.';
+          gateError.classList.add('visible');
+          gateInput.value = '';
+          gateInput.focus();
+        }
+      });
+    }
+
+    gateSubmit.addEventListener('click', submitPasskey);
+    gateInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') submitPasskey(); });
+
+    // Reader
+    var readerWrap = document.getElementById('readerWrap');
+    var readerToc = document.getElementById('readerToc');
+    var readerContent = document.getElementById('readerContent');
+
+    function openReader() {
+      var artifact = FTDA_CONFIG.artifacts[0];
+
+      // Build TOC
+      while (readerToc.firstChild) readerToc.removeChild(readerToc.firstChild);
+      var heading = document.createElement('div');
+      heading.className = 'toc-heading';
+      heading.textContent = 'Contents';
+      readerToc.appendChild(heading);
+
+      artifact.documents.forEach(function(doc, idx) {
+        var btn = document.createElement('button');
+        btn.className = 'toc-item' + (idx === 0 ? ' active' : '');
+        btn.textContent = doc.label;
+        btn.addEventListener('click', function() {
+          switchDocument(idx);
+          readerToc.querySelectorAll('.toc-item').forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+        });
+        readerToc.appendChild(btn);
+      });
+
+      // Build watermark
+      buildWatermark(artifact.watermarkText);
+
+      // Render first document
+      renderDocument(0);
+
+      // Show reader
+      readerWrap.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function switchDocument(idx) {
+      currentDocIndex = idx;
+      renderDocument(idx);
+    }
+
+    // Content rendering uses owner-controlled config.js data only
+    function renderDocument(docIdx) {
+      var artifact = FTDA_CONFIG.artifacts[0];
+      var doc = artifact.documents[docIdx];
+      if (!doc) return;
+
+      while (readerContent.firstChild) readerContent.removeChild(readerContent.firstChild);
+
+      var wrapper = document.createElement('div');
+      wrapper.className = 'doc-content';
+
+      // Top copyright
+      var topCopy = document.createElement('div');
+      topCopy.className = 'doc-copyright';
+      topCopy.textContent = artifact.copyrightNotice;
+      wrapper.appendChild(topCopy);
+
+      // Parse chunks from owner-authored config
+      var rawContent = doc.content;
+      var chunks = splitIntoChunks(rawContent);
+
+      chunks.forEach(function(chunk, idx) {
+        var chunkDiv = document.createElement('div');
+        chunkDiv.className = 'doc-chunk';
+        chunkDiv.setAttribute('data-chunk', idx);
+        // Safe: content sourced from local config.js authored by site owner
+        chunkDiv.innerHTML = chunk; // eslint-disable-line -- owner-controlled content only
+        wrapper.appendChild(chunkDiv);
+      });
+
+      // Signature
+      var sig = document.createElement('div');
+      sig.className = 'doc-signature';
+      sig.textContent = 'Lance Fisher, ' + new Date().getFullYear();
+      wrapper.appendChild(sig);
+
+      // Bottom copyright
+      var botCopy = document.createElement('div');
+      botCopy.className = 'doc-copyright';
+      botCopy.style.marginTop = '32px';
+      botCopy.textContent = artifact.copyrightNotice;
+      wrapper.appendChild(botCopy);
+
+      readerContent.appendChild(wrapper);
+      setupChunkReveal(readerContent);
+      readerContent.scrollTop = 0;
+    }
+
+    function splitIntoChunks(html) {
+      var chunks = [];
+      var temp = document.createElement('div');
+      // Safe: html sourced from local config.js authored by site owner
+      temp.innerHTML = html; // eslint-disable-line -- owner-controlled content only
+      var children = temp.children;
+      var currentChunk = '';
+      var charCount = 0;
+      var targetChunkSize = 800;
+
+      for (var i = 0; i < children.length; i++) {
+        var child = children[i].outerHTML;
+        currentChunk += child;
+        charCount += children[i].textContent.length;
+        if (charCount >= targetChunkSize || i === children.length - 1) {
+          chunks.push(currentChunk);
+          currentChunk = '';
+          charCount = 0;
+        }
+      }
+      if (chunks.length === 0 && html.trim()) chunks.push(html);
+      return chunks;
+    }
+
+    function setupChunkReveal(container) {
+      if (chunkObserver) chunkObserver.disconnect();
+      var chunks = container.querySelectorAll('.doc-chunk');
+      chunkObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) entry.target.classList.add('revealed');
+        });
+      }, { root: container, threshold: 0.1 });
+      chunks.forEach(function(chunk) { chunkObserver.observe(chunk); });
+    }
+
+    // Watermark
+    function buildWatermark(text) {
+      var wm = document.getElementById('watermark');
+      var inner = document.getElementById('watermarkInner');
+      while (inner.firstChild) inner.removeChild(inner.firstChild);
+      for (var i = 0; i < 80; i++) {
+        var span = document.createElement('span');
+        span.className = 'watermark-text';
+        span.textContent = text;
+        inner.appendChild(span);
+      }
+      wm.style.display = 'block';
+    }
+
+    // Copy protection
+    readerWrap.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
+    readerWrap.addEventListener('keydown', function(e) {
+      var key = e.key ? e.key.toLowerCase() : '';
+      var ctrl = e.ctrlKey || e.metaKey;
+      if (ctrl && (key === 'c' || key === 'a' || key === 's' || key === 'p' || key === 'u')) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    // Secure mode toggle
+    document.getElementById('btnSecure').addEventListener('click', function() {
+      secureMode = !secureMode;
+      readerWrap.classList.toggle('secure-mode', secureMode);
+      this.classList.toggle('active', secureMode);
+      this.textContent = secureMode ? 'Secure: On' : 'Secure: Off';
+    });
+
+    // Watermark toggle
+    document.getElementById('btnWatermark').addEventListener('click', function() {
+      var wm = document.getElementById('watermark');
+      var visible = wm.style.opacity !== '0';
+      wm.style.opacity = visible ? '0' : '';
+      this.classList.toggle('active', !visible);
+      this.textContent = visible ? 'Watermark: Off' : 'Watermark: On';
+    });
+
+    // Lock
+    document.getElementById('btnLock').addEventListener('click', function() {
+      clearSession();
+      readerWrap.classList.remove('active');
+      document.getElementById('watermark').style.display = 'none';
+      document.body.style.overflow = '';
+      gateOverlay.classList.remove('hidden');
+      gateInput.value = '';
+      gateError.classList.remove('visible');
+      if (chunkObserver) { chunkObserver.disconnect(); chunkObserver = null; }
+      setTimeout(function() { gateInput.focus(); }, 200);
+    });
+
+    // Close = lock
+    document.getElementById('btnClose').addEventListener('click', function() {
+      document.getElementById('btnLock').click();
+    });
+
+    // Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && readerWrap.classList.contains('active')) {
+        document.getElementById('btnLock').click();
+      }
+    });
+
+    // Check session on load
+    if (checkSession()) {
+      gateOverlay.classList.add('hidden');
+      openReader();
+    } else {
+      setTimeout(function() { gateInput.focus(); }, 200);
+    }
+
+  })();
+  </script>
+</body>
+</html>

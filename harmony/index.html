@@ -1,0 +1,2074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harmony Skin &amp; Wellness — App Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0a0a0b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  color: #f0ebe0;
+}
+
+/* ===== OUTER FRAME TITLE ===== */
+.preview-title {
+  text-align: center;
+  margin-bottom: 16px;
+}
+.preview-title h1 {
+  font-size: 22px;
+  font-weight: 300;
+  color: #f0ebe0;
+  letter-spacing: 3px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+.preview-title h1 span { color: #c9a84c; }
+
+.preview-note {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 12px;
+  color: rgba(240, 235, 224, 0.3);
+  max-width: 375px;
+  letter-spacing: 1px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #c9a84c;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+.back-link:hover { opacity: 1; }
+
+/* ===== PHONE FRAME ===== */
+.phone-frame {
+  width: 375px;
+  height: 812px;
+  background: #000;
+  border-radius: 44px;
+  padding: 12px;
+  position: relative;
+  box-shadow:
+    0 0 0 2px #1a1a1a,
+    0 0 0 5px #333,
+    0 20px 60px rgba(0,0,0,0.35),
+    inset 0 0 4px rgba(255,255,255,0.05);
+}
+
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 34px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== NOTCH ===== */
+.notch-bar {
+  width: 100%;
+  height: 44px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  z-index: 10;
+}
+.notch {
+  width: 120px;
+  height: 28px;
+  background: #000;
+  border-radius: 0 0 18px 18px;
+  position: relative;
+}
+.notch::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: #1a1a2e;
+  border-radius: 50%;
+  position: absolute;
+  right: 20px;
+  top: 8px;
+  box-shadow: inset 0 0 2px rgba(50,50,100,0.5);
+}
+.notch-bar .time-left {
+  position: absolute;
+  left: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2d2d2d;
+}
+.notch-bar .status-right {
+  position: absolute;
+  right: 24px;
+  font-size: 12px;
+  color: #2d2d2d;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ===== SCREEN CONTENT AREA ===== */
+.screen-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+.screen-content::-webkit-scrollbar { width: 0; display: none; }
+
+.screen {
+  display: none;
+  padding-bottom: 20px;
+  animation: fadeIn 0.25s ease;
+}
+.screen.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== BOTTOM TAB BAR ===== */
+.tab-bar {
+  width: 100%;
+  height: 78px;
+  background: #ffffff;
+  border-top: 1px solid #eee;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  padding-top: 8px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+  padding: 4px 12px;
+  border: none;
+  background: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s;
+}
+.tab-item:active { transform: scale(0.92); }
+.tab-icon { font-size: 22px; line-height: 1; filter: grayscale(0.3); }
+.tab-label { font-size: 10px; color: #999; font-weight: 500; }
+.tab-item.active .tab-icon { filter: none; }
+.tab-item.active .tab-label { color: #b8965c; font-weight: 600; }
+
+/* ===== UTILITY CLASSES ===== */
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2d2d2d;
+  padding: 20px 20px 12px;
+}
+.section-subtitle {
+  font-size: 13px;
+  color: #6b6b6b;
+  padding: 0 20px 12px;
+}
+.gold-btn {
+  background: linear-gradient(135deg, #b8965c 0%, #d4af6e 50%, #b8965c 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(184,150,92,0.3);
+}
+.gold-btn:active { transform: scale(0.97); box-shadow: 0 1px 4px rgba(184,150,92,0.2); }
+.gold-btn-outline {
+  background: transparent;
+  color: #b8965c;
+  border: 1.5px solid #b8965c;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.gold-btn-outline:active { background: rgba(184,150,92,0.08); }
+.card {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #f0ece6;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+/* ================================================
+   HOME SCREEN
+   ================================================ */
+.home-header {
+  padding: 16px 20px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.home-logo { height: 36px; width: auto; object-fit: contain; }
+.greeting-bell { font-size: 20px; cursor: pointer; }
+.home-greeting {
+  padding: 0 20px 4px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #2d2d2d;
+}
+.home-greeting-sub {
+  padding: 0 20px 16px;
+  font-size: 13px;
+  color: #6b6b6b;
+}
+
+/* Promo Carousel */
+.promo-carousel-wrapper {
+  padding: 0 0 0 20px;
+  position: relative;
+}
+.promo-carousel {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-right: 20px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.promo-carousel::-webkit-scrollbar { display: none; }
+.promo-card {
+  flex-shrink: 0;
+  width: 280px;
+  height: 160px;
+  border-radius: 16px;
+  overflow: hidden;
+  scroll-snap-align: start;
+  position: relative;
+  background: #f5f0eb;
+}
+.promo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.promo-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 0 4px;
+}
+.promo-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #d4cfc8;
+  transition: all 0.3s;
+}
+.promo-dot.active {
+  background: #b8965c;
+  width: 18px;
+  border-radius: 3px;
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: flex;
+  gap: 10px;
+  padding: 16px 20px;
+}
+.quick-action {
+  flex: 1;
+  padding: 14px 8px;
+  border-radius: 14px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.15s;
+}
+.quick-action:active { transform: scale(0.96); }
+.quick-action.primary {
+  background: linear-gradient(135deg, #b8965c, #d4af6e);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(184,150,92,0.3);
+}
+.quick-action.secondary {
+  background: #faf9f7;
+  color: #2d2d2d;
+  border: 1px solid #ece7df;
+}
+.quick-action-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+
+/* Service Categories */
+.service-cats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 20px 8px;
+}
+.service-cat-card {
+  padding: 18px 14px;
+  border-radius: 14px;
+  background: #faf9f7;
+  border: 1px solid #f0ece6;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.service-cat-card:active { background: #f5f0ea; transform: scale(0.98); }
+.service-cat-icon { font-size: 24px; margin-bottom: 6px; }
+.service-cat-name { font-size: 13px; font-weight: 600; color: #2d2d2d; }
+.service-cat-count { font-size: 11px; color: #999; margin-top: 2px; }
+
+/* Team Section */
+.team-scroll {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 0 20px 4px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.team-scroll::-webkit-scrollbar { display: none; }
+.team-member {
+  flex-shrink: 0;
+  text-align: center;
+  width: 80px;
+  cursor: pointer;
+}
+.team-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f0ece6;
+  margin-bottom: 6px;
+  background: #f5f0eb;
+}
+.team-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: #2d2d2d;
+  line-height: 1.2;
+}
+.team-title-text {
+  font-size: 10px;
+  color: #999;
+}
+
+/* Contact Card */
+.contact-card {
+  margin: 16px 20px 8px;
+  padding: 18px;
+  border-radius: 16px;
+  background: #faf9f7;
+  border: 1px solid #f0ece6;
+}
+.contact-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 13px;
+  color: #2d2d2d;
+}
+.contact-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.contact-row a { color: #b8965c; text-decoration: none; font-weight: 500; }
+.contact-label { font-size: 11px; color: #999; margin-top: 1px; }
+
+/* ================================================
+   SERVICES SCREEN
+   ================================================ */
+.filter-chips {
+  display: flex;
+  gap: 8px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.filter-chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1.5px solid #e0dbd4;
+  background: #fff;
+  color: #6b6b6b;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.chip:active { transform: scale(0.96); }
+.chip.active {
+  background: linear-gradient(135deg, #b8965c, #d4af6e);
+  color: #fff;
+  border-color: #b8965c;
+  box-shadow: 0 2px 6px rgba(184,150,92,0.25);
+}
+.services-list { padding: 0 20px 8px; display: flex; flex-direction: column; gap: 10px; }
+.service-card {
+  padding: 16px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #f0ece6;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  transition: transform 0.15s;
+}
+.service-card:active { transform: scale(0.99); }
+.service-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+.service-card-name { font-size: 15px; font-weight: 600; color: #2d2d2d; }
+.service-card-badge {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.badge-injectables { background: #fdf2e4; color: #b8965c; }
+.badge-laser { background: #e8f2f6; color: #5a8fa3; }
+.badge-skin { background: #f0e8f5; color: #8b6faa; }
+.badge-body { background: #e6f5ed; color: #4d9a6d; }
+.badge-prp { background: #fde8e8; color: #c56060; }
+.service-card-desc { font-size: 12px; color: #999; margin-bottom: 10px; line-height: 1.4; }
+.service-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.service-price { font-size: 15px; font-weight: 700; color: #b8965c; }
+.service-duration { font-size: 12px; color: #999; }
+.service-book-btn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: rgba(184,150,92,0.1);
+  color: #b8965c;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+.service-book-btn:active { background: rgba(184,150,92,0.2); }
+.services-count {
+  padding: 0 20px 4px;
+  font-size: 12px;
+  color: #999;
+}
+
+/* ================================================
+   APPOINTMENTS SCREEN
+   ================================================ */
+.appt-header { padding: 20px 20px 8px; }
+.appt-header h2 { font-size: 22px; font-weight: 700; }
+.appt-toggle {
+  display: flex;
+  margin: 12px 20px 16px;
+  background: #faf9f7;
+  border-radius: 12px;
+  padding: 3px;
+}
+.appt-toggle-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background: transparent;
+  color: #999;
+  transition: all 0.25s;
+}
+.appt-toggle-btn.active {
+  background: #fff;
+  color: #2d2d2d;
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.appt-card {
+  margin: 0 20px 12px;
+  padding: 16px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #f0ece6;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.appt-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+.appt-service-name { font-size: 16px; font-weight: 600; }
+.appt-status {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+.status-confirmed { background: #e6f5ed; color: #2d8a54; }
+.status-completed { background: #e8f2f6; color: #4a7f94; }
+.appt-detail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #6b6b6b;
+  padding: 3px 0;
+}
+.appt-detail-icon { font-size: 14px; width: 18px; text-align: center; }
+.appt-actions { margin-top: 12px; display: flex; gap: 10px; }
+.appt-cancel-btn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1.5px solid #e0dbd4;
+  background: #fff;
+  color: #6b6b6b;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.appt-reschedule-btn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(184,150,92,0.1);
+  color: #b8965c;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.appt-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  font-size: 14px;
+}
+.appt-empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+
+/* ================================================
+   WALLET SCREEN
+   ================================================ */
+.wallet-header { padding: 20px 20px 8px; }
+.wallet-header h2 { font-size: 22px; font-weight: 700; }
+.wallet-balance-card {
+  margin: 12px 20px 20px;
+  padding: 28px 20px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #b8965c 0%, #d4af6e 40%, #c2a27d 100%);
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(184,150,92,0.35);
+  position: relative;
+  overflow: hidden;
+}
+.wallet-balance-card::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+}
+.wallet-balance-card::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: -20px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+}
+.wallet-label { font-size: 13px; opacity: 0.85; margin-bottom: 6px; font-weight: 500; }
+.wallet-amount { font-size: 40px; font-weight: 700; letter-spacing: -1px; }
+
+.wallet-add-section { padding: 0 20px 16px; }
+.wallet-presets {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.wallet-preset {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  background: #faf9f7;
+  border: 1.5px solid #e0dbd4;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: #2d2d2d;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.wallet-preset:active, .wallet-preset.selected {
+  border-color: #b8965c;
+  background: rgba(184,150,92,0.08);
+  color: #b8965c;
+}
+.wallet-add-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #b8965c, #d4af6e);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(184,150,92,0.3);
+}
+
+.txn-list { padding: 0 20px; }
+.txn-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #f5f2ed;
+}
+.txn-item:last-child { border-bottom: none; }
+.txn-left { display: flex; align-items: center; gap: 12px; }
+.txn-icon-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.txn-credit { background: #e6f5ed; }
+.txn-debit { background: #fde8e8; }
+.txn-bonus { background: #fdf2e4; }
+.txn-desc { font-size: 13px; font-weight: 500; color: #2d2d2d; }
+.txn-date { font-size: 11px; color: #999; margin-top: 2px; }
+.txn-amount { font-size: 14px; font-weight: 600; }
+.txn-amount.credit { color: #2d8a54; }
+.txn-amount.debit { color: #c56060; }
+.txn-amount.bonus { color: #b8965c; }
+
+/* ================================================
+   PROFILE SCREEN
+   ================================================ */
+.profile-header-section {
+  text-align: center;
+  padding: 24px 20px 20px;
+  background: linear-gradient(180deg, #faf9f7 0%, #fff 100%);
+}
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #b8965c, #d4af6e);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 auto 10px;
+}
+.profile-name { font-size: 20px; font-weight: 700; }
+.profile-email {
+  font-size: 13px;
+  color: #6b6b6b;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: #2d8a54;
+  background: #e6f5ed;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.profile-section {
+  padding: 12px 20px 0;
+}
+.profile-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding-bottom: 8px;
+}
+.profile-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid #f5f2ed;
+  cursor: pointer;
+}
+.profile-row:last-child { border-bottom: none; }
+.profile-row-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.profile-row-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  background: #faf9f7;
+}
+.profile-row-text { font-size: 14px; font-weight: 500; color: #2d2d2d; }
+.profile-row-arrow { color: #ccc; font-size: 14px; }
+
+.profile-logout {
+  margin: 20px 20px 8px;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1.5px solid #f0dada;
+  background: #fff;
+  color: #c56060;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  width: calc(100% - 40px);
+}
+.profile-version {
+  text-align: center;
+  font-size: 11px;
+  color: #ccc;
+  padding: 12px 0 8px;
+}
+
+/* ================================================
+   BOOKING FLOW
+   ================================================ */
+.booking-screen { display: none; }
+.booking-screen.active { display: block; }
+
+.booking-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  gap: 12px;
+}
+.booking-back {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: #faf9f7;
+  border: 1px solid #ece7df;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+}
+.booking-header h3 { font-size: 18px; font-weight: 700; }
+
+.booking-progress {
+  display: flex;
+  gap: 6px;
+  padding: 0 20px 16px;
+}
+.booking-step-dot {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: #e0dbd4;
+  transition: background 0.3s;
+}
+.booking-step-dot.done { background: #b8965c; }
+.booking-step-dot.current { background: linear-gradient(90deg, #b8965c, #d4af6e); }
+
+/* Step 1: Provider */
+.provider-option {
+  margin: 0 20px 10px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1.5px solid #e0dbd4;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.provider-option:active { transform: scale(0.99); }
+.provider-option.selected {
+  border-color: #b8965c;
+  background: rgba(184,150,92,0.05);
+}
+.provider-opt-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #f5f0eb;
+  flex-shrink: 0;
+}
+.provider-opt-avatar-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #b8965c, #d4af6e);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.provider-opt-info { flex: 1; }
+.provider-opt-name { font-size: 14px; font-weight: 600; }
+.provider-opt-role { font-size: 12px; color: #999; }
+.provider-opt-avail { font-size: 11px; color: #7ba7bc; margin-top: 2px; }
+.provider-check { font-size: 18px; color: #b8965c; }
+
+/* Step 2: Calendar */
+.cal-month-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px 12px;
+}
+.cal-month { font-size: 16px; font-weight: 700; }
+.cal-nav {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: #faf9f7;
+  border: 1px solid #ece7df;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+.cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 0 16px 8px;
+  gap: 4px;
+}
+.cal-weekday {
+  text-align: center;
+  font-size: 11px;
+  color: #999;
+  font-weight: 600;
+}
+.cal-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 0 16px;
+  gap: 4px;
+}
+.cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: #2d2d2d;
+}
+.cal-day.empty { cursor: default; }
+.cal-day.past { color: #d4cfc8; cursor: default; }
+.cal-day.today { font-weight: 700; border: 1.5px solid #b8965c; }
+.cal-day.selected {
+  background: linear-gradient(135deg, #b8965c, #d4af6e);
+  color: #fff;
+  font-weight: 600;
+}
+.cal-day:not(.empty):not(.past):active { background: rgba(184,150,92,0.15); }
+
+/* Step 3: Time slots */
+.time-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 0 20px 20px;
+}
+.time-slot {
+  padding: 12px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1.5px solid #e0dbd4;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #2d2d2d;
+}
+.time-slot:active { transform: scale(0.96); }
+.time-slot.selected {
+  border-color: #b8965c;
+  background: linear-gradient(135deg, #b8965c, #d4af6e);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(184,150,92,0.25);
+}
+.time-slot.unavailable {
+  color: #d4cfc8;
+  border-color: #eee;
+  cursor: default;
+}
+
+/* Step 4: Review */
+.review-card {
+  margin: 0 20px 16px;
+  padding: 18px;
+  border-radius: 16px;
+  background: #faf9f7;
+  border: 1px solid #f0ece6;
+}
+.review-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+.review-label { font-size: 13px; color: #999; }
+.review-value { font-size: 14px; font-weight: 600; color: #2d2d2d; text-align: right; }
+.review-divider { height: 1px; background: #ece7df; margin: 6px 0; }
+.review-total .review-label { font-size: 14px; font-weight: 600; color: #2d2d2d; }
+.review-total .review-value { font-size: 18px; color: #b8965c; font-weight: 700; }
+.wallet-note {
+  margin: 0 20px 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #e6f5ed;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #2d8a54;
+  font-weight: 500;
+}
+.confirm-btn {
+  margin: 0 20px 20px;
+  width: calc(100% - 40px);
+  padding: 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #b8965c, #d4af6e);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(184,150,92,0.3);
+  letter-spacing: 0.3px;
+}
+.confirm-btn:active { transform: scale(0.98); }
+
+.booking-next-btn {
+  margin: 20px;
+  width: calc(100% - 40px);
+  padding: 14px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #b8965c, #d4af6e);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(184,150,92,0.3);
+}
+</style>
+</head>
+<body>
+
+<div class="preview-title">
+  <h1><span>Harmony</span> Skin &amp; Wellness &mdash; App Preview</h1>
+</div>
+
+<div class="phone-frame">
+  <div class="phone-screen">
+
+    <!-- NOTCH BAR -->
+    <div class="notch-bar">
+      <span class="time-left">9:41</span>
+      <div class="notch"></div>
+      <span class="status-right">
+        <span style="font-size:11px">&#9679;&#9679;&#9679;&#9679;</span>
+        <span style="font-size:13px">&#128267;</span>
+      </span>
+    </div>
+
+    <!-- SCROLLABLE SCREEN CONTENT -->
+    <div class="screen-content">
+
+      <!-- ========== HOME ========== -->
+      <div class="screen active" id="screen-home">
+        <div class="home-header">
+          <img class="home-logo" src="images/logo.png" alt="Harmony" onerror="this.style.display='none'">
+          <span class="greeting-bell">&#128276;</span>
+        </div>
+        <div class="home-greeting">Good morning, Sarah</div>
+        <div class="home-greeting-sub">What treatment are you looking for today?</div>
+
+        <!-- Promo Carousel -->
+        <div class="promo-carousel-wrapper">
+          <div class="promo-carousel" id="promoCarousel">
+            <div class="promo-card"><img src="images/promotions/01.jpg" alt="Promo 1"></div>
+            <div class="promo-card"><img src="images/promotions/02.jpg" alt="Promo 2"></div>
+            <div class="promo-card"><img src="images/promotions/03.jpg" alt="Promo 3"></div>
+            <div class="promo-card"><img src="images/promotions/04.jpg" alt="Promo 4"></div>
+            <div class="promo-card"><img src="images/promotions/05.jpg" alt="Promo 5"></div>
+            <div class="promo-card"><img src="images/promotions/06.jpg" alt="Promo 6"></div>
+            <div class="promo-card"><img src="images/promotions/07.jpg" alt="Promo 7"></div>
+            <div class="promo-card"><img src="images/promotions/08.jpg" alt="Promo 8"></div>
+            <div class="promo-card"><img src="images/promotions/09.jpg" alt="Promo 9"></div>
+            <div class="promo-card"><img src="images/promotions/10.jpg" alt="Promo 10"></div>
+            <div class="promo-card"><img src="images/promotions/11.jpg" alt="Promo 11"></div>
+            <div class="promo-card"><img src="images/promotions/12.jpg" alt="Promo 12"></div>
+            <div class="promo-card"><img src="images/promotions/13.jpg" alt="Promo 13"></div>
+            <div class="promo-card"><img src="images/promotions/14.jpg" alt="Promo 14"></div>
+            <div class="promo-card"><img src="images/promotions/15.jpg" alt="Promo 15"></div>
+          </div>
+          <div class="promo-dots" id="promoDots"></div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <button class="quick-action primary" onclick="showBooking()">
+            <span class="quick-action-icon">&#128197;</span>
+            Book Now
+          </button>
+          <button class="quick-action secondary" onclick="switchTab(3)">
+            <span class="quick-action-icon">&#128176;</span>
+            My Wallet
+          </button>
+          <button class="quick-action secondary" onclick="switchTab(2)">
+            <span class="quick-action-icon">&#128337;</span>
+            Upcoming
+          </button>
+        </div>
+
+        <!-- Our Services -->
+        <div class="section-title">Our Services</div>
+        <div class="service-cats">
+          <div class="service-cat-card" onclick="switchTab(1)">
+            <div class="service-cat-icon">&#128137;</div>
+            <div class="service-cat-name">Injectables &amp; Fillers</div>
+            <div class="service-cat-count">8 treatments</div>
+          </div>
+          <div class="service-cat-card" onclick="switchTab(1)">
+            <div class="service-cat-icon">&#10024;</div>
+            <div class="service-cat-name">Laser &amp; Energy</div>
+            <div class="service-cat-count">6 treatments</div>
+          </div>
+          <div class="service-cat-card" onclick="switchTab(1)">
+            <div class="service-cat-icon">&#127800;</div>
+            <div class="service-cat-name">Skin Treatments</div>
+            <div class="service-cat-count">6 treatments</div>
+          </div>
+          <div class="service-cat-card" onclick="switchTab(1)">
+            <div class="service-cat-icon">&#9889;</div>
+            <div class="service-cat-name">Body Treatments</div>
+            <div class="service-cat-count">2 treatments</div>
+          </div>
+          <div class="service-cat-card" onclick="switchTab(1)">
+            <div class="service-cat-icon">&#129656;</div>
+            <div class="service-cat-name">PRP Treatments</div>
+            <div class="service-cat-count">1 treatment</div>
+          </div>
+        </div>
+
+        <!-- Meet Our Team -->
+        <div class="section-title">Meet Our Team</div>
+        <div class="team-scroll">
+          <div class="team-member">
+            <img class="team-avatar" src="images/providers/clint-flanagan.jpg" alt="Dr. Flanagan" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2264%22 height=%2264%22><rect fill=%22%23f5f0eb%22 width=%2264%22 height=%2264%22 rx=%2232%22/><text x=%2232%22 y=%2237%22 text-anchor=%22middle%22 fill=%22%23b8965c%22 font-size=%2220%22>CF</text></svg>'">
+            <div class="team-name">Dr. Flanagan</div>
+            <div class="team-title-text">M.D.</div>
+          </div>
+          <div class="team-member">
+            <img class="team-avatar" src="images/providers/anna-wuest.jpg" alt="Anna" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2264%22 height=%2264%22><rect fill=%22%23f5f0eb%22 width=%2264%22 height=%2264%22 rx=%2232%22/><text x=%2232%22 y=%2237%22 text-anchor=%22middle%22 fill=%22%23b8965c%22 font-size=%2220%22>AW</text></svg>'">
+            <div class="team-name">Anna Wuest</div>
+            <div class="team-title-text">Aesthetician</div>
+          </div>
+          <div class="team-member">
+            <img class="team-avatar" src="images/providers/amber.jpg" alt="Amber" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2264%22 height=%2264%22><rect fill=%22%23f5f0eb%22 width=%2264%22 height=%2264%22 rx=%2232%22/><text x=%2232%22 y=%2237%22 text-anchor=%22middle%22 fill=%22%23b8965c%22 font-size=%2220%22>A</text></svg>'">
+            <div class="team-name">Amber</div>
+            <div class="team-title-text">Aesthetician</div>
+          </div>
+          <div class="team-member">
+            <img class="team-avatar" src="images/providers/amber-tobler.jpg" alt="Amber T." onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2264%22 height=%2264%22><rect fill=%22%23f5f0eb%22 width=%2264%22 height=%2264%22 rx=%2232%22/><text x=%2232%22 y=%2237%22 text-anchor=%22middle%22 fill=%22%23b8965c%22 font-size=%2220%22>AT</text></svg>'">
+            <div class="team-name">Amber Tobler</div>
+            <div class="team-title-text">Aesthetician</div>
+          </div>
+          <div class="team-member">
+            <img class="team-avatar" src="images/providers/jody-lodice.jpg" alt="Jody" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2264%22 height=%2264%22><rect fill=%22%23f5f0eb%22 width=%2264%22 height=%2264%22 rx=%2232%22/><text x=%2232%22 y=%2237%22 text-anchor=%22middle%22 fill=%22%23b8965c%22 font-size=%2220%22>JL</text></svg>'">
+            <div class="team-name">Jody Lodice</div>
+            <div class="team-title-text">Aesthetician</div>
+          </div>
+          <div class="team-member">
+            <img class="team-avatar" src="images/providers/linda.jpg" alt="Linda" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2264%22 height=%2264%22><rect fill=%22%23f5f0eb%22 width=%2264%22 height=%2264%22 rx=%2232%22/><text x=%2232%22 y=%2237%22 text-anchor=%22middle%22 fill=%22%23b8965c%22 font-size=%2220%22>L</text></svg>'">
+            <div class="team-name">Linda</div>
+            <div class="team-title-text">Aesthetician</div>
+          </div>
+          <div class="team-member">
+            <img class="team-avatar" src="images/providers/lindsay-white.jpg" alt="Lindsay" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2264%22 height=%2264%22><rect fill=%22%23f5f0eb%22 width=%2264%22 height=%2264%22 rx=%2232%22/><text x=%2232%22 y=%2237%22 text-anchor=%22middle%22 fill=%22%23b8965c%22 font-size=%2220%22>LW</text></svg>'">
+            <div class="team-name">Lindsay White</div>
+            <div class="team-title-text">Aesthetician</div>
+          </div>
+          <div class="team-member">
+            <img class="team-avatar" src="images/providers/lisa-white.jpg" alt="Lisa" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2264%22 height=%2264%22><rect fill=%22%23f5f0eb%22 width=%2264%22 height=%2264%22 rx=%2232%22/><text x=%2232%22 y=%2237%22 text-anchor=%22middle%22 fill=%22%23b8965c%22 font-size=%2220%22>LW</text></svg>'">
+            <div class="team-name">Lisa White</div>
+            <div class="team-title-text">Aesthetician</div>
+          </div>
+        </div>
+
+        <!-- Contact Card -->
+        <div class="contact-card">
+          <div style="font-size:15px; font-weight:700; margin-bottom:10px;">Contact Us</div>
+          <div class="contact-row">
+            <span class="contact-icon">&#128205;</span>
+            <div>
+              <div>2032 Caribou Drive, Suite 101</div>
+              <div class="contact-label">Fort Collins, CO 80525</div>
+            </div>
+          </div>
+          <div class="contact-row">
+            <span class="contact-icon">&#128222;</span>
+            <div>
+              <a href="tel:9706159133">(970) 615-9133</a>
+            </div>
+          </div>
+          <div class="contact-row">
+            <span class="contact-icon">&#128336;</span>
+            <div>
+              <div>Mon &ndash; Fri: 9:00 AM &ndash; 5:00 PM</div>
+              <div class="contact-label">Sat &ndash; Sun: Closed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== SERVICES ========== -->
+      <div class="screen" id="screen-services">
+        <div class="section-title" style="padding-top:16px; font-size:22px;">Services</div>
+        <div class="section-subtitle">Browse our treatments &amp; procedures</div>
+
+        <div class="filter-chips" id="filterChips">
+          <span class="chip active" data-filter="all" onclick="filterServices('all',this)">All</span>
+          <span class="chip" data-filter="injectables" onclick="filterServices('injectables',this)">Injectables</span>
+          <span class="chip" data-filter="laser" onclick="filterServices('laser',this)">Laser</span>
+          <span class="chip" data-filter="skin" onclick="filterServices('skin',this)">Skin</span>
+          <span class="chip" data-filter="body" onclick="filterServices('body',this)">Body</span>
+          <span class="chip" data-filter="prp" onclick="filterServices('prp',this)">PRP</span>
+        </div>
+
+        <div class="services-count" id="servicesCount">23 treatments available</div>
+
+        <div class="services-list" id="servicesList">
+          <!-- Injectables -->
+          <div class="service-card" data-cat="injectables">
+            <div class="service-card-top">
+              <div class="service-card-name">Botox</div>
+              <span class="service-card-badge badge-injectables">Injectables</span>
+            </div>
+            <div class="service-card-desc">Smooth fine lines and wrinkles with this FDA-approved neuromodulator treatment.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">From $10/unit</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="injectables">
+            <div class="service-card-top">
+              <div class="service-card-name">Jeuveau</div>
+              <span class="service-card-badge badge-injectables">Injectables</span>
+            </div>
+            <div class="service-card-desc">A modern alternative for treating frown lines and dynamic wrinkles.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">$10/unit</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="injectables">
+            <div class="service-card-top">
+              <div class="service-card-name">Dysport</div>
+              <span class="service-card-badge badge-injectables">Injectables</span>
+            </div>
+            <div class="service-card-desc">Fast-acting wrinkle relaxer ideal for treating moderate to severe frown lines.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">$6/unit</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="injectables">
+            <div class="service-card-top">
+              <div class="service-card-name">Dermal Fillers</div>
+              <span class="service-card-badge badge-injectables">Injectables</span>
+            </div>
+            <div class="service-card-desc">Restore volume and enhance facial contours with premium hyaluronic acid fillers.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">From $535/syringe</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="injectables">
+            <div class="service-card-top">
+              <div class="service-card-name">Evolysse</div>
+              <span class="service-card-badge badge-injectables">Injectables</span>
+            </div>
+            <div class="service-card-desc">Next-generation filler for smooth, natural-looking lip and facial enhancement.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">$600/syringe</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="injectables">
+            <div class="service-card-top">
+              <div class="service-card-name">Kybella</div>
+              <span class="service-card-badge badge-injectables">Injectables</span>
+            </div>
+            <div class="service-card-desc">Non-surgical treatment to reduce submental fat and redefine your jawline.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">Consultation required</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="injectables">
+            <div class="service-card-top">
+              <div class="service-card-name">Sculptra</div>
+              <span class="service-card-badge badge-injectables">Injectables</span>
+            </div>
+            <div class="service-card-desc">Biostimulator that gradually restores collagen for a youthful, lifted appearance.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">Consultation required</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="injectables">
+            <div class="service-card-top">
+              <div class="service-card-name">PRP Bio-Filler</div>
+              <span class="service-card-badge badge-injectables">Injectables</span>
+            </div>
+            <div class="service-card-desc">Natural volumizer using your own platelet-rich plasma for organic facial rejuvenation.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">$2,000</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+
+          <!-- Laser -->
+          <div class="service-card" data-cat="laser">
+            <div class="service-card-top">
+              <div class="service-card-name">Matrix CO2</div>
+              <span class="service-card-badge badge-laser">Laser</span>
+            </div>
+            <div class="service-card-desc">Advanced fractional CO2 laser for deep skin resurfacing and collagen renewal.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">$2,000</span> <span class="service-duration">&middot; 90 min</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="laser">
+            <div class="service-card-top">
+              <div class="service-card-name">Micro CO2</div>
+              <span class="service-card-badge badge-laser">Laser</span>
+            </div>
+            <div class="service-card-desc">Gentle fractional CO2 treatment with less downtime for mild texture improvement.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">$750</span> <span class="service-duration">&middot; 60 min</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="laser">
+            <div class="service-card-top">
+              <div class="service-card-name">Scarlet RF Microneedling</div>
+              <span class="service-card-badge badge-laser">Laser</span>
+            </div>
+            <div class="service-card-desc">Radiofrequency microneedling for skin tightening, pore reduction, and rejuvenation.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">$1,000/session</span> <span class="service-duration">&middot; 60 min</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="laser">
+            <div class="service-card-top">
+              <div class="service-card-name">IPL Fotofacial</div>
+              <span class="service-card-badge badge-laser">Laser</span>
+            </div>
+            <div class="service-card-desc">Intense pulsed light therapy to reduce sun damage, redness, and uneven pigmentation.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">$350</span> <span class="service-duration">&middot; 45 min</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="laser">
+            <div class="service-card-top">
+              <div class="service-card-name">Ultherapy</div>
+              <span class="service-card-badge badge-laser">Laser</span>
+            </div>
+            <div class="service-card-desc">Non-invasive ultrasound lifting for brow, chin, neck, and d&eacute;colletage.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">From $2,600</span> <span class="service-duration">&middot; 60-90 min</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="laser">
+            <div class="service-card-top">
+              <div class="service-card-name">Laser Hair Removal</div>
+              <span class="service-card-badge badge-laser">Laser</span>
+            </div>
+            <div class="service-card-desc">Permanent hair reduction with state-of-the-art diode laser technology.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">Varies by area</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+
+          <!-- Skin -->
+          <div class="service-card" data-cat="skin">
+            <div class="service-card-top">
+              <div class="service-card-name">HydraFacial</div>
+              <span class="service-card-badge badge-skin">Skin</span>
+            </div>
+            <div class="service-card-desc">Multi-step hydradermabrasion for deep cleansing, exfoliation, and hydration.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">From $199</span> <span class="service-duration">&middot; 45 min</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="skin">
+            <div class="service-card-top">
+              <div class="service-card-name">Nano-Needling</div>
+              <span class="service-card-badge badge-skin">Skin</span>
+            </div>
+            <div class="service-card-desc">Non-invasive serum infusion for improved texture and product absorption.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">$314</span> <span class="service-duration">&middot; 45 min</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="skin">
+            <div class="service-card-top">
+              <div class="service-card-name">Microneedling</div>
+              <span class="service-card-badge badge-skin">Skin</span>
+            </div>
+            <div class="service-card-desc">Collagen-induction therapy to reduce scarring, fine lines, and enlarged pores.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">$395</span> <span class="service-duration">&middot; 60 min</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="skin">
+            <div class="service-card-top">
+              <div class="service-card-name">Dermaplaning</div>
+              <span class="service-card-badge badge-skin">Skin</span>
+            </div>
+            <div class="service-card-desc">Gentle exfoliation to remove dead skin and peach fuzz for a flawless glow.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">From $125</span> <span class="service-duration">&middot; 30 min</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="skin">
+            <div class="service-card-top">
+              <div class="service-card-name">VI Peel</div>
+              <span class="service-card-badge badge-skin">Skin</span>
+            </div>
+            <div class="service-card-desc">Medical-grade chemical peel for pigmentation, acne scarring, and anti-aging.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">From $250</span> <span class="service-duration">&middot; 30 min</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="skin">
+            <div class="service-card-top">
+              <div class="service-card-name">Premium Facials</div>
+              <span class="service-card-badge badge-skin">Skin</span>
+            </div>
+            <div class="service-card-desc">Customized luxury facials tailored to your unique skin concerns and goals.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">From $150</span> <span class="service-duration">&middot; 60 min</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="service-card" data-cat="body">
+            <div class="service-card-top">
+              <div class="service-card-name">Cryoskin</div>
+              <span class="service-card-badge badge-body">Body</span>
+            </div>
+            <div class="service-card-desc">Non-invasive fat reduction and skin toning using targeted cryotherapy technology.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">From $250/session</span> <span class="service-duration">&middot; 30 min</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+          <div class="service-card" data-cat="body">
+            <div class="service-card-top">
+              <div class="service-card-name">Vanquish ME</div>
+              <span class="service-card-badge badge-body">Body</span>
+            </div>
+            <div class="service-card-desc">Contactless radiofrequency for circumferential fat reduction of the abdomen and thighs.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">Consultation required</span> <span class="service-duration">&middot; 45 min</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+
+          <!-- PRP -->
+          <div class="service-card" data-cat="prp">
+            <div class="service-card-top">
+              <div class="service-card-name">Hair Restoration</div>
+              <span class="service-card-badge badge-prp">PRP</span>
+            </div>
+            <div class="service-card-desc">PRP therapy to stimulate hair follicles and promote natural hair regrowth.</div>
+            <div class="service-card-bottom">
+              <div><span class="service-price">Consultation required</span> <span class="service-duration">&middot; 60 min</span></div>
+              <button class="service-book-btn" onclick="showBooking()">Book</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== APPOINTMENTS ========== -->
+      <div class="screen" id="screen-appointments">
+        <div class="appt-header">
+          <h2>Appointments</h2>
+        </div>
+        <div class="appt-toggle">
+          <button class="appt-toggle-btn active" id="apptUpcomingBtn" onclick="toggleApptTab('upcoming')">Upcoming</button>
+          <button class="appt-toggle-btn" id="apptPastBtn" onclick="toggleApptTab('past')">Past</button>
+        </div>
+
+        <!-- Upcoming -->
+        <div id="apptUpcoming">
+          <div class="appt-card">
+            <div class="appt-card-top">
+              <div class="appt-service-name">Scarlet RF Microneedling</div>
+              <span class="appt-status status-confirmed">Confirmed</span>
+            </div>
+            <div class="appt-detail">
+              <span class="appt-detail-icon">&#128197;</span>
+              <span>February 14, 2026 at 2:00 PM</span>
+            </div>
+            <div class="appt-detail">
+              <span class="appt-detail-icon">&#128100;</span>
+              <span>With Lindsay White</span>
+            </div>
+            <div class="appt-detail">
+              <span class="appt-detail-icon">&#128176;</span>
+              <span>$1,000.00</span>
+            </div>
+            <div class="appt-actions">
+              <button class="appt-cancel-btn">Cancel</button>
+              <button class="appt-reschedule-btn">Reschedule</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Past -->
+        <div id="apptPast" style="display:none;">
+          <div class="appt-card">
+            <div class="appt-card-top">
+              <div class="appt-service-name">HydraFacial</div>
+              <span class="appt-status status-completed">Completed</span>
+            </div>
+            <div class="appt-detail">
+              <span class="appt-detail-icon">&#128197;</span>
+              <span>January 28, 2026 at 10:30 AM</span>
+            </div>
+            <div class="appt-detail">
+              <span class="appt-detail-icon">&#128100;</span>
+              <span>With Anna Wuest</span>
+            </div>
+            <div class="appt-detail">
+              <span class="appt-detail-icon">&#128176;</span>
+              <span>$199.00</span>
+            </div>
+            <div class="appt-actions">
+              <button class="appt-reschedule-btn">Book Again</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== WALLET ========== -->
+      <div class="screen" id="screen-wallet">
+        <div class="wallet-header">
+          <h2>My Wallet</h2>
+        </div>
+        <div class="wallet-balance-card">
+          <div class="wallet-label">Available Balance</div>
+          <div class="wallet-amount">$150.00</div>
+        </div>
+
+        <div class="wallet-add-section">
+          <div style="font-size:14px; font-weight:600; margin-bottom:10px;">Add Funds</div>
+          <div class="wallet-presets">
+            <div class="wallet-preset" onclick="selectPreset(this)">$50</div>
+            <div class="wallet-preset selected" onclick="selectPreset(this)">$100</div>
+            <div class="wallet-preset" onclick="selectPreset(this)">$200</div>
+          </div>
+          <button class="wallet-add-btn">Add Funds</button>
+        </div>
+
+        <div class="section-title">Transaction History</div>
+        <div class="txn-list">
+          <div class="txn-item">
+            <div class="txn-left">
+              <div class="txn-icon-circle txn-credit">&#8593;</div>
+              <div>
+                <div class="txn-desc">Wallet Top-Up</div>
+                <div class="txn-date">February 1, 2026</div>
+              </div>
+            </div>
+            <div class="txn-amount credit">+ $100.00</div>
+          </div>
+          <div class="txn-item">
+            <div class="txn-left">
+              <div class="txn-icon-circle txn-debit">&#8595;</div>
+              <div>
+                <div class="txn-desc">Dermaplaning</div>
+                <div class="txn-date">January 28, 2026</div>
+              </div>
+            </div>
+            <div class="txn-amount debit">- $75.00</div>
+          </div>
+          <div class="txn-item">
+            <div class="txn-left">
+              <div class="txn-icon-circle txn-credit">&#8593;</div>
+              <div>
+                <div class="txn-desc">Wallet Top-Up</div>
+                <div class="txn-date">January 15, 2026</div>
+              </div>
+            </div>
+            <div class="txn-amount credit">+ $200.00</div>
+          </div>
+          <div class="txn-item">
+            <div class="txn-left">
+              <div class="txn-icon-circle txn-bonus">&#9733;</div>
+              <div>
+                <div class="txn-desc">New Client Credit</div>
+                <div class="txn-date">January 10, 2026</div>
+              </div>
+            </div>
+            <div class="txn-amount bonus">+ $25.00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== PROFILE ========== -->
+      <div class="screen" id="screen-profile">
+        <div class="profile-header-section">
+          <div class="profile-avatar">SM</div>
+          <div class="profile-name">Sarah Mitchell</div>
+          <div class="profile-email">
+            sarah.mitchell@email.com
+            <span class="verified-badge">&#10003; Verified</span>
+          </div>
+        </div>
+
+        <div class="profile-section">
+          <div class="profile-section-label">Account</div>
+          <div class="profile-row">
+            <div class="profile-row-left">
+              <div class="profile-row-icon">&#9998;</div>
+              <div class="profile-row-text">Edit Profile</div>
+            </div>
+            <span class="profile-row-arrow">&#8250;</span>
+          </div>
+          <div class="profile-row">
+            <div class="profile-row-left">
+              <div class="profile-row-icon">&#128276;</div>
+              <div class="profile-row-text">Notification Preferences</div>
+            </div>
+            <span class="profile-row-arrow">&#8250;</span>
+          </div>
+        </div>
+
+        <div class="profile-section">
+          <div class="profile-section-label">Appointments</div>
+          <div class="profile-row" onclick="switchTab(2)">
+            <div class="profile-row-left">
+              <div class="profile-row-icon">&#128197;</div>
+              <div class="profile-row-text">View History</div>
+            </div>
+            <span class="profile-row-arrow">&#8250;</span>
+          </div>
+        </div>
+
+        <div class="profile-section">
+          <div class="profile-section-label">Support</div>
+          <div class="profile-row">
+            <div class="profile-row-left">
+              <div class="profile-row-icon">&#128222;</div>
+              <div class="profile-row-text">Call Us (970) 615-9133</div>
+            </div>
+            <span class="profile-row-arrow">&#8250;</span>
+          </div>
+          <div class="profile-row">
+            <div class="profile-row-left">
+              <div class="profile-row-icon">&#127760;</div>
+              <div class="profile-row-text">Visit Website</div>
+            </div>
+            <span class="profile-row-arrow">&#8250;</span>
+          </div>
+          <div class="profile-row">
+            <div class="profile-row-left">
+              <div class="profile-row-icon">&#128205;</div>
+              <div class="profile-row-text">Get Directions</div>
+            </div>
+            <span class="profile-row-arrow">&#8250;</span>
+          </div>
+        </div>
+
+        <div class="profile-section">
+          <div class="profile-section-label">Legal</div>
+          <div class="profile-row">
+            <div class="profile-row-left">
+              <div class="profile-row-icon">&#128196;</div>
+              <div class="profile-row-text">Privacy Policy</div>
+            </div>
+            <span class="profile-row-arrow">&#8250;</span>
+          </div>
+          <div class="profile-row">
+            <div class="profile-row-left">
+              <div class="profile-row-icon">&#128220;</div>
+              <div class="profile-row-text">Terms of Service</div>
+            </div>
+            <span class="profile-row-arrow">&#8250;</span>
+          </div>
+        </div>
+
+        <button class="profile-logout">Log Out</button>
+        <div class="profile-version">Harmony Skin &amp; Wellness v1.0.0</div>
+      </div>
+
+      <!-- ========== BOOKING FLOW ========== -->
+      <div class="screen" id="screen-booking">
+        <div class="booking-header">
+          <div class="booking-back" onclick="hideBooking()">&#8249;</div>
+          <h3 id="bookingTitle">Choose Provider</h3>
+        </div>
+        <div class="booking-progress">
+          <div class="booking-step-dot current" id="bStep1"></div>
+          <div class="booking-step-dot" id="bStep2"></div>
+          <div class="booking-step-dot" id="bStep3"></div>
+          <div class="booking-step-dot" id="bStep4"></div>
+        </div>
+
+        <!-- Step 1: Provider -->
+        <div class="booking-screen active" id="bookStep1">
+          <div class="section-subtitle">Select a provider for your treatment</div>
+          <div class="provider-option selected" onclick="selectProvider(this)">
+            <div class="provider-opt-avatar-circle">&#9733;</div>
+            <div class="provider-opt-info">
+              <div class="provider-opt-name">First Available</div>
+              <div class="provider-opt-role">Recommended &mdash; shortest wait time</div>
+              <div class="provider-opt-avail">Next available: Feb 10</div>
+            </div>
+            <span class="provider-check">&#10003;</span>
+          </div>
+          <div class="provider-option" onclick="selectProvider(this)">
+            <img class="provider-opt-avatar" src="images/providers/clint-flanagan.jpg" alt="Dr. Flanagan" onerror="this.outerHTML='<div class=\'provider-opt-avatar-circle\'>CF</div>'">
+            <div class="provider-opt-info">
+              <div class="provider-opt-name">Dr. Clint Flanagan</div>
+              <div class="provider-opt-role">Medical Director, M.D.</div>
+              <div class="provider-opt-avail">Next available: Feb 12</div>
+            </div>
+            <span class="provider-check" style="opacity:0">&#10003;</span>
+          </div>
+          <div class="provider-option" onclick="selectProvider(this)">
+            <img class="provider-opt-avatar" src="images/providers/lindsay-white.jpg" alt="Lindsay" onerror="this.outerHTML='<div class=\'provider-opt-avatar-circle\'>LW</div>'">
+            <div class="provider-opt-info">
+              <div class="provider-opt-name">Lindsay White</div>
+              <div class="provider-opt-role">Lead Aesthetician</div>
+              <div class="provider-opt-avail">Next available: Feb 14</div>
+            </div>
+            <span class="provider-check" style="opacity:0">&#10003;</span>
+          </div>
+          <div class="provider-option" onclick="selectProvider(this)">
+            <img class="provider-opt-avatar" src="images/providers/anna-wuest.jpg" alt="Anna" onerror="this.outerHTML='<div class=\'provider-opt-avatar-circle\'>AW</div>'">
+            <div class="provider-opt-info">
+              <div class="provider-opt-name">Anna Wuest</div>
+              <div class="provider-opt-role">Aesthetician</div>
+              <div class="provider-opt-avail">Next available: Feb 11</div>
+            </div>
+            <span class="provider-check" style="opacity:0">&#10003;</span>
+          </div>
+          <button class="booking-next-btn" onclick="bookingNext(2)">Continue</button>
+        </div>
+
+        <!-- Step 2: Calendar -->
+        <div class="booking-screen" id="bookStep2">
+          <div class="section-subtitle">Select a date for your appointment</div>
+          <div class="cal-month-header">
+            <span class="cal-nav">&#8249;</span>
+            <span class="cal-month">February 2026</span>
+            <span class="cal-nav">&#8250;</span>
+          </div>
+          <div class="cal-weekdays">
+            <span class="cal-weekday">Sun</span>
+            <span class="cal-weekday">Mon</span>
+            <span class="cal-weekday">Tue</span>
+            <span class="cal-weekday">Wed</span>
+            <span class="cal-weekday">Thu</span>
+            <span class="cal-weekday">Fri</span>
+            <span class="cal-weekday">Sat</span>
+          </div>
+          <div class="cal-days" id="calDays"></div>
+          <button class="booking-next-btn" onclick="bookingNext(3)">Continue</button>
+        </div>
+
+        <!-- Step 3: Time -->
+        <div class="booking-screen" id="bookStep3">
+          <div class="section-subtitle">Choose an available time slot</div>
+          <div style="padding:0 20px 8px; font-size:13px; color:#6b6b6b;">Saturday, February 14</div>
+          <div class="time-slots-grid">
+            <div class="time-slot" onclick="selectTime(this)">9:00 AM</div>
+            <div class="time-slot" onclick="selectTime(this)">9:15 AM</div>
+            <div class="time-slot" onclick="selectTime(this)">9:30 AM</div>
+            <div class="time-slot" onclick="selectTime(this)">10:00 AM</div>
+            <div class="time-slot unavailable">10:15 AM</div>
+            <div class="time-slot" onclick="selectTime(this)">10:30 AM</div>
+            <div class="time-slot" onclick="selectTime(this)">11:00 AM</div>
+            <div class="time-slot" onclick="selectTime(this)">11:30 AM</div>
+            <div class="time-slot unavailable">12:00 PM</div>
+            <div class="time-slot" onclick="selectTime(this)">1:00 PM</div>
+            <div class="time-slot" onclick="selectTime(this)">1:30 PM</div>
+            <div class="time-slot selected" onclick="selectTime(this)">2:00 PM</div>
+            <div class="time-slot" onclick="selectTime(this)">2:30 PM</div>
+            <div class="time-slot" onclick="selectTime(this)">3:00 PM</div>
+            <div class="time-slot unavailable">3:30 PM</div>
+            <div class="time-slot" onclick="selectTime(this)">4:00 PM</div>
+            <div class="time-slot" onclick="selectTime(this)">4:30 PM</div>
+          </div>
+          <button class="booking-next-btn" onclick="bookingNext(4)">Continue</button>
+        </div>
+
+        <!-- Step 4: Review -->
+        <div class="booking-screen" id="bookStep4">
+          <div class="section-subtitle">Review your appointment details</div>
+          <div class="review-card">
+            <div class="review-row">
+              <span class="review-label">Procedure</span>
+              <span class="review-value">Scarlet RF Microneedling</span>
+            </div>
+            <div class="review-divider"></div>
+            <div class="review-row">
+              <span class="review-label">Provider</span>
+              <span class="review-value">Lindsay White</span>
+            </div>
+            <div class="review-divider"></div>
+            <div class="review-row">
+              <span class="review-label">Date</span>
+              <span class="review-value">February 14, 2026</span>
+            </div>
+            <div class="review-divider"></div>
+            <div class="review-row">
+              <span class="review-label">Time</span>
+              <span class="review-value">2:00 PM</span>
+            </div>
+            <div class="review-divider"></div>
+            <div class="review-row">
+              <span class="review-label">Duration</span>
+              <span class="review-value">60 minutes</span>
+            </div>
+            <div class="review-divider"></div>
+            <div class="review-row review-total">
+              <span class="review-label">Total</span>
+              <span class="review-value">$1,000.00</span>
+            </div>
+          </div>
+          <div class="wallet-note">
+            &#128176; Wallet Balance: $150.00 will be applied
+          </div>
+          <button class="confirm-btn" onclick="confirmBooking()">Confirm Booking</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BOTTOM TAB BAR -->
+    <div class="tab-bar">
+      <button class="tab-item active" onclick="switchTab(0)" id="tab0">
+        <span class="tab-icon">&#127968;</span>
+        <span class="tab-label">Home</span>
+      </button>
+      <button class="tab-item" onclick="switchTab(1)" id="tab1">
+        <span class="tab-icon">&#10024;</span>
+        <span class="tab-label">Services</span>
+      </button>
+      <button class="tab-item" onclick="switchTab(2)" id="tab2">
+        <span class="tab-icon">&#128197;</span>
+        <span class="tab-label">Appointments</span>
+      </button>
+      <button class="tab-item" onclick="switchTab(3)" id="tab3">
+        <span class="tab-icon">&#128176;</span>
+        <span class="tab-label">Wallet</span>
+      </button>
+      <button class="tab-item" onclick="switchTab(4)" id="tab4">
+        <span class="tab-icon">&#128100;</span>
+        <span class="tab-label">Profile</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="preview-note">
+  Interactive design preview. Tap the bottom tabs to navigate between screens.
+</div>
+<a class="back-link" href="admin/">Admin Dashboard &rarr;</a>
+<a class="back-link" href="/" style="margin-left: 24px;">&larr; Back to Portfolio</a>
+
+<script>
+/* ===== TAB NAVIGATION ===== */
+const screenIds = ['screen-home', 'screen-services', 'screen-appointments', 'screen-wallet', 'screen-profile'];
+let currentTab = 0;
+let bookingVisible = false;
+
+function switchTab(idx) {
+  if (bookingVisible) { hideBooking(); }
+  currentTab = idx;
+  screenIds.forEach((id, i) => {
+    document.getElementById(id).classList.toggle('active', i === idx);
+  });
+  document.getElementById('screen-booking').classList.remove('active');
+  for (let i = 0; i < 5; i++) {
+    document.getElementById('tab' + i).classList.toggle('active', i === idx);
+  }
+  // Scroll to top
+  document.querySelector('.screen-content').scrollTop = 0;
+}
+
+/* ===== PROMO CAROUSEL ===== */
+const carousel = document.getElementById('promoCarousel');
+const dotsContainer = document.getElementById('promoDots');
+const promoCards = carousel.querySelectorAll('.promo-card');
+const totalPromos = promoCards.length;
+let currentPromo = 0;
+let autoScrollInterval;
+
+// Create dots
+for (let i = 0; i < Math.min(totalPromos, 8); i++) {
+  const dot = document.createElement('div');
+  dot.className = 'promo-dot' + (i === 0 ? ' active' : '');
+  dotsContainer.appendChild(dot);
+}
+
+function updatePromoDots() {
+  const dots = dotsContainer.querySelectorAll('.promo-dot');
+  const scrollLeft = carousel.scrollLeft;
+  const cardWidth = 292; // 280 + 12 gap
+  const idx = Math.round(scrollLeft / cardWidth);
+  const dotIdx = Math.min(idx, dots.length - 1);
+  dots.forEach((d, i) => d.classList.toggle('active', i === dotIdx));
+}
+
+carousel.addEventListener('scroll', updatePromoDots);
+
+function autoScroll() {
+  const cardWidth = 292;
+  currentPromo++;
+  if (currentPromo >= totalPromos) {
+    currentPromo = 0;
+    carousel.scrollTo({ left: 0, behavior: 'smooth' });
+  } else {
+    carousel.scrollTo({ left: currentPromo * cardWidth, behavior: 'smooth' });
+  }
+}
+
+autoScrollInterval = setInterval(autoScroll, 3500);
+carousel.addEventListener('touchstart', () => clearInterval(autoScrollInterval));
+carousel.addEventListener('mousedown', () => clearInterval(autoScrollInterval));
+carousel.addEventListener('touchend', () => { autoScrollInterval = setInterval(autoScroll, 3500); });
+carousel.addEventListener('mouseup', () => { autoScrollInterval = setInterval(autoScroll, 3500); });
+
+/* ===== SERVICES FILTER ===== */
+function filterServices(cat, chipEl) {
+  document.querySelectorAll('#filterChips .chip').forEach(c => c.classList.remove('active'));
+  chipEl.classList.add('active');
+  const cards = document.querySelectorAll('#servicesList .service-card');
+  let count = 0;
+  cards.forEach(card => {
+    if (cat === 'all' || card.dataset.cat === cat) {
+      card.style.display = 'block';
+      count++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+  document.getElementById('servicesCount').textContent = count + ' treatment' + (count !== 1 ? 's' : '') + ' available';
+}
+
+/* ===== APPOINTMENTS TOGGLE ===== */
+function toggleApptTab(tab) {
+  document.getElementById('apptUpcoming').style.display = tab === 'upcoming' ? 'block' : 'none';
+  document.getElementById('apptPast').style.display = tab === 'past' ? 'block' : 'none';
+  document.getElementById('apptUpcomingBtn').classList.toggle('active', tab === 'upcoming');
+  document.getElementById('apptPastBtn').classList.toggle('active', tab === 'past');
+}
+
+/* ===== WALLET PRESETS ===== */
+function selectPreset(el) {
+  document.querySelectorAll('.wallet-preset').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+/* ===== BOOKING FLOW ===== */
+let bookingStep = 1;
+
+function showBooking() {
+  bookingVisible = true;
+  screenIds.forEach(id => document.getElementById(id).classList.remove('active'));
+  document.getElementById('screen-booking').classList.add('active');
+  bookingStep = 1;
+  updateBookingStep();
+  document.querySelector('.screen-content').scrollTop = 0;
+}
+
+function hideBooking() {
+  bookingVisible = false;
+  document.getElementById('screen-booking').classList.remove('active');
+  document.getElementById(screenIds[currentTab]).classList.add('active');
+  bookingStep = 1;
+  updateBookingStep();
+}
+
+function bookingNext(step) {
+  bookingStep = step;
+  updateBookingStep();
+  document.querySelector('.screen-content').scrollTop = 0;
+}
+
+function updateBookingStep() {
+  const titles = { 1: 'Choose Provider', 2: 'Choose Date', 3: 'Choose Time', 4: 'Review & Confirm' };
+  document.getElementById('bookingTitle').textContent = titles[bookingStep];
+
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById('bookStep' + i);
+    el.classList.toggle('active', i === bookingStep);
+
+    const dot = document.getElementById('bStep' + i);
+    dot.classList.remove('done', 'current');
+    if (i < bookingStep) dot.classList.add('done');
+    else if (i === bookingStep) dot.classList.add('current');
+  }
+}
+
+function selectProvider(el) {
+  document.querySelectorAll('.provider-option').forEach(p => {
+    p.classList.remove('selected');
+    p.querySelector('.provider-check').style.opacity = '0';
+  });
+  el.classList.add('selected');
+  el.querySelector('.provider-check').style.opacity = '1';
+}
+
+function selectTime(el) {
+  if (el.classList.contains('unavailable')) return;
+  document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function confirmBooking() {
+  // Show a quick confirmation animation
+  const btn = document.querySelector('.confirm-btn');
+  btn.textContent = 'Booking Confirmed!';
+  btn.style.background = 'linear-gradient(135deg, #2d8a54, #3da866)';
+  setTimeout(() => {
+    btn.textContent = 'Confirm Booking';
+    btn.style.background = '';
+    hideBooking();
+    switchTab(2);
+  }, 1800);
+}
+
+/* ===== CALENDAR ===== */
+function buildCalendar() {
+  const container = document.getElementById('calDays');
+  container.innerHTML = '';
+  // February 2026 starts on Sunday (day 0), 28 days
+  const startDay = 0; // Sunday
+  const totalDays = 28;
+  const today = 6; // Feb 6
+
+  for (let i = 0; i < startDay; i++) {
+    const empty = document.createElement('div');
+    empty.className = 'cal-day empty';
+    container.appendChild(empty);
+  }
+
+  for (let d = 1; d <= totalDays; d++) {
+    const day = document.createElement('div');
+    day.className = 'cal-day';
+    day.textContent = d;
+
+    if (d < today) {
+      day.classList.add('past');
+    } else if (d === today) {
+      day.classList.add('today');
+    }
+    if (d === 14) {
+      day.classList.add('selected');
+    }
+
+    if (d >= today) {
+      day.onclick = function() {
+        container.querySelectorAll('.cal-day').forEach(c => c.classList.remove('selected'));
+        this.classList.add('selected');
+      };
+    }
+    container.appendChild(day);
+  }
+}
+buildCalendar();
+</script>
+</body>
+</html>
