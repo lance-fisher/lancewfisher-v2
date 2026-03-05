@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lance W. Fisher — One-Pager</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@200;300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --warm-white: #f0ebe0;
+    --gold: #c9a84c;
+    --gold-dim: rgba(201, 168, 76, 0.2);
+    --text-dim: rgba(240, 235, 224, 0.35);
+    --text-faint: rgba(240, 235, 224, 0.18);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--bg); color: var(--warm-white); font-family: 'Inter', sans-serif; }
+
+  .page {
+    width: 8.5in;
+    min-height: 11in;
+    max-height: 11in;
+    margin: 0 auto;
+    padding: 0.6in 0.7in;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--gold-dim);
+  }
+  .header-left h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 32px;
+    letter-spacing: 6px;
+    color: var(--warm-white);
+    text-transform: uppercase;
+  }
+  .header-left .subtitle {
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-top: 4px;
+  }
+  .header-right {
+    text-align: right;
+    font-size: 10px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--text-dim);
+  }
+  .header-right a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  /* Section headings */
+  .section-head {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 8px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+    margin-top: 22px;
+  }
+
+  /* Summary */
+  .summary {
+    font-weight: 200;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--text-dim);
+    max-width: 6.5in;
+    margin-bottom: 4px;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 32px;
+    margin: 16px 0;
+    padding: 12px 0;
+    border-top: 1px solid rgba(201, 168, 76, 0.08);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.08);
+  }
+  .stat { text-align: center; }
+  .stat-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--gold);
+  }
+  .stat-label {
+    font-size: 8px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-top: 2px;
+  }
+
+  /* Projects grid */
+  .projects {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 24px;
+  }
+  .project {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(240, 235, 224, 0.04);
+  }
+  .project-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 1px;
+    color: var(--warm-white);
+    margin-bottom: 3px;
+  }
+  .project-desc {
+    font-size: 9px;
+    font-weight: 200;
+    line-height: 1.6;
+    color: var(--text-dim);
+  }
+  .project-tech {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    font-weight: 300;
+    color: var(--text-faint);
+    margin-top: 3px;
+  }
+
+  /* Skills row */
+  .skills-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .skill-tag {
+    font-size: 8px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border: 1px solid rgba(240, 235, 224, 0.06);
+    color: var(--text-dim);
+  }
+
+  /* Footer */
+  .page-footer {
+    position: absolute;
+    bottom: 0.6in;
+    left: 0.7in;
+    right: 0.7in;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--gold-dim);
+  }
+  .page-footer .motto {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+  .page-footer .url {
+    font-size: 9px;
+    font-weight: 300;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+
+  /* Print styles */
+  @media print {
+    html, body { background: var(--bg) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page { margin: 0; padding: 0.5in 0.6in; }
+    @page { size: letter; margin: 0; }
+  }
+
+  /* Screen: show a save hint */
+  .save-hint {
+    text-align: center;
+    padding: 16px;
+    font-size: 11px;
+    color: var(--text-faint);
+    font-family: 'Inter', sans-serif;
+  }
+  .save-hint kbd {
+    background: rgba(240,235,224,0.06);
+    border: 1px solid rgba(240,235,224,0.1);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+  }
+  @media print { .save-hint { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="save-hint">Press <kbd>Ctrl+P</kbd> &rarr; Save as PDF &nbsp;|&nbsp; Set margins to None, enable Background graphics</div>
+
+<div class="page">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h1>Lance W. Fisher</h1>
+      <div class="subtitle">Leader &middot; Builder &middot; Father &middot; Husband</div>
+    </div>
+    <div class="header-right">
+      lance@lancewfisher.com<br>
+      (918) 906-6963<br>
+      <a href="https://lancewfisher.com">lancewfisher.com</a> &middot; <a href="https://github.com/lance-fisher">github.com/lance-fisher</a><br>
+      Cheyenne, Wyoming
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <p class="summary">Technical operations leader, culture architect, and full-stack builder with 15+ years leading cross-functional teams. 20+ production systems shipped solo across six domains: trading systems, mobile applications, games, encrypted communications, local AI, and brand development. I build the thing, deploy the thing, and operate the thing.</p>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-val">15+</div><div class="stat-label">Years Leading</div></div>
+    <div class="stat"><div class="stat-val">20+</div><div class="stat-label">Systems Shipped</div></div>
+    <div class="stat"><div class="stat-val">6</div><div class="stat-label">Domains</div></div>
+    <div class="stat"><div class="stat-val">80k+</div><div class="stat-label">Lines of Code</div></div>
+    <div class="stat"><div class="stat-val">1</div><div class="stat-label">Happy Kid</div></div>
+  </div>
+
+  <!-- Featured Projects -->
+  <div class="section-head">Featured Projects</div>
+  <div class="projects">
+    <div class="project">
+      <div class="project-name">Autonomous Trading Desk</div>
+      <div class="project-desc">Multi-agent algorithmic trading system. 6 agents orchestrate 4 strategies across Polymarket, Solana, CEX, and ETH DeFi. Paper-first discipline with promotion gates.</div>
+      <div class="project-tech">Python / TypeScript / asyncio / WebSocket</div>
+    </div>
+    <div class="project">
+      <div class="project-name">Master Trade Bot</div>
+      <div class="project-desc">Unified execution layer with 6 engines, real-time WebSocket dashboard, and risk management kill switch. Live trading on crypto and prediction markets.</div>
+      <div class="project-tech">TypeScript / Node.js / ccxt / ethers.js</div>
+    </div>
+    <div class="project">
+      <div class="project-name">E2EE Messenger</div>
+      <div class="project-desc">End-to-end encrypted peer-to-peer messaging with Signal-grade X3DH key exchange, Double Ratchet forward secrecy, and passwordless WebAuthn vault.</div>
+      <div class="project-tech">TypeScript / Next.js / libsodium / WebAuthn</div>
+    </div>
+    <div class="project">
+      <div class="project-name">Harmony Medspa App</div>
+      <div class="project-desc">Production mobile booking app for a real medical spa. Appointment scheduling, payment processing via Stripe, provider profiles, admin dashboard.</div>
+      <div class="project-tech">React Native / NestJS / PostgreSQL / Stripe</div>
+    </div>
+    <div class="project">
+      <div class="project-name">Jump Quest!</div>
+      <div class="project-desc">3D platformer built as a gift for my son. Xbox controller, XP leveling, skill trees, procedural Level Draft Wizard. Plays on iPad and web browser.</div>
+      <div class="project-tech">Unity / C# / Three.js / Xbox Controller</div>
+    </div>
+    <div class="project">
+      <div class="project-name">Auton (Local AI Worker)</div>
+      <div class="project-desc">Autonomous background worker scanning 20+ projects, proposing improvements via local LLM (Qwen 14B on RTX 4070). 6-layer safety model, DRY_RUN default.</div>
+      <div class="project-tech">Python / asyncio / Ollama / Multi-Agent</div>
+    </div>
+  </div>
+
+  <!-- Technical Skills -->
+  <div class="section-head">Technical Expertise</div>
+  <div class="skills-row">
+    <span class="skill-tag">TypeScript</span>
+    <span class="skill-tag">Python</span>
+    <span class="skill-tag">C#</span>
+    <span class="skill-tag">React / React Native</span>
+    <span class="skill-tag">Node.js</span>
+    <span class="skill-tag">Next.js</span>
+    <span class="skill-tag">NestJS</span>
+    <span class="skill-tag">Unity</span>
+    <span class="skill-tag">PostgreSQL</span>
+    <span class="skill-tag">WebSocket</span>
+    <span class="skill-tag">Cryptography</span>
+    <span class="skill-tag">Canvas 2D</span>
+    <span class="skill-tag">Three.js</span>
+    <span class="skill-tag">asyncio</span>
+    <span class="skill-tag">Docker</span>
+    <span class="skill-tag">Ollama / Local AI</span>
+    <span class="skill-tag">ccxt</span>
+    <span class="skill-tag">ethers.js</span>
+    <span class="skill-tag">Stripe</span>
+  </div>
+
+  <!-- Leadership -->
+  <div class="section-head">Leadership</div>
+  <p class="summary" style="margin-bottom:0;">15+ years leading cross-functional teams in high-volume operations. Culture-first management philosophy: build the team that builds the product. Experience across call center operations, logistics, and technology organizations scaling from startup to enterprise.</p>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span class="motto">Mens clara in tenebris</span>
+    <span class="url">lancewfisher.com</span>
+  </div>
+</div>
+
+</body>
+</html>

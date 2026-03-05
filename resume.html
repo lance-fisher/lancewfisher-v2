@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lance W. Fisher | Resume | Data Center Technician Manager at Microsoft</title>
+<meta name="description" content="Resume of Lance W. Fisher. Technical operations leader with experience at Microsoft, DISH Network, FTC Group, Apple, and AT&T.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://lancewfisher.com/resume.html">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+  @page {
+    margin: 0.6in 0.7in;
+    size: letter;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Times New Roman', Times, Georgia, serif;
+    font-size: 11pt;
+    line-height: 1.35;
+    color: #111;
+    background: white;
+    max-width: 7.5in;
+    margin: 0 auto;
+    padding: 0.5in 0.6in;
+  }
+
+  /* ===== ACCESS GATE ===== */
+  .resume-content { display: none; }
+  .resume-content.unlocked { display: block; }
+
+  .access-gate {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #0a0a0b;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #f0ebe0;
+    padding: 40px 24px;
+    text-align: center;
+  }
+  .access-gate.hidden { display: none; }
+
+  .gate-icon {
+    font-size: 32px;
+    margin-bottom: 24px;
+    opacity: 0.4;
+  }
+  .gate-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 32px;
+    font-weight: 300;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    color: #f0ebe0;
+  }
+  .gate-subtitle {
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(240, 235, 224, 0.4);
+    margin-bottom: 36px;
+    line-height: 1.6;
+    max-width: 420px;
+  }
+  .gate-input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .gate-input {
+    background: rgba(240, 235, 224, 0.06);
+    border: 1px solid rgba(201, 168, 76, 0.2);
+    border-radius: 6px;
+    padding: 12px 18px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: #f0ebe0;
+    letter-spacing: 3px;
+    width: 220px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  .gate-input:focus {
+    border-color: rgba(201, 168, 76, 0.5);
+  }
+  .gate-input::placeholder {
+    color: rgba(240, 235, 224, 0.2);
+    letter-spacing: 1px;
+  }
+  .gate-btn {
+    background: rgba(201, 168, 76, 0.15);
+    border: 1px solid rgba(201, 168, 76, 0.3);
+    border-radius: 6px;
+    padding: 12px 20px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    color: #c9a84c;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+  .gate-btn:hover {
+    background: rgba(201, 168, 76, 0.25);
+    border-color: rgba(201, 168, 76, 0.5);
+  }
+  .gate-error {
+    font-size: 12px;
+    color: rgba(220, 80, 80, 0.7);
+    height: 18px;
+    margin-bottom: 24px;
+  }
+  .gate-divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.3), transparent);
+    margin-bottom: 28px;
+  }
+  .gate-contact-label {
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(240, 235, 224, 0.25);
+    margin-bottom: 16px;
+  }
+  .gate-contact-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+  .gate-contact-link {
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(240, 235, 224, 0.45);
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+  }
+  .gate-contact-link:hover {
+    color: #c9a84c;
+  }
+  .gate-contact-link span {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(240, 235, 224, 0.2);
+    margin-right: 8px;
+  }
+
+  @media print {
+    .access-gate { display: none !important; }
+    .resume-content { display: block !important; }
+  }
+
+  /* Header */
+  .resume-header { text-align: center; margin-bottom: 10pt; }
+  .resume-header h1 {
+    font-size: 28pt;
+    font-weight: bold;
+    letter-spacing: 1pt;
+    margin-bottom: 4pt;
+  }
+  .resume-header .contact-info {
+    font-size: 10pt;
+    line-height: 1.5;
+  }
+
+  /* Summary */
+  .summary {
+    font-style: italic;
+    font-size: 10.5pt;
+    line-height: 1.45;
+    margin: 10pt 0 14pt;
+    padding-top: 8pt;
+    border-top: 2px solid #111;
+  }
+  .summary strong { font-style: italic; font-weight: bold; }
+
+  /* Section headers */
+  .section-header {
+    font-size: 12pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5pt;
+    border-bottom: 1.5px solid #111;
+    padding-bottom: 2pt;
+    margin-top: 14pt;
+    margin-bottom: 10pt;
+  }
+
+  /* Job entry */
+  .job { margin-bottom: 12pt; }
+  .job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .job-company { font-weight: bold; font-size: 11pt; }
+  .job-location { font-style: normal; font-size: 11pt; }
+  .job-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .job-title { font-style: italic; font-size: 11pt; }
+  .job-dates { font-style: italic; font-size: 11pt; }
+
+  /* Bullets */
+  .bullets { padding-left: 22pt; margin-top: 4pt; }
+  .bullets li { margin-bottom: 3pt; font-size: 10.5pt; line-height: 1.4; }
+  .sub-bullets { padding-left: 22pt; margin-top: 2pt; list-style-type: circle; }
+  .sub-bullets li { margin-bottom: 2pt; font-size: 10.5pt; }
+
+  /* Education */
+  .edu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 2pt;
+  }
+  .edu-school { font-weight: bold; font-size: 11pt; }
+  .edu-location { font-size: 11pt; }
+  .edu-year { font-size: 11pt; }
+
+  /* Skills */
+  .skills-list { padding-left: 22pt; }
+  .skills-list li { margin-bottom: 4pt; font-size: 10.5pt; line-height: 1.4; }
+
+  /* Print */
+  @media print {
+    body { padding: 0; max-width: none; }
+    .page-break { page-break-before: always; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Access Gate -->
+<div class="access-gate" id="accessGate">
+  <div class="gate-icon">&#9875;</div>
+  <div class="gate-title">Resume Access</div>
+  <div class="gate-subtitle">
+    This document is available by request only.<br>
+    Enter the access code provided to you, or reach out directly.
+  </div>
+  <div class="gate-input-row">
+    <input type="password" class="gate-input" id="gateInput" placeholder="Access code" autocomplete="off">
+    <button class="gate-btn" id="gateBtn">Enter</button>
+  </div>
+  <div class="gate-error" id="gateError"></div>
+  <div class="gate-divider"></div>
+  <div class="gate-contact-label">Contact for access</div>
+  <div class="gate-contact-row">
+    <a href="mailto:lance@lancewfisher.com" class="gate-contact-link">
+      <span>Email</span> lance@lancewfisher.com
+    </a>
+    <a href="https://lancewfisher.com" target="_blank" rel="noopener noreferrer" class="gate-contact-link">
+      <span>Portfolio</span> lancewfisher.com
+    </a>
+  </div>
+</div>
+
+<div class="resume-content" id="resumeContent">
+
+<div class="resume-header">
+  <h1>Lance W. Fisher</h1>
+  <div class="contact-info">
+    Cheyenne, Wyoming<br>
+    lance@lancewfisher.com &nbsp;|&nbsp; <a href="https://lancewfisher.com" style="color:#111;text-decoration:none;border-bottom:1px solid #999;">lancewfisher.com</a>
+  </div>
+</div>
+
+<div class="summary">
+  <strong>Dynamic leader</strong> with expertise in data center operations, technical troubleshooting, broadcast operations, and customer success. Proven ability to optimize workflows, lead high-performing teams in fast-paced, mission-critical environments, and drive operational excellence. Skilled at enhancing service reliability, streamlining inefficiencies, and implementing automation strategies. Thrives under pressure while ensuring seamless, 24/7 enterprise-scale infrastructure operations.
+</div>
+
+<div class="section-header">Professional Experience</div>
+
+<!-- Microsoft -->
+<div class="job">
+  <div class="job-header">
+    <span class="job-company">MICROSOFT CORPORATION</span>
+    <span class="job-location">Cheyenne, WY</span>
+  </div>
+  <div class="job-title-row">
+    <span class="job-title">Data Center Technician Manager</span>
+    <span class="job-dates">June 2025&ndash;Present</span>
+  </div>
+  <ul class="bullets">
+    <li>Lead and manage a team of data center technicians responsible for the deployment, maintenance, and decommissioning of server and network infrastructure supporting Microsoft Azure cloud services.</li>
+    <li>Oversee day-to-day operations in a mission-critical data center environment, ensuring adherence to strict SLA requirements and maintaining 99.99%+ uptime across all managed systems.</li>
+    <li>Coordinate cross-functional efforts with engineering, capacity planning, and security teams to execute large-scale hardware deployments and infrastructure upgrades on schedule.</li>
+    <li>Enforce safety protocols, operational procedures, and compliance standards across all data center activities, maintaining zero safety incidents.</li>
+    <li>Drive continuous improvement initiatives to optimize ticketing workflows, reduce mean time to repair (MTTR), and increase team operational efficiency.</li>
+    <li>Mentor and develop technicians through structured coaching, performance reviews, and skills development programs, fostering a culture of accountability and technical excellence.</li>
+  </ul>
+</div>
+
+<!-- DISH -->
+<div class="job">
+  <div class="job-header">
+    <span class="job-company">DISH TECHNOLOGIES, LLC</span>
+    <span class="job-location">Cheyenne, WY</span>
+  </div>
+  <div class="job-title-row">
+    <span class="job-title">Supervisor, Broadcast Operations</span>
+    <span class="job-dates">March 2020&ndash;June 2025</span>
+  </div>
+  <ul class="bullets">
+    <li>Spearheaded the transition and integration of a redistributed department into Master Control, ensuring smooth structural changes while maintaining high operational efficiency and team morale.</li>
+    <li>Personally coached and transitioned four team members into new roles, with all employees thriving in their new environments and zero personnel errors (PE) reported despite a complete change in daily responsibilities.</li>
+    <li>Demonstrated dedication and adaptability by working a graveyard shift (11 PM to 7 AM), later restructuring schedules to a 4x10 overnight/day shift to cover staffing changes and ensure seamless operations.</li>
+    <li>Optimized nightly operations by reducing DAL scheduling tasks by 1-2 hours per night, streamlining processes for improved efficiency.</li>
+    <li>Directly managed a team of 5-12 responsible for monitoring, escalating, and maintaining superior on-air signal integrity, achieving:
+      <ul class="sub-bullets">
+        <li>Zero downtime incidents for priority broadcasts.</li>
+        <li>99.99% service reliability, contributing to J.D. Power Award recognition for Best-in-Class Performance and Service Reliability (2021, 2022, 2023).</li>
+        <li>A signal compliance accuracy rate of 100%.</li>
+      </ul>
+    </li>
+    <li>Designed and implemented a shift passdown system, reducing escalated issues by 85% and improving communication between shifts.</li>
+    <li>Developed and enforced an attendance policy and tracking system, leading to higher retention, increased employee engagement, and reduced turnover.</li>
+  </ul>
+</div>
+
+<!-- FTC Group -->
+<div class="job">
+  <div class="job-header">
+    <span class="job-company">FTC GROUP, LLC</span>
+    <span class="job-location">Cheyenne, WY</span>
+  </div>
+  <div class="job-title-row">
+    <span class="job-title">Owner</span>
+    <span class="job-dates">May 2019&ndash;January 2020</span>
+  </div>
+  <ul class="bullets">
+    <li>Founded and operated a technical consulting business, assisting individuals and businesses with troubleshooting and IT solutions.</li>
+    <li>Provided in-home, office, and remote support for technical training, troubleshooting, and personalized technology solutions.</li>
+    <li>Specialized in cross-platform synchronization between Mac, Windows, iOS, and Android devices.</li>
+  </ul>
+</div>
+
+<!-- Apple -->
+<div class="job">
+  <div class="job-header">
+    <span class="job-company">APPLE, INC.</span>
+    <span class="job-location">Loveland, CO</span>
+  </div>
+  <div class="job-title-row">
+    <span class="job-title">At-Home Advisor</span>
+    <span class="job-dates">September 2015&ndash;May 2019</span>
+  </div>
+  <ul class="bullets">
+    <li>Provided technical support and troubleshooting for MacOS, iOS, and tvOS devices, assisting customers through remote diagnostic tools and screen-sharing applications.</li>
+    <li>Promoted to <em>Advanced Technical Support Advisor</em>, handling high-profile customer accounts, including product safety and security cases.</li>
+    <li>Delivered supervisor-level support on escalated cases, ensuring timely resolutions and maintaining high customer satisfaction.</li>
+    <li>Developed expertise in cross-platform troubleshooting, assisting customers with Windows integration in Apple environments.</li>
+  </ul>
+</div>
+
+<!-- AT&T -->
+<div class="job">
+  <div class="job-header">
+    <span class="job-company">AT&amp;T MOBILITY, LLC.</span>
+    <span class="job-location">Tulsa, OK &amp; Greeley, CO</span>
+  </div>
+  <div class="job-title-row">
+    <span class="job-title">Business Consultant</span>
+    <span class="job-dates">August 2010&ndash;September 2015</span>
+  </div>
+  <ul class="bullets">
+    <li>Developed and implemented regional sales strategies, driving small business engagement and increasing overall performance.</li>
+    <li>Served as a Subject Matter Expert (SME) in key performance (KPI) areas, coaching peers and trainees on best practices.</li>
+    <li>Achieved Business Certification 3.0, enhancing sales effectiveness and customer relationship management.</li>
+  </ul>
+  <div class="job-title-row" style="margin-top:4pt;">
+    <span class="job-title">Team Lead</span>
+    <span class="job-dates">October 2008&ndash;August 2010</span>
+  </div>
+  <ul class="bullets">
+    <li>Managed a team of 15-25 employees, conducting weekly team huddles and implementing knowledge-sharing initiatives.</li>
+    <li>Recognized with multiple Team Quality Achievement Awards and Customer Satisfaction Awards for leadership and service excellence.</li>
+  </ul>
+  <div class="job-title-row" style="margin-top:4pt;">
+    <span class="job-title">Customer Service Representative</span>
+    <span class="job-dates">May 2008&ndash;October 2008</span>
+  </div>
+  <ul class="bullets">
+    <li>Delivered exceptional customer service, achieving a 99% Quality Attainment and 100% Customer Satisfaction scores.</li>
+    <li>Consistently exceeded dynamic goal structures, contributing to department success.</li>
+  </ul>
+</div>
+
+<div class="section-header">Education</div>
+<div class="edu-header">
+  <span class="edu-school">AMERICAN BROADCASTING SCHOOL</span>
+  <span>
+    <span class="edu-location">Tulsa, OK</span>
+  </span>
+</div>
+<div style="text-align:right;margin-top:-2pt;margin-bottom:4pt;font-size:11pt;">2006</div>
+<ul class="bullets">
+  <li>Managed a team of 10 for weekly live studio broadcasts.</li>
+  <li>Expertise in broadcasting hardware/software control, awarded Multiple Outstanding Performance Awards.</li>
+  <li>Completed state-accredited <strong>Technical Diploma in Broadcasting Excellence</strong>.</li>
+  <li>Coordinated community outreach events to promote broadcasting initiatives.</li>
+</ul>
+
+<div class="section-header">Skills</div>
+<ul class="skills-list">
+  <li><strong>Leadership &amp; Team Development</strong> &ndash; Coaching and mentoring teams to enhance performance.</li>
+  <li><strong>Data Center &amp; Infrastructure Operations</strong> &ndash; Server deployment, maintenance, and 24/7 mission-critical uptime management.</li>
+  <li><strong>Master Control &amp; Broadcast Operations</strong> &ndash; Expertise in Baton QC, DAL scheduling, Jira and automation systems.</li>
+  <li><strong>Process Optimization</strong> &ndash; Improving operational efficiency and workflow management.</li>
+  <li><strong>Technical Troubleshooting</strong> &ndash; Advanced problem-solving across MacOS, iOS, Windows, and Android platforms.</li>
+  <li><strong>Adaptability &amp; Crisis Management</strong> &ndash; Excels in high-pressure environments, quickly adjusting to business needs.</li>
+  <li><strong>Customer Service &amp; Communication</strong> &ndash; Strong verbal and written communication for effective team collaboration.</li>
+</ul>
+
+<div class="section-header">References</div>
+<ul class="skills-list">
+  <li>References available upon request.</li>
+</ul>
+
+</div><!-- /resume-content -->
+
+<script>
+(function() {
+  // SHA-256 passkey verification
+  var PASSHASH = 'c5a656f1ac082a1f7ff4d1c931f88a5b87b6580b8ccd8d5611694340222f818d';
+
+  function sha256(str) {
+    var buf = new TextEncoder().encode(str);
+    return crypto.subtle.digest('SHA-256', buf).then(function(hash) {
+      return Array.from(new Uint8Array(hash)).map(function(b) {
+        return b.toString(16).padStart(2, '0');
+      }).join('');
+    });
+  }
+
+  var gate = document.getElementById('accessGate');
+  var content = document.getElementById('resumeContent');
+  var input = document.getElementById('gateInput');
+  var btn = document.getElementById('gateBtn');
+  var error = document.getElementById('gateError');
+
+  // Check session
+  if (sessionStorage.getItem('resumeUnlocked') === '1') {
+    gate.classList.add('hidden');
+    content.classList.add('unlocked');
+  }
+
+  function tryUnlock() {
+    var val = input.value.trim();
+    if (!val) { error.textContent = ''; return; }
+    sha256(val).then(function(hash) {
+      if (hash === PASSHASH) {
+        sessionStorage.setItem('resumeUnlocked', '1');
+        gate.classList.add('hidden');
+        content.classList.add('unlocked');
+      } else {
+        error.textContent = 'Invalid access code.';
+        input.value = '';
+        input.focus();
+      }
+    });
+  }
+
+  btn.addEventListener('click', tryUnlock);
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') tryUnlock();
+  });
+})();
+</script>
+
+</body>
+</html>

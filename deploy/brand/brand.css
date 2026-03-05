@@ -1,0 +1,487 @@
+/* =============================================
+   Fisher One-Three — Brand Page Styles
+   Extends style.css base. Dark gold aesthetic.
+   ============================================= */
+
+/* ===== BRAND HERO ===== */
+.brand-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.brand-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.brand-hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  filter: saturate(0.5) brightness(0.35) contrast(1.1);
+}
+
+.brand-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg,
+      rgba(7,5,3,0.6) 0%,
+      rgba(7,5,3,0.2) 40%,
+      rgba(7,5,3,0.3) 60%,
+      rgba(7,5,3,0.95) 100%),
+    linear-gradient(90deg,
+      rgba(7,5,3,0.5) 0%,
+      transparent 30%,
+      transparent 70%,
+      rgba(7,5,3,0.5) 100%);
+}
+
+.brand-hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 120px 32px 100px;
+  max-width: 700px;
+  opacity: 0;
+  animation: rise 1.4s ease 0.4s forwards;
+}
+
+.brand-hero-name {
+  font-family: var(--serif);
+  font-size: clamp(46px, 8vw, 80px);
+  font-weight: 300;
+  color: var(--gold);
+  opacity: 0.85;
+  line-height: 1;
+  letter-spacing: -2px;
+  margin-bottom: 16px;
+}
+
+.brand-hero-mantra {
+  font-family: var(--serif);
+  font-size: clamp(16px, 2.2vw, 22px);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+  margin-bottom: 44px;
+}
+
+.brand-hero-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ===== BRAND IDENTITY STRIP ===== */
+.brand-identity {
+  background: var(--bg-deep);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+  overflow: hidden;
+}
+
+.brand-identity-inner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.brand-identity-img {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+.brand-identity-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.6) brightness(0.7) contrast(1.05);
+  transition: all 0.6s ease;
+}
+.brand-identity-img:hover img {
+  filter: saturate(0.85) brightness(0.85) contrast(1.05);
+  transform: scale(1.04);
+}
+
+/* ===== BRAND STORY ===== */
+.brand-story {
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  gap: 64px;
+  align-items: start;
+}
+
+.brand-story-main {
+  font-size: 14.5px;
+  line-height: 1.9;
+  color: var(--text-secondary);
+}
+.brand-story-main p {
+  margin-bottom: 20px;
+}
+.brand-story-main p:last-child {
+  margin-bottom: 0;
+}
+
+.brand-story-sidebar {
+  display: grid;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.brand-fact {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+  transition: background 0.3s;
+}
+.brand-fact:last-child {
+  border-bottom: none;
+}
+.brand-fact:hover {
+  background: var(--bg-card-hover);
+}
+
+.brand-fact-val {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 300;
+  color: var(--gold);
+  opacity: 0.85;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.brand-fact-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+/* ===== COLLECTION FILTERS ===== */
+.collection-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.coll-filter {
+  padding: 8px 18px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 2px;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s;
+}
+.coll-filter:hover {
+  border-color: var(--border-hover);
+  color: var(--text-secondary);
+}
+.coll-filter.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--bg-black);
+}
+
+/* ===== COLLECTION GRID ===== */
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+/* ===== DESIGN CARD ===== */
+.design-card {
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  transition: all 0.4s ease;
+  position: relative;
+}
+.design-card:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+
+.design-img {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 2px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-deep);
+}
+.design-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.9) contrast(1.05);
+  transition: all 0.5s ease;
+}
+.design-card:hover .design-img img {
+  filter: brightness(1) contrast(1.05);
+  transform: scale(1.04);
+}
+
+.design-number {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--gold);
+  opacity: 0.45;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+
+.design-name {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+
+.design-color {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.design-desc {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.design-price {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--gold);
+  opacity: 0.8;
+}
+
+/* ===== COLLECTION CTA ===== */
+.collection-cta {
+  text-align: center;
+  margin-top: 56px;
+}
+
+/* ===== MISSION ===== */
+.mission-content {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 64px;
+  align-items: start;
+}
+
+.mission-text {
+  font-size: 14.5px;
+  line-height: 1.9;
+  color: var(--text-secondary);
+}
+.mission-text p {
+  margin-bottom: 16px;
+}
+.mission-text p:last-child {
+  margin-bottom: 0;
+}
+.mission-text strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.mission-stats {
+  display: grid;
+  gap: 14px;
+  min-width: 140px;
+}
+
+.mission-stat {
+  padding: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  text-align: center;
+  transition: border-color 0.3s;
+}
+.mission-stat:hover {
+  border-color: var(--border-hover);
+}
+
+.mission-stat-val {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--gold);
+  opacity: 0.85;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.mission-stat-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+/* ===== DETAILS GRID ===== */
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.detail-card {
+  padding: 28px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  text-align: center;
+  transition: all 0.35s;
+}
+.detail-card:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+}
+
+.detail-icon {
+  font-size: 20px;
+  color: var(--gold);
+  opacity: 0.45;
+  margin-bottom: 14px;
+  line-height: 1;
+}
+
+.detail-name {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.detail-desc {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+/* ===== CONNECT ===== */
+.connect-body {
+  max-width: 560px;
+}
+
+.connect-channels {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 860px) {
+  .brand-story {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .brand-story-sidebar {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .brand-fact {
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+  }
+  .brand-fact:last-child {
+    border-right: none;
+  }
+  .mission-content {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .mission-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .details-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .connect-channels {
+    grid-template-columns: 1fr;
+  }
+  .brand-identity-inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .collection-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .brand-hero-content {
+    padding: 90px 20px 80px;
+  }
+  .brand-hero-name {
+    letter-spacing: -1px;
+  }
+  .brand-story-sidebar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .brand-fact:nth-child(2) {
+    border-right: none;
+  }
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+  .collection-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .design-card {
+    padding: 16px;
+  }
+  .design-swatch {
+    height: 70px;
+    margin-bottom: 12px;
+  }
+  .design-desc {
+    display: none;
+  }
+  .brand-identity-inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 400px) {
+  .collection-grid {
+    grid-template-columns: 1fr;
+  }
+}
