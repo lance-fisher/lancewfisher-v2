@@ -1,5 +1,5 @@
 var FTDA_CONFIG = {
-  passkeySha256Hex: "9fbf261b62c1d7c00db73afb81dd97fdf20b3442e36e338cb9359b856a03bdc8",
+  passkeySha256Hex: "c65a82e6ec8047fa252b9ab14afe81ab92736c8c0947734fe7059f67189ad984",
   artifacts: [
     {
       id: "playbook",

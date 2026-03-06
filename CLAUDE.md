@@ -20,14 +20,8 @@ index.html              — Main portfolio page (lancewfisher.com)
 resume.html             — Resume page
 one-pager.html          — One-page summary
 404.html                — Custom 404 page
-deploy/                 — Production-ready copy of all assets
-  brand/                — Fisher One-Three brand variant (one-three.net)
-    index.html          — Brand landing page
-    style.css           — Dark gold aesthetic
-    brand.css           — Brand-specific styles
-  noco/                 — NoCo businesses directory sub-app
-  concepts/             — 12 concept/design explorations
-  ftda/                 — FTDA sub-app (config.js, ftda.js, ftda.css)
+styles.css              — Extracted main CSS (from index.html)
+main.js                 — Extracted main JS (from index.html)
 concepts/               — Source concept HTML files (12 themes)
 noco/                   — NoCo businesses directory (app.js, businesses.js, styles.css)
 harmony/                — Harmony Medspa embedded sub-page

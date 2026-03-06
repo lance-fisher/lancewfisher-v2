@@ -244,7 +244,7 @@
 <body>
 
 <!-- Access Gate -->
-<div class="access-gate" id="accessGate">
+<div class="access-gate" id="accessGate" role="dialog" aria-label="Resume access gate" aria-modal="true">
   <div class="gate-icon">&#9875;</div>
   <div class="gate-title">Resume Access</div>
   <div class="gate-subtitle">
@@ -435,7 +435,7 @@
 <script>
 (function() {
   // SHA-256 passkey verification
-  var PASSHASH = 'c5a656f1ac082a1f7ff4d1c931f88a5b87b6580b8ccd8d5611694340222f818d';
+  var PASSHASH = 'c65a82e6ec8047fa252b9ab14afe81ab92736c8c0947734fe7059f67189ad984';
 
   function sha256(str) {
     var buf = new TextEncoder().encode(str);
@@ -452,10 +452,27 @@
   var btn = document.getElementById('gateBtn');
   var error = document.getElementById('gateError');
 
+  // Focus trap for accessibility — keep Tab within the gate while it's visible
+  var focusableEls = gate.querySelectorAll('input, button, a[href]');
+  var firstFocusable = focusableEls[0];
+  var lastFocusable = focusableEls[focusableEls.length - 1];
+
+  gate.addEventListener('keydown', function(e) {
+    if (e.key !== 'Tab') return;
+    if (e.shiftKey) {
+      if (document.activeElement === firstFocusable) { e.preventDefault(); lastFocusable.focus(); }
+    } else {
+      if (document.activeElement === lastFocusable) { e.preventDefault(); firstFocusable.focus(); }
+    }
+  });
+
   // Check session
   if (sessionStorage.getItem('resumeUnlocked') === '1') {
     gate.classList.add('hidden');
+    gate.setAttribute('aria-hidden', 'true');
     content.classList.add('unlocked');
+  } else {
+    input.focus();
   }
 
   function tryUnlock() {
@@ -465,6 +482,7 @@
       if (hash === PASSHASH) {
         sessionStorage.setItem('resumeUnlocked', '1');
         gate.classList.add('hidden');
+        gate.setAttribute('aria-hidden', 'true');
         content.classList.add('unlocked');
       } else {
         error.textContent = 'Invalid access code.';
