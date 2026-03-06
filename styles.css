@@ -2078,219 +2078,313 @@ span.hero-domain-dot {
   100% { opacity: 0; transform: translateX(0); filter: grayscale(1); }
 }
 
-/* ===== LIGHT THEME OVERRIDES ===== */
-/* Warm stone palette: not blinding white, more like aged marble/parchment */
+/* ===== LIGHT THEME: SILVER & BRASS ===== */
+/* Cool silver-gray base with warm brass accents — polished, not bleached */
 [data-theme="light"] {
-  --bg: #e8e4df;
-  --warm-white: #2c2a28;
-  --warm-white-dim: rgba(44, 42, 40, 0.50);
-  --warm-white-ghost: rgba(44, 42, 40, 0.07);
-  --warm-white-breath: rgba(44, 42, 40, 0.05);
-  --warm-white-soft: rgba(44, 42, 40, 0.09);
-  --accent: rgba(44, 42, 40, 0.6);
-  --gold-1776: #6b6560;
-  --navy-1776: #b8b2aa;
-  --gold-dim: rgba(90, 82, 74, 0.2);
-  --gold-ghost: rgba(90, 82, 74, 0.06);
+  --bg: #c5c6c8;
+  --warm-white: #1a1a1c;
+  --warm-white-dim: rgba(26, 26, 28, 0.6);
+  --warm-white-ghost: rgba(26, 26, 28, 0.18);
+  --warm-white-breath: rgba(26, 26, 28, 0.08);
+  --warm-white-soft: rgba(26, 26, 28, 0.12);
+  --accent: rgba(26, 26, 28, 0.65);
+  --gold-1776: #8b7355;
+  --navy-1776: #9a9b9e;
+  --gold-dim: rgba(139, 115, 85, 0.35);
+  --gold-ghost: rgba(139, 115, 85, 0.1);
 }
 
 [data-theme="light"] body {
-  background: #e8e4df;
-  color: #2c2a28;
+  background: #c5c6c8;
+  color: #1a1a1c;
+  /* Subtle cool radial glow */
   background-image:
-    radial-gradient(ellipse 600px 800px at 50% 30%, rgba(210,205,198,0.5) 0%, transparent 70%),
-    radial-gradient(ellipse 400px 600px at 80% 60%, rgba(200,195,188,0.3) 0%, transparent 60%);
+    radial-gradient(ellipse 700px 900px at 50% 25%, rgba(185,186,190,0.5) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 700px at 80% 55%, rgba(175,176,180,0.3) 0%, transparent 60%);
 }
-[data-theme="light"] ::selection { background: rgba(90,82,74,0.18); color: #2c2a28; }
+/* Stone grain texture overlay */
+[data-theme="light"] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
 
-/* Hide the ship watermark entirely, replace with CSS statue */
+[data-theme="light"] ::selection { background: rgba(139,115,85,0.25); color: #1c1a18; }
+
+/* Hide the ship watermark, show statue */
 [data-theme="light"] .ship-watermark { display: none; }
 
-/* Roman statue background watermark */
+/* Roman statue watermark — prominent design feature like the ship on dark */
 [data-theme="light"] .statue-watermark {
   display: block;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 500px;
-  height: 700px;
+  width: 600px;
+  height: 850px;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.04;
+  opacity: 0.38;
+  filter: sepia(0.15) contrast(0.85);
   background:
-    /* Head/crown area */
-    radial-gradient(ellipse 120px 80px at 50% 12%, rgba(90,82,74,0.7) 0%, transparent 100%),
-    /* Face oval */
-    radial-gradient(ellipse 90px 120px at 50% 22%, rgba(90,82,74,0.6) 0%, transparent 100%),
-    /* Nose ridge */
-    radial-gradient(ellipse 12px 40px at 50% 24%, rgba(70,62,54,0.5) 0%, transparent 100%),
-    /* Left eye socket shadow */
-    radial-gradient(ellipse 22px 12px at 42% 19%, rgba(60,52,44,0.4) 0%, transparent 100%),
-    /* Right eye socket shadow */
-    radial-gradient(ellipse 22px 12px at 58% 19%, rgba(60,52,44,0.4) 0%, transparent 100%),
-    /* Jawline left */
-    radial-gradient(ellipse 40px 60px at 38% 28%, rgba(90,82,74,0.3) 0%, transparent 100%),
-    /* Jawline right */
-    radial-gradient(ellipse 40px 60px at 62% 28%, rgba(90,82,74,0.3) 0%, transparent 100%),
-    /* Neck */
-    radial-gradient(ellipse 50px 80px at 50% 36%, rgba(90,82,74,0.4) 0%, transparent 100%),
-    /* Left shoulder */
-    radial-gradient(ellipse 140px 70px at 30% 44%, rgba(90,82,74,0.35) 0%, transparent 100%),
-    /* Right shoulder */
-    radial-gradient(ellipse 140px 70px at 70% 44%, rgba(90,82,74,0.35) 0%, transparent 100%),
-    /* Chest/torso */
-    radial-gradient(ellipse 160px 200px at 50% 56%, rgba(90,82,74,0.3) 0%, transparent 100%),
-    /* Left drape fold */
-    radial-gradient(ellipse 30px 120px at 35% 60%, rgba(70,62,54,0.2) 0%, transparent 100%),
-    /* Right drape fold */
-    radial-gradient(ellipse 30px 120px at 65% 58%, rgba(70,62,54,0.2) 0%, transparent 100%),
-    /* Base/pedestal */
-    radial-gradient(ellipse 200px 60px at 50% 82%, rgba(90,82,74,0.25) 0%, transparent 100%);
+    /* Laurel crown */
+    radial-gradient(ellipse 130px 50px at 50% 8%, rgba(139,115,85,0.5) 0%, transparent 100%),
+    radial-gradient(ellipse 20px 30px at 38% 6%, rgba(120,100,70,0.4) 0%, transparent 100%),
+    radial-gradient(ellipse 20px 30px at 62% 6%, rgba(120,100,70,0.4) 0%, transparent 100%),
+    /* Head/skull */
+    radial-gradient(ellipse 100px 130px at 50% 16%, rgba(90,82,74,0.6) 0%, transparent 100%),
+    /* Brow ridge */
+    radial-gradient(ellipse 80px 15px at 50% 13%, rgba(70,62,54,0.35) 0%, transparent 100%),
+    /* Left eye socket */
+    radial-gradient(ellipse 24px 16px at 42% 16%, rgba(50,44,38,0.45) 0%, transparent 100%),
+    /* Right eye socket */
+    radial-gradient(ellipse 24px 16px at 58% 16%, rgba(50,44,38,0.45) 0%, transparent 100%),
+    /* Nose bridge */
+    radial-gradient(ellipse 14px 45px at 50% 20%, rgba(70,62,54,0.4) 0%, transparent 100%),
+    /* Left cheekbone */
+    radial-gradient(ellipse 35px 25px at 38% 20%, rgba(90,82,74,0.3) 0%, transparent 100%),
+    /* Right cheekbone */
+    radial-gradient(ellipse 35px 25px at 62% 20%, rgba(90,82,74,0.3) 0%, transparent 100%),
+    /* Chin */
+    radial-gradient(ellipse 40px 30px at 50% 26%, rgba(80,72,64,0.35) 0%, transparent 100%),
+    /* Neck column */
+    radial-gradient(ellipse 45px 70px at 50% 33%, rgba(90,82,74,0.4) 0%, transparent 100%),
+    /* Left shoulder curve */
+    radial-gradient(ellipse 160px 80px at 28% 42%, rgba(90,82,74,0.35) 0%, transparent 100%),
+    /* Right shoulder curve */
+    radial-gradient(ellipse 160px 80px at 72% 42%, rgba(90,82,74,0.35) 0%, transparent 100%),
+    /* Chest plate */
+    radial-gradient(ellipse 180px 120px at 50% 48%, rgba(90,82,74,0.3) 0%, transparent 100%),
+    /* Left pectoral shadow */
+    radial-gradient(ellipse 60px 40px at 38% 45%, rgba(70,62,54,0.2) 0%, transparent 100%),
+    /* Right pectoral shadow */
+    radial-gradient(ellipse 60px 40px at 62% 45%, rgba(70,62,54,0.2) 0%, transparent 100%),
+    /* Torso */
+    radial-gradient(ellipse 150px 200px at 50% 60%, rgba(90,82,74,0.25) 0%, transparent 100%),
+    /* Left toga drape */
+    radial-gradient(ellipse 40px 160px at 32% 58%, rgba(70,62,54,0.2) 0%, transparent 100%),
+    /* Right toga drape */
+    radial-gradient(ellipse 35px 140px at 66% 56%, rgba(70,62,54,0.18) 0%, transparent 100%),
+    /* Center toga fold */
+    radial-gradient(ellipse 20px 100px at 50% 62%, rgba(60,52,44,0.15) 0%, transparent 100%),
+    /* Left arm */
+    radial-gradient(ellipse 50px 120px at 24% 55%, rgba(90,82,74,0.2) 0%, transparent 100%),
+    /* Right arm */
+    radial-gradient(ellipse 50px 120px at 76% 55%, rgba(90,82,74,0.2) 0%, transparent 100%),
+    /* Pedestal base */
+    radial-gradient(ellipse 250px 40px at 50% 85%, rgba(90,82,74,0.3) 0%, transparent 100%),
+    /* Pedestal column */
+    radial-gradient(ellipse 120px 80px at 50% 80%, rgba(90,82,74,0.2) 0%, transparent 100%);
   transition: opacity 3s ease;
 }
 
-/* Hero script logo on light: swap to purpose-built light asset */
-[data-theme="light"] .hero-script-logo { content: url('img/namescript-light.webp'); opacity: 0.45; filter: contrast(1.3); }
+/* ---- HERO ---- */
 
-/* Hero motto */
-[data-theme="light"] .hero-motto { text-shadow: none; color: rgba(44,42,40,0.35); }
+/* Hide script logo in light — lettermark + statue watermark carry the hero */
+[data-theme="light"] .hero-script-logo {
+  display: none;
+}
 
-/* Portrait - warmer, more visible */
-[data-theme="light"] .portrait-frame img.portrait-primary { filter: grayscale(0.1) contrast(1.05) brightness(1.0) sepia(0.08); opacity: 0.85; }
-
-/* Nav scrolled bg */
-[data-theme="light"] nav.scrolled { background: rgba(232,228,223,0.94); backdrop-filter: blur(8px); }
-
-/* Hero name: carved stone */
+/* Hero name: deep charcoal with subtle brass shadow */
 [data-theme="light"] .hero-name {
-  color: #2c2a28;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+  color: #1c1a18;
+  text-shadow: 0 1px 0 rgba(139,115,85,0.2);
 }
 
 /* Hero subtitle */
-[data-theme="light"] .hero-subtitle { color: rgba(44,42,40,0.5); }
+[data-theme="light"] .hero-subtitle { color: rgba(28,26,24,0.55); }
+
+/* Hero motto — brass tint */
+[data-theme="light"] .hero-motto { text-shadow: none; color: rgba(139,115,85,0.6); font-style: italic; }
+
+/* Hero rule line — brass */
+[data-theme="light"] .hero-rule { background: rgba(139,115,85,0.3); }
+
+/* Hero domains */
+[data-theme="light"] .hero-domains a { color: rgba(28,26,24,0.5); }
+[data-theme="light"] .hero-domains a:hover { color: #8b7355; }
+[data-theme="light"] .hero-domain-dot { color: rgba(139,115,85,0.35); }
+
+/* CTA buttons */
+[data-theme="light"] .hero-cta-primary {
+  background: #2e2e30;
+  color: #d0d1d3;
+  border-color: #2e2e30;
+}
+[data-theme="light"] .hero-cta-primary:hover { background: #8b7355; border-color: #8b7355; }
+[data-theme="light"] .hero-cta-ghost { border-color: rgba(139,115,85,0.4); color: #4a4540; }
+[data-theme="light"] .hero-cta-ghost:hover { border-color: #8b7355; color: #8b7355; }
+
+/* ---- NAVIGATION ---- */
+
+[data-theme="light"] nav.scrolled {
+  background: rgba(197,198,200,0.96);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(139,115,85,0.12);
+}
+
+/* ---- SECTION LABELS (METHOD, NOW, etc.) — brass ---- */
+[data-theme="light"] .section-label,
+[data-theme="light"] .ds-label { color: #8b7355; letter-spacing: 0.15em; }
 
 /* Section headings */
-[data-theme="light"] h2, [data-theme="light"] h3 { color: #2c2a28; }
+[data-theme="light"] h2, [data-theme="light"] h3 { color: #1c1a18; }
 
-/* About card */
-[data-theme="light"] .about-card {
-  background: rgba(255,255,255,0.35);
-  border-color: rgba(90,82,74,0.12);
-  box-shadow: 0 2px 20px rgba(0,0,0,0.03);
+/* Brass section dividers */
+[data-theme="light"] .thin-line {
+  background: linear-gradient(to bottom, transparent, rgba(139,115,85,0.25), rgba(139,115,85,0.15), rgba(139,115,85,0.25), transparent);
 }
-[data-theme="light"] .about-card::before { background: linear-gradient(90deg, transparent, rgba(90,82,74,0.15), transparent); }
 
-/* Canvas thumbs: keep dark canvases framed */
+/* ---- PORTRAIT ---- */
+[data-theme="light"] .portrait-frame img.portrait-primary {
+  filter: grayscale(0.05) contrast(1.08) brightness(0.98) sepia(0.1);
+  opacity: 0.9;
+}
+
+/* ---- ABOUT / CONVICTIONS CARDS ---- */
+[data-theme="light"] .about-card {
+  background: rgba(255,255,255,0.45);
+  border-color: rgba(139,115,85,0.18);
+  box-shadow: 0 2px 16px rgba(28,26,24,0.05);
+}
+[data-theme="light"] .about-card:hover {
+  border-color: rgba(139,115,85,0.35);
+  box-shadow: 0 6px 24px rgba(28,26,24,0.08);
+}
+[data-theme="light"] .about-card::before {
+  background: linear-gradient(90deg, transparent, rgba(139,115,85,0.2), transparent);
+}
+
+/* ---- PROJECT CARDS ---- */
+
+/* Canvas thumbs: keep dark, brass frame */
 [data-theme="light"] .project-thumb-wrap {
-  border: 1px solid rgba(44,42,40,0.1);
+  border: 1px solid rgba(139,115,85,0.2);
   border-radius: 4px;
   background: #111;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(28,26,24,0.1);
 }
-[data-theme="light"] .project-card:hover .project-thumb-wrap { box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
-
-/* CTA buttons: warm charcoal */
-[data-theme="light"] .hero-cta-primary {
-  background: #4a4540;
-  color: #e8e4df;
-  border-color: #4a4540;
+[data-theme="light"] .project-card:hover .project-thumb-wrap {
+  border-color: rgba(139,115,85,0.4);
+  box-shadow: 0 8px 30px rgba(28,26,24,0.15);
 }
-[data-theme="light"] .hero-cta-primary:hover { background: #3a3530; }
 
-/* Status badges */
-[data-theme="light"] .p-status.active { border-color: rgba(50,110,70,0.25); color: rgba(40,95,55,0.7); background: rgba(50,110,70,0.06); }
-[data-theme="light"] .p-status.shipped { border-color: rgba(140,105,40,0.25); color: rgba(120,90,30,0.7); background: rgba(140,105,40,0.06); }
+/* Project text */
+[data-theme="light"] .p-desc { color: rgba(28,26,24,0.7); }
+[data-theme="light"] .p-tech { color: rgba(139,115,85,0.7); }
+[data-theme="light"] .p-opinion { color: rgba(28,26,24,0.55); border-bottom-color: rgba(139,115,85,0.12); }
 
 /* Hover text emphasis */
 [data-theme="light"] .project-card:hover .p-title,
-[data-theme="light"] .venture-item:hover .v-title { color: #2c2a28; }
+[data-theme="light"] .venture-item:hover .v-title { color: #1c1a18; }
+
+/* Status badges — brass themed */
+[data-theme="light"] .p-status.active {
+  border-color: rgba(80,120,70,0.3);
+  color: rgba(50,100,45,0.8);
+  background: rgba(80,120,70,0.08);
+}
+[data-theme="light"] .p-status.shipped {
+  border-color: rgba(139,115,85,0.3);
+  color: rgba(120,95,60,0.8);
+  background: rgba(139,115,85,0.08);
+}
 
 /* Stat values */
-[data-theme="light"] .ds-value { color: #3a3632; }
+[data-theme="light"] .ds-value { color: #2a2622; }
 
-/* FTDA flagship on light */
-[data-theme="light"] .ftda-flagship {
-  background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 40%),
-    linear-gradient(315deg, rgba(255,255,255,0.2) 0%, transparent 40%),
-    linear-gradient(180deg, rgba(235,231,226,1) 0%, rgba(232,228,223,1) 100%) !important;
-  border-color: rgba(90,82,74,0.15) !important;
+/* ---- FILTER BUTTONS ---- */
+[data-theme="light"] .pf-btn {
+  border-color: rgba(139,115,85,0.2);
+  color: rgba(28,26,24,0.55);
+}
+[data-theme="light"] .pf-btn:hover {
+  border-color: rgba(139,115,85,0.4);
+  color: #8b7355;
+}
+[data-theme="light"] .pf-btn.active {
+  background: #2e2e30;
+  color: #d0d1d3;
+  border-color: #2e2e30;
 }
 
-/* Booking form */
-[data-theme="light"] .booking-input {
-  background: rgba(255,255,255,0.4);
-  border-color: rgba(90,82,74,0.15);
-  color: #2c2a28;
-}
-[data-theme="light"] .booking-input:focus { border-color: rgba(90,82,74,0.35); background: rgba(255,255,255,0.6); }
-[data-theme="light"] .booking-input::placeholder { color: rgba(44,42,40,0.3); }
-
-/* Booking submit */
-[data-theme="light"] .booking-submit { background: #4a4540; color: #e8e4df; }
-[data-theme="light"] .booking-submit:hover { background: #3a3530; }
-
-/* Thin line: marble vein */
-[data-theme="light"] .thin-line { background: linear-gradient(to bottom, transparent, rgba(160,152,142,0.18), rgba(130,122,112,0.1), rgba(160,152,142,0.18), transparent); }
-
-/* Links */
-[data-theme="light"] a { color: #4a4540; }
-[data-theme="light"] a:hover { color: #2c2a28; }
-
-/* Filter buttons */
-[data-theme="light"] .pf-btn { border-color: rgba(90,82,74,0.15); color: rgba(44,42,40,0.5); }
-[data-theme="light"] .pf-btn.active { background: #4a4540; color: #e8e4df; border-color: #4a4540; }
-
-/* Venture items */
+/* ---- VENTURE / CONCEPT ITEMS ---- */
 [data-theme="light"] .venture-item {
-  border-color: rgba(90,82,74,0.1);
-  background: rgba(255,255,255,0.2);
+  border-color: rgba(139,115,85,0.15);
+  background: rgba(255,255,255,0.3);
 }
-[data-theme="light"] .venture-item:hover { background: rgba(255,255,255,0.4); border-color: rgba(90,82,74,0.2); }
+[data-theme="light"] .venture-item:hover {
+  background: rgba(255,255,255,0.5);
+  border-color: rgba(139,115,85,0.35);
+  box-shadow: 0 4px 16px rgba(28,26,24,0.06);
+}
 
-/* Nav dots */
-[data-theme="light"] .nav-dot { background: rgba(44,42,40,0.15); }
-[data-theme="light"] .nav-dot.active { background: #6b6560; }
+/* ---- FTDA FLAGSHIP ---- */
+[data-theme="light"] .ftda-flagship {
+  background: linear-gradient(135deg, rgba(255,255,255,0.35) 0%, transparent 40%),
+    linear-gradient(315deg, rgba(255,255,255,0.25) 0%, transparent 40%),
+    linear-gradient(180deg, rgba(202,203,206,1) 0%, rgba(197,198,200,1) 100%) !important;
+  border-color: rgba(139,115,85,0.2) !important;
+}
 
-/* Contact row */
-[data-theme="light"] .contact-row { border-bottom-color: rgba(44,42,40,0.07); }
-[data-theme="light"] .contact-row:hover { background: rgba(255,255,255,0.25); }
+/* ---- BOOKING / CONTACT FORM ---- */
+[data-theme="light"] .booking-input {
+  background: rgba(255,255,255,0.45);
+  border-color: rgba(139,115,85,0.2);
+  color: #1c1a18;
+}
+[data-theme="light"] .booking-input:focus {
+  border-color: #8b7355;
+  background: rgba(255,255,255,0.6);
+  box-shadow: 0 0 0 3px rgba(139,115,85,0.1);
+}
+[data-theme="light"] .booking-input::placeholder { color: rgba(28,26,24,0.35); }
+[data-theme="light"] .booking-submit { background: #2e2e30; color: #d0d1d3; }
+[data-theme="light"] .booking-submit:hover { background: #8b7355; }
 
-/* Detail section */
-[data-theme="light"] .project-detail { border-top-color: rgba(44,42,40,0.07); }
-[data-theme="light"] .detail-stat { border-color: rgba(90,82,74,0.1); }
+/* ---- LINKS ---- */
+[data-theme="light"] a { color: #5a4d3e; }
+[data-theme="light"] a:hover { color: #8b7355; }
 
-/* Brand teaser */
-[data-theme="light"] .brand-teaser { background: rgba(255,255,255,0.2); border-color: rgba(90,82,74,0.1); }
+/* ---- NAV DOTS ---- */
+[data-theme="light"] .nav-dot { background: rgba(139,115,85,0.2); }
+[data-theme="light"] .nav-dot.active { background: #8b7355; }
 
-/* NoCo section */
-[data-theme="light"] .noco-section { background: rgba(255,255,255,0.15); }
+/* ---- CONTACT ROWS ---- */
+[data-theme="light"] .contact-row { border-bottom-color: rgba(139,115,85,0.12); }
+[data-theme="light"] .contact-row:hover { background: rgba(255,255,255,0.3); }
 
-/* Opinion paragraph */
-[data-theme="light"] .p-opinion { color: rgba(44,42,40,0.45); border-bottom-color: rgba(44,42,40,0.06); }
+/* ---- DETAIL SECTIONS ---- */
+[data-theme="light"] .project-detail { border-top-color: rgba(139,115,85,0.12); }
+[data-theme="light"] .detail-stat { border-color: rgba(139,115,85,0.15); }
+[data-theme="light"] .detail-col li { color: rgba(28,26,24,0.75); }
+[data-theme="light"] .detail-col em { color: #1c1a18; }
 
-/* Stats bar */
-[data-theme="light"] .stats-bar { border-color: rgba(44,42,40,0.06); }
+/* ---- BRAND TEASER ---- */
+[data-theme="light"] .brand-teaser {
+  background: rgba(255,255,255,0.3);
+  border-color: rgba(139,115,85,0.15);
+}
 
-/* Hero domains */
-[data-theme="light"] .hero-domains a { color: rgba(44,42,40,0.4); }
-[data-theme="light"] .hero-domains a:hover { color: #2c2a28; }
-[data-theme="light"] .hero-domain-dot { color: rgba(44,42,40,0.2); }
+/* ---- NOCO SECTION ---- */
+[data-theme="light"] .noco-section { background: rgba(255,255,255,0.2); }
 
-/* Glitch/morph letters */
-[data-theme="light"] .glitch-line { background: rgba(44,42,40,0.15); }
+/* ---- STATS BAR ---- */
+[data-theme="light"] .stats-bar { border-color: rgba(139,115,85,0.1); }
 
-/* Project descriptions and tech line */
-[data-theme="light"] .p-desc { color: rgba(44,42,40,0.65); }
-[data-theme="light"] .p-tech { color: rgba(44,42,40,0.4); }
+/* ---- GLITCH / MORPH ---- */
+[data-theme="light"] .glitch-line { background: rgba(139,115,85,0.2); }
 
-/* Detail column text */
-[data-theme="light"] .detail-col li { color: rgba(44,42,40,0.7); }
-[data-theme="light"] .detail-col em { color: #2c2a28; }
-
-/* Hero rule line */
-[data-theme="light"] .hero-rule { background: rgba(44,42,40,0.12); }
+/* ---- THEME TOGGLE — brass tint ---- */
+[data-theme="light"] .theme-toggle { border-color: rgba(139,115,85,0.25); }
+[data-theme="light"] .theme-toggle:hover { border-color: #8b7355; }
+[data-theme="light"] .theme-toggle svg { fill: #8b7355; stroke: #8b7355; }
 
 /* ===== THEME TOGGLE ===== */
 .theme-toggle {
