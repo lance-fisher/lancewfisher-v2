@@ -24,3 +24,7 @@ jobs:
             **/deploy/**
             **/node_modules/**
             **/.github/**
+            **/_originals/**
+            **/scripts/*.py
+            **/CLAUDE.md
+            **/STOPPOINT.md

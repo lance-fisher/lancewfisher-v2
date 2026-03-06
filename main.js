@@ -1,0 +1,2364 @@
+(function() {
+  'use strict';
+
+  // ===== PORTFOLIO EXPAND/COLLAPSE =====
+  function togglePortfolio() {
+    var btn = document.getElementById('portfolioExpandBtn');
+    var remaining = document.getElementById('portfolioRemaining');
+    var arrow = btn.querySelector('.expand-arrow');
+    var isExpanded = remaining.classList.contains('expanded');
+    if (isExpanded) {
+      remaining.classList.remove('expanded');
+      btn.classList.remove('expanded');
+      btn.firstChild.textContent = 'View Full Portfolio (9 more projects) ';
+      btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      remaining.classList.add('expanded');
+      btn.classList.add('expanded');
+      btn.firstChild.textContent = 'Collapse Portfolio ';
+    }
+  }
+  window.togglePortfolio = togglePortfolio;
+
+  // ===== PROJECT CATEGORY FILTERS =====
+  (function() {
+    var filterBtns = document.querySelectorAll('.pf-btn');
+    var allProjectCards = document.querySelectorAll('.project-card[data-tags]');
+    var expandBtn = document.getElementById('portfolioExpandBtn');
+    var remaining = document.getElementById('portfolioRemaining');
+
+    filterBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        filterBtns.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var filter = btn.getAttribute('data-filter');
+
+        // When filtering, expand the hidden section so all matches are visible
+        if (filter !== 'all' && remaining && !remaining.classList.contains('expanded')) {
+          remaining.classList.add('expanded');
+          if (expandBtn) {
+            expandBtn.classList.add('expanded');
+            expandBtn.firstChild.textContent = 'Collapse Portfolio ';
+          }
+        }
+
+        allProjectCards.forEach(function(card) {
+          if (filter === 'all' || card.getAttribute('data-tags') === filter) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  })();
+
+  // ===== PHONE NUMBER RENDERING (anti-scrape) =====
+  document.querySelectorAll('[data-p]').forEach(function(el) {
+    try {
+      var decoded = atob(el.getAttribute('data-p'));
+      var formatted = '(' + decoded.substring(0,3) + ') ' + decoded.substring(4);
+      el.textContent = formatted;
+      var parent = el.closest('.contact-row');
+      if (parent) {
+        var raw = decoded.replace(/-/g, '');
+        parent.onclick = function() { window.location.href = 'tel:+1' + raw; };
+      }
+    } catch(e) {}
+  });
+
+  // ===== BOOKING FORM SUBMISSION =====
+  (function() {
+    var form = document.getElementById('bookingForm');
+    var wrap = document.getElementById('bookingFormWrap');
+    var success = document.getElementById('bookingSuccess');
+    var submitBtn = document.getElementById('bookingSubmit');
+    if (!form) return;
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      var formData = new FormData(form);
+      fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      }).then(function(response) {
+        return response.json().then(function(data) {
+          if (response.ok && data.ok) {
+            form.style.display = 'none';
+            success.classList.add('visible');
+          } else {
+            var msg = data.error || (data.errors ? data.errors.join(' ') : 'Something went wrong.');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Request';
+            alert(msg + ' You can also email lance@lancewfisher.com directly.');
+          }
+        });
+      }).catch(function() {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Request';
+        alert('Something went wrong. Please email lance@lancewfisher.com directly.');
+      });
+    });
+  })();
+
+  // ===== THEME TOGGLE =====
+  var toggleBtn = document.getElementById('themeToggle');
+  function getTheme() {
+    var saved = localStorage.getItem('lf-theme');
+    if (saved) return saved;
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+  function setTheme(t) {
+    if (t === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+    localStorage.setItem('lf-theme', t);
+  }
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', function() {
+      var current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+  }
+  // Listen for system preference changes
+  window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function(e) {
+    if (!localStorage.getItem('lf-theme')) {
+      setTheme(e.matches ? 'light' : 'dark');
+    }
+  });
+
+  // ===== SCROLL REVEAL =====
+  var sections = document.querySelectorAll('[data-reveal]');
+  var isMobile = window.innerWidth <= 768;
+
+  // Use more aggressive threshold on mobile (1% vs 8%)
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: isMobile ? 0.01 : 0.08, rootMargin: isMobile ? '0px 0px 0px 0px' : '0px 0px -60px 0px' });
+  sections.forEach(function(s) { observer.observe(s); });
+
+  // Mobile fallback: also check on scroll in case IntersectionObserver doesn't fire
+  if (isMobile) {
+    function mobileRevealCheck() {
+      var vh = window.innerHeight;
+      sections.forEach(function(s) {
+        var rect = s.getBoundingClientRect();
+        // If section top is within 1.2x viewport height, reveal it
+        if (rect.top < vh * 1.2) {
+          s.classList.add('visible');
+        }
+      });
+    }
+    window.addEventListener('scroll', mobileRevealCheck, { passive: true });
+    // Run once on load after a small delay
+    setTimeout(mobileRevealCheck, 500);
+    setTimeout(mobileRevealCheck, 1500);
+  }
+
+  // ===== SCROLL INDICATOR =====
+  var scrollInd = document.getElementById('scrollIndicator');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 120) scrollInd.classList.add('hidden');
+    else scrollInd.classList.remove('hidden');
+  }, { passive: true });
+
+  // ===== WATERMARK PARALLAX =====
+  var ship = document.querySelector('.ship-watermark');
+  var statue = document.querySelector('.statue-watermark');
+  window.addEventListener('scroll', function() {
+    var y = window.scrollY;
+    if (ship) ship.style.transform = 'translate(-50%, calc(-50% + ' + (y * 0.05) + 'px))';
+    if (statue) statue.style.transform = 'translate(-50%, calc(-50% + ' + (y * 0.03) + 'px))';
+  }, { passive: true });
+
+  // ===== NAV DOTS =====
+  var dots = document.querySelectorAll('.nav-dot');
+  var sectionIds = [];
+  dots.forEach(function(d) { sectionIds.push(d.getAttribute('data-target')); });
+  dots.forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      var target = document.getElementById(dot.getAttribute('data-target'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+  function updateDots() {
+    var scrollY = window.scrollY, vh = window.innerHeight, active = 0;
+    for (var i = sectionIds.length - 1; i >= 0; i--) {
+      var el = document.getElementById(sectionIds[i]);
+      if (el && el.getBoundingClientRect().top < vh * 0.5) { active = i; break; }
+    }
+    if (scrollY < 200) active = 0;
+    dots.forEach(function(d, idx) { d.classList.toggle('active', idx === active); });
+  }
+  window.addEventListener('scroll', updateDots, { passive: true });
+  updateDots();
+
+  // ===== MOBILE TAP-TO-EXPAND PROJECT CARDS =====
+  if (isMobile) {
+    var projectCards = document.querySelectorAll('.project-card');
+    projectCards.forEach(function(card) {
+      // Skip cards with onclick (they navigate somewhere)
+      if (card.getAttribute('onclick')) return;
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', function(e) {
+        // Don't interfere with links inside
+        if (e.target.tagName === 'A') return;
+        // Close other cards
+        projectCards.forEach(function(c) {
+          if (c !== card) c.classList.remove('expanded');
+        });
+        card.classList.toggle('expanded');
+      });
+    });
+  }
+
+  // ===== FISHER MORPH -MATRIX DECODE EFFECT =====
+  var morphI = document.getElementById('morph-i');
+  var morphE = document.getElementById('morph-e');
+  if (morphI && morphE) {
+    var charI = morphI.querySelector('.morph-char');
+    var charE = morphE.querySelector('.morph-char');
+    var morphOrigI = charI.textContent;
+    var morphOrigE = charE.textContent;
+    var morphRunning = false;
+    var glyphPool = '0123456789!@#$%&*?><|/=+-~^';
+
+    function randomGlyph() {
+      return glyphPool.charAt(Math.floor(Math.random() * glyphPool.length));
+    }
+
+    function clearMorphState(el) {
+      el.classList.remove('scanning', 'decoded', 'reverting');
+    }
+
+    // Pre-schedule all character changes as absolute timeouts from t=0
+    // This avoids chaining/recursion and works under timer throttling
+    function scheduleScramble(charEl, wrapEl, startMs, count, gap, finalChar, startClass, finalClass) {
+      // Add scanning/reverting class at start
+      setTimeout(function() {
+        clearMorphState(wrapEl);
+        if (startClass) wrapEl.classList.add(startClass);
+      }, startMs);
+
+      // Schedule each random glyph
+      for (var i = 0; i < count; i++) {
+        (function(idx) {
+          setTimeout(function() {
+            charEl.textContent = randomGlyph();
+          }, startMs + (idx * gap));
+        })(i);
+      }
+
+      // Land on final character
+      var endMs = startMs + (count * gap);
+      setTimeout(function() {
+        charEl.textContent = finalChar;
+        clearMorphState(wrapEl);
+        if (finalClass) wrapEl.classList.add(finalClass);
+      }, endMs);
+
+      return endMs;
+    }
+
+    function runMorphCycle() {
+      if (morphRunning) return;
+      morphRunning = true;
+
+      // Phase 1: Decode I → 1 (7 glyphs at 55ms)
+      scheduleScramble(charI, morphI, 0, 7, 55, '1', 'scanning', 'decoded');
+
+      // Phase 1b: Decode E → 3 (staggered 300ms)
+      scheduleScramble(charE, morphE, 300, 7, 55, '3', 'scanning', 'decoded');
+
+      // Phase 2: Revert I (after 2.4s hold)
+      scheduleScramble(charI, morphI, 2400, 4, 50, morphOrigI, 'reverting', '');
+
+      // Phase 2b: Revert E (staggered)
+      scheduleScramble(charE, morphE, 2650, 4, 50, morphOrigE, 'reverting', '');
+
+      // Safety net: hard reset at 3.5s
+      setTimeout(function() {
+        clearMorphState(morphI);
+        clearMorphState(morphE);
+        charI.textContent = morphOrigI;
+        charE.textContent = morphOrigE;
+        morphRunning = false;
+      }, 3500);
+    }
+
+    // First morph after 4-6s, then every 10-15s
+    setTimeout(function() {
+      runMorphCycle();
+      setInterval(runMorphCycle, 10000 + Math.random() * 5000);
+    }, 4000 + Math.random() * 2000);
+  }
+
+  // ===== PORTRAIT CAROUSEL - GLITCH TRANSITION =====
+  var carouselFrame = document.getElementById('portrait-carousel');
+  if (carouselFrame) {
+    var carouselImgs = carouselFrame.querySelectorAll('.portrait-secondary');
+    var carouselScanline = carouselFrame.querySelector('.portrait-scanline');
+    var cIdx = 0;
+    var cBusy = false;
+
+    function resetGlitch(img) {
+      img.classList.remove('glitch-in', 'glitch-hold', 'glitch-out');
+      img.removeAttribute('style');
+    }
+
+    function pulseScanline() {
+      if (!carouselScanline) return;
+      carouselScanline.classList.remove('active');
+      void carouselScanline.offsetWidth;
+      carouselScanline.classList.add('active');
+    }
+
+    function glitchCycle() {
+      if (cBusy || carouselImgs.length === 0) return;
+      cBusy = true;
+
+      var img = carouselImgs[cIdx];
+      cIdx = (cIdx + 1) % carouselImgs.length;
+
+      // Reset any leftover state
+      resetGlitch(img);
+
+      // Phase 1: Scanline flash + glitch reveal (0 - 500ms)
+      pulseScanline();
+      img.classList.add('glitch-in');
+
+      // Phase 2: Hold at full opacity (500ms - 1500ms)
+      setTimeout(function() {
+        img.classList.remove('glitch-in');
+        img.classList.add('glitch-hold');
+      }, 500);
+
+      // Phase 3: Glitch dismiss (1500ms - 1900ms)
+      setTimeout(function() {
+        img.classList.remove('glitch-hold');
+        img.classList.add('glitch-out');
+        pulseScanline();
+      }, 1500);
+
+      // Phase 4: Cleanup (2000ms)
+      setTimeout(function() {
+        resetGlitch(img);
+        cBusy = false;
+      }, 2000);
+    }
+
+    // First glitch after 4-5s, then every 6-9s
+    setTimeout(function() {
+      glitchCycle();
+      setInterval(glitchCycle, 6000 + Math.random() * 3000);
+    }, 4000 + Math.random() * 1000);
+  }
+
+  // ===== IMAGE PRELOADER =====
+  var imgCache = {};
+  function loadImg(src, cb) {
+    if (imgCache[src]) { cb(imgCache[src]); return; }
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = function() { imgCache[src] = img; cb(img); };
+    img.onerror = function() { cb(null); };
+    img.src = src;
+  }
+
+  // ===== HELPERS =====
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function drawCorners(ctx, w, h, c, color) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(1, c); ctx.lineTo(1, 1); ctx.lineTo(c, 1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(w-c, 1); ctx.lineTo(w-1, 1); ctx.lineTo(w-1, c); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(1, h-c); ctx.lineTo(1, h-1); ctx.lineTo(c, h-1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(w-c, h-1); ctx.lineTo(w-1, h-1); ctx.lineTo(w-1, h-c); ctx.stroke();
+  }
+
+  // ===== PROJECT THUMBNAIL RENDERERS =====
+  // Each project gets a unique, detailed mockup
+
+  function setupCanvas(canvas) {
+    var dpr = 2;
+    var pw = canvas.parentElement.offsetWidth;
+    var ph = canvas.parentElement.offsetHeight;
+    var w = (pw > 10 ? pw : 400) * dpr;
+    var h = (ph > 10 ? ph : 250) * dpr;
+    canvas.width = w; canvas.height = h;
+    canvas.style.width = '100%'; canvas.style.height = '100%';
+    return { ctx: canvas.getContext('2d'), w: w, h: h, s: dpr };
+  }
+
+  function drawBg(ctx, w, h, r, g, b) {
+    var bg = ctx.createLinearGradient(0, 0, 0, h);
+    bg.addColorStop(0, '#0d0d0e'); bg.addColorStop(1, '#080809');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+    var glow = ctx.createRadialGradient(w*0.5, h*0.5, 0, w*0.5, h*0.5, w*0.55);
+    glow.addColorStop(0, 'rgba('+r+','+g+','+b+',0.05)');
+    glow.addColorStop(1, 'transparent');
+    ctx.fillStyle = glow; ctx.fillRect(0, 0, w, h);
+  }
+
+  // ---- BOOKING: Phone mockup with medical spa content ----
+  function drawBooking(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    drawBg(ctx, w, h, 184, 156, 92);
+
+    // Subtle grid pattern
+    ctx.strokeStyle = 'rgba(184,156,92,0.02)'; ctx.lineWidth = 0.5*s;
+    for (var gi = 0; gi < w; gi += 20*s) { ctx.beginPath(); ctx.moveTo(gi, 0); ctx.lineTo(gi, h); ctx.stroke(); }
+    for (var gj = 0; gj < h; gj += 20*s) { ctx.beginPath(); ctx.moveTo(0, gj); ctx.lineTo(w, gj); ctx.stroke(); }
+
+    // Phone frame -larger, more prominent
+    var pw = 140*s, ph = 240*s;
+    var px = w*0.12, py = (h - ph)/2;
+
+    // Phone shadow
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.4)'; ctx.shadowBlur = 30*s; ctx.shadowOffsetX = 6*s; ctx.shadowOffsetY = 8*s;
+    roundRect(ctx, px, py, pw, ph, 18*s);
+    ctx.fillStyle = '#1a1a1c'; ctx.fill();
+    ctx.restore();
+
+    // Phone bezel
+    roundRect(ctx, px, py, pw, ph, 18*s);
+    ctx.strokeStyle = 'rgba(184,156,92,0.3)'; ctx.lineWidth = 1.5*s; ctx.stroke();
+
+    // Dynamic island
+    roundRect(ctx, px + pw*0.28, py+4*s, pw*0.44, 10*s, 5*s);
+    ctx.fillStyle = '#000'; ctx.fill();
+
+    // Screen area
+    var sx = px + 5*s, sy = py + 18*s, sw = pw - 10*s, sh = ph - 26*s;
+    roundRect(ctx, sx, sy, sw, sh, 4*s);
+    ctx.fillStyle = '#faf6f0'; ctx.fill();
+
+    // Status bar
+    ctx.fillStyle = '#efe9e0'; ctx.fillRect(sx, sy, sw, 14*s);
+    ctx.fillStyle = 'rgba(80,60,30,0.5)'; ctx.font = '500 '+(6*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('9:41', sx+sw/2, sy+10*s);
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(80,60,30,0.3)'; ctx.font = (5*s)+'px Inter, sans-serif';
+    ctx.fillText('LTE', sx+4*s, sy+10*s);
+
+    // App header
+    ctx.fillStyle = '#f4ede4'; ctx.fillRect(sx, sy+14*s, sw, 24*s);
+    ctx.fillStyle = '#8b7b60'; ctx.font = '600 '+(7*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('BOOKING', sx+sw/2, sy+28*s);
+    ctx.fillStyle = '#b0a088'; ctx.font = '300 '+(4.5*s)+'px Inter, sans-serif';
+    ctx.fillText('MEDICAL SPA PLATFORM', sx+sw/2, sy+35*s);
+
+    // Promo banner placeholder (gets replaced by real image)
+    var bannerY = sy+42*s, bannerH = 44*s;
+    roundRect(ctx, sx+5*s, bannerY, sw-10*s, bannerH, 4*s);
+    ctx.fillStyle = '#d8cfc0'; ctx.fill();
+
+    loadImg('thumbs/medspa-promo.jpg', function(img) {
+      if (!img) return;
+      ctx.save();
+      roundRect(ctx, sx+5*s, bannerY, sw-10*s, bannerH, 4*s); ctx.clip();
+      var ar = img.width/img.height, bw = sw-10*s, bh = bw/ar;
+      if (bh < bannerH) { bh = bannerH; bw = bh*ar; }
+      ctx.drawImage(img, sx+5*s+(sw-10*s-bw)/2, bannerY+(bannerH-bh)/2, bw, bh);
+      ctx.restore();
+    });
+
+    // Service category cards -2x2 grid
+    var services = [{t:'Facials', icon:'\u2728'}, {t:'Laser', icon:'\u26A1'}, {t:'Injectables', icon:'\u{1F489}'}, {t:'Body', icon:'\u2B50'}];
+    var cardW = (sw - 16*s) / 2, cardH = 22*s;
+    for (var si = 0; si < 4; si++) {
+      var ccx = sx + 5*s + (si % 2) * (cardW + 6*s);
+      var ccy = sy + 92*s + Math.floor(si / 2) * (cardH + 5*s);
+      roundRect(ctx, ccx, ccy, cardW, cardH, 4*s);
+      ctx.fillStyle = '#f0e9df'; ctx.fill();
+      ctx.strokeStyle = 'rgba(184,156,92,0.12)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+      ctx.fillStyle = '#6b5e4a'; ctx.font = '400 '+(5.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText(services[si].t, ccx+cardW/2, ccy+14*s);
+    }
+
+    // Provider row with heading
+    ctx.fillStyle = '#7a6c55'; ctx.font = '500 '+(5*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText('Our Providers', sx+7*s, sy+150*s);
+    var provColors = ['#c4b09a','#b8a894','#a89a88','#beae9c'];
+    for (var pi = 0; pi < 4; pi++) {
+      var pcx = sx + 16*s + pi*24*s, pcy = sy+162*s;
+      ctx.beginPath(); ctx.arc(pcx, pcy, 10*s, 0, Math.PI*2);
+      ctx.fillStyle = provColors[pi]; ctx.fill();
+      ctx.strokeStyle = 'rgba(184,156,92,0.25)'; ctx.lineWidth = 0.8*s; ctx.stroke();
+    }
+    loadImg('thumbs/medspa-provider.jpg', function(img) {
+      if (!img) return;
+      ctx.save();
+      ctx.beginPath(); ctx.arc(sx+16*s, sy+162*s, 10*s, 0, Math.PI*2); ctx.clip();
+      ctx.drawImage(img, sx+16*s-10*s, sy+162*s-10*s, 20*s, 20*s);
+      ctx.restore();
+    });
+
+    // Book Now CTA
+    roundRect(ctx, sx+5*s, sy+182*s, sw-10*s, 18*s, 6*s);
+    var btnGrad = ctx.createLinearGradient(0, sy+182*s, 0, sy+200*s);
+    btnGrad.addColorStop(0, 'rgba(184,156,92,0.9)'); btnGrad.addColorStop(1, 'rgba(160,136,72,0.9)');
+    ctx.fillStyle = btnGrad; ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = '600 '+(6*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('Book Appointment', sx+sw/2, sy+194*s);
+
+    // Tab bar
+    ctx.fillStyle = '#f4ede4'; ctx.fillRect(sx, sy+sh-18*s, sw, 18*s);
+    ctx.strokeStyle = 'rgba(184,156,92,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(sx, sy+sh-18*s); ctx.lineTo(sx+sw, sy+sh-18*s); ctx.stroke();
+    var tabs = ['Home','Services','Book','Profile'];
+    ctx.font = (4.5*s)+'px Inter, sans-serif';
+    for (var ti = 0; ti < tabs.length; ti++) {
+      var tx = sx + sw/(tabs.length*2) + ti*(sw/tabs.length);
+      ctx.fillStyle = ti === 0 ? '#8b7b60' : '#b8a898';
+      ctx.fillText(tabs[ti], tx, sy+sh-6*s);
+    }
+
+    // === Right side: elegant feature showcase ===
+    var rx = w*0.5;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(184,156,92,0.4)'; ctx.font = '200 '+(8*s)+'px Inter, sans-serif';
+    ctx.letterSpacing = '3px';
+    ctx.fillText('MEDICAL SPA PLATFORM', rx, h*0.18);
+    ctx.fillStyle = 'rgba(240,235,224,0.75)'; ctx.font = '300 '+(18*s)+'px Cormorant Garamond, serif';
+    ctx.fillText('Mobile', rx, h*0.29);
+    ctx.fillText('Booking', rx, h*0.39);
+
+    // Thin rule
+    ctx.fillStyle = 'rgba(184,156,92,0.2)'; ctx.fillRect(rx, h*0.43, 40*s, 1);
+
+    // Feature list with better alignment
+    var features = [
+      {t:'15+ Screens', d:'Complete booking flow'},
+      {t:'Stripe Integration', d:'Secure payment processing'},
+      {t:'Provider Calendar', d:'Real-time availability'},
+      {t:'Push Alerts', d:'Appointment reminders'},
+      {t:'Admin Panel', d:'Analytics & management'}
+    ];
+    ctx.font = (7.5*s)+'px Inter, sans-serif';
+    for (var fi = 0; fi < features.length; fi++) {
+      var fy = h*0.48 + fi*20*s;
+      // Bullet dash
+      ctx.fillStyle = 'rgba(184,156,92,0.4)'; ctx.fillText('|', rx, fy+4*s);
+      ctx.fillStyle = 'rgba(240,235,224,0.55)'; ctx.font = '400 '+(7*s)+'px Inter, sans-serif';
+      ctx.fillText(features[fi].t, rx+14*s, fy+4*s);
+      ctx.fillStyle = 'rgba(240,235,224,0.2)'; ctx.font = '200 '+(6.5*s)+'px Inter, sans-serif';
+      ctx.fillText(features[fi].d, rx+100*s, fy+4*s);
+      ctx.font = (7.5*s)+'px Inter, sans-serif';
+    }
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(184,156,92,0.15)');
+  }
+
+  // ---- TRADING: Real dashboard with live-looking charts ----
+  function drawTrading(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    drawBg(ctx, w, h, 58, 143, 212);
+
+    // Header bar
+    ctx.fillStyle = 'rgba(58,143,212,0.06)'; ctx.fillRect(0, 0, w, 26*s);
+    ctx.strokeStyle = 'rgba(58,143,212,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 26*s); ctx.lineTo(w, 26*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(58,143,212,0.5)'; ctx.fillRect(0, 0, 3*s, 26*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.75)'; ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText('Master Trade Bot', 14*s, 17*s);
+    // Connection badge
+    ctx.beginPath(); ctx.arc(w-12*s, 13*s, 3*s, 0, Math.PI*2);
+    ctx.fillStyle = '#4ade80'; ctx.fill();
+    ctx.fillStyle = 'rgba(58,143,212,0.4)'; ctx.font = (7*s)+'px monospace';
+    ctx.textAlign = 'right'; ctx.fillText('LIVE', w-20*s, 17*s);
+    ctx.textAlign = 'left';
+
+    // Left panel - Engine status
+    var lw = w * 0.28, lx = 6*s, ly = 32*s;
+    ctx.fillStyle = 'rgba(58,143,212,0.025)'; ctx.fillRect(lx, ly, lw, h-ly-6*s);
+    ctx.strokeStyle = 'rgba(58,143,212,0.05)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(lx, ly, lw, h-ly-6*s);
+    ctx.fillStyle = 'rgba(58,143,212,0.35)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.letterSpacing = '2px'; ctx.fillText('ENGINES', lx+8*s, ly+12*s);
+
+    var engines = [
+      {name:'Solana Jupiter', status:'LIVE', color:'#4ade80'},
+      {name:'Polymarket CLOB', status:'LIVE', color:'#4ade80'},
+      {name:'Binance', status:'LIVE', color:'#4ade80'},
+      {name:'Coinbase', status:'PAPER', color:'#fbbf24'},
+      {name:'ETH DeFi', status:'IDLE', color:'#64748b'},
+      {name:'Kraken', status:'PAPER', color:'#fbbf24'}
+    ];
+    for (var ei = 0; ei < engines.length; ei++) {
+      var ey = ly + 22*s + ei * 16*s;
+      ctx.beginPath(); ctx.arc(lx+12*s, ey+4*s, 2*s, 0, Math.PI*2);
+      ctx.fillStyle = engines[ei].color; ctx.fill();
+      ctx.fillStyle = 'rgba(240,235,224,0.45)'; ctx.font = (6.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'left'; ctx.fillText(engines[ei].name, lx+20*s, ey+7*s);
+      ctx.fillStyle = engines[ei].color === '#4ade80' ? 'rgba(74,222,128,0.4)' : 'rgba(240,235,224,0.15)';
+      ctx.font = (5.5*s)+'px monospace';
+      ctx.textAlign = 'right'; ctx.fillText(engines[ei].status, lx+lw-6*s, ey+7*s);
+      ctx.textAlign = 'left';
+    }
+
+    // Center - Candlestick chart (deterministic seeded)
+    var cx = lx + lw + 6*s, cw = w*0.44, cy = 32*s, ch = h*0.54;
+    ctx.fillStyle = 'rgba(58,143,212,0.025)'; ctx.fillRect(cx, cy, cw, ch);
+    ctx.strokeStyle = 'rgba(58,143,212,0.05)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(cx, cy, cw, ch);
+
+    // Chart header
+    ctx.fillStyle = 'rgba(58,143,212,0.35)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.fillText('BTC/USD', cx+8*s, cy+12*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.65)'; ctx.font = '500 '+(10*s)+'px monospace';
+    ctx.fillText('$62,441.20', cx+55*s, cy+12*s);
+    ctx.fillStyle = '#4ade80'; ctx.font = (7*s)+'px monospace';
+    ctx.textAlign = 'right'; ctx.fillText('+1.24%', cx+cw-8*s, cy+12*s);
+    ctx.textAlign = 'left';
+
+    // Grid lines
+    ctx.strokeStyle = 'rgba(58,143,212,0.03)'; ctx.lineWidth = 0.5*s;
+    for (var gl = 0; gl < 5; gl++) {
+      var gy = cy + 20*s + gl * (ch-30*s)/4;
+      ctx.beginPath(); ctx.moveTo(cx, gy); ctx.lineTo(cx+cw, gy); ctx.stroke();
+    }
+
+    // Deterministic candlesticks
+    var chartY = cy + 20*s, chartH = ch - 32*s;
+    var candles = 40, seed = 62000;
+    var priceData = [];
+    for (var ci = 0; ci < candles; ci++) {
+      seed += Math.sin(ci*1.3+0.5)*180 + Math.cos(ci*0.7+1.2)*120 + Math.sin(ci*2.1)*60;
+      var open = seed, close = seed + Math.sin(ci*2.3)*280 + Math.cos(ci*1.1)*150;
+      var hi = Math.max(open, close) + Math.abs(Math.sin(ci*3.1))*180;
+      var lo = Math.min(open, close) - Math.abs(Math.cos(ci*2.7))*180;
+      priceData.push({o:open,c:close,h:hi,l:lo});
+    }
+    var allPrices = priceData.reduce(function(a,c){ return a.concat([c.h,c.l]); }, []);
+    var pMin = Math.min.apply(null, allPrices), pMax = Math.max.apply(null, allPrices);
+    var norm = function(v) { return chartY + chartH - ((v - pMin) / (pMax - pMin)) * chartH; };
+
+    // EMA overlay
+    ctx.strokeStyle = 'rgba(58,143,212,0.25)'; ctx.lineWidth = 1*s;
+    ctx.beginPath();
+    var ema = priceData[0].c;
+    for (var em = 0; em < candles; em++) {
+      ema = ema * 0.85 + priceData[em].c * 0.15;
+      var emx = cx + 8*s + em * (cw-16*s)/candles + (cw-16*s)/candles/2;
+      if (em === 0) ctx.moveTo(emx, norm(ema)); else ctx.lineTo(emx, norm(ema));
+    }
+    ctx.stroke();
+
+    for (var ci2 = 0; ci2 < candles; ci2++) {
+      var d = priceData[ci2], isGreen = d.c > d.o;
+      var cxp = cx + 8*s + ci2 * (cw-16*s)/candles;
+      var barW = Math.max(1.5*s, (cw-16*s)/candles * 0.55);
+      ctx.strokeStyle = isGreen ? 'rgba(74,222,128,0.35)' : 'rgba(248,113,113,0.35)';
+      ctx.lineWidth = 0.8*s;
+      ctx.beginPath(); ctx.moveTo(cxp+barW/2, norm(d.h)); ctx.lineTo(cxp+barW/2, norm(d.l)); ctx.stroke();
+      ctx.fillStyle = isGreen ? 'rgba(74,222,128,0.55)' : 'rgba(248,113,113,0.45)';
+      var bodyTop = norm(Math.max(d.o, d.c));
+      ctx.fillRect(cxp, bodyTop, barW, Math.max(1, Math.abs(norm(d.o) - norm(d.c))));
+    }
+
+    // Volume bars below chart
+    var vy = cy + ch + 3*s, vh = h - vy - 6*s;
+    ctx.fillStyle = 'rgba(58,143,212,0.025)'; ctx.fillRect(cx, vy, cw, vh);
+    ctx.strokeStyle = 'rgba(58,143,212,0.05)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(cx, vy, cw, vh);
+    for (var vi = 0; vi < candles; vi++) {
+      var vx = cx + 8*s + vi * (cw-16*s)/candles;
+      var vBarW = Math.max(1.5*s, (cw-16*s)/candles * 0.55);
+      var vBarH = (0.15 + Math.abs(Math.sin(vi*1.7))*0.85) * vh * 0.75;
+      var isUp = priceData[vi].c > priceData[vi].o;
+      ctx.fillStyle = isUp ? 'rgba(74,222,128,0.12)' : 'rgba(248,113,113,0.1)';
+      ctx.fillRect(vx, vy + vh - vBarH, vBarW, vBarH);
+    }
+
+    // Right panel - P&L + positions
+    var rx = cx + cw + 6*s, rw = w - rx - 6*s;
+    ctx.fillStyle = 'rgba(58,143,212,0.025)'; ctx.fillRect(rx, cy, rw, h-cy-6*s);
+    ctx.strokeStyle = 'rgba(58,143,212,0.05)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(rx, cy, rw, h-cy-6*s);
+
+    // Total P&L
+    ctx.fillStyle = 'rgba(58,143,212,0.35)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.fillText('DAILY P&L', rx+8*s, cy+12*s);
+    ctx.fillStyle = '#4ade80'; ctx.font = '500 '+(13*s)+'px monospace';
+    ctx.fillText('+$2,847', rx+8*s, cy+30*s);
+    ctx.fillStyle = 'rgba(74,222,128,0.4)'; ctx.font = (7*s)+'px monospace';
+    ctx.fillText('+2.41%', rx+8*s, cy+42*s);
+
+    // Divider
+    ctx.fillStyle = 'rgba(58,143,212,0.06)'; ctx.fillRect(rx+6*s, cy+50*s, rw-12*s, 0.5*s);
+
+    // Open positions
+    ctx.fillStyle = 'rgba(58,143,212,0.3)'; ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillText('OPEN POSITIONS', rx+8*s, cy+62*s);
+    var positions = [
+      {pair:'BTC/USD', side:'LONG', pnl:'+1.8%', c:'#4ade80'},
+      {pair:'SOL/USD', side:'LONG', pnl:'+3.2%', c:'#4ade80'},
+      {pair:'ETH/USD', side:'FLAT', pnl:'0.0%', c:'#64748b'},
+      {pair:'MATIC', side:'SHORT', pnl:'-0.4%', c:'#f87171'}
+    ];
+    for (var pi = 0; pi < positions.length; pi++) {
+      var py = cy + 72*s + pi * 14*s;
+      ctx.fillStyle = 'rgba(240,235,224,0.35)'; ctx.font = (6*s)+'px monospace';
+      ctx.textAlign = 'left'; ctx.fillText(positions[pi].pair, rx+8*s, py);
+      ctx.fillStyle = positions[pi].c; ctx.font = (5.5*s)+'px monospace';
+      ctx.textAlign = 'right'; ctx.fillText(positions[pi].pnl, rx+rw-6*s, py);
+      ctx.textAlign = 'left';
+    }
+
+    // WebSocket indicator
+    ctx.fillStyle = 'rgba(58,143,212,0.06)'; ctx.fillRect(rx+6*s, h-22*s, rw-12*s, 14*s);
+    ctx.fillStyle = 'rgba(58,143,212,0.3)'; ctx.font = (5*s)+'px monospace';
+    ctx.textAlign = 'center'; ctx.fillText('WS CONNECTED', rx+rw/2, h-13*s);
+    ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(58,143,212,0.15)');
+  }
+
+  // ---- PROFITDESK: Agent orchestration diagram ----
+  function drawProfitDesk(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    drawBg(ctx, w, h, 180, 120, 80);
+
+    // Title bar
+    ctx.fillStyle = 'rgba(180,120,80,0.05)'; ctx.fillRect(0, 0, w, 26*s);
+    ctx.strokeStyle = 'rgba(180,120,80,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 26*s); ctx.lineTo(w, 26*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(180,120,80,0.5)'; ctx.fillRect(0, 0, 3*s, 26*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.7)'; ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText('Profit Desk', 14*s, 17*s);
+    ctx.fillStyle = 'rgba(180,120,80,0.35)'; ctx.font = '200 '+(7*s)+'px Inter, sans-serif';
+    ctx.fillText('Multi-Agent Orchestration', 90*s, 17*s);
+
+    // Central PM agent -larger, glowing
+    var pmx = w*0.5, pmy = h*0.44;
+    // Glow ring
+    ctx.beginPath(); ctx.arc(pmx, pmy, 34*s, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(180,120,80,0.04)'; ctx.fill();
+    // Outer ring
+    ctx.beginPath(); ctx.arc(pmx, pmy, 28*s, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(180,120,80,0.1)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(180,120,80,0.35)'; ctx.lineWidth = 1.5*s; ctx.stroke();
+    // Inner ring
+    ctx.beginPath(); ctx.arc(pmx, pmy, 20*s, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(180,120,80,0.15)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+    ctx.fillStyle = 'rgba(240,235,224,0.75)'; ctx.font = '600 '+(10*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('PM', pmx, pmy+4*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.25)'; ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillText('Portfolio Manager', pmx, pmy+16*s);
+
+    // Agent nodes with animated-looking connections
+    var agents = [
+      {name:'Researcher', icon:'R', x:0.18, y:0.32, c:'rgba(120,180,220,'},
+      {name:'Backtester', icon:'B', x:0.18, y:0.68, c:'rgba(160,200,120,'},
+      {name:'Risk Mgr', icon:'$', x:0.82, y:0.32, c:'rgba(220,160,100,'},
+      {name:'Exec Trader', icon:'E', x:0.82, y:0.68, c:'rgba(200,130,130,'},
+      {name:'Ops Monitor', icon:'M', x:0.5, y:0.86, c:'rgba(160,140,200,'}
+    ];
+    for (var ai = 0; ai < agents.length; ai++) {
+      var ax = w*agents[ai].x, ay = h*agents[ai].y, ac = agents[ai].c;
+      // Connection line with gradient
+      ctx.strokeStyle = 'rgba(180,120,80,0.08)'; ctx.lineWidth = 1*s;
+      ctx.setLineDash([3*s, 5*s]);
+      ctx.beginPath(); ctx.moveTo(pmx, pmy); ctx.lineTo(ax, ay); ctx.stroke();
+      ctx.setLineDash([]);
+      // Data flow dots along the line
+      for (var dd = 0; dd < 3; dd++) {
+        var t = 0.3 + dd * 0.2;
+        var dx = pmx + (ax - pmx) * t, dy = pmy + (ay - pmy) * t;
+        ctx.beginPath(); ctx.arc(dx, dy, 1.5*s, 0, Math.PI*2);
+        ctx.fillStyle = ac + (0.15 + dd*0.1) + ')'; ctx.fill();
+      }
+      // Node glow
+      ctx.beginPath(); ctx.arc(ax, ay, 22*s, 0, Math.PI*2);
+      ctx.fillStyle = ac + '0.03)'; ctx.fill();
+      // Node
+      ctx.beginPath(); ctx.arc(ax, ay, 16*s, 0, Math.PI*2);
+      ctx.fillStyle = ac + '0.06)'; ctx.fill();
+      ctx.strokeStyle = ac + '0.25)'; ctx.lineWidth = 1*s; ctx.stroke();
+      ctx.fillStyle = ac + '0.7)'; ctx.font = '600 '+(8*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText(agents[ai].icon, ax, ay+3*s);
+      ctx.fillStyle = 'rgba(240,235,224,0.3)'; ctx.font = '300 '+(5.5*s)+'px Inter, sans-serif';
+      ctx.fillText(agents[ai].name, ax, ay+26*s);
+    }
+
+    // Strategy pills at bottom
+    ctx.textAlign = 'left';
+    var strats = [
+      {t:'Momentum', d:'EMA Crossover', c:'#4ade80'},
+      {t:'Mean Rev', d:'BB + RSI', c:'#60a5fa'},
+      {t:'Breakout', d:'Donchian', c:'#fbbf24'},
+      {t:'Whale Flow', d:'UW Tracking', c:'#c084fc'}
+    ];
+    var stratW = (w - 24*s) / 4;
+    for (var si = 0; si < strats.length; si++) {
+      var sx = 8*s + si * (stratW + 4*s), sy = h - 30*s;
+      roundRect(ctx, sx, sy, stratW - 4*s, 22*s, 3*s);
+      ctx.fillStyle = 'rgba(180,120,80,0.04)'; ctx.fill();
+      ctx.strokeStyle = 'rgba(180,120,80,0.06)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+      // Status dot
+      ctx.beginPath(); ctx.arc(sx+8*s, sy+11*s, 2*s, 0, Math.PI*2);
+      ctx.fillStyle = strats[si].c; ctx.fill();
+      ctx.fillStyle = 'rgba(240,235,224,0.45)'; ctx.font = '400 '+(6*s)+'px Inter, sans-serif';
+      ctx.fillText(strats[si].t, sx+14*s, sy+10*s);
+      ctx.fillStyle = 'rgba(240,235,224,0.18)'; ctx.font = '200 '+(5*s)+'px Inter, sans-serif';
+      ctx.fillText(strats[si].d, sx+14*s, sy+18*s);
+    }
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(180,120,80,0.15)');
+  }
+
+  // ---- RTS: Isometric game view ----
+  function drawRTS(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    drawBg(ctx, w, h, 192, 160, 80);
+
+    // Isometric grid -deterministic terrain
+    var tileW = 30*s, tileH = 15*s;
+    var ox = w*0.48, oy = h*0.15;
+    for (var gy = 0; gy < 9; gy++) {
+      for (var gx = 0; gx < 9; gx++) {
+        var ix = ox + (gx - gy) * tileW/2;
+        var iy = oy + (gx + gy) * tileH/2;
+        ctx.beginPath();
+        ctx.moveTo(ix, iy); ctx.lineTo(ix+tileW/2, iy+tileH/2);
+        ctx.lineTo(ix, iy+tileH); ctx.lineTo(ix-tileW/2, iy+tileH/2);
+        ctx.closePath();
+        // Deterministic terrain
+        var terrain = Math.sin(gx*2.3+gy*1.7) * 0.5 + 0.5;
+        if (terrain > 0.7) {
+          ctx.fillStyle = 'rgba(60,100,45,' + (0.06 + terrain*0.06) + ')'; ctx.fill(); // Forest
+        } else if (terrain > 0.4) {
+          ctx.fillStyle = 'rgba(80,110,50,' + (0.03 + terrain*0.03) + ')'; ctx.fill(); // Grass
+        } else {
+          ctx.fillStyle = 'rgba(120,105,70,0.03)'; ctx.fill(); // Sand
+        }
+        ctx.strokeStyle = 'rgba(192,160,80,0.04)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+
+        // Elevation blocks for buildings (deterministic)
+        if ((gx === 2 && gy === 2) || (gx === 6 && gy === 5)) {
+          var bx = ix, by = iy - 8*s;
+          ctx.fillStyle = 'rgba(160,140,100,0.15)';
+          ctx.beginPath();
+          ctx.moveTo(bx, by); ctx.lineTo(bx+tileW/2, by+tileH/2);
+          ctx.lineTo(bx+tileW/2, by+tileH/2+8*s); ctx.lineTo(bx, by+tileH+8*s);
+          ctx.lineTo(bx-tileW/2, by+tileH/2+8*s); ctx.lineTo(bx-tileW/2, by+tileH/2);
+          ctx.closePath(); ctx.fill();
+          ctx.strokeStyle = 'rgba(192,160,80,0.12)'; ctx.stroke();
+        }
+      }
+    }
+
+    // Units -blue team and red team (deterministic positions)
+    var blueUnits = [[2,3],[3,3],[2,4],[3,4],[1,3]];
+    var redUnits = [[6,5],[5,6],[6,6],[7,5],[7,6]];
+    function drawUnit(gx, gy, color, outline) {
+      var ux = ox + (gx - gy) * tileW/2;
+      var uy = oy + (gx + gy) * tileH/2 + tileH/2;
+      // Shadow
+      ctx.beginPath(); ctx.ellipse(ux, uy+2*s, 3*s, 1.5*s, 0, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(0,0,0,0.2)'; ctx.fill();
+      // Unit body
+      ctx.beginPath(); ctx.arc(ux, uy-2*s, 3*s, 0, Math.PI*2);
+      ctx.fillStyle = color; ctx.fill();
+      ctx.strokeStyle = outline; ctx.lineWidth = 0.5*s; ctx.stroke();
+    }
+    for (var bi2 = 0; bi2 < blueUnits.length; bi2++) drawUnit(blueUnits[bi2][0], blueUnits[bi2][1], 'rgba(80,160,255,0.7)', 'rgba(120,190,255,0.5)');
+    for (var ri = 0; ri < redUnits.length; ri++) drawUnit(redUnits[ri][0], redUnits[ri][1], 'rgba(255,90,90,0.7)', 'rgba(255,140,140,0.5)');
+
+    // Selection box around blue units
+    var selX = ox + (1-4)*tileW/2, selY = oy + (1+3)*tileH/2;
+    ctx.strokeStyle = 'rgba(80,160,255,0.3)'; ctx.lineWidth = 1*s;
+    ctx.setLineDash([3*s, 2*s]);
+    ctx.strokeRect(selX-10*s, selY-6*s, 80*s, 50*s);
+    ctx.setLineDash([]);
+
+    // HUD -top bar
+    ctx.fillStyle = 'rgba(0,0,0,0.65)'; ctx.fillRect(0, 0, w, 22*s);
+    ctx.fillStyle = 'rgba(192,160,80,0.8)'; ctx.font = '600 '+(8*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText('Bloodlines', 10*s, 15*s);
+    // Resource icons
+    ctx.textAlign = 'right'; ctx.font = (6.5*s)+'px monospace';
+    ctx.fillStyle = '#ffd700'; ctx.fillText('1,250', w-10*s, 10*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.3)'; ctx.fillText('Gold', w-50*s, 10*s);
+    ctx.fillStyle = '#87ceeb'; ctx.fillText('48', w-10*s, 20*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.3)'; ctx.fillText('Units', w-30*s, 20*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.25)'; ctx.fillText('Pop: 32/50', w-60*s, 20*s);
+
+    // Minimap corner
+    var mmx = w-65*s, mmy = h-55*s, mmw = 56*s, mmh = 46*s;
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fillRect(mmx, mmy, mmw, mmh);
+    ctx.strokeStyle = 'rgba(192,160,80,0.25)'; ctx.lineWidth = 1*s; ctx.strokeRect(mmx, mmy, mmw, mmh);
+    // Terrain blotches
+    ctx.fillStyle = 'rgba(60,100,45,0.2)'; ctx.fillRect(mmx+8*s, mmy+6*s, 18*s, 14*s);
+    ctx.fillStyle = 'rgba(60,100,45,0.15)'; ctx.fillRect(mmx+28*s, mmy+20*s, 16*s, 12*s);
+    // Unit clusters
+    for (var md = 0; md < 5; md++) {
+      ctx.beginPath(); ctx.arc(mmx+12*s+md*3*s, mmy+18*s, 1.5*s, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(80,160,255,0.6)'; ctx.fill();
+    }
+    for (var md2 = 0; md2 < 5; md2++) {
+      ctx.beginPath(); ctx.arc(mmx+34*s+md2*3*s, mmy+30*s, 1.5*s, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,90,90,0.6)'; ctx.fill();
+    }
+    // Viewport indicator
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeRect(mmx+8*s, mmy+10*s, 20*s, 16*s);
+
+    // Bottom action bar
+    ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(0, h-26*s, w*0.65, 26*s);
+    var actions = ['Move', 'Attack', 'Build', 'Gather', 'Patrol', 'Stop'];
+    ctx.font = (6*s)+'px Inter, sans-serif'; ctx.textAlign = 'center';
+    for (var ab = 0; ab < actions.length; ab++) {
+      var abx = 28*s + ab * 38*s;
+      roundRect(ctx, abx-15*s, h-21*s, 30*s, 14*s, 2*s);
+      ctx.fillStyle = ab === 0 ? 'rgba(192,160,80,0.15)' : 'rgba(192,160,80,0.06)'; ctx.fill();
+      ctx.strokeStyle = ab === 0 ? 'rgba(192,160,80,0.3)' : 'rgba(192,160,80,0.12)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+      ctx.fillStyle = ab === 0 ? 'rgba(240,235,224,0.6)' : 'rgba(240,235,224,0.3)'; ctx.fillText(actions[ab], abx, h-11*s);
+    }
+    ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(192,160,80,0.15)');
+  }
+
+  // ---- PLATFORMER: 3D game scene ----
+  function drawPlatformer(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+
+    // Rich sky gradient
+    var sky = ctx.createLinearGradient(0, 0, 0, h);
+    sky.addColorStop(0, '#0c1628'); sky.addColorStop(0.3, '#1a2d4a'); sky.addColorStop(0.6, '#243a58'); sky.addColorStop(1, '#162a1e');
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
+
+    // Stars (deterministic)
+    for (var si = 0; si < 40; si++) {
+      var sx2 = (Math.sin(si*7.3+2.1)*0.5+0.5)*w;
+      var sy2 = (Math.sin(si*3.7+1.4)*0.5+0.5)*h*0.4;
+      var sr = (0.4 + Math.sin(si*4.2)*0.3)*s;
+      ctx.beginPath(); ctx.arc(sx2, sy2, sr, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,255,255,' + (0.1+Math.sin(si*2.9)*0.15) + ')'; ctx.fill();
+    }
+
+    // Background mountains
+    ctx.beginPath(); ctx.moveTo(0, h*0.55);
+    for (var mi = 0; mi <= 10; mi++) {
+      var mx = mi/10*w, my = h*0.55 - Math.sin(mi*1.2+0.5)*h*0.12 - Math.cos(mi*0.8)*h*0.05;
+      ctx.lineTo(mx, my);
+    }
+    ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath();
+    ctx.fillStyle = 'rgba(20,40,30,0.4)'; ctx.fill();
+
+    // Ground platforms with 3D depth
+    var platforms = [
+      {x:0.02, y:0.78, w:0.28, main:true}, {x:0.34, y:0.62, w:0.22}, {x:0.62, y:0.5, w:0.16},
+      {x:0.8, y:0.66, w:0.18}, {x:0.18, y:0.42, w:0.14}, {x:0.48, y:0.36, w:0.12}
+    ];
+    for (var pi = 0; pi < platforms.length; pi++) {
+      var p = platforms[pi];
+      var ppx = p.x*w, ppy = p.y*h, ppw = p.w*w, pph = 10*s;
+      var depth = 6*s;
+      // Front face (depth)
+      ctx.fillStyle = '#1e4a16'; ctx.fillRect(ppx, ppy+pph, ppw, depth);
+      // Top surface
+      var pg = ctx.createLinearGradient(0, ppy, 0, ppy+pph);
+      pg.addColorStop(0, '#4a9a38'); pg.addColorStop(1, '#2a7020');
+      ctx.fillStyle = pg; ctx.fillRect(ppx, ppy, ppw, pph);
+      // Grass highlights
+      ctx.fillStyle = '#6ad44a'; ctx.fillRect(ppx, ppy, ppw, 2*s);
+      // Grass detail tufts
+      for (var gt = 0; gt < ppw/(6*s); gt++) {
+        var gx = ppx + gt*6*s + 3*s;
+        ctx.fillStyle = 'rgba(110,220,70,0.3)';
+        ctx.fillRect(gx, ppy-1*s, 1*s, 2*s);
+      }
+    }
+
+    // Player character -more detailed
+    var playerX = w*0.37, playerY = h*0.54;
+    // Shadow
+    ctx.beginPath(); ctx.ellipse(playerX, playerY+14*s, 6*s, 2*s, 0, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.fill();
+    // Legs
+    ctx.fillStyle = '#2255aa'; ctx.fillRect(playerX-4*s, playerY+8*s, 3*s, 6*s);
+    ctx.fillRect(playerX+1*s, playerY+8*s, 3*s, 6*s);
+    // Body
+    ctx.fillStyle = '#4488ff'; ctx.fillRect(playerX-5*s, playerY, 10*s, 10*s);
+    // Cape/trail
+    ctx.fillStyle = 'rgba(255,80,80,0.5)';
+    ctx.beginPath(); ctx.moveTo(playerX+5*s, playerY+2*s); ctx.lineTo(playerX+12*s, playerY+8*s);
+    ctx.lineTo(playerX+5*s, playerY+10*s); ctx.closePath(); ctx.fill();
+    // Head
+    ctx.beginPath(); ctx.arc(playerX, playerY-4*s, 6*s, 0, Math.PI*2);
+    ctx.fillStyle = '#ffcc88'; ctx.fill();
+    ctx.strokeStyle = 'rgba(200,160,100,0.3)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+    // Eyes
+    ctx.fillStyle = '#333'; ctx.fillRect(playerX-3*s, playerY-5*s, 2*s, 2.5*s);
+    ctx.fillRect(playerX+1*s, playerY-5*s, 2*s, 2.5*s);
+    // Eye shine
+    ctx.fillStyle = '#fff'; ctx.fillRect(playerX-2.5*s, playerY-5*s, 1*s, 1*s);
+    ctx.fillRect(playerX+1.5*s, playerY-5*s, 1*s, 1*s);
+
+    // Collectible coins with glow
+    var coins = [[0.55, 0.43], [0.60, 0.43], [0.65, 0.43], [0.20, 0.34], [0.26, 0.34]];
+    for (var ci = 0; ci < coins.length; ci++) {
+      var ccx = coins[ci][0]*w, ccy = coins[ci][1]*h;
+      // Glow
+      ctx.beginPath(); ctx.arc(ccx, ccy, 6*s, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,215,0,0.1)'; ctx.fill();
+      // Coin
+      ctx.beginPath(); ctx.arc(ccx, ccy, 4*s, 0, Math.PI*2);
+      ctx.fillStyle = '#ffd700'; ctx.fill();
+      ctx.strokeStyle = '#daa520'; ctx.lineWidth = 0.8*s; ctx.stroke();
+      // $ symbol
+      ctx.fillStyle = '#b8860b'; ctx.font = 'bold '+(4*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText('$', ccx, ccy+1.5*s);
+    }
+
+    // HUD overlay -top bar
+    var hudGrad = ctx.createLinearGradient(0, 0, 0, 28*s);
+    hudGrad.addColorStop(0, 'rgba(0,0,0,0.7)'); hudGrad.addColorStop(1, 'rgba(0,0,0,0.3)');
+    ctx.fillStyle = hudGrad; ctx.fillRect(0, 0, w, 28*s);
+
+    ctx.fillStyle = '#6ad44a'; ctx.font = 'bold '+(9*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText('Jump Quest!', 10*s, 17*s);
+
+    // XP bar with rounded edges
+    var xpX = w*0.32, xpW = w*0.32;
+    roundRect(ctx, xpX, 7*s, xpW, 12*s, 6*s);
+    ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fill();
+    roundRect(ctx, xpX, 7*s, xpW*0.65, 12*s, 6*s);
+    ctx.fillStyle = 'rgba(106,212,74,0.5)'; ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = '500 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('LVL 7 | 1,240 / 1,900 XP', xpX+xpW/2, 15.5*s);
+
+    // Coins and hearts
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#ffd700'; ctx.font = '600 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('350', w-12*s, 13*s);
+    ctx.fillStyle = '#ff4466'; ctx.font = (8*s)+'px Inter, sans-serif';
+    ctx.fillText('\u2764 \u2764 \u2764', w-12*s, 24*s);
+
+    // Controller hints -bottom right
+    roundRect(ctx, w-85*s, h-22*s, 78*s, 16*s, 4*s);
+    ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.font = (5.5*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('A Jump   X Boost   Y Shield', w-46*s, h-11.5*s);
+    ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(106,196,74,0.15)');
+  }
+
+  // ---- MESSENGER: Chat UI ----
+  function drawMessenger(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    drawBg(ctx, w, h, 138, 106, 212);
+
+    // App header bar
+    ctx.fillStyle = 'rgba(138,106,212,0.05)'; ctx.fillRect(0, 0, w, 26*s);
+    ctx.strokeStyle = 'rgba(138,106,212,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 26*s); ctx.lineTo(w, 26*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(138,106,212,0.5)'; ctx.fillRect(0, 0, 3*s, 26*s);
+
+    // Contact avatar + name
+    ctx.beginPath(); ctx.arc(22*s, 13*s, 8*s, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(138,106,212,0.2)'; ctx.fill();
+    ctx.fillStyle = 'rgba(240,235,224,0.5)'; ctx.font = '500 '+(7*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('A', 22*s, 16*s);
+    ctx.textAlign = 'left';
+
+    ctx.fillStyle = 'rgba(240,235,224,0.7)'; ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
+    ctx.fillText('Alex Chen', 36*s, 11*s);
+    ctx.fillStyle = 'rgba(138,106,212,0.4)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.fillText('Online', 36*s, 21*s);
+    // Online dot
+    ctx.beginPath(); ctx.arc(58*s, 18*s, 2*s, 0, Math.PI*2);
+    ctx.fillStyle = '#4ade80'; ctx.fill();
+
+    // Lock badge
+    ctx.fillStyle = 'rgba(138,106,212,0.4)'; ctx.font = (7*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('\uD83D\uDD12 Encrypted', w-12*s, 16*s);
+    ctx.textAlign = 'left';
+
+    // Chat area with better-spaced bubbles
+    var chatY = 32*s;
+    var msgs = [
+      {in:true, text:'Hey, the new build looks solid', time:'2:41 PM'},
+      {in:false, text:'Thanks! Just pushed the auth flow', time:'2:42 PM'},
+      {in:true, text:'X3DH handshake working perfectly', time:'2:42 PM'},
+      {in:true, text:'Forward secrecy is verified', time:'2:43 PM'},
+      {in:false, text:'Double Ratchet rekeying every msg', time:'2:44 PM'},
+      {in:true, text:'Ship it', time:'2:44 PM'},
+    ];
+    var my = chatY + 8*s;
+    for (var mi = 0; mi < msgs.length; mi++) {
+      var msg = msgs[mi];
+      ctx.font = (7*s)+'px Inter, sans-serif';
+      var textW = ctx.measureText(msg.text).width;
+      var mw = Math.min(w*0.55, textW + 24*s);
+      mw = Math.max(mw, 60*s);
+      var mh = 20*s;
+      var mx = msg.in ? 12*s : w - mw - 12*s;
+
+      // Bubble
+      roundRect(ctx, mx, my, mw, mh, msg.in ? [2*s, 8*s, 8*s, 8*s] : [8*s, 2*s, 8*s, 8*s]);
+      // Use simple roundRect since custom radii not supported, just use uniform
+      roundRect(ctx, mx, my, mw, mh, 6*s);
+      ctx.fillStyle = msg.in ? 'rgba(138,106,212,0.07)' : 'rgba(138,106,212,0.16)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(138,106,212,0.06)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+
+      // Text
+      ctx.fillStyle = msg.in ? 'rgba(240,235,224,0.5)' : 'rgba(240,235,224,0.6)';
+      ctx.font = '300 '+(7*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'left'; ctx.fillText(msg.text, mx+8*s, my+13*s);
+
+      // Timestamp
+      ctx.fillStyle = 'rgba(240,235,224,0.12)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'right'; ctx.fillText(msg.time, mx+mw-6*s, my+13*s);
+      ctx.textAlign = 'left';
+
+      // Read receipt for outgoing
+      if (!msg.in) {
+        ctx.fillStyle = 'rgba(138,106,212,0.3)'; ctx.font = (4*s)+'px Inter, sans-serif';
+        ctx.textAlign = 'right'; ctx.fillText('\u2713\u2713', mx+mw-4*s, my+mh-2*s);
+        ctx.textAlign = 'left';
+      }
+
+      my += mh + 6*s;
+    }
+
+    // Input bar
+    roundRect(ctx, 10*s, h-30*s, w-20*s, 22*s, 8*s);
+    ctx.fillStyle = 'rgba(138,106,212,0.04)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(138,106,212,0.08)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+    ctx.fillStyle = 'rgba(240,235,224,0.15)'; ctx.font = '200 '+(7*s)+'px Inter, sans-serif';
+    ctx.fillText('Message...', 22*s, h-16*s);
+    // Send button
+    ctx.beginPath(); ctx.arc(w-22*s, h-19*s, 8*s, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(138,106,212,0.2)'; ctx.fill();
+    ctx.fillStyle = 'rgba(138,106,212,0.5)'; ctx.font = (7*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('\u2191', w-22*s, h-16*s);
+    ctx.textAlign = 'left';
+
+    // Encryption protocol badge at bottom
+    roundRect(ctx, 10*s, h-52*s, w-20*s, 16*s, 4*s);
+    ctx.fillStyle = 'rgba(138,106,212,0.04)'; ctx.fill();
+    ctx.fillStyle = 'rgba(138,106,212,0.25)'; ctx.font = '200 '+(5*s)+'px monospace';
+    ctx.textAlign = 'center'; ctx.fillText('X3DH \u00B7 Double Ratchet \u00B7 WebAuthn \u00B7 libsodium', w/2, h-41.5*s);
+    ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(138,106,212,0.15)');
+  }
+
+  // ---- POLYMARKET: Terminal view ----
+  function drawPolymarket(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    ctx.fillStyle = '#020204'; ctx.fillRect(0, 0, w, h);
+
+    // CRT scanline effect
+    for (var sl = 0; sl < h; sl += 3*s) {
+      ctx.fillStyle = 'rgba(0,255,100,0.006)'; ctx.fillRect(0, sl, w, 1.5*s);
+    }
+    // CRT vignette
+    var vig = ctx.createRadialGradient(w/2, h/2, w*0.25, w/2, h/2, w*0.7);
+    vig.addColorStop(0, 'transparent'); vig.addColorStop(1, 'rgba(0,0,0,0.3)');
+    ctx.fillStyle = vig; ctx.fillRect(0, 0, w, h);
+
+    // Terminal content
+    ctx.font = (7*s)+'px monospace'; ctx.textAlign = 'left';
+    var lh = 11*s;
+    var lines = [
+      {c:'rgba(0,200,128,0.8)',  t:'[PolyBTC] 15-Min Market Analysis'},
+      {c:'rgba(100,100,100,0.4)',t:'────────────────────────────────────────'},
+      {c:'rgba(0,170,100,0.6)', t:'  Chainlink BTC/USD   $62,441.20'},
+      {c:'rgba(0,170,100,0.6)', t:'  Binance Spot        $62,438.50  (-$2.70)'},
+      {c:'rgba(80,80,80,0.4)',  t:''},
+      {c:'rgba(0,200,128,0.7)', t:'  Polymarket Contracts:'},
+      {c:'rgba(74,222,128,0.7)',t:'    BTC Up   \u2192  0.54  \u25B2 +0.02  [65% conf]'},
+      {c:'rgba(248,113,113,0.6)',t:'    BTC Down \u2192  0.46  \u25BC -0.02  [35% conf]'},
+      {c:'rgba(80,80,80,0.4)',  t:''},
+      {c:'rgba(0,200,128,0.6)', t:'  Indicators:'},
+      {c:'rgba(140,140,140,0.5)',t:'    RSI(14)   58.2   Neutral'},
+      {c:'rgba(74,222,128,0.6)',t:'    MACD      Bullish crossover \u2713'},
+      {c:'rgba(140,140,140,0.5)',t:'    VWAP      $62,300 (above)'},
+      {c:'rgba(74,222,128,0.5)',t:'    H.Ashi    Green forming'},
+      {c:'rgba(80,80,80,0.4)',  t:''},
+      {c:'rgba(251,191,36,0.7)',t:'  \u25B6 Signal: LEAN UP  |  Confidence: 65%'},
+      {c:'rgba(80,80,80,0.4)',  t:''},
+      {c:'rgba(0,200,128,0.5)', t:'  [CopyBot] Watching whale_0x7a...'},
+      {c:'rgba(0,200,128,0.4)', t:'  [CopyBot] Last mirror: BUY 0.54 @ 12:45'},
+    ];
+    for (var li = 0; li < lines.length; li++) {
+      ctx.fillStyle = lines[li].c; ctx.fillText(lines[li].t, 8*s, 12*s + li*lh);
+    }
+
+    // Blinking cursor
+    ctx.fillStyle = 'rgba(0,200,80,0.5)'; ctx.fillRect(8*s, 12*s + lines.length*lh, 5*s, 8*s);
+
+    // Mini sparkline chart in top-right
+    var spx = w-90*s, spy = 8*s, spw = 82*s, sph = 40*s;
+    ctx.fillStyle = 'rgba(0,200,80,0.03)'; ctx.fillRect(spx, spy, spw, sph);
+    ctx.strokeStyle = 'rgba(0,200,80,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(spx, spy, spw, sph);
+    ctx.fillStyle = 'rgba(0,200,80,0.25)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillText('BTC 15m', spx+2*s, spy+8*s);
+    // Sparkline
+    ctx.strokeStyle = 'rgba(0,200,80,0.35)'; ctx.lineWidth = 1*s;
+    ctx.beginPath();
+    for (var sp = 0; sp < 30; sp++) {
+      var spXp = spx + 4*s + sp * (spw-8*s)/30;
+      var spYp = spy + sph*0.3 + Math.sin(sp*0.4+1)*sph*0.15 + Math.cos(sp*0.7)*sph*0.1;
+      if (sp === 0) ctx.moveTo(spXp, spYp); else ctx.lineTo(spXp, spYp);
+    }
+    ctx.stroke();
+    // Fill under
+    ctx.lineTo(spx+spw-4*s, spy+sph); ctx.lineTo(spx+4*s, spy+sph); ctx.closePath();
+    ctx.fillStyle = 'rgba(0,200,80,0.04)'; ctx.fill();
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(0,200,80,0.15)');
+  }
+
+  // ---- GALLEON: Loads real ship image ----
+  function drawGalleon(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+
+    // Deep storm sky
+    var sky = ctx.createLinearGradient(0, 0, 0, h);
+    sky.addColorStop(0, '#060a10'); sky.addColorStop(0.3, '#0e141c'); sky.addColorStop(0.7, '#101820'); sky.addColorStop(1, '#060a0e');
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
+
+    // Storm clouds
+    for (var ci = 0; ci < 5; ci++) {
+      var cx2 = (Math.sin(ci*2.3)*0.3+0.5)*w, cy2 = ci*h*0.08;
+      var cg = ctx.createRadialGradient(cx2, cy2, 0, cx2, cy2, w*0.2);
+      cg.addColorStop(0, 'rgba(30,40,55,0.15)'); cg.addColorStop(1, 'transparent');
+      ctx.fillStyle = cg; ctx.fillRect(0, 0, w, h*0.5);
+    }
+
+    // Lightning bolt with glow
+    ctx.save();
+    // Broad glow
+    ctx.strokeStyle = 'rgba(180,200,240,0.04)'; ctx.lineWidth = 16*s;
+    ctx.beginPath(); ctx.moveTo(w*0.72, 0); ctx.lineTo(w*0.66, h*0.22);
+    ctx.lineTo(w*0.73, h*0.18); ctx.lineTo(w*0.58, h*0.48); ctx.stroke();
+    // Tight glow
+    ctx.strokeStyle = 'rgba(200,215,240,0.08)'; ctx.lineWidth = 6*s; ctx.stroke();
+    // Core
+    ctx.strokeStyle = 'rgba(220,230,255,0.2)'; ctx.lineWidth = 1.5*s; ctx.stroke();
+    ctx.restore();
+
+    // Matrix rain (deterministic)
+    for (var mi = 0; mi < 20; mi++) {
+      var mx = (Math.sin(mi*5.7+0.3)*0.5+0.5)*w;
+      var my = (Math.sin(mi*3.2+1.1)*0.5+0.5)*h*0.25;
+      var ml = (0.2+Math.sin(mi*2.1)*0.2)*h;
+      var mg = ctx.createLinearGradient(mx, my, mx, my+ml);
+      mg.addColorStop(0, 'rgba(64,200,160,0)');
+      mg.addColorStop(0.5, 'rgba(64,200,160,'+(0.03+Math.sin(mi*1.7)*0.02)+')');
+      mg.addColorStop(1, 'rgba(64,200,160,0)');
+      ctx.strokeStyle = mg; ctx.lineWidth = 0.8*s;
+      ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(mx, my+ml); ctx.stroke();
+    }
+
+    // Ocean water
+    var ocean = ctx.createLinearGradient(0, h*0.75, 0, h);
+    ocean.addColorStop(0, 'rgba(10,30,50,0.3)'); ocean.addColorStop(1, 'rgba(5,15,25,0.8)');
+    ctx.fillStyle = ocean; ctx.fillRect(0, h*0.75, w, h*0.25);
+    // Wave lines
+    ctx.strokeStyle = 'rgba(80,120,160,0.06)'; ctx.lineWidth = 0.5*s;
+    for (var wv = 0; wv < 4; wv++) {
+      ctx.beginPath();
+      for (var wx = 0; wx < w; wx += 2*s) {
+        var wy = h*0.78 + wv*10*s + Math.sin(wx/(20*s)+wv*1.5)*3*s;
+        if (wx === 0) ctx.moveTo(wx, wy); else ctx.lineTo(wx, wy);
+      }
+      ctx.stroke();
+    }
+
+    // Load real ship image
+    loadImg('thumbs/galleon-ship.png', function(img) {
+      if (!img) return;
+      var iw = w*0.55, ih = iw * (img.height/img.width);
+      ctx.globalAlpha = 0.45;
+      ctx.drawImage(img, (w-iw)/2, h-ih-5*s, iw, ih);
+      ctx.globalAlpha = 1.0;
+      // Fade bottom into ocean
+      var fade = ctx.createLinearGradient(0, h-50*s, 0, h);
+      fade.addColorStop(0, 'rgba(6,10,14,0)'); fade.addColorStop(1, 'rgba(6,10,14,1)');
+      ctx.fillStyle = fade; ctx.fillRect(0, h-50*s, w, 50*s);
+      // Re-draw corners after async
+      drawCorners(ctx, w, h, 14*s, 'rgba(120,150,180,0.15)');
+    });
+
+    // HUD overlay
+    ctx.fillStyle = 'rgba(64,200,160,0.06)'; ctx.fillRect(0, 0, w, 20*s);
+    ctx.strokeStyle = 'rgba(64,200,160,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 20*s); ctx.lineTo(w, 20*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(64,200,160,0.35)'; ctx.font = '200 '+(6*s)+'px monospace';
+    ctx.textAlign = 'left'; ctx.fillText('CLASSIFIED // ARCHIVAL SCAN', 8*s, 13*s);
+    ctx.textAlign = 'right'; ctx.fillText('STORM ACTIVE', w-8*s, 13*s);
+    ctx.textAlign = 'left';
+
+    // Name watermark
+    ctx.fillStyle = 'rgba(240,235,224,0.35)'; ctx.font = '300 italic '+(20*s)+'px Cormorant Garamond, serif';
+    ctx.textAlign = 'center'; ctx.fillText('Lance W. Fisher', w/2, h*0.38);
+    // Subtitle
+    ctx.fillStyle = 'rgba(240,235,224,0.12)'; ctx.font = '200 '+(7*s)+'px Inter, sans-serif';
+    ctx.fillText('The Original Concept', w/2, h*0.45);
+    ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(120,150,180,0.15)');
+  }
+
+  // ---- BOOKMARK BOT: CLI pipeline visualization ----
+  function drawBookmarkBot(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    drawBg(ctx, w, h, 64, 180, 140);
+
+    // Subtle circuit-board grid pattern
+    ctx.strokeStyle = 'rgba(64,180,140,0.02)'; ctx.lineWidth = 0.5*s;
+    for (var gi = 0; gi < w; gi += 24*s) { ctx.beginPath(); ctx.moveTo(gi, 0); ctx.lineTo(gi, h); ctx.stroke(); }
+    for (var gj = 0; gj < h; gj += 24*s) { ctx.beginPath(); ctx.moveTo(0, gj); ctx.lineTo(w, gj); ctx.stroke(); }
+
+    // Header bar with gradient
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, 'rgba(64,180,140,0.08)'); hGrad.addColorStop(1, 'rgba(64,180,140,0.02)');
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 28*s);
+    ctx.strokeStyle = 'rgba(64,180,140,0.1)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 28*s); ctx.lineTo(w, 28*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(64,180,140,0.6)'; ctx.fillRect(0, 0, 3*s, 28*s);
+
+    // X logo stylized
+    ctx.save();
+    ctx.fillStyle = 'rgba(240,235,224,0.08)'; ctx.font = 'bold '+(40*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('X', w-8*s, 60*s); ctx.restore();
+
+    ctx.fillStyle = 'rgba(240,235,224,0.75)'; ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText('Bookmark-to-Build Bot', 14*s, 18*s);
+    ctx.fillStyle = 'rgba(74,222,128,0.5)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.fillText('\u25CF  PIPELINE ACTIVE', w*0.55, 18*s);
+
+    // Left panel: Bookmark feed (scrollable list mockup)
+    var feedX = 6*s, feedY = 34*s, feedW = w*0.38, feedH = h*0.55;
+    ctx.fillStyle = 'rgba(64,180,140,0.02)'; ctx.fillRect(feedX, feedY, feedW, feedH);
+    ctx.strokeStyle = 'rgba(64,180,140,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(feedX, feedY, feedW, feedH);
+    ctx.fillStyle = 'rgba(64,180,140,0.35)'; ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillText('BOOKMARK QUEUE', feedX+8*s, feedY+12*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.15)'; ctx.font = (5*s)+'px monospace';
+    ctx.textAlign = 'right'; ctx.fillText('47 pending', feedX+feedW-6*s, feedY+12*s); ctx.textAlign = 'left';
+
+    var bookmarks = [
+      {user:'@levelsio', text:'Ship fast, iterate faster. Here\'s my stack...', tag:'patterns'},
+      {user:'@thdxr', text:'SST Ion architecture for serverless TypeScript', tag:'arch'},
+      {user:'@dan_abramov', text:'React compiler deep dive and mental model', tag:'react'},
+      {user:'@karpathy', text:'Tokenization is all you need. Thread on BPE...', tag:'ai'},
+      {user:'@naval', text:'Leverage and judgment scale. Code as leverage...', tag:'philosophy'},
+      {user:'@swyx', text:'The rising tide of AI coding assistants', tag:'tools'}
+    ];
+    var tagColors = {patterns:'rgba(74,222,128,', arch:'rgba(96,165,250,', react:'rgba(147,130,220,', ai:'rgba(251,191,36,', philosophy:'rgba(240,120,120,', tools:'rgba(64,180,140,'};
+    for (var bi = 0; bi < bookmarks.length; bi++) {
+      var by = feedY+20*s + bi*18*s;
+      if (by + 16*s > feedY + feedH) break;
+      // Row separator
+      ctx.strokeStyle = 'rgba(64,180,140,0.03)'; ctx.beginPath(); ctx.moveTo(feedX+6*s, by+16*s); ctx.lineTo(feedX+feedW-6*s, by+16*s); ctx.stroke();
+      // Username
+      ctx.fillStyle = 'rgba(64,180,140,0.5)'; ctx.font = '500 '+(5*s)+'px Inter, sans-serif';
+      ctx.fillText(bookmarks[bi].user, feedX+8*s, by+6*s);
+      // Text preview
+      ctx.fillStyle = 'rgba(240,235,224,0.25)'; ctx.font = '300 '+(5*s)+'px Inter, sans-serif';
+      var txt = bookmarks[bi].text; if (txt.length > 32) txt = txt.substring(0,30)+'...';
+      ctx.fillText(txt, feedX+8*s, by+14*s);
+      // Tag
+      var tc = tagColors[bookmarks[bi].tag] || 'rgba(64,180,140,';
+      ctx.fillStyle = tc+'0.1)'; ctx.fillRect(feedX+feedW-32*s, by+2*s, 26*s, 8*s);
+      ctx.fillStyle = tc+'0.5)'; ctx.font = (4*s)+'px monospace'; ctx.fillText(bookmarks[bi].tag, feedX+feedW-30*s, by+8*s);
+    }
+
+    // Right side: Pipeline visualization (vertical flow)
+    var pipeX = feedX+feedW+10*s, pipeY = 34*s;
+    ctx.fillStyle = 'rgba(240,235,224,0.5)'; ctx.font = '300 '+(14*s)+'px Cormorant Garamond, serif';
+    ctx.fillText('Pipeline', pipeX, pipeY+14*s);
+    ctx.fillStyle = 'rgba(64,180,140,0.3)'; ctx.font = '200 '+(7*s)+'px Inter, sans-serif';
+    ctx.fillText('5-stage processor', pipeX, pipeY+26*s);
+
+    // Thin rule
+    ctx.fillStyle = 'rgba(64,180,140,0.15)'; ctx.fillRect(pipeX, pipeY+30*s, 40*s, 0.5*s);
+
+    var stages = [
+      {name:'INGEST', desc:'Fetch bookmarks via API', status:'done', c:'rgba(74,222,128,'},
+      {name:'EXTRACT', desc:'Parse ideas & patterns', status:'done', c:'rgba(74,222,128,'},
+      {name:'MATCH', desc:'Map to codebase projects', status:'active', c:'rgba(64,180,140,'},
+      {name:'PROPOSE', desc:'Generate PR descriptions', status:'pending', c:'rgba(64,180,140,'},
+      {name:'IMPLEMENT', desc:'Apply with approval gate', status:'pending', c:'rgba(64,180,140,'}
+    ];
+    var stY = pipeY+40*s;
+    for (var si = 0; si < stages.length; si++) {
+      var sy = stY + si * 22*s;
+      var isDone = stages[si].status === 'done';
+      var isActive = stages[si].status === 'active';
+      var isPending = stages[si].status === 'pending';
+
+      // Vertical connection line
+      if (si < stages.length - 1) {
+        ctx.strokeStyle = isDone ? 'rgba(74,222,128,0.15)' : 'rgba(64,180,140,0.05)';
+        ctx.lineWidth = 1*s; ctx.setLineDash(isDone ? [] : [2*s, 3*s]);
+        ctx.beginPath(); ctx.moveTo(pipeX+8*s, sy+12*s); ctx.lineTo(pipeX+8*s, sy+22*s); ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // Status icon
+      ctx.beginPath(); ctx.arc(pipeX+8*s, sy+4*s, 5*s, 0, Math.PI*2);
+      ctx.fillStyle = isDone ? 'rgba(74,222,128,0.12)' : isActive ? 'rgba(64,180,140,0.15)' : 'rgba(64,180,140,0.04)';
+      ctx.fill();
+      ctx.strokeStyle = isDone ? 'rgba(74,222,128,0.4)' : isActive ? 'rgba(64,180,140,0.4)' : 'rgba(64,180,140,0.08)';
+      ctx.lineWidth = isActive ? 1.5*s : 0.8*s; ctx.stroke();
+
+      if (isDone) {
+        ctx.fillStyle = 'rgba(74,222,128,0.8)'; ctx.font = 'bold '+(7*s)+'px Inter'; ctx.textAlign = 'center';
+        ctx.fillText('\u2713', pipeX+8*s, sy+7*s); ctx.textAlign = 'left';
+      } else if (isActive) {
+        // Pulsing dot
+        ctx.beginPath(); ctx.arc(pipeX+8*s, sy+4*s, 2*s, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(64,180,140,0.6)'; ctx.fill();
+      }
+
+      // Stage name and description
+      ctx.fillStyle = isDone ? 'rgba(74,222,128,0.6)' : isActive ? 'rgba(64,180,140,0.6)' : 'rgba(64,180,140,0.2)';
+      ctx.font = '600 '+(6*s)+'px Inter, sans-serif'; ctx.fillText(stages[si].name, pipeX+20*s, sy+7*s);
+      ctx.fillStyle = isPending ? 'rgba(240,235,224,0.1)' : 'rgba(240,235,224,0.25)';
+      ctx.font = '300 '+(5.5*s)+'px Inter, sans-serif'; ctx.fillText(stages[si].desc, pipeX+65*s, sy+7*s);
+    }
+
+    // Bottom panel: Matched ideas with confidence scores
+    var bY = h*0.65;
+    ctx.fillStyle = 'rgba(64,180,140,0.02)'; ctx.fillRect(6*s, bY, w-12*s, h-bY-8*s);
+    ctx.strokeStyle = 'rgba(64,180,140,0.05)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(6*s, bY, w-12*s, h-bY-8*s);
+    ctx.fillStyle = 'rgba(64,180,140,0.35)'; ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillText('MATCHED TO PROJECTS', 14*s, bY+12*s);
+
+    var ideas = [
+      {project:'master-trade-bot', idea:'Trailing stop-loss from @levelsio pattern', conf:92, c:'#4ade80'},
+      {project:'home-hub', idea:'Motion detection alerts from @karpathy thread', conf:87, c:'#60a5fa'},
+      {project:'medspa-booking', idea:'Waitlist feature from @spa_tech bookmark', conf:81, c:'#fbbf24'},
+      {project:'profit-desk', idea:'Risk parity rebalancing from @naval thread', conf:74, c:'#c084fc'}
+    ];
+    for (var ii = 0; ii < ideas.length; ii++) {
+      var iy = bY + 20*s + ii * 14*s;
+      if (iy + 10*s > h - 12*s) break;
+      // Confidence bar background
+      ctx.fillStyle = 'rgba(64,180,140,0.03)'; ctx.fillRect(14*s, iy, w-28*s, 10*s);
+      // Confidence bar fill
+      ctx.fillStyle = 'rgba(64,180,140,0.08)'; ctx.fillRect(14*s, iy, (w-28*s)*ideas[ii].conf/100, 10*s);
+      // Project name
+      ctx.fillStyle = 'rgba(240,235,224,0.45)'; ctx.font = '500 '+(5*s)+'px monospace';
+      ctx.fillText(ideas[ii].project, 20*s, iy+7*s);
+      // Idea text
+      ctx.fillStyle = 'rgba(240,235,224,0.2)'; ctx.font = '300 '+(5*s)+'px Inter, sans-serif';
+      ctx.fillText(ideas[ii].idea, 120*s, iy+7*s);
+      // Confidence percentage
+      ctx.fillStyle = ideas[ii].c; ctx.globalAlpha = 0.6; ctx.font = '500 '+(5.5*s)+'px monospace';
+      ctx.textAlign = 'right'; ctx.fillText(ideas[ii].conf+'%', w-16*s, iy+7*s);
+      ctx.textAlign = 'left'; ctx.globalAlpha = 1;
+    }
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(64,180,140,0.15)');
+  }
+
+  // ---- HOME HUB: Security dashboard ----
+  function drawHomeHub(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    drawBg(ctx, w, h, 60, 140, 220);
+
+    // Subtle hex grid pattern (security aesthetic)
+    ctx.strokeStyle = 'rgba(60,140,220,0.015)'; ctx.lineWidth = 0.5*s;
+    var hexR = 18*s;
+    for (var hx = 0; hx < w + hexR*2; hx += hexR*1.5) {
+      for (var hy = 0; hy < h + hexR*2; hy += hexR*1.73) {
+        var ox = (Math.floor(hy/(hexR*1.73)) % 2) * hexR*0.75;
+        ctx.beginPath();
+        for (var hi = 0; hi < 6; hi++) {
+          var ha = Math.PI/3*hi - Math.PI/6;
+          var hpx = hx+ox + hexR*0.5*Math.cos(ha), hpy = hy + hexR*0.5*Math.sin(ha);
+          if (hi === 0) ctx.moveTo(hpx, hpy); else ctx.lineTo(hpx, hpy);
+        }
+        ctx.closePath(); ctx.stroke();
+      }
+    }
+
+    // Header bar with shield icon effect
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, 'rgba(60,140,220,0.08)'); hGrad.addColorStop(1, 'rgba(60,140,220,0.02)');
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 28*s);
+    ctx.strokeStyle = 'rgba(60,140,220,0.1)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 28*s); ctx.lineTo(w, 28*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(60,140,220,0.6)'; ctx.fillRect(0, 0, 3*s, 28*s);
+
+    // Shield icon
+    ctx.save();
+    ctx.beginPath(); ctx.moveTo(10*s, 8*s); ctx.lineTo(18*s, 5*s); ctx.lineTo(26*s, 8*s);
+    ctx.lineTo(26*s, 16*s); ctx.quadraticCurveTo(18*s, 24*s, 18*s, 24*s);
+    ctx.quadraticCurveTo(18*s, 24*s, 10*s, 16*s); ctx.closePath();
+    ctx.strokeStyle = 'rgba(60,140,220,0.35)'; ctx.lineWidth = 1*s; ctx.stroke();
+    ctx.fillStyle = 'rgba(60,140,220,0.05)'; ctx.fill();
+    ctx.restore();
+
+    ctx.fillStyle = 'rgba(240,235,224,0.75)'; ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText('Home Hub', 32*s, 18*s);
+    // Status
+    ctx.beginPath(); ctx.arc(w-14*s, 14*s, 3*s, 0, Math.PI*2);
+    ctx.fillStyle = '#4ade80'; ctx.fill();
+    ctx.fillStyle = 'rgba(74,222,128,0.5)'; ctx.font = (6*s)+'px monospace';
+    ctx.textAlign = 'right'; ctx.fillText('SECURE', w-22*s, 17*s); ctx.textAlign = 'left';
+
+    // Left panel: Camera feeds (2x2)
+    var camX = 6*s, camY = 34*s, camW = w*0.44, camH = h*0.52;
+    ctx.fillStyle = 'rgba(60,140,220,0.02)'; ctx.fillRect(camX, camY, camW, camH);
+    ctx.strokeStyle = 'rgba(60,140,220,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(camX, camY, camW, camH);
+    ctx.fillStyle = 'rgba(60,140,220,0.35)'; ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillText('CAMERA FEEDS', camX+8*s, camY+12*s);
+    ctx.fillStyle = 'rgba(248,113,113,0.4)'; ctx.font = (4.5*s)+'px monospace';
+    ctx.textAlign = 'right'; ctx.fillText('\u25CF REC', camX+camW-6*s, camY+12*s); ctx.textAlign = 'left';
+
+    var feedW2 = (camW-18*s)/2, feedH2 = (camH-36*s)/2;
+    var cameras = [
+      {name:'Front Door', status:'online', motion:true},
+      {name:'Backyard', status:'online', motion:false},
+      {name:'Garage', status:'online', motion:false},
+      {name:'Driveway', status:'offline', motion:false}
+    ];
+    for (var ci = 0; ci < 4; ci++) {
+      var fx = camX+6*s + (ci%2)*(feedW2+6*s);
+      var fy = camY+20*s + Math.floor(ci/2)*(feedH2+6*s);
+      var isOnline = cameras[ci].status === 'online';
+
+      // Feed background with slight noise texture
+      ctx.fillStyle = isOnline ? 'rgba(60,140,220,0.04)' : 'rgba(200,60,60,0.03)';
+      ctx.fillRect(fx, fy, feedW2, feedH2);
+      ctx.strokeStyle = isOnline ? 'rgba(60,140,220,0.1)' : 'rgba(200,60,60,0.1)';
+      ctx.lineWidth = 0.5*s; ctx.strokeRect(fx, fy, feedW2, feedH2);
+
+      // Camera name badge
+      ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.fillRect(fx+2*s, fy+2*s, 40*s, 9*s);
+      ctx.fillStyle = 'rgba(240,235,224,0.5)'; ctx.font = '500 '+(4.5*s)+'px Inter, sans-serif';
+      ctx.fillText(cameras[ci].name, fx+4*s, fy+9*s);
+
+      // Status dot
+      ctx.beginPath(); ctx.arc(fx+feedW2-6*s, fy+6*s, 2.5*s, 0, Math.PI*2);
+      ctx.fillStyle = isOnline ? '#4ade80' : '#f87171'; ctx.fill();
+
+      if (isOnline) {
+        // Scanlines for video feel
+        for (var sl = 0; sl < feedH2; sl += 3*s) {
+          ctx.fillStyle = 'rgba(60,140,220,0.01)'; ctx.fillRect(fx, fy+sl, feedW2, 1*s);
+        }
+        // Motion detection box
+        if (cameras[ci].motion) {
+          ctx.strokeStyle = 'rgba(74,222,128,0.3)'; ctx.lineWidth = 0.8*s;
+          ctx.setLineDash([2*s, 2*s]);
+          ctx.strokeRect(fx+feedW2*0.3, fy+feedH2*0.3, feedW2*0.4, feedH2*0.4);
+          ctx.setLineDash([]);
+          ctx.fillStyle = 'rgba(74,222,128,0.4)'; ctx.font = (3.5*s)+'px monospace';
+          ctx.fillText('MOTION', fx+feedW2*0.32, fy+feedH2*0.28);
+        }
+        // Timestamp
+        ctx.fillStyle = 'rgba(240,235,224,0.2)'; ctx.font = (3.5*s)+'px monospace';
+        ctx.fillText('02:41:33', fx+4*s, fy+feedH2-4*s);
+      } else {
+        // Offline X
+        ctx.strokeStyle = 'rgba(248,113,113,0.15)'; ctx.lineWidth = 1.5*s;
+        ctx.beginPath(); ctx.moveTo(fx+feedW2*0.35, fy+feedH2*0.35); ctx.lineTo(fx+feedW2*0.65, fy+feedH2*0.65); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(fx+feedW2*0.65, fy+feedH2*0.35); ctx.lineTo(fx+feedW2*0.35, fy+feedH2*0.65); ctx.stroke();
+        ctx.fillStyle = 'rgba(248,113,113,0.3)'; ctx.font = (4*s)+'px monospace';
+        ctx.textAlign = 'center'; ctx.fillText('OFFLINE', fx+feedW2/2, fy+feedH2*0.8); ctx.textAlign = 'left';
+      }
+    }
+
+    // Right panel: Network topology
+    var netX = camX+camW+6*s, netY = 34*s, netW = w-netX-6*s, netH = h*0.52;
+    ctx.fillStyle = 'rgba(60,140,220,0.02)'; ctx.fillRect(netX, netY, netW, netH);
+    ctx.strokeStyle = 'rgba(60,140,220,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(netX, netY, netW, netH);
+    ctx.fillStyle = 'rgba(60,140,220,0.35)'; ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillText('NETWORK TOPOLOGY', netX+8*s, netY+12*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.2)'; ctx.font = (5*s)+'px monospace';
+    ctx.textAlign = 'right'; ctx.fillText('14 devices', netX+netW-8*s, netY+12*s); ctx.textAlign = 'left';
+
+    // Router (central hub with rings)
+    var routerX = netX+netW*0.5, routerY = netY+netH*0.5;
+    // Outer ring
+    ctx.beginPath(); ctx.arc(routerX, routerY, 20*s, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(60,140,220,0.05)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+    // Inner ring
+    ctx.beginPath(); ctx.arc(routerX, routerY, 12*s, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(60,140,220,0.08)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(60,140,220,0.25)'; ctx.lineWidth = 1.2*s; ctx.stroke();
+    ctx.fillStyle = 'rgba(240,235,224,0.6)'; ctx.font = '600 '+(6*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('GW', routerX, routerY+2*s);
+
+    // Device nodes with connection lines
+    var devices = [
+      {x:0.18, y:0.3, label:'PC', c:'#4ade80'},
+      {x:0.28, y:0.75, label:'TV', c:'#fbbf24'},
+      {x:0.82, y:0.28, label:'NAS', c:'#4ade80'},
+      {x:0.78, y:0.7, label:'IoT', c:'#fbbf24'},
+      {x:0.12, y:0.6, label:'CAM', c:'#60a5fa'},
+      {x:0.88, y:0.5, label:'???', c:'#f87171'},
+      {x:0.4, y:0.2, label:'PH', c:'#4ade80'},
+      {x:0.6, y:0.8, label:'CAM', c:'#60a5fa'},
+      {x:0.7, y:0.2, label:'LAP', c:'#4ade80'},
+      {x:0.35, y:0.55, label:'TAB', c:'#4ade80'}
+    ];
+    for (var di = 0; di < devices.length; di++) {
+      var dx = netX+netW*devices[di].x, dy = netY+20*s+(netH-32*s)*devices[di].y;
+      // Connection line with gradient
+      ctx.strokeStyle = devices[di].c === '#f87171' ? 'rgba(248,113,113,0.08)' : 'rgba(60,140,220,0.06)';
+      ctx.lineWidth = 0.5*s; ctx.beginPath(); ctx.moveTo(routerX, routerY); ctx.lineTo(dx, dy); ctx.stroke();
+      // Device circle
+      ctx.beginPath(); ctx.arc(dx, dy, 5*s, 0, Math.PI*2);
+      ctx.fillStyle = devices[di].c; ctx.globalAlpha = 0.15; ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = devices[di].c; ctx.globalAlpha = 0.4; ctx.lineWidth = 0.8*s; ctx.stroke(); ctx.globalAlpha = 1;
+      // Label
+      ctx.fillStyle = devices[di].c; ctx.globalAlpha = 0.4;
+      ctx.font = (3.5*s)+'px monospace'; ctx.textAlign = 'center'; ctx.fillText(devices[di].label, dx, dy+10*s);
+      ctx.globalAlpha = 1;
+    }
+    ctx.textAlign = 'left';
+
+    // Bottom panel: Alerts with severity indicators
+    var alertY = Math.max(camY+camH, netY+netH) + 6*s;
+    var alertH = h-alertY-6*s;
+    ctx.fillStyle = 'rgba(60,140,220,0.02)'; ctx.fillRect(6*s, alertY, w-12*s, alertH);
+    ctx.strokeStyle = 'rgba(60,140,220,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(6*s, alertY, w-12*s, alertH);
+    ctx.fillStyle = 'rgba(60,140,220,0.35)'; ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillText('ALERTS & EVENTS', 14*s, alertY+12*s);
+
+    // Stats bar
+    var stats = [{v:'14', l:'Devices', c:'#4ade80'}, {v:'3', l:'Cameras', c:'#60a5fa'}, {v:'1.2GB', l:'/hr', c:'#fbbf24'}, {v:'1', l:'Warning', c:'#f87171'}];
+    var stW2 = (w-24*s)/4;
+    for (var sti = 0; sti < stats.length; sti++) {
+      var stx = 12*s + sti*stW2;
+      ctx.fillStyle = stats[sti].c; ctx.globalAlpha = 0.6;
+      ctx.font = '600 '+(8*s)+'px Inter, sans-serif'; ctx.fillText(stats[sti].v, stx, alertY+26*s);
+      ctx.globalAlpha = 0.3; ctx.font = (5*s)+'px Inter, sans-serif'; ctx.fillText(stats[sti].l, stx, alertY+34*s);
+      ctx.globalAlpha = 1;
+    }
+
+    var alerts = [
+      {type:'WARN', msg:'Unknown device joined: MAC aa:bb:cc:12:34', t:'2m ago', c:'#fbbf24'},
+      {type:'DOWN', msg:'Driveway camera lost connection', t:'14m ago', c:'#f87171'},
+      {type:'INFO', msg:'Smart TV bandwidth: 500MB/hr', t:'1h ago', c:'#60a5fa'}
+    ];
+    for (var ai = 0; ai < alerts.length; ai++) {
+      var ay = alertY+42*s + ai*12*s;
+      if (ay + 10*s > h - 8*s) break;
+      // Severity bar
+      ctx.fillStyle = alerts[ai].c; ctx.globalAlpha = 0.15;
+      ctx.fillRect(14*s, ay-1*s, 2*s, 10*s); ctx.globalAlpha = 1;
+      // Type badge
+      ctx.fillStyle = alerts[ai].c; ctx.globalAlpha = 0.5;
+      ctx.font = 'bold '+(4.5*s)+'px monospace'; ctx.fillText(alerts[ai].type, 22*s, ay+6*s);
+      ctx.globalAlpha = 1;
+      // Message
+      ctx.fillStyle = 'rgba(240,235,224,0.3)'; ctx.font = '300 '+(5*s)+'px Inter, sans-serif';
+      ctx.fillText(alerts[ai].msg, 50*s, ay+6*s);
+      // Time
+      ctx.fillStyle = 'rgba(240,235,224,0.12)'; ctx.font = (4.5*s)+'px monospace';
+      ctx.textAlign = 'right'; ctx.fillText(alerts[ai].t, w-14*s, ay+6*s); ctx.textAlign = 'left';
+    }
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(60,140,220,0.15)');
+  }
+
+  // ===== PROJECT HUB =====
+  function drawProjectHub(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    drawBg(ctx, w, h, 201, 168, 76);
+
+    // Subtle grid pattern (command center)
+    ctx.strokeStyle = 'rgba(201,168,76,0.02)'; ctx.lineWidth = 0.5*s;
+    for (var gi = 0; gi < w; gi += 20*s) { ctx.beginPath(); ctx.moveTo(gi, 0); ctx.lineTo(gi, h); ctx.stroke(); }
+    for (var gj = 0; gj < h; gj += 20*s) { ctx.beginPath(); ctx.moveTo(0, gj); ctx.lineTo(w, gj); ctx.stroke(); }
+
+    // Header bar
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, 'rgba(201,168,76,0.08)'); hGrad.addColorStop(1, 'rgba(201,168,76,0.02)');
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 28*s);
+    ctx.strokeStyle = 'rgba(201,168,76,0.1)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 28*s); ctx.lineTo(w, 28*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(201,168,76,0.6)'; ctx.fillRect(0, 0, 3*s, 28*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.75)'; ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText('ProjectHub', 14*s, 18*s);
+
+    // Sync status
+    ctx.beginPath(); ctx.arc(w-14*s, 14*s, 3*s, 0, Math.PI*2);
+    ctx.fillStyle = '#4ade80'; ctx.fill();
+    ctx.fillStyle = 'rgba(74,222,128,0.5)'; ctx.font = (6*s)+'px monospace';
+    ctx.textAlign = 'right'; ctx.fillText('SYNCED', w-22*s, 17*s); ctx.textAlign = 'left';
+
+    // Left side: Project list table
+    var tableX = 6*s, tableY = 34*s, tableW = w*0.55, tableH = h - 70*s;
+    ctx.fillStyle = 'rgba(201,168,76,0.02)'; ctx.fillRect(tableX, tableY, tableW, tableH);
+    ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(tableX, tableY, tableW, tableH);
+
+    // Table header
+    ctx.fillStyle = 'rgba(201,168,76,0.06)'; ctx.fillRect(tableX, tableY, tableW, 12*s);
+    ctx.fillStyle = 'rgba(201,168,76,0.4)'; ctx.font = '500 '+(4.5*s)+'px Inter, sans-serif';
+    ctx.fillText('PROJECT', tableX+22*s, tableY+8*s);
+    ctx.fillText('STATUS', tableX+tableW*0.62, tableY+8*s);
+    ctx.fillText('LANG', tableX+tableW*0.82, tableY+8*s);
+
+    var projects = [
+      {name:'medspa-booking', status:'clean', lang:'TS/RN', commits:'+3'},
+      {name:'profit-desk', status:'dirty', lang:'PY', commits:'+12'},
+      {name:'master-trade-bot', status:'ahead', lang:'TS', commits:'+8'},
+      {name:'frontier-bastion', status:'clean', lang:'TS', commits:'+1'},
+      {name:'e2ee-messenger', status:'clean', lang:'TS', commits:'+5'},
+      {name:'polymarket-btc', status:'clean', lang:'JS', commits:'+2'},
+      {name:'JumpQuest', status:'dirty', lang:'C#', commits:'+7'},
+      {name:'home-hub', status:'clean', lang:'TS', commits:'+4'},
+      {name:'auton', status:'clean', lang:'PY', commits:'+6'},
+      {name:'x-bookmark-bot', status:'clean', lang:'PY', commits:'+3'}
+    ];
+    var statusColors = {clean:'#4ade80', dirty:'#fbbf24', ahead:'#60a5fa'};
+    var rowH = Math.min(16*s, (tableH-14*s)/projects.length);
+    for (var p = 0; p < projects.length; p++) {
+      var py = tableY+14*s + p*rowH;
+      if (py + rowH > tableY + tableH) break;
+      var proj = projects[p];
+
+      // Alternating row shade
+      if (p % 2 === 0) { ctx.fillStyle = 'rgba(240,235,224,0.008)'; ctx.fillRect(tableX, py, tableW, rowH); }
+
+      // Status dot
+      ctx.beginPath(); ctx.arc(tableX+10*s, py+rowH/2, 2*s, 0, Math.PI*2);
+      ctx.fillStyle = statusColors[proj.status]; ctx.globalAlpha = 0.5; ctx.fill(); ctx.globalAlpha = 1;
+
+      // Project name
+      ctx.fillStyle = 'rgba(240,235,224,0.4)'; ctx.font = (6*s)+'px Inter, sans-serif';
+      ctx.fillText(proj.name, tableX+20*s, py+rowH/2+2*s);
+
+      // Status text
+      ctx.fillStyle = statusColors[proj.status]; ctx.globalAlpha = 0.5;
+      ctx.font = (5*s)+'px monospace'; ctx.fillText(proj.status.toUpperCase(), tableX+tableW*0.62, py+rowH/2+2*s);
+      ctx.globalAlpha = 1;
+
+      // Language badge
+      ctx.fillStyle = 'rgba(201,168,76,0.08)'; ctx.fillRect(tableX+tableW*0.82, py+2*s, 20*s, rowH-4*s);
+      ctx.fillStyle = 'rgba(201,168,76,0.45)'; ctx.font = (5*s)+'px monospace';
+      ctx.fillText(proj.lang, tableX+tableW*0.84, py+rowH/2+2*s);
+
+      // Commit count
+      ctx.fillStyle = 'rgba(74,222,128,0.3)'; ctx.font = (4.5*s)+'px monospace';
+      ctx.textAlign = 'right'; ctx.fillText(proj.commits, tableX+tableW-6*s, py+rowH/2+2*s); ctx.textAlign = 'left';
+    }
+
+    // Right side: Stats and activity
+    var rX = tableX+tableW+8*s, rY = 34*s, rW = w-rX-6*s;
+
+    // Big stat cards
+    var statCards = [
+      {v:'19', l:'Repos', c:'#4ade80'},
+      {v:'6', l:'Active', c:'#60a5fa'},
+      {v:'2', l:'Dirty', c:'#fbbf24'},
+      {v:'47', l:'Commits', c:'#c9a84c'}
+    ];
+    var scW = (rW-6*s)/2, scH = 28*s;
+    for (var sc = 0; sc < 4; sc++) {
+      var scx = rX + (sc%2)*(scW+6*s);
+      var scy = rY + Math.floor(sc/2)*(scH+6*s);
+      ctx.fillStyle = 'rgba(201,168,76,0.03)'; ctx.fillRect(scx, scy, scW, scH);
+      ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(scx, scy, scW, scH);
+      ctx.fillStyle = statCards[sc].c; ctx.globalAlpha = 0.7;
+      ctx.font = '600 '+(14*s)+'px Inter, sans-serif'; ctx.fillText(statCards[sc].v, scx+6*s, scy+18*s);
+      ctx.globalAlpha = 0.35; ctx.font = (5.5*s)+'px Inter, sans-serif'; ctx.fillText(statCards[sc].l, scx+6*s, scy+25*s);
+      ctx.globalAlpha = 1;
+    }
+
+    // Activity graph (sparkline)
+    var graphY = rY + 2*(scH+6*s) + 6*s;
+    var graphH = h - graphY - 34*s;
+    ctx.fillStyle = 'rgba(201,168,76,0.02)'; ctx.fillRect(rX, graphY, rW, graphH);
+    ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(rX, graphY, rW, graphH);
+    ctx.fillStyle = 'rgba(201,168,76,0.35)'; ctx.font = '200 '+(5*s)+'px Inter, sans-serif';
+    ctx.fillText('COMMIT ACTIVITY', rX+6*s, graphY+10*s);
+
+    // Draw sparkline bars (last 14 days)
+    var days = [3,7,2,5,12,8,4,6,9,3,11,5,7,4];
+    var barW2 = (rW-24*s)/days.length;
+    var maxD = 12;
+    for (var di = 0; di < days.length; di++) {
+      var bx = rX+10*s + di*(barW2+1*s);
+      var bh = (days[di]/maxD)*(graphH-20*s);
+      var bGrad = ctx.createLinearGradient(0, graphY+graphH-6*s-bh, 0, graphY+graphH-6*s);
+      bGrad.addColorStop(0, 'rgba(201,168,76,0.3)'); bGrad.addColorStop(1, 'rgba(201,168,76,0.05)');
+      ctx.fillStyle = bGrad; ctx.fillRect(bx, graphY+graphH-6*s-bh, barW2, bh);
+    }
+
+    // Bottom bar: sync info
+    var barY = h-24*s;
+    ctx.fillStyle = 'rgba(201,168,76,0.04)'; ctx.fillRect(0, barY, w, 24*s);
+    ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY); ctx.lineTo(w, barY); ctx.stroke();
+    ctx.fillStyle = 'rgba(240,235,224,0.25)'; ctx.font = (5.5*s)+'px Inter, sans-serif';
+    ctx.fillText('Last sync: 2m ago', 14*s, barY+15*s);
+    ctx.fillStyle = 'rgba(74,222,128,0.3)'; ctx.font = (5.5*s)+'px monospace';
+    ctx.textAlign = 'center'; ctx.fillText('5-min auto-sync active', w/2, barY+15*s);
+    ctx.fillStyle = 'rgba(201,168,76,0.25)'; ctx.font = (5.5*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('manifest v2.4', w-14*s, barY+15*s);
+    ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(201,168,76,0.15)');
+  }
+
+  // ---- FISHER ONE-THREE: Nautical brand showcase ----
+  function drawFisher13(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+
+    // Deep ocean night sky
+    var sky = ctx.createLinearGradient(0, 0, 0, h);
+    sky.addColorStop(0, '#050810'); sky.addColorStop(0.35, '#0a1020');
+    sky.addColorStop(0.7, '#0c1428'); sky.addColorStop(1, '#060a14');
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
+
+    // Subtle ocean waves pattern at bottom
+    var oceanY = h * 0.72;
+    var ocean = ctx.createLinearGradient(0, oceanY, 0, h);
+    ocean.addColorStop(0, 'rgba(15,30,60,0.0)');
+    ocean.addColorStop(0.3, 'rgba(15,30,60,0.2)');
+    ocean.addColorStop(1, 'rgba(8,16,32,0.6)');
+    ctx.fillStyle = ocean; ctx.fillRect(0, oceanY, w, h - oceanY);
+
+    // Animated-style wave lines
+    ctx.strokeStyle = 'rgba(140,170,210,0.04)'; ctx.lineWidth = 0.6*s;
+    for (var wv = 0; wv < 6; wv++) {
+      ctx.beginPath();
+      for (var wx = 0; wx < w; wx += 2*s) {
+        var wy = oceanY + 12*s + wv*8*s + Math.sin(wx/(18*s) + wv*1.8)*3*s;
+        if (wx === 0) ctx.moveTo(wx, wy); else ctx.lineTo(wx, wy);
+      }
+      ctx.stroke();
+    }
+
+    // Star field
+    for (var si = 0; si < 35; si++) {
+      var sx = (Math.sin(si*7.3+2.1)*0.5+0.5)*w;
+      var sy = (Math.sin(si*4.1+0.7)*0.3+0.05)*h;
+      var sa = 0.06 + Math.sin(si*3.7)*0.04;
+      ctx.fillStyle = 'rgba(200,215,240,'+sa+')';
+      ctx.fillRect(sx, sy, 1*s, 1*s);
+    }
+
+    // Compass rose (subtle background element)
+    ctx.save();
+    ctx.translate(w*0.82, h*0.25);
+    ctx.globalAlpha = 0.035;
+    ctx.strokeStyle = '#8caad2'; ctx.lineWidth = 1*s;
+    var cr = 30*s;
+    ctx.beginPath(); ctx.arc(0, 0, cr, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, cr*0.7, 0, Math.PI*2); ctx.stroke();
+    // N-S-E-W lines
+    for (var ci = 0; ci < 8; ci++) {
+      var ca = ci*Math.PI/4;
+      ctx.beginPath(); ctx.moveTo(0, 0);
+      ctx.lineTo(Math.cos(ca)*cr*1.15, Math.sin(ca)*cr*1.15); ctx.stroke();
+    }
+    // Cardinal points
+    ctx.fillStyle = '#8caad2'; ctx.font = '600 '+(5*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('N', 0, -cr*1.3);
+    ctx.fillText('S', 0, cr*1.3);
+    ctx.fillText('E', cr*1.3, 0);
+    ctx.fillText('W', -cr*1.3, 0);
+    ctx.restore();
+
+    // Header bar with brand accent
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, 'rgba(140,170,210,0.06)'); hGrad.addColorStop(1, 'rgba(140,170,210,0.01)');
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
+    ctx.strokeStyle = 'rgba(140,170,210,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
+    // Left accent bar
+    ctx.fillStyle = 'rgba(140,170,210,0.4)'; ctx.fillRect(0, 0, 3*s, 24*s);
+
+    // Header text
+    ctx.fillStyle = 'rgba(240,235,224,0.65)'; ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText('Fisher One-Three', 14*s, 16*s);
+    ctx.fillStyle = 'rgba(140,170,210,0.4)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('EST. 2024', w-14*s, 16*s);
+    ctx.textAlign = 'left';
+
+    // Load the brand crest image (winged anchor)
+    loadImg('thumbs/fisher13-crest.jpg', function(img) {
+      if (!img) return;
+      // Center the crest image
+      var maxW = w*0.48, maxH = h*0.52;
+      var ratio = img.width / img.height;
+      var iw, ih;
+      if (ratio > maxW/maxH) { iw = maxW; ih = iw / ratio; }
+      else { ih = maxH; iw = ih * ratio; }
+      var ix = (w - iw)/2, iy = h*0.18;
+      ctx.globalAlpha = 0.55;
+      ctx.drawImage(img, ix, iy, iw, ih);
+      ctx.globalAlpha = 1.0;
+      // Vignette fade around image
+      var vigTop = ctx.createLinearGradient(0, iy - 10*s, 0, iy + 20*s);
+      vigTop.addColorStop(0, 'rgba(5,8,16,1)'); vigTop.addColorStop(1, 'rgba(5,8,16,0)');
+      ctx.fillStyle = vigTop; ctx.fillRect(ix-5*s, iy-10*s, iw+10*s, 30*s);
+      var vigBot = ctx.createLinearGradient(0, iy+ih-25*s, 0, iy+ih+5*s);
+      vigBot.addColorStop(0, 'rgba(5,8,16,0)'); vigBot.addColorStop(1, 'rgba(5,8,16,0.9)');
+      ctx.fillStyle = vigBot; ctx.fillRect(ix-5*s, iy+ih-25*s, iw+10*s, 30*s);
+      // Re-draw corners after async
+      drawCorners(ctx, w, h, 14*s, 'rgba(140,170,210,0.12)');
+    });
+
+    // Brand tagline
+    ctx.fillStyle = 'rgba(240,235,224,0.28)'; ctx.font = '300 italic '+(9*s)+'px Cormorant Garamond, serif';
+    ctx.textAlign = 'center'; ctx.fillText('One Part Land, Three Parts Sea', w/2, h*0.78);
+
+    // Bottom info bar
+    var barY2 = h - 22*s;
+    ctx.fillStyle = 'rgba(140,170,210,0.03)'; ctx.fillRect(0, barY2, w, 22*s);
+    ctx.strokeStyle = 'rgba(140,170,210,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY2); ctx.lineTo(w, barY2); ctx.stroke();
+
+    // T-shirt size badges
+    var sizes = ['XS','S','M','L','XL','2XL','3XL','4XL','5XL'];
+    var badgeW = 18*s, gap2 = 3*s;
+    var totalW = sizes.length*(badgeW+gap2) - gap2;
+    var startX = (w - totalW)/2;
+    for (var bi = 0; bi < sizes.length; bi++) {
+      var bx2 = startX + bi*(badgeW+gap2);
+      ctx.fillStyle = 'rgba(140,170,210,0.04)'; ctx.fillRect(bx2, barY2+4*s, badgeW, 14*s);
+      ctx.strokeStyle = 'rgba(140,170,210,0.08)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(bx2, barY2+4*s, badgeW, 14*s);
+      ctx.fillStyle = 'rgba(240,235,224,0.3)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText(sizes[bi], bx2+badgeW/2, barY2+14*s);
+    }
+    ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(140,170,210,0.12)');
+  }
+
+  // ---- NOCO APP STUDIO: Phone mockup demos ----
+  function drawNoCo(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+
+    // Warm dark gradient (local business warmth)
+    var bg = ctx.createLinearGradient(0, 0, w*0.3, h);
+    bg.addColorStop(0, '#0c0a08'); bg.addColorStop(0.5, '#0e0b09');
+    bg.addColorStop(1, '#0a0907');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    // Subtle mountain silhouette (Northern Colorado)
+    ctx.beginPath();
+    ctx.moveTo(0, h*0.52);
+    ctx.lineTo(w*0.12, h*0.38); ctx.lineTo(w*0.22, h*0.42);
+    ctx.lineTo(w*0.35, h*0.28); ctx.lineTo(w*0.45, h*0.35);
+    ctx.lineTo(w*0.55, h*0.25); ctx.lineTo(w*0.68, h*0.32);
+    ctx.lineTo(w*0.78, h*0.3); ctx.lineTo(w*0.88, h*0.38);
+    ctx.lineTo(w, h*0.42); ctx.lineTo(w, h); ctx.lineTo(0, h);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(201,168,76,0.012)'; ctx.fill();
+
+    // Grid dots (app grid aesthetic)
+    for (var gx = 0; gx < w; gx += 16*s) {
+      for (var gy = 0; gy < h; gy += 16*s) {
+        ctx.fillStyle = 'rgba(201,168,76,0.015)';
+        ctx.fillRect(gx, gy, 1*s, 1*s);
+      }
+    }
+
+    // Header bar
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, 'rgba(201,168,76,0.06)'); hGrad.addColorStop(1, 'rgba(201,168,76,0.01)');
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
+    ctx.strokeStyle = 'rgba(201,168,76,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(201,168,76,0.5)'; ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.65)'; ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('NoCo App Studio', 14*s, 16*s);
+    ctx.fillStyle = 'rgba(201,168,76,0.4)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('10 CLIENTS', w-14*s, 16*s); ctx.textAlign = 'left';
+
+    // Phone mockup (centered)
+    var phoneW = 44*s, phoneH = 80*s;
+    var phoneX = (w - phoneW)/2, phoneY = h*0.2;
+    ctx.strokeStyle = 'rgba(201,168,76,0.18)'; ctx.lineWidth = 1.5*s;
+    ctx.beginPath();
+    ctx.roundRect(phoneX, phoneY, phoneW, phoneH, 4*s);
+    ctx.stroke();
+    // Screen
+    ctx.fillStyle = 'rgba(201,168,76,0.02)';
+    ctx.beginPath(); ctx.roundRect(phoneX+3*s, phoneY+8*s, phoneW-6*s, phoneH-16*s, 2*s);
+    ctx.fill();
+    // Notch
+    ctx.fillStyle = 'rgba(201,168,76,0.1)';
+    ctx.fillRect(phoneX + phoneW*0.3, phoneY+2*s, phoneW*0.4, 3*s);
+    // Screen content - app list items
+    var screenX = phoneX+6*s, screenW = phoneW-12*s;
+    var listItems = ['Bakery', 'CrossFit', 'Salon', 'Dental', 'Brewery'];
+    for (var li = 0; li < listItems.length; li++) {
+      var ly = phoneY + 16*s + li*12*s;
+      ctx.fillStyle = 'rgba(201,168,76,0.035)';
+      ctx.fillRect(screenX, ly, screenW, 10*s);
+      ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 0.5*s;
+      ctx.strokeRect(screenX, ly, screenW, 10*s);
+      // App icon dot
+      ctx.fillStyle = 'rgba(201,168,76,0.25)';
+      ctx.beginPath(); ctx.arc(screenX+4*s, ly+5*s, 2*s, 0, Math.PI*2); ctx.fill();
+      // Name
+      ctx.fillStyle = 'rgba(240,235,224,0.35)'; ctx.font = '300 '+(3.5*s)+'px Inter, sans-serif';
+      ctx.fillText(listItems[li], screenX+9*s, ly+6.5*s);
+    }
+
+    // Side floating cards (left & right of phone)
+    var verticals = [
+      {label: 'FOOD', x: w*0.06, y: h*0.32, color: '220,180,100'},
+      {label: 'FITNESS', x: w*0.06, y: h*0.52, color: '100,200,150'},
+      {label: 'BEAUTY', x: w*0.78, y: h*0.32, color: '200,140,180'},
+      {label: 'HEALTH', x: w*0.78, y: h*0.52, color: '140,180,220'},
+      {label: 'DRINKS', x: w*0.06, y: h*0.72, color: '180,160,120'},
+      {label: 'RETAIL', x: w*0.78, y: h*0.72, color: '160,200,180'}
+    ];
+    for (var vi = 0; vi < verticals.length; vi++) {
+      var v = verticals[vi];
+      var vw = 28*s, vh = 14*s;
+      ctx.fillStyle = 'rgba('+v.color+',0.025)'; ctx.fillRect(v.x, v.y, vw, vh);
+      ctx.strokeStyle = 'rgba('+v.color+',0.08)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(v.x, v.y, vw, vh);
+      ctx.fillStyle = 'rgba('+v.color+',0.35)'; ctx.font = '200 '+(3.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText(v.label, v.x+vw/2, v.y+vh/2+1.5*s); ctx.textAlign = 'left';
+    }
+
+    // Bottom bar - stats
+    var barY = h - 22*s;
+    ctx.fillStyle = 'rgba(201,168,76,0.03)'; ctx.fillRect(0, barY, w, 22*s);
+    ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY); ctx.lineTo(w, barY); ctx.stroke();
+    ctx.fillStyle = 'rgba(201,168,76,0.35)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillText('6 verticals', 10*s, barY+14*s);
+    ctx.textAlign = 'right'; ctx.fillText('$199/mo', w-10*s, barY+14*s); ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(201,168,76,0.15)');
+  }
+
+  // ---- MARKET DASHBOARD: Trading terminal ----
+  function drawMarketDash(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+
+    // Deep dark terminal bg
+    var bg = ctx.createLinearGradient(0, 0, 0, h);
+    bg.addColorStop(0, '#080a0c'); bg.addColorStop(0.5, '#060a0e');
+    bg.addColorStop(1, '#04080c');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    // Scanline overlay
+    ctx.fillStyle = 'rgba(0,255,180,0.003)';
+    for (var sl = 0; sl < h; sl += 2*s) { ctx.fillRect(0, sl, w, 1*s); }
+
+    // Header bar
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, 'rgba(0,220,160,0.06)'); hGrad.addColorStop(1, 'rgba(0,220,160,0.01)');
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
+    ctx.strokeStyle = 'rgba(0,220,160,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(0,220,160,0.5)'; ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.65)'; ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('Market Terminal', 14*s, 16*s);
+    // Live dot
+    ctx.beginPath(); ctx.arc(w-12*s, 12*s, 2.5*s, 0, Math.PI*2);
+    ctx.fillStyle = '#00dc96'; ctx.fill();
+    ctx.fillStyle = 'rgba(0,220,150,0.5)'; ctx.font = (5.5*s)+'px monospace';
+    ctx.textAlign = 'right'; ctx.fillText('LIVE', w-18*s, 15*s); ctx.textAlign = 'left';
+
+    // Candlestick chart (main area)
+    var chartX = 8*s, chartY = 32*s, chartW = w*0.62, chartH = h*0.52;
+    ctx.fillStyle = 'rgba(0,220,160,0.01)'; ctx.fillRect(chartX, chartY, chartW, chartH);
+    ctx.strokeStyle = 'rgba(0,220,160,0.04)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(chartX, chartY, chartW, chartH);
+
+    // Horizontal grid lines
+    for (var gl = 0; gl < 5; gl++) {
+      var gly = chartY + gl*(chartH/5);
+      ctx.strokeStyle = 'rgba(0,220,160,0.025)'; ctx.lineWidth = 0.5*s;
+      ctx.beginPath(); ctx.moveTo(chartX, gly); ctx.lineTo(chartX+chartW, gly); ctx.stroke();
+    }
+
+    // Candlesticks
+    var candleW = 4*s, gap = 1.5*s;
+    var nCandles = Math.floor(chartW / (candleW + gap));
+    var basePrice = chartH*0.5;
+    for (var ci = 0; ci < nCandles; ci++) {
+      var cx = chartX + 4*s + ci*(candleW+gap);
+      var noise = Math.sin(ci*0.8+1.2)*0.35 + Math.sin(ci*0.3+0.5)*0.2;
+      var open = basePrice + noise*chartH*0.3;
+      var close = open + (Math.sin(ci*1.7+2.3)*0.08)*chartH;
+      var high = Math.min(open, close) - Math.abs(Math.sin(ci*2.1))*10*s;
+      var low = Math.max(open, close) + Math.abs(Math.cos(ci*1.9))*10*s;
+      var bullish = close < open; // inverted because Y axis is flipped
+      ctx.strokeStyle = bullish ? 'rgba(0,220,150,0.3)' : 'rgba(248,113,113,0.3)';
+      ctx.lineWidth = 0.5*s;
+      // Wick
+      ctx.beginPath(); ctx.moveTo(cx+candleW/2, chartY+high); ctx.lineTo(cx+candleW/2, chartY+low); ctx.stroke();
+      // Body
+      ctx.fillStyle = bullish ? 'rgba(0,220,150,0.15)' : 'rgba(248,113,113,0.12)';
+      var bodyTop = chartY + Math.min(open, close), bodyH = Math.abs(close - open) || 1*s;
+      ctx.fillRect(cx, bodyTop, candleW, bodyH);
+      ctx.strokeRect(cx, bodyTop, candleW, bodyH);
+    }
+
+    // Order book (right side)
+    var obX = w*0.66, obY = 32*s, obW = w*0.32, obH = chartH;
+    ctx.fillStyle = 'rgba(0,220,160,0.01)'; ctx.fillRect(obX, obY, obW, obH);
+    ctx.strokeStyle = 'rgba(0,220,160,0.04)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(obX, obY, obW, obH);
+    ctx.fillStyle = 'rgba(0,220,160,0.3)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
+    ctx.fillText('ORDER BOOK', obX+6*s, obY+10*s);
+
+    // Asks (red) top half
+    for (var ai = 0; ai < 6; ai++) {
+      var ay = obY + 16*s + ai*7*s;
+      var aBarW = (0.3 + Math.sin(ai*1.7+0.5)*0.15)*obW*0.65;
+      ctx.fillStyle = 'rgba(248,113,113,0.06)'; ctx.fillRect(obX+obW-aBarW-4*s, ay, aBarW, 5*s);
+      ctx.fillStyle = 'rgba(248,113,113,0.3)'; ctx.font = (3.5*s)+'px monospace';
+      ctx.textAlign = 'right'; ctx.fillText((67200-ai*12).toFixed(0), obX+obW-6*s, ay+4*s);
+      ctx.textAlign = 'left';
+    }
+    // Spread line
+    var spreadY = obY + 16*s + 6*7*s + 2*s;
+    ctx.strokeStyle = 'rgba(201,168,76,0.15)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(obX+4*s, spreadY); ctx.lineTo(obX+obW-4*s, spreadY); ctx.stroke();
+    ctx.fillStyle = 'rgba(201,168,76,0.3)'; ctx.font = (3*s)+'px monospace';
+    ctx.textAlign = 'center'; ctx.fillText('SPREAD', obX+obW/2, spreadY-2*s); ctx.textAlign = 'left';
+    // Bids (green) bottom half
+    for (var bi = 0; bi < 6; bi++) {
+      var by = spreadY + 6*s + bi*7*s;
+      var bBarW = (0.3 + Math.sin(bi*2.1+1.2)*0.15)*obW*0.65;
+      ctx.fillStyle = 'rgba(0,220,150,0.06)'; ctx.fillRect(obX+4*s, by, bBarW, 5*s);
+      ctx.fillStyle = 'rgba(0,220,150,0.3)'; ctx.font = (3.5*s)+'px monospace';
+      ctx.fillText((67140-bi*12).toFixed(0), obX+6*s, by+4*s);
+    }
+
+    // Trade tape (bottom)
+    var tapeY = chartY + chartH + 8*s;
+    ctx.fillStyle = 'rgba(0,220,160,0.025)'; ctx.fillRect(8*s, tapeY, w-16*s, h-tapeY-28*s);
+    ctx.strokeStyle = 'rgba(0,220,160,0.04)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeRect(8*s, tapeY, w-16*s, h-tapeY-28*s);
+    ctx.fillStyle = 'rgba(0,220,160,0.3)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
+    ctx.fillText('TRADE TAPE', 14*s, tapeY+10*s);
+    // Tape entries
+    var trades = ['BUY 0.15 @ 67,148', 'SELL 0.42 @ 67,156', 'BUY 1.20 @ 67,144', 'SELL 0.08 @ 67,160'];
+    for (var ti = 0; ti < trades.length; ti++) {
+      var ty = tapeY + 16*s + ti*6.5*s;
+      var isBuy = trades[ti].indexOf('BUY') === 0;
+      ctx.fillStyle = isBuy ? 'rgba(0,220,150,0.25)' : 'rgba(248,113,113,0.25)';
+      ctx.font = (3.5*s)+'px monospace';
+      ctx.fillText(trades[ti], 14*s, ty);
+    }
+
+    // Bottom stat bar
+    var barY = h - 22*s;
+    ctx.fillStyle = 'rgba(0,220,160,0.03)'; ctx.fillRect(0, barY, w, 22*s);
+    ctx.strokeStyle = 'rgba(0,220,160,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY); ctx.lineTo(w, barY); ctx.stroke();
+    ctx.fillStyle = 'rgba(0,220,150,0.35)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillText('0 deps', 10*s, barY+14*s);
+    ctx.textAlign = 'center'; ctx.fillText('60 FPS', w/2, barY+14*s);
+    ctx.textAlign = 'right'; ctx.fillText('WebSocket', w-10*s, barY+14*s); ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(0,220,160,0.12)');
+  }
+
+  // ---- AUTON: Autonomous background worker ----
+  function drawAuton(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+
+    // Deep purple-tinted dark bg (AI aesthetic)
+    var bg = ctx.createLinearGradient(0, 0, w*0.4, h);
+    bg.addColorStop(0, '#090710'); bg.addColorStop(0.5, '#0b0912');
+    bg.addColorStop(1, '#07060c');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    // Neural network dots & connections (background pattern)
+    var nodes = [];
+    for (var ni = 0; ni < 30; ni++) {
+      nodes.push({
+        x: (Math.sin(ni*4.7+1.3)*0.4+0.5)*w,
+        y: (Math.sin(ni*3.2+0.8)*0.4+0.5)*h
+      });
+    }
+    // Connections
+    ctx.strokeStyle = 'rgba(160,120,220,0.015)'; ctx.lineWidth = 0.5*s;
+    for (var ci = 0; ci < nodes.length; ci++) {
+      for (var cj = ci+1; cj < nodes.length; cj++) {
+        var dx = nodes[ci].x - nodes[cj].x, dy = nodes[ci].y - nodes[cj].y;
+        if (dx*dx+dy*dy < (80*s)*(80*s)) {
+          ctx.beginPath(); ctx.moveTo(nodes[ci].x, nodes[ci].y); ctx.lineTo(nodes[cj].x, nodes[cj].y); ctx.stroke();
+        }
+      }
+    }
+    // Nodes
+    for (var nj = 0; nj < nodes.length; nj++) {
+      ctx.fillStyle = 'rgba(160,120,220,0.04)';
+      ctx.beginPath(); ctx.arc(nodes[nj].x, nodes[nj].y, 1.5*s, 0, Math.PI*2); ctx.fill();
+    }
+
+    // Header bar
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, 'rgba(160,120,220,0.06)'); hGrad.addColorStop(1, 'rgba(160,120,220,0.01)');
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
+    ctx.strokeStyle = 'rgba(160,120,220,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
+    ctx.fillStyle = 'rgba(160,120,220,0.5)'; ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = 'rgba(240,235,224,0.65)'; ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('Auton', 14*s, 16*s);
+    ctx.fillStyle = 'rgba(160,120,220,0.35)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('AUTONOMOUS', w-14*s, 16*s); ctx.textAlign = 'left';
+
+    // Agent pipeline (central feature)
+    var agents = [
+      {name: 'Scanner', icon: '\u25CE', color: '120,180,220'},
+      {name: 'Planner', icon: '\u25C7', color: '160,120,220'},
+      {name: 'Executor', icon: '\u25B7', color: '200,120,180'},
+      {name: 'Tester', icon: '\u25A1', color: '120,200,160'},
+      {name: 'Reviewer', icon: '\u25CB', color: '220,180,100'},
+      {name: 'Monitor', icon: '\u25C9', color: '100,180,200'}
+    ];
+    var pipeY = h*0.32;
+    var pipeH = 14*s;
+    var agentW = (w - 20*s) / agents.length;
+    for (var ai = 0; ai < agents.length; ai++) {
+      var ag = agents[ai];
+      var ax = 10*s + ai*agentW;
+      // Agent box
+      ctx.fillStyle = 'rgba('+ag.color+',0.025)';
+      ctx.fillRect(ax+1*s, pipeY, agentW-2*s, pipeH);
+      ctx.strokeStyle = 'rgba('+ag.color+',0.1)'; ctx.lineWidth = 0.5*s;
+      ctx.strokeRect(ax+1*s, pipeY, agentW-2*s, pipeH);
+      // Icon
+      ctx.fillStyle = 'rgba('+ag.color+',0.35)'; ctx.font = (6*s)+'px monospace';
+      ctx.textAlign = 'center'; ctx.fillText(ag.icon, ax+agentW/2, pipeY+6*s);
+      // Name
+      ctx.fillStyle = 'rgba('+ag.color+',0.4)'; ctx.font = '200 '+(3*s)+'px Inter, sans-serif';
+      ctx.fillText(ag.name, ax+agentW/2, pipeY+12*s);
+      // Arrow between agents
+      if (ai < agents.length-1) {
+        ctx.strokeStyle = 'rgba(160,120,220,0.08)'; ctx.lineWidth = 0.5*s;
+        ctx.beginPath(); ctx.moveTo(ax+agentW-1*s, pipeY+pipeH/2);
+        ctx.lineTo(ax+agentW+1*s, pipeY+pipeH/2); ctx.stroke();
+      }
+    }
+    ctx.textAlign = 'left';
+
+    // Safety model visualization
+    var safeY = pipeY + pipeH + 18*s;
+    ctx.fillStyle = 'rgba(160,120,220,0.02)'; ctx.fillRect(10*s, safeY, w-20*s, 28*s);
+    ctx.strokeStyle = 'rgba(160,120,220,0.05)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeRect(10*s, safeY, w-20*s, 28*s);
+    ctx.fillStyle = 'rgba(160,120,220,0.25)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
+    ctx.fillText('SAFETY LAYERS', 16*s, safeY+10*s);
+
+    var layers = ['DRY_RUN', 'SafetyGuard', 'Kill Switch', 'Cred Isolation', 'Audit', 'Rollback'];
+    var layerW = (w - 30*s) / layers.length;
+    for (var li = 0; li < layers.length; li++) {
+      var lx = 15*s + li*layerW;
+      ctx.fillStyle = 'rgba(0,220,150,0.04)'; ctx.fillRect(lx, safeY+14*s, layerW-3*s, 10*s);
+      ctx.strokeStyle = 'rgba(0,220,150,0.08)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(lx, safeY+14*s, layerW-3*s, 10*s);
+      ctx.fillStyle = 'rgba(0,220,150,0.35)'; ctx.font = (2.8*s)+'px monospace';
+      ctx.textAlign = 'center'; ctx.fillText(layers[li], lx+(layerW-3*s)/2, safeY+21*s);
+    }
+    ctx.textAlign = 'left';
+
+    // Activity log at bottom
+    var logY = safeY + 34*s;
+    var logEntries = [
+      {t:'14:22:01', msg:'Scanner → found 3 improvements in profit-desk/', color:'120,180,220'},
+      {t:'14:22:08', msg:'Planner → drafted PR #47: add retry logic', color:'160,120,220'},
+      {t:'14:22:15', msg:'Executor → applied patch (DRY_RUN)', color:'200,120,180'},
+      {t:'14:22:19', msg:'Tester → all 42 tests passing', color:'120,200,160'}
+    ];
+    for (var ei = 0; ei < logEntries.length; ei++) {
+      var entry = logEntries[ei];
+      var ey = logY + ei*7*s;
+      ctx.fillStyle = 'rgba('+entry.color+',0.06)'; ctx.font = (3*s)+'px monospace';
+      ctx.fillText(entry.t, 10*s, ey);
+      ctx.fillStyle = 'rgba('+entry.color+',0.25)'; ctx.font = (3*s)+'px monospace';
+      ctx.fillText(entry.msg, 36*s, ey);
+    }
+
+    // Bottom stat bar
+    var barY = h - 22*s;
+    ctx.fillStyle = 'rgba(160,120,220,0.03)'; ctx.fillRect(0, barY, w, 22*s);
+    ctx.strokeStyle = 'rgba(160,120,220,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY); ctx.lineTo(w, barY); ctx.stroke();
+    ctx.fillStyle = 'rgba(160,120,220,0.35)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillText('6 agents', 10*s, barY+14*s);
+    ctx.textAlign = 'center'; ctx.fillText('14B LLM', w/2, barY+14*s);
+    ctx.textAlign = 'right'; ctx.fillText('RTX 4070', w-10*s, barY+14*s); ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, 'rgba(160,120,220,0.12)');
+  }
+
+  // ===== DISPATCH =====
+  var renderers = {
+    booking: drawBooking, trading: drawTrading, profitdesk: drawProfitDesk,
+    rts: drawRTS, platformer: drawPlatformer, messenger: drawMessenger,
+    polymarket: drawPolymarket, galleon: drawGalleon,
+    bookmarkbot: drawBookmarkBot, homehub: drawHomeHub,
+    projecthub: drawProjectHub, fisher13: drawFisher13,
+    noco: drawNoCo, marketdash: drawMarketDash, auton: drawAuton
+  };
+
+  function initProjectCanvases() {
+    document.querySelectorAll('canvas[data-project]').forEach(function(cv) {
+      var key = cv.getAttribute('data-project');
+      if (renderers[key]) renderers[key](cv);
+    });
+  }
+
+  // Init
+  window.addEventListener('load', function() {
+    initProjectCanvases();
+  });
+  var resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() { initProjectCanvases(); }, 300);
+  });
+
+  // Lazy-load concept iframes when gallery scrolls into view
+  var conceptGallery = document.querySelector('.concept-gallery');
+  if (conceptGallery) {
+    var conceptLoaded = false;
+    var conceptObserver = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting && !conceptLoaded) {
+        conceptLoaded = true;
+        var thumbs = document.querySelectorAll('.concept-thumb[data-src]');
+        thumbs.forEach(function(thumb) {
+          var iframe = document.createElement('iframe');
+          iframe.src = thumb.getAttribute('data-src');
+          iframe.loading = 'lazy';
+          iframe.tabIndex = -1;
+          iframe.setAttribute('aria-hidden', 'true');
+          iframe.setAttribute('sandbox', 'allow-same-origin');
+          var placeholder = thumb.querySelector('.concept-placeholder');
+          if (placeholder) placeholder.remove();
+          thumb.appendChild(iframe);
+        });
+        conceptObserver.disconnect();
+      }
+    }, { rootMargin: '200px' });
+    conceptObserver.observe(conceptGallery);
+  }
+
+})();

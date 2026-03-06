@@ -28,8 +28,7 @@
 var FTDA_CONFIG = {
 
   // SHA-256 hex hash of the passkey. Generate with the console command above.
-  // Current passkey: "ftda2026"
-  passkeySha256Hex: "bceb97e6972d9e40c1ea7e6d6d13b182c4ba1242e179e9f915026d38fb53ecd2",
+  passkeySha256Hex: "c65a82e6ec8047fa252b9ab14afe81ab92736c8c0947734fe7059f67189ad984",
 
   artifacts: [
     {
