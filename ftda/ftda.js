@@ -105,19 +105,21 @@
     var ctx = canvas.getContext('2d');
     var s = dpr;
 
-    // Deep dark background
+    // Theme-aware background
+    var light = document.documentElement.getAttribute('data-theme') === 'light';
     var bg = ctx.createLinearGradient(0, 0, w, h);
-    bg.addColorStop(0, '#08080a'); bg.addColorStop(0.5, '#0c0b0e'); bg.addColorStop(1, '#0a0910');
+    if (light) { bg.addColorStop(0, '#e6e4e0'); bg.addColorStop(0.5, '#e8e6e2'); bg.addColorStop(1, '#e4e2de'); }
+    else { bg.addColorStop(0, '#08080a'); bg.addColorStop(0.5, '#0c0b0e'); bg.addColorStop(1, '#0a0910'); }
     ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
 
     // Subtle radial glow (gold)
     var glow = ctx.createRadialGradient(w*0.4, h*0.45, 0, w*0.4, h*0.45, w*0.5);
-    glow.addColorStop(0, 'rgba(201, 168, 76, 0.06)');
+    glow.addColorStop(0, 'rgba(201, 168, 76, '+(light ? '0.1' : '0.06')+')');
     glow.addColorStop(1, 'transparent');
     ctx.fillStyle = glow; ctx.fillRect(0, 0, w, h);
 
     // Grid pattern
-    ctx.strokeStyle = 'rgba(201, 168, 76, 0.015)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeStyle = 'rgba(201, 168, 76, '+(light ? '0.03' : '0.015')+')'; ctx.lineWidth = 0.5*s;
     for (var gi = 0; gi < w; gi += 30*s) { ctx.beginPath(); ctx.moveTo(gi, 0); ctx.lineTo(gi, h); ctx.stroke(); }
     for (var gj = 0; gj < h; gj += 30*s) { ctx.beginPath(); ctx.moveTo(0, gj); ctx.lineTo(w, gj); ctx.stroke(); }
 
@@ -154,13 +156,13 @@
 
     // Right side: document lines mockup
     var docX = w*0.55, docY = h*0.15, docW = w*0.36, docH = h*0.7;
-    ctx.fillStyle = 'rgba(201, 168, 76, 0.02)'; ctx.fillRect(docX, docY, docW, docH);
-    ctx.strokeStyle = 'rgba(201, 168, 76, 0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.fillStyle = 'rgba(201, 168, 76, '+(light ? '0.04' : '0.02')+')'; ctx.fillRect(docX, docY, docW, docH);
+    ctx.strokeStyle = 'rgba(201, 168, 76, '+(light ? '0.1' : '0.06')+')'; ctx.lineWidth = 0.5*s;
     ctx.strokeRect(docX, docY, docW, docH);
 
     // Doc header
-    ctx.fillStyle = 'rgba(201, 168, 76, 0.04)'; ctx.fillRect(docX, docY, docW, 20*s);
-    ctx.fillStyle = 'rgba(201, 168, 76, 0.3)'; ctx.font = '200 '+(5*s)+'px Inter, sans-serif';
+    ctx.fillStyle = 'rgba(201, 168, 76, '+(light ? '0.08' : '0.04')+')'; ctx.fillRect(docX, docY, docW, 20*s);
+    ctx.fillStyle = 'rgba(201, 168, 76, '+(light ? '0.5' : '0.3')+')'; ctx.font = '200 '+(5*s)+'px Inter, sans-serif';
     ctx.fillText('ARCHITECTURE PLAYBOOK', docX+8*s, docY+13*s);
 
     // Document line mockups
@@ -170,7 +172,9 @@
       if (lineWidths[li] === 0) { lineY += 10*s; continue; }
       var lw = lineWidths[li] * (docW - 16*s);
       var isHeading = (li === 0 || li === 5 || li === 11 || li === 16);
-      ctx.fillStyle = isHeading ? 'rgba(240, 235, 224, 0.12)' : 'rgba(240, 235, 224, 0.04)';
+      ctx.fillStyle = isHeading
+        ? (light ? 'rgba(60, 50, 40, 0.15)' : 'rgba(240, 235, 224, 0.12)')
+        : (light ? 'rgba(60, 50, 40, 0.06)' : 'rgba(240, 235, 224, 0.04)');
       ctx.fillRect(docX+8*s, lineY, lw, isHeading ? 3*s : 2*s);
       lineY += isHeading ? 12*s : 8*s;
     }
@@ -184,18 +188,18 @@
     ctx.textAlign = 'left';
 
     // Title text overlay
-    ctx.fillStyle = 'rgba(240, 235, 224, 0.45)'; ctx.font = '300 '+(14*s)+'px Cormorant Garamond, serif';
+    ctx.fillStyle = light ? 'rgba(40, 35, 30, 0.55)' : 'rgba(240, 235, 224, 0.45)'; ctx.font = '300 '+(14*s)+'px Cormorant Garamond, serif';
     ctx.fillText('Fisher Team', w*0.06, h*0.14);
     ctx.fillText('Development', w*0.06, h*0.21);
-    ctx.fillStyle = 'rgba(201, 168, 76, 0.35)';
+    ctx.fillStyle = light ? 'rgba(140, 115, 55, 0.55)' : 'rgba(201, 168, 76, 0.35)';
     ctx.fillText('Architecture', w*0.06, h*0.28);
 
     // Decorative rule
-    ctx.fillStyle = 'rgba(201, 168, 76, 0.12)';
+    ctx.fillStyle = 'rgba(201, 168, 76, '+(light ? '0.2' : '0.12')+')';
     ctx.fillRect(w*0.06, h*0.31, 50*s, 0.5*s);
 
     // Subtitle
-    ctx.fillStyle = 'rgba(240, 235, 224, 0.15)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.fillStyle = light ? 'rgba(40, 35, 30, 0.2)' : 'rgba(240, 235, 224, 0.15)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
     ctx.fillText('LEADERSHIP FRAMEWORK', w*0.06, h*0.35);
 
     // Bottom stats bar
@@ -208,9 +212,9 @@
     var bsW = w / bStats.length;
     for (var bsi = 0; bsi < bStats.length; bsi++) {
       var bsx = bsi * bsW + bsW/2;
-      ctx.fillStyle = 'rgba(201, 168, 76, 0.5)'; ctx.font = '300 '+(10*s)+'px Cormorant Garamond, serif';
+      ctx.fillStyle = 'rgba(201, 168, 76, '+(light ? '0.65' : '0.5')+')'; ctx.font = '300 '+(10*s)+'px Cormorant Garamond, serif';
       ctx.textAlign = 'center'; ctx.fillText(bStats[bsi].v, bsx, bStatY+8*s);
-      ctx.fillStyle = 'rgba(240, 235, 224, 0.12)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
+      ctx.fillStyle = light ? 'rgba(40, 35, 30, 0.18)' : 'rgba(240, 235, 224, 0.12)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
       ctx.fillText(bStats[bsi].l, bsx, bStatY+16*s);
     }
     ctx.textAlign = 'left';
@@ -585,5 +589,13 @@
   } else {
     init();
   }
+
+  // Expose canvas re-draw for theme toggle (called from main.js)
+  window.initFtdaCanvas = function() {
+    var canvas = document.getElementById('ftda-canvas');
+    if (canvas && currentArtifact) {
+      drawFtdaThumbnail(canvas, currentArtifact);
+    }
+  };
 
 })();

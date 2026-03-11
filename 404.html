@@ -81,7 +81,30 @@
     font-size: 28px;
     opacity: 0.08;
   }
+
+  [data-theme="light"] {
+    --bg: #c5c6c8;
+    --warm-white: #1a1a1c;
+    --gold-1776: #3a3a3c;
+  }
+  [data-theme="light"] body { background: #c5c6c8; color: #1a1a1c; }
+  [data-theme="light"] .code { color: rgba(42,42,46,0.18); }
+  [data-theme="light"] .message { color: rgba(26,26,28,0.6); }
+  [data-theme="light"] .sub { color: rgba(26,26,28,0.3); }
+  [data-theme="light"] .home-link {
+    color: #2a2a2e;
+    border-color: rgba(42,42,46,0.25);
+  }
+  [data-theme="light"] .home-link:hover {
+    background: rgba(42,42,46,0.06);
+    border-color: rgba(42,42,46,0.5);
+  }
 </style>
+<script>
+  if (localStorage.getItem('lf-theme') === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+</script>
 </head>
 <body>
   <div class="code">404</div>

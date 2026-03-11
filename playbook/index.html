@@ -437,6 +437,108 @@
     }
 
 
+    /* =========== LIGHT MODE =========== */
+    [data-theme="light"] {
+      --bg: #c5c6c8;
+      --warm-white: #1a1a1c;
+      --gold-1776: #3a3a3c;
+    }
+    [data-theme="light"] body {
+      background: #c5c6c8;
+      color: #1a1a1c;
+    }
+    [data-theme="light"] .gate-overlay {
+      background: #c5c6c8;
+    }
+    [data-theme="light"] .gate-heading { color: #1a1a1c; }
+    [data-theme="light"] .gate-sub { color: rgba(26,26,28,0.45); }
+    [data-theme="light"] .gate-input {
+      background: rgba(255,255,255,0.55);
+      border-color: rgba(42,42,46,0.2);
+      color: #1a1a1c;
+    }
+    [data-theme="light"] .gate-input::placeholder { color: rgba(26,26,28,0.3); }
+    [data-theme="light"] .gate-input:focus { border-color: rgba(42,42,46,0.5); }
+    [data-theme="light"] .gate-submit {
+      background: rgba(42,42,46,0.1);
+      border-color: rgba(42,42,46,0.3);
+      color: #2a2a2e;
+    }
+    [data-theme="light"] .gate-submit:hover {
+      background: rgba(42,42,46,0.18);
+      border-color: rgba(42,42,46,0.5);
+    }
+    [data-theme="light"] .gate-back { color: rgba(26,26,28,0.35); }
+    [data-theme="light"] .gate-back:hover { color: rgba(26,26,28,0.7); }
+    [data-theme="light"] .reader-topbar {
+      background: rgba(255,255,255,0.3);
+      border-bottom-color: rgba(42,42,46,0.12);
+    }
+    [data-theme="light"] .reader-title-bar { color: rgba(42,42,46,0.65); }
+    [data-theme="light"] .reader-status { color: rgba(40,120,70,0.7); }
+    [data-theme="light"] .reader-status-dot { background: rgba(40,120,70,0.7); }
+    [data-theme="light"] .reader-btn {
+      background: rgba(255,255,255,0.4);
+      border-color: rgba(42,42,46,0.15);
+      color: rgba(26,26,28,0.6);
+    }
+    [data-theme="light"] .reader-btn:hover {
+      background: rgba(255,255,255,0.65);
+      color: rgba(26,26,28,0.85);
+    }
+    [data-theme="light"] .reader-btn.active {
+      background: rgba(42,42,46,0.1);
+      border-color: rgba(42,42,46,0.3);
+      color: #1a1a1c;
+    }
+    [data-theme="light"] .reader-close {
+      border-color: rgba(42,42,46,0.15);
+      color: rgba(26,26,28,0.55);
+    }
+    [data-theme="light"] .reader-close:hover { border-color: rgba(200,40,55,0.3); color: #c02837; }
+    [data-theme="light"] .reader-toc {
+      background: rgba(255,255,255,0.2);
+      border-right-color: rgba(42,42,46,0.1);
+    }
+    [data-theme="light"] .toc-heading { color: rgba(42,42,46,0.5); }
+    [data-theme="light"] .toc-item {
+      color: rgba(26,26,28,0.45);
+    }
+    [data-theme="light"] .toc-item:hover {
+      color: rgba(26,26,28,0.8);
+      background: rgba(42,42,46,0.04);
+    }
+    [data-theme="light"] .toc-item.active {
+      color: #1a1a1c;
+      border-left-color: #3a3a3c;
+      background: rgba(42,42,46,0.06);
+    }
+    [data-theme="light"] .reader-content { background: transparent; }
+    [data-theme="light"] .doc-copyright {
+      color: rgba(42,42,46,0.5);
+      border-top-color: rgba(42,42,46,0.1);
+      border-bottom-color: rgba(42,42,46,0.1);
+    }
+    [data-theme="light"] .doc-signature { color: rgba(42,42,46,0.4); border-top-color: rgba(42,42,46,0.06); }
+    [data-theme="light"] .doc-content { color: rgba(26,26,28,0.75); }
+    [data-theme="light"] .doc-content h1,
+    [data-theme="light"] .doc-content h2 { color: #1a1a1c; }
+    [data-theme="light"] .doc-content h3 { color: rgba(42,42,46,0.7); }
+    [data-theme="light"] .doc-content h4 { color: rgba(26,26,28,0.6); }
+    [data-theme="light"] .doc-content em { color: rgba(26,26,28,0.88); }
+    [data-theme="light"] .doc-content strong { color: #1a1a1c; }
+    [data-theme="light"] .doc-content hr { border-top-color: rgba(42,42,46,0.12); }
+    [data-theme="light"] .doc-content a { color: #2a2a2e; border-bottom-color: rgba(42,42,46,0.3); }
+    [data-theme="light"] .doc-content a:hover { border-bottom-color: #1a1a1c; }
+    [data-theme="light"] .ftda-note {
+      color: rgba(42,42,46,0.65);
+      border-left-color: rgba(42,42,46,0.3);
+      background: rgba(42,42,46,0.04);
+    }
+    [data-theme="light"] .ftda-subtitle { color: rgba(26,26,28,0.5); }
+    [data-theme="light"] .ftda-byline { color: rgba(26,26,28,0.4); }
+    [data-theme="light"] .watermark-text { color: rgba(26,26,28,0.8); }
+
     /* =========== RESPONSIVE =========== */
     @media (max-width: 768px) {
       .reader-body {
@@ -476,6 +578,15 @@
   </style>
 </head>
 <body>
+
+  <!-- Apply site theme from localStorage before paint to prevent flash -->
+  <script>
+    (function() {
+      if (localStorage.getItem('lf-theme') === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
 
   <!-- PASSKEY GATE -->
   <div class="gate-overlay" id="gateOverlay">
