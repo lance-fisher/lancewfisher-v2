@@ -807,7 +807,7 @@ body::after {
 </div>
 
 <!-- Coordinates Display -->
-<div class="coordinates" id="coordsDisplay">40.5853&deg; N, 105.0844&deg; W</div>
+<div class="coordinates" id="coordsDisplay">XX.XXXX&deg; N, XX.XXXX&deg; W</div>
 
 <!-- Coffee stains -->
 <div class="stain" style="width:120px;height:120px;top:15%;right:12%;"></div>
@@ -825,7 +825,7 @@ body::after {
       <img src="../portrait.jpg" alt="Lance Fisher" />
     </div>
 
-    <div class="cartouche-location">Cheyenne, Wyoming</div>
+    <div class="cartouche-location">United States</div>
   </div>
 
   <div class="ship-illustration">
@@ -842,7 +842,7 @@ body::after {
 
     <div class="about-content">
       <div class="about-text">
-        <p>In the territories of Cheyenne, Wyoming, there resides a builder of considerable works. Lance Fisher charts his course through the digital frontier, commanding fleets of applications, trading systems, and interactive experiences.</p>
+        <p>There resides a builder of considerable works. Lance Fisher charts his course through the digital frontier, commanding fleets of applications, trading systems, and interactive experiences.</p>
         <p>A father who builds games for his son. A husband who builds platforms for his wife's practice. A leader who builds systems that run day and night. Every line of code is a mark on the map of what's possible.</p>
         <p>From full-stack applications to autonomous trading engines, from real-time strategy games to encrypted communications, these are the territories he has charted.</p>
       </div>
@@ -889,7 +889,7 @@ body::after {
     </div>
 
     <div class="venture-card">
-      <div class="venture-name">Harmony Skin & Wellness</div>
+      <div class="venture-name">a private medical spa</div>
       <div class="venture-role">Builder for Family</div>
       <div class="venture-desc">A production booking platform for his wife's medspa practice. Mobile-first experience with provider scheduling, service catalog, and payment processing. Built with love, deployed with care.</div>
     </div>
@@ -926,7 +926,7 @@ body::after {
       <div class="project-territory">
         <div class="project-name">3D Platformer for His Son</div>
         <div class="project-stack">Unity / C# / Three.js</div>
-        <div class="project-desc">Jump Quest: a 3D obby platformer with procedural level generation, XP progression, skill trees, and Xbox controller support. Built for Jamison.</div>
+        <div class="project-desc">Jump Quest: a 3D obby platformer with procedural level generation, XP progression, skill trees, and Xbox controller support. Built for his son.</div>
       </div>
 
       <div class="project-territory" style="grid-column: 1 / -1;">
@@ -1075,8 +1075,8 @@ window.addEventListener('scroll', function() {
 // Coordinates display - track mouse as lat/lng
 document.addEventListener('mousemove', function(e) {
   const display = document.getElementById('coordsDisplay');
-  const lat = (40.5853 + (0.5 - e.clientY / window.innerHeight) * 0.5).toFixed(4);
-  const lng = (105.0844 + (e.clientX / window.innerWidth - 0.5) * 0.5).toFixed(4);
+  const lat = (39.8283 + (0.5 - e.clientY / window.innerHeight) * 0.5).toFixed(4);
+  const lng = (98.5795 + (e.clientX / window.innerWidth - 0.5) * 0.5).toFixed(4);
   display.textContent = lat + '\u00B0 N, ' + lng + '\u00B0 W';
 });
 

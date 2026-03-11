@@ -1090,7 +1090,7 @@ body {
       <div>
         <div class="section-title">Building<br>from the<br>ground up</div>
         <div class="body-text">
-          Based in <em>Cheyenne, Wyoming</em>. Full-stack architect, trading systems engineer, game developer, and maker of things that work. Father and husband first. Builder of <em>production software</em>, <em>autonomous trading infrastructure</em>, <em>real-time games</em>, and <em>encrypted communication platforms</em>.
+          Full-stack architect, trading systems engineer, game developer, and maker of things that work. Father and husband first. Builder of <em>production software</em>, <em>autonomous trading infrastructure</em>, <em>real-time games</em>, and <em>encrypted communication platforms</em>.
         </div>
         <div class="stats-row">
           <div class="stat">
@@ -1129,8 +1129,8 @@ body {
       <div class="project-card">
         <div class="project-info">
           <div class="p-number">01</div>
-          <div class="p-title">Harmony Booking Platform</div>
-          <div class="p-desc">Production mobile booking system built for Harmony Skin &amp; Wellness, a medical spa practice in Cheyenne. Full client-facing app with provider scheduling, Stripe payments, and admin analytics.</div>
+          <div class="p-title">MedSpa Booking Platform</div>
+          <div class="p-desc">Production mobile booking system built for a private medical spa practice. Full client-facing app with provider scheduling, Stripe payments, and admin analytics.</div>
           <div class="p-tech">React Native / Expo / NestJS / PostgreSQL / Stripe</div>
           <div class="p-status active">In Development</div>
         </div>
@@ -1320,7 +1320,7 @@ body {
         </div>
         <div class="project-detail">
           <div class="detail-inner">
-            <p class="p-opinion">The best code Lance has ever written was for a six-year-old. Watching his son Jamison play a game his dad built is the whole reason he does this. Jamison doesn't care about the architecture or the procedural level generation. He cares that the coins sparkle and the jump feels good. Honestly, that's the highest bar there is.</p>
+            <p class="p-opinion">The best code Lance has ever written was for a six-year-old. Watching his son play a game his dad built is the whole reason he does this. He doesn't care about the architecture or the procedural level generation. He cares that the coins sparkle and the jump feels good. Honestly, that's the highest bar there is.</p>
             <div class="detail-col">
               <h4>Highlights</h4>
               <ul>
@@ -1735,7 +1735,7 @@ body {
       </a>
       <div class="contact-row" style="cursor:default;">
         <span class="c-label">Location</span>
-        <span class="c-value">Cheyenne, Wyoming</span>
+        <span class="c-value">United States</span>
       </div>
     </div>
 
@@ -1924,7 +1924,7 @@ body {
     ctx.fillStyle = glow; ctx.fillRect(0, 0, w, h);
   }
 
-  // ---- BOOKING: Phone mockup with real Harmony content ----
+  // ---- BOOKING: Phone mockup with medspa booking content ----
   function drawBooking(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
     drawBg(ctx, w, h, 184, 156, 92);
@@ -1965,12 +1965,12 @@ body {
     ctx.fillStyle = 'rgba(80,60,30,0.3)'; ctx.font = (5*s)+'px Inter, sans-serif';
     ctx.fillText('LTE', sx+4*s, sy+10*s);
 
-    // Harmony header
+    // App header
     ctx.fillStyle = '#f4ede4'; ctx.fillRect(sx, sy+14*s, sw, 24*s);
     ctx.fillStyle = '#8b7b60'; ctx.font = '600 '+(7*s)+'px Inter, sans-serif';
-    ctx.textAlign = 'center'; ctx.fillText('HARMONY', sx+sw/2, sy+28*s);
+    ctx.textAlign = 'center'; ctx.fillText('MEDSPA', sx+sw/2, sy+28*s);
     ctx.fillStyle = '#b0a088'; ctx.font = '300 '+(4.5*s)+'px Inter, sans-serif';
-    ctx.fillText('SKIN & WELLNESS CLINIC', sx+sw/2, sy+35*s);
+    ctx.fillText('BOOKING PLATFORM', sx+sw/2, sy+35*s);
 
     // Promo banner placeholder (gets replaced by real image)
     var bannerY = sy+42*s, bannerH = 44*s;
@@ -2043,7 +2043,7 @@ body {
     ctx.textAlign = 'left';
     ctx.fillStyle = 'rgba(184,156,92,0.4)'; ctx.font = '200 '+(8*s)+'px Inter, sans-serif';
     ctx.letterSpacing = '3px';
-    ctx.fillText('HARMONY SKIN & WELLNESS', rx, h*0.18);
+    ctx.fillText('MEDSPA BOOKING PLATFORM', rx, h*0.18);
     ctx.fillStyle = 'rgba(240,235,224,0.75)'; ctx.font = '300 '+(18*s)+'px Cormorant Garamond, serif';
     ctx.fillText('Mobile', rx, h*0.29);
     ctx.fillText('Booking', rx, h*0.39);
@@ -2959,7 +2959,7 @@ body {
     var ideas = [
       {project:'master-trade-bot', idea:'Trailing stop-loss from @levelsio pattern', conf:92, c:'#4ade80'},
       {project:'home-hub', idea:'Motion detection alerts from @karpathy thread', conf:87, c:'#60a5fa'},
-      {project:'harmony-medspa', idea:'Waitlist feature from @spa_tech bookmark', conf:81, c:'#fbbf24'},
+      {project:'medspa-booking', idea:'Waitlist feature from @spa_tech bookmark', conf:81, c:'#fbbf24'},
       {project:'profit-desk', idea:'Risk parity rebalancing from @naval thread', conf:74, c:'#c084fc'}
     ];
     for (var ii = 0; ii < ideas.length; ii++) {
@@ -3227,7 +3227,7 @@ body {
     ctx.fillText('LANG', tableX+tableW*0.82, tableY+8*s);
 
     var projects = [
-      {name:'harmony-medspa', status:'clean', lang:'TS/RN', commits:'+3'},
+      {name:'medspa-booking', status:'clean', lang:'TS/RN', commits:'+3'},
       {name:'profit-desk', status:'dirty', lang:'PY', commits:'+12'},
       {name:'master-trade-bot', status:'ahead', lang:'TS', commits:'+8'},
       {name:'frontier-bastion', status:'clean', lang:'TS', commits:'+1'},
