@@ -4,13 +4,7 @@
     {
       "name": "lancewfisher-v2",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8070"],
-      "port": 8070
-    },
-    {
-      "name": "unified-preview",
-      "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8073"],
+      "runtimeArgs": ["-m", "http.server", "8073", "--directory", "."],
       "port": 8073
     }
   ]

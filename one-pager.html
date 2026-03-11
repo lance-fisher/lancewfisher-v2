@@ -210,7 +210,28 @@
     font-size: 10px;
   }
   @media print { .save-hint { display: none; } }
+
+  [data-theme="light"] {
+    --bg: #f5f4f2;
+    --warm-white: #1a1a1c;
+    --gold: #3a3a3c;
+    --gold-dim: rgba(42,42,46,0.18);
+    --text-dim: rgba(26,26,28,0.6);
+    --text-faint: rgba(26,26,28,0.35);
+  }
+  [data-theme="light"] html,
+  [data-theme="light"] body { background: #e8e7e5; color: #1a1a1c; }
+  [data-theme="light"] .save-hint { color: rgba(26,26,28,0.4); }
+  [data-theme="light"] .save-hint kbd {
+    background: rgba(42,42,46,0.08);
+    border-color: rgba(42,42,46,0.15);
+  }
 </style>
+<script>
+  if (localStorage.getItem('lf-theme') === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+</script>
 </head>
 <body>
 

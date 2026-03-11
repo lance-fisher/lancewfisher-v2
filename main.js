@@ -122,6 +122,9 @@
     toggleBtn.addEventListener('click', function() {
       var current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
       setTheme(current === 'dark' ? 'light' : 'dark');
+      // Re-render all canvases for new theme
+      if (typeof initProjectCanvases === 'function') initProjectCanvases();
+      if (typeof initFtdaCanvas === 'function') initFtdaCanvas();
     });
   }
   // Listen for system preference changes
@@ -174,7 +177,17 @@
   window.addEventListener('scroll', function() {
     var y = window.scrollY;
     if (ship) ship.style.transform = 'translate(-50%, calc(-50% + ' + (y * 0.05) + 'px))';
-    if (statue) statue.style.transform = 'translate(-50%, calc(-50% + ' + (y * 0.03) + 'px))';
+    var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    if (statue && !isLight) {
+      // Dark mode only — light mode statue stays perfectly fixed via CSS
+      statue.style.transform = 'translate(-50%, calc(-50% + ' + (y * 0.03) + 'px))';
+    }
+    // Scroll progress line (light mode only)
+    if (isLight) {
+      var maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      var pct = maxScroll > 0 ? Math.min(y / maxScroll, 1) : 0;
+      document.documentElement.style.setProperty('--sp', pct);
+    }
   }, { passive: true });
 
   // ===== NAV DOTS =====
@@ -409,12 +422,56 @@
     return { ctx: canvas.getContext('2d'), w: w, h: h, s: dpr };
   }
 
+  function isLightTheme() {
+    return document.documentElement.getAttribute('data-theme') === 'light';
+  }
+  function pal(r, g, b) {
+    var light = isLightTheme();
+    return {
+      bg1: light ? '#e8e9eb' : '#0d0d0e',
+      bg2: light ? '#dddee0' : '#080809',
+      glowAlpha: light ? 0.08 : 0.05,
+      panelFill: light ? 'rgba('+r+','+g+','+b+',0.06)' : 'rgba('+r+','+g+','+b+',0.025)',
+      panelStroke: light ? 'rgba('+r+','+g+','+b+',0.12)' : 'rgba('+r+','+g+','+b+',0.05)',
+      panelHeavy: light ? 'rgba('+r+','+g+','+b+',0.1)' : 'rgba('+r+','+g+','+b+',0.06)',
+      textPrimary: light ? 'rgba(26,26,28,0.88)' : 'rgba(240,235,224,0.75)',
+      textSecondary: light ? 'rgba(26,26,28,0.65)' : 'rgba(240,235,224,0.45)',
+      textDim: light ? 'rgba(26,26,28,0.4)' : 'rgba(240,235,224,0.25)',
+      textBright: light ? 'rgba(26,26,28,0.95)' : 'rgba(240,235,224,0.85)',
+      accentLabel: light ? 'rgba('+r+','+g+','+b+',0.55)' : 'rgba('+r+','+g+','+b+',0.35)',
+      accentDim: light ? 'rgba('+r+','+g+','+b+',0.3)' : 'rgba('+r+','+g+','+b+',0.15)',
+      accentGlow: light ? 'rgba('+r+','+g+','+b+',0.12)' : 'rgba('+r+','+g+','+b+',0.06)',
+      accentMed: light ? 'rgba('+r+','+g+','+b+',0.5)' : 'rgba('+r+','+g+','+b+',0.3)',
+      accentStrong: light ? 'rgba('+r+','+g+','+b+',0.7)' : 'rgba('+r+','+g+','+b+',0.5)',
+      cornerColor: light ? 'rgba('+r+','+g+','+b+',0.2)' : 'rgba('+r+','+g+','+b+',0.15)',
+      deviceBg: light ? '#f5f5f7' : '#1a1a1c',
+      deviceBorder: light ? 'rgba(26,26,28,0.1)' : 'rgba(240,235,224,0.08)',
+      gridLine: light ? 'rgba('+r+','+g+','+b+',0.06)' : 'rgba('+r+','+g+','+b+',0.02)',
+      gridLineMed: light ? 'rgba('+r+','+g+','+b+',0.1)' : 'rgba('+r+','+g+','+b+',0.03)',
+      shadowColor: light ? 'rgba(26,26,28,0.15)' : 'rgba(0,0,0,0.4)',
+      r: r, g: g, b: b,
+      light: light
+    };
+  }
+
+  // Theme-aware text color: swaps warm-white to dark text
+  function tClr(p, a) {
+    return p.light ? 'rgba(26,26,28,' + Math.min(1, a * 1.15).toFixed(3) + ')' : 'rgba(240,235,224,' + a + ')';
+  }
+  // Theme-aware accent color: boosts alpha on light backgrounds
+  function aClr(p, a) {
+    var boosted = p.light ? Math.min(1, a < 0.1 ? a * 2.5 : a * 1.5) : a;
+    return 'rgba(' + p.r + ',' + p.g + ',' + p.b + ',' + (boosted < 0.001 ? a : +boosted.toFixed(4)) + ')';
+  }
+
   function drawBg(ctx, w, h, r, g, b) {
+    var light = isLightTheme();
     var bg = ctx.createLinearGradient(0, 0, 0, h);
-    bg.addColorStop(0, '#0d0d0e'); bg.addColorStop(1, '#080809');
+    bg.addColorStop(0, light ? '#e8e9eb' : '#0d0d0e');
+    bg.addColorStop(1, light ? '#dddee0' : '#080809');
     ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
     var glow = ctx.createRadialGradient(w*0.5, h*0.5, 0, w*0.5, h*0.5, w*0.55);
-    glow.addColorStop(0, 'rgba('+r+','+g+','+b+',0.05)');
+    glow.addColorStop(0, 'rgba('+r+','+g+','+b+','+(light ? 0.08 : 0.05)+')');
     glow.addColorStop(1, 'transparent');
     ctx.fillStyle = glow; ctx.fillRect(0, 0, w, h);
   }
@@ -423,9 +480,10 @@
   function drawBooking(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
     drawBg(ctx, w, h, 184, 156, 92);
+    var p = pal(184, 156, 92);
 
     // Subtle grid pattern
-    ctx.strokeStyle = 'rgba(184,156,92,0.02)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeStyle = aClr(p,0.02); ctx.lineWidth = 0.5*s;
     for (var gi = 0; gi < w; gi += 20*s) { ctx.beginPath(); ctx.moveTo(gi, 0); ctx.lineTo(gi, h); ctx.stroke(); }
     for (var gj = 0; gj < h; gj += 20*s) { ctx.beginPath(); ctx.moveTo(0, gj); ctx.lineTo(w, gj); ctx.stroke(); }
 
@@ -434,18 +492,18 @@
     var px = w*0.12, py = (h - ph)/2;
 
     // Phone shadow
-    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.4)'; ctx.shadowBlur = 30*s; ctx.shadowOffsetX = 6*s; ctx.shadowOffsetY = 8*s;
+    ctx.save(); ctx.shadowColor = (p.light ? 'rgba(26,26,28,0.16)' : 'rgba(0,0,0,0.4)'); ctx.shadowBlur = 30*s; ctx.shadowOffsetX = 6*s; ctx.shadowOffsetY = 8*s;
     roundRect(ctx, px, py, pw, ph, 18*s);
-    ctx.fillStyle = '#1a1a1c'; ctx.fill();
+    ctx.fillStyle = p.light ? '#b8b9bc' : '#1a1a1c'; ctx.fill();
     ctx.restore();
 
     // Phone bezel
     roundRect(ctx, px, py, pw, ph, 18*s);
-    ctx.strokeStyle = 'rgba(184,156,92,0.3)'; ctx.lineWidth = 1.5*s; ctx.stroke();
+    ctx.strokeStyle = aClr(p,0.3); ctx.lineWidth = 1.5*s; ctx.stroke();
 
     // Dynamic island
     roundRect(ctx, px + pw*0.28, py+4*s, pw*0.44, 10*s, 5*s);
-    ctx.fillStyle = '#000'; ctx.fill();
+    ctx.fillStyle = p.light ? '#8a8b8e' : '#000'; ctx.fill();
 
     // Screen area
     var sx = px + 5*s, sy = py + 18*s, sw = pw - 10*s, sh = ph - 26*s;
@@ -490,7 +548,7 @@
       var ccy = sy + 92*s + Math.floor(si / 2) * (cardH + 5*s);
       roundRect(ctx, ccx, ccy, cardW, cardH, 4*s);
       ctx.fillStyle = '#f0e9df'; ctx.fill();
-      ctx.strokeStyle = 'rgba(184,156,92,0.12)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+      ctx.strokeStyle = aClr(p,0.12); ctx.lineWidth = 0.5*s; ctx.stroke();
       ctx.fillStyle = '#6b5e4a'; ctx.font = '400 '+(5.5*s)+'px Inter, sans-serif';
       ctx.textAlign = 'center'; ctx.fillText(services[si].t, ccx+cardW/2, ccy+14*s);
     }
@@ -503,7 +561,7 @@
       var pcx = sx + 16*s + pi*24*s, pcy = sy+162*s;
       ctx.beginPath(); ctx.arc(pcx, pcy, 10*s, 0, Math.PI*2);
       ctx.fillStyle = provColors[pi]; ctx.fill();
-      ctx.strokeStyle = 'rgba(184,156,92,0.25)'; ctx.lineWidth = 0.8*s; ctx.stroke();
+      ctx.strokeStyle = aClr(p,0.25); ctx.lineWidth = 0.8*s; ctx.stroke();
     }
     loadImg('thumbs/medspa-provider.jpg', function(img) {
       if (!img) return;
@@ -516,14 +574,14 @@
     // Book Now CTA
     roundRect(ctx, sx+5*s, sy+182*s, sw-10*s, 18*s, 6*s);
     var btnGrad = ctx.createLinearGradient(0, sy+182*s, 0, sy+200*s);
-    btnGrad.addColorStop(0, 'rgba(184,156,92,0.9)'); btnGrad.addColorStop(1, 'rgba(160,136,72,0.9)');
+    btnGrad.addColorStop(0, aClr(p,0.9)); btnGrad.addColorStop(1, 'rgba(160,136,72,0.9)');
     ctx.fillStyle = btnGrad; ctx.fill();
     ctx.fillStyle = '#fff'; ctx.font = '600 '+(6*s)+'px Inter, sans-serif';
     ctx.textAlign = 'center'; ctx.fillText('Book Appointment', sx+sw/2, sy+194*s);
 
     // Tab bar
     ctx.fillStyle = '#f4ede4'; ctx.fillRect(sx, sy+sh-18*s, sw, 18*s);
-    ctx.strokeStyle = 'rgba(184,156,92,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeStyle = aClr(p,0.08); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(sx, sy+sh-18*s); ctx.lineTo(sx+sw, sy+sh-18*s); ctx.stroke();
     var tabs = ['Home','Services','Book','Profile'];
     ctx.font = (4.5*s)+'px Inter, sans-serif';
@@ -536,15 +594,15 @@
     // === Right side: elegant feature showcase ===
     var rx = w*0.5;
     ctx.textAlign = 'left';
-    ctx.fillStyle = 'rgba(184,156,92,0.4)'; ctx.font = '200 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.4); ctx.font = '200 '+(8*s)+'px Inter, sans-serif';
     ctx.letterSpacing = '3px';
     ctx.fillText('MEDICAL SPA PLATFORM', rx, h*0.18);
-    ctx.fillStyle = 'rgba(240,235,224,0.75)'; ctx.font = '300 '+(18*s)+'px Cormorant Garamond, serif';
+    ctx.fillStyle = tClr(p,0.75); ctx.font = '300 '+(18*s)+'px Cormorant Garamond, serif';
     ctx.fillText('Mobile', rx, h*0.29);
     ctx.fillText('Booking', rx, h*0.39);
 
     // Thin rule
-    ctx.fillStyle = 'rgba(184,156,92,0.2)'; ctx.fillRect(rx, h*0.43, 40*s, 1);
+    ctx.fillStyle = aClr(p,0.2); ctx.fillRect(rx, h*0.43, 40*s, 1);
 
     // Feature list with better alignment
     var features = [
@@ -558,41 +616,42 @@
     for (var fi = 0; fi < features.length; fi++) {
       var fy = h*0.48 + fi*20*s;
       // Bullet dash
-      ctx.fillStyle = 'rgba(184,156,92,0.4)'; ctx.fillText('|', rx, fy+4*s);
-      ctx.fillStyle = 'rgba(240,235,224,0.55)'; ctx.font = '400 '+(7*s)+'px Inter, sans-serif';
+      ctx.fillStyle = aClr(p,0.4); ctx.fillText('|', rx, fy+4*s);
+      ctx.fillStyle = tClr(p,0.55); ctx.font = '400 '+(7*s)+'px Inter, sans-serif';
       ctx.fillText(features[fi].t, rx+14*s, fy+4*s);
-      ctx.fillStyle = 'rgba(240,235,224,0.2)'; ctx.font = '200 '+(6.5*s)+'px Inter, sans-serif';
+      ctx.fillStyle = tClr(p,0.2); ctx.font = '200 '+(6.5*s)+'px Inter, sans-serif';
       ctx.fillText(features[fi].d, rx+100*s, fy+4*s);
       ctx.font = (7.5*s)+'px Inter, sans-serif';
     }
 
-    drawCorners(ctx, w, h, 14*s, 'rgba(184,156,92,0.15)');
+    drawCorners(ctx, w, h, 14*s, aClr(p,0.15));
   }
 
   // ---- TRADING: Real dashboard with live-looking charts ----
   function drawTrading(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
     drawBg(ctx, w, h, 58, 143, 212);
+    var p = pal(58, 143, 212);
 
     // Header bar
-    ctx.fillStyle = 'rgba(58,143,212,0.06)'; ctx.fillRect(0, 0, w, 26*s);
-    ctx.strokeStyle = 'rgba(58,143,212,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.fillStyle = aClr(p,0.06); ctx.fillRect(0, 0, w, 26*s);
+    ctx.strokeStyle = aClr(p,0.08); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(0, 26*s); ctx.lineTo(w, 26*s); ctx.stroke();
-    ctx.fillStyle = 'rgba(58,143,212,0.5)'; ctx.fillRect(0, 0, 3*s, 26*s);
-    ctx.fillStyle = 'rgba(240,235,224,0.75)'; ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.5); ctx.fillRect(0, 0, 3*s, 26*s);
+    ctx.fillStyle = tClr(p,0.75); ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
     ctx.textAlign = 'left'; ctx.fillText('Master Trade Bot', 14*s, 17*s);
     // Connection badge
     ctx.beginPath(); ctx.arc(w-12*s, 13*s, 3*s, 0, Math.PI*2);
     ctx.fillStyle = '#4ade80'; ctx.fill();
-    ctx.fillStyle = 'rgba(58,143,212,0.4)'; ctx.font = (7*s)+'px monospace';
+    ctx.fillStyle = aClr(p,0.4); ctx.font = (7*s)+'px monospace';
     ctx.textAlign = 'right'; ctx.fillText('LIVE', w-20*s, 17*s);
     ctx.textAlign = 'left';
 
     // Left panel - Engine status
     var lw = w * 0.28, lx = 6*s, ly = 32*s;
-    ctx.fillStyle = 'rgba(58,143,212,0.025)'; ctx.fillRect(lx, ly, lw, h-ly-6*s);
-    ctx.strokeStyle = 'rgba(58,143,212,0.05)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(lx, ly, lw, h-ly-6*s);
-    ctx.fillStyle = 'rgba(58,143,212,0.35)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.025); ctx.fillRect(lx, ly, lw, h-ly-6*s);
+    ctx.strokeStyle = aClr(p,0.05); ctx.lineWidth = 0.5*s; ctx.strokeRect(lx, ly, lw, h-ly-6*s);
+    ctx.fillStyle = aClr(p,0.35); ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
     ctx.letterSpacing = '2px'; ctx.fillText('ENGINES', lx+8*s, ly+12*s);
 
     var engines = [
@@ -607,9 +666,9 @@
       var ey = ly + 22*s + ei * 16*s;
       ctx.beginPath(); ctx.arc(lx+12*s, ey+4*s, 2*s, 0, Math.PI*2);
       ctx.fillStyle = engines[ei].color; ctx.fill();
-      ctx.fillStyle = 'rgba(240,235,224,0.45)'; ctx.font = (6.5*s)+'px Inter, sans-serif';
+      ctx.fillStyle = tClr(p,0.45); ctx.font = (6.5*s)+'px Inter, sans-serif';
       ctx.textAlign = 'left'; ctx.fillText(engines[ei].name, lx+20*s, ey+7*s);
-      ctx.fillStyle = engines[ei].color === '#4ade80' ? 'rgba(74,222,128,0.4)' : 'rgba(240,235,224,0.15)';
+      ctx.fillStyle = engines[ei].color === '#4ade80' ? 'rgba(74,222,128,0.4)' : tClr(p,0.15);
       ctx.font = (5.5*s)+'px monospace';
       ctx.textAlign = 'right'; ctx.fillText(engines[ei].status, lx+lw-6*s, ey+7*s);
       ctx.textAlign = 'left';
@@ -617,20 +676,20 @@
 
     // Center - Candlestick chart (deterministic seeded)
     var cx = lx + lw + 6*s, cw = w*0.44, cy = 32*s, ch = h*0.54;
-    ctx.fillStyle = 'rgba(58,143,212,0.025)'; ctx.fillRect(cx, cy, cw, ch);
-    ctx.strokeStyle = 'rgba(58,143,212,0.05)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(cx, cy, cw, ch);
+    ctx.fillStyle = aClr(p,0.025); ctx.fillRect(cx, cy, cw, ch);
+    ctx.strokeStyle = aClr(p,0.05); ctx.lineWidth = 0.5*s; ctx.strokeRect(cx, cy, cw, ch);
 
     // Chart header
-    ctx.fillStyle = 'rgba(58,143,212,0.35)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.35); ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
     ctx.fillText('BTC/USD', cx+8*s, cy+12*s);
-    ctx.fillStyle = 'rgba(240,235,224,0.65)'; ctx.font = '500 '+(10*s)+'px monospace';
+    ctx.fillStyle = tClr(p,0.65); ctx.font = '500 '+(10*s)+'px monospace';
     ctx.fillText('$62,441.20', cx+55*s, cy+12*s);
     ctx.fillStyle = '#4ade80'; ctx.font = (7*s)+'px monospace';
     ctx.textAlign = 'right'; ctx.fillText('+1.24%', cx+cw-8*s, cy+12*s);
     ctx.textAlign = 'left';
 
     // Grid lines
-    ctx.strokeStyle = 'rgba(58,143,212,0.03)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeStyle = aClr(p,0.03); ctx.lineWidth = 0.5*s;
     for (var gl = 0; gl < 5; gl++) {
       var gy = cy + 20*s + gl * (ch-30*s)/4;
       ctx.beginPath(); ctx.moveTo(cx, gy); ctx.lineTo(cx+cw, gy); ctx.stroke();
@@ -652,7 +711,7 @@
     var norm = function(v) { return chartY + chartH - ((v - pMin) / (pMax - pMin)) * chartH; };
 
     // EMA overlay
-    ctx.strokeStyle = 'rgba(58,143,212,0.25)'; ctx.lineWidth = 1*s;
+    ctx.strokeStyle = aClr(p,0.25); ctx.lineWidth = 1*s;
     ctx.beginPath();
     var ema = priceData[0].c;
     for (var em = 0; em < candles; em++) {
@@ -676,8 +735,8 @@
 
     // Volume bars below chart
     var vy = cy + ch + 3*s, vh = h - vy - 6*s;
-    ctx.fillStyle = 'rgba(58,143,212,0.025)'; ctx.fillRect(cx, vy, cw, vh);
-    ctx.strokeStyle = 'rgba(58,143,212,0.05)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(cx, vy, cw, vh);
+    ctx.fillStyle = aClr(p,0.025); ctx.fillRect(cx, vy, cw, vh);
+    ctx.strokeStyle = aClr(p,0.05); ctx.lineWidth = 0.5*s; ctx.strokeRect(cx, vy, cw, vh);
     for (var vi = 0; vi < candles; vi++) {
       var vx = cx + 8*s + vi * (cw-16*s)/candles;
       var vBarW = Math.max(1.5*s, (cw-16*s)/candles * 0.55);
@@ -689,11 +748,11 @@
 
     // Right panel - P&L + positions
     var rx = cx + cw + 6*s, rw = w - rx - 6*s;
-    ctx.fillStyle = 'rgba(58,143,212,0.025)'; ctx.fillRect(rx, cy, rw, h-cy-6*s);
-    ctx.strokeStyle = 'rgba(58,143,212,0.05)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(rx, cy, rw, h-cy-6*s);
+    ctx.fillStyle = aClr(p,0.025); ctx.fillRect(rx, cy, rw, h-cy-6*s);
+    ctx.strokeStyle = aClr(p,0.05); ctx.lineWidth = 0.5*s; ctx.strokeRect(rx, cy, rw, h-cy-6*s);
 
     // Total P&L
-    ctx.fillStyle = 'rgba(58,143,212,0.35)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.35); ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
     ctx.fillText('DAILY P&L', rx+8*s, cy+12*s);
     ctx.fillStyle = '#4ade80'; ctx.font = '500 '+(13*s)+'px monospace';
     ctx.fillText('+$2,847', rx+8*s, cy+30*s);
@@ -701,10 +760,10 @@
     ctx.fillText('+2.41%', rx+8*s, cy+42*s);
 
     // Divider
-    ctx.fillStyle = 'rgba(58,143,212,0.06)'; ctx.fillRect(rx+6*s, cy+50*s, rw-12*s, 0.5*s);
+    ctx.fillStyle = aClr(p,0.06); ctx.fillRect(rx+6*s, cy+50*s, rw-12*s, 0.5*s);
 
     // Open positions
-    ctx.fillStyle = 'rgba(58,143,212,0.3)'; ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.3); ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
     ctx.fillText('OPEN POSITIONS', rx+8*s, cy+62*s);
     var positions = [
       {pair:'BTC/USD', side:'LONG', pnl:'+1.8%', c:'#4ade80'},
@@ -714,7 +773,7 @@
     ];
     for (var pi = 0; pi < positions.length; pi++) {
       var py = cy + 72*s + pi * 14*s;
-      ctx.fillStyle = 'rgba(240,235,224,0.35)'; ctx.font = (6*s)+'px monospace';
+      ctx.fillStyle = tClr(p,0.35); ctx.font = (6*s)+'px monospace';
       ctx.textAlign = 'left'; ctx.fillText(positions[pi].pair, rx+8*s, py);
       ctx.fillStyle = positions[pi].c; ctx.font = (5.5*s)+'px monospace';
       ctx.textAlign = 'right'; ctx.fillText(positions[pi].pnl, rx+rw-6*s, py);
@@ -722,44 +781,45 @@
     }
 
     // WebSocket indicator
-    ctx.fillStyle = 'rgba(58,143,212,0.06)'; ctx.fillRect(rx+6*s, h-22*s, rw-12*s, 14*s);
-    ctx.fillStyle = 'rgba(58,143,212,0.3)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillStyle = aClr(p,0.06); ctx.fillRect(rx+6*s, h-22*s, rw-12*s, 14*s);
+    ctx.fillStyle = aClr(p,0.3); ctx.font = (5*s)+'px monospace';
     ctx.textAlign = 'center'; ctx.fillText('WS CONNECTED', rx+rw/2, h-13*s);
     ctx.textAlign = 'left';
 
-    drawCorners(ctx, w, h, 14*s, 'rgba(58,143,212,0.15)');
+    drawCorners(ctx, w, h, 14*s, aClr(p,0.15));
   }
 
   // ---- PROFITDESK: Agent orchestration diagram ----
   function drawProfitDesk(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
     drawBg(ctx, w, h, 180, 120, 80);
+    var p = pal(180, 120, 80);
 
     // Title bar
-    ctx.fillStyle = 'rgba(180,120,80,0.05)'; ctx.fillRect(0, 0, w, 26*s);
-    ctx.strokeStyle = 'rgba(180,120,80,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.fillStyle = aClr(p,0.05); ctx.fillRect(0, 0, w, 26*s);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(0, 26*s); ctx.lineTo(w, 26*s); ctx.stroke();
-    ctx.fillStyle = 'rgba(180,120,80,0.5)'; ctx.fillRect(0, 0, 3*s, 26*s);
-    ctx.fillStyle = 'rgba(240,235,224,0.7)'; ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.5); ctx.fillRect(0, 0, 3*s, 26*s);
+    ctx.fillStyle = tClr(p,0.7); ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
     ctx.textAlign = 'left'; ctx.fillText('Profit Desk', 14*s, 17*s);
-    ctx.fillStyle = 'rgba(180,120,80,0.35)'; ctx.font = '200 '+(7*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.35); ctx.font = '200 '+(7*s)+'px Inter, sans-serif';
     ctx.fillText('Multi-Agent Orchestration', 90*s, 17*s);
 
     // Central PM agent -larger, glowing
     var pmx = w*0.5, pmy = h*0.44;
     // Glow ring
     ctx.beginPath(); ctx.arc(pmx, pmy, 34*s, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(180,120,80,0.04)'; ctx.fill();
+    ctx.fillStyle = aClr(p,0.04); ctx.fill();
     // Outer ring
     ctx.beginPath(); ctx.arc(pmx, pmy, 28*s, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(180,120,80,0.1)'; ctx.fill();
-    ctx.strokeStyle = 'rgba(180,120,80,0.35)'; ctx.lineWidth = 1.5*s; ctx.stroke();
+    ctx.fillStyle = aClr(p,0.1); ctx.fill();
+    ctx.strokeStyle = aClr(p,0.35); ctx.lineWidth = 1.5*s; ctx.stroke();
     // Inner ring
     ctx.beginPath(); ctx.arc(pmx, pmy, 20*s, 0, Math.PI*2);
-    ctx.strokeStyle = 'rgba(180,120,80,0.15)'; ctx.lineWidth = 0.5*s; ctx.stroke();
-    ctx.fillStyle = 'rgba(240,235,224,0.75)'; ctx.font = '600 '+(10*s)+'px Inter, sans-serif';
+    ctx.strokeStyle = aClr(p,0.15); ctx.lineWidth = 0.5*s; ctx.stroke();
+    ctx.fillStyle = tClr(p,0.75); ctx.font = '600 '+(10*s)+'px Inter, sans-serif';
     ctx.textAlign = 'center'; ctx.fillText('PM', pmx, pmy+4*s);
-    ctx.fillStyle = 'rgba(240,235,224,0.25)'; ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillStyle = tClr(p,0.25); ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
     ctx.fillText('Portfolio Manager', pmx, pmy+16*s);
 
     // Agent nodes with animated-looking connections
@@ -773,7 +833,7 @@
     for (var ai = 0; ai < agents.length; ai++) {
       var ax = w*agents[ai].x, ay = h*agents[ai].y, ac = agents[ai].c;
       // Connection line with gradient
-      ctx.strokeStyle = 'rgba(180,120,80,0.08)'; ctx.lineWidth = 1*s;
+      ctx.strokeStyle = aClr(p,0.08); ctx.lineWidth = 1*s;
       ctx.setLineDash([3*s, 5*s]);
       ctx.beginPath(); ctx.moveTo(pmx, pmy); ctx.lineTo(ax, ay); ctx.stroke();
       ctx.setLineDash([]);
@@ -793,7 +853,7 @@
       ctx.strokeStyle = ac + '0.25)'; ctx.lineWidth = 1*s; ctx.stroke();
       ctx.fillStyle = ac + '0.7)'; ctx.font = '600 '+(8*s)+'px Inter, sans-serif';
       ctx.textAlign = 'center'; ctx.fillText(agents[ai].icon, ax, ay+3*s);
-      ctx.fillStyle = 'rgba(240,235,224,0.3)'; ctx.font = '300 '+(5.5*s)+'px Inter, sans-serif';
+      ctx.fillStyle = tClr(p,0.3); ctx.font = '300 '+(5.5*s)+'px Inter, sans-serif';
       ctx.fillText(agents[ai].name, ax, ay+26*s);
     }
 
@@ -809,24 +869,25 @@
     for (var si = 0; si < strats.length; si++) {
       var sx = 8*s + si * (stratW + 4*s), sy = h - 30*s;
       roundRect(ctx, sx, sy, stratW - 4*s, 22*s, 3*s);
-      ctx.fillStyle = 'rgba(180,120,80,0.04)'; ctx.fill();
-      ctx.strokeStyle = 'rgba(180,120,80,0.06)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+      ctx.fillStyle = aClr(p,0.04); ctx.fill();
+      ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s; ctx.stroke();
       // Status dot
       ctx.beginPath(); ctx.arc(sx+8*s, sy+11*s, 2*s, 0, Math.PI*2);
       ctx.fillStyle = strats[si].c; ctx.fill();
-      ctx.fillStyle = 'rgba(240,235,224,0.45)'; ctx.font = '400 '+(6*s)+'px Inter, sans-serif';
+      ctx.fillStyle = tClr(p,0.45); ctx.font = '400 '+(6*s)+'px Inter, sans-serif';
       ctx.fillText(strats[si].t, sx+14*s, sy+10*s);
-      ctx.fillStyle = 'rgba(240,235,224,0.18)'; ctx.font = '200 '+(5*s)+'px Inter, sans-serif';
+      ctx.fillStyle = tClr(p,0.18); ctx.font = '200 '+(5*s)+'px Inter, sans-serif';
       ctx.fillText(strats[si].d, sx+14*s, sy+18*s);
     }
 
-    drawCorners(ctx, w, h, 14*s, 'rgba(180,120,80,0.15)');
+    drawCorners(ctx, w, h, 14*s, aClr(p,0.15));
   }
 
   // ---- RTS: Isometric game view ----
   function drawRTS(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
     drawBg(ctx, w, h, 192, 160, 80);
+    var p = pal(192, 160, 80);
 
     // Isometric grid -deterministic terrain
     var tileW = 30*s, tileH = 15*s;
@@ -848,7 +909,7 @@
         } else {
           ctx.fillStyle = 'rgba(120,105,70,0.03)'; ctx.fill(); // Sand
         }
-        ctx.strokeStyle = 'rgba(192,160,80,0.04)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+        ctx.strokeStyle = aClr(p,0.04); ctx.lineWidth = 0.5*s; ctx.stroke();
 
         // Elevation blocks for buildings (deterministic)
         if ((gx === 2 && gy === 2) || (gx === 6 && gy === 5)) {
@@ -859,7 +920,7 @@
           ctx.lineTo(bx+tileW/2, by+tileH/2+8*s); ctx.lineTo(bx, by+tileH+8*s);
           ctx.lineTo(bx-tileW/2, by+tileH/2+8*s); ctx.lineTo(bx-tileW/2, by+tileH/2);
           ctx.closePath(); ctx.fill();
-          ctx.strokeStyle = 'rgba(192,160,80,0.12)'; ctx.stroke();
+          ctx.strokeStyle = aClr(p,0.12); ctx.stroke();
         }
       }
     }
@@ -872,7 +933,7 @@
       var uy = oy + (gx + gy) * tileH/2 + tileH/2;
       // Shadow
       ctx.beginPath(); ctx.ellipse(ux, uy+2*s, 3*s, 1.5*s, 0, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(0,0,0,0.2)'; ctx.fill();
+      ctx.fillStyle = (p.light ? 'rgba(26,26,28,0.08)' : 'rgba(0,0,0,0.2)'); ctx.fill();
       // Unit body
       ctx.beginPath(); ctx.arc(ux, uy-2*s, 3*s, 0, Math.PI*2);
       ctx.fillStyle = color; ctx.fill();
@@ -889,22 +950,22 @@
     ctx.setLineDash([]);
 
     // HUD -top bar
-    ctx.fillStyle = 'rgba(0,0,0,0.65)'; ctx.fillRect(0, 0, w, 22*s);
-    ctx.fillStyle = 'rgba(192,160,80,0.8)'; ctx.font = '600 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillStyle = (p.light ? 'rgba(26,26,28,0.26)' : 'rgba(0,0,0,0.65)'); ctx.fillRect(0, 0, w, 22*s);
+    ctx.fillStyle = aClr(p,0.8); ctx.font = '600 '+(8*s)+'px Inter, sans-serif';
     ctx.textAlign = 'left'; ctx.fillText('Bloodlines', 10*s, 15*s);
     // Resource icons
     ctx.textAlign = 'right'; ctx.font = (6.5*s)+'px monospace';
     ctx.fillStyle = '#ffd700'; ctx.fillText('1,250', w-10*s, 10*s);
-    ctx.fillStyle = 'rgba(240,235,224,0.3)'; ctx.fillText('Gold', w-50*s, 10*s);
+    ctx.fillStyle = tClr(p,0.3); ctx.fillText('Gold', w-50*s, 10*s);
     ctx.fillStyle = '#87ceeb'; ctx.fillText('48', w-10*s, 20*s);
-    ctx.fillStyle = 'rgba(240,235,224,0.3)'; ctx.fillText('Units', w-30*s, 20*s);
-    ctx.fillStyle = 'rgba(240,235,224,0.25)'; ctx.fillText('Pop: 32/50', w-60*s, 20*s);
+    ctx.fillStyle = tClr(p,0.3); ctx.fillText('Units', w-30*s, 20*s);
+    ctx.fillStyle = tClr(p,0.25); ctx.fillText('Pop: 32/50', w-60*s, 20*s);
 
     // Minimap corner
     var mmx = w-65*s, mmy = h-55*s, mmw = 56*s, mmh = 46*s;
-    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fillStyle = (p.light ? 'rgba(26,26,28,0.22)' : 'rgba(0,0,0,0.55)');
     ctx.fillRect(mmx, mmy, mmw, mmh);
-    ctx.strokeStyle = 'rgba(192,160,80,0.25)'; ctx.lineWidth = 1*s; ctx.strokeRect(mmx, mmy, mmw, mmh);
+    ctx.strokeStyle = aClr(p,0.25); ctx.lineWidth = 1*s; ctx.strokeRect(mmx, mmy, mmw, mmh);
     // Terrain blotches
     ctx.fillStyle = 'rgba(60,100,45,0.2)'; ctx.fillRect(mmx+8*s, mmy+6*s, 18*s, 14*s);
     ctx.fillStyle = 'rgba(60,100,45,0.15)'; ctx.fillRect(mmx+28*s, mmy+20*s, 16*s, 12*s);
@@ -922,28 +983,30 @@
     ctx.strokeRect(mmx+8*s, mmy+10*s, 20*s, 16*s);
 
     // Bottom action bar
-    ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(0, h-26*s, w*0.65, 26*s);
+    ctx.fillStyle = (p.light ? 'rgba(26,26,28,0.24)' : 'rgba(0,0,0,0.6)'); ctx.fillRect(0, h-26*s, w*0.65, 26*s);
     var actions = ['Move', 'Attack', 'Build', 'Gather', 'Patrol', 'Stop'];
     ctx.font = (6*s)+'px Inter, sans-serif'; ctx.textAlign = 'center';
     for (var ab = 0; ab < actions.length; ab++) {
       var abx = 28*s + ab * 38*s;
       roundRect(ctx, abx-15*s, h-21*s, 30*s, 14*s, 2*s);
-      ctx.fillStyle = ab === 0 ? 'rgba(192,160,80,0.15)' : 'rgba(192,160,80,0.06)'; ctx.fill();
-      ctx.strokeStyle = ab === 0 ? 'rgba(192,160,80,0.3)' : 'rgba(192,160,80,0.12)'; ctx.lineWidth = 0.5*s; ctx.stroke();
-      ctx.fillStyle = ab === 0 ? 'rgba(240,235,224,0.6)' : 'rgba(240,235,224,0.3)'; ctx.fillText(actions[ab], abx, h-11*s);
+      ctx.fillStyle = ab === 0 ? aClr(p,0.15) : aClr(p,0.06); ctx.fill();
+      ctx.strokeStyle = ab === 0 ? aClr(p,0.3) : aClr(p,0.12); ctx.lineWidth = 0.5*s; ctx.stroke();
+      ctx.fillStyle = ab === 0 ? tClr(p,0.6) : tClr(p,0.3); ctx.fillText(actions[ab], abx, h-11*s);
     }
     ctx.textAlign = 'left';
 
-    drawCorners(ctx, w, h, 14*s, 'rgba(192,160,80,0.15)');
+    drawCorners(ctx, w, h, 14*s, aClr(p,0.15));
   }
 
   // ---- PLATFORMER: 3D game scene ----
   function drawPlatformer(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(106, 196, 74);
 
     // Rich sky gradient
     var sky = ctx.createLinearGradient(0, 0, 0, h);
-    sky.addColorStop(0, '#0c1628'); sky.addColorStop(0.3, '#1a2d4a'); sky.addColorStop(0.6, '#243a58'); sky.addColorStop(1, '#162a1e');
+    if (p.light) { sky.addColorStop(0, '#b8d4f0'); sky.addColorStop(0.3, '#a0c8e8'); sky.addColorStop(0.6, '#90bbe0'); sky.addColorStop(1, '#a8d8b8'); }
+    else { sky.addColorStop(0, '#0c1628'); sky.addColorStop(0.3, '#1a2d4a'); sky.addColorStop(0.6, '#243a58'); sky.addColorStop(1, '#162a1e'); }
     ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
 
     // Stars (deterministic)
@@ -962,7 +1025,7 @@
       ctx.lineTo(mx, my);
     }
     ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath();
-    ctx.fillStyle = 'rgba(20,40,30,0.4)'; ctx.fill();
+    ctx.fillStyle = p.light ? 'rgba(60,100,70,0.15)' : 'rgba(20,40,30,0.4)'; ctx.fill();
 
     // Ground platforms with 3D depth
     var platforms = [
@@ -970,8 +1033,8 @@
       {x:0.8, y:0.66, w:0.18}, {x:0.18, y:0.42, w:0.14}, {x:0.48, y:0.36, w:0.12}
     ];
     for (var pi = 0; pi < platforms.length; pi++) {
-      var p = platforms[pi];
-      var ppx = p.x*w, ppy = p.y*h, ppw = p.w*w, pph = 10*s;
+      var plat = platforms[pi];
+      var ppx = plat.x*w, ppy = plat.y*h, ppw = plat.w*w, pph = 10*s;
       var depth = 6*s;
       // Front face (depth)
       ctx.fillStyle = '#1e4a16'; ctx.fillRect(ppx, ppy+pph, ppw, depth);
@@ -993,7 +1056,7 @@
     var playerX = w*0.37, playerY = h*0.54;
     // Shadow
     ctx.beginPath(); ctx.ellipse(playerX, playerY+14*s, 6*s, 2*s, 0, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.fill();
+    ctx.fillStyle = (p.light ? 'rgba(26,26,28,0.12)' : 'rgba(0,0,0,0.3)'); ctx.fill();
     // Legs
     ctx.fillStyle = '#2255aa'; ctx.fillRect(playerX-4*s, playerY+8*s, 3*s, 6*s);
     ctx.fillRect(playerX+1*s, playerY+8*s, 3*s, 6*s);
@@ -1032,7 +1095,7 @@
 
     // HUD overlay -top bar
     var hudGrad = ctx.createLinearGradient(0, 0, 0, 28*s);
-    hudGrad.addColorStop(0, 'rgba(0,0,0,0.7)'); hudGrad.addColorStop(1, 'rgba(0,0,0,0.3)');
+    hudGrad.addColorStop(0, (p.light ? 'rgba(26,26,28,0.28)' : 'rgba(0,0,0,0.7)')); hudGrad.addColorStop(1, (p.light ? 'rgba(26,26,28,0.12)' : 'rgba(0,0,0,0.3)'));
     ctx.fillStyle = hudGrad; ctx.fillRect(0, 0, w, 28*s);
 
     ctx.fillStyle = '#6ad44a'; ctx.font = 'bold '+(9*s)+'px Inter, sans-serif';
@@ -1056,42 +1119,43 @@
 
     // Controller hints -bottom right
     roundRect(ctx, w-85*s, h-22*s, 78*s, 16*s, 4*s);
-    ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fill();
+    ctx.fillStyle = (p.light ? 'rgba(26,26,28,0.18)' : 'rgba(0,0,0,0.45)'); ctx.fill();
     ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.font = (5.5*s)+'px Inter, sans-serif';
     ctx.textAlign = 'center'; ctx.fillText('A Jump   X Boost   Y Shield', w-46*s, h-11.5*s);
     ctx.textAlign = 'left';
 
-    drawCorners(ctx, w, h, 14*s, 'rgba(106,196,74,0.15)');
+    drawCorners(ctx, w, h, 14*s, aClr(p,0.15));
   }
 
   // ---- MESSENGER: Chat UI ----
   function drawMessenger(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
     drawBg(ctx, w, h, 138, 106, 212);
+    var p = pal(138, 106, 212);
 
     // App header bar
-    ctx.fillStyle = 'rgba(138,106,212,0.05)'; ctx.fillRect(0, 0, w, 26*s);
-    ctx.strokeStyle = 'rgba(138,106,212,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.fillStyle = aClr(p,0.05); ctx.fillRect(0, 0, w, 26*s);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(0, 26*s); ctx.lineTo(w, 26*s); ctx.stroke();
-    ctx.fillStyle = 'rgba(138,106,212,0.5)'; ctx.fillRect(0, 0, 3*s, 26*s);
+    ctx.fillStyle = aClr(p,0.5); ctx.fillRect(0, 0, 3*s, 26*s);
 
     // Contact avatar + name
     ctx.beginPath(); ctx.arc(22*s, 13*s, 8*s, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(138,106,212,0.2)'; ctx.fill();
-    ctx.fillStyle = 'rgba(240,235,224,0.5)'; ctx.font = '500 '+(7*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.2); ctx.fill();
+    ctx.fillStyle = tClr(p,0.5); ctx.font = '500 '+(7*s)+'px Inter, sans-serif';
     ctx.textAlign = 'center'; ctx.fillText('A', 22*s, 16*s);
     ctx.textAlign = 'left';
 
-    ctx.fillStyle = 'rgba(240,235,224,0.7)'; ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
+    ctx.fillStyle = tClr(p,0.7); ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
     ctx.fillText('Alex Chen', 36*s, 11*s);
-    ctx.fillStyle = 'rgba(138,106,212,0.4)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.4); ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
     ctx.fillText('Online', 36*s, 21*s);
     // Online dot
     ctx.beginPath(); ctx.arc(58*s, 18*s, 2*s, 0, Math.PI*2);
     ctx.fillStyle = '#4ade80'; ctx.fill();
 
     // Lock badge
-    ctx.fillStyle = 'rgba(138,106,212,0.4)'; ctx.font = (7*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.4); ctx.font = (7*s)+'px Inter, sans-serif';
     ctx.textAlign = 'right'; ctx.fillText('\uD83D\uDD12 Encrypted', w-12*s, 16*s);
     ctx.textAlign = 'left';
 
@@ -1119,23 +1183,23 @@
       roundRect(ctx, mx, my, mw, mh, msg.in ? [2*s, 8*s, 8*s, 8*s] : [8*s, 2*s, 8*s, 8*s]);
       // Use simple roundRect since custom radii not supported, just use uniform
       roundRect(ctx, mx, my, mw, mh, 6*s);
-      ctx.fillStyle = msg.in ? 'rgba(138,106,212,0.07)' : 'rgba(138,106,212,0.16)';
+      ctx.fillStyle = msg.in ? aClr(p,0.07) : aClr(p,0.16);
       ctx.fill();
-      ctx.strokeStyle = 'rgba(138,106,212,0.06)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+      ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s; ctx.stroke();
 
       // Text
-      ctx.fillStyle = msg.in ? 'rgba(240,235,224,0.5)' : 'rgba(240,235,224,0.6)';
+      ctx.fillStyle = msg.in ? tClr(p,0.5) : tClr(p,0.6);
       ctx.font = '300 '+(7*s)+'px Inter, sans-serif';
       ctx.textAlign = 'left'; ctx.fillText(msg.text, mx+8*s, my+13*s);
 
       // Timestamp
-      ctx.fillStyle = 'rgba(240,235,224,0.12)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
+      ctx.fillStyle = tClr(p,0.12); ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
       ctx.textAlign = 'right'; ctx.fillText(msg.time, mx+mw-6*s, my+13*s);
       ctx.textAlign = 'left';
 
       // Read receipt for outgoing
       if (!msg.in) {
-        ctx.fillStyle = 'rgba(138,106,212,0.3)'; ctx.font = (4*s)+'px Inter, sans-serif';
+        ctx.fillStyle = aClr(p,0.3); ctx.font = (4*s)+'px Inter, sans-serif';
         ctx.textAlign = 'right'; ctx.fillText('\u2713\u2713', mx+mw-4*s, my+mh-2*s);
         ctx.textAlign = 'left';
       }
@@ -1145,80 +1209,81 @@
 
     // Input bar
     roundRect(ctx, 10*s, h-30*s, w-20*s, 22*s, 8*s);
-    ctx.fillStyle = 'rgba(138,106,212,0.04)'; ctx.fill();
-    ctx.strokeStyle = 'rgba(138,106,212,0.08)'; ctx.lineWidth = 0.5*s; ctx.stroke();
-    ctx.fillStyle = 'rgba(240,235,224,0.15)'; ctx.font = '200 '+(7*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.04); ctx.fill();
+    ctx.strokeStyle = aClr(p,0.08); ctx.lineWidth = 0.5*s; ctx.stroke();
+    ctx.fillStyle = tClr(p,0.15); ctx.font = '200 '+(7*s)+'px Inter, sans-serif';
     ctx.fillText('Message...', 22*s, h-16*s);
     // Send button
     ctx.beginPath(); ctx.arc(w-22*s, h-19*s, 8*s, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(138,106,212,0.2)'; ctx.fill();
-    ctx.fillStyle = 'rgba(138,106,212,0.5)'; ctx.font = (7*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.2); ctx.fill();
+    ctx.fillStyle = aClr(p,0.5); ctx.font = (7*s)+'px Inter, sans-serif';
     ctx.textAlign = 'center'; ctx.fillText('\u2191', w-22*s, h-16*s);
     ctx.textAlign = 'left';
 
     // Encryption protocol badge at bottom
     roundRect(ctx, 10*s, h-52*s, w-20*s, 16*s, 4*s);
-    ctx.fillStyle = 'rgba(138,106,212,0.04)'; ctx.fill();
-    ctx.fillStyle = 'rgba(138,106,212,0.25)'; ctx.font = '200 '+(5*s)+'px monospace';
+    ctx.fillStyle = aClr(p,0.04); ctx.fill();
+    ctx.fillStyle = aClr(p,0.25); ctx.font = '200 '+(5*s)+'px monospace';
     ctx.textAlign = 'center'; ctx.fillText('X3DH \u00B7 Double Ratchet \u00B7 WebAuthn \u00B7 libsodium', w/2, h-41.5*s);
     ctx.textAlign = 'left';
 
-    drawCorners(ctx, w, h, 14*s, 'rgba(138,106,212,0.15)');
+    drawCorners(ctx, w, h, 14*s, aClr(p,0.15));
   }
 
   // ---- POLYMARKET: Terminal view ----
   function drawPolymarket(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
-    ctx.fillStyle = '#020204'; ctx.fillRect(0, 0, w, h);
+    var p = pal(0, 200, 80);
+    ctx.fillStyle = p.light ? '#e8e9eb' : '#020204'; ctx.fillRect(0, 0, w, h);
 
     // CRT scanline effect
     for (var sl = 0; sl < h; sl += 3*s) {
-      ctx.fillStyle = 'rgba(0,255,100,0.006)'; ctx.fillRect(0, sl, w, 1.5*s);
+      ctx.fillStyle = p.light ? 'rgba(0,140,60,0.012)' : 'rgba(0,255,100,0.006)'; ctx.fillRect(0, sl, w, 1.5*s);
     }
     // CRT vignette
     var vig = ctx.createRadialGradient(w/2, h/2, w*0.25, w/2, h/2, w*0.7);
-    vig.addColorStop(0, 'transparent'); vig.addColorStop(1, 'rgba(0,0,0,0.3)');
+    vig.addColorStop(0, 'transparent'); vig.addColorStop(1, (p.light ? 'rgba(26,26,28,0.12)' : 'rgba(0,0,0,0.3)'));
     ctx.fillStyle = vig; ctx.fillRect(0, 0, w, h);
 
     // Terminal content
     ctx.font = (7*s)+'px monospace'; ctx.textAlign = 'left';
     var lh = 11*s;
     var lines = [
-      {c:'rgba(0,200,128,0.8)',  t:'[PolyBTC] 15-Min Market Analysis'},
-      {c:'rgba(100,100,100,0.4)',t:'────────────────────────────────────────'},
-      {c:'rgba(0,170,100,0.6)', t:'  Chainlink BTC/USD   $62,441.20'},
-      {c:'rgba(0,170,100,0.6)', t:'  Binance Spot        $62,438.50  (-$2.70)'},
-      {c:'rgba(80,80,80,0.4)',  t:''},
-      {c:'rgba(0,200,128,0.7)', t:'  Polymarket Contracts:'},
+      {c:(p.light ? 'rgba(0,140,90,0.8)' : 'rgba(0,200,128,0.8)'),  t:'[PolyBTC] 15-Min Market Analysis'},
+      {c:(p.light ? 'rgba(26,26,28,0.4)' : 'rgba(100,100,100,0.4)'),t:'────────────────────────────────────────'},
+      {c:(p.light ? 'rgba(0,120,70,0.6)' : 'rgba(0,170,100,0.6)'), t:'  Chainlink BTC/USD   $62,441.20'},
+      {c:(p.light ? 'rgba(0,120,70,0.6)' : 'rgba(0,170,100,0.6)'), t:'  Binance Spot        $62,438.50  (-$2.70)'},
+      {c:(p.light ? 'rgba(26,26,28,0.4)' : 'rgba(80,80,80,0.4)'),  t:''},
+      {c:(p.light ? 'rgba(0,140,90,0.7)' : 'rgba(0,200,128,0.7)'), t:'  Polymarket Contracts:'},
       {c:'rgba(74,222,128,0.7)',t:'    BTC Up   \u2192  0.54  \u25B2 +0.02  [65% conf]'},
       {c:'rgba(248,113,113,0.6)',t:'    BTC Down \u2192  0.46  \u25BC -0.02  [35% conf]'},
-      {c:'rgba(80,80,80,0.4)',  t:''},
-      {c:'rgba(0,200,128,0.6)', t:'  Indicators:'},
-      {c:'rgba(140,140,140,0.5)',t:'    RSI(14)   58.2   Neutral'},
+      {c:(p.light ? 'rgba(26,26,28,0.4)' : 'rgba(80,80,80,0.4)'),  t:''},
+      {c:(p.light ? 'rgba(0,140,90,0.6)' : 'rgba(0,200,128,0.6)'), t:'  Indicators:'},
+      {c:(p.light ? 'rgba(60,60,60,0.5)' : 'rgba(140,140,140,0.5)'),t:'    RSI(14)   58.2   Neutral'},
       {c:'rgba(74,222,128,0.6)',t:'    MACD      Bullish crossover \u2713'},
-      {c:'rgba(140,140,140,0.5)',t:'    VWAP      $62,300 (above)'},
+      {c:(p.light ? 'rgba(60,60,60,0.5)' : 'rgba(140,140,140,0.5)'),t:'    VWAP      $62,300 (above)'},
       {c:'rgba(74,222,128,0.5)',t:'    H.Ashi    Green forming'},
-      {c:'rgba(80,80,80,0.4)',  t:''},
+      {c:(p.light ? 'rgba(26,26,28,0.4)' : 'rgba(80,80,80,0.4)'),  t:''},
       {c:'rgba(251,191,36,0.7)',t:'  \u25B6 Signal: LEAN UP  |  Confidence: 65%'},
-      {c:'rgba(80,80,80,0.4)',  t:''},
-      {c:'rgba(0,200,128,0.5)', t:'  [CopyBot] Watching whale_0x7a...'},
-      {c:'rgba(0,200,128,0.4)', t:'  [CopyBot] Last mirror: BUY 0.54 @ 12:45'},
+      {c:(p.light ? 'rgba(26,26,28,0.4)' : 'rgba(80,80,80,0.4)'),  t:''},
+      {c:(p.light ? 'rgba(0,140,90,0.5)' : 'rgba(0,200,128,0.5)'), t:'  [CopyBot] Watching whale_0x7a...'},
+      {c:(p.light ? 'rgba(0,140,90,0.4)' : 'rgba(0,200,128,0.4)'), t:'  [CopyBot] Last mirror: BUY 0.54 @ 12:45'},
     ];
     for (var li = 0; li < lines.length; li++) {
       ctx.fillStyle = lines[li].c; ctx.fillText(lines[li].t, 8*s, 12*s + li*lh);
     }
 
     // Blinking cursor
-    ctx.fillStyle = 'rgba(0,200,80,0.5)'; ctx.fillRect(8*s, 12*s + lines.length*lh, 5*s, 8*s);
+    ctx.fillStyle = aClr(p,0.5); ctx.fillRect(8*s, 12*s + lines.length*lh, 5*s, 8*s);
 
     // Mini sparkline chart in top-right
     var spx = w-90*s, spy = 8*s, spw = 82*s, sph = 40*s;
-    ctx.fillStyle = 'rgba(0,200,80,0.03)'; ctx.fillRect(spx, spy, spw, sph);
-    ctx.strokeStyle = 'rgba(0,200,80,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(spx, spy, spw, sph);
-    ctx.fillStyle = 'rgba(0,200,80,0.25)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillStyle = aClr(p,0.03); ctx.fillRect(spx, spy, spw, sph);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s; ctx.strokeRect(spx, spy, spw, sph);
+    ctx.fillStyle = aClr(p,0.25); ctx.font = (5*s)+'px monospace';
     ctx.fillText('BTC 15m', spx+2*s, spy+8*s);
     // Sparkline
-    ctx.strokeStyle = 'rgba(0,200,80,0.35)'; ctx.lineWidth = 1*s;
+    ctx.strokeStyle = aClr(p,0.35); ctx.lineWidth = 1*s;
     ctx.beginPath();
     for (var sp = 0; sp < 30; sp++) {
       var spXp = spx + 4*s + sp * (spw-8*s)/30;
@@ -1228,25 +1293,27 @@
     ctx.stroke();
     // Fill under
     ctx.lineTo(spx+spw-4*s, spy+sph); ctx.lineTo(spx+4*s, spy+sph); ctx.closePath();
-    ctx.fillStyle = 'rgba(0,200,80,0.04)'; ctx.fill();
+    ctx.fillStyle = aClr(p,0.04); ctx.fill();
 
-    drawCorners(ctx, w, h, 14*s, 'rgba(0,200,80,0.15)');
+    drawCorners(ctx, w, h, 14*s, aClr(p,0.15));
   }
 
   // ---- GALLEON: Loads real ship image ----
   function drawGalleon(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(120, 150, 180);
 
     // Deep storm sky
     var sky = ctx.createLinearGradient(0, 0, 0, h);
-    sky.addColorStop(0, '#060a10'); sky.addColorStop(0.3, '#0e141c'); sky.addColorStop(0.7, '#101820'); sky.addColorStop(1, '#060a0e');
+    if (p.light) { sky.addColorStop(0, '#dde2e8'); sky.addColorStop(0.3, '#d8dee6'); sky.addColorStop(0.7, '#d5dce5'); sky.addColorStop(1, '#dde2e8'); }
+    else { sky.addColorStop(0, '#060a10'); sky.addColorStop(0.3, '#0e141c'); sky.addColorStop(0.7, '#101820'); sky.addColorStop(1, '#060a0e'); }
     ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
 
     // Storm clouds
     for (var ci = 0; ci < 5; ci++) {
       var cx2 = (Math.sin(ci*2.3)*0.3+0.5)*w, cy2 = ci*h*0.08;
       var cg = ctx.createRadialGradient(cx2, cy2, 0, cx2, cy2, w*0.2);
-      cg.addColorStop(0, 'rgba(30,40,55,0.15)'); cg.addColorStop(1, 'transparent');
+      cg.addColorStop(0, p.light ? 'rgba(120,150,180,0.06)' : 'rgba(30,40,55,0.15)'); cg.addColorStop(1, 'transparent');
       ctx.fillStyle = cg; ctx.fillRect(0, 0, w, h*0.5);
     }
 
@@ -1268,19 +1335,19 @@
       var my = (Math.sin(mi*3.2+1.1)*0.5+0.5)*h*0.25;
       var ml = (0.2+Math.sin(mi*2.1)*0.2)*h;
       var mg = ctx.createLinearGradient(mx, my, mx, my+ml);
-      mg.addColorStop(0, 'rgba(64,200,160,0)');
-      mg.addColorStop(0.5, 'rgba(64,200,160,'+(0.03+Math.sin(mi*1.7)*0.02)+')');
-      mg.addColorStop(1, 'rgba(64,200,160,0)');
+      mg.addColorStop(0, (p.light ? 'rgba(40,120,100,0)' : 'rgba(64,200,160,0)'));
+      mg.addColorStop(0.5, (p.light ? 'rgba(40,120,100,'+(0.03+Math.sin(mi*1.7)*0.02)+')' : 'rgba(64,200,160,'+(0.03+Math.sin(mi*1.7)*0.02)+')'));
+      mg.addColorStop(1, (p.light ? 'rgba(40,120,100,0)' : 'rgba(64,200,160,0)'));
       ctx.strokeStyle = mg; ctx.lineWidth = 0.8*s;
       ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(mx, my+ml); ctx.stroke();
     }
 
     // Ocean water
     var ocean = ctx.createLinearGradient(0, h*0.75, 0, h);
-    ocean.addColorStop(0, 'rgba(10,30,50,0.3)'); ocean.addColorStop(1, 'rgba(5,15,25,0.8)');
+    ocean.addColorStop(0, p.light ? 'rgba(120,150,180,0.08)' : 'rgba(10,30,50,0.3)'); ocean.addColorStop(1, p.light ? 'rgba(120,150,180,0.15)' : 'rgba(5,15,25,0.8)');
     ctx.fillStyle = ocean; ctx.fillRect(0, h*0.75, w, h*0.25);
     // Wave lines
-    ctx.strokeStyle = 'rgba(80,120,160,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeStyle = p.light ? 'rgba(80,120,160,0.1)' : 'rgba(80,120,160,0.06)'; ctx.lineWidth = 0.5*s;
     for (var wv = 0; wv < 4; wv++) {
       ctx.beginPath();
       for (var wx = 0; wx < w; wx += 2*s) {
@@ -1299,67 +1366,68 @@
       ctx.globalAlpha = 1.0;
       // Fade bottom into ocean
       var fade = ctx.createLinearGradient(0, h-50*s, 0, h);
-      fade.addColorStop(0, 'rgba(6,10,14,0)'); fade.addColorStop(1, 'rgba(6,10,14,1)');
+      fade.addColorStop(0, p.light ? 'rgba(221,226,232,0)' : 'rgba(6,10,14,0)'); fade.addColorStop(1, p.light ? 'rgba(221,226,232,1)' : 'rgba(6,10,14,1)');
       ctx.fillStyle = fade; ctx.fillRect(0, h-50*s, w, 50*s);
       // Re-draw corners after async
-      drawCorners(ctx, w, h, 14*s, 'rgba(120,150,180,0.15)');
+      drawCorners(ctx, w, h, 14*s, aClr(p,0.15));
     });
 
     // HUD overlay
-    ctx.fillStyle = 'rgba(64,200,160,0.06)'; ctx.fillRect(0, 0, w, 20*s);
-    ctx.strokeStyle = 'rgba(64,200,160,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.fillStyle = (p.light ? 'rgba(40,120,100,0.06)' : 'rgba(64,200,160,0.06)'); ctx.fillRect(0, 0, w, 20*s);
+    ctx.strokeStyle = (p.light ? 'rgba(40,120,100,0.06)' : 'rgba(64,200,160,0.06)'); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(0, 20*s); ctx.lineTo(w, 20*s); ctx.stroke();
-    ctx.fillStyle = 'rgba(64,200,160,0.35)'; ctx.font = '200 '+(6*s)+'px monospace';
+    ctx.fillStyle = (p.light ? 'rgba(40,120,100,0.35)' : 'rgba(64,200,160,0.35)'); ctx.font = '200 '+(6*s)+'px monospace';
     ctx.textAlign = 'left'; ctx.fillText('CLASSIFIED // ARCHIVAL SCAN', 8*s, 13*s);
     ctx.textAlign = 'right'; ctx.fillText('STORM ACTIVE', w-8*s, 13*s);
     ctx.textAlign = 'left';
 
     // Name watermark
-    ctx.fillStyle = 'rgba(240,235,224,0.35)'; ctx.font = '300 italic '+(20*s)+'px Cormorant Garamond, serif';
+    ctx.fillStyle = tClr(p,0.35); ctx.font = '300 italic '+(20*s)+'px Cormorant Garamond, serif';
     ctx.textAlign = 'center'; ctx.fillText('Lance W. Fisher', w/2, h*0.38);
     // Subtitle
-    ctx.fillStyle = 'rgba(240,235,224,0.12)'; ctx.font = '200 '+(7*s)+'px Inter, sans-serif';
+    ctx.fillStyle = tClr(p,0.12); ctx.font = '200 '+(7*s)+'px Inter, sans-serif';
     ctx.fillText('The Original Concept', w/2, h*0.45);
     ctx.textAlign = 'left';
 
-    drawCorners(ctx, w, h, 14*s, 'rgba(120,150,180,0.15)');
+    drawCorners(ctx, w, h, 14*s, aClr(p,0.15));
   }
 
   // ---- BOOKMARK BOT: CLI pipeline visualization ----
   function drawBookmarkBot(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
     drawBg(ctx, w, h, 64, 180, 140);
+    var p = pal(64, 180, 140);
 
     // Subtle circuit-board grid pattern
-    ctx.strokeStyle = 'rgba(64,180,140,0.02)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeStyle = aClr(p,0.02); ctx.lineWidth = 0.5*s;
     for (var gi = 0; gi < w; gi += 24*s) { ctx.beginPath(); ctx.moveTo(gi, 0); ctx.lineTo(gi, h); ctx.stroke(); }
     for (var gj = 0; gj < h; gj += 24*s) { ctx.beginPath(); ctx.moveTo(0, gj); ctx.lineTo(w, gj); ctx.stroke(); }
 
     // Header bar with gradient
     var hGrad = ctx.createLinearGradient(0, 0, w, 0);
-    hGrad.addColorStop(0, 'rgba(64,180,140,0.08)'); hGrad.addColorStop(1, 'rgba(64,180,140,0.02)');
+    hGrad.addColorStop(0, aClr(p,0.08)); hGrad.addColorStop(1, aClr(p,0.02));
     ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 28*s);
-    ctx.strokeStyle = 'rgba(64,180,140,0.1)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeStyle = aClr(p,0.1); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(0, 28*s); ctx.lineTo(w, 28*s); ctx.stroke();
-    ctx.fillStyle = 'rgba(64,180,140,0.6)'; ctx.fillRect(0, 0, 3*s, 28*s);
+    ctx.fillStyle = aClr(p,0.6); ctx.fillRect(0, 0, 3*s, 28*s);
 
     // X logo stylized
     ctx.save();
-    ctx.fillStyle = 'rgba(240,235,224,0.08)'; ctx.font = 'bold '+(40*s)+'px Inter, sans-serif';
+    ctx.fillStyle = tClr(p,0.08); ctx.font = 'bold '+(40*s)+'px Inter, sans-serif';
     ctx.textAlign = 'right'; ctx.fillText('X', w-8*s, 60*s); ctx.restore();
 
-    ctx.fillStyle = 'rgba(240,235,224,0.75)'; ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
+    ctx.fillStyle = tClr(p,0.75); ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
     ctx.textAlign = 'left'; ctx.fillText('Bookmark-to-Build Bot', 14*s, 18*s);
     ctx.fillStyle = 'rgba(74,222,128,0.5)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
     ctx.fillText('\u25CF  PIPELINE ACTIVE', w*0.55, 18*s);
 
     // Left panel: Bookmark feed (scrollable list mockup)
     var feedX = 6*s, feedY = 34*s, feedW = w*0.38, feedH = h*0.55;
-    ctx.fillStyle = 'rgba(64,180,140,0.02)'; ctx.fillRect(feedX, feedY, feedW, feedH);
-    ctx.strokeStyle = 'rgba(64,180,140,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(feedX, feedY, feedW, feedH);
-    ctx.fillStyle = 'rgba(64,180,140,0.35)'; ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.02); ctx.fillRect(feedX, feedY, feedW, feedH);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s; ctx.strokeRect(feedX, feedY, feedW, feedH);
+    ctx.fillStyle = aClr(p,0.35); ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
     ctx.fillText('BOOKMARK QUEUE', feedX+8*s, feedY+12*s);
-    ctx.fillStyle = 'rgba(240,235,224,0.15)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillStyle = tClr(p,0.15); ctx.font = (5*s)+'px monospace';
     ctx.textAlign = 'right'; ctx.fillText('47 pending', feedX+feedW-6*s, feedY+12*s); ctx.textAlign = 'left';
 
     var bookmarks = [
@@ -1375,12 +1443,12 @@
       var by = feedY+20*s + bi*18*s;
       if (by + 16*s > feedY + feedH) break;
       // Row separator
-      ctx.strokeStyle = 'rgba(64,180,140,0.03)'; ctx.beginPath(); ctx.moveTo(feedX+6*s, by+16*s); ctx.lineTo(feedX+feedW-6*s, by+16*s); ctx.stroke();
+      ctx.strokeStyle = aClr(p,0.03); ctx.beginPath(); ctx.moveTo(feedX+6*s, by+16*s); ctx.lineTo(feedX+feedW-6*s, by+16*s); ctx.stroke();
       // Username
-      ctx.fillStyle = 'rgba(64,180,140,0.5)'; ctx.font = '500 '+(5*s)+'px Inter, sans-serif';
+      ctx.fillStyle = aClr(p,0.5); ctx.font = '500 '+(5*s)+'px Inter, sans-serif';
       ctx.fillText(bookmarks[bi].user, feedX+8*s, by+6*s);
       // Text preview
-      ctx.fillStyle = 'rgba(240,235,224,0.25)'; ctx.font = '300 '+(5*s)+'px Inter, sans-serif';
+      ctx.fillStyle = tClr(p,0.25); ctx.font = '300 '+(5*s)+'px Inter, sans-serif';
       var txt = bookmarks[bi].text; if (txt.length > 32) txt = txt.substring(0,30)+'...';
       ctx.fillText(txt, feedX+8*s, by+14*s);
       // Tag
@@ -1391,13 +1459,13 @@
 
     // Right side: Pipeline visualization (vertical flow)
     var pipeX = feedX+feedW+10*s, pipeY = 34*s;
-    ctx.fillStyle = 'rgba(240,235,224,0.5)'; ctx.font = '300 '+(14*s)+'px Cormorant Garamond, serif';
+    ctx.fillStyle = tClr(p,0.5); ctx.font = '300 '+(14*s)+'px Cormorant Garamond, serif';
     ctx.fillText('Pipeline', pipeX, pipeY+14*s);
-    ctx.fillStyle = 'rgba(64,180,140,0.3)'; ctx.font = '200 '+(7*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.3); ctx.font = '200 '+(7*s)+'px Inter, sans-serif';
     ctx.fillText('5-stage processor', pipeX, pipeY+26*s);
 
     // Thin rule
-    ctx.fillStyle = 'rgba(64,180,140,0.15)'; ctx.fillRect(pipeX, pipeY+30*s, 40*s, 0.5*s);
+    ctx.fillStyle = aClr(p,0.15); ctx.fillRect(pipeX, pipeY+30*s, 40*s, 0.5*s);
 
     var stages = [
       {name:'INGEST', desc:'Fetch bookmarks via API', status:'done', c:'rgba(74,222,128,'},
@@ -1415,7 +1483,7 @@
 
       // Vertical connection line
       if (si < stages.length - 1) {
-        ctx.strokeStyle = isDone ? 'rgba(74,222,128,0.15)' : 'rgba(64,180,140,0.05)';
+        ctx.strokeStyle = isDone ? 'rgba(74,222,128,0.15)' : aClr(p,0.05);
         ctx.lineWidth = 1*s; ctx.setLineDash(isDone ? [] : [2*s, 3*s]);
         ctx.beginPath(); ctx.moveTo(pipeX+8*s, sy+12*s); ctx.lineTo(pipeX+8*s, sy+22*s); ctx.stroke();
         ctx.setLineDash([]);
@@ -1423,9 +1491,9 @@
 
       // Status icon
       ctx.beginPath(); ctx.arc(pipeX+8*s, sy+4*s, 5*s, 0, Math.PI*2);
-      ctx.fillStyle = isDone ? 'rgba(74,222,128,0.12)' : isActive ? 'rgba(64,180,140,0.15)' : 'rgba(64,180,140,0.04)';
+      ctx.fillStyle = isDone ? 'rgba(74,222,128,0.12)' : isActive ? aClr(p,0.15) : aClr(p,0.04);
       ctx.fill();
-      ctx.strokeStyle = isDone ? 'rgba(74,222,128,0.4)' : isActive ? 'rgba(64,180,140,0.4)' : 'rgba(64,180,140,0.08)';
+      ctx.strokeStyle = isDone ? 'rgba(74,222,128,0.4)' : isActive ? aClr(p,0.4) : aClr(p,0.08);
       ctx.lineWidth = isActive ? 1.5*s : 0.8*s; ctx.stroke();
 
       if (isDone) {
@@ -1434,21 +1502,21 @@
       } else if (isActive) {
         // Pulsing dot
         ctx.beginPath(); ctx.arc(pipeX+8*s, sy+4*s, 2*s, 0, Math.PI*2);
-        ctx.fillStyle = 'rgba(64,180,140,0.6)'; ctx.fill();
+        ctx.fillStyle = aClr(p,0.6); ctx.fill();
       }
 
       // Stage name and description
-      ctx.fillStyle = isDone ? 'rgba(74,222,128,0.6)' : isActive ? 'rgba(64,180,140,0.6)' : 'rgba(64,180,140,0.2)';
+      ctx.fillStyle = isDone ? 'rgba(74,222,128,0.6)' : isActive ? aClr(p,0.6) : aClr(p,0.2);
       ctx.font = '600 '+(6*s)+'px Inter, sans-serif'; ctx.fillText(stages[si].name, pipeX+20*s, sy+7*s);
-      ctx.fillStyle = isPending ? 'rgba(240,235,224,0.1)' : 'rgba(240,235,224,0.25)';
+      ctx.fillStyle = isPending ? tClr(p,0.1) : tClr(p,0.25);
       ctx.font = '300 '+(5.5*s)+'px Inter, sans-serif'; ctx.fillText(stages[si].desc, pipeX+65*s, sy+7*s);
     }
 
     // Bottom panel: Matched ideas with confidence scores
     var bY = h*0.65;
-    ctx.fillStyle = 'rgba(64,180,140,0.02)'; ctx.fillRect(6*s, bY, w-12*s, h-bY-8*s);
-    ctx.strokeStyle = 'rgba(64,180,140,0.05)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(6*s, bY, w-12*s, h-bY-8*s);
-    ctx.fillStyle = 'rgba(64,180,140,0.35)'; ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.02); ctx.fillRect(6*s, bY, w-12*s, h-bY-8*s);
+    ctx.strokeStyle = aClr(p,0.05); ctx.lineWidth = 0.5*s; ctx.strokeRect(6*s, bY, w-12*s, h-bY-8*s);
+    ctx.fillStyle = aClr(p,0.35); ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
     ctx.fillText('MATCHED TO PROJECTS', 14*s, bY+12*s);
 
     var ideas = [
@@ -1461,14 +1529,14 @@
       var iy = bY + 20*s + ii * 14*s;
       if (iy + 10*s > h - 12*s) break;
       // Confidence bar background
-      ctx.fillStyle = 'rgba(64,180,140,0.03)'; ctx.fillRect(14*s, iy, w-28*s, 10*s);
+      ctx.fillStyle = aClr(p,0.03); ctx.fillRect(14*s, iy, w-28*s, 10*s);
       // Confidence bar fill
-      ctx.fillStyle = 'rgba(64,180,140,0.08)'; ctx.fillRect(14*s, iy, (w-28*s)*ideas[ii].conf/100, 10*s);
+      ctx.fillStyle = aClr(p,0.08); ctx.fillRect(14*s, iy, (w-28*s)*ideas[ii].conf/100, 10*s);
       // Project name
-      ctx.fillStyle = 'rgba(240,235,224,0.45)'; ctx.font = '500 '+(5*s)+'px monospace';
+      ctx.fillStyle = tClr(p,0.45); ctx.font = '500 '+(5*s)+'px monospace';
       ctx.fillText(ideas[ii].project, 20*s, iy+7*s);
       // Idea text
-      ctx.fillStyle = 'rgba(240,235,224,0.2)'; ctx.font = '300 '+(5*s)+'px Inter, sans-serif';
+      ctx.fillStyle = tClr(p,0.2); ctx.font = '300 '+(5*s)+'px Inter, sans-serif';
       ctx.fillText(ideas[ii].idea, 120*s, iy+7*s);
       // Confidence percentage
       ctx.fillStyle = ideas[ii].c; ctx.globalAlpha = 0.6; ctx.font = '500 '+(5.5*s)+'px monospace';
@@ -1476,16 +1544,17 @@
       ctx.textAlign = 'left'; ctx.globalAlpha = 1;
     }
 
-    drawCorners(ctx, w, h, 14*s, 'rgba(64,180,140,0.15)');
+    drawCorners(ctx, w, h, 14*s, aClr(p,0.15));
   }
 
   // ---- HOME HUB: Security dashboard ----
   function drawHomeHub(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
     drawBg(ctx, w, h, 60, 140, 220);
+    var p = pal(60, 140, 220);
 
     // Subtle hex grid pattern (security aesthetic)
-    ctx.strokeStyle = 'rgba(60,140,220,0.015)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeStyle = aClr(p,0.015); ctx.lineWidth = 0.5*s;
     var hexR = 18*s;
     for (var hx = 0; hx < w + hexR*2; hx += hexR*1.5) {
       for (var hy = 0; hy < h + hexR*2; hy += hexR*1.73) {
@@ -1502,22 +1571,22 @@
 
     // Header bar with shield icon effect
     var hGrad = ctx.createLinearGradient(0, 0, w, 0);
-    hGrad.addColorStop(0, 'rgba(60,140,220,0.08)'); hGrad.addColorStop(1, 'rgba(60,140,220,0.02)');
+    hGrad.addColorStop(0, aClr(p,0.08)); hGrad.addColorStop(1, aClr(p,0.02));
     ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 28*s);
-    ctx.strokeStyle = 'rgba(60,140,220,0.1)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeStyle = aClr(p,0.1); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(0, 28*s); ctx.lineTo(w, 28*s); ctx.stroke();
-    ctx.fillStyle = 'rgba(60,140,220,0.6)'; ctx.fillRect(0, 0, 3*s, 28*s);
+    ctx.fillStyle = aClr(p,0.6); ctx.fillRect(0, 0, 3*s, 28*s);
 
     // Shield icon
     ctx.save();
     ctx.beginPath(); ctx.moveTo(10*s, 8*s); ctx.lineTo(18*s, 5*s); ctx.lineTo(26*s, 8*s);
     ctx.lineTo(26*s, 16*s); ctx.quadraticCurveTo(18*s, 24*s, 18*s, 24*s);
     ctx.quadraticCurveTo(18*s, 24*s, 10*s, 16*s); ctx.closePath();
-    ctx.strokeStyle = 'rgba(60,140,220,0.35)'; ctx.lineWidth = 1*s; ctx.stroke();
-    ctx.fillStyle = 'rgba(60,140,220,0.05)'; ctx.fill();
+    ctx.strokeStyle = aClr(p,0.35); ctx.lineWidth = 1*s; ctx.stroke();
+    ctx.fillStyle = aClr(p,0.05); ctx.fill();
     ctx.restore();
 
-    ctx.fillStyle = 'rgba(240,235,224,0.75)'; ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
+    ctx.fillStyle = tClr(p,0.75); ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
     ctx.textAlign = 'left'; ctx.fillText('Home Hub', 32*s, 18*s);
     // Status
     ctx.beginPath(); ctx.arc(w-14*s, 14*s, 3*s, 0, Math.PI*2);
@@ -1527,9 +1596,9 @@
 
     // Left panel: Camera feeds (2x2)
     var camX = 6*s, camY = 34*s, camW = w*0.44, camH = h*0.52;
-    ctx.fillStyle = 'rgba(60,140,220,0.02)'; ctx.fillRect(camX, camY, camW, camH);
-    ctx.strokeStyle = 'rgba(60,140,220,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(camX, camY, camW, camH);
-    ctx.fillStyle = 'rgba(60,140,220,0.35)'; ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.02); ctx.fillRect(camX, camY, camW, camH);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s; ctx.strokeRect(camX, camY, camW, camH);
+    ctx.fillStyle = aClr(p,0.35); ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
     ctx.fillText('CAMERA FEEDS', camX+8*s, camY+12*s);
     ctx.fillStyle = 'rgba(248,113,113,0.4)'; ctx.font = (4.5*s)+'px monospace';
     ctx.textAlign = 'right'; ctx.fillText('\u25CF REC', camX+camW-6*s, camY+12*s); ctx.textAlign = 'left';
@@ -1547,14 +1616,14 @@
       var isOnline = cameras[ci].status === 'online';
 
       // Feed background with slight noise texture
-      ctx.fillStyle = isOnline ? 'rgba(60,140,220,0.04)' : 'rgba(200,60,60,0.03)';
+      ctx.fillStyle = isOnline ? aClr(p,0.04) : 'rgba(200,60,60,0.03)';
       ctx.fillRect(fx, fy, feedW2, feedH2);
-      ctx.strokeStyle = isOnline ? 'rgba(60,140,220,0.1)' : 'rgba(200,60,60,0.1)';
+      ctx.strokeStyle = isOnline ? aClr(p,0.1) : 'rgba(200,60,60,0.1)';
       ctx.lineWidth = 0.5*s; ctx.strokeRect(fx, fy, feedW2, feedH2);
 
       // Camera name badge
-      ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.fillRect(fx+2*s, fy+2*s, 40*s, 9*s);
-      ctx.fillStyle = 'rgba(240,235,224,0.5)'; ctx.font = '500 '+(4.5*s)+'px Inter, sans-serif';
+      ctx.fillStyle = (p.light ? 'rgba(26,26,28,0.12)' : 'rgba(0,0,0,0.3)'); ctx.fillRect(fx+2*s, fy+2*s, 40*s, 9*s);
+      ctx.fillStyle = tClr(p,0.5); ctx.font = '500 '+(4.5*s)+'px Inter, sans-serif';
       ctx.fillText(cameras[ci].name, fx+4*s, fy+9*s);
 
       // Status dot
@@ -1564,7 +1633,7 @@
       if (isOnline) {
         // Scanlines for video feel
         for (var sl = 0; sl < feedH2; sl += 3*s) {
-          ctx.fillStyle = 'rgba(60,140,220,0.01)'; ctx.fillRect(fx, fy+sl, feedW2, 1*s);
+          ctx.fillStyle = aClr(p,0.01); ctx.fillRect(fx, fy+sl, feedW2, 1*s);
         }
         // Motion detection box
         if (cameras[ci].motion) {
@@ -1576,7 +1645,7 @@
           ctx.fillText('MOTION', fx+feedW2*0.32, fy+feedH2*0.28);
         }
         // Timestamp
-        ctx.fillStyle = 'rgba(240,235,224,0.2)'; ctx.font = (3.5*s)+'px monospace';
+        ctx.fillStyle = tClr(p,0.2); ctx.font = (3.5*s)+'px monospace';
         ctx.fillText('02:41:33', fx+4*s, fy+feedH2-4*s);
       } else {
         // Offline X
@@ -1590,23 +1659,23 @@
 
     // Right panel: Network topology
     var netX = camX+camW+6*s, netY = 34*s, netW = w-netX-6*s, netH = h*0.52;
-    ctx.fillStyle = 'rgba(60,140,220,0.02)'; ctx.fillRect(netX, netY, netW, netH);
-    ctx.strokeStyle = 'rgba(60,140,220,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(netX, netY, netW, netH);
-    ctx.fillStyle = 'rgba(60,140,220,0.35)'; ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.02); ctx.fillRect(netX, netY, netW, netH);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s; ctx.strokeRect(netX, netY, netW, netH);
+    ctx.fillStyle = aClr(p,0.35); ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
     ctx.fillText('NETWORK TOPOLOGY', netX+8*s, netY+12*s);
-    ctx.fillStyle = 'rgba(240,235,224,0.2)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillStyle = tClr(p,0.2); ctx.font = (5*s)+'px monospace';
     ctx.textAlign = 'right'; ctx.fillText('14 devices', netX+netW-8*s, netY+12*s); ctx.textAlign = 'left';
 
     // Router (central hub with rings)
     var routerX = netX+netW*0.5, routerY = netY+netH*0.5;
     // Outer ring
     ctx.beginPath(); ctx.arc(routerX, routerY, 20*s, 0, Math.PI*2);
-    ctx.strokeStyle = 'rgba(60,140,220,0.05)'; ctx.lineWidth = 0.5*s; ctx.stroke();
+    ctx.strokeStyle = aClr(p,0.05); ctx.lineWidth = 0.5*s; ctx.stroke();
     // Inner ring
     ctx.beginPath(); ctx.arc(routerX, routerY, 12*s, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(60,140,220,0.08)'; ctx.fill();
-    ctx.strokeStyle = 'rgba(60,140,220,0.25)'; ctx.lineWidth = 1.2*s; ctx.stroke();
-    ctx.fillStyle = 'rgba(240,235,224,0.6)'; ctx.font = '600 '+(6*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.08); ctx.fill();
+    ctx.strokeStyle = aClr(p,0.25); ctx.lineWidth = 1.2*s; ctx.stroke();
+    ctx.fillStyle = tClr(p,0.6); ctx.font = '600 '+(6*s)+'px Inter, sans-serif';
     ctx.textAlign = 'center'; ctx.fillText('GW', routerX, routerY+2*s);
 
     // Device nodes with connection lines
@@ -1625,7 +1694,7 @@
     for (var di = 0; di < devices.length; di++) {
       var dx = netX+netW*devices[di].x, dy = netY+20*s+(netH-32*s)*devices[di].y;
       // Connection line with gradient
-      ctx.strokeStyle = devices[di].c === '#f87171' ? 'rgba(248,113,113,0.08)' : 'rgba(60,140,220,0.06)';
+      ctx.strokeStyle = devices[di].c === '#f87171' ? 'rgba(248,113,113,0.08)' : aClr(p,0.06);
       ctx.lineWidth = 0.5*s; ctx.beginPath(); ctx.moveTo(routerX, routerY); ctx.lineTo(dx, dy); ctx.stroke();
       // Device circle
       ctx.beginPath(); ctx.arc(dx, dy, 5*s, 0, Math.PI*2);
@@ -1641,9 +1710,9 @@
     // Bottom panel: Alerts with severity indicators
     var alertY = Math.max(camY+camH, netY+netH) + 6*s;
     var alertH = h-alertY-6*s;
-    ctx.fillStyle = 'rgba(60,140,220,0.02)'; ctx.fillRect(6*s, alertY, w-12*s, alertH);
-    ctx.strokeStyle = 'rgba(60,140,220,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(6*s, alertY, w-12*s, alertH);
-    ctx.fillStyle = 'rgba(60,140,220,0.35)'; ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.02); ctx.fillRect(6*s, alertY, w-12*s, alertH);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s; ctx.strokeRect(6*s, alertY, w-12*s, alertH);
+    ctx.fillStyle = aClr(p,0.35); ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
     ctx.fillText('ALERTS & EVENTS', 14*s, alertY+12*s);
 
     // Stats bar
@@ -1673,34 +1742,35 @@
       ctx.font = 'bold '+(4.5*s)+'px monospace'; ctx.fillText(alerts[ai].type, 22*s, ay+6*s);
       ctx.globalAlpha = 1;
       // Message
-      ctx.fillStyle = 'rgba(240,235,224,0.3)'; ctx.font = '300 '+(5*s)+'px Inter, sans-serif';
+      ctx.fillStyle = tClr(p,0.3); ctx.font = '300 '+(5*s)+'px Inter, sans-serif';
       ctx.fillText(alerts[ai].msg, 50*s, ay+6*s);
       // Time
-      ctx.fillStyle = 'rgba(240,235,224,0.12)'; ctx.font = (4.5*s)+'px monospace';
+      ctx.fillStyle = tClr(p,0.12); ctx.font = (4.5*s)+'px monospace';
       ctx.textAlign = 'right'; ctx.fillText(alerts[ai].t, w-14*s, ay+6*s); ctx.textAlign = 'left';
     }
 
-    drawCorners(ctx, w, h, 14*s, 'rgba(60,140,220,0.15)');
+    drawCorners(ctx, w, h, 14*s, aClr(p,0.15));
   }
 
   // ===== PROJECT HUB =====
   function drawProjectHub(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
     drawBg(ctx, w, h, 201, 168, 76);
+    var p = pal(201, 168, 76);
 
     // Subtle grid pattern (command center)
-    ctx.strokeStyle = 'rgba(201,168,76,0.02)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeStyle = aClr(p,0.02); ctx.lineWidth = 0.5*s;
     for (var gi = 0; gi < w; gi += 20*s) { ctx.beginPath(); ctx.moveTo(gi, 0); ctx.lineTo(gi, h); ctx.stroke(); }
     for (var gj = 0; gj < h; gj += 20*s) { ctx.beginPath(); ctx.moveTo(0, gj); ctx.lineTo(w, gj); ctx.stroke(); }
 
     // Header bar
     var hGrad = ctx.createLinearGradient(0, 0, w, 0);
-    hGrad.addColorStop(0, 'rgba(201,168,76,0.08)'); hGrad.addColorStop(1, 'rgba(201,168,76,0.02)');
+    hGrad.addColorStop(0, aClr(p,0.08)); hGrad.addColorStop(1, aClr(p,0.02));
     ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 28*s);
-    ctx.strokeStyle = 'rgba(201,168,76,0.1)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeStyle = aClr(p,0.1); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(0, 28*s); ctx.lineTo(w, 28*s); ctx.stroke();
-    ctx.fillStyle = 'rgba(201,168,76,0.6)'; ctx.fillRect(0, 0, 3*s, 28*s);
-    ctx.fillStyle = 'rgba(240,235,224,0.75)'; ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.6); ctx.fillRect(0, 0, 3*s, 28*s);
+    ctx.fillStyle = tClr(p,0.75); ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
     ctx.textAlign = 'left'; ctx.fillText('ProjectHub', 14*s, 18*s);
 
     // Sync status
@@ -1711,12 +1781,12 @@
 
     // Left side: Project list table
     var tableX = 6*s, tableY = 34*s, tableW = w*0.55, tableH = h - 70*s;
-    ctx.fillStyle = 'rgba(201,168,76,0.02)'; ctx.fillRect(tableX, tableY, tableW, tableH);
-    ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(tableX, tableY, tableW, tableH);
+    ctx.fillStyle = aClr(p,0.02); ctx.fillRect(tableX, tableY, tableW, tableH);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s; ctx.strokeRect(tableX, tableY, tableW, tableH);
 
     // Table header
-    ctx.fillStyle = 'rgba(201,168,76,0.06)'; ctx.fillRect(tableX, tableY, tableW, 12*s);
-    ctx.fillStyle = 'rgba(201,168,76,0.4)'; ctx.font = '500 '+(4.5*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.06); ctx.fillRect(tableX, tableY, tableW, 12*s);
+    ctx.fillStyle = aClr(p,0.4); ctx.font = '500 '+(4.5*s)+'px Inter, sans-serif';
     ctx.fillText('PROJECT', tableX+22*s, tableY+8*s);
     ctx.fillText('STATUS', tableX+tableW*0.62, tableY+8*s);
     ctx.fillText('LANG', tableX+tableW*0.82, tableY+8*s);
@@ -1735,20 +1805,20 @@
     ];
     var statusColors = {clean:'#4ade80', dirty:'#fbbf24', ahead:'#60a5fa'};
     var rowH = Math.min(16*s, (tableH-14*s)/projects.length);
-    for (var p = 0; p < projects.length; p++) {
-      var py = tableY+14*s + p*rowH;
+    for (var pi = 0; pi < projects.length; pi++) {
+      var py = tableY+14*s + pi*rowH;
       if (py + rowH > tableY + tableH) break;
-      var proj = projects[p];
+      var proj = projects[pi];
 
       // Alternating row shade
-      if (p % 2 === 0) { ctx.fillStyle = 'rgba(240,235,224,0.008)'; ctx.fillRect(tableX, py, tableW, rowH); }
+      if (pi % 2 === 0) { ctx.fillStyle = tClr(p,0.008); ctx.fillRect(tableX, py, tableW, rowH); }
 
       // Status dot
       ctx.beginPath(); ctx.arc(tableX+10*s, py+rowH/2, 2*s, 0, Math.PI*2);
       ctx.fillStyle = statusColors[proj.status]; ctx.globalAlpha = 0.5; ctx.fill(); ctx.globalAlpha = 1;
 
       // Project name
-      ctx.fillStyle = 'rgba(240,235,224,0.4)'; ctx.font = (6*s)+'px Inter, sans-serif';
+      ctx.fillStyle = tClr(p,0.4); ctx.font = (6*s)+'px Inter, sans-serif';
       ctx.fillText(proj.name, tableX+20*s, py+rowH/2+2*s);
 
       // Status text
@@ -1757,8 +1827,8 @@
       ctx.globalAlpha = 1;
 
       // Language badge
-      ctx.fillStyle = 'rgba(201,168,76,0.08)'; ctx.fillRect(tableX+tableW*0.82, py+2*s, 20*s, rowH-4*s);
-      ctx.fillStyle = 'rgba(201,168,76,0.45)'; ctx.font = (5*s)+'px monospace';
+      ctx.fillStyle = aClr(p,0.08); ctx.fillRect(tableX+tableW*0.82, py+2*s, 20*s, rowH-4*s);
+      ctx.fillStyle = aClr(p,0.45); ctx.font = (5*s)+'px monospace';
       ctx.fillText(proj.lang, tableX+tableW*0.84, py+rowH/2+2*s);
 
       // Commit count
@@ -1780,8 +1850,8 @@
     for (var sc = 0; sc < 4; sc++) {
       var scx = rX + (sc%2)*(scW+6*s);
       var scy = rY + Math.floor(sc/2)*(scH+6*s);
-      ctx.fillStyle = 'rgba(201,168,76,0.03)'; ctx.fillRect(scx, scy, scW, scH);
-      ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(scx, scy, scW, scH);
+      ctx.fillStyle = aClr(p,0.03); ctx.fillRect(scx, scy, scW, scH);
+      ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s; ctx.strokeRect(scx, scy, scW, scH);
       ctx.fillStyle = statCards[sc].c; ctx.globalAlpha = 0.7;
       ctx.font = '600 '+(14*s)+'px Inter, sans-serif'; ctx.fillText(statCards[sc].v, scx+6*s, scy+18*s);
       ctx.globalAlpha = 0.35; ctx.font = (5.5*s)+'px Inter, sans-serif'; ctx.fillText(statCards[sc].l, scx+6*s, scy+25*s);
@@ -1791,9 +1861,9 @@
     // Activity graph (sparkline)
     var graphY = rY + 2*(scH+6*s) + 6*s;
     var graphH = h - graphY - 34*s;
-    ctx.fillStyle = 'rgba(201,168,76,0.02)'; ctx.fillRect(rX, graphY, rW, graphH);
-    ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(rX, graphY, rW, graphH);
-    ctx.fillStyle = 'rgba(201,168,76,0.35)'; ctx.font = '200 '+(5*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.02); ctx.fillRect(rX, graphY, rW, graphH);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s; ctx.strokeRect(rX, graphY, rW, graphH);
+    ctx.fillStyle = aClr(p,0.35); ctx.font = '200 '+(5*s)+'px Inter, sans-serif';
     ctx.fillText('COMMIT ACTIVITY', rX+6*s, graphY+10*s);
 
     // Draw sparkline bars (last 14 days)
@@ -1804,46 +1874,47 @@
       var bx = rX+10*s + di*(barW2+1*s);
       var bh = (days[di]/maxD)*(graphH-20*s);
       var bGrad = ctx.createLinearGradient(0, graphY+graphH-6*s-bh, 0, graphY+graphH-6*s);
-      bGrad.addColorStop(0, 'rgba(201,168,76,0.3)'); bGrad.addColorStop(1, 'rgba(201,168,76,0.05)');
+      bGrad.addColorStop(0, aClr(p,0.3)); bGrad.addColorStop(1, aClr(p,0.05));
       ctx.fillStyle = bGrad; ctx.fillRect(bx, graphY+graphH-6*s-bh, barW2, bh);
     }
 
     // Bottom bar: sync info
     var barY = h-24*s;
-    ctx.fillStyle = 'rgba(201,168,76,0.04)'; ctx.fillRect(0, barY, w, 24*s);
-    ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.fillStyle = aClr(p,0.04); ctx.fillRect(0, barY, w, 24*s);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(0, barY); ctx.lineTo(w, barY); ctx.stroke();
-    ctx.fillStyle = 'rgba(240,235,224,0.25)'; ctx.font = (5.5*s)+'px Inter, sans-serif';
+    ctx.fillStyle = tClr(p,0.25); ctx.font = (5.5*s)+'px Inter, sans-serif';
     ctx.fillText('Last sync: 2m ago', 14*s, barY+15*s);
     ctx.fillStyle = 'rgba(74,222,128,0.3)'; ctx.font = (5.5*s)+'px monospace';
     ctx.textAlign = 'center'; ctx.fillText('5-min auto-sync active', w/2, barY+15*s);
-    ctx.fillStyle = 'rgba(201,168,76,0.25)'; ctx.font = (5.5*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.25); ctx.font = (5.5*s)+'px Inter, sans-serif';
     ctx.textAlign = 'right'; ctx.fillText('manifest v2.4', w-14*s, barY+15*s);
     ctx.textAlign = 'left';
 
-    drawCorners(ctx, w, h, 14*s, 'rgba(201,168,76,0.15)');
+    drawCorners(ctx, w, h, 14*s, aClr(p,0.15));
   }
 
   // ---- FISHER ONE-THREE: Nautical brand showcase ----
   function drawFisher13(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(140, 170, 210);
 
     // Deep ocean night sky
     var sky = ctx.createLinearGradient(0, 0, 0, h);
-    sky.addColorStop(0, '#050810'); sky.addColorStop(0.35, '#0a1020');
-    sky.addColorStop(0.7, '#0c1428'); sky.addColorStop(1, '#060a14');
+    if (p.light) { sky.addColorStop(0, '#dfe5ed'); sky.addColorStop(0.35, '#d8dee8'); sky.addColorStop(0.7, '#d2d9e4'); sky.addColorStop(1, '#dce2ec'); }
+    else { sky.addColorStop(0, '#050810'); sky.addColorStop(0.35, '#0a1020'); sky.addColorStop(0.7, '#0c1428'); sky.addColorStop(1, '#060a14'); }
     ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
 
     // Subtle ocean waves pattern at bottom
     var oceanY = h * 0.72;
     var ocean = ctx.createLinearGradient(0, oceanY, 0, h);
-    ocean.addColorStop(0, 'rgba(15,30,60,0.0)');
-    ocean.addColorStop(0.3, 'rgba(15,30,60,0.2)');
-    ocean.addColorStop(1, 'rgba(8,16,32,0.6)');
+    ocean.addColorStop(0, p.light ? 'rgba(140,170,210,0.0)' : 'rgba(15,30,60,0.0)');
+    ocean.addColorStop(0.3, p.light ? 'rgba(140,170,210,0.08)' : 'rgba(15,30,60,0.2)');
+    ocean.addColorStop(1, p.light ? 'rgba(140,170,210,0.15)' : 'rgba(8,16,32,0.6)');
     ctx.fillStyle = ocean; ctx.fillRect(0, oceanY, w, h - oceanY);
 
     // Animated-style wave lines
-    ctx.strokeStyle = 'rgba(140,170,210,0.04)'; ctx.lineWidth = 0.6*s;
+    ctx.strokeStyle = aClr(p,0.04); ctx.lineWidth = 0.6*s;
     for (var wv = 0; wv < 6; wv++) {
       ctx.beginPath();
       for (var wx = 0; wx < w; wx += 2*s) {
@@ -1858,7 +1929,7 @@
       var sx = (Math.sin(si*7.3+2.1)*0.5+0.5)*w;
       var sy = (Math.sin(si*4.1+0.7)*0.3+0.05)*h;
       var sa = 0.06 + Math.sin(si*3.7)*0.04;
-      ctx.fillStyle = 'rgba(200,215,240,'+sa+')';
+      ctx.fillStyle = p.light ? 'rgba(100,115,140,'+sa+')' : 'rgba(200,215,240,'+sa+')';
       ctx.fillRect(sx, sy, 1*s, 1*s);
     }
 
@@ -1866,7 +1937,7 @@
     ctx.save();
     ctx.translate(w*0.82, h*0.25);
     ctx.globalAlpha = 0.035;
-    ctx.strokeStyle = '#8caad2'; ctx.lineWidth = 1*s;
+    ctx.strokeStyle = p.light ? '#6080a0' : '#8caad2'; ctx.lineWidth = 1*s;
     var cr = 30*s;
     ctx.beginPath(); ctx.arc(0, 0, cr, 0, Math.PI*2); ctx.stroke();
     ctx.beginPath(); ctx.arc(0, 0, cr*0.7, 0, Math.PI*2); ctx.stroke();
@@ -1877,7 +1948,7 @@
       ctx.lineTo(Math.cos(ca)*cr*1.15, Math.sin(ca)*cr*1.15); ctx.stroke();
     }
     // Cardinal points
-    ctx.fillStyle = '#8caad2'; ctx.font = '600 '+(5*s)+'px Inter, sans-serif';
+    ctx.fillStyle = p.light ? '#6080a0' : '#8caad2'; ctx.font = '600 '+(5*s)+'px Inter, sans-serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText('N', 0, -cr*1.3);
     ctx.fillText('S', 0, cr*1.3);
@@ -1887,17 +1958,17 @@
 
     // Header bar with brand accent
     var hGrad = ctx.createLinearGradient(0, 0, w, 0);
-    hGrad.addColorStop(0, 'rgba(140,170,210,0.06)'); hGrad.addColorStop(1, 'rgba(140,170,210,0.01)');
+    hGrad.addColorStop(0, aClr(p,0.06)); hGrad.addColorStop(1, aClr(p,0.01));
     ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
-    ctx.strokeStyle = 'rgba(140,170,210,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeStyle = aClr(p,0.08); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
     // Left accent bar
-    ctx.fillStyle = 'rgba(140,170,210,0.4)'; ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = aClr(p,0.4); ctx.fillRect(0, 0, 3*s, 24*s);
 
     // Header text
-    ctx.fillStyle = 'rgba(240,235,224,0.65)'; ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillStyle = tClr(p,0.65); ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
     ctx.textAlign = 'left'; ctx.fillText('Fisher One-Three', 14*s, 16*s);
-    ctx.fillStyle = 'rgba(140,170,210,0.4)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.4); ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
     ctx.textAlign = 'right'; ctx.fillText('EST. 2024', w-14*s, 16*s);
     ctx.textAlign = 'left';
 
@@ -1916,23 +1987,23 @@
       ctx.globalAlpha = 1.0;
       // Vignette fade around image
       var vigTop = ctx.createLinearGradient(0, iy - 10*s, 0, iy + 20*s);
-      vigTop.addColorStop(0, 'rgba(5,8,16,1)'); vigTop.addColorStop(1, 'rgba(5,8,16,0)');
+      vigTop.addColorStop(0, p.light ? 'rgba(223,229,237,1)' : 'rgba(5,8,16,1)'); vigTop.addColorStop(1, p.light ? 'rgba(223,229,237,0)' : 'rgba(5,8,16,0)');
       ctx.fillStyle = vigTop; ctx.fillRect(ix-5*s, iy-10*s, iw+10*s, 30*s);
       var vigBot = ctx.createLinearGradient(0, iy+ih-25*s, 0, iy+ih+5*s);
-      vigBot.addColorStop(0, 'rgba(5,8,16,0)'); vigBot.addColorStop(1, 'rgba(5,8,16,0.9)');
+      vigBot.addColorStop(0, p.light ? 'rgba(223,229,237,0)' : 'rgba(5,8,16,0)'); vigBot.addColorStop(1, p.light ? 'rgba(223,229,237,0.9)' : 'rgba(5,8,16,0.9)');
       ctx.fillStyle = vigBot; ctx.fillRect(ix-5*s, iy+ih-25*s, iw+10*s, 30*s);
       // Re-draw corners after async
-      drawCorners(ctx, w, h, 14*s, 'rgba(140,170,210,0.12)');
+      drawCorners(ctx, w, h, 14*s, aClr(p,0.12));
     });
 
     // Brand tagline
-    ctx.fillStyle = 'rgba(240,235,224,0.28)'; ctx.font = '300 italic '+(9*s)+'px Cormorant Garamond, serif';
+    ctx.fillStyle = tClr(p,0.28); ctx.font = '300 italic '+(9*s)+'px Cormorant Garamond, serif';
     ctx.textAlign = 'center'; ctx.fillText('One Part Land, Three Parts Sea', w/2, h*0.78);
 
     // Bottom info bar
     var barY2 = h - 22*s;
-    ctx.fillStyle = 'rgba(140,170,210,0.03)'; ctx.fillRect(0, barY2, w, 22*s);
-    ctx.strokeStyle = 'rgba(140,170,210,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.fillStyle = aClr(p,0.03); ctx.fillRect(0, barY2, w, 22*s);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(0, barY2); ctx.lineTo(w, barY2); ctx.stroke();
 
     // T-shirt size badges
@@ -1942,24 +2013,25 @@
     var startX = (w - totalW)/2;
     for (var bi = 0; bi < sizes.length; bi++) {
       var bx2 = startX + bi*(badgeW+gap2);
-      ctx.fillStyle = 'rgba(140,170,210,0.04)'; ctx.fillRect(bx2, barY2+4*s, badgeW, 14*s);
-      ctx.strokeStyle = 'rgba(140,170,210,0.08)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(bx2, barY2+4*s, badgeW, 14*s);
-      ctx.fillStyle = 'rgba(240,235,224,0.3)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
+      ctx.fillStyle = aClr(p,0.04); ctx.fillRect(bx2, barY2+4*s, badgeW, 14*s);
+      ctx.strokeStyle = aClr(p,0.08); ctx.lineWidth = 0.5*s; ctx.strokeRect(bx2, barY2+4*s, badgeW, 14*s);
+      ctx.fillStyle = tClr(p,0.3); ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
       ctx.textAlign = 'center'; ctx.fillText(sizes[bi], bx2+badgeW/2, barY2+14*s);
     }
     ctx.textAlign = 'left';
 
-    drawCorners(ctx, w, h, 14*s, 'rgba(140,170,210,0.12)');
+    drawCorners(ctx, w, h, 14*s, aClr(p,0.12));
   }
 
   // ---- NOCO APP STUDIO: Phone mockup demos ----
   function drawNoCo(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(201, 168, 76);
 
-    // Warm dark gradient (local business warmth)
+    // Warm gradient
     var bg = ctx.createLinearGradient(0, 0, w*0.3, h);
-    bg.addColorStop(0, '#0c0a08'); bg.addColorStop(0.5, '#0e0b09');
-    bg.addColorStop(1, '#0a0907');
+    if (p.light) { bg.addColorStop(0, '#e8e5e0'); bg.addColorStop(0.5, '#e4e1dc'); bg.addColorStop(1, '#e6e3de'); }
+    else { bg.addColorStop(0, '#0c0a08'); bg.addColorStop(0.5, '#0e0b09'); bg.addColorStop(1, '#0a0907'); }
     ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
 
     // Subtle mountain silhouette (Northern Colorado)
@@ -1971,56 +2043,56 @@
     ctx.lineTo(w*0.78, h*0.3); ctx.lineTo(w*0.88, h*0.38);
     ctx.lineTo(w, h*0.42); ctx.lineTo(w, h); ctx.lineTo(0, h);
     ctx.closePath();
-    ctx.fillStyle = 'rgba(201,168,76,0.012)'; ctx.fill();
+    ctx.fillStyle = aClr(p,0.012); ctx.fill();
 
     // Grid dots (app grid aesthetic)
     for (var gx = 0; gx < w; gx += 16*s) {
       for (var gy = 0; gy < h; gy += 16*s) {
-        ctx.fillStyle = 'rgba(201,168,76,0.015)';
+        ctx.fillStyle = aClr(p,0.015);
         ctx.fillRect(gx, gy, 1*s, 1*s);
       }
     }
 
     // Header bar
     var hGrad = ctx.createLinearGradient(0, 0, w, 0);
-    hGrad.addColorStop(0, 'rgba(201,168,76,0.06)'); hGrad.addColorStop(1, 'rgba(201,168,76,0.01)');
+    hGrad.addColorStop(0, aClr(p,0.06)); hGrad.addColorStop(1, aClr(p,0.01));
     ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
-    ctx.strokeStyle = 'rgba(201,168,76,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeStyle = aClr(p,0.08); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
-    ctx.fillStyle = 'rgba(201,168,76,0.5)'; ctx.fillRect(0, 0, 3*s, 24*s);
-    ctx.fillStyle = 'rgba(240,235,224,0.65)'; ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.5); ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = tClr(p,0.65); ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
     ctx.fillText('NoCo App Studio', 14*s, 16*s);
-    ctx.fillStyle = 'rgba(201,168,76,0.4)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.4); ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
     ctx.textAlign = 'right'; ctx.fillText('10 CLIENTS', w-14*s, 16*s); ctx.textAlign = 'left';
 
     // Phone mockup (centered)
     var phoneW = 44*s, phoneH = 80*s;
     var phoneX = (w - phoneW)/2, phoneY = h*0.2;
-    ctx.strokeStyle = 'rgba(201,168,76,0.18)'; ctx.lineWidth = 1.5*s;
+    ctx.strokeStyle = aClr(p,0.18); ctx.lineWidth = 1.5*s;
     ctx.beginPath();
     ctx.roundRect(phoneX, phoneY, phoneW, phoneH, 4*s);
     ctx.stroke();
     // Screen
-    ctx.fillStyle = 'rgba(201,168,76,0.02)';
+    ctx.fillStyle = aClr(p,0.02);
     ctx.beginPath(); ctx.roundRect(phoneX+3*s, phoneY+8*s, phoneW-6*s, phoneH-16*s, 2*s);
     ctx.fill();
     // Notch
-    ctx.fillStyle = 'rgba(201,168,76,0.1)';
+    ctx.fillStyle = aClr(p,0.1);
     ctx.fillRect(phoneX + phoneW*0.3, phoneY+2*s, phoneW*0.4, 3*s);
     // Screen content - app list items
     var screenX = phoneX+6*s, screenW = phoneW-12*s;
     var listItems = ['Bakery', 'CrossFit', 'Salon', 'Dental', 'Brewery'];
     for (var li = 0; li < listItems.length; li++) {
       var ly = phoneY + 16*s + li*12*s;
-      ctx.fillStyle = 'rgba(201,168,76,0.035)';
+      ctx.fillStyle = aClr(p,0.035);
       ctx.fillRect(screenX, ly, screenW, 10*s);
-      ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 0.5*s;
+      ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s;
       ctx.strokeRect(screenX, ly, screenW, 10*s);
       // App icon dot
-      ctx.fillStyle = 'rgba(201,168,76,0.25)';
+      ctx.fillStyle = aClr(p,0.25);
       ctx.beginPath(); ctx.arc(screenX+4*s, ly+5*s, 2*s, 0, Math.PI*2); ctx.fill();
       // Name
-      ctx.fillStyle = 'rgba(240,235,224,0.35)'; ctx.font = '300 '+(3.5*s)+'px Inter, sans-serif';
+      ctx.fillStyle = tClr(p,0.35); ctx.font = '300 '+(3.5*s)+'px Inter, sans-serif';
       ctx.fillText(listItems[li], screenX+9*s, ly+6.5*s);
     }
 
@@ -2044,54 +2116,55 @@
 
     // Bottom bar - stats
     var barY = h - 22*s;
-    ctx.fillStyle = 'rgba(201,168,76,0.03)'; ctx.fillRect(0, barY, w, 22*s);
-    ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.fillStyle = aClr(p,0.03); ctx.fillRect(0, barY, w, 22*s);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(0, barY); ctx.lineTo(w, barY); ctx.stroke();
-    ctx.fillStyle = 'rgba(201,168,76,0.35)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillStyle = aClr(p,0.35); ctx.font = (5*s)+'px monospace';
     ctx.fillText('6 verticals', 10*s, barY+14*s);
     ctx.textAlign = 'right'; ctx.fillText('$199/mo', w-10*s, barY+14*s); ctx.textAlign = 'left';
 
-    drawCorners(ctx, w, h, 14*s, 'rgba(201,168,76,0.15)');
+    drawCorners(ctx, w, h, 14*s, aClr(p,0.15));
   }
 
   // ---- MARKET DASHBOARD: Trading terminal ----
   function drawMarketDash(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(0, 220, 160);
 
-    // Deep dark terminal bg
+    // Terminal bg
     var bg = ctx.createLinearGradient(0, 0, 0, h);
-    bg.addColorStop(0, '#080a0c'); bg.addColorStop(0.5, '#060a0e');
-    bg.addColorStop(1, '#04080c');
+    if (p.light) { bg.addColorStop(0, '#e6eae8'); bg.addColorStop(0.5, '#e2e8e6'); bg.addColorStop(1, '#e0e6e4'); }
+    else { bg.addColorStop(0, '#080a0c'); bg.addColorStop(0.5, '#060a0e'); bg.addColorStop(1, '#04080c'); }
     ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
 
     // Scanline overlay
-    ctx.fillStyle = 'rgba(0,255,180,0.003)';
+    ctx.fillStyle = p.light ? 'rgba(0,180,120,0.008)' : 'rgba(0,255,180,0.003)';
     for (var sl = 0; sl < h; sl += 2*s) { ctx.fillRect(0, sl, w, 1*s); }
 
     // Header bar
     var hGrad = ctx.createLinearGradient(0, 0, w, 0);
-    hGrad.addColorStop(0, 'rgba(0,220,160,0.06)'); hGrad.addColorStop(1, 'rgba(0,220,160,0.01)');
+    hGrad.addColorStop(0, aClr(p,0.06)); hGrad.addColorStop(1, aClr(p,0.01));
     ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
-    ctx.strokeStyle = 'rgba(0,220,160,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeStyle = aClr(p,0.08); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
-    ctx.fillStyle = 'rgba(0,220,160,0.5)'; ctx.fillRect(0, 0, 3*s, 24*s);
-    ctx.fillStyle = 'rgba(240,235,224,0.65)'; ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.5); ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = tClr(p,0.65); ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
     ctx.fillText('Market Terminal', 14*s, 16*s);
     // Live dot
     ctx.beginPath(); ctx.arc(w-12*s, 12*s, 2.5*s, 0, Math.PI*2);
-    ctx.fillStyle = '#00dc96'; ctx.fill();
-    ctx.fillStyle = 'rgba(0,220,150,0.5)'; ctx.font = (5.5*s)+'px monospace';
+    ctx.fillStyle = p.light ? '#00a070' : '#00dc96'; ctx.fill();
+    ctx.fillStyle = (p.light ? 'rgba(0,160,110,0.5)' : 'rgba(0,220,150,0.5)'); ctx.font = (5.5*s)+'px monospace';
     ctx.textAlign = 'right'; ctx.fillText('LIVE', w-18*s, 15*s); ctx.textAlign = 'left';
 
     // Candlestick chart (main area)
     var chartX = 8*s, chartY = 32*s, chartW = w*0.62, chartH = h*0.52;
-    ctx.fillStyle = 'rgba(0,220,160,0.01)'; ctx.fillRect(chartX, chartY, chartW, chartH);
-    ctx.strokeStyle = 'rgba(0,220,160,0.04)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(chartX, chartY, chartW, chartH);
+    ctx.fillStyle = aClr(p,0.01); ctx.fillRect(chartX, chartY, chartW, chartH);
+    ctx.strokeStyle = aClr(p,0.04); ctx.lineWidth = 0.5*s; ctx.strokeRect(chartX, chartY, chartW, chartH);
 
     // Horizontal grid lines
     for (var gl = 0; gl < 5; gl++) {
       var gly = chartY + gl*(chartH/5);
-      ctx.strokeStyle = 'rgba(0,220,160,0.025)'; ctx.lineWidth = 0.5*s;
+      ctx.strokeStyle = aClr(p,0.025); ctx.lineWidth = 0.5*s;
       ctx.beginPath(); ctx.moveTo(chartX, gly); ctx.lineTo(chartX+chartW, gly); ctx.stroke();
     }
 
@@ -2107,12 +2180,12 @@
       var high = Math.min(open, close) - Math.abs(Math.sin(ci*2.1))*10*s;
       var low = Math.max(open, close) + Math.abs(Math.cos(ci*1.9))*10*s;
       var bullish = close < open; // inverted because Y axis is flipped
-      ctx.strokeStyle = bullish ? 'rgba(0,220,150,0.3)' : 'rgba(248,113,113,0.3)';
+      ctx.strokeStyle = bullish ? (p.light ? 'rgba(0,160,110,0.3)' : 'rgba(0,220,150,0.3)') : 'rgba(248,113,113,0.3)';
       ctx.lineWidth = 0.5*s;
       // Wick
       ctx.beginPath(); ctx.moveTo(cx+candleW/2, chartY+high); ctx.lineTo(cx+candleW/2, chartY+low); ctx.stroke();
       // Body
-      ctx.fillStyle = bullish ? 'rgba(0,220,150,0.15)' : 'rgba(248,113,113,0.12)';
+      ctx.fillStyle = bullish ? (p.light ? 'rgba(0,160,110,0.15)' : 'rgba(0,220,150,0.15)') : 'rgba(248,113,113,0.12)';
       var bodyTop = chartY + Math.min(open, close), bodyH = Math.abs(close - open) || 1*s;
       ctx.fillRect(cx, bodyTop, candleW, bodyH);
       ctx.strokeRect(cx, bodyTop, candleW, bodyH);
@@ -2120,9 +2193,9 @@
 
     // Order book (right side)
     var obX = w*0.66, obY = 32*s, obW = w*0.32, obH = chartH;
-    ctx.fillStyle = 'rgba(0,220,160,0.01)'; ctx.fillRect(obX, obY, obW, obH);
-    ctx.strokeStyle = 'rgba(0,220,160,0.04)'; ctx.lineWidth = 0.5*s; ctx.strokeRect(obX, obY, obW, obH);
-    ctx.fillStyle = 'rgba(0,220,160,0.3)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.01); ctx.fillRect(obX, obY, obW, obH);
+    ctx.strokeStyle = aClr(p,0.04); ctx.lineWidth = 0.5*s; ctx.strokeRect(obX, obY, obW, obH);
+    ctx.fillStyle = aClr(p,0.3); ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
     ctx.fillText('ORDER BOOK', obX+6*s, obY+10*s);
 
     // Asks (red) top half
@@ -2144,49 +2217,50 @@
     for (var bi = 0; bi < 6; bi++) {
       var by = spreadY + 6*s + bi*7*s;
       var bBarW = (0.3 + Math.sin(bi*2.1+1.2)*0.15)*obW*0.65;
-      ctx.fillStyle = 'rgba(0,220,150,0.06)'; ctx.fillRect(obX+4*s, by, bBarW, 5*s);
-      ctx.fillStyle = 'rgba(0,220,150,0.3)'; ctx.font = (3.5*s)+'px monospace';
+      ctx.fillStyle = (p.light ? 'rgba(0,160,110,0.06)' : 'rgba(0,220,150,0.06)'); ctx.fillRect(obX+4*s, by, bBarW, 5*s);
+      ctx.fillStyle = (p.light ? 'rgba(0,160,110,0.3)' : 'rgba(0,220,150,0.3)'); ctx.font = (3.5*s)+'px monospace';
       ctx.fillText((67140-bi*12).toFixed(0), obX+6*s, by+4*s);
     }
 
     // Trade tape (bottom)
     var tapeY = chartY + chartH + 8*s;
-    ctx.fillStyle = 'rgba(0,220,160,0.025)'; ctx.fillRect(8*s, tapeY, w-16*s, h-tapeY-28*s);
-    ctx.strokeStyle = 'rgba(0,220,160,0.04)'; ctx.lineWidth = 0.5*s;
+    ctx.fillStyle = aClr(p,0.025); ctx.fillRect(8*s, tapeY, w-16*s, h-tapeY-28*s);
+    ctx.strokeStyle = aClr(p,0.04); ctx.lineWidth = 0.5*s;
     ctx.strokeRect(8*s, tapeY, w-16*s, h-tapeY-28*s);
-    ctx.fillStyle = 'rgba(0,220,160,0.3)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.3); ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
     ctx.fillText('TRADE TAPE', 14*s, tapeY+10*s);
     // Tape entries
     var trades = ['BUY 0.15 @ 67,148', 'SELL 0.42 @ 67,156', 'BUY 1.20 @ 67,144', 'SELL 0.08 @ 67,160'];
     for (var ti = 0; ti < trades.length; ti++) {
       var ty = tapeY + 16*s + ti*6.5*s;
       var isBuy = trades[ti].indexOf('BUY') === 0;
-      ctx.fillStyle = isBuy ? 'rgba(0,220,150,0.25)' : 'rgba(248,113,113,0.25)';
+      ctx.fillStyle = isBuy ? (p.light ? 'rgba(0,160,110,0.25)' : 'rgba(0,220,150,0.25)') : 'rgba(248,113,113,0.25)';
       ctx.font = (3.5*s)+'px monospace';
       ctx.fillText(trades[ti], 14*s, ty);
     }
 
     // Bottom stat bar
     var barY = h - 22*s;
-    ctx.fillStyle = 'rgba(0,220,160,0.03)'; ctx.fillRect(0, barY, w, 22*s);
-    ctx.strokeStyle = 'rgba(0,220,160,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.fillStyle = aClr(p,0.03); ctx.fillRect(0, barY, w, 22*s);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(0, barY); ctx.lineTo(w, barY); ctx.stroke();
-    ctx.fillStyle = 'rgba(0,220,150,0.35)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillStyle = (p.light ? 'rgba(0,160,110,0.35)' : 'rgba(0,220,150,0.35)'); ctx.font = (5*s)+'px monospace';
     ctx.fillText('0 deps', 10*s, barY+14*s);
     ctx.textAlign = 'center'; ctx.fillText('60 FPS', w/2, barY+14*s);
     ctx.textAlign = 'right'; ctx.fillText('WebSocket', w-10*s, barY+14*s); ctx.textAlign = 'left';
 
-    drawCorners(ctx, w, h, 14*s, 'rgba(0,220,160,0.12)');
+    drawCorners(ctx, w, h, 14*s, aClr(p,0.12));
   }
 
   // ---- AUTON: Autonomous background worker ----
   function drawAuton(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(160, 120, 220);
 
-    // Deep purple-tinted dark bg (AI aesthetic)
+    // Purple-tinted bg (AI aesthetic)
     var bg = ctx.createLinearGradient(0, 0, w*0.4, h);
-    bg.addColorStop(0, '#090710'); bg.addColorStop(0.5, '#0b0912');
-    bg.addColorStop(1, '#07060c');
+    if (p.light) { bg.addColorStop(0, '#e8e4ee'); bg.addColorStop(0.5, '#e4e0ec'); bg.addColorStop(1, '#e6e2ea'); }
+    else { bg.addColorStop(0, '#090710'); bg.addColorStop(0.5, '#0b0912'); bg.addColorStop(1, '#07060c'); }
     ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
 
     // Neural network dots & connections (background pattern)
@@ -2198,7 +2272,7 @@
       });
     }
     // Connections
-    ctx.strokeStyle = 'rgba(160,120,220,0.015)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeStyle = aClr(p,0.015); ctx.lineWidth = 0.5*s;
     for (var ci = 0; ci < nodes.length; ci++) {
       for (var cj = ci+1; cj < nodes.length; cj++) {
         var dx = nodes[ci].x - nodes[cj].x, dy = nodes[ci].y - nodes[cj].y;
@@ -2209,20 +2283,20 @@
     }
     // Nodes
     for (var nj = 0; nj < nodes.length; nj++) {
-      ctx.fillStyle = 'rgba(160,120,220,0.04)';
+      ctx.fillStyle = aClr(p,0.04);
       ctx.beginPath(); ctx.arc(nodes[nj].x, nodes[nj].y, 1.5*s, 0, Math.PI*2); ctx.fill();
     }
 
     // Header bar
     var hGrad = ctx.createLinearGradient(0, 0, w, 0);
-    hGrad.addColorStop(0, 'rgba(160,120,220,0.06)'); hGrad.addColorStop(1, 'rgba(160,120,220,0.01)');
+    hGrad.addColorStop(0, aClr(p,0.06)); hGrad.addColorStop(1, aClr(p,0.01));
     ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
-    ctx.strokeStyle = 'rgba(160,120,220,0.08)'; ctx.lineWidth = 0.5*s;
+    ctx.strokeStyle = aClr(p,0.08); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
-    ctx.fillStyle = 'rgba(160,120,220,0.5)'; ctx.fillRect(0, 0, 3*s, 24*s);
-    ctx.fillStyle = 'rgba(240,235,224,0.65)'; ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.5); ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = tClr(p,0.65); ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
     ctx.fillText('Auton', 14*s, 16*s);
-    ctx.fillStyle = 'rgba(160,120,220,0.35)'; ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.35); ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
     ctx.textAlign = 'right'; ctx.fillText('AUTONOMOUS', w-14*s, 16*s); ctx.textAlign = 'left';
 
     // Agent pipeline (central feature)
@@ -2253,7 +2327,7 @@
       ctx.fillText(ag.name, ax+agentW/2, pipeY+12*s);
       // Arrow between agents
       if (ai < agents.length-1) {
-        ctx.strokeStyle = 'rgba(160,120,220,0.08)'; ctx.lineWidth = 0.5*s;
+        ctx.strokeStyle = aClr(p,0.08); ctx.lineWidth = 0.5*s;
         ctx.beginPath(); ctx.moveTo(ax+agentW-1*s, pipeY+pipeH/2);
         ctx.lineTo(ax+agentW+1*s, pipeY+pipeH/2); ctx.stroke();
       }
@@ -2262,10 +2336,10 @@
 
     // Safety model visualization
     var safeY = pipeY + pipeH + 18*s;
-    ctx.fillStyle = 'rgba(160,120,220,0.02)'; ctx.fillRect(10*s, safeY, w-20*s, 28*s);
-    ctx.strokeStyle = 'rgba(160,120,220,0.05)'; ctx.lineWidth = 0.5*s;
+    ctx.fillStyle = aClr(p,0.02); ctx.fillRect(10*s, safeY, w-20*s, 28*s);
+    ctx.strokeStyle = aClr(p,0.05); ctx.lineWidth = 0.5*s;
     ctx.strokeRect(10*s, safeY, w-20*s, 28*s);
-    ctx.fillStyle = 'rgba(160,120,220,0.25)'; ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
+    ctx.fillStyle = aClr(p,0.25); ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
     ctx.fillText('SAFETY LAYERS', 16*s, safeY+10*s);
 
     var layers = ['DRY_RUN', 'SafetyGuard', 'Kill Switch', 'Cred Isolation', 'Audit', 'Rollback'];
@@ -2298,15 +2372,15 @@
 
     // Bottom stat bar
     var barY = h - 22*s;
-    ctx.fillStyle = 'rgba(160,120,220,0.03)'; ctx.fillRect(0, barY, w, 22*s);
-    ctx.strokeStyle = 'rgba(160,120,220,0.06)'; ctx.lineWidth = 0.5*s;
+    ctx.fillStyle = aClr(p,0.03); ctx.fillRect(0, barY, w, 22*s);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s;
     ctx.beginPath(); ctx.moveTo(0, barY); ctx.lineTo(w, barY); ctx.stroke();
-    ctx.fillStyle = 'rgba(160,120,220,0.35)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillStyle = aClr(p,0.35); ctx.font = (5*s)+'px monospace';
     ctx.fillText('6 agents', 10*s, barY+14*s);
     ctx.textAlign = 'center'; ctx.fillText('14B LLM', w/2, barY+14*s);
     ctx.textAlign = 'right'; ctx.fillText('RTX 4070', w-10*s, barY+14*s); ctx.textAlign = 'left';
 
-    drawCorners(ctx, w, h, 14*s, 'rgba(160,120,220,0.12)');
+    drawCorners(ctx, w, h, 14*s, aClr(p,0.12));
   }
 
   // ===== DISPATCH =====

@@ -192,33 +192,65 @@ body {
 
 .hero-domains {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   gap: 0;
-  margin-top: 28px;
+  margin-top: 32px;
   opacity: 0;
   animation: fadeIn 1.8s ease forwards 3s;
+  counter-reset: domain-counter;
 }
 .hero-domains a {
+  display: grid;
+  grid-template-columns: 28px 1fr 16px;
+  align-items: center;
+  width: clamp(220px, 30vw, 310px);
+  padding: 8px 0;
   text-decoration: none;
+  position: relative;
+  border-bottom: 1px solid rgba(201,168,76,0.07);
+  transition: background 0.2s ease;
+  counter-increment: domain-counter;
+}
+.hero-domains a:first-child { border-top: 1px solid rgba(201,168,76,0.07); }
+.hero-domains a::before {
+  content: "0" counter(domain-counter);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.5px;
+  color: rgba(201,168,76,0.2);
+  transition: color 0.3s ease;
+  line-height: 1;
+}
+.hero-domains a::after {
+  content: '→';
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: rgba(201,168,76,0.12);
+  transition: color 0.3s ease, transform 0.3s ease;
+  transform: translateX(0);
+  text-align: right;
+  line-height: 1;
+}
+.hero-domains a:hover::before { color: rgba(201,168,76,0.5); }
+.hero-domains a:hover::after {
+  color: rgba(201,168,76,0.6);
+  transform: translateX(3px);
 }
 .hero-domains span {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 400;
+  font-size: 10px;
   letter-spacing: 1.8px;
-  color: rgba(201, 168, 76, 0.4);
+  color: rgba(201,168,76,0.38);
   text-transform: lowercase;
-  transition: color 0.4s ease;
+  transition: color 0.3s ease;
 }
 .hero-domains a:hover span {
-  color: rgba(201, 168, 76, 0.7);
+  color: rgba(201,168,76,0.72);
 }
 span.hero-domain-dot {
-  margin: 0 14px;
-  font-size: 6px;
-  opacity: 0.35;
-  color: var(--gold-dim);
+  display: none;
 }
 
 .scroll-indicator {
@@ -1271,9 +1303,12 @@ span.hero-domain-dot {
   }
 
   .hero-domains {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 4px 0;
+    align-items: center;
+  }
+  .hero-domains a {
+    width: clamp(200px, 70vw, 280px);
+    grid-template-columns: 24px 1fr 14px;
+    padding: 7px 0;
   }
 
   .stats-row {
@@ -2090,10 +2125,10 @@ span.hero-domain-dot {
   --warm-white-breath: rgba(26, 26, 28, 0.12);
   --warm-white-soft: rgba(26, 26, 28, 0.16);
   --accent: rgba(26, 26, 28, 0.75);
-  --gold-1776: #7a6345;
-  --navy-1776: #9a9b9e;
-  --gold-dim: rgba(139, 115, 85, 0.4);
-  --gold-ghost: rgba(139, 115, 85, 0.12);
+  --gold-1776: #3a3a3c;
+  --navy-1776: #6a6b6e;
+  --gold-dim: rgba(42, 42, 46, 0.35);
+  --gold-ghost: rgba(42, 42, 46, 0.08);
 }
 
 [data-theme="light"] body {
@@ -2116,74 +2151,85 @@ span.hero-domain-dot {
   background-size: 200px 200px;
 }
 
-[data-theme="light"] ::selection { background: rgba(139,115,85,0.25); color: #1c1a18; }
+[data-theme="light"] ::selection { background: rgba(42,42,46,0.2); color: #1c1a18; }
 
 /* Hide the ship watermark, show statue */
 [data-theme="light"] .ship-watermark { display: none; }
 
-/* Roman statue watermark — prominent design feature like the ship on dark */
+/* Roman statue watermark — anchored to right viewport edge, multiply blend erases white bg */
 [data-theme="light"] .statue-watermark {
   display: block;
   position: fixed;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 600px;
-  height: 850px;
+  right: -4%;
+  transform: translateY(-50%);
+  width: clamp(420px, 46vw, 820px);
+  height: auto;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.25;
-  filter: sepia(0.15) contrast(0.85);
-  background:
-    /* Laurel crown */
-    radial-gradient(ellipse 130px 50px at 50% 8%, rgba(139,115,85,0.5) 0%, transparent 100%),
-    radial-gradient(ellipse 20px 30px at 38% 6%, rgba(120,100,70,0.4) 0%, transparent 100%),
-    radial-gradient(ellipse 20px 30px at 62% 6%, rgba(120,100,70,0.4) 0%, transparent 100%),
-    /* Head/skull */
-    radial-gradient(ellipse 100px 130px at 50% 16%, rgba(90,82,74,0.6) 0%, transparent 100%),
-    /* Brow ridge */
-    radial-gradient(ellipse 80px 15px at 50% 13%, rgba(70,62,54,0.35) 0%, transparent 100%),
-    /* Left eye socket */
-    radial-gradient(ellipse 24px 16px at 42% 16%, rgba(50,44,38,0.45) 0%, transparent 100%),
-    /* Right eye socket */
-    radial-gradient(ellipse 24px 16px at 58% 16%, rgba(50,44,38,0.45) 0%, transparent 100%),
-    /* Nose bridge */
-    radial-gradient(ellipse 14px 45px at 50% 20%, rgba(70,62,54,0.4) 0%, transparent 100%),
-    /* Left cheekbone */
-    radial-gradient(ellipse 35px 25px at 38% 20%, rgba(90,82,74,0.3) 0%, transparent 100%),
-    /* Right cheekbone */
-    radial-gradient(ellipse 35px 25px at 62% 20%, rgba(90,82,74,0.3) 0%, transparent 100%),
-    /* Chin */
-    radial-gradient(ellipse 40px 30px at 50% 26%, rgba(80,72,64,0.35) 0%, transparent 100%),
-    /* Neck column */
-    radial-gradient(ellipse 45px 70px at 50% 33%, rgba(90,82,74,0.4) 0%, transparent 100%),
-    /* Left shoulder curve */
-    radial-gradient(ellipse 160px 80px at 28% 42%, rgba(90,82,74,0.35) 0%, transparent 100%),
-    /* Right shoulder curve */
-    radial-gradient(ellipse 160px 80px at 72% 42%, rgba(90,82,74,0.35) 0%, transparent 100%),
-    /* Chest plate */
-    radial-gradient(ellipse 180px 120px at 50% 48%, rgba(90,82,74,0.3) 0%, transparent 100%),
-    /* Left pectoral shadow */
-    radial-gradient(ellipse 60px 40px at 38% 45%, rgba(70,62,54,0.2) 0%, transparent 100%),
-    /* Right pectoral shadow */
-    radial-gradient(ellipse 60px 40px at 62% 45%, rgba(70,62,54,0.2) 0%, transparent 100%),
-    /* Torso */
-    radial-gradient(ellipse 150px 200px at 50% 60%, rgba(90,82,74,0.25) 0%, transparent 100%),
-    /* Left toga drape */
-    radial-gradient(ellipse 40px 160px at 32% 58%, rgba(70,62,54,0.2) 0%, transparent 100%),
-    /* Right toga drape */
-    radial-gradient(ellipse 35px 140px at 66% 56%, rgba(70,62,54,0.18) 0%, transparent 100%),
-    /* Center toga fold */
-    radial-gradient(ellipse 20px 100px at 50% 62%, rgba(60,52,44,0.15) 0%, transparent 100%),
-    /* Left arm */
-    radial-gradient(ellipse 50px 120px at 24% 55%, rgba(90,82,74,0.2) 0%, transparent 100%),
-    /* Right arm */
-    radial-gradient(ellipse 50px 120px at 76% 55%, rgba(90,82,74,0.2) 0%, transparent 100%),
-    /* Pedestal base */
-    radial-gradient(ellipse 250px 40px at 50% 85%, rgba(90,82,74,0.3) 0%, transparent 100%),
-    /* Pedestal column */
-    radial-gradient(ellipse 120px 80px at 50% 80%, rgba(90,82,74,0.2) 0%, transparent 100%);
+  opacity: 0.41;
+  object-fit: contain;
+  object-position: right center;
+  filter: grayscale(0.15) contrast(1.12) brightness(0.92);
+  mix-blend-mode: multiply;
+  /* Two intersected gradients — fade from every edge simultaneously, no rectangular boundary */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, black 22%, black 100%),
+    linear-gradient(to bottom, transparent 0%, black 8%, black 88%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, black 22%, black 100%),
+    linear-gradient(to bottom, transparent 0%, black 8%, black 88%, transparent 100%);
+  mask-composite: intersect;
   transition: opacity 3s ease;
+  animation: glitchWatermark 11s ease-in-out infinite;
+  animation-delay: -4s;
+}
+
+/* Glitch animation on the right-side statue watermark in light mode — matches right ghost timing */
+@keyframes glitchWatermark {
+  0%, 42%, 48%, 100% { transform: translateY(-50%) translate(0, 0); opacity: 0.41; }
+  43%   { transform: translateY(-50%) translate(-4px, 2px);  opacity: 0.32; }
+  44.5% { transform: translateY(-50%) translate(5px, -1px);  opacity: 0.22; }
+  46%   { transform: translateY(-50%) translate(0, 0);        opacity: 0.41; }
+}
+
+/* ---- SCROLL PROGRESS LINE (light mode only) ---- */
+.scroll-progress-track { display: none; }
+
+[data-theme="light"] .scroll-progress-track {
+  display: block;
+  position: fixed;
+  left: clamp(16px, 2vw, 32px);
+  top: 96px;
+  bottom: 96px;
+  width: 1px;
+  background: rgba(201,168,76,0.07);
+  pointer-events: none;
+  z-index: 10;
+}
+
+[data-theme="light"] .scroll-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: top center;
+  transform: scaleY(var(--sp, 0));
+  background: linear-gradient(to bottom, rgba(201,168,76,0.65), rgba(201,168,76,0.10));
+}
+
+[data-theme="light"] .scroll-progress-fill::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 50%) rotate(45deg);
+  width: 5px;
+  height: 5px;
+  background: rgba(201,168,76,0.75);
+  box-shadow: 0 0 6px rgba(201,168,76,0.3);
 }
 
 /* ---- HERO ---- */
@@ -2196,25 +2242,44 @@ span.hero-domain-dot {
   opacity: 0.5;
 }
 
-/* Hero name: deep charcoal with subtle brass shadow */
+/* Hero name: deep charcoal */
 [data-theme="light"] .hero-name {
   color: #1c1a18;
-  text-shadow: 0 1px 0 rgba(139,115,85,0.2);
+  text-shadow: 0 1px 0 rgba(42,42,46,0.12);
 }
 
 /* Hero subtitle */
-[data-theme="light"] .hero-subtitle { color: rgba(28,26,24,0.65); }
+[data-theme="light"] .hero-subtitle { color: rgba(28,26,24,0.6); }
 
-/* Hero motto — brass tint */
-[data-theme="light"] .hero-motto { text-shadow: none; color: rgba(122,99,69,0.75); font-style: italic; }
+/* Hero motto — slate tint */
+[data-theme="light"] .hero-motto { text-shadow: none; color: rgba(50,50,55,0.7); font-style: italic; }
 
-/* Hero rule line — brass */
-[data-theme="light"] .hero-rule { background: rgba(139,115,85,0.4); }
+/* Hero rule line — dark */
+[data-theme="light"] .hero-rule { background: rgba(42,42,46,0.35); }
 
-/* Hero domains */
-[data-theme="light"] .hero-domains a { color: rgba(28,26,24,0.6); }
-[data-theme="light"] .hero-domains a:hover { color: #7a6345; }
-[data-theme="light"] .hero-domain-dot { color: rgba(139,115,85,0.4); }
+/* Hero domains — dark index list in light mode */
+[data-theme="light"] .hero-domains a {
+  border-bottom-color: rgba(42,42,46,0.1);
+}
+[data-theme="light"] .hero-domains a:first-child {
+  border-top-color: rgba(42,42,46,0.1);
+}
+[data-theme="light"] .hero-domains a::before {
+  color: rgba(42,42,46,0.25);
+  content: "0" counter(domain-counter);
+}
+[data-theme="light"] .hero-domains a:hover::before { color: rgba(42,42,46,0.6); }
+[data-theme="light"] .hero-domains a::after {
+  content: '→';
+  color: rgba(42,42,46,0.15);
+}
+[data-theme="light"] .hero-domains a:hover::after { color: rgba(42,42,46,0.55); }
+[data-theme="light"] .hero-domains span {
+  color: rgba(28,26,24,0.5);
+  font-size: 10px;
+  letter-spacing: 1.8px;
+}
+[data-theme="light"] .hero-domains a:hover span { color: #1c1a18; }
 
 /* CTA buttons */
 [data-theme="light"] .hero-cta-primary {
@@ -2222,28 +2287,28 @@ span.hero-domain-dot {
   color: #d0d1d3;
   border-color: #2e2e30;
 }
-[data-theme="light"] .hero-cta-primary:hover { background: #7a6345; border-color: #7a6345; }
-[data-theme="light"] .hero-cta-ghost { border-color: rgba(26,26,28,0.2); color: #3a3a3c; }
-[data-theme="light"] .hero-cta-ghost:hover { border-color: #7a6345; color: #7a6345; }
+[data-theme="light"] .hero-cta-primary:hover { background: #1a1a1c; border-color: #1a1a1c; }
+[data-theme="light"] .hero-cta-ghost { border-color: rgba(26,26,28,0.25); color: #3a3a3c; }
+[data-theme="light"] .hero-cta-ghost:hover { border-color: #1a1a1c; color: #1a1a1c; }
 
 /* ---- NAVIGATION ---- */
 
 [data-theme="light"] nav.scrolled {
   background: rgba(197,198,200,0.96);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(139,115,85,0.12);
+  border-bottom: 1px solid rgba(42,42,46,0.1);
 }
 
-/* ---- SECTION LABELS (METHOD, NOW, etc.) — brass ---- */
+/* ---- SECTION LABELS (METHOD, NOW, etc.) — dark slate ---- */
 [data-theme="light"] .section-label,
-[data-theme="light"] .ds-label { color: #7a6345; letter-spacing: 0.15em; }
+[data-theme="light"] .ds-label { color: #4a4a4e; letter-spacing: 0.15em; }
 
 /* Section headings */
 [data-theme="light"] h2, [data-theme="light"] h3 { color: #1a1a1c; }
 
-/* Brass section dividers */
+/* Dark section dividers */
 [data-theme="light"] .thin-line {
-  background: linear-gradient(to bottom, transparent, rgba(139,115,85,0.25), rgba(139,115,85,0.15), rgba(139,115,85,0.25), transparent);
+  background: linear-gradient(to bottom, transparent, rgba(42,42,46,0.2), rgba(42,42,46,0.12), rgba(42,42,46,0.2), transparent);
 }
 
 /* ---- PORTRAIT ---- */
@@ -2259,11 +2324,11 @@ span.hero-domain-dot {
   box-shadow: 0 2px 16px rgba(28,26,24,0.05);
 }
 [data-theme="light"] .about-card:hover {
-  border-color: rgba(139,115,85,0.3);
+  border-color: rgba(42,42,46,0.25);
   box-shadow: 0 6px 24px rgba(28,26,24,0.08);
 }
 [data-theme="light"] .about-card::before {
-  background: linear-gradient(90deg, transparent, rgba(139,115,85,0.25), transparent);
+  background: linear-gradient(90deg, transparent, rgba(42,42,46,0.2), transparent);
 }
 /* Body text inside about/conviction cards — ensure readable */
 [data-theme="light"] .about-card .body-text,
@@ -2287,19 +2352,30 @@ span.hero-domain-dot {
 [data-theme="light"] .project-card:hover {
   background: rgba(255,255,255,0.5);
   box-shadow: 0 6px 24px rgba(26,26,28,0.08);
-  border-color: rgba(139,115,85,0.25);
+  border-color: rgba(42,42,46,0.2);
 }
 
-/* Canvas thumbs: keep dark, brass frame */
+/* Canvas thumbs: light frame on light mode */
 [data-theme="light"] .project-thumb-wrap {
-  border: 1px solid rgba(139,115,85,0.2);
+  border: 1px solid rgba(42,42,46,0.12);
   border-radius: 6px;
-  background: #111;
-  box-shadow: 0 2px 12px rgba(28,26,24,0.1);
+  background: rgba(255,255,255,0.3);
+  box-shadow: 0 2px 12px rgba(28,26,24,0.06);
 }
 [data-theme="light"] .project-card:hover .project-thumb-wrap {
-  border-color: rgba(139,115,85,0.4);
-  box-shadow: 0 8px 30px rgba(28,26,24,0.15);
+  border-color: rgba(42,42,46,0.3);
+  box-shadow: 0 4px 20px rgba(28,26,24,0.1);
+}
+[data-theme="light"] .project-thumb-wrap::after {
+  border-color: rgba(42,42,46,0.06);
+}
+[data-theme="light"] .project-card:hover .project-thumb-wrap::after {
+  border-color: rgba(42,42,46,0.15);
+}
+/* Lighten static image thumbnails in light mode (dark JPGs that aren't canvas-drawn) */
+[data-theme="light"] .project-thumb-wrap > img {
+  filter: brightness(1.3) contrast(0.85) saturate(0.8) !important;
+  opacity: 0.85;
 }
 
 /* Project numbers */
@@ -2307,23 +2383,23 @@ span.hero-domain-dot {
 
 /* Project text — full readable contrast */
 [data-theme="light"] .p-desc { color: rgba(28,26,24,0.8); }
-[data-theme="light"] .p-tech { color: rgba(122,99,69,0.85); }
-[data-theme="light"] .p-opinion { color: rgba(28,26,24,0.65); border-bottom-color: rgba(139,115,85,0.15); }
+[data-theme="light"] .p-tech { color: rgba(60,60,65,0.75); }
+[data-theme="light"] .p-opinion { color: rgba(28,26,24,0.65); border-bottom-color: rgba(42,42,46,0.12); }
 
 /* Hover text emphasis */
 [data-theme="light"] .project-card:hover .p-title { color: #1c1a18; letter-spacing: 5px; }
 [data-theme="light"] .venture-item:hover .v-title { color: #1c1a18; }
 
-/* Status badges — brass themed */
+/* Status badges */
 [data-theme="light"] .p-status.active {
   border-color: rgba(60,110,55,0.35);
   color: rgba(40,90,35,0.9);
   background: rgba(60,110,55,0.1);
 }
 [data-theme="light"] .p-status.shipped {
-  border-color: rgba(122,99,69,0.35);
-  color: rgba(100,80,50,0.9);
-  background: rgba(122,99,69,0.1);
+  border-color: rgba(50,50,55,0.3);
+  color: rgba(50,50,55,0.85);
+  background: rgba(50,50,55,0.08);
 }
 
 /* Stat values */
@@ -2335,8 +2411,8 @@ span.hero-domain-dot {
   color: rgba(28,26,24,0.7);
 }
 [data-theme="light"] .pf-btn:hover {
-  border-color: rgba(139,115,85,0.4);
-  color: #7a6345;
+  border-color: rgba(42,42,46,0.35);
+  color: #2e2e30;
 }
 [data-theme="light"] .pf-btn.active {
   background: #2e2e30;
@@ -2351,79 +2427,396 @@ span.hero-domain-dot {
 }
 [data-theme="light"] .venture-item:hover {
   background: rgba(255,255,255,0.5);
-  border-color: rgba(139,115,85,0.3);
+  border-color: rgba(42,42,46,0.25);
   box-shadow: 0 4px 16px rgba(28,26,24,0.06);
 }
 [data-theme="light"] .v-desc { color: rgba(28,26,24,0.75); }
-[data-theme="light"] .v-tech { color: rgba(122,99,69,0.8); }
+[data-theme="light"] .v-tech { color: rgba(60,60,65,0.7); }
 
 /* ---- FTDA FLAGSHIP ---- */
 [data-theme="light"] .ftda-flagship {
   background: linear-gradient(135deg, rgba(255,255,255,0.45) 0%, transparent 40%),
     linear-gradient(315deg, rgba(255,255,255,0.35) 0%, transparent 40%),
     linear-gradient(180deg, rgba(215,216,218,1) 0%, rgba(205,206,208,1) 100%) !important;
-  border-color: rgba(122,99,69,0.25) !important;
+  border-color: rgba(42,42,46,0.2) !important;
   box-shadow: 0 4px 20px rgba(26,26,28,0.06) !important;
 }
 [data-theme="light"] .ftda-flagship:hover {
-  background: linear-gradient(135deg, rgba(139,115,85,0.08) 0%, transparent 40%),
+  background: linear-gradient(135deg, rgba(42,42,46,0.06) 0%, transparent 40%),
     linear-gradient(315deg, rgba(139,115,85,0.05) 0%, transparent 40%),
     linear-gradient(180deg, rgba(220,221,223,1) 0%, rgba(210,211,213,1) 100%) !important;
-  border-color: rgba(122,99,69,0.4) !important;
+  border-color: rgba(42,42,46,0.3) !important;
 }
 
 /* ---- BOOKING / CONTACT FORM ---- */
 [data-theme="light"] .booking-input {
   background: rgba(255,255,255,0.45);
-  border-color: rgba(139,115,85,0.2);
+  border-color: rgba(42,42,46,0.15);
   color: #1c1a18;
 }
 [data-theme="light"] .booking-input:focus {
-  border-color: #8b7355;
+  border-color: #4a4a4e;
   background: rgba(255,255,255,0.6);
-  box-shadow: 0 0 0 3px rgba(139,115,85,0.1);
+  box-shadow: 0 0 0 3px rgba(42,42,46,0.08);
 }
 [data-theme="light"] .booking-input::placeholder { color: rgba(28,26,24,0.35); }
+[data-theme="light"] .booking-textarea {
+  background: rgba(255,255,255,0.45);
+  border-color: rgba(42,42,46,0.15);
+  color: #1c1a18;
+}
+[data-theme="light"] .booking-textarea:focus {
+  border-color: #4a4a4e;
+  background: rgba(255,255,255,0.6);
+  box-shadow: 0 0 0 3px rgba(42,42,46,0.08);
+}
+[data-theme="light"] .booking-textarea::placeholder { color: rgba(28,26,24,0.35); }
+[data-theme="light"] .booking-select {
+  background: rgba(255,255,255,0.45);
+  border-color: rgba(42,42,46,0.15);
+  color: #1c1a18;
+}
+[data-theme="light"] .booking-label { color: rgba(28,26,24,0.45); }
 [data-theme="light"] .booking-submit { background: #2e2e30; color: #d0d1d3; }
-[data-theme="light"] .booking-submit:hover { background: #7a6345; }
+[data-theme="light"] .booking-submit:hover { background: #3a3a3c; }
 
 /* ---- LINKS ---- */
-[data-theme="light"] a { color: #5a4d3e; }
-[data-theme="light"] a:hover { color: #7a6345; }
+[data-theme="light"] a { color: #3a3a3c; }
+[data-theme="light"] a:hover { color: #3a3a3c; }
 
 /* ---- NAV DOTS ---- */
-[data-theme="light"] .nav-dot { background: rgba(139,115,85,0.2); }
-[data-theme="light"] .nav-dot.active { background: #7a6345; }
+[data-theme="light"] .nav-dot { background: rgba(42,42,46,0.15); }
+[data-theme="light"] .nav-dot.active { background: #3a3a3c; }
 
 /* ---- CONTACT ROWS ---- */
-[data-theme="light"] .contact-row { border-bottom-color: rgba(139,115,85,0.12); }
+[data-theme="light"] .contact-row { border-bottom-color: rgba(42,42,46,0.1); }
 [data-theme="light"] .contact-row:hover { background: rgba(255,255,255,0.3); }
+[data-theme="light"] .contact-row .c-label { color: rgba(28,26,24,0.35); }
+[data-theme="light"] .contact-row .c-value { color: #1c1a18; }
+[data-theme="light"] .contact-row:hover .c-value { color: #3a3a3c; }
+
+/* ---- SOVEREIGNTY SECTION ---- */
+[data-theme="light"] .sov-intro { color: rgba(28,26,24,0.6); }
+[data-theme="light"] .sov-item-desc { color: rgba(28,26,24,0.55); }
 
 /* ---- DETAIL SECTIONS ---- */
-[data-theme="light"] .project-detail { border-top-color: rgba(139,115,85,0.15); }
-[data-theme="light"] .detail-stat { border-color: rgba(139,115,85,0.18); }
+[data-theme="light"] .project-detail { border-top-color: rgba(42,42,46,0.12); }
+[data-theme="light"] .detail-stat { border-color: rgba(42,42,46,0.15); }
 [data-theme="light"] .detail-col li { color: rgba(28,26,24,0.82); }
 [data-theme="light"] .detail-col em { color: #1a1a1c; }
 
 /* ---- BRAND TEASER ---- */
 [data-theme="light"] .brand-teaser {
   background: rgba(255,255,255,0.3);
-  border-color: rgba(139,115,85,0.15);
+  border-color: rgba(42,42,46,0.12);
 }
 
 /* ---- NOCO SECTION ---- */
 [data-theme="light"] .noco-section { background: rgba(255,255,255,0.2); }
 
 /* ---- STATS BAR ---- */
-[data-theme="light"] .stats-bar { border-color: rgba(139,115,85,0.1); }
+[data-theme="light"] .stats-bar { border-color: rgba(42,42,46,0.08); }
 
 /* ---- GLITCH / MORPH ---- */
-[data-theme="light"] .glitch-line { background: rgba(139,115,85,0.2); }
+[data-theme="light"] .glitch-line { background: rgba(42,42,46,0.15); }
 
-/* ---- THEME TOGGLE — brass tint ---- */
-[data-theme="light"] .theme-toggle { border-color: rgba(139,115,85,0.25); }
-[data-theme="light"] .theme-toggle:hover { border-color: #7a6345; }
-[data-theme="light"] .theme-toggle svg { fill: #7a6345; stroke: #7a6345; }
+/* ---- ARCHITECTURE DIAGRAM (SVG) ---- */
+/* SVG text uses inline rgba(240,235,224,...) which is invisible on light bg.
+   Override via CSS fill on the text/line/rect elements. */
+[data-theme="light"] .arch-diagram svg text {
+  fill: rgba(26,26,28,0.55);
+}
+[data-theme="light"] .arch-diagram svg text[fill*="201,168,76"] {
+  fill: rgba(60,60,65,0.75);
+}
+[data-theme="light"] .arch-diagram svg text[fill*="130,200,160"] {
+  fill: rgba(40,120,70,0.7);
+}
+[data-theme="light"] .arch-diagram svg text[fill*="0,212,255"] {
+  fill: rgba(0,140,180,0.7);
+}
+[data-theme="light"] .arch-diagram svg text[fill*="255,61,87"] {
+  fill: rgba(200,40,55,0.7);
+}
+[data-theme="light"] .arch-diagram svg line {
+  stroke: rgba(26,26,28,0.12);
+}
+[data-theme="light"] .arch-diagram svg line[stroke*="201,168,76"] {
+  stroke: rgba(42,42,46,0.28);
+}
+[data-theme="light"] .arch-diagram svg line[stroke*="0,212,255"] {
+  stroke: rgba(0,140,180,0.2);
+}
+[data-theme="light"] .arch-diagram svg line[stroke*="255,61,87"] {
+  stroke: rgba(200,40,55,0.2);
+}
+[data-theme="light"] .arch-diagram svg polygon {
+  fill: rgba(42,42,46,0.3);
+}
+[data-theme="light"] .arch-diagram svg rect[fill*="240,235,224"] {
+  fill: rgba(26,26,28,0.04);
+  stroke: rgba(26,26,28,0.12);
+}
+[data-theme="light"] .arch-diagram svg rect[fill*="201,168,76"] {
+  fill: rgba(42,42,46,0.04);
+  stroke: rgba(42,42,46,0.2);
+}
+[data-theme="light"] .arch-diagram svg rect[fill*="130,200,160"] {
+  fill: rgba(40,120,70,0.06);
+  stroke: rgba(40,120,70,0.2);
+}
+[data-theme="light"] .arch-diagram svg rect[fill*="0,212,255"] {
+  fill: rgba(0,140,180,0.06);
+  stroke: rgba(0,140,180,0.2);
+}
+[data-theme="light"] .arch-diagram svg rect[fill*="255,61,87"] {
+  fill: rgba(200,40,55,0.06);
+  stroke: rgba(200,40,55,0.2);
+}
+
+/* ---- PRINCIPLES / CONVICTIONS ---- */
+[data-theme="light"] .principle { border-bottom-color: rgba(42,42,46,0.08); }
+[data-theme="light"] .p-text { color: rgba(28,26,24,0.75); }
+
+/* ---- VENTURE CARDS v3 ---- */
+[data-theme="light"] .venture-card-v3 {
+  background: rgba(42,42,46,0.03);
+  border-color: rgba(42,42,46,0.1);
+}
+[data-theme="light"] .venture-card-v3:hover {
+  border-color: rgba(42,42,46,0.25);
+  background: rgba(42,42,46,0.05);
+}
+[data-theme="light"] .vc3-name { color: #1c1a18; }
+[data-theme="light"] .vc3-tagline { color: rgba(28,26,24,0.35); }
+[data-theme="light"] .vc3-desc { color: rgba(28,26,24,0.55); }
+[data-theme="light"] .vc3-tech { color: rgba(28,26,24,0.25); }
+[data-theme="light"] .vc3-arrow { color: rgba(28,26,24,0.15); }
+[data-theme="light"] .venture-card-v3:hover .vc3-arrow { color: #3a3a3c; }
+[data-theme="light"] .vc3-status {
+  color: rgba(60,60,65,0.65);
+  border-color: rgba(42,42,46,0.2);
+}
+[data-theme="light"] .vc3-chip {
+  color: #3a3a3c;
+  border-color: rgba(42,42,46,0.15);
+}
+
+/* ---- GLITCH STATUES (both themes — dark: ghost, light: face overlays) ---- */
+
+/* Theme-split layers: glitch-light shown only in light mode, glitch-dark only in dark mode */
+.glitch-light { display: none; }
+[data-theme="light"] .glitch-light { display: block; }
+[data-theme="light"] .glitch-dark  { display: none; }
+
+/* Base layer positioning — must be ungated so dark mode renders correctly */
+.glitch-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(1.0);
+}
+
+/* Base animation — runs in both themes; theme overrides adjust filter/blend only */
+.glitch-a {
+  opacity: 1;
+  animation: glitchA 8s ease-in-out infinite;
+}
+.glitch-b {
+  opacity: 0;
+  mix-blend-mode: screen;
+  animation: glitchB 8s ease-in-out infinite;
+}
+.glitch-c {
+  opacity: 0;
+  animation: glitchC 8s ease-in-out infinite;
+  clip-path: inset(0 0 0 0);
+}
+
+/* Left statue — dark mode ghost (default state) */
+.glitch-statue-left {
+  display: block;
+  position: fixed;
+  top: 50%;
+  left: -5%;
+  transform: translate(0, -50%);
+  width: 550px;
+  height: 750px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.12;
+  mix-blend-mode: screen;
+  -webkit-mask-image:
+    linear-gradient(to left, transparent 0%, black 20%, black 100%),
+    linear-gradient(to bottom, transparent 0%, black 8%, black 88%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to left, transparent 0%, black 20%, black 100%),
+    linear-gradient(to bottom, transparent 0%, black 8%, black 88%, transparent 100%);
+  mask-composite: intersect;
+}
+
+/* Right statue — dark mode ghost (default state) */
+.glitch-statue-right {
+  display: block;
+  position: fixed;
+  top: 50%;
+  right: -5%;
+  transform: translate(0, -50%);
+  width: 550px;
+  height: 750px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.12;
+  mix-blend-mode: screen;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, black 20%, black 100%),
+    linear-gradient(to bottom, transparent 0%, black 8%, black 88%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, black 20%, black 100%),
+    linear-gradient(to bottom, transparent 0%, black 8%, black 88%, transparent 100%);
+  mask-composite: intersect;
+}
+
+/* Face framing: left uses ghost-right (face on left of image), right uses ghost-left (face on right of image) */
+.glitch-statue-left  .glitch-dark  { object-position: left center; }
+.glitch-statue-right .glitch-layer { object-position: right center; }
+
+/* Right statue animation — offset timing so both sides never glitch in sync */
+.glitch-statue-right .glitch-a { animation-duration: 11s; animation-delay: -4s; }
+.glitch-statue-right .glitch-b { animation-duration: 11s; animation-delay: -4s; }
+.glitch-statue-right .glitch-c { animation-duration: 11s; animation-delay: -4s; }
+
+/* Light mode overrides — left statue */
+[data-theme="light"] .glitch-statue-left {
+  opacity: 0.18;
+  mix-blend-mode: normal;
+}
+
+/* Light mode overrides — right statue hidden; original statue-watermark shows instead */
+[data-theme="light"] .glitch-statue-right {
+  display: none;
+}
+
+/* Light mode layer filter */
+[data-theme="light"] .glitch-layer {
+  filter: grayscale(0.3) contrast(1.2) brightness(0.85);
+}
+
+[data-theme="light"] .glitch-a {
+  opacity: 1;
+  animation: glitchA 8s ease-in-out infinite;
+}
+[data-theme="light"] .glitch-b {
+  opacity: 0;
+  mix-blend-mode: screen;
+  animation: glitchB 8s ease-in-out infinite;
+}
+[data-theme="light"] .glitch-c {
+  opacity: 0;
+  animation: glitchC 8s ease-in-out infinite;
+  clip-path: inset(0 0 0 0);
+}
+
+@keyframes glitchA {
+  0%, 42% { opacity: 1; transform: translate(0, 0); }
+  44% { opacity: 0.6; transform: translate(3px, -2px); }
+  46% { opacity: 1; transform: translate(-1px, 1px); }
+  48%, 100% { opacity: 1; transform: translate(0, 0); }
+}
+
+@keyframes glitchB {
+  0%, 42% { opacity: 0; }
+  43% { opacity: 0.4; transform: translate(-4px, 2px); clip-path: inset(20% 0 40% 0); }
+  44.5% { opacity: 0.3; transform: translate(5px, -1px); clip-path: inset(50% 0 10% 0); }
+  46% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+  47%, 100% { opacity: 0; }
+}
+
+@keyframes glitchC {
+  0%, 43% { opacity: 0; }
+  44% { opacity: 0.5; transform: translate(2px, 3px); clip-path: inset(60% 0 5% 0); }
+  45% { opacity: 0.3; transform: translate(-3px, -2px); clip-path: inset(10% 0 70% 0); }
+  46.5% { opacity: 0; clip-path: inset(0 0 0 0); }
+  47%, 100% { opacity: 0; }
+}
+
+/* ---- METHOD / HOW I BUILD ---- */
+[data-theme="light"] .build-method-item {
+  border-color: rgba(42,42,46,0.1);
+  background: rgba(255,255,255,0.25);
+}
+[data-theme="light"] .build-method-label { color: rgba(42,42,46,0.6); }
+[data-theme="light"] .build-method-text { color: rgba(26,26,28,0.65); }
+
+/* ---- NOW SECTION ---- */
+[data-theme="light"] .now-item { border-bottom-color: rgba(42,42,46,0.08); }
+[data-theme="light"] .now-meta { color: rgba(26,26,28,0.3); }
+[data-theme="light"] .now-dot {
+  background: #3a3a3c;
+  box-shadow: 0 0 8px rgba(42,42,46,0.2);
+}
+
+/* ---- FOOTER ---- */
+[data-theme="light"] .footer-motto { color: rgba(42,42,46,0.35); }
+[data-theme="light"] .footer-name { color: rgba(26,26,28,0.28); }
+[data-theme="light"] .footer-year { color: rgba(26,26,28,0.2); }
+[data-theme="light"] .footer-stars { color: rgba(42,42,46,0.18); }
+
+/* ---- NOCO STATS ---- */
+[data-theme="light"] .noco-stat {
+  border-color: rgba(42,42,46,0.1);
+  background: rgba(255,255,255,0.25);
+}
+[data-theme="light"] .noco-stat-label { color: rgba(26,26,28,0.4); }
+[data-theme="light"] .noco-cta-link {
+  background: #2e2e30;
+  color: #d0d1d3;
+}
+[data-theme="light"] .noco-cta-link:hover { background: #1a1a1c; box-shadow: none; }
+
+/* ---- BRAND TEASER ---- */
+[data-theme="light"] .brand-teaser-label { color: rgba(26,26,28,0.38); }
+[data-theme="light"] .brand-link-ghost {
+  color: rgba(26,26,28,0.5);
+  border-color: rgba(42,42,46,0.2);
+}
+[data-theme="light"] .brand-link-ghost:hover {
+  color: #1a1a1c;
+  border-color: #2a2a2e;
+  background: rgba(42,42,46,0.04);
+}
+[data-theme="light"] .brand-link-primary {
+  background: #2e2e30;
+  color: #d0d1d3;
+}
+[data-theme="light"] .brand-link-primary:hover { background: #1a1a1c; box-shadow: none; }
+
+/* ---- CONTACT SHORTCUT ---- */
+[data-theme="light"] .contact-shortcut { color: rgba(42,42,46,0.55); }
+[data-theme="light"] .contact-shortcut:hover { color: #1a1a1c; }
+
+/* ---- SOVEREIGNTY TITLE ---- */
+[data-theme="light"] .sov-item-title { color: #2a2a2e; }
+[data-theme="light"] .sov-item { border-top: none; }
+
+/* ---- THEME TOGGLE — clearly visible in light mode ---- */
+[data-theme="light"] .theme-toggle {
+  border-color: rgba(42,42,46,0.45);
+  background: rgba(255,255,255,0.65);
+  opacity: 0.85;
+  box-shadow: 0 1px 6px rgba(42,42,46,0.12);
+}
+[data-theme="light"] .theme-toggle:hover {
+  border-color: #2a2a2e;
+  background: rgba(255,255,255,0.9);
+  opacity: 1;
+}
+[data-theme="light"] .theme-toggle svg { fill: #2a2a2e; stroke: #2a2a2e; }
 
 /* ===== THEME TOGGLE ===== */
 .theme-toggle {

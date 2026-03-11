@@ -39,7 +39,7 @@
 <script>
 (function(){
   var t = localStorage.getItem('lf-theme');
-  if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  if (!t) t = 'dark';
   if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
 })();
 </script>
@@ -58,7 +58,30 @@
 <img class="ship-watermark" src="img/ship.png" alt="" role="presentation" loading="lazy">
 
 <!-- Roman Statue Watermark (light mode only, hidden in dark via CSS) -->
-<div class="statue-watermark" role="presentation" aria-hidden="true"></div>
+<img class="statue-watermark" src="img/statue.webp" alt="" role="presentation" aria-hidden="true" loading="lazy">
+
+<!-- Scroll progress line (light mode only) -->
+<div class="scroll-progress-track" aria-hidden="true"><div class="scroll-progress-fill"></div></div>
+
+<!-- Glitch statue left (dark: ghost-right faces inward; light: original stone face) -->
+<div class="glitch-statue-left" aria-hidden="true">
+  <!-- Light mode: original stone face close-up (statue-faces.webp) -->
+  <img class="glitch-layer glitch-a glitch-light" src="img/statue-faces.webp" alt="" role="presentation">
+  <img class="glitch-layer glitch-b glitch-light" src="img/statue.webp" alt="" role="presentation">
+  <img class="glitch-layer glitch-c glitch-light" src="img/statue-faces.webp" alt="" role="presentation">
+  <!-- Dark mode: ghost-right — faces point RIGHT, inward toward center -->
+  <img class="glitch-layer glitch-a glitch-dark" src="img/statue-ghost-right.png" alt="" role="presentation">
+  <img class="glitch-layer glitch-b glitch-dark" src="img/statue.webp" alt="" role="presentation">
+  <img class="glitch-layer glitch-c glitch-dark" src="img/statue-ghost-right.png" alt="" role="presentation">
+</div>
+
+<!-- Glitch statue right (dark: ghost-left faces inward; light: hidden) -->
+<div class="glitch-statue-right" aria-hidden="true">
+  <!-- ghost-left — faces point LEFT, inward toward center; no scaleX flip needed -->
+  <img class="glitch-layer glitch-a" src="img/statue-ghost-left.png" alt="" role="presentation">
+  <img class="glitch-layer glitch-b" src="img/statue.webp" alt="" role="presentation">
+  <img class="glitch-layer glitch-c" src="img/statue-ghost-left.png" alt="" role="presentation">
+</div>
 
 <div class="page">
 
@@ -75,12 +98,12 @@
     <p class="hero-motto">Mens clara in tenebris</p>
     <div class="hero-domains">
       <a href="https://lancewfisher.com" target="_blank" rel="noopener noreferrer"><span>lancewfisher.com</span></a>
-      <span class="hero-domain-dot">&middot;</span>
       <a href="https://one-three.net" target="_blank" rel="noopener noreferrer"><span>one-three.net</span></a>
-      <span class="hero-domain-dot">&middot;</span>
       <a href="https://fisher13.net" target="_blank" rel="noopener noreferrer"><span>fisher13.net</span></a>
-      <span class="hero-domain-dot">&middot;</span>
       <a href="https://f1sh3r.net" target="_blank" rel="noopener noreferrer"><span>f1sh3r.net</span></a>
+      <a href="https://fishersovereign.com" target="_blank" rel="noopener noreferrer"><span>fishersovereign.com</span></a>
+      <a href="https://fishersovereign.systems" target="_blank" rel="noopener noreferrer"><span>fishersovereign.systems</span></a>
+      <a href="https://teamfisher.us" target="_blank" rel="noopener noreferrer"><span>teamfisher.us</span></a>
     </div>
     <div class="hero-ctas">
       <a href="#sec-contact" class="hero-cta hero-cta-primary">Book a Call</a>
@@ -164,6 +187,35 @@
   <div class="thin-line" style="height:100px;"></div>
   <div class="spacer-lg"></div>
 
+  <!-- Sovereignty -->
+  <section class="section" id="sec-sovereignty" data-reveal>
+    <div class="section-label">Philosophy</div>
+    <div class="section-title">Digital Sovereignty</div>
+    <p class="sov-intro">A throughline connects every project in this portfolio: the conviction that critical systems should run on hardware you own, process data that never leaves your network, and answer to no one's terms of service but your own.</p>
+    <div class="sovereignty-grid">
+      <div class="sov-item">
+        <div class="sov-item-title">Local AI</div>
+        <div class="sov-item-desc">Auton and MoltBot run Qwen 2.5 14B on a local RTX 4070. No API keys. No rate limits. No data leaving the machine. The GPU is the moat.</div>
+      </div>
+      <div class="sov-item">
+        <div class="sov-item-title">E2E Encryption</div>
+        <div class="sov-item-desc">Sovereign Signal implements Signal-grade X3DH key exchange and Double Ratchet. Messages are plaintext only on sender and receiver devices. The relay server sees nothing.</div>
+      </div>
+      <div class="sov-item">
+        <div class="sov-item-title">Self-Hosted Bots</div>
+        <div class="sov-item-desc">Every trading bot runs locally. Market data streams through private WebSocket connections. No cloud functions. No third-party dashboards. The execution path is yours.</div>
+      </div>
+      <div class="sov-item">
+        <div class="sov-item-title">Home Hub</div>
+        <div class="sov-item-desc">Project Hub serves 22 projects from localhost. No SaaS project manager. No Jira. No Notion dependency. The workspace is a single machine with a single source of truth.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="spacer-lg"></div>
+  <div class="thin-line" style="height:100px;"></div>
+  <div class="spacer-lg"></div>
+
   <!-- Now -->
   <section class="section" id="sec-now" data-reveal>
     <div class="section-label">Now</div>
@@ -200,7 +252,7 @@
       <div class="now-item">
         <div class="now-dot"></div>
         <div>
-          <div class="now-text">Developing an <strong>end-to-end encrypted messenger</strong> with X3DH key exchange, Double Ratchet protocol, and WebAuthn vault.</div>
+          <div class="now-text">Developing <strong>Sovereign Signal</strong>, an E2EE messenger with X3DH key exchange, Double Ratchet protocol, and WebAuthn vault.</div>
           <div class="now-meta">TypeScript &middot; Next.js &middot; libsodium &middot; WebAuthn</div>
         </div>
       </div>
@@ -532,8 +584,8 @@
       <div class="project-card" data-tags="tools">
         <div class="project-info">
           <div class="p-number">06</div>
-          <div class="p-title">E2EE Messenger</div>
-          <div class="p-desc">End-to-end encrypted peer-to-peer messaging platform with Signal-grade cryptography. X3DH key exchange, Double Ratchet forward secrecy, and passwordless WebAuthn vault.</div>
+          <div class="p-title">Sovereign Signal</div>
+          <div class="p-desc">E2EE peer-to-peer messaging platform with Signal-grade cryptography. X3DH key exchange, Double Ratchet forward secrecy, and passwordless WebAuthn vault.</div>
           <div class="p-tech">TypeScript / Next.js / libsodium / WebAuthn / Vitest</div>
           <div class="p-status active">In Development</div>
         </div>
@@ -1241,39 +1293,6 @@
     </div>
   </section>
 
-  <div class="spacer-lg"></div>
-  <div class="thin-line" style="height:100px;"></div>
-  <div class="spacer-lg"></div>
-
-  <!-- Sovereignty -->
-  <section class="section" id="sec-sovereignty" data-reveal>
-    <div class="section-label">Philosophy</div>
-    <div class="section-title">Digital Sovereignty</div>
-    <p class="sov-intro">A throughline connects every project in this portfolio: the conviction that critical systems should run on hardware you own, process data that never leaves your network, and answer to no one's terms of service but your own.</p>
-    <div class="sovereignty-grid">
-      <div class="sov-item">
-        <div class="sov-item-title">Local AI</div>
-        <div class="sov-item-desc">Auton and MoltBot run Qwen 2.5 14B on a local RTX 4070. No API keys. No rate limits. No data leaving the machine. The GPU is the moat.</div>
-      </div>
-      <div class="sov-item">
-        <div class="sov-item-title">E2E Encryption</div>
-        <div class="sov-item-desc">The E2EE Messenger implements Signal-grade X3DH key exchange and Double Ratchet. Messages are plaintext only on sender and receiver devices. The relay server sees nothing.</div>
-      </div>
-      <div class="sov-item">
-        <div class="sov-item-title">Self-Hosted Bots</div>
-        <div class="sov-item-desc">Every trading bot runs locally. Market data streams through private WebSocket connections. No cloud functions. No third-party dashboards. The execution path is yours.</div>
-      </div>
-      <div class="sov-item">
-        <div class="sov-item-title">Home Hub</div>
-        <div class="sov-item-desc">Project Hub serves 22 projects from localhost. No SaaS project manager. No Jira. No Notion dependency. The workspace is a single machine with a single source of truth.</div>
-      </div>
-    </div>
-  </section>
-
-  <div class="spacer-lg"></div>
-  <div class="thin-line" style="height:100px;"></div>
-  <div class="spacer-lg"></div>
-
   <!-- Contact -->
   <section class="section" id="sec-contact" data-reveal>
     <div class="section-label">Contact</div>
@@ -1423,6 +1442,7 @@
 <nav class="nav-dots" id="navDots">
   <div class="nav-dot active" data-target="sec-hero"></div>
   <div class="nav-dot" data-target="sec-about"></div>
+  <div class="nav-dot" data-target="sec-sovereignty"></div>
   <div class="nav-dot" data-target="sec-now"></div>
   <div class="nav-dot" data-target="sec-projects"></div>
   <div class="nav-dot" data-target="sec-ventures"></div>
@@ -1430,7 +1450,6 @@
   <div class="nav-dot" data-target="sec-brand"></div>
   <div class="nav-dot" data-target="sec-architecture"></div>
   <div class="nav-dot" data-target="sec-principles"></div>
-  <div class="nav-dot" data-target="sec-sovereignty"></div>
   <div class="nav-dot" data-target="sec-contact"></div>
 </nav>
 
