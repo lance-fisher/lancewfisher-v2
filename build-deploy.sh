@@ -22,6 +22,7 @@ cp "$SCRIPT_DIR/robots.txt"         "$DEPLOY/"
 cp "$SCRIPT_DIR/sitemap.xml"        "$DEPLOY/"
 cp "$SCRIPT_DIR/.htaccess"          "$DEPLOY/"
 cp "$SCRIPT_DIR/apple-touch-icon.png" "$DEPLOY/"
+cp "$SCRIPT_DIR/fisher-sovereign.html" "$DEPLOY/"
 
 # Directories (full copy)
 cp -r "$SCRIPT_DIR/img"             "$DEPLOY/img"
