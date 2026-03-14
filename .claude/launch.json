@@ -1,11 +1,1 @@
-{
-  "version": "0.0.1",
-  "configurations": [
-    {
-      "name": "lancewfisher-v2",
-      "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8073", "--directory", "."],
-      "port": 8073
-    }
-  ]
-}
+{"version": "0.0.1", "configurations": [{"name": "lancewfisher-v2", "runtimeExecutable": "python", "runtimeArgs": ["-m", "http.server", "8077", "--directory", "D:/ProjectsHome/FisherSovereign/lancewfisher-v2/deploy"], "port": 8077}, {"name": "lancewfisher-dev-root", "runtimeExecutable": "python", "runtimeArgs": ["-m", "http.server", "8070", "--directory", "D:/ProjectsHome/FisherSovereign/lancewfisher-v2"], "port": 8070}]}
