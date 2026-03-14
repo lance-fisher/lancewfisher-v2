@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lance W. Fisher | Resume | Data Center Technician Manager at Microsoft</title>
-<meta name="description" content="Resume of Lance W. Fisher. Technical operations leader with experience at Microsoft, DISH Network, FTC Group, Apple, and AT&T.">
+<title>Lance W. Fisher | Resume | Data Center Technician Manager</title>
+<meta name="description" content="Resume of Lance W. Fisher. Technical operations leader with experience in data center operations, broadcast, telecommunications, and retail technology.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="canonical" href="https://lancewfisher.com/resume.html">
 <link rel="stylesheet" href="fonts/fonts.css">
@@ -156,8 +156,16 @@
   }
 
   @media print {
-    .access-gate { display: none !important; }
-    .resume-content { display: block !important; }
+    body * { display: none !important; }
+    body::after {
+      display: block !important;
+      content: "Printing is disabled. Request a copy directly from Lance.";
+      font-family: serif;
+      font-size: 14pt;
+      text-align: center;
+      margin-top: 3in;
+      color: #111;
+    }
   }
 
   /* Header */
@@ -284,18 +292,17 @@
 
 <div class="section-header">Professional Experience</div>
 
-<!-- Microsoft -->
 <div class="job">
   <div class="job-header">
-    <span class="job-company">MICROSOFT CORPORATION</span>
-    <span class="job-location">Cheyenne, WY</span>
+    <span class="job-company">DATA CENTER TECHNICIAN MANAGER</span>
+    <span class="job-location">Current Role</span>
   </div>
   <div class="job-title-row">
     <span class="job-title">Data Center Technician Manager</span>
     <span class="job-dates">June 2025&ndash;Present</span>
   </div>
   <ul class="bullets">
-    <li>Lead and manage a team of data center technicians responsible for the deployment, maintenance, and decommissioning of server and network infrastructure supporting Microsoft Azure cloud services.</li>
+    <li>Lead and manage a team of data center technicians responsible for the deployment, maintenance, and decommissioning of server and network infrastructure supporting cloud services at enterprise scale.</li>
     <li>Oversee day-to-day operations in a mission-critical data center environment, ensuring adherence to strict SLA requirements and maintaining 99.99%+ uptime across all managed systems.</li>
     <li>Coordinate cross-functional efforts with engineering, capacity planning, and security teams to execute large-scale hardware deployments and infrastructure upgrades on schedule.</li>
     <li>Enforce safety protocols, operational procedures, and compliance standards across all data center activities, maintaining zero safety incidents.</li>
@@ -497,6 +504,14 @@
     if (e.key === 'Enter') tryUnlock();
   });
 })();
+
+// Disable printing entirely
+window.addEventListener('beforeprint', function(e) {
+  e.preventDefault();
+  e.stopImmediatePropagation();
+  return false;
+});
+window.onbeforeprint = function() { return false; };
 </script>
 
 </body>

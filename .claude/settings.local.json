@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pandoc --track-changes=all \"Architect_of_Independence_v3_Complete.docx\" -o article_content.md)",
+      "Bash(where pandoc:*)",
+      "Bash(winget list:*)",
+      "Bash(python -c \"import zipfile, os; z=zipfile.ZipFile\\(r''''D:/ProjectsHome/FisherSovereign/lancewfisher-v2/docs/Architect_of_Independence_v3_Complete.docx''''\\); [print\\(name\\) for name in z.namelist\\(\\)]\")",
+      "Bash(python -c \":*)",
+      "Bash(\"D:/ProjectsHome/FisherSovereign/lancewfisher-v2/docs/plans/2026-03-13-fisher-sovereign-integration-design.md\":*)",
+      "Bash(\"D:\\\\ProjectsHome\\\\FisherSovereign\\\\lancewfisher-v2\\\\SESSION_STATUS.md\":*)",
+      "Bash(python3 /tmp/append_css.py)",
+      "Bash(powershell.exe -Command \":*)",
+      "Bash(python3 -c \":*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(python3 -c 'import docx')",
+      "Bash(pip install:*)",
+      "Bash(python3 -c \"import docx; print\\(''ok''\\)\")",
+      "Bash(python -m pip install python-docx -q)",
+      "Bash(python -c \"import docx; print\\(''''ok''''\\)\")",
+      "Skill(commit-commands:commit)",
+      "Skill(commit-commands:commit:*)",
+      "Bash(bash build-deploy.sh)"
+    ]
+  }
+}
