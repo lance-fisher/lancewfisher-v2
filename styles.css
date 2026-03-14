@@ -2999,3 +2999,15 @@ span.hero-domain-dot {
 [data-theme="light"] .fs-article-end-name { color: rgba(140, 100, 20, 0.9); }
 [data-theme="light"] .fs-article-nav { background: rgba(197, 198, 200, 0.92); }
 [data-theme="light"] .fs-article-nav-name { color: rgba(140, 100, 20, 0.9); }
+
+/* Fisher Sovereign subheadline */
+.fs-subheadline {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(17px, 2.2vw, 22px);
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(var(--fg), 0.60);
+  line-height: 1.5;
+  margin: 0 0 28px 0;
+  letter-spacing: 0.01em;
+}
