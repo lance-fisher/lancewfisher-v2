@@ -10,9 +10,23 @@ Personal portfolio and brand site for Lance W. Fisher. Static HTML/CSS/JS, no bu
 
 ## How to Run
 ```
+# Serve deploy/ for live preview (launch.json configured for port 8077):
+python -m http.server 8077 --directory deploy
+
+# Or serve root for development:
 python -m http.server 8070 --directory .
 ```
-Then open http://localhost:8070
+
+## Source vs Deploy
+- **Root is the source of truth.** `deploy/` is the build output.
+- `build-deploy.sh` wipes and rebuilds `deploy/` from root — running it will overwrite any deploy-only edits.
+- **Always edit root files.** If you edit `deploy/` directly during development, sync back before finishing:
+  ```bash
+  cp deploy/styles.css styles.css
+  cp deploy/ftda/ftda.css ftda/ftda.css
+  # etc. for any other changed files
+  ```
+- Verify root == deploy with: `diff styles.css deploy/styles.css`
 
 ## Structure
 ```
@@ -36,3 +50,37 @@ _originals/             — Original high-res assets
 - Sections: Hero, About, Now, Ventures, Projects, One-Three brand, Contact
 - Responsive with mobile nav toggle
 - Multiple sub-sites served from subdirectories
+- **Two themes**: dark (default) and light — both must work. Toggle is top-right pill button.
+
+## Dual-Mode Rule (NON-NEGOTIABLE)
+Every CSS or UI change must be verified in BOTH dark and light mode before marking done.
+
+Quick check in browser console (paste and run):
+```js
+// Switch to light
+document.documentElement.setAttribute('data-theme','light');
+// Switch back to dark
+document.documentElement.removeAttribute('data-theme');
+```
+
+## CSS Convention — New Color Rules
+**Never hardcode `rgba(240, 235, 224, ...)` for text.** Use the `--fg` variable instead:
+
+```css
+/* ONE rule covers both themes automatically: */
+.my-element { color: rgba(var(--fg), 0.65); }
+
+/* Dark mode resolves to: rgba(240, 235, 224, 0.65)  ← near-white on dark bg */
+/* Light mode resolves to: rgba(26, 26, 28, 0.65)    ← near-black on light bg */
+```
+
+`--fg` is defined in `:root` (dark) and `[data-theme="light"]` in `deploy/styles.css`.
+For `ftda/ftda.css`, also add `--fg` to its `:root` block if writing new color rules there.
+
+**Alpha guidance for readable text in both modes:**
+- `0.85+` — primary text (headings, body)
+- `0.65–0.75` — secondary text (descriptions, labels)
+- `0.45–0.55` — muted/metadata text
+- Below `0.40` — decorative only, do not use for readable content
+
+**Do NOT use `rgba(var(--fg), ...)` for backgrounds** — use the existing `--warm-white-ghost` etc. variables or explicit values for backgrounds.
