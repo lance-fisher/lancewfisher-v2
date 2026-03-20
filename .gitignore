@@ -2,7 +2,12 @@ deploy/
 node_modules/
 
 # Claude Code
-.claude/settings.local.json
+.claude/
 
 # Temp files
 *.tmp
+
+# Standard entries
+__pycache__/
+*.pid
+.env
