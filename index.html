@@ -33,8 +33,8 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%E2%9A%93</text></svg>">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="ftda/ftda.css">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="ftda/ftda.css?v=20260314">
+<link rel="stylesheet" href="styles.css?v=20260314">
 <!-- Prevent FOUC: apply saved theme before paint -->
 <script>
 (function(){
@@ -95,8 +95,8 @@
     </h1>
     <div class="hero-rule"></div>
     <p class="hero-subtitle">Leader &middot; Builder &middot; Father &middot; Husband</p>
+    <p class="hero-company"><span class="sovereign-glitch" data-text="Fisher Sovereign Systems">Fisher Sovereign Systems</span></p>
     <p class="hero-motto">Mens clara in tenebris</p>
-    <p style="font-size:12px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(201,168,76,0.6);margin-top:8px;font-family:Inter,sans-serif;">Founder &mdash; Fisher Sovereign Systems, LLC</p>
     <div class="hero-domains">
       <a href="https://lancewfisher.com" target="_blank" rel="noopener noreferrer"><span>lancewfisher.com</span></a>
       <a href="https://one-three.net" target="_blank" rel="noopener noreferrer"><span>one-three.net</span></a>
@@ -114,30 +114,6 @@
       <div class="scroll-line"></div>
     </div>
   </section>
-
-  <!-- Stats Strip -->
-  <div class="stats-strip" data-reveal>
-    <div class="stats-strip-grid">
-      <div class="stats-strip-item">
-        <div class="stats-strip-val">80k+</div>
-        <div class="stats-strip-label">Lines Shipped</div>
-      </div>
-      <div class="stats-strip-item">
-        <div class="stats-strip-val">20+</div>
-        <div class="stats-strip-label">Systems Built</div>
-      </div>
-      <div class="stats-strip-item">
-        <div class="stats-strip-val">6</div>
-        <div class="stats-strip-label">Languages</div>
-      </div>
-      <div class="stats-strip-item">
-        <div class="stats-strip-val">15+</div>
-        <div class="stats-strip-label">Years Leading</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="spacer-lg"></div>
 
   <!-- About -->
   <section class="section" id="sec-about" data-reveal style="max-width:1000px;">
@@ -163,24 +139,8 @@
           <div class="body-text" style="margin-top:14px;">
             On his own time, he builds. Not as a career engineer, but as a leader who recognized what AI tooling made possible and moved on it. Full-stack production applications for real businesses. Multi-agent autonomous trading systems. A 3D platformer built for his son. Encrypted messaging platforms. An AI framework running on his own hardware. A nautical apparel brand. A custom app studio for local businesses. Over <em>80,000 lines of code</em> across <em>20+ projects</em>, all designed, architected, and shipped alone, most with the disciplined use of large language models as a force multiplier. Every tile on this page represents something he built from nothing, on his own time, because the work itself is the point.
           </div>
-          <div class="stats-row">
-            <div class="stat">
-              <div class="s-value">15+</div>
-              <div class="s-label">Years Leading</div>
-            </div>
-            <div class="stat">
-              <div class="s-value">20+</div>
-              <div class="s-label">Systems Shipped</div>
-            </div>
-            <div class="stat">
-              <div class="s-value">6</div>
-              <div class="s-label">Domains</div>
-            </div>
-            <div class="stat">
-              <div class="s-value">80k+</div>
-              <div class="s-label">Lines Shipped</div>
-            </div>
-          <a href="#sec-contact" class="contact-shortcut">Get in touch <span>&#8595;</span></a>
+          <div style="margin-top:24px;">
+            <a href="#sec-contact" class="contact-shortcut">Get in touch <span>&#8595;</span></a>
           </div>
         </div>
       </div>
@@ -191,9 +151,8 @@
   <div class="thin-line" style="height:100px;"></div>
   <div class="spacer-lg"></div>
 
-  <!-- Fisher Sovereign Systems -->
-  <section class="section" id="sec-fisher-sovereign" data-reveal style="max-width:1000px;">
-    <div class="section-label">Notice</div>
+  <!-- Fisher Sovereign Systems — Combined Mission + Sovereignty -->
+  <section class="section fs-mega" id="sec-fisher-sovereign" data-reveal style="max-width:1100px;">
     <div class="fs-wordmark">
       <svg class="fs-glyph" width="20" height="28" viewBox="0 0 20 28" fill="none" aria-hidden="true">
         <line x1="4"  y1="1"  x2="4"  y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -217,9 +176,33 @@
       <p>To observe, categorize, and convert your behavior into revenue. Every search, every click, every pause is a data point inside a system you didn&rsquo;t design, can&rsquo;t inspect, and rarely benefit from. You were never the customer. You were the inventory.</p>
       <p>Fisher Sovereign Systems is the refusal. Encrypted. Local. Sovereign. Infrastructure engineered to answer to the person using it &mdash; not the company profiting from it.</p>
     </div>
-    <div class="fs-ctas">
-      <a href="#sec-projects" class="hero-cta hero-cta-ghost">See What We Build &darr;</a>
+
+    <!-- Digital Sovereignty -->
+    <div class="fs-sovereignty-block">
+      <div class="section-title" style="font-size:clamp(28px, 4vw, 42px); margin-bottom:16px;">Digital Sovereignty</div>
+      <p class="sov-intro">A throughline connects every project in this portfolio: the conviction that critical systems should run on hardware you own, process data that never leaves your network, and answer to no one&rsquo;s terms of service but your own.</p>
     </div>
+    <div class="fs-pillars-label">The Infrastructure</div>
+    <div class="sovereignty-grid">
+      <div class="sov-item">
+        <div class="sov-item-title">Local AI</div>
+        <div class="sov-item-desc">Auton and MoltBot run Qwen 2.5 14B on a local RTX 4070. No API keys. No rate limits. No data leaving the machine. The GPU is the moat.</div>
+      </div>
+      <div class="sov-item">
+        <div class="sov-item-title">E2E Encryption</div>
+        <div class="sov-item-desc">Sovereign Signal implements Signal-grade X3DH key exchange and Double Ratchet. Messages are plaintext only on sender and receiver devices. The relay server sees nothing.</div>
+      </div>
+      <div class="sov-item">
+        <div class="sov-item-title">Self-Hosted Bots</div>
+        <div class="sov-item-desc">Every trading bot runs locally. Market data streams through private WebSocket connections. No cloud functions. No third-party dashboards. The execution path is yours.</div>
+      </div>
+      <div class="sov-item">
+        <div class="sov-item-title">Home Hub</div>
+        <div class="sov-item-desc">Project Hub serves 22 projects from localhost. No SaaS project manager. No Jira. No Notion dependency. The workspace is a single machine with a single source of truth.</div>
+      </div>
+    </div>
+
+    <!-- Article teaser card -->
     <div class="fs-teaser-card">
       <div class="fs-teaser-info">
         <div class="fs-teaser-eyebrow">The Case</div>
@@ -239,39 +222,28 @@
   <div class="thin-line" style="height:100px;"></div>
   <div class="spacer-lg"></div>
 
-  <!-- Sovereignty -->
-  <section class="section" id="sec-sovereignty" data-reveal>
-    <div class="section-label">Philosophy</div>
-    <div class="section-title">Digital Sovereignty</div>
-    <p class="sov-intro">A throughline connects every project in this portfolio: the conviction that critical systems should run on hardware you own, process data that never leaves your network, and answer to no one's terms of service but your own.</p>
-    <div class="sovereignty-grid">
-      <div class="sov-item">
-        <div class="sov-item-title">Local AI</div>
-        <div class="sov-item-desc">Auton and MoltBot run Qwen 2.5 14B on a local RTX 4070. No API keys. No rate limits. No data leaving the machine. The GPU is the moat.</div>
+  <!-- The Work — Combined Now + Method -->
+  <section class="section" id="sec-now" data-reveal style="max-width:1100px;">
+    <div class="section-label">The Work</div>
+    <div class="section-title">What he builds<br>&amp; how he builds it</div>
+    <div class="body-text" style="margin-bottom:40px;">
+      Lance is not a software engineer by trade. He is an operations leader with 15+ years managing teams, facilities, and complex systems at scale. The projects on this page were built the way a leader builds: identify the problem, architect the solution, direct the tooling, and ship. Large language models are the force multiplier. He sets the standard. The tooling executes.
+    </div>
+    <div class="build-method-grid" style="margin-bottom:48px;">
+      <div class="build-method-item">
+        <div class="build-method-label">Identify</div>
+        <div class="build-method-text">Real problems for real people. Every project starts with a need, not a technology.</div>
       </div>
-      <div class="sov-item">
-        <div class="sov-item-title">E2E Encryption</div>
-        <div class="sov-item-desc">Sovereign Signal implements Signal-grade X3DH key exchange and Double Ratchet. Messages are plaintext only on sender and receiver devices. The relay server sees nothing.</div>
+      <div class="build-method-item">
+        <div class="build-method-label">Architect</div>
+        <div class="build-method-text">Design the system before writing a line. Data flow, dependencies, failure modes, user experience.</div>
       </div>
-      <div class="sov-item">
-        <div class="sov-item-title">Self-Hosted Bots</div>
-        <div class="sov-item-desc">Every trading bot runs locally. Market data streams through private WebSocket connections. No cloud functions. No third-party dashboards. The execution path is yours.</div>
-      </div>
-      <div class="sov-item">
-        <div class="sov-item-title">Home Hub</div>
-        <div class="sov-item-desc">Project Hub serves 22 projects from localhost. No SaaS project manager. No Jira. No Notion dependency. The workspace is a single machine with a single source of truth.</div>
+      <div class="build-method-item">
+        <div class="build-method-label">Direct</div>
+        <div class="build-method-text">LLMs as force multipliers under disciplined guidance. The human sets the standard. The tooling executes.</div>
       </div>
     </div>
-  </section>
-
-  <div class="spacer-lg"></div>
-  <div class="thin-line" style="height:100px;"></div>
-  <div class="spacer-lg"></div>
-
-  <!-- Now -->
-  <section class="section" id="sec-now" data-reveal>
-    <div class="section-label">Now</div>
-    <div class="section-title">What he's building<br>right now</div>
+    <div class="fs-pillars-label">Active Projects</div>
     <div class="now-list">
       <div class="now-item">
         <div class="now-dot"></div>
@@ -307,33 +279,6 @@
           <div class="now-text">Developing <strong>Sovereign Signal</strong>, an E2EE messenger with X3DH key exchange, Double Ratchet protocol, and WebAuthn vault.</div>
           <div class="now-meta">TypeScript &middot; Next.js &middot; libsodium &middot; WebAuthn</div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="spacer-lg"></div>
-  <div class="thin-line" style="height:100px;"></div>
-  <div class="spacer-lg"></div>
-
-  <!-- How I Build -->
-  <section class="section how-i-build" id="sec-method" data-reveal>
-    <div class="section-label">Method</div>
-    <div class="section-title">How he builds</div>
-    <div class="body-text">
-      Lance is not a software engineer by trade. He is an operations leader with 15+ years managing teams, facilities, and complex systems at scale. The projects on this page were not built the way a developer builds. They were built the way a leader builds: identify the problem, architect the solution, direct the tooling, and ship. Large language models are the force multiplier that made it possible for one person to produce what would normally require a team. He recognized the paradigm shift early, learned to leverage it with discipline, and treated every project as an operational problem to be solved, not a coding exercise to be performed.
-    </div>
-    <div class="build-method-grid">
-      <div class="build-method-item">
-        <div class="build-method-label">Identify</div>
-        <div class="build-method-text">Real problems for real people. Every project starts with a need, not a technology.</div>
-      </div>
-      <div class="build-method-item">
-        <div class="build-method-label">Architect</div>
-        <div class="build-method-text">Design the system before writing a line. Data flow, dependencies, failure modes, user experience.</div>
-      </div>
-      <div class="build-method-item">
-        <div class="build-method-label">Direct</div>
-        <div class="build-method-text">LLMs as force multipliers under disciplined guidance. The human sets the standard. The tooling executes.</div>
       </div>
     </div>
   </section>
@@ -1499,7 +1444,6 @@
   <div class="nav-dot active" data-target="sec-hero"></div>
   <div class="nav-dot" data-target="sec-about"></div>
   <div class="nav-dot" data-target="sec-fisher-sovereign"></div>
-  <div class="nav-dot" data-target="sec-sovereignty"></div>
   <div class="nav-dot" data-target="sec-now"></div>
   <div class="nav-dot" data-target="sec-projects"></div>
   <div class="nav-dot" data-target="sec-ventures"></div>
@@ -1510,7 +1454,7 @@
   <div class="nav-dot" data-target="sec-contact"></div>
 </nav>
 
-<script src="main.js"></script>
+<script src="main.js?v=20260314"></script>
 
 <!-- FTDA: Passkey Modal -->
 <div class="ftda-passkey-overlay" id="ftda-passkey-overlay" aria-hidden="true" role="dialog" aria-label="Passkey required">
