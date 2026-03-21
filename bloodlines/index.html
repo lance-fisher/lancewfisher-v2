@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bloodlines — Design Archive</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    :root {
+      --bg-deep:    #0f0d0b;
+      --bg-dark:    #161210;
+      --bg-mid:     #1d1915;
+      --bg-sidebar: #1a1613;
+      --bg-card:    #221e19;
+      --bg-hover:   #2a2420;
+      --border:     #3a2e24;
+      --border-dim: #2a2218;
+      --text-ivory: #e8dcc8;
+      --text-warm:  #c8b89a;
+      --text-muted: #7d6f5e;
+      --text-dim:   #4a3f32;
+      --ember:      #c94b1a;
+      --ember-dim:  #8a3210;
+      --ember-glow: rgba(201, 75, 26, 0.15);
+      --gold:       #c9a227;
+      --silver:     #8fa4ba;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: var(--bg-deep); color: var(--text-ivory); font-family: 'Crimson Pro', Georgia, serif; font-size: 17px; line-height: 1.7; overflow: hidden; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-deep); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--ember-dim); }
+
+    /* ===== ACCESS GATE ===== */
+    .gate-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg-deep);
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.4s ease;
+    }
+    .gate-overlay.hidden { opacity: 0; pointer-events: none; }
+    .gate-box {
+      text-align: center; padding: 48px 40px;
+      max-width: 400px; width: 90%;
+    }
+    .gate-sigil { width: 80px; height: 80px; margin: 0 auto 28px; }
+    .gate-heading {
+      font-family: 'Cinzel Decorative', serif; font-size: 28px; font-weight: 700;
+      letter-spacing: 0.06em; color: var(--text-ivory); margin-bottom: 8px;
+    }
+    .gate-sub {
+      font-family: 'Crimson Pro', serif; font-size: 16px; font-style: italic;
+      color: var(--text-muted); margin-bottom: 32px;
+    }
+    .gate-input {
+      display: block; width: 100%; padding: 12px 16px;
+      font-family: 'Crimson Pro', serif; font-size: 16px; letter-spacing: 1px;
+      color: var(--text-ivory); background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: 3px;
+      outline: none; margin-bottom: 12px; text-align: center;
+    }
+    .gate-input:focus { border-color: var(--ember); }
+    .gate-input::placeholder { color: var(--text-dim); letter-spacing: 2px; }
+    .gate-submit {
+      display: inline-block; padding: 10px 32px;
+      font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text-ivory); background: transparent;
+      border: 1px solid var(--ember-dim); border-radius: 2px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .gate-submit:hover { background: var(--ember-glow); border-color: var(--ember); color: var(--ember); }
+    .gate-error {
+      font-family: 'Crimson Pro', serif; font-size: 14px;
+      color: var(--ember); margin-top: 12px; opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .gate-error.visible { opacity: 1; }
+    .gate-divider {
+      width: 120px; height: 1px; margin: 28px auto;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+    .gate-back {
+      font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.15em;
+      color: var(--text-dim); text-decoration: none; text-transform: uppercase;
+    }
+    .gate-back:hover { color: var(--text-muted); }
+
+    /* ===== APP (hidden until unlocked) ===== */
+    #app { display: none; grid-template-rows: auto 1fr; grid-template-columns: 260px 1fr; height: 100vh; }
+    #app.unlocked { display: grid; }
+
+    /* HEADER */
+    #header { grid-column: 1 / -1; background: var(--bg-dark); border-bottom: 1px solid var(--border); display: flex; align-items: stretch; min-height: 56px; position: relative; }
+    #header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, var(--ember) 0%, var(--ember-dim) 30%, transparent 70%); }
+    #header-brand { display: flex; align-items: center; gap: 14px; padding: 0 24px; border-right: 1px solid var(--border-dim); flex-shrink: 0; width: 260px; }
+    #header-sigil { width: 34px; height: 34px; flex-shrink: 0; }
+    #header-title { font-family: 'Cinzel Decorative', serif; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; color: var(--text-ivory); line-height: 1.2; }
+    #header-subtitle { font-family: 'Cinzel', serif; font-size: 9px; font-weight: 400; letter-spacing: 0.18em; color: var(--text-muted); text-transform: uppercase; margin-top: 2px; }
+    #header-stats { display: flex; align-items: center; padding: 0 32px; gap: 36px; flex: 1; }
+    .stat-pill { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .stat-value { font-family: 'Cinzel', serif; font-size: 18px; font-weight: 700; color: var(--gold); line-height: 1; }
+    .stat-label { font-family: 'Cinzel', serif; font-size: 7px; font-weight: 400; letter-spacing: 0.2em; color: var(--text-muted); text-transform: uppercase; }
+    .stat-divider { width: 1px; height: 28px; background: var(--border-dim); }
+    #header-session { margin-left: auto; display: flex; align-items: center; padding: 0 24px; gap: 10px; border-left: 1px solid var(--border-dim); flex-shrink: 0; }
+    .session-badge { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.15em; color: var(--ember); text-transform: uppercase; background: var(--ember-glow); border: 1px solid var(--ember-dim); padding: 4px 10px; border-radius: 2px; }
+
+    /* SIDEBAR */
+    #sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border); overflow-y: auto; padding: 16px 0 32px; }
+    .nav-section { margin-bottom: 4px; }
+    .nav-section-header { font-family: 'Cinzel', serif; font-size: 9px; font-weight: 600; letter-spacing: 0.22em; color: var(--text-dim); text-transform: uppercase; padding: 10px 20px 6px; cursor: pointer; user-select: none; display: flex; align-items: center; justify-content: space-between; transition: color 0.2s; }
+    .nav-section-header:hover { color: var(--text-muted); }
+    .nav-section-arrow { font-size: 8px; transition: transform 0.2s; }
+    .nav-section.collapsed .nav-section-arrow { transform: rotate(-90deg); }
+    .nav-section.collapsed .nav-items { display: none; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 20px 7px 24px; cursor: pointer; font-family: 'Crimson Pro', serif; font-size: 14.5px; color: var(--text-muted); transition: background 0.15s, color 0.15s; border-left: 2px solid transparent; }
+    .nav-item:hover { background: var(--bg-hover); color: var(--text-warm); border-left-color: var(--border); }
+    .nav-item.active { background: var(--bg-hover); color: var(--text-ivory); border-left-color: var(--ember); }
+    .nav-icon { font-size: 12px; width: 14px; text-align: center; flex-shrink: 0; color: var(--text-dim); }
+    .nav-item.active .nav-icon { color: var(--ember); }
+    .nav-badge { margin-left: auto; font-family: 'Cinzel', serif; font-size: 8px; color: var(--text-dim); background: var(--bg-card); border: 1px solid var(--border-dim); padding: 1px 5px; border-radius: 2px; }
+    .nav-sep { height: 1px; background: var(--border-dim); margin: 8px 16px; }
+
+    /* CONTENT */
+    #content { overflow-y: auto; background: var(--bg-mid); }
+    #content-inner { max-width: 900px; margin: 0 auto; padding: 40px 48px 80px; }
+
+    /* OVERVIEW */
+    #overview { display: none; }
+    #overview.visible { display: block; }
+    .overview-hero { text-align: center; padding: 48px 0 48px; }
+    .overview-hero::after { content: ''; display: block; width: 200px; height: 1px; background: linear-gradient(90deg, transparent, var(--ember), transparent); margin: 36px auto 0; }
+    .hero-sigil { width: 80px; height: 80px; margin: 0 auto 24px; }
+    .overview-title { font-family: 'Cinzel Decorative', serif; font-size: 42px; font-weight: 700; letter-spacing: 0.06em; color: var(--text-ivory); margin-bottom: 10px; }
+    .overview-tagline { font-family: 'Crimson Pro', serif; font-style: italic; font-size: 20px; color: var(--text-muted); margin-bottom: 6px; }
+    .overview-phase { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.25em; color: var(--ember); text-transform: uppercase; }
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 32px 0; }
+    .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 20px; text-align: center; position: relative; overflow: hidden; transition: border-color 0.2s; cursor: default; }
+    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--ember); opacity: 0; transition: opacity 0.2s; }
+    .stat-card:hover { border-color: var(--ember-dim); }
+    .stat-card:hover::before { opacity: 1; }
+    .stat-card-value { font-family: 'Cinzel', serif; font-size: 32px; font-weight: 700; color: var(--gold); line-height: 1; margin-bottom: 8px; }
+    .stat-card-label { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.2em; color: var(--text-muted); text-transform: uppercase; }
+    .section-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 12px; }
+    .section-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 18px 20px; cursor: pointer; transition: background 0.15s, border-color 0.15s; display: flex; align-items: flex-start; gap: 14px; }
+    .section-card:hover { background: var(--bg-hover); border-color: var(--ember-dim); }
+    .section-card-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+    .section-card-title { font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; color: var(--text-ivory); margin-bottom: 4px; }
+    .section-card-desc { font-family: 'Crimson Pro', serif; font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    .section-card-meta { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.12em; color: var(--text-dim); text-transform: uppercase; margin-top: 6px; }
+    .overview-heading { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.25em; color: var(--ember); text-transform: uppercase; margin: 40px 0 14px; }
+    .pending-list { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--ember); border-radius: 4px; padding: 16px 20px; }
+    .pending-item { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; font-family: 'Crimson Pro', serif; font-size: 14px; color: var(--text-warm); border-bottom: 1px solid var(--border-dim); }
+    .pending-item:last-child { border-bottom: none; }
+    .pending-tag { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.1em; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; flex-shrink: 0; margin-top: 3px; }
+    .tag-high { background: rgba(201,75,26,0.2); color: var(--ember); border: 1px solid var(--ember-dim); }
+    .tag-med { background: rgba(201,162,39,0.15); color: var(--gold); border: 1px solid rgba(201,162,39,0.3); }
+    .tag-low { background: rgba(74,82,96,0.3); color: var(--silver); border: 1px solid rgba(74,82,96,0.4); }
+    .house-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .house-table th { background: var(--bg-card); font-family: 'Cinzel', serif; font-size: 9px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+    .house-table td { padding: 9px 14px; border-bottom: 1px solid var(--border-dim); color: var(--text-warm); vertical-align: top; }
+    .house-table tr:hover td { background: var(--bg-card); }
+    .house-canonical td:first-child { color: var(--text-ivory); font-weight: 600; }
+    .badge-canon { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.1em; color: var(--ember); }
+    .badge-proposed { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.1em; color: var(--gold); }
+
+    /* MD VIEW */
+    #md-view { display: none; }
+    #md-view.visible { display: block; }
+    #md-header { padding: 32px 0 24px; border-bottom: 1px solid var(--border); margin-bottom: 32px; display: flex; align-items: flex-end; justify-content: space-between; }
+    #md-breadcrumb { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.2em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 6px; }
+    #md-doc-title { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 600; color: var(--text-ivory); letter-spacing: 0.05em; }
+    #md-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+    #md-line-count { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.18em; color: var(--text-dim); text-transform: uppercase; }
+    #md-status-badge { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; }
+    #md-body { animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* MARKDOWN STYLES */
+    #md-body h1 { font-family: 'Cinzel', serif; font-size: 26px; font-weight: 700; color: var(--text-ivory); letter-spacing: 0.04em; margin: 40px 0 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    #md-body h1:first-child { margin-top: 0; }
+    #md-body h2 { font-family: 'Cinzel', serif; font-size: 17px; font-weight: 600; color: var(--text-warm); letter-spacing: 0.06em; margin: 32px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border-dim); }
+    #md-body h3 { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 600; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; margin: 24px 0 10px; }
+    #md-body h4 { font-family: 'Crimson Pro', serif; font-size: 16px; font-weight: 600; font-style: italic; color: var(--text-warm); margin: 18px 0 8px; }
+    #md-body p { color: var(--text-warm); margin-bottom: 14px; }
+    #md-body strong { font-weight: 600; color: var(--text-ivory); }
+    #md-body em { font-style: italic; color: var(--text-warm); }
+    #md-body ul, #md-body ol { padding-left: 22px; margin-bottom: 14px; }
+    #md-body li { color: var(--text-warm); margin-bottom: 5px; }
+    #md-body li::marker { color: var(--ember); }
+    #md-body blockquote { border-left: 3px solid var(--ember); padding: 10px 16px; margin: 16px 0; background: var(--bg-card); border-radius: 0 3px 3px 0; }
+    #md-body blockquote p { color: var(--text-warm); font-style: italic; margin: 0; }
+    #md-body code { font-family: 'Courier New', monospace; font-size: 13px; background: var(--bg-card); border: 1px solid var(--border-dim); padding: 1px 5px; border-radius: 3px; color: var(--gold); }
+    #md-body pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 16px 18px; margin-bottom: 16px; overflow-x: auto; }
+    #md-body pre code { background: none; border: none; padding: 0; font-size: 13px; color: var(--text-warm); }
+    #md-body table { width: 100%; border-collapse: collapse; margin-bottom: 18px; font-size: 14px; }
+    #md-body th { background: var(--bg-card); font-family: 'Cinzel', serif; font-size: 9px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+    #md-body td { padding: 9px 14px; border-bottom: 1px solid var(--border-dim); color: var(--text-warm); vertical-align: top; }
+    #md-body tr:hover td { background: var(--bg-card); }
+    #md-body hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+    #md-body a { color: var(--ember); text-decoration: none; }
+    #md-body a:hover { text-decoration: underline; color: var(--text-ivory); }
+
+    /* LOADING */
+    #loading { display: none; align-items: center; justify-content: center; height: 200px; gap: 12px; color: var(--text-muted); font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.2em; }
+    #loading.visible { display: flex; }
+    .loader-dots { display: flex; gap: 5px; }
+    .loader-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--ember); animation: pulse 1.2s ease-in-out infinite; }
+    .loader-dot:nth-child(2) { animation-delay: 0.2s; }
+    .loader-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes pulse { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      #app.unlocked { grid-template-columns: 1fr; }
+      #sidebar { display: none; }
+      #header-stats { display: none; }
+      #header-brand { width: auto; border-right: none; }
+      #content-inner { padding: 24px 16px 60px; }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .section-grid { grid-template-columns: 1fr; }
+      .gate-box { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ACCESS GATE -->
+<div class="gate-overlay" id="gateOverlay">
+  <div class="gate-box">
+    <svg class="gate-sigil" viewBox="0 0 64 64" fill="none">
+      <polygon points="32,2 58,17 58,47 32,62 6,47 6,17" stroke="#c9a227" stroke-width="1.5" fill="none" opacity="0.5"/>
+      <polygon points="32,10 50,20 50,44 32,54 14,44 14,20" stroke="#c94b1a" stroke-width="1" fill="none" opacity="0.35"/>
+      <line x1="32" y1="2" x2="32" y2="62" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/>
+      <line x1="6" y1="17" x2="58" y2="47" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/>
+      <line x1="58" y1="17" x2="6" y2="47" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/>
+      <circle cx="32" cy="32" r="9" stroke="#c94b1a" stroke-width="1.5" fill="rgba(201,75,26,0.08)"/>
+      <circle cx="32" cy="32" r="4" stroke="#c9a227" stroke-width="1" fill="rgba(201,162,39,0.15)"/>
+      <circle cx="32" cy="32" r="2" fill="#c94b1a" opacity="0.9"/>
+    </svg>
+    <div class="gate-heading">Bloodlines</div>
+    <div class="gate-sub">Design archive access is restricted</div>
+    <input type="password" class="gate-input" id="gateInput" placeholder="access code" autocomplete="off" spellcheck="false">
+    <button class="gate-submit" id="gateSubmit">Enter the Archive</button>
+    <div class="gate-error" id="gateError">Invalid access code</div>
+    <div class="gate-divider"></div>
+    <a href="https://lancewfisher.com" class="gate-back">&larr; lancewfisher.com</a>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+
+  <header id="header">
+    <div id="header-brand">
+      <svg id="header-sigil" viewBox="0 0 64 64" fill="none">
+        <polygon points="32,4 52,16 52,48 32,60 12,48 12,16" stroke="#c9a227" stroke-width="1.5" fill="none" opacity="0.6"/>
+        <polygon points="32,12 46,20 46,44 32,52 18,44 18,20" stroke="#c94b1a" stroke-width="1" fill="none" opacity="0.4"/>
+        <line x1="32" y1="4" x2="32" y2="60" stroke="#c9a227" stroke-width="0.5" opacity="0.3"/>
+        <line x1="12" y1="16" x2="52" y2="48" stroke="#c9a227" stroke-width="0.5" opacity="0.3"/>
+        <line x1="52" y1="16" x2="12" y2="48" stroke="#c9a227" stroke-width="0.5" opacity="0.3"/>
+        <circle cx="32" cy="32" r="6" stroke="#c94b1a" stroke-width="1.5" fill="rgba(201,75,26,0.1)"/>
+        <circle cx="32" cy="32" r="2" fill="#c94b1a" opacity="0.8"/>
+      </svg>
+      <div>
+        <div id="header-title">Bloodlines</div>
+        <div id="header-subtitle">Design Archive</div>
+      </div>
+    </div>
+    <div id="header-stats">
+      <div class="stat-pill"><span class="stat-value">2,813</span><span class="stat-label">Bible Lines</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-pill"><span class="stat-value">15,000+</span><span class="stat-label">Total Lines</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-pill"><span class="stat-value">9</span><span class="stat-label">Houses</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-pill"><span class="stat-value">7</span><span class="stat-label">Systems</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-pill"><span class="stat-value">62</span><span class="stat-label">Bible Sections</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-pill"><span class="stat-value">6</span><span class="stat-label">Victory Paths</span></div>
+    </div>
+    <div id="header-session"><span class="session-badge">Phase 1 Complete</span></div>
+  </header>
+
+  <nav id="sidebar">
+    <div class="nav-section">
+      <div class="nav-section-header" onclick="toggleSection(this)"><span>Project</span><span class="nav-section-arrow">&#9662;</span></div>
+      <div class="nav-items">
+        <div class="nav-item active" onclick="showOverview()" data-id="overview"><span class="nav-icon">&#11041;</span> Overview</div>
+        <div class="nav-item" onclick="loadDoc('00_ADMIN/PROJECT_STATUS.md','Project Status','Admin','COMPLETE')" data-id="ps"><span class="nav-icon">&#9672;</span> Project Status</div>
+        <div class="nav-item" onclick="loadDoc('01_CANON/CANONICAL_RULES.md','Canonical Rules','Canon','LOCKED')" data-id="cr"><span class="nav-icon">&#9672;</span> Canonical Rules</div>
+      </div>
+    </div>
+    <div class="nav-sep"></div>
+    <div class="nav-section">
+      <div class="nav-section-header" onclick="toggleSection(this)"><span>Design Bible</span><span class="nav-section-arrow">&#9662;</span></div>
+      <div class="nav-items">
+        <div class="nav-item" onclick="loadDoc('18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md','Complete Design Bible v3.0','Exports','COMPLETE')" data-id="bible"><span class="nav-icon">&#128214;</span> Complete Bible v3.0 <span class="nav-badge">2,813</span></div>
+        <div class="nav-item" onclick="loadDoc('01_CANON/BLOODLINES_MASTER_MEMORY.md','Master Memory','Canon','COMPLETE')" data-id="mm"><span class="nav-icon">&#129504;</span> Master Memory <span class="nav-badge">2,769</span></div>
+      </div>
+    </div>
+    <div class="nav-sep"></div>
+    <div class="nav-section">
+      <div class="nav-section-header" onclick="toggleSection(this)"><span>Core Systems</span><span class="nav-section-arrow">&#9662;</span></div>
+      <div class="nav-items">
+        <div class="nav-item" onclick="loadDoc('04_SYSTEMS/SYSTEM_INDEX.md','System Index + Interdependencies','Systems','COMPLETE')" data-id="si"><span class="nav-icon">&#9881;</span> Index + Interdependencies</div>
+        <div class="nav-item" onclick="loadDoc('04_SYSTEMS/CONVICTION_SYSTEM.md','Conviction System','Systems','COMPLETE')" data-id="cv"><span class="nav-icon">&#9881;</span> Conviction <span class="nav-badge">334</span></div>
+        <div class="nav-item" onclick="loadDoc('04_SYSTEMS/FAITH_SYSTEM.md','Faith System','Systems','COMPLETE')" data-id="fs"><span class="nav-icon">&#9881;</span> Faith <span class="nav-badge">749</span></div>
+        <div class="nav-item" onclick="loadDoc('04_SYSTEMS/POPULATION_SYSTEM.md','Population System','Systems','COMPLETE')" data-id="pop"><span class="nav-icon">&#9881;</span> Population <span class="nav-badge">126</span></div>
+        <div class="nav-item" onclick="loadDoc('04_SYSTEMS/RESOURCE_SYSTEM.md','Resource System','Systems','COMPLETE')" data-id="res"><span class="nav-icon">&#9881;</span> Resource <span class="nav-badge">228</span></div>
+        <div class="nav-item" onclick="loadDoc('04_SYSTEMS/TERRITORY_SYSTEM.md','Territory System','Systems','COMPLETE')" data-id="ter"><span class="nav-icon">&#9881;</span> Territory <span class="nav-badge">113</span></div>
+        <div class="nav-item" onclick="loadDoc('04_SYSTEMS/DYNASTIC_SYSTEM.md','Dynastic System','Systems','COMPLETE')" data-id="dyn"><span class="nav-icon">&#9881;</span> Dynastic <span class="nav-badge">292</span></div>
+        <div class="nav-item" onclick="loadDoc('04_SYSTEMS/BORN_OF_SACRIFICE_SYSTEM.md','Born of Sacrifice','Systems','COMPLETE')" data-id="bos"><span class="nav-icon">&#9881;</span> Born of Sacrifice <span class="nav-badge">313</span></div>
+      </div>
+    </div>
+    <div class="nav-sep"></div>
+    <div class="nav-section">
+      <div class="nav-section-header" onclick="toggleSection(this)"><span>Houses and Faiths</span><span class="nav-section-arrow">&#9662;</span></div>
+      <div class="nav-items">
+        <div class="nav-item" onclick="loadDoc('06_FACTIONS/FOUNDING_HOUSES.md','Founding Houses','Factions','CB004 PENDING')" data-id="fh"><span class="nav-icon">&#9873;</span> Founding Houses</div>
+        <div class="nav-item" onclick="loadDoc('07_FAITHS/FOUR_ANCIENT_FAITHS.md','Four Ancient Faiths','Faiths','COMPLETE')" data-id="faf"><span class="nav-icon">&#10022;</span> Four Ancient Faiths <span class="nav-badge">1,778</span></div>
+      </div>
+    </div>
+    <div class="nav-sep"></div>
+    <div class="nav-section">
+      <div class="nav-section-header" onclick="toggleSection(this)"><span>Units and Military</span><span class="nav-section-arrow">&#9662;</span></div>
+      <div class="nav-items">
+        <div class="nav-item" onclick="loadDoc('10_UNITS/UNIT_INDEX.md','Unit Index','Units','COMPLETE')" data-id="ui-unit"><span class="nav-icon">&#9876;</span> Unit Index <span class="nav-badge">466</span></div>
+      </div>
+    </div>
+    <div class="nav-sep"></div>
+    <div class="nav-section">
+      <div class="nav-section-header" onclick="toggleSection(this)"><span>Match and Events</span><span class="nav-section-arrow">&#9662;</span></div>
+      <div class="nav-items">
+        <div class="nav-item" onclick="loadDoc('11_MATCHFLOW/MATCH_STRUCTURE.md','Match Structure','Match Flow','COMPLETE')" data-id="ms"><span class="nav-icon">&#9876;</span> Match Structure <span class="nav-badge">252</span></div>
+        <div class="nav-item" onclick="loadDoc('11_MATCHFLOW/POLITICAL_EVENTS.md','Political Events','Match Flow','COMPLETE')" data-id="pe"><span class="nav-icon">&#9876;</span> Political Events <span class="nav-badge">980</span></div>
+      </div>
+    </div>
+    <div class="nav-sep"></div>
+    <div class="nav-section">
+      <div class="nav-section-header" onclick="toggleSection(this)"><span>World and Lore</span><span class="nav-section-arrow">&#9662;</span></div>
+      <div class="nav-items">
+        <div class="nav-item" onclick="loadDoc('09_WORLD/WORLD_INDEX.md','World Generation','World','COMPLETE')" data-id="wi"><span class="nav-icon">&#9673;</span> World Generation <span class="nav-badge">449</span></div>
+        <div class="nav-item" onclick="loadDoc('05_LORE/TIMELINE.md','World Timeline','Lore','COMPLETE')" data-id="tl"><span class="nav-icon">&#9673;</span> Timeline <span class="nav-badge">170</span></div>
+      </div>
+    </div>
+    <div class="nav-sep"></div>
+    <div class="nav-section">
+      <div class="nav-section-header" onclick="toggleSection(this)"><span>UI and Audio/Visual</span><span class="nav-section-arrow">&#9662;</span></div>
+      <div class="nav-items">
+        <div class="nav-item" onclick="loadDoc('12_UI_UX/UI_NOTES.md','UI/UX Notes','UI/UX','COMPLETE')" data-id="ui"><span class="nav-icon">&#9635;</span> UI/UX Notes <span class="nav-badge">276</span></div>
+        <div class="nav-item" onclick="loadDoc('13_AUDIO_VISUAL/AUDIO_VISUAL_DIRECTION.md','Audio/Visual Direction','A/V','COMPLETE')" data-id="av"><span class="nav-icon">&#9635;</span> Audio/Visual Direction <span class="nav-badge">195</span></div>
+      </div>
+    </div>
+    <div class="nav-sep"></div>
+    <div class="nav-section">
+      <div class="nav-section-header" onclick="toggleSection(this)"><span>Archive</span><span class="nav-section-arrow">&#9662;</span></div>
+      <div class="nav-items">
+        <div class="nav-item" onclick="loadDoc('19_ARCHIVE/LEGACY_ARCHIVE_INDEX.md','Legacy Archive Index','Archive','HISTORICAL')" data-id="lai"><span class="nav-icon">&#8865;</span> Legacy Archive Index</div>
+      </div>
+    </div>
+  </nav>
+
+  <main id="content">
+    <div id="content-inner">
+
+      <div id="loading">
+        <div class="loader-dots">
+          <div class="loader-dot"></div>
+          <div class="loader-dot"></div>
+          <div class="loader-dot"></div>
+        </div>
+        <span>Loading document...</span>
+      </div>
+
+      <div id="overview" class="visible">
+        <div class="overview-hero">
+          <svg class="hero-sigil" viewBox="0 0 64 64" fill="none">
+            <polygon points="32,2 58,17 58,47 32,62 6,47 6,17" stroke="#c9a227" stroke-width="1.5" fill="none" opacity="0.5"/>
+            <polygon points="32,10 50,20 50,44 32,54 14,44 14,20" stroke="#c94b1a" stroke-width="1" fill="none" opacity="0.35"/>
+            <line x1="32" y1="2" x2="32" y2="62" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/>
+            <line x1="6" y1="17" x2="58" y2="47" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/>
+            <line x1="58" y1="17" x2="6" y2="47" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/>
+            <circle cx="32" cy="32" r="9" stroke="#c94b1a" stroke-width="1.5" fill="rgba(201,75,26,0.08)"/>
+            <circle cx="32" cy="32" r="4" stroke="#c9a227" stroke-width="1" fill="rgba(201,162,39,0.15)"/>
+            <circle cx="32" cy="32" r="2" fill="#c94b1a" opacity="0.9"/>
+          </svg>
+          <div class="overview-title">Bloodlines</div>
+          <div class="overview-tagline">Dynasty-driven strategy where faith, sacrifice, and bloodline shape civilizations.</div>
+          <div class="overview-phase">Phase 1: Design Foundation Complete</div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-card-value">2,813</div><div class="stat-card-label">Design Bible Lines</div></div>
+          <div class="stat-card"><div class="stat-card-value">62</div><div class="stat-card-label">Bible Sections</div></div>
+          <div class="stat-card"><div class="stat-card-value">15,000+</div><div class="stat-card-label">Total Corpus Lines</div></div>
+          <div class="stat-card"><div class="stat-card-value">9</div><div class="stat-card-label">Sessions Complete</div></div>
+          <div class="stat-card"><div class="stat-card-value">9</div><div class="stat-card-label">Founding Houses</div></div>
+          <div class="stat-card"><div class="stat-card-value">7</div><div class="stat-card-label">Core Systems</div></div>
+          <div class="stat-card"><div class="stat-card-value">4</div><div class="stat-card-label">Ancient Faiths</div></div>
+          <div class="stat-card"><div class="stat-card-value">6</div><div class="stat-card-label">Victory Paths</div></div>
+        </div>
+
+        <div class="overview-heading">Quick Access</div>
+        <div class="section-grid">
+          <div class="section-card" onclick="loadDoc('18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md','Complete Design Bible v3.0','Exports','COMPLETE')">
+            <span class="section-card-icon">&#128214;</span>
+            <div>
+              <div class="section-card-title">Design Bible v3.0</div>
+              <div class="section-card-desc">All 62 sections complete. The full civilizational design reference.</div>
+              <div class="section-card-meta">2,813 lines -- All 9 Houses -- Closing Manifesto</div>
+            </div>
+          </div>
+          <div class="section-card" onclick="loadDoc('07_FAITHS/FOUR_ANCIENT_FAITHS.md','Four Ancient Faiths','Faiths','COMPLETE')">
+            <span class="section-card-icon">&#10022;</span>
+            <div>
+              <div class="section-card-title">Four Ancient Faiths</div>
+              <div class="section-card-desc">Old Light, Blood Dominion, The Order, The Wild at full depth.</div>
+              <div class="section-card-meta">1,778 lines -- 3 layers -- CB003 complete</div>
+            </div>
+          </div>
+          <div class="section-card" onclick="loadDoc('11_MATCHFLOW/POLITICAL_EVENTS.md','Political Events','Match Flow','COMPLETE')">
+            <span class="section-card-icon">&#9876;</span>
+            <div>
+              <div class="section-card-title">Political Events</div>
+              <div class="section-card-desc">34+ named events with triggers, effects, resolution paths, and counter-play.</div>
+              <div class="section-card-meta">980 lines -- 6 categories -- Fully designed</div>
+            </div>
+          </div>
+          <div class="section-card" onclick="loadDoc('04_SYSTEMS/FAITH_SYSTEM.md','Faith System','Systems','COMPLETE')">
+            <span class="section-card-icon">&#9881;</span>
+            <div>
+              <div class="section-card-title">Faith System</div>
+              <div class="section-card-desc">Covenant theology, doctrine mechanics, unit roster L3-L5, intensity thresholds.</div>
+              <div class="section-card-meta">749 lines -- Light and Dark doctrine per covenant</div>
+            </div>
+          </div>
+          <div class="section-card" onclick="loadDoc('09_WORLD/WORLD_INDEX.md','World Generation','World','COMPLETE')">
+            <span class="section-card-icon">&#9673;</span>
+            <div>
+              <div class="section-card-title">World Generation</div>
+              <div class="section-card-desc">Full procedural world parameters, terrain types, faction placement, resource distribution.</div>
+              <div class="section-card-meta">449 lines -- Complete procedural spec</div>
+            </div>
+          </div>
+          <div class="section-card" onclick="loadDoc('04_SYSTEMS/DYNASTIC_SYSTEM.md','Dynastic System','Systems','COMPLETE')">
+            <span class="section-card-icon">&#9881;</span>
+            <div>
+              <div class="section-card-title">Dynastic System</div>
+              <div class="section-card-desc">Three-tier family model, 8 commitment roles, succession mechanics, marriage alliances.</div>
+              <div class="section-card-meta">292 lines -- Full generational design</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="overview-heading">Nine Founding Houses</div>
+        <table class="house-table">
+          <thead>
+            <tr>
+              <th>House</th>
+              <th>Squad Trait</th>
+              <th>Core Mechanic</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Trueborn</td><td style="font-style:italic">By Precedent</td><td>Resist rout when outnumbered via institutional authority</td><td><span class="badge-proposed">PROPOSED</span></td></tr>
+            <tr><td>Highborne</td><td style="font-style:italic">As It Was in the Beginning</td><td>Compounding morale bonus in high-faith territory</td><td><span class="badge-proposed">PROPOSED</span></td></tr>
+            <tr class="house-canonical" style="background:var(--bg-card)"><td>Ironmark</td><td style="font-style:italic;color:var(--ember)">Ferocity Under Loss</td><td>Progressive bonuses as squad members fall in battle</td><td><span class="badge-canon">CANONICAL</span></td></tr>
+            <tr><td>Goldgrave</td><td style="font-style:italic">Find the Spread</td><td>Passive economic yield near resource nodes</td><td><span class="badge-proposed">PROPOSED</span></td></tr>
+            <tr><td>Stonehelm</td><td style="font-style:italic">Fortified Ground</td><td>+2 Def from Stonehelm-built defensive structures</td><td><span class="badge-proposed">PROPOSED</span></td></tr>
+            <tr><td>Westland</td><td style="font-style:italic">Pursuit Momentum</td><td>Stacking bonus for consecutive movement-charge sequences</td><td><span class="badge-proposed">PROPOSED</span></td></tr>
+            <tr><td>Hartvale</td><td style="font-style:italic">Verdant Recovery</td><td>Recover one member per cycle near Hartvale territory</td><td><span class="badge-proposed">PROPOSED</span></td></tr>
+            <tr><td>Whitehall</td><td style="font-style:italic">Sustained Operations</td><td>20% lower supply consumption, no combat enhancement</td><td><span class="badge-proposed">PROPOSED</span></td></tr>
+            <tr><td>Oldcrest</td><td style="font-style:italic">Tactical Memory</td><td>Compounding bonus vs. specific enemy types (accumulates in match)</td><td><span class="badge-proposed">PROPOSED</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="md-view">
+        <div id="md-header">
+          <div>
+            <div id="md-breadcrumb"></div>
+            <div id="md-doc-title"></div>
+          </div>
+          <div id="md-meta">
+            <div id="md-line-count"></div>
+            <div id="md-status-badge"></div>
+          </div>
+        </div>
+        <div id="md-body"></div>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // SHA-256 via WebCrypto
+  var PASSHASH = 'c65a82e6ec8047fa252b9ab14afe81ab92736c8c0947734fe7059f67189ad984';
+
+  function sha256(str) {
+    var buf = new TextEncoder().encode(str);
+    return crypto.subtle.digest('SHA-256', buf).then(function(hash) {
+      return Array.from(new Uint8Array(hash)).map(function(b) {
+        return b.toString(16).padStart(2, '0');
+      }).join('');
+    });
+  }
+
+  var gateOverlay = document.getElementById('gateOverlay');
+  var gateInput = document.getElementById('gateInput');
+  var gateSubmit = document.getElementById('gateSubmit');
+  var gateError = document.getElementById('gateError');
+  var app = document.getElementById('app');
+
+  function unlock() {
+    sessionStorage.setItem('bloodlines_unlocked', 'true');
+    gateOverlay.classList.add('hidden');
+    app.classList.add('unlocked');
+  }
+
+  if (sessionStorage.getItem('bloodlines_unlocked') === 'true') {
+    unlock();
+  } else {
+    setTimeout(function() { gateInput.focus(); }, 200);
+  }
+
+  function submitPasskey() {
+    var val = gateInput.value.trim();
+    if (!val) { gateError.classList.add('visible'); return; }
+    sha256(val).then(function(hash) {
+      if (hash === PASSHASH) {
+        unlock();
+      } else {
+        gateError.classList.add('visible');
+        gateInput.value = '';
+        gateInput.focus();
+      }
+    });
+  }
+
+  gateSubmit.addEventListener('click', submitPasskey);
+  gateInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') submitPasskey(); });
+
+  // Sidebar toggle
+  function toggleSection(header) {
+    header.closest('.nav-section').classList.toggle('collapsed');
+  }
+  window.toggleSection = toggleSection;
+
+  function setActive(id) {
+    document.querySelectorAll('.nav-item').forEach(function(el) {
+      el.classList.remove('active');
+    });
+    var el = document.querySelector('[data-id="' + id + '"]');
+    if (el) { el.classList.add('active'); }
+  }
+
+  function showOverview() {
+    document.getElementById('overview').classList.add('visible');
+    document.getElementById('md-view').classList.remove('visible');
+    document.getElementById('loading').classList.remove('visible');
+    setActive('overview');
+    document.getElementById('content').scrollTop = 0;
+  }
+  window.showOverview = showOverview;
+
+  function inferNavId(path) {
+    if (path.includes('PROJECT_STATUS')) return 'ps';
+    if (path.includes('CANONICAL_RULES')) return 'cr';
+    if (path.includes('DESIGN_BIBLE')) return 'bible';
+    if (path.includes('MASTER_MEMORY')) return 'mm';
+    if (path.includes('SYSTEM_INDEX')) return 'si';
+    if (path.includes('CONVICTION')) return 'cv';
+    if (path.includes('FAITH_SYSTEM')) return 'fs';
+    if (path.includes('POPULATION')) return 'pop';
+    if (path.includes('RESOURCE')) return 'res';
+    if (path.includes('TERRITORY')) return 'ter';
+    if (path.includes('DYNASTIC')) return 'dyn';
+    if (path.includes('BORN_OF')) return 'bos';
+    if (path.includes('FOUNDING_HOUSES')) return 'fh';
+    if (path.includes('FOUR_ANCIENT')) return 'faf';
+    if (path.includes('UNIT_INDEX')) return 'ui-unit';
+    if (path.includes('MATCH_STRUCTURE')) return 'ms';
+    if (path.includes('POLITICAL_EVENTS')) return 'pe';
+    if (path.includes('WORLD_INDEX')) return 'wi';
+    if (path.includes('TIMELINE')) return 'tl';
+    if (path.includes('UI_NOTES')) return 'ui';
+    if (path.includes('AUDIO_VISUAL')) return 'av';
+    if (path.includes('LEGACY_ARCHIVE')) return 'lai';
+    return '';
+  }
+
+  function renderMarkdown(rawText) {
+    marked.setOptions({ breaks: true, gfm: true });
+    var htmlString = marked.parse(rawText);
+    var parser = new DOMParser();
+    var parsedDoc = parser.parseFromString(htmlString, 'text/html');
+    var target = document.getElementById('md-body');
+    target.replaceChildren.apply(target, Array.from(parsedDoc.body.childNodes));
+  }
+
+  function badgeStyle(status) {
+    if (status === 'COMPLETE') {
+      return 'background:rgba(201,162,39,0.15);color:#c9a227;border:1px solid rgba(201,162,39,0.3);';
+    }
+    if (status === 'CANONICAL' || status === 'LOCKED') {
+      return 'background:rgba(201,75,26,0.15);color:#c94b1a;border:1px solid rgba(201,75,26,0.3);';
+    }
+    return 'background:rgba(74,82,96,0.2);color:#8fa4ba;border:1px solid rgba(74,82,96,0.3);';
+  }
+
+  function loadDoc(path, title, section, status) {
+    document.getElementById('overview').classList.remove('visible');
+    document.getElementById('md-view').classList.remove('visible');
+    document.getElementById('loading').classList.add('visible');
+    setActive(inferNavId(path));
+
+    fetch(path)
+      .then(function(resp) {
+        if (!resp.ok) { throw new Error('HTTP ' + resp.status); }
+        return resp.text();
+      })
+      .then(function(text) {
+        var lines = text.split('\n').length;
+        document.getElementById('md-breadcrumb').textContent = section.toUpperCase();
+        document.getElementById('md-doc-title').textContent = title;
+        document.getElementById('md-line-count').textContent = lines.toLocaleString() + ' lines';
+        var badge = document.getElementById('md-status-badge');
+        badge.textContent = status;
+        badge.setAttribute('style', badgeStyle(status));
+
+        renderMarkdown(text);
+
+        document.getElementById('loading').classList.remove('visible');
+        document.getElementById('md-view').classList.add('visible');
+        document.getElementById('content').scrollTop = 0;
+      })
+      .catch(function(err) {
+        var body = document.getElementById('md-body');
+        var p = document.createElement('p');
+        p.style.cssText = 'color:var(--ember);font-family:Cinzel,serif;';
+        p.textContent = 'Could not load: ' + path + ' -- ' + err.message;
+        body.replaceChildren(p);
+        document.getElementById('loading').classList.remove('visible');
+        document.getElementById('md-view').classList.add('visible');
+      });
+  }
+  window.loadDoc = loadDoc;
+})();
+</script>
+</body>
+</html>
