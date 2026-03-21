@@ -29,12 +29,15 @@
 <meta name="twitter:image" content="https://lancewfisher.com/img/og-image.jpg">
 <meta name="twitter:image:alt" content="Lance W. Fisher portrait">
 <link rel="stylesheet" href="fonts/fonts.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700&display=swap">
 <meta name="theme-color" content="#0a0a0b">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%E2%9A%93</text></svg>">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="ftda/ftda.css?v=20260314">
-<link rel="stylesheet" href="styles.css?v=20260314">
+<link rel="stylesheet" href="ftda/ftda.css?v=20260321">
+<link rel="stylesheet" href="styles.css?v=20260321">
 <!-- Prevent FOUC: apply saved theme before paint -->
 <script>
 (function(){
@@ -87,7 +90,7 @@
 
   <!-- Hero -->
   <section class="hero" id="sec-hero">
-    <img class="hero-script-logo hero-script-dark" src="thumbs/lance-fisher-script.png" alt="Lance Fisher">
+    <img class="hero-script-logo hero-script-dark" src="thumbs/lance-fisher-script-transparent.png" alt="Lance Fisher">
     <img class="hero-script-logo hero-script-light" src="thumbs/lance-fisher-script-transparent.png" alt="Lance Fisher">
     <h1 class="hero-name">
       <span class="line">Lance</span>
@@ -100,7 +103,7 @@
     <div class="hero-domains">
       <a href="https://lancewfisher.com" target="_blank" rel="noopener noreferrer"><span>lancewfisher.com</span></a>
       <a href="https://one-three.net" target="_blank" rel="noopener noreferrer"><span>one-three.net</span></a>
-      <a href="https://fisher13.net" target="_blank" rel="noopener noreferrer"><span>fisher13.net</span></a>
+      <a href="https://fisher13.com" target="_blank" rel="noopener noreferrer"><span>fisher13.com</span></a>
       <a href="https://f1sh3r.net" target="_blank" rel="noopener noreferrer"><span>f1sh3r.net</span></a>
       <a href="https://fishersovereign.com" target="_blank" rel="noopener noreferrer"><span>fishersovereign.com</span></a>
       <a href="https://fishersovereign.systems" target="_blank" rel="noopener noreferrer"><span>fishersovereign.systems</span></a>
@@ -262,7 +265,7 @@
       <div class="now-item">
         <div class="now-dot"></div>
         <div>
-          <div class="now-text">Growing <strong>Fisher One-Three</strong>, a nautical lifestyle apparel brand with 19 original designs and a direct storefront.</div>
+          <div class="now-text">Growing <strong>Fisher One-Three</strong>, a nautical lifestyle apparel brand with 24 original designs and a direct storefront.</div>
           <div class="now-meta">Brand &middot; Apparel &middot; Creative &middot; E-Commerce</div>
         </div>
       </div>
@@ -271,6 +274,13 @@
         <div>
           <div class="now-text">Building <strong>Jump Quest!</strong> &mdash; a 3D platformer game built for his son. Unity + Three.js web version with Xbox controller support.</div>
           <div class="now-meta">Unity &middot; C# &middot; Three.js &middot; WebGL</div>
+        </div>
+      </div>
+      <div class="now-item">
+        <div class="now-dot"></div>
+        <div>
+          <div class="now-text">Designing <strong>Bloodlines</strong>, a dynasty-driven medieval real-time strategy game with nine founding houses, seven interconnected systems, and a 62-section Design Bible spanning 15,000+ lines of design documentation.</div>
+          <div class="now-meta">TypeScript &middot; Canvas 2D &middot; ECS &middot; Deterministic Lockstep</div>
         </div>
       </div>
       <div class="now-item">
@@ -388,124 +398,93 @@
         </div>
       </div>
 
-      <!-- 02 Trading Engine -->
-      <div class="project-card" data-tags="trading">
-        <div class="project-info">
-          <div class="p-number">02</div>
-          <div class="p-title">Multi-Chain Trading Engine</div>
-          <div class="p-desc">Unified execution layer spanning six engines across five exchanges and blockchains. Real-time WebSocket dashboard with autonomous operation, paper-first discipline, and live P&amp;L tracking.</div>
-          <div class="p-tech">TypeScript / ccxt / ethers.js / WebSocket / Claude AI</div>
-          <div class="p-status active">Active</div>
-        </div>
-        <div class="project-thumb-wrap">
-          <canvas data-project="trading"></canvas>
-          <div class="thumb-label">Dashboard</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">Lance built this engine on a simple conviction: speed, discipline, and brutal honesty. Six engines across five exchanges isn't about complexity for its own sake. It's about never being locked into a single venue. Paper-first is non-negotiable. He'd rather miss a trade than lose capital to an untested strategy.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>Six independent engines</em>: Solana (Jupiter/DexScreener), Polymarket CLOB, Binance, Coinbase, Kraken, and ETH DeFi</li>
-                <li>Real-time <em>WebSocket dashboard</em> streaming live market data, positions, and P&amp;L</li>
-                <li><em>Claude AI integration</em> for strategy analysis, market commentary, and continuous learning</li>
-                <li><em>Paper-first discipline</em>: every engine defaults to DRY_RUN; live trading requires explicit promotion</li>
-                <li>Cross-chain order execution with <em>sub-second latency</em> on supported venues</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li>Modular engine architecture: each exchange runs <em>independently</em> with its own config and state</li>
-                <li>Unified <em>ccxt abstraction</em> for centralized exchanges with custom adapters for DeFi</li>
-                <li><em>ethers.js</em> for on-chain operations including Polymarket CLOB and Uniswap/1inch routing</li>
-                <li>Event-driven design with <em>WebSocket pub/sub</em> for real-time UI updates</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">6</div><div class="ds-label">Engines</div></div>
-              <div class="detail-stat"><div class="ds-value">5</div><div class="ds-label">Exchanges</div></div>
-              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Chains</div></div>
-              <div class="detail-stat"><div class="ds-value">24/7</div><div class="ds-label">Uptime</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 03 AI Trading Desk -->
-      <div class="project-card" data-tags="trading">
-        <div class="project-info">
-          <div class="p-number">03</div>
-          <div class="p-title">Autonomous Trading Desk</div>
-          <div class="p-desc">Multi-agent AI system with six specialized agents orchestrating four independent trading strategies. Rigorous backtesting and risk gates required before any strategy goes live.</div>
-          <div class="p-tech">Python / asyncio / NumPy / YAML / EventBus</div>
-          <div class="p-status active">Active</div>
-        </div>
-        <div class="project-thumb-wrap">
-          <canvas data-project="profitdesk"></canvas>
-          <div class="thumb-label">Agents</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">This is where AI stops being a buzzword and starts being accountable. Six agents, each with a specific job, each required to justify its decisions. The promotion gates are intentionally harsh. No strategy goes live without proving itself over weeks of paper trading. Lance built this because he doesn't trust black boxes, and neither should anyone else.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>Six autonomous agents</em>:Portfolio Manager, Researcher, Backtester, Risk Manager, Execution Trader, Ops Monitor</li>
-                <li>Four independent strategies: <em>Momentum</em> (EMA crossover), <em>Mean Reversion</em> (Bollinger Bands + RSI), <em>Breakout</em> (Donchian), <em>Whale Flow</em></li>
-                <li><em>Promotion gates</em> before live: PF &ge; 1.35, max drawdown &le; 6%, 80+ trades, 10+ days of paper results</li>
-                <li>Three operating modes: <em>BACKTEST</em>, <em>PAPER</em> (default), and <em>LIVE</em>: disciplined pipeline</li>
-                <li>Wraps the Multi-Chain Trading Engine for <em>end-to-end autonomous execution</em></li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li><em>EventBus pub/sub</em> architecture: agents communicate asynchronously via typed events</li>
-                <li>Each agent runs as an <em>independent asyncio task</em> with its own state and decision loop</li>
-                <li>YAML-driven configuration for <em>risk limits</em>, universe selection, and strategy parameters</li>
-                <li>Comprehensive <em>journal and audit trail</em> for every trade decision and agent action</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">6</div><div class="ds-label">Agents</div></div>
-              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Strategies</div></div>
-              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Modes</div></div>
-              <div class="detail-stat"><div class="ds-value">&le;6%</div><div class="ds-label">Max Drawdown</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 04 RTS Game -->
+      <!-- 04 Bloodlines — Medieval Real-Time Strategy Game (In Development) -->
       <div class="project-card" data-tags="games">
         <div class="project-info">
-          <div class="p-number">04</div>
+          <div class="p-number">02</div>
           <div class="p-title">Bloodlines</div>
-          <div class="p-desc">Massively large-scale medieval RTS built on Command and Conquer style clarity, with dynasty rule, territorial control plus loyalty, and long-form matches that can run 2 to 10+ hours.</div>
+          <div class="p-desc">Dynasty-driven medieval real-time strategy game where faith, sacrifice, and bloodline shape the fate of civilizations. Nine founding houses. Seven interconnected systems. Four ancient faith covenants. Matches designed for 2 to 10+ hours of deep strategic play.</div>
           <div class="p-tech">TypeScript / Canvas 2D / Vite / ECS / A* Pathfinding / Deterministic Lockstep / Fixed-Point Sim</div>
           <div class="p-status active">In Development</div>
         </div>
         <div class="project-thumb-wrap">
-          <canvas data-project="rts"></canvas>
-          <div class="thumb-label">Gameplay</div>
+          <div class="bloodlines-thumb-composite">
+            <div class="bl-viewer-bar">
+              <div class="bl-sigil-mark">B</div>
+              <div class="bl-brand-text">
+                <div class="bl-brand-title">Bloodlines</div>
+                <div class="bl-brand-sub">Design Archive &mdash; Session 9</div>
+              </div>
+              <div class="bl-stats">
+                <div class="bl-stat"><span class="bl-stat-val">62</span><span class="bl-stat-label">Sections</span></div>
+                <div class="bl-stat-div"></div>
+                <div class="bl-stat"><span class="bl-stat-val">15k+</span><span class="bl-stat-label">Lines</span></div>
+                <div class="bl-stat-div"></div>
+                <div class="bl-stat"><span class="bl-stat-val">9</span><span class="bl-stat-label">Houses</span></div>
+                <div class="bl-stat-div"></div>
+                <div class="bl-stat"><span class="bl-stat-val">7</span><span class="bl-stat-label">Systems</span></div>
+              </div>
+              <div class="bl-phase">Phase 1 Complete</div>
+            </div>
+            <div class="bl-sidebar-strip">
+              <div class="bl-nav-section">
+                <div class="bl-nav-header">Project</div>
+                <div class="bl-nav-item active">&#x2B21; Overview</div>
+                <div class="bl-nav-item">&#x25C8; Project Status</div>
+                <div class="bl-nav-item">&#x25C8; Canonical Rules</div>
+              </div>
+              <div class="bl-nav-section">
+                <div class="bl-nav-header">Design Bible</div>
+                <div class="bl-nav-item">&#x1F4D6; Complete Bible v3.0</div>
+                <div class="bl-nav-item">&#x1F9E0; Master Memory</div>
+              </div>
+              <div class="bl-nav-section">
+                <div class="bl-nav-header">Core Systems</div>
+                <div class="bl-nav-item">&#x2699; Conviction</div>
+                <div class="bl-nav-item">&#x2699; Faith</div>
+                <div class="bl-nav-item">&#x2699; Population</div>
+                <div class="bl-nav-item">&#x2699; Resource</div>
+                <div class="bl-nav-item">&#x2699; Territory</div>
+                <div class="bl-nav-item">&#x2699; Dynastic</div>
+                <div class="bl-nav-item">&#x2699; Born of Sacrifice</div>
+              </div>
+              <div class="bl-nav-section">
+                <div class="bl-nav-header">World</div>
+                <div class="bl-nav-item">&#x1F30D; Four Ancient Faiths</div>
+                <div class="bl-nav-item">&#x1F30D; Timeline</div>
+              </div>
+            </div>
+            <div class="bl-mockup-layer">
+              <img class="bl-mockup-img" src="thumbs/bloodlines-mockup.png" alt="Bloodlines concept mockup">
+            </div>
+            <div class="bl-content-overlay">
+              <div class="bl-overview-title">Bloodlines</div>
+              <div class="bl-overview-tagline">"What it costs to build something that outlasts you."</div>
+              <div class="bl-mini-stats">
+                <div class="bl-mini-stat"><div class="bl-mini-stat-val">2,813</div><div class="bl-mini-stat-label">Bible Lines</div></div>
+                <div class="bl-mini-stat"><div class="bl-mini-stat-val">9</div><div class="bl-mini-stat-label">Houses</div></div>
+                <div class="bl-mini-stat"><div class="bl-mini-stat-val">28+</div><div class="bl-mini-stat-label">Events</div></div>
+                <div class="bl-mini-stat"><div class="bl-mini-stat-val">6</div><div class="bl-mini-stat-label">Victory Paths</div></div>
+              </div>
+            </div>
+            <div class="bl-mockup-label">Concept &middot; Pre-Alpha</div>
+          </div>
+          <div class="thumb-label">Design Archive</div>
         </div>
         <div class="project-detail">
           <div class="detail-inner">
-            <p class="p-opinion">Bloodlines is built around dynastic rule, not a static faction pick. You play a ruling bloodline that expands across a massive randomized world, governs territory, manages loyalty, and escalates into late-game divergence through economy, warfare, faith, and prestige. The combat layer stays pure Command and Conquer, clean counters, clear unit roles, and fast readability, even under 6 to 10 hour stress tests.</p>
+            <p class="p-opinion">Bloodlines is not a quick skirmish game. It is a civilization simulator built around dynastic rule, where your ruling bloodline expands across a massive procedurally generated world. You govern territory through loyalty and military presence, shape your civilization through four ancient faith covenants, and escalate into late-game divergence through economy, warfare, prestige, or divine right. The combat layer stays pure Command and Conquer: clean counters, readable unit roles, and fast engagements, even under 6 to 10 hour stress tests.</p>
             <div class="detail-col">
               <h4>Highlights</h4>
               <ul>
-                <li><em>Command and Conquer style medieval RTS combat</em>: clear counters, readable roles, fast engagements</li>
-                <li><em>Five-level advancement</em> with a major irreversible divergence at Level 4 that unlocks grand endgame structures</li>
-                <li><em>Resources</em>: gold, food, water, stone, with water as a hard survival requirement for population stability</li>
-                <li><em>Housing</em> replaces the classic RTS power constraint: growth requires housing to sustain population and army scale</li>
-                <li><em>Single pooled population</em> model driven by food and water, with loyalty affecting recruitment, taxes, and sabotage risk</li>
-                <li><em>Bloodline system</em> with 20 active members (extra members dormant), specialization chosen at birth, training paths, capture and marriage politics</li>
-                <li><em>Four ancient Faith covenants</em> chosen at the end of Level 1 after early exposure: Old Light, Blood Dominion, The Order, The Wild</li>
-                <li><em>Trueborn city</em> neutral-zone trade hub with contribution history and late-game coalition response as an anti-rush world stabilizer</li>
-                <li><em>Born of Sacrifice</em>: elite army forging through sacrifice, with player naming or random name generation</li>
+                <li><em>Nine founding houses</em>: Trueborn, Highborne, Ironmark, Goldgrave, Stonehelm, Westland, Hartvale, Whitehall, Oldcrest, each with unique units, squad traits, and strategic identity</li>
+                <li><em>Seven interconnected systems</em>: Conviction, Faith, Population, Resource, Territory, Dynastic, Born of Sacrifice</li>
+                <li><em>Four ancient faith covenants</em>: Old Light, Blood Dominion, The Order, The Wild, each with dual light/dark doctrine paths</li>
+                <li><em>Conviction axis</em>: moral tracking with amplifying penalties, where repeated dark actions compound consequences</li>
+                <li><em>28+ political events</em>: named world events with triggers, effects, counter-play, and resolution mechanics</li>
+                <li><em>Born of Sacrifice</em>: elite army forging through genuine sacrifice, the moral core of the game</li>
+                <li><em>Six victory paths</em>: Military Conquest, Economic Dominance, Dynastic Prestige, Faith Divine Right, Alliance Victory, Trueborn Rise</li>
+                <li><em>62-section Design Bible</em>: complete design foundation across all systems, houses, and mechanics</li>
               </ul>
             </div>
             <div class="detail-col">
@@ -516,16 +495,51 @@
                 <li><em>Seeded RNG</em> for deterministic outcomes: same inputs always produce the same state</li>
                 <li>ECS-inspired architecture: entities, components, systems cleanly separated</li>
                 <li><em>A* pathfinding</em> with terrain costs and collision avoidance for large-scale unit movement</li>
-                <li>Isometric projection: tile W=64, H=32, <em>elevation offset 16px</em> per level</li>
-                <li>Systems support long matches: 2 to 10+ hours, large maps, AI kingdoms, and minor tribes</li>
-                <li>RTS layer integrates dynasty layer: territory plus loyalty, bloodline roles, faith selection at end of Level 1, Level 4 divergence</li>
+                <li>Isometric projection: tile W=64, H=32, elevation offset 16px per level</li>
+                <li><em>Procedural world generation</em>: biome distribution, resource placement, terrain features</li>
+                <li><em>15,000+ lines</em> of design documentation across 20 structured directories</li>
               </ul>
             </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">20</div><div class="ds-label">TPS Sim Rate</div></div>
-              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Dependencies</div></div>
-              <div class="detail-stat"><div class="ds-value">2.5D</div><div class="ds-label">Isometric</div></div>
-              <div class="detail-stat"><div class="ds-value">Det.</div><div class="ds-label">Lockstep</div></div>
+            <div class="bl-detail-links">
+              <a href="bloodlines/" class="brand-link-primary" target="_blank">Read the Design Bible &rarr;</a>
+            </div>
+            <div class="bl-detail-footer">
+              <div>
+                <div class="bl-houses-header">The Nine Houses</div>
+                <div class="bl-houses-strip">
+                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#e8dcc8;"></div><span class="bl-house-name">Trueborn</span></div>
+                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#c9a84c;"></div><span class="bl-house-name">Highborne</span></div>
+                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#c94b1a;"></div><span class="bl-house-name">Ironmark</span></div>
+                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#d4a843;"></div><span class="bl-house-name">Goldgrave</span></div>
+                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#8a8a8a;"></div><span class="bl-house-name">Stonehelm</span></div>
+                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#4a7a6a;"></div><span class="bl-house-name">Westland</span></div>
+                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#5a8a4a;"></div><span class="bl-house-name">Hartvale</span></div>
+                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#b8c8d8;"></div><span class="bl-house-name">Whitehall</span></div>
+                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#7a6a5a;"></div><span class="bl-house-name">Oldcrest</span></div>
+                </div>
+              </div>
+              <div class="bl-scope-row">
+                <div class="bl-scope-item">
+                  <div class="bl-scope-label">Design Bible</div>
+                  <div class="bl-scope-bar-track"><div class="bl-scope-bar-fill" style="width:100%; background:linear-gradient(90deg, var(--gold-1776), rgba(201,168,76,0.3));"></div></div>
+                  <div class="bl-scope-val">62 sections &middot; 2,813 lines</div>
+                </div>
+                <div class="bl-scope-item">
+                  <div class="bl-scope-label">Core Systems</div>
+                  <div class="bl-scope-bar-track"><div class="bl-scope-bar-fill" style="width:100%; background:linear-gradient(90deg, #c94b1a, rgba(201,75,26,0.3));"></div></div>
+                  <div class="bl-scope-val">7 systems &middot; all interconnected</div>
+                </div>
+                <div class="bl-scope-item">
+                  <div class="bl-scope-label">World Events</div>
+                  <div class="bl-scope-bar-track"><div class="bl-scope-bar-fill" style="width:85%; background:linear-gradient(90deg, rgba(var(--fg),0.5), rgba(var(--fg),0.1));"></div></div>
+                  <div class="bl-scope-val">28+ political events &middot; 6 victory paths</div>
+                </div>
+                <div class="bl-scope-item">
+                  <div class="bl-scope-label">Documentation</div>
+                  <div class="bl-scope-bar-track"><div class="bl-scope-bar-fill" style="width:95%; background:linear-gradient(90deg, rgba(var(--fg),0.4), rgba(var(--fg),0.1));"></div></div>
+                  <div class="bl-scope-val">15,000+ lines &middot; 20 directories</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -534,7 +548,7 @@
       <!-- 05 Platformer -->
       <div class="project-card" data-tags="games">
         <div class="project-info">
-          <div class="p-number">05</div>
+          <div class="p-number">03</div>
           <div class="p-title">Jump Quest!</div>
           <div class="p-desc">Fully realized 3D platformer built for his son. Xbox controller support, XP leveling, skill trees, cosmetics shop, and a procedural Level Draft Wizard. Designed for children ages 4&ndash;10.</div>
           <div class="p-tech">Unity / C# / Three.js / Xbox Controller</div>
@@ -577,10 +591,254 @@
         </div>
       </div>
 
-      <!-- 06 E2EE Messenger -->
+      <!-- 02 Trading Engine -->
+      <div class="project-card" data-tags="trading">
+        <div class="project-info">
+          <div class="p-number">04</div>
+          <div class="p-title">Multi-Chain Trading Engine</div>
+          <div class="p-desc">Unified execution layer spanning six engines across five exchanges and blockchains. Real-time WebSocket dashboard with autonomous operation, paper-first discipline, and live P&amp;L tracking.</div>
+          <div class="p-tech">TypeScript / ccxt / ethers.js / WebSocket / Claude AI</div>
+          <div class="p-status active">Active</div>
+        </div>
+        <div class="project-thumb-wrap">
+          <canvas data-project="trading"></canvas>
+          <div class="thumb-label">Dashboard</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <p class="p-opinion">Lance built this engine on a simple conviction: speed, discipline, and brutal honesty. Six engines across five exchanges isn't about complexity for its own sake. It's about never being locked into a single venue. Paper-first is non-negotiable. He'd rather miss a trade than lose capital to an untested strategy.</p>
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>Six independent engines</em>: Solana (Jupiter/DexScreener), Polymarket CLOB, Binance, Coinbase, Kraken, and ETH DeFi</li>
+                <li>Real-time <em>WebSocket dashboard</em> streaming live market data, positions, and P&amp;L</li>
+                <li><em>Claude AI integration</em> for strategy analysis, market commentary, and continuous learning</li>
+                <li><em>Paper-first discipline</em>: every engine defaults to DRY_RUN; live trading requires explicit promotion</li>
+                <li>Cross-chain order execution with <em>sub-second latency</em> on supported venues</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li>Modular engine architecture: each exchange runs <em>independently</em> with its own config and state</li>
+                <li>Unified <em>ccxt abstraction</em> for centralized exchanges with custom adapters for DeFi</li>
+                <li><em>ethers.js</em> for on-chain operations including Polymarket CLOB and Uniswap/1inch routing</li>
+                <li>Event-driven design with <em>WebSocket pub/sub</em> for real-time UI updates</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">6</div><div class="ds-label">Engines</div></div>
+              <div class="detail-stat"><div class="ds-value">5</div><div class="ds-label">Exchanges</div></div>
+              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Chains</div></div>
+              <div class="detail-stat"><div class="ds-value">24/7</div><div class="ds-label">Uptime</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10 Fisher Sovereign Hub -->
       <div class="project-card" data-tags="tools">
         <div class="project-info">
+          <div class="p-number">05</div>
+          <div class="p-title">Fisher Sovereign Hub</div>
+          <div class="p-desc">Single pane of glass for every project in the portfolio. Live git status, sync tracking, manifest-driven indexing, and automatic GitHub sync every five minutes. The operational backbone that keeps 20+ projects organized and current.</div>
+          <div class="p-tech">Python / PowerShell / Git / JSON Manifest</div>
+          <div class="p-status active">Active</div>
+        </div>
+        <div class="project-thumb-wrap">
+          <canvas data-project="projecthub"></canvas>
+          <div class="thumb-label">Dashboard</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <p class="p-opinion">This is the project that watches all the other projects. Lance got tired of context-switching between repos, forgetting what he pushed from his phone, and losing track of which project needed attention. ProjectHub solves it by treating the entire workspace as a single system. Every repo, every sync, every status check flows through one place.</p>
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>Automatic GitHub sync</em> every 5 minutes pulls phone changes to PC instantly</li>
+                <li><em>Manifest-driven index</em> with status, tags, entry points, and last-touched dates</li>
+                <li>Operational dashboard showing <em>dirty/clean/ahead/behind</em> status for every repo</li>
+                <li>One-click <em>sync-now</em> for manual pulls with verbose logging</li>
+                <li>Full <em>runbook</em> documenting daily workflow, conflict resolution, and recovery</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li><em>PowerShell sync engine</em> with ff-only pulls, dirty-repo protection, and divergence detection</li>
+                <li>Windows <em>Scheduled Task</em> for unattended 5-minute sync cycles</li>
+                <li>JSON config for <em>per-repo control</em>: enable/disable, push policy, pull strategy</li>
+                <li>Structured <em>sync logs</em> with timestamps, actions taken, and error tracking</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">19</div><div class="ds-label">Repos</div></div>
+              <div class="detail-stat"><div class="ds-value">5m</div><div class="ds-label">Sync Interval</div></div>
+              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Cloud Deps</div></div>
+              <div class="detail-stat"><div class="ds-value">24/7</div><div class="ds-label">Uptime</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fisher One-Three: Nautical apparel brand (links to brand site) -->
+      <div class="project-card" data-tags="apps" onclick="window.open('brand/brand.html','_blank')" style="cursor:pointer;">
+        <div class="project-info">
           <div class="p-number">06</div>
+          <div class="p-title">Fisher One-Three</div>
+          <div class="p-desc">Nautical-themed apparel and lifestyle brand. 24 original limited-run designs celebrating the spirit of coastal living and maritime adventure. One part land, three parts sea. Full brand website with integrated storefront.</div>
+          <div class="p-tech">Brand Design / Apparel / E-Commerce / HTML / CSS / JavaScript</div>
+          <div class="p-status active">Active | Visit Site &rarr;</div>
+        </div>
+        <div class="project-thumb-wrap">
+          <div class="ot-thumb-composite">
+            <img class="ot-hero-bg" src="thumbs/ot-golden-anchor.jpg" alt="Fisher One-Three golden anchor" loading="lazy">
+            <div class="ot-hero-overlay"></div>
+            <div class="ot-brand-mark">
+              <div class="ot-brand-name">One-Three</div>
+              <div class="ot-brand-tagline">One part land, three parts sea</div>
+            </div>
+            <div class="ot-design-strip">
+              <img src="thumbs/ot-skull.jpg" alt="Design" loading="lazy">
+              <img src="thumbs/ot-mountain-moon.jpg" alt="Design" loading="lazy">
+              <img src="thumbs/ot-classic-anchor.jpg" alt="Design" loading="lazy">
+              <img src="thumbs/ot-eagle-13.jpg" alt="Design" loading="lazy">
+            </div>
+            <div class="ot-strip-label">24 Original Designs</div>
+          </div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <p class="p-opinion">Fisher One-Three started as a sketch on a napkin and became a full brand with its own ethos, website, and storefront. Every design is original, every color choice deliberate, every run limited. The name encodes the Fisher surname and the maritime ratio that drives everything: one part land, three parts sea. It is wearable art for people who dream of the ocean even when they are nowhere near it.</p>
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>24 original founder designs</em>: every graphic hand-crafted from concept to final print</li>
+                <li><em>Full brand website</em> with collection gallery, category filters, brand story, and integrated store</li>
+                <li><em>Size-inclusive</em> range from XS to 5XL, because great style should be accessible to all</li>
+                <li><em>$1 per shirt donated</em> to ocean and waterway conservation efforts worldwide</li>
+                <li>Full brand identity system: <em>logo suite, typography, color palette</em>, and brand guidelines</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Brand Architecture</h4>
+              <ul>
+                <li><em>Design collections</em>: nautical emblems, coastal scenes, marine life, maritime adventure themes</li>
+                <li><em>Integrated storefront</em> with cart, sizing, and direct purchase flow built from scratch</li>
+                <li>Multi-domain presence: <em>fisher13.com, f1sh3r.net, one-three.net</em></li>
+                <li>Social channels on <em>X, Facebook, Instagram</em> with cohesive brand voice and visual identity</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">24</div><div class="ds-label">Designs</div></div>
+              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Domains</div></div>
+              <div class="detail-stat"><div class="ds-value">1:3</div><div class="ds-label">Land : Sea</div></div>
+              <div class="detail-stat"><div class="ds-value">5XL</div><div class="ds-label">Max Size</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NoCo App Studio: Custom apps for Northern Colorado businesses -->
+      <div class="project-card" data-tags="apps" onclick="window.open('noco/index.html','_blank')" style="cursor:pointer;">
+        <div class="project-info">
+          <div class="p-number">07</div>
+          <div class="p-title">NoCo App Studio</div>
+          <div class="p-desc">Custom mobile app development studio for Northern Colorado businesses. 10 fully interactive live demos built for real med spas, salons, fitness studios, pet groomers, and chiropractors. Online booking, wallets, loyalty, push notifications, and branded mobile apps.</div>
+          <div class="p-tech">HTML / CSS / JavaScript / React Native / NestJS / Stripe</div>
+          <div class="p-status active">Active | See Demos &rarr;</div>
+        </div>
+        <div class="project-thumb-wrap">
+          <img src="thumbs/thumb-noco.jpg" alt="NoCo App Studio demos" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+          <div class="thumb-label">Demos</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <p class="p-opinion">Every local business deserves a branded mobile app. Not a Vagaro page. Not a Booksy listing. Their own app, with their name, their colors, on their clients' home screens. NoCo App Studio is the vehicle for that vision. Lance built 10 fully interactive phone mockup demos for real businesses across Northern Colorado, each with their actual services, branding, staff, and pricing. The pitch is simple: your clients will book from your app, not a third-party marketplace.</p>
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>10 live interactive demos</em> built for real NoCo businesses across 6 verticals</li>
+                <li><em>Phone mockup simulator</em> with real app UI, tabbed navigation, and business-specific branding</li>
+                <li><em>Category filters</em>: Med Spas, Nail Salons, Hair &amp; Barber, Fitness, Pet Grooming, Chiropractic</li>
+                <li><em>Transparent pricing</em>: $2,500 setup + $199/mo starter, scaling to enterprise custom</li>
+                <li>Every demo shows <em>real services, staff, scheduling</em>, and payment processing</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li><em>Zero-dependency frontend</em>: pure HTML/CSS/JS with modular business data architecture</li>
+                <li><em>35KB data layer</em> (businesses.js) powering all 10 business configurations</li>
+                <li>Interactive phone mockup: <em>300x600px viewport</em> with notch, home indicator, tab bar</li>
+                <li>Production apps built on <em>React Native + NestJS + Stripe + PostgreSQL</em> stack</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">10</div><div class="ds-label">Businesses</div></div>
+              <div class="detail-stat"><div class="ds-value">6</div><div class="ds-label">Verticals</div></div>
+              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Cities</div></div>
+              <div class="detail-stat"><div class="ds-value">$199</div><div class="ds-label">Per Month</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="portfolio-expand-btn" id="portfolioExpandBtn" onclick="togglePortfolio()">
+        View Full Portfolio (8 more projects) <span class="expand-arrow">&#9660;</span>
+      </button>
+
+      <div class="portfolio-remaining" id="portfolioRemaining">
+
+      <!-- Autonomous Trading Desk -->
+      <div class="project-card" data-tags="trading">
+        <div class="project-info">
+          <div class="p-number">08</div>
+          <div class="p-title">Autonomous Trading Desk</div>
+          <div class="p-desc">Multi-agent AI system with six specialized agents orchestrating four independent trading strategies. Rigorous backtesting and risk gates required before any strategy goes live.</div>
+          <div class="p-tech">Python / asyncio / NumPy / YAML / EventBus</div>
+          <div class="p-status active">Active</div>
+        </div>
+        <div class="project-thumb-wrap">
+          <canvas data-project="profitdesk"></canvas>
+          <div class="thumb-label">Agents</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <p class="p-opinion">This is where AI stops being a buzzword and starts being accountable. Six agents, each with a specific job, each required to justify its decisions. The promotion gates are intentionally harsh. No strategy goes live without proving itself over weeks of paper trading. Lance built this because he doesn't trust black boxes, and neither should anyone else.</p>
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>Six autonomous agents</em>:Portfolio Manager, Researcher, Backtester, Risk Manager, Execution Trader, Ops Monitor</li>
+                <li>Four independent strategies: <em>Momentum</em> (EMA crossover), <em>Mean Reversion</em> (Bollinger Bands + RSI), <em>Breakout</em> (Donchian), <em>Whale Flow</em></li>
+                <li><em>Promotion gates</em> before live: PF &ge; 1.35, max drawdown &le; 6%, 80+ trades, 10+ days of paper results</li>
+                <li>Three operating modes: <em>BACKTEST</em>, <em>PAPER</em> (default), and <em>LIVE</em>: disciplined pipeline</li>
+                <li>Wraps the Multi-Chain Trading Engine for <em>end-to-end autonomous execution</em></li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li><em>EventBus pub/sub</em> architecture: agents communicate asynchronously via typed events</li>
+                <li>Each agent runs as an <em>independent asyncio task</em> with its own state and decision loop</li>
+                <li>YAML-driven configuration for <em>risk limits</em>, universe selection, and strategy parameters</li>
+                <li>Comprehensive <em>journal and audit trail</em> for every trade decision and agent action</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">6</div><div class="ds-label">Agents</div></div>
+              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Strategies</div></div>
+              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Modes</div></div>
+              <div class="detail-stat"><div class="ds-value">&le;6%</div><div class="ds-label">Max Drawdown</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sovereign Signal E2EE Messenger -->
+      <div class="project-card" data-tags="tools">
+        <div class="project-info">
+          <div class="p-number">09</div>
           <div class="p-title">Sovereign Signal</div>
           <div class="p-desc">E2EE peer-to-peer messaging platform with Signal-grade cryptography. X3DH key exchange, Double Ratchet forward secrecy, and passwordless WebAuthn vault.</div>
           <div class="p-tech">TypeScript / Next.js / libsodium / WebAuthn / Vitest</div>
@@ -622,16 +880,100 @@
         </div>
       </div>
 
-      <button class="portfolio-expand-btn" id="portfolioExpandBtn" onclick="togglePortfolio()">
-        View Full Portfolio (9 more projects) <span class="expand-arrow">&#9660;</span>
-      </button>
+      <!-- Home Hub -->
+      <div class="project-card" data-tags="tools">
+        <div class="project-info">
+          <div class="p-number">10</div>
+          <div class="p-title">Home Hub</div>
+          <div class="p-desc">Local-first home automation and network security dashboard with device discovery, camera feeds, network traffic monitoring, and real-time alerts. Full-stack with force-directed network visualization and WebSocket streaming.</div>
+          <div class="p-tech">TypeScript / React 19 / Fastify / SQLite / WebSocket</div>
+          <div class="p-status active">Active</div>
+        </div>
+        <div class="project-thumb-wrap">
+          <canvas data-project="homehub"></canvas>
+          <div class="thumb-label">Dashboard</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <p class="p-opinion">A man's home is his castle, and he should know exactly what's happening inside its walls and on its network. Lance built Home Hub because he doesn't trust cloud cameras or third-party monitoring. Every byte of data stays local in SQLite, every camera feed streams on his LAN, and every unknown device that joins his network triggers an alert. Sovereignty starts at home.</p>
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>Device discovery</em> via ARP, ping sweep, and nmap:auto-detects every device on the LAN with vendor OUI lookup</li>
+                <li><em>Camera management</em> supporting RTSP, HLS, and snapshot feeds with health monitoring and Eufy integration</li>
+                <li><em>Network traffic monitoring</em> with pluggable collectors (SNMP, Pcap, Router API) and per-device bandwidth tracking</li>
+                <li>Real-time <em>alerting engine</em>: new devices, camera offline, bandwidth thresholds, quiet hours, webhook notifications</li>
+                <li><em>Force-directed graph</em> visualization of network topology with interactive device management and CSV export</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li><em>React 19 + Vite</em> frontend with Tailwind CSS, Recharts, and React Force Graph 2D</li>
+                <li><em>Fastify 5</em> backend with SQLite persistence, Winston logging, and cron-scheduled discovery</li>
+                <li><em>WebSocket + polling hybrid</em> for real-time UI updates across all dashboards</li>
+                <li><em>Local-first</em>: all data stored in SQLite, LAN-accessible on port 3210, zero cloud dependency</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">5</div><div class="ds-label">Pages</div></div>
+              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Alert Types</div></div>
+              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Collectors</div></div>
+              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Cloud Deps</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <div class="portfolio-remaining" id="portfolioRemaining">
+      <!-- Market Dashboard: Real-time trading terminal -->
+      <div class="project-card" data-tags="trading">
+        <div class="project-info">
+          <div class="p-number">11</div>
+          <div class="p-title">Market Dashboard</div>
+          <div class="p-desc">Real-time multi-market trading terminal. Canvas-rendered candlestick charts, order book visualization, trade tape, configurable watchlist. Python server proxies live exchange data. Zero dependencies.</div>
+          <div class="p-tech">Python / Canvas 2D / WebSocket / Zero Dependencies</div>
+          <div class="p-status active">Active</div>
+          <a class="p-demo-link" href="dashboard/" target="_blank" rel="noopener noreferrer"><span class="demo-icon">&#9654;</span> Live Demo</a>
+        </div>
+        <div class="project-thumb-wrap">
+          <img src="thumbs/thumb-dashboard.jpg" alt="Market Dashboard terminal" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+          <div class="thumb-label">Terminal</div>
+        </div>
+        <div class="project-detail">
+          <div class="detail-inner">
+            <p class="p-opinion">Every trader needs a terminal they can trust, and trusting something means building it yourself. This dashboard pulls live data from crypto.com Exchange API through a Python proxy and renders it all on raw Canvas 2D. Candlestick charts, order book depth, live trade tape, multi-market watchlist. No charting library. No framework. Every pixel is mine.</p>
+            <div class="detail-col">
+              <h4>Highlights</h4>
+              <ul>
+                <li><em>Canvas-rendered candlestick charts</em> with OHLCV data, volume bars, and crosshair tooltip</li>
+                <li><em>Order book visualization</em> with depth bars, spread indicator, and mid-price</li>
+                <li><em>Live trade tape</em> streaming buys and sells with color-coded direction</li>
+                <li><em>Multi-market watchlist</em> with configurable instruments and timeframes</li>
+              </ul>
+            </div>
+            <div class="detail-col">
+              <h4>Architecture</h4>
+              <ul>
+                <li><em>Python proxy server</em> handles exchange API auth, rate limiting, and WebSocket relay</li>
+                <li><em>Zero-dependency frontend</em>: vanilla HTML/CSS/JS with Canvas 2D rendering</li>
+                <li><em>60fps render loop</em> for smooth chart updates and interactive crosshair</li>
+                <li>Designed to feed into the <em>autonomous trading desk</em> as visual monitoring layer</li>
+              </ul>
+            </div>
+            <div class="detail-status-row">
+              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Dependencies</div></div>
+              <div class="detail-stat"><div class="ds-value">60</div><div class="ds-label">FPS</div></div>
+              <div class="detail-stat"><div class="ds-value">Live</div><div class="ds-label">Data Feed</div></div>
+              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Views</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- 07 Polymarket Bot -->
       <div class="project-card" data-tags="trading">
         <div class="project-info">
-          <div class="p-number">07</div>
+          <div class="p-number">12</div>
           <div class="p-title">Prediction Market Assistant</div>
           <div class="p-desc">Real-time technical analysis assistant for Polymarket BTC 15-minute markets. Chainlink and Binance price feeds, full indicator suite, and an autonomous copy-trading bot.</div>
           <div class="p-tech">JavaScript / ethers.js / Chainlink / WebSocket</div>
@@ -676,7 +1018,7 @@
       <!-- 08 X Bookmark Bot -->
       <div class="project-card" data-tags="tools">
         <div class="project-info">
-          <div class="p-number">08</div>
+          <div class="p-number">13</div>
           <div class="p-title">X Bookmark Bot</div>
           <div class="p-desc">Local-first automation tool that transforms saved X/Twitter bookmarks into actionable improvements for existing projects. Intelligent codebase scanning, idea extraction, and approval-gated implementation with zero external dependencies.</div>
           <div class="p-tech">Python / Zero Dependencies / File-Based Agents / CLI</div>
@@ -718,100 +1060,10 @@
         </div>
       </div>
 
-      <!-- 09 Home Hub -->
-      <div class="project-card" data-tags="tools">
-        <div class="project-info">
-          <div class="p-number">09</div>
-          <div class="p-title">Home Hub</div>
-          <div class="p-desc">Local-first home automation and network security dashboard with device discovery, camera feeds, network traffic monitoring, and real-time alerts. Full-stack with force-directed network visualization and WebSocket streaming.</div>
-          <div class="p-tech">TypeScript / React 19 / Fastify / SQLite / WebSocket</div>
-          <div class="p-status active">Active</div>
-        </div>
-        <div class="project-thumb-wrap">
-          <canvas data-project="homehub"></canvas>
-          <div class="thumb-label">Dashboard</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">A man's home is his castle, and he should know exactly what's happening inside its walls and on its network. Lance built Home Hub because he doesn't trust cloud cameras or third-party monitoring. Every byte of data stays local in SQLite, every camera feed streams on his LAN, and every unknown device that joins his network triggers an alert. Sovereignty starts at home.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>Device discovery</em> via ARP, ping sweep, and nmap:auto-detects every device on the LAN with vendor OUI lookup</li>
-                <li><em>Camera management</em> supporting RTSP, HLS, and snapshot feeds with health monitoring and Eufy integration</li>
-                <li><em>Network traffic monitoring</em> with pluggable collectors (SNMP, Pcap, Router API) and per-device bandwidth tracking</li>
-                <li>Real-time <em>alerting engine</em>: new devices, camera offline, bandwidth thresholds, quiet hours, webhook notifications</li>
-                <li><em>Force-directed graph</em> visualization of network topology with interactive device management and CSV export</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li><em>React 19 + Vite</em> frontend with Tailwind CSS, Recharts, and React Force Graph 2D</li>
-                <li><em>Fastify 5</em> backend with SQLite persistence, Winston logging, and cron-scheduled discovery</li>
-                <li><em>WebSocket + polling hybrid</em> for real-time UI updates across all dashboards</li>
-                <li><em>Local-first</em>: all data stored in SQLite, LAN-accessible on port 3210, zero cloud dependency</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">5</div><div class="ds-label">Pages</div></div>
-              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Alert Types</div></div>
-              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Collectors</div></div>
-              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Cloud Deps</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 10 ProjectHub -->
-      <div class="project-card" data-tags="tools">
-        <div class="project-info">
-          <div class="p-number">10</div>
-          <div class="p-title">ProjectHub</div>
-          <div class="p-desc">Single pane of glass for every project in the portfolio. Live git status, sync tracking, manifest-driven indexing, and automatic GitHub sync every five minutes. The operational backbone that keeps 20+ projects organized and current.</div>
-          <div class="p-tech">Python / PowerShell / Git / JSON Manifest</div>
-          <div class="p-status active">Active</div>
-        </div>
-        <div class="project-thumb-wrap">
-          <canvas data-project="projecthub"></canvas>
-          <div class="thumb-label">Dashboard</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">This is the project that watches all the other projects. Lance got tired of context-switching between repos, forgetting what he pushed from his phone, and losing track of which project needed attention. ProjectHub solves it by treating the entire workspace as a single system. Every repo, every sync, every status check flows through one place.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>Automatic GitHub sync</em> every 5 minutes pulls phone changes to PC instantly</li>
-                <li><em>Manifest-driven index</em> with status, tags, entry points, and last-touched dates</li>
-                <li>Operational dashboard showing <em>dirty/clean/ahead/behind</em> status for every repo</li>
-                <li>One-click <em>sync-now</em> for manual pulls with verbose logging</li>
-                <li>Full <em>runbook</em> documenting daily workflow, conflict resolution, and recovery</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li><em>PowerShell sync engine</em> with ff-only pulls, dirty-repo protection, and divergence detection</li>
-                <li>Windows <em>Scheduled Task</em> for unattended 5-minute sync cycles</li>
-                <li>JSON config for <em>per-repo control</em>: enable/disable, push policy, pull strategy</li>
-                <li>Structured <em>sync logs</em> with timestamps, actions taken, and error tracking</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">19</div><div class="ds-label">Repos</div></div>
-              <div class="detail-stat"><div class="ds-value">5m</div><div class="ds-label">Sync Interval</div></div>
-              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Cloud Deps</div></div>
-              <div class="detail-stat"><div class="ds-value">24/7</div><div class="ds-label">Uptime</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- 11 Galleon Splash -->
       <div class="project-card" data-tags="apps">
         <div class="project-info">
-          <div class="p-number">11</div>
+          <div class="p-number">14</div>
           <div class="p-title">Galleon Splash Page</div>
           <div class="p-desc">The original cinematic concept for lancewfisher.com. Storm lightning, matrix rain, HUD overlays, scroll-reveal dossier cards, and a dawn color transition, all in a single HTML file with zero dependencies.</div>
           <div class="p-tech">HTML / CSS / Canvas 2D / Zero Dependencies</div>
@@ -848,141 +1100,6 @@
               <div class="detail-stat"><div class="ds-value">1</div><div class="ds-label">HTML File</div></div>
               <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Dependencies</div></div>
               <div class="detail-stat"><div class="ds-value">60</div><div class="ds-label">FPS</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Fisher One-Three: Nautical apparel brand (links to brand site) -->
-      <div class="project-card" data-tags="apps" onclick="window.open('brand/brand.html','_blank')" style="cursor:pointer;">
-        <div class="project-info">
-          <div class="p-number">12</div>
-          <div class="p-title">Fisher One-Three</div>
-          <div class="p-desc">Nautical-themed apparel and lifestyle brand. 19 original limited-run designs celebrating the spirit of coastal living and maritime adventure. One part land, three parts sea. Full brand website with integrated storefront.</div>
-          <div class="p-tech">Brand Design / Apparel / E-Commerce / HTML / CSS / JavaScript</div>
-          <div class="p-status active">Active | Visit Site &rarr;</div>
-        </div>
-        <div class="project-thumb-wrap">
-          <img src="thumbs/fisher13-sail.jpg" alt="Fisher One-Three sailing vessel" loading="lazy" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.8) contrast(1.1);">
-          <div class="thumb-label">Brand</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">Fisher One-Three started as a sketch on a napkin and became a full brand with its own ethos, website, and storefront. Every design is original, every color choice deliberate, every run limited. The name encodes the Fisher surname and the maritime ratio that drives everything: one part land, three parts sea. It is wearable art for people who dream of the ocean even when they are nowhere near it.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>19 original founder designs</em>: every graphic hand-crafted from concept to final print</li>
-                <li><em>Full brand website</em> with collection gallery, category filters, brand story, and integrated store</li>
-                <li><em>Size-inclusive</em> range from XS to 5XL, because great style should be accessible to all</li>
-                <li><em>$1 per shirt donated</em> to ocean and waterway conservation efforts worldwide</li>
-                <li>Full brand identity system: <em>logo suite, typography, color palette</em>, and brand guidelines</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Brand Architecture</h4>
-              <ul>
-                <li><em>Design collections</em>: nautical emblems, coastal scenes, marine life, maritime adventure themes</li>
-                <li><em>Integrated storefront</em> with cart, sizing, and direct purchase flow built from scratch</li>
-                <li>Multi-domain presence: <em>fisher13.com, f1sh3r.net, one-three.net</em></li>
-                <li>Social channels on <em>X, Facebook, Instagram</em> with cohesive brand voice and visual identity</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">19</div><div class="ds-label">Designs</div></div>
-              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Domains</div></div>
-              <div class="detail-stat"><div class="ds-value">1:3</div><div class="ds-label">Land : Sea</div></div>
-              <div class="detail-stat"><div class="ds-value">5XL</div><div class="ds-label">Max Size</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- NoCo App Studio: Custom apps for Northern Colorado businesses -->
-      <div class="project-card" data-tags="apps" onclick="window.open('noco/index.html','_blank')" style="cursor:pointer;">
-        <div class="project-info">
-          <div class="p-number">13</div>
-          <div class="p-title">NoCo App Studio</div>
-          <div class="p-desc">Custom mobile app development studio for Northern Colorado businesses. 10 fully interactive live demos built for real med spas, salons, fitness studios, pet groomers, and chiropractors. Online booking, wallets, loyalty, push notifications, and branded mobile apps.</div>
-          <div class="p-tech">HTML / CSS / JavaScript / React Native / NestJS / Stripe</div>
-          <div class="p-status active">Active | See Demos &rarr;</div>
-        </div>
-        <div class="project-thumb-wrap">
-          <img src="thumbs/thumb-noco.jpg" alt="NoCo App Studio demos" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
-          <div class="thumb-label">Demos</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">Every local business deserves a branded mobile app. Not a Vagaro page. Not a Booksy listing. Their own app, with their name, their colors, on their clients' home screens. NoCo App Studio is the vehicle for that vision. Lance built 10 fully interactive phone mockup demos for real businesses across Northern Colorado, each with their actual services, branding, staff, and pricing. The pitch is simple: your clients will book from your app, not a third-party marketplace.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>10 live interactive demos</em> built for real NoCo businesses across 6 verticals</li>
-                <li><em>Phone mockup simulator</em> with real app UI, tabbed navigation, and business-specific branding</li>
-                <li><em>Category filters</em>: Med Spas, Nail Salons, Hair &amp; Barber, Fitness, Pet Grooming, Chiropractic</li>
-                <li><em>Transparent pricing</em>: $2,500 setup + $199/mo starter, scaling to enterprise custom</li>
-                <li>Every demo shows <em>real services, staff, scheduling</em>, and payment processing</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li><em>Zero-dependency frontend</em>: pure HTML/CSS/JS with modular business data architecture</li>
-                <li><em>35KB data layer</em> (businesses.js) powering all 10 business configurations</li>
-                <li>Interactive phone mockup: <em>300x600px viewport</em> with notch, home indicator, tab bar</li>
-                <li>Production apps built on <em>React Native + NestJS + Stripe + PostgreSQL</em> stack</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">10</div><div class="ds-label">Businesses</div></div>
-              <div class="detail-stat"><div class="ds-value">6</div><div class="ds-label">Verticals</div></div>
-              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Cities</div></div>
-              <div class="detail-stat"><div class="ds-value">$199</div><div class="ds-label">Per Month</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Market Dashboard: Real-time trading terminal -->
-      <div class="project-card" data-tags="trading">
-        <div class="project-info">
-          <div class="p-number">14</div>
-          <div class="p-title">Market Dashboard</div>
-          <div class="p-desc">Real-time multi-market trading terminal. Canvas-rendered candlestick charts, order book visualization, trade tape, configurable watchlist. Python server proxies live exchange data. Zero dependencies.</div>
-          <div class="p-tech">Python / Canvas 2D / WebSocket / Zero Dependencies</div>
-          <div class="p-status active">Active</div>
-          <a class="p-demo-link" href="dashboard/" target="_blank" rel="noopener noreferrer"><span class="demo-icon">&#9654;</span> Live Demo</a>
-        </div>
-        <div class="project-thumb-wrap">
-          <img src="thumbs/thumb-dashboard.jpg" alt="Market Dashboard terminal" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
-          <div class="thumb-label">Terminal</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">Every trader needs a terminal they can trust, and trusting something means building it yourself. This dashboard pulls live data from crypto.com Exchange API through a Python proxy and renders it all on raw Canvas 2D. Candlestick charts, order book depth, live trade tape, multi-market watchlist. No charting library. No framework. Every pixel is mine.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>Canvas-rendered candlestick charts</em> with OHLCV data, volume bars, and crosshair tooltip</li>
-                <li><em>Order book visualization</em> with depth bars, spread indicator, and mid-price</li>
-                <li><em>Live trade tape</em> streaming buys and sells with color-coded direction</li>
-                <li><em>Multi-market watchlist</em> with configurable instruments and timeframes</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li><em>Python proxy server</em> handles exchange API auth, rate limiting, and WebSocket relay</li>
-                <li><em>Zero-dependency frontend</em>: vanilla HTML/CSS/JS with Canvas 2D rendering</li>
-                <li><em>60fps render loop</em> for smooth chart updates and interactive crosshair</li>
-                <li>Designed to feed into the <em>autonomous trading desk</em> as visual monitoring layer</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Dependencies</div></div>
-              <div class="detail-stat"><div class="ds-value">60</div><div class="ds-label">FPS</div></div>
-              <div class="detail-stat"><div class="ds-value">Live</div><div class="ds-label">Data Feed</div></div>
-              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Views</div></div>
             </div>
           </div>
         </div>
@@ -1071,9 +1188,9 @@
         </div>
         <div class="vc3-name">Fisher One-Three</div>
         <div class="vc3-tagline">One part land, three parts sea</div>
-        <div class="vc3-desc">Nautical lifestyle apparel brand. 19 original designs. Direct storefront. A philosophy of freedom, courage, and self-determination rooted in maritime tradition.</div>
+        <div class="vc3-desc">Nautical lifestyle apparel brand. 24 original designs. Direct storefront. A philosophy of freedom, courage, and self-determination rooted in maritime tradition.</div>
         <div class="vc3-chips">
-          <span class="vc3-chip">19 designs</span>
+          <span class="vc3-chip">24 designs</span>
           <span class="vc3-chip">XS&ndash;5XL</span>
           <span class="vc3-chip">$34.99</span>
         </div>
@@ -1141,9 +1258,29 @@
     <div class="section-label">Fisher One-Three</div>
     <div class="section-title">One part land,<br>three parts sea</div>
     <div class="brand-teaser-philosophy">The sea does not ask who you are or where you came from. It only asks whether you are willing to face what is ahead of you. Fisher One-Three is a reminder that the courage to leave shore is the beginning of every life worth living.</div>
+
+    <!-- Brand Visual Mosaic -->
+    <div class="brand-mosaic">
+      <div class="brand-mosaic-item brand-mosaic-tall">
+        <img src="thumbs/ot-golden-anchor.jpg" alt="One-Three golden anchor design" loading="lazy">
+      </div>
+      <div class="brand-mosaic-item">
+        <img src="thumbs/ot-skull.jpg" alt="One-Three skull design" loading="lazy">
+      </div>
+      <div class="brand-mosaic-item">
+        <img src="thumbs/ot-eagle-sword.jpg" alt="One-Three eagle design" loading="lazy">
+      </div>
+      <div class="brand-mosaic-item">
+        <img src="thumbs/ot-mountain-moon.jpg" alt="One-Three mountain moon design" loading="lazy">
+      </div>
+      <div class="brand-mosaic-item">
+        <img src="thumbs/ot-classic-anchor.jpg" alt="One-Three classic anchor design" loading="lazy">
+      </div>
+    </div>
+
     <div class="brand-teaser-details">
       <div class="brand-teaser-detail">
-        <div class="brand-teaser-val">19</div>
+        <div class="brand-teaser-val">24</div>
         <div class="brand-teaser-label">Original Designs</div>
       </div>
       <div class="brand-teaser-detail">
@@ -1454,7 +1591,7 @@
   <div class="nav-dot" data-target="sec-contact"></div>
 </nav>
 
-<script src="main.js?v=20260314"></script>
+<script src="main.js?v=20260321"></script>
 
 <!-- FTDA: Passkey Modal -->
 <div class="ftda-passkey-overlay" id="ftda-passkey-overlay" aria-hidden="true" role="dialog" aria-label="Passkey required">
