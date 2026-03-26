@@ -19,7 +19,9 @@
       "Bash(python -c \"import docx; print\\(''''ok''''\\)\")",
       "Skill(commit-commands:commit)",
       "Skill(commit-commands:commit:*)",
-      "Bash(bash build-deploy.sh)"
+      "Bash(bash build-deploy.sh)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill //PID 79392 //F)"
     ]
   }
 }

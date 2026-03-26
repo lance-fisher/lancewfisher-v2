@@ -917,6 +917,10 @@ span.hero-domain-dot {
   .bl-mini-stat-val { font-size: 11px; }
   .bl-scope-row { flex-wrap: wrap; gap: 12px; }
   .bl-scope-item { min-width: calc(50% - 6px); }
+  /* Bloodlines mini-stats: prevent overflow on narrow screens */
+  .bl-mini-stats { flex-wrap: wrap; }
+  .bl-content-overlay { gap: 6px; }
+  .bl-overview-tagline { font-size: 9px; }
 }
 
 /* ── One-Three Composite Thumbnail ── */
@@ -1561,6 +1565,81 @@ span.hero-domain-dot {
   .nav-dots { display: none; }
   .concept-card { width: 160px; }
   .concept-thumb { width: 160px; height: 96px; }
+
+  /* ===== MOBILE OPTIMIZATION — FULL AUDIT ===== */
+
+  /* Hero: reduce padding, ensure no overflow */
+  .hero { padding: 0 20px 80px; }
+  .hero-script-logo { margin-bottom: -40px; }
+  .hero-domains { gap: 4px; }
+  .hero-domains a { font-size: 11px; min-height: 44px; }
+  .hero-company { font-size: 11px; letter-spacing: 0.25em; }
+  .hero-motto { font-size: 11px; }
+
+  /* Hero CTAs: ensure 44px touch targets */
+  .hero-cta { min-height: 44px; padding: 12px 24px; }
+
+  /* Build method grid: stack on mobile (outside .how-i-build context) */
+  .build-method-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+  /* Project filter buttons: ensure tappable */
+  .pf-btn { min-height: 44px; padding: 10px 16px; }
+
+  /* Project demo links: ensure tappable touch targets */
+  .p-demo-link { min-height: 44px; padding: 8px 16px; margin-left: 0; }
+
+  /* Project card: no max-width constraint on p-desc */
+  .project-card .p-desc { max-width: 100%; }
+
+  /* Architecture diagram: allow horizontal scroll on very small screens */
+  .arch-diagram { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .arch-diagram svg { min-width: 600px; }
+
+  /* Sovereignty grid: single column on mobile */
+  .sovereignty-grid { grid-template-columns: 1fr; gap: 20px; }
+
+  /* NoCo CTA: ensure text and stats stack properly */
+  .noco-cta { padding: 0 24px; }
+  .noco-cta-link { min-height: 44px; }
+
+  /* Brand teaser: ensure mosaic doesn't overflow */
+  .brand-mosaic { max-width: 100%; }
+  .brand-teaser-links { justify-content: center; }
+  .brand-link-primary { min-height: 44px; padding: 12px 20px; }
+  .brand-link-ghost { min-height: 44px; padding: 12px 20px; }
+
+  /* Booking form: ensure touch targets */
+  .booking-input, .booking-textarea, .booking-select { min-height: 48px; font-size: 16px; }
+  .booking-submit { min-height: 48px; width: 100%; }
+
+  /* Contact rows: ensure tappable */
+  .contact-row { min-height: 48px; padding: 14px 0; }
+
+  /* Venture cards: ensure padding and readability */
+  .venture-card-v3 { padding: 24px 20px; }
+  .vc3-desc { font-size: 13px; }
+  .vc3-chips { flex-wrap: wrap; }
+
+  /* Now list items: touch targets */
+  .now-item { padding: 18px 0; }
+
+  /* Footer: reduce padding */
+  .footer { padding: 60px 20px; }
+
+  /* Principles: ensure p-text is readable */
+  .principle .p-text { font-size: 14px; line-height: 1.8; }
+
+  /* Spacers: reduce on mobile */
+  .spacer-lg { height: 100px; }
+
+  /* Concept iframes: prevent overflow */
+  .concept-thumb iframe { pointer-events: none; }
+
+  /* Stats strip: stack on mobile */
+  .stats-strip { padding: 40px 20px 0; }
+
+  /* Glitch statues: hide on mobile to avoid overlap */
+  .glitch-statue-left, .glitch-statue-right { display: none; }
 }
 
 @media (max-width: 480px) {
@@ -1591,6 +1670,38 @@ span.hero-domain-dot {
     flex-direction: column;
     gap: 6px;
   }
+
+  /* Bloodlines thumbnail: simplify on very small screens */
+  .bl-sidebar-strip { display: none; }
+  .bl-content-overlay { left: 0; padding: 10px 12px; }
+  .bl-mockup-layer { left: 0; }
+  .bl-overview-title { font-size: 14px; }
+  .bl-mini-stat { padding: 3px 5px; }
+  .bl-mini-stat-val { font-size: 10px; }
+
+  /* Section titles: ensure they fit */
+  .section-title { font-size: clamp(24px, 6vw, 36px); }
+
+  /* About card text: ensure readable */
+  .about-card .body-text { font-size: 14px; }
+
+  /* Ventures grid: single column */
+  .ventures-grid { grid-template-columns: 1fr; }
+
+  /* Brand details: ensure they stack */
+  .brand-teaser-details { flex-direction: column; gap: 12px; align-items: flex-start; }
+
+  /* Booking row: single column */
+  .booking-row { grid-template-columns: 1fr; }
+
+  /* Hero CTAs: full width */
+  .hero-ctas { flex-direction: column; align-items: center; }
+  .hero-cta { width: 100%; max-width: 280px; justify-content: center; }
+
+  /* NoCo stats: ensure proper stacking */
+  .noco-cta-stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .noco-stat { padding: 16px 8px; }
+  .noco-stat-val { font-size: 22px; }
 }
 
 /* ===== ACCESSIBILITY: FOCUS STYLES ===== */
@@ -3285,6 +3396,10 @@ span.hero-domain-dot {
   .fs-article-ghost { display: none; }
   .fs-article-nav { padding: 14px 20px; }
   .fs-article-end { padding: 48px 20px; }
+  .fs-mega { padding-top: 40px; padding-bottom: 40px; }
+  .fs-mission p { font-size: 15px; }
+  .fs-tagline { font-size: 13px; letter-spacing: 0.12em; }
+  .fs-teaser-cta { min-height: 44px; }
 }
 
 [data-theme="light"] .fs-glyph { color: rgba(201, 168, 76, 1); }

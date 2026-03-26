@@ -7,241 +7,130 @@
   <meta name="robots" content="noindex, nofollow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+/**
+ * marked v9.1.6 - a markdown parser
+ * Copyright (c) 2011-2023, Christopher Jeffrey. (MIT Licensed)
+ * https://github.com/markedjs/marked
+ */
+!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports):"function"==typeof define&&define.amd?define(["exports"],t):t((e="undefined"!=typeof globalThis?globalThis:e||self).marked={})}(this,(function(e){"use strict";function t(){return{async:!1,breaks:!1,extensions:null,gfm:!0,hooks:null,pedantic:!1,renderer:null,silent:!1,tokenizer:null,walkTokens:null}}function n(t){e.defaults=t}e.defaults={async:!1,breaks:!1,extensions:null,gfm:!0,hooks:null,pedantic:!1,renderer:null,silent:!1,tokenizer:null,walkTokens:null};const s=/[&<>"']/,r=new RegExp(s.source,"g"),i=/[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/,l=new RegExp(i.source,"g"),o={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"},a=e=>o[e];function c(e,t){if(t){if(s.test(e))return e.replace(r,a)}else if(i.test(e))return e.replace(l,a);return e}const h=/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/gi;const p=/(^|[^\[])\^/g;function u(e,t){e="string"==typeof e?e:e.source,t=t||"";const n={replace:(t,s)=>(s=(s="object"==typeof s&&"source"in s?s.source:s).replace(p,"$1"),e=e.replace(t,s),n),getRegex:()=>new RegExp(e,t)};return n}function g(e){try{e=encodeURI(e).replace(/%25/g,"%")}catch(e){return null}return e}const k={exec:()=>null};function f(e,t){const n=e.replace(/\|/g,((e,t,n)=>{let s=!1,r=t;for(;--r>=0&&"\\"===n[r];)s=!s;return s?"|":" |"})).split(/ \|/);let s=0;if(n[0].trim()||n.shift(),n.length>0&&!n[n.length-1].trim()&&n.pop(),t)if(n.length>t)n.splice(t);else for(;n.length<t;)n.push("");for(;s<n.length;s++)n[s]=n[s].trim().replace(/\\\|/g,"|");return n}function d(e,t,n){const s=e.length;if(0===s)return"";let r=0;for(;r<s;){const i=e.charAt(s-r-1);if(i!==t||n){if(i===t||!n)break;r++}else r++}return e.slice(0,s-r)}function x(e,t,n,s){const r=t.href,i=t.title?c(t.title):null,l=e[1].replace(/\\([\[\]])/g,"$1");if("!"!==e[0].charAt(0)){s.state.inLink=!0;const e={type:"link",raw:n,href:r,title:i,text:l,tokens:s.inlineTokens(l)};return s.state.inLink=!1,e}return{type:"image",raw:n,href:r,title:i,text:c(l)}}class b{options;rules;lexer;constructor(t){this.options=t||e.defaults}space(e){const t=this.rules.block.newline.exec(e);if(t&&t[0].length>0)return{type:"space",raw:t[0]}}code(e){const t=this.rules.block.code.exec(e);if(t){const e=t[0].replace(/^ {1,4}/gm,"");return{type:"code",raw:t[0],codeBlockStyle:"indented",text:this.options.pedantic?e:d(e,"\n")}}}fences(e){const t=this.rules.block.fences.exec(e);if(t){const e=t[0],n=function(e,t){const n=e.match(/^(\s+)(?:```)/);if(null===n)return t;const s=n[1];return t.split("\n").map((e=>{const t=e.match(/^\s+/);if(null===t)return e;const[n]=t;return n.length>=s.length?e.slice(s.length):e})).join("\n")}(e,t[3]||"");return{type:"code",raw:e,lang:t[2]?t[2].trim().replace(this.rules.inline._escapes,"$1"):t[2],text:n}}}heading(e){const t=this.rules.block.heading.exec(e);if(t){let e=t[2].trim();if(/#$/.test(e)){const t=d(e,"#");this.options.pedantic?e=t.trim():t&&!/ $/.test(t)||(e=t.trim())}return{type:"heading",raw:t[0],depth:t[1].length,text:e,tokens:this.lexer.inline(e)}}}hr(e){const t=this.rules.block.hr.exec(e);if(t)return{type:"hr",raw:t[0]}}blockquote(e){const t=this.rules.block.blockquote.exec(e);if(t){const e=d(t[0].replace(/^ *>[ \t]?/gm,""),"\n"),n=this.lexer.state.top;this.lexer.state.top=!0;const s=this.lexer.blockTokens(e);return this.lexer.state.top=n,{type:"blockquote",raw:t[0],tokens:s,text:e}}}list(e){let t=this.rules.block.list.exec(e);if(t){let n=t[1].trim();const s=n.length>1,r={type:"list",raw:"",ordered:s,start:s?+n.slice(0,-1):"",loose:!1,items:[]};n=s?`\\d{1,9}\\${n.slice(-1)}`:`\\${n}`,this.options.pedantic&&(n=s?n:"[*+-]");const i=new RegExp(`^( {0,3}${n})((?:[\t ][^\\n]*)?(?:\\n|$))`);let l="",o="",a=!1;for(;e;){let n=!1;if(!(t=i.exec(e)))break;if(this.rules.block.hr.test(e))break;l=t[0],e=e.substring(l.length);let s=t[2].split("\n",1)[0].replace(/^\t+/,(e=>" ".repeat(3*e.length))),c=e.split("\n",1)[0],h=0;this.options.pedantic?(h=2,o=s.trimStart()):(h=t[2].search(/[^ ]/),h=h>4?1:h,o=s.slice(h),h+=t[1].length);let p=!1;if(!s&&/^ *$/.test(c)&&(l+=c+"\n",e=e.substring(c.length+1),n=!0),!n){const t=new RegExp(`^ {0,${Math.min(3,h-1)}}(?:[*+-]|\\d{1,9}[.)])((?:[ \t][^\\n]*)?(?:\\n|$))`),n=new RegExp(`^ {0,${Math.min(3,h-1)}}((?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$)`),r=new RegExp(`^ {0,${Math.min(3,h-1)}}(?:\`\`\`|~~~)`),i=new RegExp(`^ {0,${Math.min(3,h-1)}}#`);for(;e;){const a=e.split("\n",1)[0];if(c=a,this.options.pedantic&&(c=c.replace(/^ {1,4}(?=( {4})*[^ ])/g,"  ")),r.test(c))break;if(i.test(c))break;if(t.test(c))break;if(n.test(e))break;if(c.search(/[^ ]/)>=h||!c.trim())o+="\n"+c.slice(h);else{if(p)break;if(s.search(/[^ ]/)>=4)break;if(r.test(s))break;if(i.test(s))break;if(n.test(s))break;o+="\n"+c}p||c.trim()||(p=!0),l+=a+"\n",e=e.substring(a.length+1),s=c.slice(h)}}r.loose||(a?r.loose=!0:/\n *\n *$/.test(l)&&(a=!0));let u,g=null;this.options.gfm&&(g=/^\[[ xX]\] /.exec(o),g&&(u="[ ] "!==g[0],o=o.replace(/^\[[ xX]\] +/,""))),r.items.push({type:"list_item",raw:l,task:!!g,checked:u,loose:!1,text:o,tokens:[]}),r.raw+=l}r.items[r.items.length-1].raw=l.trimEnd(),r.items[r.items.length-1].text=o.trimEnd(),r.raw=r.raw.trimEnd();for(let e=0;e<r.items.length;e++)if(this.lexer.state.top=!1,r.items[e].tokens=this.lexer.blockTokens(r.items[e].text,[]),!r.loose){const t=r.items[e].tokens.filter((e=>"space"===e.type)),n=t.length>0&&t.some((e=>/\n.*\n/.test(e.raw)));r.loose=n}if(r.loose)for(let e=0;e<r.items.length;e++)r.items[e].loose=!0;return r}}html(e){const t=this.rules.block.html.exec(e);if(t){return{type:"html",block:!0,raw:t[0],pre:"pre"===t[1]||"script"===t[1]||"style"===t[1],text:t[0]}}}def(e){const t=this.rules.block.def.exec(e);if(t){const e=t[1].toLowerCase().replace(/\s+/g," "),n=t[2]?t[2].replace(/^<(.*)>$/,"$1").replace(this.rules.inline._escapes,"$1"):"",s=t[3]?t[3].substring(1,t[3].length-1).replace(this.rules.inline._escapes,"$1"):t[3];return{type:"def",tag:e,raw:t[0],href:n,title:s}}}table(e){const t=this.rules.block.table.exec(e);if(t){if(!/[:|]/.test(t[2]))return;const e={type:"table",raw:t[0],header:f(t[1]).map((e=>({text:e,tokens:[]}))),align:t[2].replace(/^\||\| *$/g,"").split("|"),rows:t[3]&&t[3].trim()?t[3].replace(/\n[ \t]*$/,"").split("\n"):[]};if(e.header.length===e.align.length){let t,n,s,r,i=e.align.length;for(t=0;t<i;t++){const n=e.align[t];n&&(/^ *-+: *$/.test(n)?e.align[t]="right":/^ *:-+: *$/.test(n)?e.align[t]="center":/^ *:-+ *$/.test(n)?e.align[t]="left":e.align[t]=null)}for(i=e.rows.length,t=0;t<i;t++)e.rows[t]=f(e.rows[t],e.header.length).map((e=>({text:e,tokens:[]})));for(i=e.header.length,n=0;n<i;n++)e.header[n].tokens=this.lexer.inline(e.header[n].text);for(i=e.rows.length,n=0;n<i;n++)for(r=e.rows[n],s=0;s<r.length;s++)r[s].tokens=this.lexer.inline(r[s].text);return e}}}lheading(e){const t=this.rules.block.lheading.exec(e);if(t)return{type:"heading",raw:t[0],depth:"="===t[2].charAt(0)?1:2,text:t[1],tokens:this.lexer.inline(t[1])}}paragraph(e){const t=this.rules.block.paragraph.exec(e);if(t){const e="\n"===t[1].charAt(t[1].length-1)?t[1].slice(0,-1):t[1];return{type:"paragraph",raw:t[0],text:e,tokens:this.lexer.inline(e)}}}text(e){const t=this.rules.block.text.exec(e);if(t)return{type:"text",raw:t[0],text:t[0],tokens:this.lexer.inline(t[0])}}escape(e){const t=this.rules.inline.escape.exec(e);if(t)return{type:"escape",raw:t[0],text:c(t[1])}}tag(e){const t=this.rules.inline.tag.exec(e);if(t)return!this.lexer.state.inLink&&/^<a /i.test(t[0])?this.lexer.state.inLink=!0:this.lexer.state.inLink&&/^<\/a>/i.test(t[0])&&(this.lexer.state.inLink=!1),!this.lexer.state.inRawBlock&&/^<(pre|code|kbd|script)(\s|>)/i.test(t[0])?this.lexer.state.inRawBlock=!0:this.lexer.state.inRawBlock&&/^<\/(pre|code|kbd|script)(\s|>)/i.test(t[0])&&(this.lexer.state.inRawBlock=!1),{type:"html",raw:t[0],inLink:this.lexer.state.inLink,inRawBlock:this.lexer.state.inRawBlock,block:!1,text:t[0]}}link(e){const t=this.rules.inline.link.exec(e);if(t){const e=t[2].trim();if(!this.options.pedantic&&/^</.test(e)){if(!/>$/.test(e))return;const t=d(e.slice(0,-1),"\\");if((e.length-t.length)%2==0)return}else{const e=function(e,t){if(-1===e.indexOf(t[1]))return-1;let n=0;for(let s=0;s<e.length;s++)if("\\"===e[s])s++;else if(e[s]===t[0])n++;else if(e[s]===t[1]&&(n--,n<0))return s;return-1}(t[2],"()");if(e>-1){const n=(0===t[0].indexOf("!")?5:4)+t[1].length+e;t[2]=t[2].substring(0,e),t[0]=t[0].substring(0,n).trim(),t[3]=""}}let n=t[2],s="";if(this.options.pedantic){const e=/^([^'"]*[^\s])\s+(['"])(.*)\2/.exec(n);e&&(n=e[1],s=e[3])}else s=t[3]?t[3].slice(1,-1):"";return n=n.trim(),/^</.test(n)&&(n=this.options.pedantic&&!/>$/.test(e)?n.slice(1):n.slice(1,-1)),x(t,{href:n?n.replace(this.rules.inline._escapes,"$1"):n,title:s?s.replace(this.rules.inline._escapes,"$1"):s},t[0],this.lexer)}}reflink(e,t){let n;if((n=this.rules.inline.reflink.exec(e))||(n=this.rules.inline.nolink.exec(e))){let e=(n[2]||n[1]).replace(/\s+/g," ");if(e=t[e.toLowerCase()],!e){const e=n[0].charAt(0);return{type:"text",raw:e,text:e}}return x(n,e,n[0],this.lexer)}}emStrong(e,t,n=""){let s=this.rules.inline.emStrong.lDelim.exec(e);if(!s)return;if(s[3]&&n.match(/[\p{L}\p{N}]/u))return;if(!(s[1]||s[2]||"")||!n||this.rules.inline.punctuation.exec(n)){const n=[...s[0]].length-1;let r,i,l=n,o=0;const a="*"===s[0][0]?this.rules.inline.emStrong.rDelimAst:this.rules.inline.emStrong.rDelimUnd;for(a.lastIndex=0,t=t.slice(-1*e.length+n);null!=(s=a.exec(t));){if(r=s[1]||s[2]||s[3]||s[4]||s[5]||s[6],!r)continue;if(i=[...r].length,s[3]||s[4]){l+=i;continue}if((s[5]||s[6])&&n%3&&!((n+i)%3)){o+=i;continue}if(l-=i,l>0)continue;i=Math.min(i,i+l+o);const t=[...s[0]][0].length,a=e.slice(0,n+s.index+t+i);if(Math.min(n,i)%2){const e=a.slice(1,-1);return{type:"em",raw:a,text:e,tokens:this.lexer.inlineTokens(e)}}const c=a.slice(2,-2);return{type:"strong",raw:a,text:c,tokens:this.lexer.inlineTokens(c)}}}}codespan(e){const t=this.rules.inline.code.exec(e);if(t){let e=t[2].replace(/\n/g," ");const n=/[^ ]/.test(e),s=/^ /.test(e)&&/ $/.test(e);return n&&s&&(e=e.substring(1,e.length-1)),e=c(e,!0),{type:"codespan",raw:t[0],text:e}}}br(e){const t=this.rules.inline.br.exec(e);if(t)return{type:"br",raw:t[0]}}del(e){const t=this.rules.inline.del.exec(e);if(t)return{type:"del",raw:t[0],text:t[2],tokens:this.lexer.inlineTokens(t[2])}}autolink(e){const t=this.rules.inline.autolink.exec(e);if(t){let e,n;return"@"===t[2]?(e=c(t[1]),n="mailto:"+e):(e=c(t[1]),n=e),{type:"link",raw:t[0],text:e,href:n,tokens:[{type:"text",raw:e,text:e}]}}}url(e){let t;if(t=this.rules.inline.url.exec(e)){let e,n;if("@"===t[2])e=c(t[0]),n="mailto:"+e;else{let s;do{s=t[0],t[0]=this.rules.inline._backpedal.exec(t[0])[0]}while(s!==t[0]);e=c(t[0]),n="www."===t[1]?"http://"+t[0]:t[0]}return{type:"link",raw:t[0],text:e,href:n,tokens:[{type:"text",raw:e,text:e}]}}}inlineText(e){const t=this.rules.inline.text.exec(e);if(t){let e;return e=this.lexer.state.inRawBlock?t[0]:c(t[0]),{type:"text",raw:t[0],text:e}}}}const m={newline:/^(?: *(?:\n|$))+/,code:/^( {4}[^\n]+(?:\n(?: *(?:\n|$))*)?)+/,fences:/^ {0,3}(`{3,}(?=[^`\n]*(?:\n|$))|~{3,})([^\n]*)(?:\n|$)(?:|([\s\S]*?)(?:\n|$))(?: {0,3}\1[~`]* *(?=\n|$)|$)/,hr:/^ {0,3}((?:-[\t ]*){3,}|(?:_[ \t]*){3,}|(?:\*[ \t]*){3,})(?:\n+|$)/,heading:/^ {0,3}(#{1,6})(?=\s|$)(.*)(?:\n+|$)/,blockquote:/^( {0,3}> ?(paragraph|[^\n]*)(?:\n|$))+/,list:/^( {0,3}bull)([ \t][^\n]+?)?(?:\n|$)/,html:"^ {0,3}(?:<(script|pre|style|textarea)[\\s>][\\s\\S]*?(?:</\\1>[^\\n]*\\n+|$)|comment[^\\n]*(\\n+|$)|<\\?[\\s\\S]*?(?:\\?>\\n*|$)|<![A-Z][\\s\\S]*?(?:>\\n*|$)|<!\\[CDATA\\[[\\s\\S]*?(?:\\]\\]>\\n*|$)|</?(tag)(?: +|\\n|/?>)[\\s\\S]*?(?:(?:\\n *)+\\n|$)|<(?!script|pre|style|textarea)([a-z][\\w-]*)(?:attribute)*? */?>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n *)+\\n|$)|</(?!script|pre|style|textarea)[a-z][\\w-]*\\s*>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n *)+\\n|$))",def:/^ {0,3}\[(label)\]: *(?:\n *)?([^<\s][^\s]*|<.*?>)(?:(?: +(?:\n *)?| *\n *)(title))? *(?:\n+|$)/,table:k,lheading:/^(?!bull )((?:.|\n(?!\s*?\n|bull ))+?)\n {0,3}(=+|-+) *(?:\n+|$)/,_paragraph:/^([^\n]+(?:\n(?!hr|heading|lheading|blockquote|fences|list|html|table| +\n)[^\n]+)*)/,text:/^[^\n]+/,_label:/(?!\s*\])(?:\\.|[^\[\]\\])+/,_title:/(?:"(?:\\"?|[^"\\])*"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\([^()]*\))/};m.def=u(m.def).replace("label",m._label).replace("title",m._title).getRegex(),m.bullet=/(?:[*+-]|\d{1,9}[.)])/,m.listItemStart=u(/^( *)(bull) */).replace("bull",m.bullet).getRegex(),m.list=u(m.list).replace(/bull/g,m.bullet).replace("hr","\\n+(?=\\1?(?:(?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$))").replace("def","\\n+(?="+m.def.source+")").getRegex(),m._tag="address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|option|p|param|section|source|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul",m._comment=/<!--(?!-?>)[\s\S]*?(?:-->|$)/,m.html=u(m.html,"i").replace("comment",m._comment).replace("tag",m._tag).replace("attribute",/ +[a-zA-Z:_][\w.:-]*(?: *= *"[^"\n]*"| *= *'[^'\n]*'| *= *[^\s"'=<>`]+)?/).getRegex(),m.lheading=u(m.lheading).replace(/bull/g,m.bullet).getRegex(),m.paragraph=u(m._paragraph).replace("hr",m.hr).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("|lheading","").replace("|table","").replace("blockquote"," {0,3}>").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)]) ").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",m._tag).getRegex(),m.blockquote=u(m.blockquote).replace("paragraph",m.paragraph).getRegex(),m.normal={...m},m.gfm={...m.normal,table:"^ *([^\\n ].*)\\n {0,3}((?:\\| *)?:?-+:? *(?:\\| *:?-+:? *)*(?:\\| *)?)(?:\\n((?:(?! *\\n|hr|heading|blockquote|code|fences|list|html).*(?:\\n|$))*)\\n*|$)"},m.gfm.table=u(m.gfm.table).replace("hr",m.hr).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("blockquote"," {0,3}>").replace("code"," {4}[^\\n]").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)]) ").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",m._tag).getRegex(),m.gfm.paragraph=u(m._paragraph).replace("hr",m.hr).replace("heading"," {0,3}#{1,6}(?:\\s|$)").replace("|lheading","").replace("table",m.gfm.table).replace("blockquote"," {0,3}>").replace("fences"," {0,3}(?:`{3,}(?=[^`\\n]*\\n)|~{3,})[^\\n]*\\n").replace("list"," {0,3}(?:[*+-]|1[.)]) ").replace("html","</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag",m._tag).getRegex(),m.pedantic={...m.normal,html:u("^ *(?:comment *(?:\\n|\\s*$)|<(tag)[\\s\\S]+?</\\1> *(?:\\n{2,}|\\s*$)|<tag(?:\"[^\"]*\"|'[^']*'|\\s[^'\"/>\\s]*)*?/?> *(?:\\n{2,}|\\s*$))").replace("comment",m._comment).replace(/tag/g,"(?!(?:a|em|strong|small|s|cite|q|dfn|abbr|data|time|code|var|samp|kbd|sub|sup|i|b|u|mark|ruby|rt|rp|bdi|bdo|span|br|wbr|ins|del|img)\\b)\\w+(?!:|[^\\w\\s@]*@)\\b").getRegex(),def:/^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +(["(][^\n]+[")]))? *(?:\n+|$)/,heading:/^(#{1,6})(.*)(?:\n+|$)/,fences:k,lheading:/^(.+?)\n {0,3}(=+|-+) *(?:\n+|$)/,paragraph:u(m.normal._paragraph).replace("hr",m.hr).replace("heading"," *#{1,6} *[^\n]").replace("lheading",m.lheading).replace("blockquote"," {0,3}>").replace("|fences","").replace("|list","").replace("|html","").getRegex()};const w={escape:/^\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])/,autolink:/^<(scheme:[^\s\x00-\x1f<>]*|email)>/,url:k,tag:"^comment|^</[a-zA-Z][\\w:-]*\\s*>|^<[a-zA-Z][\\w-]*(?:attribute)*?\\s*/?>|^<\\?[\\s\\S]*?\\?>|^<![a-zA-Z]+\\s[\\s\\S]*?>|^<!\\[CDATA\\[[\\s\\S]*?\\]\\]>",link:/^!?\[(label)\]\(\s*(href)(?:\s+(title))?\s*\)/,reflink:/^!?\[(label)\]\[(ref)\]/,nolink:/^!?\[(ref)\](?:\[\])?/,reflinkSearch:"reflink|nolink(?!\\()",emStrong:{lDelim:/^(?:\*+(?:((?!\*)[punct])|[^\s*]))|^_+(?:((?!_)[punct])|([^\s_]))/,rDelimAst:/^[^_*]*?__[^_*]*?\*[^_*]*?(?=__)|[^*]+(?=[^*])|(?!\*)[punct](\*+)(?=[\s]|$)|[^punct\s](\*+)(?!\*)(?=[punct\s]|$)|(?!\*)[punct\s](\*+)(?=[^punct\s])|[\s](\*+)(?!\*)(?=[punct])|(?!\*)[punct](\*+)(?!\*)(?=[punct])|[^punct\s](\*+)(?=[^punct\s])/,rDelimUnd:/^[^_*]*?\*\*[^_*]*?_[^_*]*?(?=\*\*)|[^_]+(?=[^_])|(?!_)[punct](_+)(?=[\s]|$)|[^punct\s](_+)(?!_)(?=[punct\s]|$)|(?!_)[punct\s](_+)(?=[^punct\s])|[\s](_+)(?!_)(?=[punct])|(?!_)[punct](_+)(?!_)(?=[punct])/},code:/^(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/,br:/^( {2,}|\\)\n(?!\s*$)/,del:k,text:/^(`+|[^`])(?:(?= {2,}\n)|[\s\S]*?(?:(?=[\\<!\[`*_]|\b_|$)|[^ ](?= {2,}\n)))/,punctuation:/^((?![*_])[\spunctuation])/,_punctuation:"\\p{P}$+<=>`^|~"};w.punctuation=u(w.punctuation,"u").replace(/punctuation/g,w._punctuation).getRegex(),w.blockSkip=/\[[^[\]]*?\]\([^\(\)]*?\)|`[^`]*?`|<[^<>]*?>/g,w.anyPunctuation=/\\[punct]/g,w._escapes=/\\([punct])/g,w._comment=u(m._comment).replace("(?:--\x3e|$)","--\x3e").getRegex(),w.emStrong.lDelim=u(w.emStrong.lDelim,"u").replace(/punct/g,w._punctuation).getRegex(),w.emStrong.rDelimAst=u(w.emStrong.rDelimAst,"gu").replace(/punct/g,w._punctuation).getRegex(),w.emStrong.rDelimUnd=u(w.emStrong.rDelimUnd,"gu").replace(/punct/g,w._punctuation).getRegex(),w.anyPunctuation=u(w.anyPunctuation,"gu").replace(/punct/g,w._punctuation).getRegex(),w._escapes=u(w._escapes,"gu").replace(/punct/g,w._punctuation).getRegex(),w._scheme=/[a-zA-Z][a-zA-Z0-9+.-]{1,31}/,w._email=/[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+(@)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+(?![-_])/,w.autolink=u(w.autolink).replace("scheme",w._scheme).replace("email",w._email).getRegex(),w._attribute=/\s+[a-zA-Z:_][\w.:-]*(?:\s*=\s*"[^"]*"|\s*=\s*'[^']*'|\s*=\s*[^\s"'=<>`]+)?/,w.tag=u(w.tag).replace("comment",w._comment).replace("attribute",w._attribute).getRegex(),w._label=/(?:\[(?:\\.|[^\[\]\\])*\]|\\.|`[^`]*`|[^\[\]\\`])*?/,w._href=/<(?:\\.|[^\n<>\\])+>|[^\s\x00-\x1f]*/,w._title=/"(?:\\"?|[^"\\])*"|'(?:\\'?|[^'\\])*'|\((?:\\\)?|[^)\\])*\)/,w.link=u(w.link).replace("label",w._label).replace("href",w._href).replace("title",w._title).getRegex(),w.reflink=u(w.reflink).replace("label",w._label).replace("ref",m._label).getRegex(),w.nolink=u(w.nolink).replace("ref",m._label).getRegex(),w.reflinkSearch=u(w.reflinkSearch,"g").replace("reflink",w.reflink).replace("nolink",w.nolink).getRegex(),w.normal={...w},w.pedantic={...w.normal,strong:{start:/^__|\*\*/,middle:/^__(?=\S)([\s\S]*?\S)__(?!_)|^\*\*(?=\S)([\s\S]*?\S)\*\*(?!\*)/,endAst:/\*\*(?!\*)/g,endUnd:/__(?!_)/g},em:{start:/^_|\*/,middle:/^()\*(?=\S)([\s\S]*?\S)\*(?!\*)|^_(?=\S)([\s\S]*?\S)_(?!_)/,endAst:/\*(?!\*)/g,endUnd:/_(?!_)/g},link:u(/^!?\[(label)\]\((.*?)\)/).replace("label",w._label).getRegex(),reflink:u(/^!?\[(label)\]\s*\[([^\]]*)\]/).replace("label",w._label).getRegex()},w.gfm={...w.normal,escape:u(w.escape).replace("])","~|])").getRegex(),_extended_email:/[A-Za-z0-9._+-]+(@)[a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]*[a-zA-Z0-9])+(?![-_])/,url:/^((?:ftp|https?):\/\/|www\.)(?:[a-zA-Z0-9\-]+\.?)+[^\s<]*|^email/,_backpedal:/(?:[^?!.,:;*_'"~()&]+|\([^)]*\)|&(?![a-zA-Z0-9]+;$)|[?!.,:;*_'"~)]+(?!$))+/,del:/^(~~?)(?=[^\s~])([\s\S]*?[^\s~])\1(?=[^~]|$)/,text:/^([`~]+|[^`~])(?:(?= {2,}\n)|(?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)|[\s\S]*?(?:(?=[\\<!\[`*~_]|\b_|https?:\/\/|ftp:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-](?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)))/},w.gfm.url=u(w.gfm.url,"i").replace("email",w.gfm._extended_email).getRegex(),w.breaks={...w.gfm,br:u(w.br).replace("{2,}","*").getRegex(),text:u(w.gfm.text).replace("\\b_","\\b_| {2,}\\n").replace(/\{2,\}/g,"*").getRegex()};class _{tokens;options;state;tokenizer;inlineQueue;constructor(t){this.tokens=[],this.tokens.links=Object.create(null),this.options=t||e.defaults,this.options.tokenizer=this.options.tokenizer||new b,this.tokenizer=this.options.tokenizer,this.tokenizer.options=this.options,this.tokenizer.lexer=this,this.inlineQueue=[],this.state={inLink:!1,inRawBlock:!1,top:!0};const n={block:m.normal,inline:w.normal};this.options.pedantic?(n.block=m.pedantic,n.inline=w.pedantic):this.options.gfm&&(n.block=m.gfm,this.options.breaks?n.inline=w.breaks:n.inline=w.gfm),this.tokenizer.rules=n}static get rules(){return{block:m,inline:w}}static lex(e,t){return new _(t).lex(e)}static lexInline(e,t){return new _(t).inlineTokens(e)}lex(e){let t;for(e=e.replace(/\r\n|\r/g,"\n"),this.blockTokens(e,this.tokens);t=this.inlineQueue.shift();)this.inlineTokens(t.src,t.tokens);return this.tokens}blockTokens(e,t=[]){let n,s,r,i;for(e=this.options.pedantic?e.replace(/\t/g,"    ").replace(/^ +$/gm,""):e.replace(/^( *)(\t+)/gm,((e,t,n)=>t+"    ".repeat(n.length)));e;)if(!(this.options.extensions&&this.options.extensions.block&&this.options.extensions.block.some((s=>!!(n=s.call({lexer:this},e,t))&&(e=e.substring(n.raw.length),t.push(n),!0)))))if(n=this.tokenizer.space(e))e=e.substring(n.raw.length),1===n.raw.length&&t.length>0?t[t.length-1].raw+="\n":t.push(n);else if(n=this.tokenizer.code(e))e=e.substring(n.raw.length),s=t[t.length-1],!s||"paragraph"!==s.type&&"text"!==s.type?t.push(n):(s.raw+="\n"+n.raw,s.text+="\n"+n.text,this.inlineQueue[this.inlineQueue.length-1].src=s.text);else if(n=this.tokenizer.fences(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.heading(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.hr(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.blockquote(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.list(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.html(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.def(e))e=e.substring(n.raw.length),s=t[t.length-1],!s||"paragraph"!==s.type&&"text"!==s.type?this.tokens.links[n.tag]||(this.tokens.links[n.tag]={href:n.href,title:n.title}):(s.raw+="\n"+n.raw,s.text+="\n"+n.raw,this.inlineQueue[this.inlineQueue.length-1].src=s.text);else if(n=this.tokenizer.table(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.lheading(e))e=e.substring(n.raw.length),t.push(n);else{if(r=e,this.options.extensions&&this.options.extensions.startBlock){let t=1/0;const n=e.slice(1);let s;this.options.extensions.startBlock.forEach((e=>{s=e.call({lexer:this},n),"number"==typeof s&&s>=0&&(t=Math.min(t,s))})),t<1/0&&t>=0&&(r=e.substring(0,t+1))}if(this.state.top&&(n=this.tokenizer.paragraph(r)))s=t[t.length-1],i&&"paragraph"===s.type?(s.raw+="\n"+n.raw,s.text+="\n"+n.text,this.inlineQueue.pop(),this.inlineQueue[this.inlineQueue.length-1].src=s.text):t.push(n),i=r.length!==e.length,e=e.substring(n.raw.length);else if(n=this.tokenizer.text(e))e=e.substring(n.raw.length),s=t[t.length-1],s&&"text"===s.type?(s.raw+="\n"+n.raw,s.text+="\n"+n.text,this.inlineQueue.pop(),this.inlineQueue[this.inlineQueue.length-1].src=s.text):t.push(n);else if(e){const t="Infinite loop on byte: "+e.charCodeAt(0);if(this.options.silent){console.error(t);break}throw new Error(t)}}return this.state.top=!0,t}inline(e,t=[]){return this.inlineQueue.push({src:e,tokens:t}),t}inlineTokens(e,t=[]){let n,s,r,i,l,o,a=e;if(this.tokens.links){const e=Object.keys(this.tokens.links);if(e.length>0)for(;null!=(i=this.tokenizer.rules.inline.reflinkSearch.exec(a));)e.includes(i[0].slice(i[0].lastIndexOf("[")+1,-1))&&(a=a.slice(0,i.index)+"["+"a".repeat(i[0].length-2)+"]"+a.slice(this.tokenizer.rules.inline.reflinkSearch.lastIndex))}for(;null!=(i=this.tokenizer.rules.inline.blockSkip.exec(a));)a=a.slice(0,i.index)+"["+"a".repeat(i[0].length-2)+"]"+a.slice(this.tokenizer.rules.inline.blockSkip.lastIndex);for(;null!=(i=this.tokenizer.rules.inline.anyPunctuation.exec(a));)a=a.slice(0,i.index)+"++"+a.slice(this.tokenizer.rules.inline.anyPunctuation.lastIndex);for(;e;)if(l||(o=""),l=!1,!(this.options.extensions&&this.options.extensions.inline&&this.options.extensions.inline.some((s=>!!(n=s.call({lexer:this},e,t))&&(e=e.substring(n.raw.length),t.push(n),!0)))))if(n=this.tokenizer.escape(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.tag(e))e=e.substring(n.raw.length),s=t[t.length-1],s&&"text"===n.type&&"text"===s.type?(s.raw+=n.raw,s.text+=n.text):t.push(n);else if(n=this.tokenizer.link(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.reflink(e,this.tokens.links))e=e.substring(n.raw.length),s=t[t.length-1],s&&"text"===n.type&&"text"===s.type?(s.raw+=n.raw,s.text+=n.text):t.push(n);else if(n=this.tokenizer.emStrong(e,a,o))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.codespan(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.br(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.del(e))e=e.substring(n.raw.length),t.push(n);else if(n=this.tokenizer.autolink(e))e=e.substring(n.raw.length),t.push(n);else if(this.state.inLink||!(n=this.tokenizer.url(e))){if(r=e,this.options.extensions&&this.options.extensions.startInline){let t=1/0;const n=e.slice(1);let s;this.options.extensions.startInline.forEach((e=>{s=e.call({lexer:this},n),"number"==typeof s&&s>=0&&(t=Math.min(t,s))})),t<1/0&&t>=0&&(r=e.substring(0,t+1))}if(n=this.tokenizer.inlineText(r))e=e.substring(n.raw.length),"_"!==n.raw.slice(-1)&&(o=n.raw.slice(-1)),l=!0,s=t[t.length-1],s&&"text"===s.type?(s.raw+=n.raw,s.text+=n.text):t.push(n);else if(e){const t="Infinite loop on byte: "+e.charCodeAt(0);if(this.options.silent){console.error(t);break}throw new Error(t)}}else e=e.substring(n.raw.length),t.push(n);return t}}class y{options;constructor(t){this.options=t||e.defaults}code(e,t,n){const s=(t||"").match(/^\S*/)?.[0];return e=e.replace(/\n$/,"")+"\n",s?'<pre><code class="language-'+c(s)+'">'+(n?e:c(e,!0))+"</code></pre>\n":"<pre><code>"+(n?e:c(e,!0))+"</code></pre>\n"}blockquote(e){return`<blockquote>\n${e}</blockquote>\n`}html(e,t){return e}heading(e,t,n){return`<h${t}>${e}</h${t}>\n`}hr(){return"<hr>\n"}list(e,t,n){const s=t?"ol":"ul";return"<"+s+(t&&1!==n?' start="'+n+'"':"")+">\n"+e+"</"+s+">\n"}listitem(e,t,n){return`<li>${e}</li>\n`}checkbox(e){return"<input "+(e?'checked="" ':"")+'disabled="" type="checkbox">'}paragraph(e){return`<p>${e}</p>\n`}table(e,t){return t&&(t=`<tbody>${t}</tbody>`),"<table>\n<thead>\n"+e+"</thead>\n"+t+"</table>\n"}tablerow(e){return`<tr>\n${e}</tr>\n`}tablecell(e,t){const n=t.header?"th":"td";return(t.align?`<${n} align="${t.align}">`:`<${n}>`)+e+`</${n}>\n`}strong(e){return`<strong>${e}</strong>`}em(e){return`<em>${e}</em>`}codespan(e){return`<code>${e}</code>`}br(){return"<br>"}del(e){return`<del>${e}</del>`}link(e,t,n){const s=g(e);if(null===s)return n;let r='<a href="'+(e=s)+'"';return t&&(r+=' title="'+t+'"'),r+=">"+n+"</a>",r}image(e,t,n){const s=g(e);if(null===s)return n;let r=`<img src="${e=s}" alt="${n}"`;return t&&(r+=` title="${t}"`),r+=">",r}text(e){return e}}class ${strong(e){return e}em(e){return e}codespan(e){return e}del(e){return e}html(e){return e}text(e){return e}link(e,t,n){return""+n}image(e,t,n){return""+n}br(){return""}}class z{options;renderer;textRenderer;constructor(t){this.options=t||e.defaults,this.options.renderer=this.options.renderer||new y,this.renderer=this.options.renderer,this.renderer.options=this.options,this.textRenderer=new $}static parse(e,t){return new z(t).parse(e)}static parseInline(e,t){return new z(t).parseInline(e)}parse(e,t=!0){let n="";for(let s=0;s<e.length;s++){const r=e[s];if(this.options.extensions&&this.options.extensions.renderers&&this.options.extensions.renderers[r.type]){const e=r,t=this.options.extensions.renderers[e.type].call({parser:this},e);if(!1!==t||!["space","hr","heading","code","table","blockquote","list","html","paragraph","text"].includes(e.type)){n+=t||"";continue}}switch(r.type){case"space":continue;case"hr":n+=this.renderer.hr();continue;case"heading":{const e=r;n+=this.renderer.heading(this.parseInline(e.tokens),e.depth,this.parseInline(e.tokens,this.textRenderer).replace(h,((e,t)=>"colon"===(t=t.toLowerCase())?":":"#"===t.charAt(0)?"x"===t.charAt(1)?String.fromCharCode(parseInt(t.substring(2),16)):String.fromCharCode(+t.substring(1)):"")));continue}case"code":{const e=r;n+=this.renderer.code(e.text,e.lang,!!e.escaped);continue}case"table":{const e=r;let t="",s="";for(let t=0;t<e.header.length;t++)s+=this.renderer.tablecell(this.parseInline(e.header[t].tokens),{header:!0,align:e.align[t]});t+=this.renderer.tablerow(s);let i="";for(let t=0;t<e.rows.length;t++){const n=e.rows[t];s="";for(let t=0;t<n.length;t++)s+=this.renderer.tablecell(this.parseInline(n[t].tokens),{header:!1,align:e.align[t]});i+=this.renderer.tablerow(s)}n+=this.renderer.table(t,i);continue}case"blockquote":{const e=r,t=this.parse(e.tokens);n+=this.renderer.blockquote(t);continue}case"list":{const e=r,t=e.ordered,s=e.start,i=e.loose;let l="";for(let t=0;t<e.items.length;t++){const n=e.items[t],s=n.checked,r=n.task;let o="";if(n.task){const e=this.renderer.checkbox(!!s);i?n.tokens.length>0&&"paragraph"===n.tokens[0].type?(n.tokens[0].text=e+" "+n.tokens[0].text,n.tokens[0].tokens&&n.tokens[0].tokens.length>0&&"text"===n.tokens[0].tokens[0].type&&(n.tokens[0].tokens[0].text=e+" "+n.tokens[0].tokens[0].text)):n.tokens.unshift({type:"text",text:e+" "}):o+=e+" "}o+=this.parse(n.tokens,i),l+=this.renderer.listitem(o,r,!!s)}n+=this.renderer.list(l,t,s);continue}case"html":{const e=r;n+=this.renderer.html(e.text,e.block);continue}case"paragraph":{const e=r;n+=this.renderer.paragraph(this.parseInline(e.tokens));continue}case"text":{let i=r,l=i.tokens?this.parseInline(i.tokens):i.text;for(;s+1<e.length&&"text"===e[s+1].type;)i=e[++s],l+="\n"+(i.tokens?this.parseInline(i.tokens):i.text);n+=t?this.renderer.paragraph(l):l;continue}default:{const e='Token with "'+r.type+'" type was not found.';if(this.options.silent)return console.error(e),"";throw new Error(e)}}}return n}parseInline(e,t){t=t||this.renderer;let n="";for(let s=0;s<e.length;s++){const r=e[s];if(this.options.extensions&&this.options.extensions.renderers&&this.options.extensions.renderers[r.type]){const e=this.options.extensions.renderers[r.type].call({parser:this},r);if(!1!==e||!["escape","html","link","image","strong","em","codespan","br","del","text"].includes(r.type)){n+=e||"";continue}}switch(r.type){case"escape":{const e=r;n+=t.text(e.text);break}case"html":{const e=r;n+=t.html(e.text);break}case"link":{const e=r;n+=t.link(e.href,e.title,this.parseInline(e.tokens,t));break}case"image":{const e=r;n+=t.image(e.href,e.title,e.text);break}case"strong":{const e=r;n+=t.strong(this.parseInline(e.tokens,t));break}case"em":{const e=r;n+=t.em(this.parseInline(e.tokens,t));break}case"codespan":{const e=r;n+=t.codespan(e.text);break}case"br":n+=t.br();break;case"del":{const e=r;n+=t.del(this.parseInline(e.tokens,t));break}case"text":{const e=r;n+=t.text(e.text);break}default:{const e='Token with "'+r.type+'" type was not found.';if(this.options.silent)return console.error(e),"";throw new Error(e)}}}return n}}class T{options;constructor(t){this.options=t||e.defaults}static passThroughHooks=new Set(["preprocess","postprocess"]);preprocess(e){return e}postprocess(e){return e}}class R{defaults={async:!1,breaks:!1,extensions:null,gfm:!0,hooks:null,pedantic:!1,renderer:null,silent:!1,tokenizer:null,walkTokens:null};options=this.setOptions;parse=this.#e(_.lex,z.parse);parseInline=this.#e(_.lexInline,z.parseInline);Parser=z;Renderer=y;TextRenderer=$;Lexer=_;Tokenizer=b;Hooks=T;constructor(...e){this.use(...e)}walkTokens(e,t){let n=[];for(const s of e)switch(n=n.concat(t.call(this,s)),s.type){case"table":{const e=s;for(const s of e.header)n=n.concat(this.walkTokens(s.tokens,t));for(const s of e.rows)for(const e of s)n=n.concat(this.walkTokens(e.tokens,t));break}case"list":{const e=s;n=n.concat(this.walkTokens(e.items,t));break}default:{const e=s;this.defaults.extensions?.childTokens?.[e.type]?this.defaults.extensions.childTokens[e.type].forEach((s=>{n=n.concat(this.walkTokens(e[s],t))})):e.tokens&&(n=n.concat(this.walkTokens(e.tokens,t)))}}return n}use(...e){const t=this.defaults.extensions||{renderers:{},childTokens:{}};return e.forEach((e=>{const n={...e};if(n.async=this.defaults.async||n.async||!1,e.extensions&&(e.extensions.forEach((e=>{if(!e.name)throw new Error("extension name required");if("renderer"in e){const n=t.renderers[e.name];t.renderers[e.name]=n?function(...t){let s=e.renderer.apply(this,t);return!1===s&&(s=n.apply(this,t)),s}:e.renderer}if("tokenizer"in e){if(!e.level||"block"!==e.level&&"inline"!==e.level)throw new Error("extension level must be 'block' or 'inline'");const n=t[e.level];n?n.unshift(e.tokenizer):t[e.level]=[e.tokenizer],e.start&&("block"===e.level?t.startBlock?t.startBlock.push(e.start):t.startBlock=[e.start]:"inline"===e.level&&(t.startInline?t.startInline.push(e.start):t.startInline=[e.start]))}"childTokens"in e&&e.childTokens&&(t.childTokens[e.name]=e.childTokens)})),n.extensions=t),e.renderer){const t=this.defaults.renderer||new y(this.defaults);for(const n in e.renderer){const s=e.renderer[n],r=n,i=t[r];t[r]=(...e)=>{let n=s.apply(t,e);return!1===n&&(n=i.apply(t,e)),n||""}}n.renderer=t}if(e.tokenizer){const t=this.defaults.tokenizer||new b(this.defaults);for(const n in e.tokenizer){const s=e.tokenizer[n],r=n,i=t[r];t[r]=(...e)=>{let n=s.apply(t,e);return!1===n&&(n=i.apply(t,e)),n}}n.tokenizer=t}if(e.hooks){const t=this.defaults.hooks||new T;for(const n in e.hooks){const s=e.hooks[n],r=n,i=t[r];T.passThroughHooks.has(n)?t[r]=e=>{if(this.defaults.async)return Promise.resolve(s.call(t,e)).then((e=>i.call(t,e)));const n=s.call(t,e);return i.call(t,n)}:t[r]=(...e)=>{let n=s.apply(t,e);return!1===n&&(n=i.apply(t,e)),n}}n.hooks=t}if(e.walkTokens){const t=this.defaults.walkTokens,s=e.walkTokens;n.walkTokens=function(e){let n=[];return n.push(s.call(this,e)),t&&(n=n.concat(t.call(this,e))),n}}this.defaults={...this.defaults,...n}})),this}setOptions(e){return this.defaults={...this.defaults,...e},this}lexer(e,t){return _.lex(e,t??this.defaults)}parser(e,t){return z.parse(e,t??this.defaults)}#e(e,t){return(n,s)=>{const r={...s},i={...this.defaults,...r};!0===this.defaults.async&&!1===r.async&&(i.silent||console.warn("marked(): The async option was set to true by an extension. The async: false option sent to parse will be ignored."),i.async=!0);const l=this.#t(!!i.silent,!!i.async);if(null==n)return l(new Error("marked(): input parameter is undefined or null"));if("string"!=typeof n)return l(new Error("marked(): input parameter is of type "+Object.prototype.toString.call(n)+", string expected"));if(i.hooks&&(i.hooks.options=i),i.async)return Promise.resolve(i.hooks?i.hooks.preprocess(n):n).then((t=>e(t,i))).then((e=>i.walkTokens?Promise.all(this.walkTokens(e,i.walkTokens)).then((()=>e)):e)).then((e=>t(e,i))).then((e=>i.hooks?i.hooks.postprocess(e):e)).catch(l);try{i.hooks&&(n=i.hooks.preprocess(n));const s=e(n,i);i.walkTokens&&this.walkTokens(s,i.walkTokens);let r=t(s,i);return i.hooks&&(r=i.hooks.postprocess(r)),r}catch(e){return l(e)}}}#t(e,t){return n=>{if(n.message+="\nPlease report this to https://github.com/markedjs/marked.",e){const e="<p>An error occurred:</p><pre>"+c(n.message+"",!0)+"</pre>";return t?Promise.resolve(e):e}if(t)return Promise.reject(n);throw n}}}const S=new R;function A(e,t){return S.parse(e,t)}A.options=A.setOptions=function(e){return S.setOptions(e),A.defaults=S.defaults,n(A.defaults),A},A.getDefaults=t,A.defaults=e.defaults,A.use=function(...e){return S.use(...e),A.defaults=S.defaults,n(A.defaults),A},A.walkTokens=function(e,t){return S.walkTokens(e,t)},A.parseInline=S.parseInline,A.Parser=z,A.parser=z.parse,A.Renderer=y,A.TextRenderer=$,A.Lexer=_,A.lexer=_.lex,A.Tokenizer=b,A.Hooks=T,A.parse=A;const I=A.options,E=A.setOptions,Z=A.use,q=A.walkTokens,L=A.parseInline,D=A,P=z.parse,v=_.lex;e.Hooks=T,e.Lexer=_,e.Marked=R,e.Parser=z,e.Renderer=y,e.TextRenderer=$,e.Tokenizer=b,e.getDefaults=t,e.lexer=v,e.marked=A,e.options=I,e.parse=D,e.parseInline=L,e.parser=P,e.setOptions=E,e.use=Z,e.walkTokens=q}));
+
+  </script>
   <style>
-    :root {
-      --bg-deep:    #0f0d0b;
-      --bg-dark:    #161210;
-      --bg-mid:     #1d1915;
-      --bg-sidebar: #1a1613;
-      --bg-card:    #221e19;
-      --bg-hover:   #2a2420;
-      --border:     #3a2e24;
-      --border-dim: #2a2218;
-      --text-ivory: #e8dcc8;
-      --text-warm:  #c8b89a;
-      --text-muted: #7d6f5e;
-      --text-dim:   #4a3f32;
-      --ember:      #c94b1a;
-      --ember-dim:  #8a3210;
-      --ember-glow: rgba(201, 75, 26, 0.15);
-      --gold:       #c9a227;
-      --silver:     #8fa4ba;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; background: var(--bg-deep); color: var(--text-ivory); font-family: 'Crimson Pro', Georgia, serif; font-size: 17px; line-height: 1.7; overflow: hidden; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-deep); }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--ember-dim); }
-
-    /* ===== ACCESS GATE ===== */
-    .gate-overlay {
-      position: fixed; inset: 0; z-index: 9999;
-      background: var(--bg-deep);
-      display: flex; align-items: center; justify-content: center;
-      transition: opacity 0.4s ease;
-    }
-    .gate-overlay.hidden { opacity: 0; pointer-events: none; }
-    .gate-box {
-      text-align: center; padding: 48px 40px;
-      max-width: 400px; width: 90%;
-    }
-    .gate-sigil { width: 80px; height: 80px; margin: 0 auto 28px; }
-    .gate-heading {
-      font-family: 'Cinzel Decorative', serif; font-size: 28px; font-weight: 700;
-      letter-spacing: 0.06em; color: var(--text-ivory); margin-bottom: 8px;
-    }
-    .gate-sub {
-      font-family: 'Crimson Pro', serif; font-size: 16px; font-style: italic;
-      color: var(--text-muted); margin-bottom: 32px;
-    }
-    .gate-input {
-      display: block; width: 100%; padding: 12px 16px;
-      font-family: 'Crimson Pro', serif; font-size: 16px; letter-spacing: 1px;
-      color: var(--text-ivory); background: var(--bg-card);
-      border: 1px solid var(--border); border-radius: 3px;
-      outline: none; margin-bottom: 12px; text-align: center;
-    }
-    .gate-input:focus { border-color: var(--ember); }
-    .gate-input::placeholder { color: var(--text-dim); letter-spacing: 2px; }
-    .gate-submit {
-      display: inline-block; padding: 10px 32px;
-      font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--text-ivory); background: transparent;
-      border: 1px solid var(--ember-dim); border-radius: 2px;
-      cursor: pointer; transition: all 0.2s;
-    }
-    .gate-submit:hover { background: var(--ember-glow); border-color: var(--ember); color: var(--ember); }
-    .gate-error {
-      font-family: 'Crimson Pro', serif; font-size: 14px;
-      color: var(--ember); margin-top: 12px; opacity: 0;
-      transition: opacity 0.2s;
-    }
-    .gate-error.visible { opacity: 1; }
-    .gate-divider {
-      width: 120px; height: 1px; margin: 28px auto;
-      background: linear-gradient(90deg, transparent, var(--border), transparent);
-    }
-    .gate-back {
-      font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.15em;
-      color: var(--text-dim); text-decoration: none; text-transform: uppercase;
-    }
-    .gate-back:hover { color: var(--text-muted); }
-
-    /* ===== APP (hidden until unlocked) ===== */
-    #app { display: none; grid-template-rows: auto 1fr; grid-template-columns: 260px 1fr; height: 100vh; }
-    #app.unlocked { display: grid; }
-
-    /* HEADER */
-    #header { grid-column: 1 / -1; background: var(--bg-dark); border-bottom: 1px solid var(--border); display: flex; align-items: stretch; min-height: 56px; position: relative; }
-    #header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, var(--ember) 0%, var(--ember-dim) 30%, transparent 70%); }
-    #header-brand { display: flex; align-items: center; gap: 14px; padding: 0 24px; border-right: 1px solid var(--border-dim); flex-shrink: 0; width: 260px; }
-    #header-sigil { width: 34px; height: 34px; flex-shrink: 0; }
-    #header-title { font-family: 'Cinzel Decorative', serif; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; color: var(--text-ivory); line-height: 1.2; }
-    #header-subtitle { font-family: 'Cinzel', serif; font-size: 9px; font-weight: 400; letter-spacing: 0.18em; color: var(--text-muted); text-transform: uppercase; margin-top: 2px; }
-    #header-stats { display: flex; align-items: center; padding: 0 32px; gap: 36px; flex: 1; }
-    .stat-pill { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-    .stat-value { font-family: 'Cinzel', serif; font-size: 18px; font-weight: 700; color: var(--gold); line-height: 1; }
-    .stat-label { font-family: 'Cinzel', serif; font-size: 7px; font-weight: 400; letter-spacing: 0.2em; color: var(--text-muted); text-transform: uppercase; }
-    .stat-divider { width: 1px; height: 28px; background: var(--border-dim); }
-    #header-session { margin-left: auto; display: flex; align-items: center; padding: 0 24px; gap: 10px; border-left: 1px solid var(--border-dim); flex-shrink: 0; }
-    .session-badge { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.15em; color: var(--ember); text-transform: uppercase; background: var(--ember-glow); border: 1px solid var(--ember-dim); padding: 4px 10px; border-radius: 2px; }
-
-    /* SIDEBAR */
-    #sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border); overflow-y: auto; padding: 16px 0 32px; }
-    .nav-section { margin-bottom: 4px; }
-    .nav-section-header { font-family: 'Cinzel', serif; font-size: 9px; font-weight: 600; letter-spacing: 0.22em; color: var(--text-dim); text-transform: uppercase; padding: 10px 20px 6px; cursor: pointer; user-select: none; display: flex; align-items: center; justify-content: space-between; transition: color 0.2s; }
-    .nav-section-header:hover { color: var(--text-muted); }
-    .nav-section-arrow { font-size: 8px; transition: transform 0.2s; }
-    .nav-section.collapsed .nav-section-arrow { transform: rotate(-90deg); }
-    .nav-section.collapsed .nav-items { display: none; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 7px 20px 7px 24px; cursor: pointer; font-family: 'Crimson Pro', serif; font-size: 14.5px; color: var(--text-muted); transition: background 0.15s, color 0.15s; border-left: 2px solid transparent; }
-    .nav-item:hover { background: var(--bg-hover); color: var(--text-warm); border-left-color: var(--border); }
-    .nav-item.active { background: var(--bg-hover); color: var(--text-ivory); border-left-color: var(--ember); }
-    .nav-icon { font-size: 12px; width: 14px; text-align: center; flex-shrink: 0; color: var(--text-dim); }
-    .nav-item.active .nav-icon { color: var(--ember); }
-    .nav-badge { margin-left: auto; font-family: 'Cinzel', serif; font-size: 8px; color: var(--text-dim); background: var(--bg-card); border: 1px solid var(--border-dim); padding: 1px 5px; border-radius: 2px; }
-    .nav-sep { height: 1px; background: var(--border-dim); margin: 8px 16px; }
-
-    /* CONTENT */
-    #content { overflow-y: auto; background: var(--bg-mid); }
-    #content-inner { max-width: 900px; margin: 0 auto; padding: 40px 48px 80px; }
-
-    /* OVERVIEW */
-    #overview { display: none; }
-    #overview.visible { display: block; }
-    .overview-hero { text-align: center; padding: 48px 0 48px; }
-    .overview-hero::after { content: ''; display: block; width: 200px; height: 1px; background: linear-gradient(90deg, transparent, var(--ember), transparent); margin: 36px auto 0; }
-    .hero-sigil { width: 80px; height: 80px; margin: 0 auto 24px; }
-    .overview-title { font-family: 'Cinzel Decorative', serif; font-size: 42px; font-weight: 700; letter-spacing: 0.06em; color: var(--text-ivory); margin-bottom: 10px; }
-    .overview-tagline { font-family: 'Crimson Pro', serif; font-style: italic; font-size: 20px; color: var(--text-muted); margin-bottom: 6px; }
-    .overview-phase { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.25em; color: var(--ember); text-transform: uppercase; }
-    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 32px 0; }
-    .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 20px; text-align: center; position: relative; overflow: hidden; transition: border-color 0.2s; cursor: default; }
-    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--ember); opacity: 0; transition: opacity 0.2s; }
-    .stat-card:hover { border-color: var(--ember-dim); }
-    .stat-card:hover::before { opacity: 1; }
-    .stat-card-value { font-family: 'Cinzel', serif; font-size: 32px; font-weight: 700; color: var(--gold); line-height: 1; margin-bottom: 8px; }
-    .stat-card-label { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.2em; color: var(--text-muted); text-transform: uppercase; }
-    .section-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 12px; }
-    .section-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 18px 20px; cursor: pointer; transition: background 0.15s, border-color 0.15s; display: flex; align-items: flex-start; gap: 14px; }
-    .section-card:hover { background: var(--bg-hover); border-color: var(--ember-dim); }
-    .section-card-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
-    .section-card-title { font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; color: var(--text-ivory); margin-bottom: 4px; }
-    .section-card-desc { font-family: 'Crimson Pro', serif; font-size: 13px; color: var(--text-muted); line-height: 1.5; }
-    .section-card-meta { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.12em; color: var(--text-dim); text-transform: uppercase; margin-top: 6px; }
-    .overview-heading { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.25em; color: var(--ember); text-transform: uppercase; margin: 40px 0 14px; }
-    .pending-list { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--ember); border-radius: 4px; padding: 16px 20px; }
-    .pending-item { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; font-family: 'Crimson Pro', serif; font-size: 14px; color: var(--text-warm); border-bottom: 1px solid var(--border-dim); }
-    .pending-item:last-child { border-bottom: none; }
-    .pending-tag { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.1em; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; flex-shrink: 0; margin-top: 3px; }
-    .tag-high { background: rgba(201,75,26,0.2); color: var(--ember); border: 1px solid var(--ember-dim); }
-    .tag-med { background: rgba(201,162,39,0.15); color: var(--gold); border: 1px solid rgba(201,162,39,0.3); }
-    .tag-low { background: rgba(74,82,96,0.3); color: var(--silver); border: 1px solid rgba(74,82,96,0.4); }
-    .house-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    .house-table th { background: var(--bg-card); font-family: 'Cinzel', serif; font-size: 9px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
-    .house-table td { padding: 9px 14px; border-bottom: 1px solid var(--border-dim); color: var(--text-warm); vertical-align: top; }
-    .house-table tr:hover td { background: var(--bg-card); }
-    .house-canonical td:first-child { color: var(--text-ivory); font-weight: 600; }
-    .badge-canon { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.1em; color: var(--ember); }
-    .badge-proposed { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.1em; color: var(--gold); }
-
-    /* MD VIEW */
-    #md-view { display: none; }
-    #md-view.visible { display: block; }
-    #md-header { padding: 32px 0 24px; border-bottom: 1px solid var(--border); margin-bottom: 32px; display: flex; align-items: flex-end; justify-content: space-between; }
-    #md-breadcrumb { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.2em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 6px; }
-    #md-doc-title { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 600; color: var(--text-ivory); letter-spacing: 0.05em; }
-    #md-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-    #md-line-count { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.18em; color: var(--text-dim); text-transform: uppercase; }
-    #md-status-badge { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; }
-    #md-body { animation: fadeIn 0.25s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* MARKDOWN STYLES */
-    #md-body h1 { font-family: 'Cinzel', serif; font-size: 26px; font-weight: 700; color: var(--text-ivory); letter-spacing: 0.04em; margin: 40px 0 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-    #md-body h1:first-child { margin-top: 0; }
-    #md-body h2 { font-family: 'Cinzel', serif; font-size: 17px; font-weight: 600; color: var(--text-warm); letter-spacing: 0.06em; margin: 32px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border-dim); }
-    #md-body h3 { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 600; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; margin: 24px 0 10px; }
-    #md-body h4 { font-family: 'Crimson Pro', serif; font-size: 16px; font-weight: 600; font-style: italic; color: var(--text-warm); margin: 18px 0 8px; }
-    #md-body p { color: var(--text-warm); margin-bottom: 14px; }
-    #md-body strong { font-weight: 600; color: var(--text-ivory); }
-    #md-body em { font-style: italic; color: var(--text-warm); }
-    #md-body ul, #md-body ol { padding-left: 22px; margin-bottom: 14px; }
-    #md-body li { color: var(--text-warm); margin-bottom: 5px; }
-    #md-body li::marker { color: var(--ember); }
-    #md-body blockquote { border-left: 3px solid var(--ember); padding: 10px 16px; margin: 16px 0; background: var(--bg-card); border-radius: 0 3px 3px 0; }
-    #md-body blockquote p { color: var(--text-warm); font-style: italic; margin: 0; }
-    #md-body code { font-family: 'Courier New', monospace; font-size: 13px; background: var(--bg-card); border: 1px solid var(--border-dim); padding: 1px 5px; border-radius: 3px; color: var(--gold); }
-    #md-body pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 16px 18px; margin-bottom: 16px; overflow-x: auto; }
-    #md-body pre code { background: none; border: none; padding: 0; font-size: 13px; color: var(--text-warm); }
-    #md-body table { width: 100%; border-collapse: collapse; margin-bottom: 18px; font-size: 14px; }
-    #md-body th { background: var(--bg-card); font-family: 'Cinzel', serif; font-size: 9px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
-    #md-body td { padding: 9px 14px; border-bottom: 1px solid var(--border-dim); color: var(--text-warm); vertical-align: top; }
-    #md-body tr:hover td { background: var(--bg-card); }
-    #md-body hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
-    #md-body a { color: var(--ember); text-decoration: none; }
-    #md-body a:hover { text-decoration: underline; color: var(--text-ivory); }
-
-    /* LOADING */
-    #loading { display: none; align-items: center; justify-content: center; height: 200px; gap: 12px; color: var(--text-muted); font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.2em; }
-    #loading.visible { display: flex; }
-    .loader-dots { display: flex; gap: 5px; }
-    .loader-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--ember); animation: pulse 1.2s ease-in-out infinite; }
-    .loader-dot:nth-child(2) { animation-delay: 0.2s; }
-    .loader-dot:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes pulse { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
-
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-      #app.unlocked { grid-template-columns: 1fr; }
-      #sidebar { display: none; }
-      #header-stats { display: none; }
-      #header-brand { width: auto; border-right: none; }
-      #content-inner { padding: 24px 16px 60px; }
-      .stat-grid { grid-template-columns: repeat(2, 1fr); }
-      .section-grid { grid-template-columns: 1fr; }
-      .gate-box { padding: 32px 24px; }
-    }
+    :root{--bg-deep:#0f0d0b;--bg-dark:#161210;--bg-mid:#1d1915;--bg-sidebar:#1a1613;--bg-card:#221e19;--bg-hover:#2a2420;--border:#3a2e24;--border-dim:#2a2218;--text-ivory:#e8dcc8;--text-warm:#c8b89a;--text-muted:#7d6f5e;--text-dim:#4a3f32;--ember:#c94b1a;--ember-dim:#8a3210;--ember-glow:rgba(201,75,26,0.15);--gold:#c9a227;--silver:#8fa4ba}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;background:var(--bg-deep);color:var(--text-ivory);font-family:'Crimson Pro',Georgia,serif;font-size:17px;line-height:1.7;overflow:hidden}
+    ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:var(--bg-deep)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--ember-dim)}
+    .gate-overlay{position:fixed;inset:0;z-index:9999;background:var(--bg-deep);display:flex;align-items:center;justify-content:center;transition:opacity .4s ease}
+    .gate-overlay.hidden{opacity:0;pointer-events:none}
+    .gate-box{text-align:center;padding:48px 40px;max-width:400px;width:90%}
+    .gate-sigil{width:80px;height:80px;margin:0 auto 28px}
+    .gate-heading{font-family:'Cinzel Decorative',serif;font-size:28px;font-weight:700;letter-spacing:.06em;color:var(--text-ivory);margin-bottom:8px}
+    .gate-sub{font-family:'Crimson Pro',serif;font-size:16px;font-style:italic;color:var(--text-muted);margin-bottom:32px}
+    .gate-input{display:block;width:100%;padding:12px 16px;font-family:'Crimson Pro',serif;font-size:16px;letter-spacing:1px;color:var(--text-ivory);background:var(--bg-card);border:1px solid var(--border);border-radius:3px;outline:none;margin-bottom:12px;text-align:center}
+    .gate-input:focus{border-color:var(--ember)}.gate-input::placeholder{color:var(--text-dim);letter-spacing:2px}
+    .gate-submit{display:inline-block;padding:10px 32px;font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--text-ivory);background:transparent;border:1px solid var(--ember-dim);border-radius:2px;cursor:pointer;transition:all .2s}
+    .gate-submit:hover{background:var(--ember-glow);border-color:var(--ember);color:var(--ember)}
+    .gate-error{font-family:'Crimson Pro',serif;font-size:14px;color:var(--ember);margin-top:12px;opacity:0;transition:opacity .2s}.gate-error.visible{opacity:1}
+    .gate-divider{width:120px;height:1px;margin:28px auto;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+    .gate-back{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.15em;color:var(--text-dim);text-decoration:none;text-transform:uppercase}.gate-back:hover{color:var(--text-muted)}
+    #app{display:none;grid-template-rows:auto 1fr;grid-template-columns:260px 1fr;height:100vh}#app.unlocked{display:grid}
+    #header{grid-column:1/-1;background:var(--bg-dark);border-bottom:1px solid var(--border);display:flex;align-items:stretch;min-height:56px;position:relative}
+    #header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--ember) 0%,var(--ember-dim) 30%,transparent 70%)}
+    #header-brand{display:flex;align-items:center;gap:14px;padding:0 24px;border-right:1px solid var(--border-dim);flex-shrink:0;width:260px}
+    #header-sigil{width:34px;height:34px;flex-shrink:0}
+    #header-title{font-family:'Cinzel Decorative',serif;font-size:14px;font-weight:700;letter-spacing:.08em;color:var(--text-ivory);line-height:1.2}
+    #header-subtitle{font-family:'Cinzel',serif;font-size:9px;font-weight:400;letter-spacing:.18em;color:var(--text-muted);text-transform:uppercase;margin-top:2px}
+    #header-stats{display:flex;align-items:center;padding:0 24px;gap:28px;flex:1}
+    .stat-pill{display:flex;flex-direction:column;align-items:center;gap:2px}
+    .stat-value{font-family:'Cinzel',serif;font-size:18px;font-weight:700;color:var(--gold);line-height:1}
+    .stat-label{font-family:'Cinzel',serif;font-size:7px;font-weight:400;letter-spacing:.2em;color:var(--text-muted);text-transform:uppercase}
+    .stat-divider{width:1px;height:28px;background:var(--border-dim)}
+    #header-session{margin-left:auto;display:flex;align-items:center;padding:0 24px;gap:10px;border-left:1px solid var(--border-dim);flex-shrink:0}
+    .session-badge{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.15em;color:var(--ember);text-transform:uppercase;background:var(--ember-glow);border:1px solid var(--ember-dim);padding:4px 10px;border-radius:2px}
+    .download-btn{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);background:transparent;border:1px solid rgba(201,162,39,.3);border-radius:2px;padding:4px 12px;cursor:pointer;transition:all .2s}
+    .download-btn:hover{background:rgba(201,162,39,.1);border-color:var(--gold)}
+    #sidebar{background:var(--bg-sidebar);border-right:1px solid var(--border);overflow-y:auto;padding:16px 0 32px}
+    .nav-section{margin-bottom:4px}
+    .nav-section-header{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:.22em;color:var(--text-dim);text-transform:uppercase;padding:10px 20px 6px;cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between;transition:color .2s}
+    .nav-section-header:hover{color:var(--text-muted)}
+    .nav-section-arrow{font-size:8px;transition:transform .2s}
+    .nav-section.collapsed .nav-section-arrow{transform:rotate(-90deg)}.nav-section.collapsed .nav-items{display:none}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:7px 20px 7px 24px;cursor:pointer;font-family:'Crimson Pro',serif;font-size:14.5px;color:var(--text-muted);transition:background .15s,color .15s;border-left:2px solid transparent}
+    .nav-item:hover{background:var(--bg-hover);color:var(--text-warm);border-left-color:var(--border)}
+    .nav-item.active{background:var(--bg-hover);color:var(--text-ivory);border-left-color:var(--ember)}
+    .nav-icon{font-size:12px;width:14px;text-align:center;flex-shrink:0;color:var(--text-dim)}.nav-item.active .nav-icon{color:var(--ember)}
+    .nav-badge{margin-left:auto;font-family:'Cinzel',serif;font-size:8px;color:var(--text-dim);background:var(--bg-card);border:1px solid var(--border-dim);padding:1px 5px;border-radius:2px}
+    .nav-sep{height:1px;background:var(--border-dim);margin:8px 16px}
+    #content{overflow-y:auto;background:var(--bg-mid)}#content-inner{max-width:900px;margin:0 auto;padding:40px 48px 80px}
+    #overview{display:none}#overview.visible{display:block}
+    .overview-hero{text-align:center;padding:48px 0 48px}
+    .overview-hero::after{content:'';display:block;width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--ember),transparent);margin:36px auto 0}
+    .hero-sigil{width:80px;height:80px;margin:0 auto 24px}
+    .overview-title{font-family:'Cinzel Decorative',serif;font-size:42px;font-weight:700;letter-spacing:.06em;color:var(--text-ivory);margin-bottom:10px}
+    .overview-tagline{font-family:'Crimson Pro',serif;font-style:italic;font-size:20px;color:var(--text-muted);margin-bottom:6px}
+    .overview-phase{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.25em;color:var(--ember);text-transform:uppercase}
+    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:32px 0}
+    .stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:20px;text-align:center;position:relative;overflow:hidden;transition:border-color .2s;cursor:default}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ember);opacity:0;transition:opacity .2s}
+    .stat-card:hover{border-color:var(--ember-dim)}.stat-card:hover::before{opacity:1}
+    .stat-card-value{font-family:'Cinzel',serif;font-size:32px;font-weight:700;color:var(--gold);line-height:1;margin-bottom:8px}
+    .stat-card-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.2em;color:var(--text-muted);text-transform:uppercase}
+    .section-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+    .section-card{background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:18px 20px;cursor:pointer;transition:background .15s,border-color .15s;display:flex;align-items:flex-start;gap:14px}
+    .section-card:hover{background:var(--bg-hover);border-color:var(--ember-dim)}
+    .section-card-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+    .section-card-title{font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:.1em;color:var(--text-ivory);margin-bottom:4px}
+    .section-card-desc{font-family:'Crimson Pro',serif;font-size:13px;color:var(--text-muted);line-height:1.5}
+    .section-card-meta{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.12em;color:var(--text-dim);text-transform:uppercase;margin-top:6px}
+    .overview-heading{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.25em;color:var(--ember);text-transform:uppercase;margin:40px 0 14px}
+    .house-table{width:100%;border-collapse:collapse;font-size:14px}
+    .house-table th{background:var(--bg-card);font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+    .house-table td{padding:9px 14px;border-bottom:1px solid var(--border-dim);color:var(--text-warm);vertical-align:top}
+    .house-table tr:hover td{background:var(--bg-card)}.house-canonical td:first-child{color:var(--text-ivory);font-weight:600}
+    .badge-canon{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;color:var(--ember)}
+    .badge-proposed{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.1em;color:var(--gold)}
+    #md-view{display:none}#md-view.visible{display:block}
+    #md-header{padding:32px 0 24px;border-bottom:1px solid var(--border);margin-bottom:32px;display:flex;align-items:flex-end;justify-content:space-between}
+    #md-breadcrumb{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.2em;color:var(--text-dim);text-transform:uppercase;margin-bottom:6px}
+    #md-doc-title{font-family:'Cinzel',serif;font-size:22px;font-weight:600;color:var(--text-ivory);letter-spacing:.05em}
+    #md-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+    #md-line-count{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.18em;color:var(--text-dim);text-transform:uppercase}
+    #md-status-badge{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.15em;text-transform:uppercase;padding:3px 8px;border-radius:2px}
+    #md-body{animation:fadeIn .25s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    #md-body h1{font-family:'Cinzel',serif;font-size:26px;font-weight:700;color:var(--text-ivory);letter-spacing:.04em;margin:40px 0 16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+    #md-body h1:first-child{margin-top:0}
+    #md-body h2{font-family:'Cinzel',serif;font-size:17px;font-weight:600;color:var(--text-warm);letter-spacing:.06em;margin:32px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border-dim)}
+    #md-body h3{font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin:24px 0 10px}
+    #md-body h4{font-family:'Crimson Pro',serif;font-size:16px;font-weight:600;font-style:italic;color:var(--text-warm);margin:18px 0 8px}
+    #md-body p{color:var(--text-warm);margin-bottom:14px}
+    #md-body strong{font-weight:600;color:var(--text-ivory)}#md-body em{font-style:italic;color:var(--text-warm)}
+    #md-body ul,#md-body ol{padding-left:22px;margin-bottom:14px}#md-body li{color:var(--text-warm);margin-bottom:5px}#md-body li::marker{color:var(--ember)}
+    #md-body blockquote{border-left:3px solid var(--ember);padding:10px 16px;margin:16px 0;background:var(--bg-card);border-radius:0 3px 3px 0}
+    #md-body blockquote p{color:var(--text-warm);font-style:italic;margin:0}
+    #md-body code{font-family:'Courier New',monospace;font-size:13px;background:var(--bg-card);border:1px solid var(--border-dim);padding:1px 5px;border-radius:3px;color:var(--gold)}
+    #md-body pre{background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:16px 18px;margin-bottom:16px;overflow-x:auto}
+    #md-body pre code{background:none;border:none;padding:0;font-size:13px;color:var(--text-warm)}
+    #md-body table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:14px}
+    #md-body th{background:var(--bg-card);font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+    #md-body td{padding:9px 14px;border-bottom:1px solid var(--border-dim);color:var(--text-warm);vertical-align:top}
+    #md-body tr:hover td{background:var(--bg-card)}
+    #md-body hr{border:none;border-top:1px solid var(--border);margin:28px 0}
+    #md-body a{color:var(--ember);text-decoration:none}#md-body a:hover{text-decoration:underline;color:var(--text-ivory)}
+    #loading{display:none;align-items:center;justify-content:center;height:200px;gap:12px;color:var(--text-muted);font-family:'Cinzel',serif;font-size:11px;letter-spacing:.2em}
+    #loading.visible{display:flex}.loader-dots{display:flex;gap:5px}
+    .loader-dot{width:5px;height:5px;border-radius:50%;background:var(--ember);animation:pulse 1.2s ease-in-out infinite}
+    .loader-dot:nth-child(2){animation-delay:.2s}.loader-dot:nth-child(3){animation-delay:.4s}
+    @keyframes pulse{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+    @media(max-width:768px){#app.unlocked{grid-template-columns:1fr}#sidebar{display:none}#header-stats{display:none}#header-brand{width:auto;border-right:none}#content-inner{padding:24px 16px 60px}.stat-grid{grid-template-columns:repeat(2,1fr)}.section-grid{grid-template-columns:1fr}.gate-box{padding:32px 24px}.download-btn{display:none}}
+    @media print{.gate-overlay,#sidebar,#header,#loading{display:none!important}#app{display:block!important}#content{overflow:visible!important}#content-inner{max-width:none;padding:0}body{background:#fff;color:#1a1a1a;font-size:11pt}#md-body h1,#md-body h2,#md-body h3,#md-body strong{color:#1a1a1a}#md-body p,#md-body li,#md-body td{color:#333}#md-body th{color:#555;background:#f0f0f0}#md-body blockquote{border-left-color:#888;background:#f8f8f8}#md-body a{color:#444}}
   </style>
 </head>
 <body>
-
-<!-- ACCESS GATE -->
 <div class="gate-overlay" id="gateOverlay">
   <div class="gate-box">
-    <svg class="gate-sigil" viewBox="0 0 64 64" fill="none">
-      <polygon points="32,2 58,17 58,47 32,62 6,47 6,17" stroke="#c9a227" stroke-width="1.5" fill="none" opacity="0.5"/>
-      <polygon points="32,10 50,20 50,44 32,54 14,44 14,20" stroke="#c94b1a" stroke-width="1" fill="none" opacity="0.35"/>
-      <line x1="32" y1="2" x2="32" y2="62" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/>
-      <line x1="6" y1="17" x2="58" y2="47" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/>
-      <line x1="58" y1="17" x2="6" y2="47" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/>
-      <circle cx="32" cy="32" r="9" stroke="#c94b1a" stroke-width="1.5" fill="rgba(201,75,26,0.08)"/>
-      <circle cx="32" cy="32" r="4" stroke="#c9a227" stroke-width="1" fill="rgba(201,162,39,0.15)"/>
-      <circle cx="32" cy="32" r="2" fill="#c94b1a" opacity="0.9"/>
-    </svg>
+    <svg class="gate-sigil" viewBox="0 0 64 64" fill="none"><polygon points="32,2 58,17 58,47 32,62 6,47 6,17" stroke="#c9a227" stroke-width="1.5" fill="none" opacity="0.5"/><polygon points="32,10 50,20 50,44 32,54 14,44 14,20" stroke="#c94b1a" stroke-width="1" fill="none" opacity="0.35"/><line x1="32" y1="2" x2="32" y2="62" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/><line x1="6" y1="17" x2="58" y2="47" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/><line x1="58" y1="17" x2="6" y2="47" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/><circle cx="32" cy="32" r="9" stroke="#c94b1a" stroke-width="1.5" fill="rgba(201,75,26,0.08)"/><circle cx="32" cy="32" r="4" stroke="#c9a227" stroke-width="1" fill="rgba(201,162,39,0.15)"/><circle cx="32" cy="32" r="2" fill="#c94b1a" opacity="0.9"/></svg>
     <div class="gate-heading">Bloodlines</div>
     <div class="gate-sub">Design archive access is restricted</div>
     <input type="password" class="gate-input" id="gateInput" placeholder="access code" autocomplete="off" spellcheck="false">
@@ -251,42 +140,30 @@
     <a href="https://lancewfisher.com" class="gate-back">&larr; lancewfisher.com</a>
   </div>
 </div>
-
-<!-- MAIN APP -->
 <div id="app">
-
   <header id="header">
     <div id="header-brand">
-      <svg id="header-sigil" viewBox="0 0 64 64" fill="none">
-        <polygon points="32,4 52,16 52,48 32,60 12,48 12,16" stroke="#c9a227" stroke-width="1.5" fill="none" opacity="0.6"/>
-        <polygon points="32,12 46,20 46,44 32,52 18,44 18,20" stroke="#c94b1a" stroke-width="1" fill="none" opacity="0.4"/>
-        <line x1="32" y1="4" x2="32" y2="60" stroke="#c9a227" stroke-width="0.5" opacity="0.3"/>
-        <line x1="12" y1="16" x2="52" y2="48" stroke="#c9a227" stroke-width="0.5" opacity="0.3"/>
-        <line x1="52" y1="16" x2="12" y2="48" stroke="#c9a227" stroke-width="0.5" opacity="0.3"/>
-        <circle cx="32" cy="32" r="6" stroke="#c94b1a" stroke-width="1.5" fill="rgba(201,75,26,0.1)"/>
-        <circle cx="32" cy="32" r="2" fill="#c94b1a" opacity="0.8"/>
-      </svg>
-      <div>
-        <div id="header-title">Bloodlines</div>
-        <div id="header-subtitle">Design Archive</div>
-      </div>
+      <svg id="header-sigil" viewBox="0 0 64 64" fill="none"><polygon points="32,4 52,16 52,48 32,60 12,48 12,16" stroke="#c9a227" stroke-width="1.5" fill="none" opacity="0.6"/><polygon points="32,12 46,20 46,44 32,52 18,44 18,20" stroke="#c94b1a" stroke-width="1" fill="none" opacity="0.4"/><line x1="32" y1="4" x2="32" y2="60" stroke="#c9a227" stroke-width="0.5" opacity="0.3"/><line x1="12" y1="16" x2="52" y2="48" stroke="#c9a227" stroke-width="0.5" opacity="0.3"/><line x1="52" y1="16" x2="12" y2="48" stroke="#c9a227" stroke-width="0.5" opacity="0.3"/><circle cx="32" cy="32" r="6" stroke="#c94b1a" stroke-width="1.5" fill="rgba(201,75,26,0.1)"/><circle cx="32" cy="32" r="2" fill="#c94b1a" opacity="0.8"/></svg>
+      <div><div id="header-title">Bloodlines</div><div id="header-subtitle">Design Archive</div></div>
     </div>
     <div id="header-stats">
-      <div class="stat-pill"><span class="stat-value">2,813</span><span class="stat-label">Bible Lines</span></div>
+      <div class="stat-pill"><span class="stat-value">2,942</span><span class="stat-label">Bible Lines</span></div>
       <div class="stat-divider"></div>
-      <div class="stat-pill"><span class="stat-value">15,000+</span><span class="stat-label">Total Lines</span></div>
+      <div class="stat-pill"><span class="stat-value">16,000+</span><span class="stat-label">Total Lines</span></div>
       <div class="stat-divider"></div>
       <div class="stat-pill"><span class="stat-value">9</span><span class="stat-label">Houses</span></div>
       <div class="stat-divider"></div>
-      <div class="stat-pill"><span class="stat-value">7</span><span class="stat-label">Systems</span></div>
+      <div class="stat-pill"><span class="stat-value">8</span><span class="stat-label">Systems</span></div>
       <div class="stat-divider"></div>
-      <div class="stat-pill"><span class="stat-value">62</span><span class="stat-label">Bible Sections</span></div>
+      <div class="stat-pill"><span class="stat-value">69</span><span class="stat-label">Bible Sections</span></div>
       <div class="stat-divider"></div>
       <div class="stat-pill"><span class="stat-value">6</span><span class="stat-label">Victory Paths</span></div>
     </div>
-    <div id="header-session"><span class="session-badge">Phase 1 Complete</span></div>
+    <div id="header-session">
+      <button class="download-btn" onclick="downloadBible()" title="Download Design Bible as printable HTML">&#8681; Bible</button>
+      <span class="session-badge">Phase 1 Complete</span>
+    </div>
   </header>
-
   <nav id="sidebar">
     <div class="nav-section">
       <div class="nav-section-header" onclick="toggleSection(this)"><span>Project</span><span class="nav-section-arrow">&#9662;</span></div>
@@ -300,7 +177,7 @@
     <div class="nav-section">
       <div class="nav-section-header" onclick="toggleSection(this)"><span>Design Bible</span><span class="nav-section-arrow">&#9662;</span></div>
       <div class="nav-items">
-        <div class="nav-item" onclick="loadDoc('18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md','Complete Design Bible v3.0','Exports','COMPLETE')" data-id="bible"><span class="nav-icon">&#128214;</span> Complete Bible v3.0 <span class="nav-badge">2,813</span></div>
+        <div class="nav-item" onclick="loadDoc('18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md','Complete Design Bible v3.1','Exports','COMPLETE')" data-id="bible"><span class="nav-icon">&#128214;</span> Complete Bible v3.1 <span class="nav-badge">2,942</span></div>
         <div class="nav-item" onclick="loadDoc('01_CANON/BLOODLINES_MASTER_MEMORY.md','Master Memory','Canon','COMPLETE')" data-id="mm"><span class="nav-icon">&#129504;</span> Master Memory <span class="nav-badge">2,769</span></div>
       </div>
     </div>
@@ -335,6 +212,13 @@
     </div>
     <div class="nav-sep"></div>
     <div class="nav-section">
+      <div class="nav-section-header" onclick="toggleSection(this)"><span>Mechanics</span><span class="nav-section-arrow">&#9662;</span></div>
+      <div class="nav-items">
+        <div class="nav-item" onclick="loadDoc('08_MECHANICS/OPERATIONS_SYSTEM.md','Operations System','Mechanics','PROPOSED')" data-id="ops"><span class="nav-icon">&#9878;</span> Operations System <span class="nav-badge">389</span></div>
+      </div>
+    </div>
+    <div class="nav-sep"></div>
+    <div class="nav-section">
       <div class="nav-section-header" onclick="toggleSection(this)"><span>Match and Events</span><span class="nav-section-arrow">&#9662;</span></div>
       <div class="nav-items">
         <div class="nav-item" onclick="loadDoc('11_MATCHFLOW/MATCH_STRUCTURE.md','Match Structure','Match Flow','COMPLETE')" data-id="ms"><span class="nav-icon">&#9876;</span> Match Structure <span class="nav-badge">252</span></div>
@@ -365,109 +249,38 @@
       </div>
     </div>
   </nav>
-
   <main id="content">
     <div id="content-inner">
-
-      <div id="loading">
-        <div class="loader-dots">
-          <div class="loader-dot"></div>
-          <div class="loader-dot"></div>
-          <div class="loader-dot"></div>
-        </div>
-        <span>Loading document...</span>
-      </div>
-
+      <div id="loading"><div class="loader-dots"><div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div></div><span>Loading document...</span></div>
       <div id="overview" class="visible">
         <div class="overview-hero">
-          <svg class="hero-sigil" viewBox="0 0 64 64" fill="none">
-            <polygon points="32,2 58,17 58,47 32,62 6,47 6,17" stroke="#c9a227" stroke-width="1.5" fill="none" opacity="0.5"/>
-            <polygon points="32,10 50,20 50,44 32,54 14,44 14,20" stroke="#c94b1a" stroke-width="1" fill="none" opacity="0.35"/>
-            <line x1="32" y1="2" x2="32" y2="62" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/>
-            <line x1="6" y1="17" x2="58" y2="47" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/>
-            <line x1="58" y1="17" x2="6" y2="47" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/>
-            <circle cx="32" cy="32" r="9" stroke="#c94b1a" stroke-width="1.5" fill="rgba(201,75,26,0.08)"/>
-            <circle cx="32" cy="32" r="4" stroke="#c9a227" stroke-width="1" fill="rgba(201,162,39,0.15)"/>
-            <circle cx="32" cy="32" r="2" fill="#c94b1a" opacity="0.9"/>
-          </svg>
+          <svg class="hero-sigil" viewBox="0 0 64 64" fill="none"><polygon points="32,2 58,17 58,47 32,62 6,47 6,17" stroke="#c9a227" stroke-width="1.5" fill="none" opacity="0.5"/><polygon points="32,10 50,20 50,44 32,54 14,44 14,20" stroke="#c94b1a" stroke-width="1" fill="none" opacity="0.35"/><line x1="32" y1="2" x2="32" y2="62" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/><line x1="6" y1="17" x2="58" y2="47" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/><line x1="58" y1="17" x2="6" y2="47" stroke="#c9a227" stroke-width="0.5" opacity="0.25"/><circle cx="32" cy="32" r="9" stroke="#c94b1a" stroke-width="1.5" fill="rgba(201,75,26,0.08)"/><circle cx="32" cy="32" r="4" stroke="#c9a227" stroke-width="1" fill="rgba(201,162,39,0.15)"/><circle cx="32" cy="32" r="2" fill="#c94b1a" opacity="0.9"/></svg>
           <div class="overview-title">Bloodlines</div>
           <div class="overview-tagline">Dynasty-driven strategy where faith, sacrifice, and bloodline shape civilizations.</div>
           <div class="overview-phase">Phase 1: Design Foundation Complete</div>
         </div>
-
         <div class="stat-grid">
-          <div class="stat-card"><div class="stat-card-value">2,813</div><div class="stat-card-label">Design Bible Lines</div></div>
-          <div class="stat-card"><div class="stat-card-value">62</div><div class="stat-card-label">Bible Sections</div></div>
-          <div class="stat-card"><div class="stat-card-value">15,000+</div><div class="stat-card-label">Total Corpus Lines</div></div>
-          <div class="stat-card"><div class="stat-card-value">9</div><div class="stat-card-label">Sessions Complete</div></div>
+          <div class="stat-card"><div class="stat-card-value">2,942</div><div class="stat-card-label">Design Bible Lines</div></div>
+          <div class="stat-card"><div class="stat-card-value">69</div><div class="stat-card-label">Bible Sections</div></div>
+          <div class="stat-card"><div class="stat-card-value">16,000+</div><div class="stat-card-label">Total Corpus Lines</div></div>
+          <div class="stat-card"><div class="stat-card-value">10</div><div class="stat-card-label">Sessions Complete</div></div>
           <div class="stat-card"><div class="stat-card-value">9</div><div class="stat-card-label">Founding Houses</div></div>
-          <div class="stat-card"><div class="stat-card-value">7</div><div class="stat-card-label">Core Systems</div></div>
+          <div class="stat-card"><div class="stat-card-value">8</div><div class="stat-card-label">Core Systems</div></div>
           <div class="stat-card"><div class="stat-card-value">4</div><div class="stat-card-label">Ancient Faiths</div></div>
           <div class="stat-card"><div class="stat-card-value">6</div><div class="stat-card-label">Victory Paths</div></div>
         </div>
-
         <div class="overview-heading">Quick Access</div>
         <div class="section-grid">
-          <div class="section-card" onclick="loadDoc('18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md','Complete Design Bible v3.0','Exports','COMPLETE')">
-            <span class="section-card-icon">&#128214;</span>
-            <div>
-              <div class="section-card-title">Design Bible v3.0</div>
-              <div class="section-card-desc">All 62 sections complete. The full civilizational design reference.</div>
-              <div class="section-card-meta">2,813 lines -- All 9 Houses -- Closing Manifesto</div>
-            </div>
-          </div>
-          <div class="section-card" onclick="loadDoc('07_FAITHS/FOUR_ANCIENT_FAITHS.md','Four Ancient Faiths','Faiths','COMPLETE')">
-            <span class="section-card-icon">&#10022;</span>
-            <div>
-              <div class="section-card-title">Four Ancient Faiths</div>
-              <div class="section-card-desc">Old Light, Blood Dominion, The Order, The Wild at full depth.</div>
-              <div class="section-card-meta">1,778 lines -- 3 layers -- CB003 complete</div>
-            </div>
-          </div>
-          <div class="section-card" onclick="loadDoc('11_MATCHFLOW/POLITICAL_EVENTS.md','Political Events','Match Flow','COMPLETE')">
-            <span class="section-card-icon">&#9876;</span>
-            <div>
-              <div class="section-card-title">Political Events</div>
-              <div class="section-card-desc">34+ named events with triggers, effects, resolution paths, and counter-play.</div>
-              <div class="section-card-meta">980 lines -- 6 categories -- Fully designed</div>
-            </div>
-          </div>
-          <div class="section-card" onclick="loadDoc('04_SYSTEMS/FAITH_SYSTEM.md','Faith System','Systems','COMPLETE')">
-            <span class="section-card-icon">&#9881;</span>
-            <div>
-              <div class="section-card-title">Faith System</div>
-              <div class="section-card-desc">Covenant theology, doctrine mechanics, unit roster L3-L5, intensity thresholds.</div>
-              <div class="section-card-meta">749 lines -- Light and Dark doctrine per covenant</div>
-            </div>
-          </div>
-          <div class="section-card" onclick="loadDoc('09_WORLD/WORLD_INDEX.md','World Generation','World','COMPLETE')">
-            <span class="section-card-icon">&#9673;</span>
-            <div>
-              <div class="section-card-title">World Generation</div>
-              <div class="section-card-desc">Full procedural world parameters, terrain types, faction placement, resource distribution.</div>
-              <div class="section-card-meta">449 lines -- Complete procedural spec</div>
-            </div>
-          </div>
-          <div class="section-card" onclick="loadDoc('04_SYSTEMS/DYNASTIC_SYSTEM.md','Dynastic System','Systems','COMPLETE')">
-            <span class="section-card-icon">&#9881;</span>
-            <div>
-              <div class="section-card-title">Dynastic System</div>
-              <div class="section-card-desc">Three-tier family model, 8 commitment roles, succession mechanics, marriage alliances.</div>
-              <div class="section-card-meta">292 lines -- Full generational design</div>
-            </div>
-          </div>
+          <div class="section-card" onclick="loadDoc('18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md','Complete Design Bible v3.1','Exports','COMPLETE')"><span class="section-card-icon">&#128214;</span><div><div class="section-card-title">Design Bible v3.1</div><div class="section-card-desc">All 69 sections complete. The full civilizational design reference.</div><div class="section-card-meta">2,942 lines -- All 9 Houses -- Operations System -- Closing Manifesto</div></div></div>
+          <div class="section-card" onclick="loadDoc('08_MECHANICS/OPERATIONS_SYSTEM.md','Operations System','Mechanics','PROPOSED')"><span class="section-card-icon">&#9878;</span><div><div class="section-card-title">Operations System</div><div class="section-card-desc">Covert, faith, and military operations. 56 total operations across all categories.</div><div class="section-card-meta">389 lines -- Timing system -- Rogue and Mystic units</div></div></div>
+          <div class="section-card" onclick="loadDoc('07_FAITHS/FOUR_ANCIENT_FAITHS.md','Four Ancient Faiths','Faiths','COMPLETE')"><span class="section-card-icon">&#10022;</span><div><div class="section-card-title">Four Ancient Faiths</div><div class="section-card-desc">Old Light, Blood Dominion, The Order, The Wild at full depth.</div><div class="section-card-meta">1,778 lines -- 3 layers -- CB003 complete</div></div></div>
+          <div class="section-card" onclick="loadDoc('11_MATCHFLOW/POLITICAL_EVENTS.md','Political Events','Match Flow','COMPLETE')"><span class="section-card-icon">&#9876;</span><div><div class="section-card-title">Political Events</div><div class="section-card-desc">34+ named events with triggers, effects, resolution paths, and counter-play.</div><div class="section-card-meta">980 lines -- 6 categories -- Fully designed</div></div></div>
+          <div class="section-card" onclick="loadDoc('04_SYSTEMS/FAITH_SYSTEM.md','Faith System','Systems','COMPLETE')"><span class="section-card-icon">&#9881;</span><div><div class="section-card-title">Faith System</div><div class="section-card-desc">Covenant theology, doctrine mechanics, unit roster L3-L5, intensity thresholds.</div><div class="section-card-meta">749 lines -- Light and Dark doctrine per covenant</div></div></div>
+          <div class="section-card" onclick="loadDoc('04_SYSTEMS/DYNASTIC_SYSTEM.md','Dynastic System','Systems','COMPLETE')"><span class="section-card-icon">&#9881;</span><div><div class="section-card-title">Dynastic System</div><div class="section-card-desc">Three-tier family model, 8 commitment roles, succession mechanics, marriage alliances.</div><div class="section-card-meta">292 lines -- Full generational design</div></div></div>
         </div>
-
         <div class="overview-heading">Nine Founding Houses</div>
         <table class="house-table">
-          <thead>
-            <tr>
-              <th>House</th>
-              <th>Squad Trait</th>
-              <th>Core Mechanic</th>
-              <th>Status</th>
-            </tr>
-          </thead>
+          <thead><tr><th>House</th><th>Squad Trait</th><th>Core Mechanic</th><th>Status</th></tr></thead>
           <tbody>
             <tr><td>Trueborn</td><td style="font-style:italic">By Precedent</td><td>Resist rout when outnumbered via institutional authority</td><td><span class="badge-proposed">PROPOSED</span></td></tr>
             <tr><td>Highborne</td><td style="font-style:italic">As It Was in the Beginning</td><td>Compounding morale bonus in high-faith territory</td><td><span class="badge-proposed">PROPOSED</span></td></tr>
@@ -481,182 +294,34 @@
           </tbody>
         </table>
       </div>
-
       <div id="md-view">
-        <div id="md-header">
-          <div>
-            <div id="md-breadcrumb"></div>
-            <div id="md-doc-title"></div>
-          </div>
-          <div id="md-meta">
-            <div id="md-line-count"></div>
-            <div id="md-status-badge"></div>
-          </div>
-        </div>
+        <div id="md-header"><div><div id="md-breadcrumb"></div><div id="md-doc-title"></div></div><div id="md-meta"><div id="md-line-count"></div><div id="md-status-badge"></div></div></div>
         <div id="md-body"></div>
       </div>
-
     </div>
   </main>
-
 </div>
-
 <script>
-(function() {
+(function(){
   'use strict';
-
-  // SHA-256 via WebCrypto
-  var PASSHASH = 'c65a82e6ec8047fa252b9ab14afe81ab92736c8c0947734fe7059f67189ad984';
-
-  function sha256(str) {
-    var buf = new TextEncoder().encode(str);
-    return crypto.subtle.digest('SHA-256', buf).then(function(hash) {
-      return Array.from(new Uint8Array(hash)).map(function(b) {
-        return b.toString(16).padStart(2, '0');
-      }).join('');
-    });
-  }
-
-  var gateOverlay = document.getElementById('gateOverlay');
-  var gateInput = document.getElementById('gateInput');
-  var gateSubmit = document.getElementById('gateSubmit');
-  var gateError = document.getElementById('gateError');
-  var app = document.getElementById('app');
-
-  function unlock() {
-    sessionStorage.setItem('bloodlines_unlocked', 'true');
-    gateOverlay.classList.add('hidden');
-    app.classList.add('unlocked');
-  }
-
-  if (sessionStorage.getItem('bloodlines_unlocked') === 'true') {
-    unlock();
-  } else {
-    setTimeout(function() { gateInput.focus(); }, 200);
-  }
-
-  function submitPasskey() {
-    var val = gateInput.value.trim();
-    if (!val) { gateError.classList.add('visible'); return; }
-    sha256(val).then(function(hash) {
-      if (hash === PASSHASH) {
-        unlock();
-      } else {
-        gateError.classList.add('visible');
-        gateInput.value = '';
-        gateInput.focus();
-      }
-    });
-  }
-
-  gateSubmit.addEventListener('click', submitPasskey);
-  gateInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') submitPasskey(); });
-
-  // Sidebar toggle
-  function toggleSection(header) {
-    header.closest('.nav-section').classList.toggle('collapsed');
-  }
-  window.toggleSection = toggleSection;
-
-  function setActive(id) {
-    document.querySelectorAll('.nav-item').forEach(function(el) {
-      el.classList.remove('active');
-    });
-    var el = document.querySelector('[data-id="' + id + '"]');
-    if (el) { el.classList.add('active'); }
-  }
-
-  function showOverview() {
-    document.getElementById('overview').classList.add('visible');
-    document.getElementById('md-view').classList.remove('visible');
-    document.getElementById('loading').classList.remove('visible');
-    setActive('overview');
-    document.getElementById('content').scrollTop = 0;
-  }
-  window.showOverview = showOverview;
-
-  function inferNavId(path) {
-    if (path.includes('PROJECT_STATUS')) return 'ps';
-    if (path.includes('CANONICAL_RULES')) return 'cr';
-    if (path.includes('DESIGN_BIBLE')) return 'bible';
-    if (path.includes('MASTER_MEMORY')) return 'mm';
-    if (path.includes('SYSTEM_INDEX')) return 'si';
-    if (path.includes('CONVICTION')) return 'cv';
-    if (path.includes('FAITH_SYSTEM')) return 'fs';
-    if (path.includes('POPULATION')) return 'pop';
-    if (path.includes('RESOURCE')) return 'res';
-    if (path.includes('TERRITORY')) return 'ter';
-    if (path.includes('DYNASTIC')) return 'dyn';
-    if (path.includes('BORN_OF')) return 'bos';
-    if (path.includes('FOUNDING_HOUSES')) return 'fh';
-    if (path.includes('FOUR_ANCIENT')) return 'faf';
-    if (path.includes('UNIT_INDEX')) return 'ui-unit';
-    if (path.includes('MATCH_STRUCTURE')) return 'ms';
-    if (path.includes('POLITICAL_EVENTS')) return 'pe';
-    if (path.includes('WORLD_INDEX')) return 'wi';
-    if (path.includes('TIMELINE')) return 'tl';
-    if (path.includes('UI_NOTES')) return 'ui';
-    if (path.includes('AUDIO_VISUAL')) return 'av';
-    if (path.includes('LEGACY_ARCHIVE')) return 'lai';
-    return '';
-  }
-
-  function renderMarkdown(rawText) {
-    marked.setOptions({ breaks: true, gfm: true });
-    var htmlString = marked.parse(rawText);
-    var parser = new DOMParser();
-    var parsedDoc = parser.parseFromString(htmlString, 'text/html');
-    var target = document.getElementById('md-body');
-    target.replaceChildren.apply(target, Array.from(parsedDoc.body.childNodes));
-  }
-
-  function badgeStyle(status) {
-    if (status === 'COMPLETE') {
-      return 'background:rgba(201,162,39,0.15);color:#c9a227;border:1px solid rgba(201,162,39,0.3);';
-    }
-    if (status === 'CANONICAL' || status === 'LOCKED') {
-      return 'background:rgba(201,75,26,0.15);color:#c94b1a;border:1px solid rgba(201,75,26,0.3);';
-    }
-    return 'background:rgba(74,82,96,0.2);color:#8fa4ba;border:1px solid rgba(74,82,96,0.3);';
-  }
-
-  function loadDoc(path, title, section, status) {
-    document.getElementById('overview').classList.remove('visible');
-    document.getElementById('md-view').classList.remove('visible');
-    document.getElementById('loading').classList.add('visible');
-    setActive(inferNavId(path));
-
-    fetch(path)
-      .then(function(resp) {
-        if (!resp.ok) { throw new Error('HTTP ' + resp.status); }
-        return resp.text();
-      })
-      .then(function(text) {
-        var lines = text.split('\n').length;
-        document.getElementById('md-breadcrumb').textContent = section.toUpperCase();
-        document.getElementById('md-doc-title').textContent = title;
-        document.getElementById('md-line-count').textContent = lines.toLocaleString() + ' lines';
-        var badge = document.getElementById('md-status-badge');
-        badge.textContent = status;
-        badge.setAttribute('style', badgeStyle(status));
-
-        renderMarkdown(text);
-
-        document.getElementById('loading').classList.remove('visible');
-        document.getElementById('md-view').classList.add('visible');
-        document.getElementById('content').scrollTop = 0;
-      })
-      .catch(function(err) {
-        var body = document.getElementById('md-body');
-        var p = document.createElement('p');
-        p.style.cssText = 'color:var(--ember);font-family:Cinzel,serif;';
-        p.textContent = 'Could not load: ' + path + ' -- ' + err.message;
-        body.replaceChildren(p);
-        document.getElementById('loading').classList.remove('visible');
-        document.getElementById('md-view').classList.add('visible');
-      });
-  }
-  window.loadDoc = loadDoc;
+  var PASSHASHES=['c65a82e6ec8047fa252b9ab14afe81ab92736c8c0947734fe7059f67189ad984','59195c6c541c8307f1da2d1e768d6f2280c984df217ad5f4c64c3542b04111a4'];
+  function sha256(s){var b=new TextEncoder().encode(s);return crypto.subtle.digest('SHA-256',b).then(function(h){return Array.from(new Uint8Array(h)).map(function(x){return x.toString(16).padStart(2,'0')}).join('')})}
+  var gO=document.getElementById('gateOverlay'),gI=document.getElementById('gateInput'),gS=document.getElementById('gateSubmit'),gE=document.getElementById('gateError'),app=document.getElementById('app');
+  function unlock(){sessionStorage.setItem('bloodlines_unlocked','true');gO.classList.add('hidden');app.classList.add('unlocked')}
+  if(sessionStorage.getItem('bloodlines_unlocked')==='true'){unlock()}else{setTimeout(function(){gI.focus()},200)}
+  function submitPasskey(){var v=gI.value.trim();if(!v){gE.classList.add('visible');return}sha256(v).then(function(h){if(PASSHASHES.indexOf(h)!==-1){unlock()}else{gE.classList.add('visible');gI.value='';gI.focus()}})}
+  gS.addEventListener('click',submitPasskey);gI.addEventListener('keydown',function(e){if(e.key==='Enter')submitPasskey()});
+  function toggleSection(h){h.closest('.nav-section').classList.toggle('collapsed')}window.toggleSection=toggleSection;
+  function setActive(id){document.querySelectorAll('.nav-item').forEach(function(el){el.classList.remove('active')});var el=document.querySelector('[data-id="'+id+'"]');if(el)el.classList.add('active')}
+  function showOverview(){document.getElementById('overview').classList.add('visible');document.getElementById('md-view').classList.remove('visible');document.getElementById('loading').classList.remove('visible');setActive('overview');document.getElementById('content').scrollTop=0}
+  window.showOverview=showOverview;
+  function inferNavId(p){if(p.includes('PROJECT_STATUS'))return'ps';if(p.includes('CANONICAL_RULES'))return'cr';if(p.includes('DESIGN_BIBLE'))return'bible';if(p.includes('MASTER_MEMORY'))return'mm';if(p.includes('SYSTEM_INDEX'))return'si';if(p.includes('CONVICTION'))return'cv';if(p.includes('FAITH_SYSTEM'))return'fs';if(p.includes('POPULATION'))return'pop';if(p.includes('RESOURCE'))return'res';if(p.includes('TERRITORY'))return'ter';if(p.includes('DYNASTIC'))return'dyn';if(p.includes('BORN_OF'))return'bos';if(p.includes('FOUNDING_HOUSES'))return'fh';if(p.includes('FOUR_ANCIENT'))return'faf';if(p.includes('UNIT_INDEX'))return'ui-unit';if(p.includes('OPERATIONS_SYSTEM'))return'ops';if(p.includes('MATCH_STRUCTURE'))return'ms';if(p.includes('POLITICAL_EVENTS'))return'pe';if(p.includes('WORLD_INDEX'))return'wi';if(p.includes('TIMELINE'))return'tl';if(p.includes('UI_NOTES'))return'ui';if(p.includes('AUDIO_VISUAL'))return'av';if(p.includes('LEGACY_ARCHIVE'))return'lai';return''}
+  function renderMarkdown(raw){if(typeof marked==='undefined'||!marked.parse){var t=document.getElementById('md-body');var pre=document.createElement('pre');pre.style.cssText='white-space:pre-wrap;color:var(--text-warm);font-size:14px;';pre.textContent=raw;t.replaceChildren(pre);return}marked.setOptions({breaks:true,gfm:true});var html=marked.parse(raw);var parser=new DOMParser();var doc=parser.parseFromString(html,'text/html');var t=document.getElementById('md-body');t.replaceChildren.apply(t,Array.from(doc.body.childNodes))}
+  function badgeStyle(s){if(s==='COMPLETE')return'background:rgba(201,162,39,.15);color:#c9a227;border:1px solid rgba(201,162,39,.3)';if(s==='CANONICAL'||s==='LOCKED')return'background:rgba(201,75,26,.15);color:#c94b1a;border:1px solid rgba(201,75,26,.3)';if(s==='PROPOSED')return'background:rgba(143,164,186,.15);color:#8fa4ba;border:1px solid rgba(143,164,186,.3)';return'background:rgba(74,82,96,.2);color:#8fa4ba;border:1px solid rgba(74,82,96,.3)'}
+  function loadDoc(path,title,section,status){document.getElementById('overview').classList.remove('visible');document.getElementById('md-view').classList.remove('visible');document.getElementById('loading').classList.add('visible');setActive(inferNavId(path));fetch(path).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text()}).then(function(text){var lines=text.split('\n').length;document.getElementById('md-breadcrumb').textContent=section.toUpperCase();document.getElementById('md-doc-title').textContent=title;document.getElementById('md-line-count').textContent=lines.toLocaleString()+' lines';var badge=document.getElementById('md-status-badge');badge.textContent=status;badge.setAttribute('style',badgeStyle(status));renderMarkdown(text);document.getElementById('loading').classList.remove('visible');document.getElementById('md-view').classList.add('visible');document.getElementById('content').scrollTop=0}).catch(function(err){var body=document.getElementById('md-body');var p=document.createElement('p');p.style.cssText='color:var(--ember);font-family:Cinzel,serif;';p.textContent='Could not load: '+path+' -- '+err.message;body.replaceChildren(p);document.getElementById('loading').classList.remove('visible');document.getElementById('md-view').classList.add('visible')})}
+  window.loadDoc=loadDoc;
+  function downloadBible(){fetch('18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text()}).then(function(text){var html=marked.parse(text);var doc='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Bloodlines Design Bible v3.1</title><style>body{font-family:Georgia,serif;max-width:800px;margin:40px auto;padding:0 20px;color:#1a1a1a;font-size:11pt;line-height:1.7}h1{font-size:22pt;border-bottom:2px solid #333;padding-bottom:8px;margin-top:48px;page-break-before:always}h1:first-child{page-break-before:avoid}h2{font-size:16pt;border-bottom:1px solid #999;padding-bottom:4px;margin-top:32px}h3{font-size:12pt;margin-top:24px;color:#444}h4{font-size:11pt;font-style:italic;margin-top:18px}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:10pt;page-break-inside:avoid}th{background:#f0f0f0;text-align:left;padding:8px 10px;border:1px solid #ccc;font-weight:600}td{padding:6px 10px;border:1px solid #ddd;vertical-align:top}blockquote{border-left:3px solid #888;padding:8px 16px;margin:16px 0;background:#f8f8f8}code{font-family:Consolas,monospace;font-size:9pt;background:#f4f4f4;padding:1px 4px;border-radius:2px}pre{background:#f4f4f4;border:1px solid #ddd;padding:12px;border-radius:4px;overflow-x:auto}pre code{background:none;padding:0}hr{border:none;border-top:1px solid #ccc;margin:32px 0}ul,ol{padding-left:24px}li{margin-bottom:4px}@media print{body{margin:0;padding:0 10px}h1{page-break-before:always}h1:first-child{page-break-before:avoid}table{page-break-inside:avoid}}@page{margin:.75in}</style></head><body><div style="text-align:center;padding:60px 0;border-bottom:2px solid #333;margin-bottom:40px"><h1 style="font-size:32pt;border:none;margin:0;page-break-before:avoid">BLOODLINES</h1><p style="font-size:14pt;color:#666;margin:8px 0 0">Complete Design Bible v3.1</p><p style="font-size:10pt;color:#999;margin:4px 0 0">Dynasty-driven strategy where faith, sacrifice, and bloodline shape civilizations</p></div>'+html+'</body></html>';var blob=new Blob([doc],{type:'text/html'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Bloodlines_Design_Bible_v3.1.html';a.click();URL.revokeObjectURL(a.href)}).catch(function(err){alert('Could not generate download: '+err.message)})}
+  window.downloadBible=downloadBible;
 })();
 </script>
 </body>

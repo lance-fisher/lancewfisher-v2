@@ -37,6 +37,11 @@ cp -r "$SCRIPT_DIR/ftda"            "$DEPLOY/ftda"
 cp -r "$SCRIPT_DIR/harmony"         "$DEPLOY/harmony"
 cp -r "$SCRIPT_DIR/jumpquest"       "$DEPLOY/jumpquest"
 cp -r "$SCRIPT_DIR/api"             "$DEPLOY/api"
+[ -d "$SCRIPT_DIR/bloodlines" ] && cp -r "$SCRIPT_DIR/bloodlines" "$DEPLOY/bloodlines"
+[ -d "$SCRIPT_DIR/projects" ] && cp -r "$SCRIPT_DIR/projects" "$DEPLOY/projects"
+# one-three is a sibling project; copy from FisherSovereign if available
+ONE_THREE_SRC="$(dirname "$SCRIPT_DIR")/one-three-net"
+[ -d "$ONE_THREE_SRC" ] && cp -r "$ONE_THREE_SRC" "$DEPLOY/one-three"
 
 echo "Deploy folder built at: $DEPLOY"
 du -sh "$DEPLOY"
