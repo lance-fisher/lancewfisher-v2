@@ -123,7 +123,46 @@
     .loader-dot{width:5px;height:5px;border-radius:50%;background:var(--ember);animation:pulse 1.2s ease-in-out infinite}
     .loader-dot:nth-child(2){animation-delay:.2s}.loader-dot:nth-child(3){animation-delay:.4s}
     @keyframes pulse{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
-    @media(max-width:768px){#app.unlocked{grid-template-columns:1fr}#sidebar{display:none}#header-stats{display:none}#header-brand{width:auto;border-right:none}#content-inner{padding:24px 16px 60px}.stat-grid{grid-template-columns:repeat(2,1fr)}.section-grid{grid-template-columns:1fr}.gate-box{padding:32px 24px}.download-btn{display:none}}
+
+    /* ── Reading Progress Bar ── */
+    #readingProgress{position:fixed;top:0;left:0;right:0;height:2px;background:transparent;z-index:200;pointer-events:none}
+    #readingProgressFill{height:100%;width:0%;background:var(--gold);transition:width 0.1s linear}
+
+    /* ── Hamburger Button ── */
+    .hamburger-btn{display:none;background:none;border:none;color:var(--gold);font-size:22px;cursor:pointer;padding:4px 8px;line-height:1;flex-shrink:0}
+    .hamburger-btn:hover{color:var(--ember)}
+
+    /* ── Mobile Sidebar Backdrop ── */
+    .sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:90}
+    .sidebar-backdrop.open{display:block}
+
+    /* ── Floating Section Indicator ── */
+    #sectionIndicator{position:fixed;top:56px;left:0;right:0;height:32px;background:var(--bg-sidebar);border-bottom:1px solid var(--border);display:none;align-items:center;padding:0 24px;z-index:95;font-family:'Cinzel',serif;font-size:11px;color:var(--gold);letter-spacing:.06em;cursor:pointer;transition:opacity 0.2s}
+    #sectionIndicator.on{display:flex}
+    #sectionIndicator:hover{color:var(--ember)}
+    #sectionIndicator .indicator-arrow{color:var(--text-dim);font-size:10px;margin-left:6px}
+    #sectionIndicator .indicator-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+    /* ── Quick-Jump Dropdown ── */
+    #quickJump{position:fixed;top:88px;left:0;width:340px;max-height:60vh;overflow-y:auto;background:var(--bg-sidebar);border:1px solid var(--border);z-index:96;display:none;padding:8px 0;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
+    #quickJump.open{display:block}
+    #quickJump .qj-item{display:flex;align-items:center;gap:10px;padding:6px 16px;font-family:'Crimson Pro',serif;font-size:13px;color:var(--text-muted);cursor:pointer;transition:color .15s,background .15s;text-decoration:none}
+    #quickJump .qj-item:hover{color:var(--text-warm);background:rgba(201,75,26,0.04)}
+    #quickJump .qj-item.active{color:var(--gold);background:rgba(201,162,39,0.07)}
+    #quickJump .qj-icon{font-size:11px;width:14px;text-align:center;flex-shrink:0;color:var(--text-dim)}
+    #quickJump::-webkit-scrollbar{width:3px}
+    #quickJump::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+    /* ── Prev/Next Floating Nav ── */
+    #navPrevNext{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:80;opacity:0;pointer-events:none;transition:opacity 0.2s}
+    #navPrevNext.on{opacity:1;pointer-events:auto}
+    .nav-pn-btn{background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);padding:6px 14px;border-radius:3px;cursor:pointer;font-family:'Crimson Pro',serif;font-size:12px;letter-spacing:.04em;transition:color .15s,border-color .15s;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
+    .nav-pn-btn:hover{color:var(--gold);border-color:var(--gold)}
+    .nav-pn-btn:disabled{opacity:0.3;cursor:default}
+    .nav-pn-btn:disabled:hover{color:var(--text-muted);border-color:var(--border)}
+    .nav-pn-arrow{font-size:14px;vertical-align:middle}
+
+    @media(max-width:768px){#app.unlocked{grid-template-columns:1fr}.hamburger-btn{display:block}#sidebar{display:block;position:fixed;top:0;left:0;width:280px;height:100vh;z-index:91;transform:translateX(-100%);transition:transform .25s ease;padding-top:56px}#sidebar.mobile-open{transform:translateX(0)}#header-stats{display:none}#header-brand{width:auto;border-right:none}#content-inner{padding:24px 16px 60px}.stat-grid{grid-template-columns:repeat(2,1fr)}.section-grid{grid-template-columns:1fr}.gate-box{padding:32px 24px}.download-btn{display:none}#sectionIndicator{padding:0 16px}#quickJump{width:calc(100vw - 24px);left:12px}#navPrevNext{left:16px;right:16px;transform:none;justify-content:space-between}.nav-pn-btn{max-width:45vw}}
     @media print{.gate-overlay,#sidebar,#header,#loading{display:none!important}#app{display:block!important}#content{overflow:visible!important}#content-inner{max-width:none;padding:0}body{background:#fff;color:#1a1a1a;font-size:11pt}#md-body h1,#md-body h2,#md-body h3,#md-body strong{color:#1a1a1a}#md-body p,#md-body li,#md-body td{color:#333}#md-body th{color:#555;background:#f0f0f0}#md-body blockquote{border-left-color:#888;background:#f8f8f8}#md-body a{color:#444}}
   </style>
 </head>
@@ -140,8 +179,17 @@
     <a href="https://lancewfisher.com" class="gate-back">&larr; lancewfisher.com</a>
   </div>
 </div>
+<div id="readingProgress"><div id="readingProgressFill"></div></div>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+<div id="sectionIndicator"><span class="indicator-label" id="indicatorText"></span><span class="indicator-arrow">&#9662;</span></div>
+<div id="quickJump"></div>
+<div id="navPrevNext">
+  <button class="nav-pn-btn" id="navPrev" title="Previous document"><span class="nav-pn-arrow">&larr;</span> <span id="navPrevLabel">Prev</span></button>
+  <button class="nav-pn-btn" id="navNext" title="Next document"><span id="navNextLabel">Next</span> <span class="nav-pn-arrow">&rarr;</span></button>
+</div>
 <div id="app">
   <header id="header">
+    <button class="hamburger-btn" id="hamburgerBtn" title="Menu">&#9776;</button>
     <div id="header-brand">
       <svg id="header-sigil" viewBox="0 0 64 64" fill="none"><polygon points="32,4 52,16 52,48 32,60 12,48 12,16" stroke="#c9a227" stroke-width="1.5" fill="none" opacity="0.6"/><polygon points="32,12 46,20 46,44 32,52 18,44 18,20" stroke="#c94b1a" stroke-width="1" fill="none" opacity="0.4"/><line x1="32" y1="4" x2="32" y2="60" stroke="#c9a227" stroke-width="0.5" opacity="0.3"/><line x1="12" y1="16" x2="52" y2="48" stroke="#c9a227" stroke-width="0.5" opacity="0.3"/><line x1="52" y1="16" x2="12" y2="48" stroke="#c9a227" stroke-width="0.5" opacity="0.3"/><circle cx="32" cy="32" r="6" stroke="#c94b1a" stroke-width="1.5" fill="rgba(201,75,26,0.1)"/><circle cx="32" cy="32" r="2" fill="#c94b1a" opacity="0.8"/></svg>
       <div><div id="header-title">Bloodlines</div><div id="header-subtitle">Design Archive</div></div>
@@ -313,15 +361,181 @@
   gS.addEventListener('click',submitPasskey);gI.addEventListener('keydown',function(e){if(e.key==='Enter')submitPasskey()});
   function toggleSection(h){h.closest('.nav-section').classList.toggle('collapsed')}window.toggleSection=toggleSection;
   function setActive(id){document.querySelectorAll('.nav-item').forEach(function(el){el.classList.remove('active')});var el=document.querySelector('[data-id="'+id+'"]');if(el)el.classList.add('active')}
-  function showOverview(){document.getElementById('overview').classList.add('visible');document.getElementById('md-view').classList.remove('visible');document.getElementById('loading').classList.remove('visible');setActive('overview');document.getElementById('content').scrollTop=0}
+  function showOverview(){closeMobileMenu();document.getElementById('overview').classList.add('visible');document.getElementById('md-view').classList.remove('visible');document.getElementById('loading').classList.remove('visible');setActive('overview');currentDocId='overview';currentDocTitle='';updateSectionIndicator();updatePrevNext();document.getElementById('content').scrollTop=0}
   window.showOverview=showOverview;
   function inferNavId(p){if(p.includes('PROJECT_STATUS'))return'ps';if(p.includes('CANONICAL_RULES'))return'cr';if(p.includes('DESIGN_BIBLE'))return'bible';if(p.includes('MASTER_MEMORY'))return'mm';if(p.includes('SYSTEM_INDEX'))return'si';if(p.includes('CONVICTION'))return'cv';if(p.includes('FAITH_SYSTEM'))return'fs';if(p.includes('POPULATION'))return'pop';if(p.includes('RESOURCE'))return'res';if(p.includes('TERRITORY'))return'ter';if(p.includes('DYNASTIC'))return'dyn';if(p.includes('BORN_OF'))return'bos';if(p.includes('FOUNDING_HOUSES'))return'fh';if(p.includes('FOUR_ANCIENT'))return'faf';if(p.includes('UNIT_INDEX'))return'ui-unit';if(p.includes('OPERATIONS_SYSTEM'))return'ops';if(p.includes('MATCH_STRUCTURE'))return'ms';if(p.includes('POLITICAL_EVENTS'))return'pe';if(p.includes('WORLD_INDEX'))return'wi';if(p.includes('TIMELINE'))return'tl';if(p.includes('UI_NOTES'))return'ui';if(p.includes('AUDIO_VISUAL'))return'av';if(p.includes('LEGACY_ARCHIVE'))return'lai';return''}
   function renderMarkdown(raw){if(typeof marked==='undefined'||!marked.parse){var t=document.getElementById('md-body');var pre=document.createElement('pre');pre.style.cssText='white-space:pre-wrap;color:var(--text-warm);font-size:14px;';pre.textContent=raw;t.replaceChildren(pre);return}marked.setOptions({breaks:true,gfm:true});var html=marked.parse(raw);var parser=new DOMParser();var doc=parser.parseFromString(html,'text/html');var t=document.getElementById('md-body');t.replaceChildren.apply(t,Array.from(doc.body.childNodes))}
   function badgeStyle(s){if(s==='COMPLETE')return'background:rgba(201,162,39,.15);color:#c9a227;border:1px solid rgba(201,162,39,.3)';if(s==='CANONICAL'||s==='LOCKED')return'background:rgba(201,75,26,.15);color:#c94b1a;border:1px solid rgba(201,75,26,.3)';if(s==='PROPOSED')return'background:rgba(143,164,186,.15);color:#8fa4ba;border:1px solid rgba(143,164,186,.3)';return'background:rgba(74,82,96,.2);color:#8fa4ba;border:1px solid rgba(74,82,96,.3)'}
-  function loadDoc(path,title,section,status){document.getElementById('overview').classList.remove('visible');document.getElementById('md-view').classList.remove('visible');document.getElementById('loading').classList.add('visible');setActive(inferNavId(path));fetch(path).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text()}).then(function(text){var lines=text.split('\n').length;document.getElementById('md-breadcrumb').textContent=section.toUpperCase();document.getElementById('md-doc-title').textContent=title;document.getElementById('md-line-count').textContent=lines.toLocaleString()+' lines';var badge=document.getElementById('md-status-badge');badge.textContent=status;badge.setAttribute('style',badgeStyle(status));renderMarkdown(text);document.getElementById('loading').classList.remove('visible');document.getElementById('md-view').classList.add('visible');document.getElementById('content').scrollTop=0}).catch(function(err){var body=document.getElementById('md-body');var p=document.createElement('p');p.style.cssText='color:var(--ember);font-family:Cinzel,serif;';p.textContent='Could not load: '+path+' -- '+err.message;body.replaceChildren(p);document.getElementById('loading').classList.remove('visible');document.getElementById('md-view').classList.add('visible')})}
+  function loadDoc(path,title,section,status){closeMobileMenu();document.getElementById('overview').classList.remove('visible');document.getElementById('md-view').classList.remove('visible');document.getElementById('loading').classList.add('visible');var navId=inferNavId(path);setActive(navId);currentDocId=navId;currentDocTitle=title;updateSectionIndicator();updatePrevNext();pushNavState(navId);fetch(path).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text()}).then(function(text){var lines=text.split('\n').length;document.getElementById('md-breadcrumb').textContent=section.toUpperCase();document.getElementById('md-doc-title').textContent=title;document.getElementById('md-line-count').textContent=lines.toLocaleString()+' lines';var badge=document.getElementById('md-status-badge');badge.textContent=status;badge.setAttribute('style',badgeStyle(status));renderMarkdown(text);document.getElementById('loading').classList.remove('visible');document.getElementById('md-view').classList.add('visible');document.getElementById('content').scrollTop=0}).catch(function(err){var body=document.getElementById('md-body');var p=document.createElement('p');p.style.cssText='color:var(--ember);font-family:Cinzel,serif;';p.textContent='Could not load: '+path+' -- '+err.message;body.replaceChildren(p);document.getElementById('loading').classList.remove('visible');document.getElementById('md-view').classList.add('visible')})}
   window.loadDoc=loadDoc;
   function downloadBible(){fetch('18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text()}).then(function(text){var html=marked.parse(text);var doc='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Bloodlines Design Bible v3.1</title><style>body{font-family:Georgia,serif;max-width:800px;margin:40px auto;padding:0 20px;color:#1a1a1a;font-size:11pt;line-height:1.7}h1{font-size:22pt;border-bottom:2px solid #333;padding-bottom:8px;margin-top:48px;page-break-before:always}h1:first-child{page-break-before:avoid}h2{font-size:16pt;border-bottom:1px solid #999;padding-bottom:4px;margin-top:32px}h3{font-size:12pt;margin-top:24px;color:#444}h4{font-size:11pt;font-style:italic;margin-top:18px}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:10pt;page-break-inside:avoid}th{background:#f0f0f0;text-align:left;padding:8px 10px;border:1px solid #ccc;font-weight:600}td{padding:6px 10px;border:1px solid #ddd;vertical-align:top}blockquote{border-left:3px solid #888;padding:8px 16px;margin:16px 0;background:#f8f8f8}code{font-family:Consolas,monospace;font-size:9pt;background:#f4f4f4;padding:1px 4px;border-radius:2px}pre{background:#f4f4f4;border:1px solid #ddd;padding:12px;border-radius:4px;overflow-x:auto}pre code{background:none;padding:0}hr{border:none;border-top:1px solid #ccc;margin:32px 0}ul,ol{padding-left:24px}li{margin-bottom:4px}@media print{body{margin:0;padding:0 10px}h1{page-break-before:always}h1:first-child{page-break-before:avoid}table{page-break-inside:avoid}}@page{margin:.75in}</style></head><body><div style="text-align:center;padding:60px 0;border-bottom:2px solid #333;margin-bottom:40px"><h1 style="font-size:32pt;border:none;margin:0;page-break-before:avoid">BLOODLINES</h1><p style="font-size:14pt;color:#666;margin:8px 0 0">Complete Design Bible v3.1</p><p style="font-size:10pt;color:#999;margin:4px 0 0">Dynasty-driven strategy where faith, sacrifice, and bloodline shape civilizations</p></div>'+html+'</body></html>';var blob=new Blob([doc],{type:'text/html'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Bloodlines_Design_Bible_v3.1.html';a.click();URL.revokeObjectURL(a.href)}).catch(function(err){alert('Could not generate download: '+err.message)})}
   window.downloadBible=downloadBible;
+
+  // ── Mobile Navigation State ──
+  var currentDocId='overview';
+  var currentDocTitle='';
+  var suppressPopState=false;
+
+  // ── Ordered list of all navigable documents (matches sidebar order) ──
+  var docList=[];
+  (function buildDocList(){
+    var items=document.querySelectorAll('.nav-item');
+    items.forEach(function(el){
+      var id=el.getAttribute('data-id');
+      var onclick=el.getAttribute('onclick')||'';
+      var m=onclick.match(/loadDoc\('([^']+)','([^']+)','([^']+)','([^']+)'\)/);
+      if(m){docList.push({id:id,path:m[1],title:m[2],section:m[3],status:m[4],el:el})}
+      else if(id==='overview'){docList.push({id:'overview',path:'',title:'Overview',section:'',status:'',el:el})}
+    });
+  })();
+
+  // ── Mobile Menu ──
+  function openMobileMenu(){document.getElementById('sidebar').classList.add('mobile-open');document.getElementById('sidebarBackdrop').classList.add('open')}
+  function closeMobileMenu(){document.getElementById('sidebar').classList.remove('mobile-open');document.getElementById('sidebarBackdrop').classList.remove('open')}
+  function toggleMobileMenu(){var sb=document.getElementById('sidebar');if(sb.classList.contains('mobile-open'))closeMobileMenu();else openMobileMenu()}
+
+  document.getElementById('hamburgerBtn').addEventListener('click',toggleMobileMenu);
+  document.getElementById('sidebarBackdrop').addEventListener('click',closeMobileMenu);
+
+  // ── Section Indicator ──
+  function updateSectionIndicator(){
+    var indicator=document.getElementById('sectionIndicator');
+    var textEl=document.getElementById('indicatorText');
+    if(!currentDocId||currentDocId==='overview'){indicator.classList.remove('on');return}
+    var match=docList.find(function(d){return d.id===currentDocId});
+    if(match&&match.title){textEl.textContent=match.title;indicator.classList.add('on')}
+    else{indicator.classList.remove('on')}
+  }
+
+  document.getElementById('sectionIndicator').addEventListener('click',toggleQuickJump);
+
+  // ── Quick-Jump Dropdown ──
+  (function buildQuickJump(){
+    var container=document.getElementById('quickJump');
+    docList.forEach(function(doc){
+      if(doc.id==='overview')return;
+      var item=document.createElement('div');
+      item.className='qj-item';
+      item.setAttribute('data-id',doc.id);
+      var iconSpan=document.createElement('span');
+      iconSpan.className='qj-icon';
+      var navIcon=doc.el.querySelector('.nav-icon');
+      iconSpan.textContent=navIcon?navIcon.textContent:'';
+      item.appendChild(iconSpan);
+      item.appendChild(document.createTextNode(doc.title));
+      item.addEventListener('click',function(){
+        if(doc.path)loadDoc(doc.path,doc.title,doc.section,doc.status);
+        closeQuickJump();
+      });
+      container.appendChild(item);
+    });
+  })();
+
+  function toggleQuickJump(){document.getElementById('quickJump').classList.toggle('open');updateQuickJumpActive()}
+  function closeQuickJump(){document.getElementById('quickJump').classList.remove('open')}
+  function updateQuickJumpActive(){
+    document.querySelectorAll('#quickJump .qj-item').forEach(function(item){
+      item.classList.toggle('active',item.getAttribute('data-id')===currentDocId);
+    });
+  }
+
+  document.addEventListener('click',function(e){
+    var qj=document.getElementById('quickJump');
+    var indicator=document.getElementById('sectionIndicator');
+    if(qj.classList.contains('open')&&!qj.contains(e.target)&&!indicator.contains(e.target)){closeQuickJump()}
+  });
+
+  // ── Prev/Next Navigation ──
+  function updatePrevNext(){
+    var navPN=document.getElementById('navPrevNext');
+    var prevBtn=document.getElementById('navPrev');
+    var nextBtn=document.getElementById('navNext');
+    var prevLabel=document.getElementById('navPrevLabel');
+    var nextLabel=document.getElementById('navNextLabel');
+    if(!currentDocId||currentDocId==='overview'||docList.length===0){navPN.classList.remove('on');return}
+    var idx=-1;
+    for(var i=0;i<docList.length;i++){if(docList[i].id===currentDocId){idx=i;break}}
+    if(idx===-1){navPN.classList.remove('on');return}
+    navPN.classList.add('on');
+    var prevDoc=idx>0?docList[idx-1]:null;
+    var nextDoc=idx<docList.length-1?docList[idx+1]:null;
+    if(prevDoc&&prevDoc.id==='overview')prevDoc=null;
+    prevBtn.disabled=!prevDoc;
+    nextBtn.disabled=!nextDoc;
+    prevLabel.textContent=prevDoc?prevDoc.title:'Prev';
+    nextLabel.textContent=nextDoc?nextDoc.title:'Next';
+    prevBtn.title=prevDoc?prevDoc.title:'';
+    nextBtn.title=nextDoc?nextDoc.title:'';
+  }
+
+  function navigatePrev(){
+    if(!currentDocId||docList.length===0)return;
+    var idx=-1;
+    for(var i=0;i<docList.length;i++){if(docList[i].id===currentDocId){idx=i;break}}
+    if(idx>0){var d=docList[idx-1];if(d.id==='overview'){showOverview()}else if(d.path){loadDoc(d.path,d.title,d.section,d.status)}}
+  }
+  function navigateNext(){
+    if(!currentDocId||docList.length===0)return;
+    var idx=-1;
+    for(var i=0;i<docList.length;i++){if(docList[i].id===currentDocId){idx=i;break}}
+    if(idx>=0&&idx<docList.length-1){var d=docList[idx+1];if(d.id==='overview'){showOverview()}else if(d.path){loadDoc(d.path,d.title,d.section,d.status)}}
+  }
+
+  document.getElementById('navPrev').addEventListener('click',navigatePrev);
+  document.getElementById('navNext').addEventListener('click',navigateNext);
+
+  // ── Reading Progress Bar ──
+  function updateReadingProgress(){
+    var fill=document.getElementById('readingProgressFill');
+    var content=document.getElementById('content');
+    var scrollTop=content.scrollTop;
+    var scrollHeight=content.scrollHeight-content.clientHeight;
+    var pct=scrollHeight>0?Math.min(100,(scrollTop/scrollHeight)*100):0;
+    fill.style.width=pct+'%';
+  }
+  document.getElementById('content').addEventListener('scroll',updateReadingProgress);
+
+  // ── Browser History Integration ──
+  function pushNavState(docId){
+    if(docId&&docId!=='overview'){
+      suppressPopState=true;
+      history.pushState({docId:docId},'','#'+docId);
+      setTimeout(function(){suppressPopState=false},100);
+    }
+  }
+  window.addEventListener('popstate',function(e){
+    if(suppressPopState)return;
+    if(e.state&&e.state.docId){
+      var d=docList.find(function(doc){return doc.id===e.state.docId});
+      if(d&&d.path)loadDoc(d.path,d.title,d.section,d.status);
+      else showOverview();
+    }else{
+      var hash=location.hash.slice(1);
+      if(hash){
+        var d=docList.find(function(doc){return doc.id===hash});
+        if(d&&d.path)loadDoc(d.path,d.title,d.section,d.status);
+      }
+    }
+  });
+
+  // ── Handle initial hash on load ──
+  (function handleInitialHash(){
+    var hash=location.hash.slice(1);
+    if(hash){
+      var d=docList.find(function(doc){return doc.id===hash});
+      if(d&&d.path)loadDoc(d.path,d.title,d.section,d.status);
+    }
+  })();
+
+  // ── Keyboard Shortcuts ──
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){closeMobileMenu();closeQuickJump();return}
+    if(e.key==='/'&&e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'){e.preventDefault();var searchInput=document.querySelector('#sidebar input[type="text"],#sidebar input[type="search"]');if(searchInput)searchInput.focus();return}
+    if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+    if(e.key==='ArrowLeft'){e.preventDefault();navigatePrev()}
+    if(e.key==='ArrowRight'){e.preventDefault();navigateNext()}
+    if(e.key==='Home'){e.preventDefault();document.getElementById('content').scrollTo({top:0,behavior:'smooth'})}
+  });
 })();
 </script>
 </body>
