@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Detail | Lance W. Fisher</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700&display=swap">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%E2%9A%93</text></svg>">
+<link rel="stylesheet" href="detail.css">
+<script src="project-data.js"></script>
+</head>
+<body>
+
+<a href="../" class="pd-back" id="backLink">&larr; Back to Portfolio</a>
+
+<div class="pd-page" id="projectPage">
+  <!-- Content rendered from local static project-data.js (no user input) -->
+</div>
+
+<div class="pd-not-found" id="notFound" style="display:none;">
+  <div class="pd-nf-number">404</div>
+  <div class="pd-nf-text">Project not found</div>
+  <a href="../" class="pd-nf-link">&larr; Return to Portfolio</a>
+</div>
+
+<script>
+(function() {
+  // Read project slug from query param
+  var params = new URLSearchParams(window.location.search);
+  var slug = params.get('p') || window.location.hash.replace('#', '');
+  var project = slug && PROJECT_DATA[slug];
+
+  if (!project) {
+    document.getElementById('projectPage').style.display = 'none';
+    document.getElementById('notFound').style.display = 'flex';
+    return;
+  }
+
+  // Set page title
+  document.title = project.title + ' | Lance W. Fisher';
+
+  // Build the page using DOM methods (no innerHTML with external input)
+  // Data source: local static project-data.js file, fully controlled, no user input
+  var page = document.getElementById('projectPage');
+
+  // Determine disclosure badge
+  var disclosureBadge = '';
+  if (project.disclosure === 'restricted-detail') {
+    disclosureBadge = '<span class="pd-disclosure restricted">Private Implementation</span>';
+  } else if (project.disclosure === 'public-curated') {
+    disclosureBadge = '<span class="pd-disclosure curated">Curated Overview</span>';
+  }
+
+  // Build capabilities list
+  var capList = project.capabilities.map(function(c) {
+    return '<li>' + c + '</li>';
+  }).join('');
+
+  // Build approach list
+  var approachList = project.approach.map(function(a) {
+    return '<li>' + a + '</li>';
+  }).join('');
+
+  // Build tech chips
+  var techChips = project.tech.map(function(t) {
+    return '<span class="pd-chip">' + t + '</span>';
+  }).join('');
+
+  // Build stats
+  var statsHtml = project.stats.map(function(s) {
+    return '<div class="pd-stat"><div class="pd-stat-value">' + s.value + '</div><div class="pd-stat-label">' + s.label + '</div></div>';
+  }).join('');
+
+  // Build optional concepts link
+  var conceptsHtml = '';
+  if (project.conceptsLink) {
+    conceptsHtml = '<div class="pd-concepts-cta"><a href="../concepts/" class="pd-concepts-link">View the Design Archive &rarr;</a><span class="pd-concepts-sub">12 original concept designs preserved in full</span></div>';
+  }
+
+  // Restricted-detail notice
+  var restrictedNotice = '';
+  if (project.disclosure === 'restricted-detail') {
+    restrictedNotice = '<div class="pd-restricted-notice"><div class="pd-rn-icon">&#x1F512;</div><div class="pd-rn-text">This project operates as private infrastructure. The details shown here represent a curated public summary. Deeper technical documentation and live demonstrations are available selectively.</div></div>';
+  }
+
+  // All data below originates from project-data.js (static, local, no user input)
+  page.insertAdjacentHTML('beforeend',
+    '<div class="pd-hero">' +
+      '<div class="pd-number">' + project.number + '</div>' +
+      '<h1 class="pd-title">' + project.title + '</h1>' +
+      '<p class="pd-tagline">' + project.tagline + '</p>' +
+      '<div class="pd-meta">' +
+        '<span class="pd-status ' + project.statusClass + '">' + project.status + '</span>' +
+        disclosureBadge +
+      '</div>' +
+      '<div class="pd-tech-row">' + techChips + '</div>' +
+    '</div>' +
+    '<div class="pd-body">' +
+      '<div class="pd-section">' +
+        '<p class="pd-philosophy">' + project.philosophy + '</p>' +
+      '</div>' +
+      '<div class="pd-section">' +
+        '<h2 class="pd-heading">Overview</h2>' +
+        '<p class="pd-text">' + project.overview + '</p>' +
+      '</div>' +
+      '<div class="pd-columns">' +
+        '<div class="pd-col">' +
+          '<h2 class="pd-heading">Capabilities</h2>' +
+          '<ul class="pd-list">' + capList + '</ul>' +
+        '</div>' +
+        '<div class="pd-col">' +
+          '<h2 class="pd-heading">Technical Approach</h2>' +
+          '<ul class="pd-list">' + approachList + '</ul>' +
+        '</div>' +
+      '</div>' +
+      conceptsHtml +
+      '<div class="pd-stats-row">' + statsHtml + '</div>' +
+      restrictedNotice +
+    '</div>' +
+    '<div class="pd-footer">' +
+      '<a href="../#sec-projects" class="pd-footer-link">&larr; Back to All Projects</a>' +
+    '</div>'
+  );
+
+  // Persist theme from parent page
+  var stored = localStorage.getItem('theme');
+  if (stored === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+</script>
+
+</body>
+</html>
