@@ -23,7 +23,8 @@ var PROJECT_DATA = {
       "Real-time dashboard streaming live market data and portfolio state",
       "Paper-first discipline with explicit promotion gates before live execution",
       "Cross-chain order execution with sub-second latency on supported venues",
-      "AI-assisted strategy analysis and continuous market commentary"
+      "AI-assisted strategy analysis and continuous market commentary",
+      "Defense-in-depth stop-loss and take-profit enforcement with central safety monitor"
     ],
     approach: [
       "Modular engine architecture where each exchange runs independently",
@@ -42,12 +43,12 @@ var PROJECT_DATA = {
   "sovereign-hub": {
     title: "Fisher Sovereign Hub",
     number: "05",
-    tagline: "Single pane of glass for a 20+ project portfolio",
+    tagline: "Single pane of glass for a 25+ project portfolio",
     disclosure: "public-curated",
     status: "Active",
     statusClass: "active",
     tech: ["Python", "Git Integration", "JSON Manifest", "Automation"],
-    overview: "An operational command center that monitors and synchronizes over twenty active projects through a single dashboard. Tracks git status, sync state, and health across the entire portfolio with automatic GitHub synchronization every five minutes. The system treats the entire workspace as a single organism rather than a collection of disconnected repositories.",
+    overview: "An operational command center that monitors and synchronizes over twenty-five active projects through a single dashboard. Tracks git status, sync state, and health across the entire portfolio with automatic GitHub synchronization every five minutes. The system treats the entire workspace as a single organism rather than a collection of disconnected repositories.",
     philosophy: "Context-switching between twenty repositories, forgetting what was pushed from a phone, losing track of which project needs attention. These are organizational failures, not technical ones. The Sovereign Hub solves them by treating the entire workspace as a single system. Every repo, every sync, every status check flows through one place.",
     capabilities: [
       "Automatic GitHub synchronization every five minutes across all repositories",
@@ -63,7 +64,7 @@ var PROJECT_DATA = {
       "Structured logging with timestamps, actions taken, and error tracking"
     ],
     stats: [
-      { value: "20+", label: "Projects" },
+      { value: "25+", label: "Projects" },
       { value: "5m", label: "Sync Interval" },
       { value: "0", label: "Cloud Deps" },
       { value: "24/7", label: "Uptime" }
@@ -140,14 +141,15 @@ var PROJECT_DATA = {
     status: "Active",
     statusClass: "active",
     tech: ["TypeScript", "React", "Real-Time Monitoring", "Local-First"],
-    overview: "A local-first home automation and network security dashboard that provides complete visibility into every device on the network. Features device discovery, camera feed management, network traffic monitoring, and real-time alerting. All data stays on-premises in a local database with zero cloud dependencies.",
-    philosophy: "Sovereignty starts at home. Built on the principle that a homeowner should know exactly what is happening on their network without sending that information to a cloud service. Every byte of data stays local, every camera feed streams on the LAN, and every unknown device that joins the network triggers an alert.",
+    overview: "A local-first home automation and network security dashboard that provides complete visibility into every device on the network. Features device discovery, camera feed management, network traffic monitoring, real-time alerting, and secure remote access via HTTPS with API key authentication and dynamic DNS. All data stays on-premises in a local database with zero cloud dependencies.",
+    philosophy: "Sovereignty starts at home. Built on the principle that a homeowner should know exactly what is happening on their network without sending that information to a cloud service. Every byte of data stays local, every camera feed streams on the LAN, and every unknown device that joins the network triggers an alert. Remote access uses self-signed TLS and rate-limited API key auth, no third-party tunneling services.",
     capabilities: [
       "Automatic device discovery with vendor identification across the local network",
       "Camera feed management supporting multiple streaming protocols with health monitoring",
       "Network traffic monitoring with per-device bandwidth tracking",
       "Real-time alerting for new devices, camera issues, and bandwidth anomalies",
-      "Interactive network topology visualization with device management"
+      "Interactive network topology visualization with device management",
+      "Secure remote access via HTTPS with API key authentication, rate limiting, and dynamic DNS"
     ],
     approach: [
       "Modern React frontend with interactive data visualization components",
@@ -219,9 +221,9 @@ var PROJECT_DATA = {
     ],
     stats: [
       { value: "0", label: "Dependencies" },
-      { value: "3", label: "Agents" },
+      { value: "7", label: "Agents" },
       { value: "3", label: "Safe Modes" },
-      { value: "6", label: "CLI Commands" }
+      { value: "254", label: "Tests" }
     ]
   },
 
@@ -282,7 +284,7 @@ var PROJECT_DATA = {
     ],
     stats: [
       { value: "6", label: "Agents" },
-      { value: "20+", label: "Projects" },
+      { value: "25+", label: "Projects" },
       { value: "3", label: "Modes" },
       { value: "GPU", label: "Local AI" }
     ]
