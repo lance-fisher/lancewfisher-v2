@@ -2823,6 +2823,7 @@ span.hero-domain-dot {
 /* Project text — full readable contrast */
 [data-theme="light"] .project-card .p-title { color: rgba(26,26,28,0.92); }
 [data-theme="light"] .project-card .p-desc { color: rgba(28,26,24,0.8); }
+[data-theme="light"] .project-card:hover .p-desc { color: rgba(28,26,24,0.88); }
 [data-theme="light"] .project-card .p-tech { color: rgba(60,60,65,0.85); }
 [data-theme="light"] .p-opinion { color: rgba(28,26,24,0.65); border-bottom-color: rgba(42,42,46,0.12); }
 
@@ -2840,6 +2841,10 @@ span.hero-domain-dot {
   border-color: rgba(50,50,55,0.3);
   color: rgba(50,50,55,0.85);
   background: rgba(50,50,55,0.08);
+}
+[data-theme="light"] .p-status {
+  border-color: rgba(42,42,46,0.2);
+  color: rgba(42,42,46,0.7);
 }
 
 /* Stat values */
@@ -2914,6 +2919,15 @@ span.hero-domain-dot {
 [data-theme="light"] .booking-select {
   background: rgba(255,255,255,0.45);
   border-color: rgba(42,42,46,0.15);
+  color: #1c1a18;
+}
+[data-theme="light"] .booking-select:focus {
+  border-color: #4a4a4e;
+  background: rgba(255,255,255,0.6);
+  box-shadow: 0 0 0 3px rgba(42,42,46,0.08);
+}
+[data-theme="light"] .booking-select option {
+  background: #e8e8ea;
   color: #1c1a18;
 }
 [data-theme="light"] .booking-label { color: rgba(28,26,24,0.65); }
