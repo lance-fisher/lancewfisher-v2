@@ -3,7 +3,6 @@ Allow: /
 Disallow: /ftda/
 Disallow: /playbook/
 Disallow: /concepts/
-Disallow: /deploy/
 Disallow: /thumbs/
 
 Sitemap: https://lancewfisher.com/sitemap.xml

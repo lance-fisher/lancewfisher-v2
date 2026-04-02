@@ -43,5 +43,15 @@ cp -r "$SCRIPT_DIR/api"             "$DEPLOY/api"
 ONE_THREE_SRC="$(dirname "$SCRIPT_DIR")/one-three-net"
 [ -d "$ONE_THREE_SRC" ] && cp -r "$ONE_THREE_SRC" "$DEPLOY/one-three"
 
+# Bloodlines web viewer: built by a separate pipeline (build_index.py + web_sync.py)
+# If no bloodlines/ was copied from source above, rebuild from the Bloodlines project
+BLOODLINES_BUILD="D:/ProjectsHome/Bloodlines/15_PROTOTYPE/build_index.py"
+BLOODLINES_SYNC="D:/ProjectsHome/Bloodlines/15_PROTOTYPE/web_sync.py"
+if [ ! -d "$DEPLOY/bloodlines" ] && [ -f "$BLOODLINES_BUILD" ]; then
+  echo "Rebuilding Bloodlines web viewer..."
+  python "$BLOODLINES_SYNC" 2>/dev/null || true
+  python "$BLOODLINES_BUILD"
+fi
+
 echo "Deploy folder built at: $DEPLOY"
 du -sh "$DEPLOY"

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PREVIEW — Bloodlines Card Update</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@200;300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ===== PREVIEW FRAME ===== */
+.preview-banner {
+  max-width: 1100px;
+  margin: 40px auto 0;
+  padding: 20px 40px;
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  background: rgba(201, 168, 76, 0.04);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: rgba(var(--fg), 0.6);
+  letter-spacing: 1px;
+}
+.preview-banner strong {
+  color: var(--gold-1776);
+  font-weight: 500;
+}
+
+/* ===== BLOODLINES COMPOSITE THUMBNAIL ===== */
+.bloodlines-thumb-composite {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0f0d0b;
+}
+
+/* Layer 1: Viewer header bar (top banner) */
+.bl-viewer-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  background: linear-gradient(180deg, #161210 0%, rgba(22, 18, 16, 0.95) 100%);
+  border-bottom: 1px solid #3a2e24;
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  gap: 12px;
+  height: 44px;
+}
+.bl-viewer-bar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #c94b1a 0%, rgba(138, 50, 16, 0.5) 30%, transparent 70%);
+}
+
+.bl-sigil {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+.bl-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.bl-brand-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #e8dcc8;
+  line-height: 1.2;
+}
+.bl-brand-sub {
+  font-family: 'Cinzel', serif;
+  font-size: 7px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: #7d6f5e;
+  text-transform: uppercase;
+}
+
+.bl-stats {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: 20px;
+}
+.bl-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+.bl-stat-val {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #c9a227;
+  line-height: 1;
+}
+.bl-stat-label {
+  font-family: 'Cinzel', serif;
+  font-size: 5.5px;
+  letter-spacing: 0.18em;
+  color: #7d6f5e;
+  text-transform: uppercase;
+}
+.bl-stat-div {
+  width: 1px;
+  height: 18px;
+  background: #2a2218;
+}
+.bl-phase {
+  margin-left: auto;
+  font-family: 'Cinzel', serif;
+  font-size: 7px;
+  letter-spacing: 0.12em;
+  color: #c94b1a;
+  text-transform: uppercase;
+  background: rgba(201, 75, 26, 0.12);
+  border: 1px solid rgba(138, 50, 16, 0.5);
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+
+/* Layer 2: Sidebar nav preview (left strip) */
+.bl-sidebar-strip {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  width: 30%;
+  bottom: 0;
+  z-index: 2;
+  background: #1a1613;
+  border-right: 1px solid #3a2e24;
+  padding: 10px 0;
+  overflow: hidden;
+}
+.bl-nav-section {
+  padding: 0 10px;
+  margin-bottom: 6px;
+}
+.bl-nav-header {
+  font-family: 'Cinzel', serif;
+  font-size: 6px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: #4a3f32;
+  text-transform: uppercase;
+  padding: 4px 8px;
+}
+.bl-nav-item {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 9px;
+  color: #7d6f5e;
+  padding: 3px 8px 3px 12px;
+  border-left: 2px solid transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bl-nav-item.active {
+  color: #e8dcc8;
+  border-left-color: #c94b1a;
+  background: #2a2420;
+}
+
+/* Layer 3: Mockup image (main content area, faded) */
+.bl-mockup-layer {
+  position: absolute;
+  top: 44px;
+  left: 30%;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+.bl-mockup-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  filter: blur(1.5px) brightness(0.55) saturate(0.7);
+  opacity: 0.6;
+  transition: filter 0.6s ease, opacity 0.6s ease;
+}
+.project-card:hover .bl-mockup-img {
+  filter: blur(0.5px) brightness(0.65) saturate(0.85);
+  opacity: 0.75;
+}
+
+/* Mockup overlay label */
+.bl-mockup-label {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  z-index: 4;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 7px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(232, 220, 200, 0.25);
+  background: rgba(15, 13, 11, 0.6);
+  padding: 2px 6px;
+  border: 1px solid rgba(58, 46, 36, 0.4);
+}
+
+/* Gradient overlays for compositing */
+.bl-mockup-layer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(15, 13, 11, 0.8) 0%, rgba(15, 13, 11, 0.2) 25%, rgba(15, 13, 11, 0.1) 60%, rgba(15, 13, 11, 0.7) 100%),
+    linear-gradient(90deg, rgba(15, 13, 11, 0.6) 0%, transparent 30%);
+  pointer-events: none;
+}
+
+/* Content overlay text on the mockup area */
+.bl-content-overlay {
+  position: absolute;
+  top: 44px;
+  left: 30%;
+  right: 0;
+  z-index: 3;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.bl-overview-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #e8dcc8;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+}
+.bl-overview-tagline {
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-style: italic;
+  font-size: 10px;
+  color: #7d6f5e;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+}
+.bl-mini-stats {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+.bl-mini-stat {
+  background: rgba(34, 30, 25, 0.85);
+  border: 1px solid #3a2e24;
+  padding: 6px 10px;
+  text-align: center;
+  border-radius: 3px;
+}
+.bl-mini-stat-val {
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #c9a227;
+  line-height: 1;
+}
+.bl-mini-stat-label {
+  font-family: 'Cinzel', serif;
+  font-size: 5px;
+  letter-spacing: 0.18em;
+  color: #7d6f5e;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* ===== p-opinion ===== */
+.p-opinion {
+  grid-column: 1 / -1;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.85;
+  color: rgba(var(--fg), 0.35);
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--warm-white-breath);
+}
+
+/* ===== BLOODLINES DETAIL FOOTER: Houses + Scope ===== */
+.bl-detail-footer {
+  grid-column: 1 / -1;
+  padding-top: 20px;
+  border-top: 1px solid var(--warm-white-breath);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Houses strip */
+.bl-houses-header {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 9px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(var(--fg), 0.15);
+  margin-bottom: 6px;
+}
+.bl-houses-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.bl-house-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 1px solid rgba(var(--fg), 0.06);
+  background: rgba(var(--fg), 0.02);
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+.bl-house-tag:hover {
+  border-color: rgba(var(--fg), 0.12);
+  background: rgba(var(--fg), 0.04);
+}
+.bl-house-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.bl-house-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  color: rgba(var(--fg), 0.45);
+  text-transform: uppercase;
+}
+
+/* Scope bar */
+.bl-scope-row {
+  display: flex;
+  gap: 24px;
+  align-items: flex-end;
+}
+.bl-scope-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+.bl-scope-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 8px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(var(--fg), 0.2);
+}
+.bl-scope-bar-track {
+  height: 3px;
+  background: rgba(var(--fg), 0.04);
+  position: relative;
+  overflow: hidden;
+}
+.bl-scope-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.bl-scope-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 13px;
+  color: rgba(var(--fg), 0.5);
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+</style>
+</head>
+<body>
+<div class="ship-watermark-wrap" aria-hidden="true">
+  <img src="img/ship.png" class="ship-watermark" alt="">
+</div>
+
+<div class="preview-banner">
+  <strong>PREVIEW</strong> &mdash; Updated Bloodlines project card. This is a sample showing the proposed changes. The real site is untouched. Hover the card to see interactive states.
+</div>
+
+<div style="max-width:1100px; margin:40px auto 80px; padding:0 40px;">
+
+  <!-- UPDATED BLOODLINES CARD -->
+  <div class="project-card bloodlines-updated" data-tags="games">
+    <div class="project-info">
+      <div class="p-number">04</div>
+      <div class="p-title">Bloodlines</div>
+      <div class="p-desc">Dynasty-driven medieval RTS where faith, sacrifice, and bloodline shape the fate of civilizations. Nine founding houses. Seven interconnected systems. Four ancient faith covenants. Matches designed for 2 to 10+ hours of deep strategic play.</div>
+      <div class="p-tech">TypeScript / Canvas 2D / Vite / ECS / A* Pathfinding / Deterministic Lockstep / Fixed-Point Sim</div>
+      <div class="p-status active">In Development</div>
+    </div>
+    <div class="project-thumb-wrap">
+      <div class="bloodlines-thumb-composite">
+        <!-- Layer: Viewer header bar (from bloodlines-viewer.html) -->
+        <div class="bl-viewer-bar">
+          <svg class="bl-sigil" viewBox="0 0 64 64" fill="none">
+            <polygon points="32,4 52,16 52,48 32,60 12,48 12,16" stroke="#c9a227" stroke-width="1.5" fill="none" opacity="0.6"/>
+            <polygon points="32,12 46,20 46,44 32,52 18,44 18,20" stroke="#c94b1a" stroke-width="1" fill="none" opacity="0.4"/>
+            <line x1="32" y1="4" x2="32" y2="60" stroke="#c9a227" stroke-width="0.5" opacity="0.3"/>
+            <line x1="12" y1="16" x2="52" y2="48" stroke="#c9a227" stroke-width="0.5" opacity="0.3"/>
+            <line x1="52" y1="16" x2="12" y2="48" stroke="#c9a227" stroke-width="0.5" opacity="0.3"/>
+            <circle cx="32" cy="32" r="6" stroke="#c94b1a" stroke-width="1.5" fill="rgba(201,75,26,0.1)"/>
+            <circle cx="32" cy="32" r="2" fill="#c94b1a" opacity="0.8"/>
+          </svg>
+          <div class="bl-brand-text">
+            <div class="bl-brand-title">Bloodlines</div>
+            <div class="bl-brand-sub">Design Archive &mdash; Session 9</div>
+          </div>
+          <div class="bl-stats">
+            <div class="bl-stat"><span class="bl-stat-val">62</span><span class="bl-stat-label">Sections</span></div>
+            <div class="bl-stat-div"></div>
+            <div class="bl-stat"><span class="bl-stat-val">15k+</span><span class="bl-stat-label">Lines</span></div>
+            <div class="bl-stat-div"></div>
+            <div class="bl-stat"><span class="bl-stat-val">9</span><span class="bl-stat-label">Houses</span></div>
+            <div class="bl-stat-div"></div>
+            <div class="bl-stat"><span class="bl-stat-val">7</span><span class="bl-stat-label">Systems</span></div>
+          </div>
+          <div class="bl-phase">Phase 1 Complete</div>
+        </div>
+
+        <!-- Layer: Sidebar nav strip (from bloodlines-viewer.html) -->
+        <div class="bl-sidebar-strip">
+          <div class="bl-nav-section">
+            <div class="bl-nav-header">Project</div>
+            <div class="bl-nav-item active">&#x2B21; Overview</div>
+            <div class="bl-nav-item">&#x25C8; Project Status</div>
+            <div class="bl-nav-item">&#x25C8; Canonical Rules</div>
+          </div>
+          <div class="bl-nav-section">
+            <div class="bl-nav-header">Design Bible</div>
+            <div class="bl-nav-item">&#x1F4D6; Complete Bible v3.0</div>
+            <div class="bl-nav-item">&#x1F9E0; Master Memory</div>
+          </div>
+          <div class="bl-nav-section">
+            <div class="bl-nav-header">Core Systems</div>
+            <div class="bl-nav-item">&#x2699; Conviction</div>
+            <div class="bl-nav-item">&#x2699; Faith</div>
+            <div class="bl-nav-item">&#x2699; Population</div>
+            <div class="bl-nav-item">&#x2699; Resource</div>
+            <div class="bl-nav-item">&#x2699; Territory</div>
+            <div class="bl-nav-item">&#x2699; Dynastic</div>
+            <div class="bl-nav-item">&#x2699; Born of Sacrifice</div>
+          </div>
+          <div class="bl-nav-section">
+            <div class="bl-nav-header">World</div>
+            <div class="bl-nav-item">&#x1F30D; Four Ancient Faiths</div>
+            <div class="bl-nav-item">&#x1F30D; Timeline</div>
+          </div>
+        </div>
+
+        <!-- Layer: Mockup image (faded/blurred background) -->
+        <div class="bl-mockup-layer">
+          <img class="bl-mockup-img" src="thumbs/bloodlines-mockup.png" alt="Bloodlines concept mockup">
+        </div>
+
+        <!-- Content overlay on mockup area -->
+        <div class="bl-content-overlay">
+          <div class="bl-overview-title">Bloodlines</div>
+          <div class="bl-overview-tagline">"What it costs to build something that outlasts you."</div>
+          <div class="bl-mini-stats">
+            <div class="bl-mini-stat"><div class="bl-mini-stat-val">2,813</div><div class="bl-mini-stat-label">Bible Lines</div></div>
+            <div class="bl-mini-stat"><div class="bl-mini-stat-val">9</div><div class="bl-mini-stat-label">Houses</div></div>
+            <div class="bl-mini-stat"><div class="bl-mini-stat-val">28+</div><div class="bl-mini-stat-label">Events</div></div>
+            <div class="bl-mini-stat"><div class="bl-mini-stat-val">6</div><div class="bl-mini-stat-label">Victory Paths</div></div>
+          </div>
+        </div>
+
+        <div class="bl-mockup-label">Concept &middot; Pre-Alpha</div>
+      </div>
+      <div class="thumb-label">Design Archive</div>
+    </div>
+    <div class="project-detail" style="max-height:800px; opacity:1; padding:24px 0 8px;">
+      <div class="detail-inner">
+        <p class="p-opinion">Bloodlines is not a quick skirmish game. It is a civilization simulator built around dynastic rule, where your ruling bloodline expands across a massive procedurally generated world. You govern territory through loyalty and military presence, shape your civilization through four ancient faith covenants, and escalate into late-game divergence through economy, warfare, prestige, or divine right. The combat layer stays pure Command and Conquer: clean counters, readable unit roles, and fast engagements, even under 6 to 10 hour stress tests.</p>
+        <div class="detail-col">
+          <h4>Highlights</h4>
+          <ul>
+            <li><em>Nine founding houses</em>: Trueborn, Highborne, Ironmark, Goldgrave, Stonehelm, Westland, Hartvale, Whitehall, Oldcrest, each with unique units, squad traits, and strategic identity</li>
+            <li><em>Seven interconnected systems</em>: Conviction, Faith, Population, Resource, Territory, Dynastic, Born of Sacrifice</li>
+            <li><em>Four ancient faith covenants</em>: Old Light, Blood Dominion, The Order, The Wild, each with dual light/dark doctrine paths</li>
+            <li><em>Conviction axis</em>: moral tracking with amplifying penalties, where repeated dark actions compound consequences</li>
+            <li><em>28+ political events</em>: named world events with triggers, effects, counter-play, and resolution mechanics</li>
+            <li><em>Born of Sacrifice</em>: elite army forging through genuine sacrifice, the moral core of the game</li>
+            <li><em>Six victory paths</em>: Military Conquest, Economic Dominance, Dynastic Prestige, Faith Divine Right, Alliance Victory, Trueborn Rise</li>
+            <li><em>62-section Design Bible</em>: complete design foundation across all systems, houses, and mechanics</li>
+          </ul>
+        </div>
+        <div class="detail-col">
+          <h4>Architecture</h4>
+          <ul>
+            <li><em>Zero runtime dependencies</em>: pure TypeScript with Canvas 2D rendering</li>
+            <li><em>Deterministic lockstep simulation</em> using fixed-point math for multiplayer-ready replay and sync stability</li>
+            <li><em>Seeded RNG</em> for deterministic outcomes: same inputs always produce the same state</li>
+            <li>ECS-inspired architecture: entities, components, systems cleanly separated</li>
+            <li><em>A* pathfinding</em> with terrain costs and collision avoidance for large-scale unit movement</li>
+            <li>Isometric projection: tile W=64, H=32, elevation offset 16px per level</li>
+            <li><em>Procedural world generation</em>: biome distribution, resource placement, terrain features</li>
+            <li><em>15,000+ lines</em> of design documentation across 20 structured directories</li>
+          </ul>
+        </div>
+        <div class="bl-detail-footer">
+          <div>
+            <div class="bl-houses-header">The Nine Houses</div>
+            <div class="bl-houses-strip">
+              <div class="bl-house-tag"><div class="bl-house-dot" style="background:#e8dcc8;"></div><span class="bl-house-name">Trueborn</span></div>
+              <div class="bl-house-tag"><div class="bl-house-dot" style="background:#c9a84c;"></div><span class="bl-house-name">Highborne</span></div>
+              <div class="bl-house-tag"><div class="bl-house-dot" style="background:#c94b1a;"></div><span class="bl-house-name">Ironmark</span></div>
+              <div class="bl-house-tag"><div class="bl-house-dot" style="background:#d4a843;"></div><span class="bl-house-name">Goldgrave</span></div>
+              <div class="bl-house-tag"><div class="bl-house-dot" style="background:#8a8a8a;"></div><span class="bl-house-name">Stonehelm</span></div>
+              <div class="bl-house-tag"><div class="bl-house-dot" style="background:#4a7a6a;"></div><span class="bl-house-name">Westland</span></div>
+              <div class="bl-house-tag"><div class="bl-house-dot" style="background:#5a8a4a;"></div><span class="bl-house-name">Hartvale</span></div>
+              <div class="bl-house-tag"><div class="bl-house-dot" style="background:#b8c8d8;"></div><span class="bl-house-name">Whitehall</span></div>
+              <div class="bl-house-tag"><div class="bl-house-dot" style="background:#7a6a5a;"></div><span class="bl-house-name">Oldcrest</span></div>
+            </div>
+          </div>
+          <div class="bl-scope-row">
+            <div class="bl-scope-item">
+              <div class="bl-scope-label">Design Bible</div>
+              <div class="bl-scope-bar-track"><div class="bl-scope-bar-fill" style="width:100%; background:linear-gradient(90deg, var(--gold-1776), rgba(201,168,76,0.3));"></div></div>
+              <div class="bl-scope-val">62 sections &middot; 2,813 lines</div>
+            </div>
+            <div class="bl-scope-item">
+              <div class="bl-scope-label">Core Systems</div>
+              <div class="bl-scope-bar-track"><div class="bl-scope-bar-fill" style="width:100%; background:linear-gradient(90deg, #c94b1a, rgba(201,75,26,0.3));"></div></div>
+              <div class="bl-scope-val">7 systems &middot; all interconnected</div>
+            </div>
+            <div class="bl-scope-item">
+              <div class="bl-scope-label">World Events</div>
+              <div class="bl-scope-bar-track"><div class="bl-scope-bar-fill" style="width:85%; background:linear-gradient(90deg, rgba(var(--fg),0.5), rgba(var(--fg),0.1));"></div></div>
+              <div class="bl-scope-val">28+ political events &middot; 6 victory paths</div>
+            </div>
+            <div class="bl-scope-item">
+              <div class="bl-scope-label">Documentation</div>
+              <div class="bl-scope-bar-track"><div class="bl-scope-bar-fill" style="width:95%; background:linear-gradient(90deg, rgba(var(--fg),0.4), rgba(var(--fg),0.1));"></div></div>
+              <div class="bl-scope-val">15,000+ lines &middot; 20 directories</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
