@@ -18,15 +18,30 @@ python -m http.server 8070 --directory .
 ```
 
 ## Source vs Deploy
-- **Root is the source of truth.** `deploy/` is the build output.
-- `build-deploy.sh` wipes and rebuilds `deploy/` from root — running it will overwrite any deploy-only edits.
-- **Always edit root files.** If you edit `deploy/` directly during development, sync back before finishing:
+
+**`deploy/` is the website and the authoritative source of truth for all content.** It is uploaded in full to Hostinger and is what goes live at lancewfisher.com. All website work must be done in `deploy/`.
+
+### Sync Direction (NON-NEGOTIABLE)
+
+The only safe sync direction is: **`deploy/` → root** (never root → `deploy/`).
+
+- **Edit files in `deploy/` directly.** This is the primary working location.
+- **After editing, sync back to root** to keep the repository consistent:
   ```bash
   cp deploy/styles.css styles.css
-  cp deploy/ftda/ftda.css ftda/ftda.css
-  # etc. for any other changed files
+  cp deploy/main.js main.js
+  cp deploy/home.html home.html
+  cp deploy/index.html index.html
+  # etc. for any changed files
   ```
-- Verify root == deploy with: `diff styles.css deploy/styles.css`
+- **NEVER run `build-deploy.sh`** — it wipes and rebuilds `deploy/` from root, destroying all deploy-side edits and the live site state.
+- **NEVER copy root files into `deploy/`** — root files are a mirror/backup and are always older than or equal to deploy. Copying root → deploy overwrites recent work with stale content.
+- **NEVER overwrite a deploy file without first comparing line counts or diffing** — if the source and deploy versions differ, `deploy/` wins unless you have explicit confirmation the source is newer.
+- The preview server always serves from `deploy/`: `python -m http.server 8077 --directory deploy`
+
+### Bloodlines Content Rule
+
+`deploy/bloodlines/` may contain newer or expanded `.md` files than `D:/ProjectsHome/Bloodlines/`. Before copying any Bloodlines source file into deploy, verify with `wc -l` that the deploy version is not already longer. If it is, do not overwrite — the deploy version is canonical.
 
 ## Structure
 ```

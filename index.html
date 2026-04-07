@@ -3,41 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lance W. Fisher | Leader. Builder. Father. Husband.</title>
-<meta name="description" content="Lance W. Fisher | Technical operations leader, culture architect, and full-stack builder. Data Center Technician Manager. 25+ production systems shipped across trading, AI, encrypted messaging, and games.">
+<title>Fisher Sovereign Systems</title>
+<meta name="description" content="Fisher Sovereign Systems. Building the architecture for independence. 25+ projects, one operator.">
 <meta name="author" content="Lance W. Fisher">
-<meta name="keywords" content="Lance W. Fisher, Lance Fisher, technical operations, full-stack developer, data center manager, trading systems, AI, software engineer, leadership">
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="robots" content="index, follow">
 <link rel="canonical" href="https://lancewfisher.com/">
-<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://lancewfisher.com/">
-<meta property="og:title" content="Lance W. Fisher | Leader. Builder. Father.">
-<meta property="og:description" content="Technical operations leader and full-stack builder. Data Center Technician Manager. 25+ production systems shipped across trading, AI, encrypted messaging, and games.">
+<meta property="og:title" content="Fisher Sovereign Systems">
+<meta property="og:description" content="Building the architecture for independence. 25+ projects, one operator.">
 <meta property="og:image" content="https://lancewfisher.com/img/og-image.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Lance W. Fisher portrait">
-<meta property="og:site_name" content="Lance W. Fisher">
-<meta property="og:locale" content="en_US">
-<!-- Twitter Card -->
+<meta property="og:site_name" content="Fisher Sovereign Systems">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@lancefisher_">
-<meta name="twitter:creator" content="@lancefisher_">
-<meta name="twitter:title" content="Lance W. Fisher | Leader. Builder. Father.">
-<meta name="twitter:description" content="Technical operations leader and full-stack builder. Data Center Technician Manager. 25+ systems shipped. The work speaks for itself.">
+<meta name="twitter:title" content="Fisher Sovereign Systems">
+<meta name="twitter:description" content="Building the architecture for independence. 25+ projects, one operator.">
 <meta name="twitter:image" content="https://lancewfisher.com/img/og-image.jpg">
-<meta name="twitter:image:alt" content="Lance W. Fisher portrait">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%E2%9A%93</text></svg>">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="stylesheet" href="fonts/fonts.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@300;400;600&family=Jost:wght@200;300;400&display=swap">
+<link rel="stylesheet" href="styles.css">
 <meta name="theme-color" content="#0a0a0b">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%E2%9A%93</text></svg>">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="ftda/ftda.css?v=20260321">
-<link rel="stylesheet" href="styles.css?v=20260321">
 <!-- Prevent FOUC: apply saved theme before paint -->
 <script>
 (function(){
@@ -46,1660 +34,732 @@
   if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
 })();
 </script>
+<style>
+/* ===== GATEWAY RESET & LAYOUT ===== */
+body {
+  cursor: default;
+  overflow: hidden;
+  height: 100vh;
+  height: 100svh;
+  margin: 0;
+  padding: 0;
+}
+
+.gw-stage {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 40px 24px 120px;
+  cursor: pointer;
+}
+
+/* ===== STATUE BACKGROUND ===== */
+.gw-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.gw-bg-layer {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.gw-bg-statue {
+  background-image: url(img/statue.webp);
+  background-position: center 35%;
+  mix-blend-mode: screen;
+  opacity: 0.14;
+}
+.gw-bg-ghost-right {
+  background-image: url(img/statue-ghost-right.png);
+  mix-blend-mode: screen;
+  opacity: 0;
+  filter: hue-rotate(15deg);
+  animation: gwGhostPulseR 10s ease-in-out infinite;
+}
+.gw-bg-ghost-left {
+  background-image: url(img/statue-ghost-left.png);
+  mix-blend-mode: screen;
+  opacity: 0;
+  filter: hue-rotate(-10deg);
+  animation: gwGhostPulseL 12s ease-in-out 3s infinite;
+}
+.gw-bg-faces {
+  background-image: url(img/statue-faces.webp);
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: gwFacesCycle 20s ease-in-out infinite;
+}
+.gw-bg-vignette {
+  background: radial-gradient(ellipse at center, transparent 30%, var(--bg) 85%);
+  opacity: 1;
+}
+
+@keyframes gwGhostPulseR {
+  0%, 100% { opacity: 0; }
+  40% { opacity: 0.04; }
+  60% { opacity: 0.06; }
+}
+@keyframes gwGhostPulseL {
+  0%, 100% { opacity: 0; }
+  35% { opacity: 0.03; }
+  55% { opacity: 0.05; }
+}
+@keyframes gwFacesCycle {
+  0%, 70%, 100% { opacity: 0; }
+  78% { opacity: 0.05; }
+  85% { opacity: 0.03; }
+  92% { opacity: 0; }
+}
+
+/* Light mode: switch blend modes */
+[data-theme="light"] .gw-bg-statue { mix-blend-mode: multiply; opacity: 0.12; }
+[data-theme="light"] .gw-bg-ghost-right { mix-blend-mode: multiply; }
+[data-theme="light"] .gw-bg-ghost-left { mix-blend-mode: multiply; }
+[data-theme="light"] .gw-bg-faces { mix-blend-mode: multiply; }
+
+/* ===== COMPANY NAME ===== */
+.gw-company {
+  font-family: 'Cormorant SC', serif;
+  font-weight: 600;
+  font-size: clamp(28px, 6vw, 64px);
+  letter-spacing: clamp(6px, 1.5vw, 18px);
+  text-transform: uppercase;
+  color: var(--warm-white);
+  text-align: center;
+  position: relative;
+  opacity: 0;
+  animation: gwFadeUp 1.2s ease forwards 0.5s;
+}
+/* Ambient glow behind company name */
+.gw-company::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 200%;
+  background: radial-gradient(ellipse, rgba(201, 168, 76, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+  animation: gwGlowBreathe 6s ease-in-out infinite;
+  z-index: -1;
+}
+[data-theme="light"] .gw-company::before {
+  background: radial-gradient(ellipse, rgba(201, 168, 76, 0.08) 0%, transparent 70%);
+}
+
+/* RGB-split glitch on company name */
+@keyframes gwNameGlitch {
+  0%, 92%, 100% { clip-path: inset(0 0 0 0); transform: none; }
+  93% { clip-path: inset(20% 0 60% 0); transform: translateX(-3px); filter: hue-rotate(90deg); }
+  94% { clip-path: inset(60% 0 10% 0); transform: translateX(3px); filter: hue-rotate(-90deg); }
+  95% { clip-path: inset(40% 0 30% 0); transform: translateX(-1px) skewX(-2deg); }
+  96% { clip-path: inset(0 0 0 0); transform: none; filter: none; }
+}
+.gw-company-glitch {
+  display: inline-block;
+  position: relative;
+}
+.gw-company-glitch::before,
+.gw-company-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+.gw-company-glitch::before {
+  color: #0ff;
+  animation: gwNameGlitch 14s ease-in-out infinite;
+}
+.gw-company-glitch::after {
+  color: #f33;
+  animation: gwNameGlitch 14s ease-in-out 0.05s infinite;
+}
+
+@keyframes gwGlowBreathe {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ===== TAGLINE ===== */
+.gw-tagline {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: clamp(10px, 1.4vw, 14px);
+  letter-spacing: clamp(4px, 0.8vw, 10px);
+  text-transform: uppercase;
+  color: var(--gold-1776);
+  text-align: center;
+  margin-top: 16px;
+  opacity: 0;
+  animation: gwFadeUp 1.2s ease forwards 0.8s;
+}
+
+/* ===== RULE ===== */
+.gw-rule {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-1776), transparent);
+  margin: 32px auto 28px;
+  opacity: 0;
+  animation: gwFadeUp 1.2s ease forwards 1.0s;
+}
+
+/* ===== CLOSING BLOCK ===== */
+.gw-closing {
+  text-align: center;
+  margin-top: 24px;
+  opacity: 0;
+  animation: gwFadeUp 1.2s ease forwards 1.7s;
+}
+.gw-closing-vision {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(var(--fg), 0.35);
+}
+.gw-closing-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: clamp(15px, 2vw, 19px);
+  letter-spacing: 3px;
+  color: rgba(var(--fg), 0.55);
+  margin-top: 6px;
+}
+.gw-closing-purpose {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(var(--fg), 0.30);
+  margin-top: 4px;
+}
+.gw-closing-brief {
+  display: block;
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(var(--fg), 0.30);
+  text-decoration: none;
+  margin-top: 22px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(var(--fg), 0.10);
+  transition: color 0.3s, border-color 0.3s;
+  cursor: pointer;
+}
+.gw-closing-brief:hover {
+  color: var(--gold-1776);
+  border-bottom-color: var(--gold-1776);
+}
+.gw-closing-motto {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(18px, 2.8vw, 28px);
+  letter-spacing: 5px;
+  color: var(--gold-1776);
+  margin-top: 14px;
+  text-shadow: 0 0 40px rgba(201, 168, 76, 0.25), 0 0 80px rgba(201, 168, 76, 0.08);
+  position: relative;
+  display: inline-block;
+}
+[data-theme="light"] .gw-closing-motto {
+  text-shadow: none;
+}
+.gw-motto-text {
+  display: inline;
+  transition: opacity 0.3s, filter 0.15s;
+}
+.gw-motto-translation {
+  display: none;
+}
+
+/* ===== TEXT GLITCH (shared by preview + domains) ===== */
+.gw-glitch-text {
+  position: relative;
+}
+.gw-glitch-text::before,
+.gw-glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+.gw-glitch-text:hover::before {
+  animation: gwTextGlitch 0.12s ease-in-out 1;
+}
+.gw-glitch-text:hover::after {
+  animation: gwTextGlitch 0.12s ease-in-out 0.02s 1;
+}
+.gw-glitch-text::before { color: rgba(0, 255, 255, 0.4); }
+.gw-glitch-text::after { color: rgba(255, 50, 50, 0.3); }
+@keyframes gwTextGlitch {
+  0%, 100% { opacity: 0; clip-path: inset(0 0 0 0); transform: none; }
+  30% { opacity: 0.5; clip-path: inset(0 0 50% 0); transform: translateX(-1px); }
+  60% { opacity: 0.35; clip-path: inset(50% 0 0 0); transform: translateX(1px); }
+  85% { opacity: 0.15; transform: none; }
+}
+/* Ambient glitch on staggered timers for preview lines */
+.gw-preview .gw-glitch-text:nth-child(1)::before { animation: gwTextGlitch 20s ease-in-out 6s infinite; }
+.gw-preview .gw-glitch-text:nth-child(3)::before { animation: gwTextGlitch 24s ease-in-out 11s infinite; }
+.gw-preview .gw-glitch-text:nth-child(5)::before { animation: gwTextGlitch 18s ease-in-out 16s infinite; }
+
+/* ===== PREVIEW LINES ===== */
+.gw-preview {
+  text-align: center;
+  margin-top: 28px;
+  opacity: 0;
+  animation: gwFadeUp 1.2s ease forwards 1.3s;
+}
+.gw-preview p {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(13px, 1.6vw, 17px);
+  line-height: 2;
+  color: rgba(var(--fg), 0.35);
+  letter-spacing: 1px;
+}
+
+/* ===== ENTER BUTTON ===== */
+.gw-enter-wrap {
+  margin-top: 36px;
+  position: relative;
+  opacity: 0;
+  animation: gwFadeUp 1.2s ease forwards 1.55s;
+}
+.gw-enter-wrap a.gw-enter-btn {
+  display: inline-block;
+  position: relative;
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: rgba(var(--fg), 0.7);
+  text-decoration: none;
+  padding: 14px 44px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  transition: color 0.3s;
+  z-index: 1;
+}
+.gw-enter-wrap a.gw-enter-btn:hover {
+  color: rgba(var(--fg), 1);
+}
+/* SVG border overlay */
+.gw-enter-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+.gw-enter-svg rect {
+  fill: none;
+  stroke: rgba(var(--fg), 0.25);
+  stroke-width: 1;
+  transition: stroke 0.3s;
+}
+.gw-enter-wrap:hover .gw-enter-svg rect {
+  stroke: rgba(var(--fg), 0.55);
+}
+
+/* ===== DOMAIN STRIP ===== */
+.gw-domains {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  z-index: 10;
+  opacity: 0;
+  animation: gwFadeUp 1s ease forwards 2.2s;
+}
+.gw-domains a,
+.gw-domains a:link,
+.gw-domains a:visited {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: rgba(var(--fg), 0.25);
+  text-decoration: none;
+  padding: 4px 10px;
+  position: relative;
+  cursor: pointer;
+  transition: color 0.3s;
+  white-space: nowrap;
+}
+.gw-domains a:hover {
+  color: rgba(var(--fg), 0.75);
+}
+/* Domain separators */
+.gw-domains a + a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 10px;
+  background: rgba(var(--fg), 0.1);
+}
+
+/* Domain glitch effect */
+.gw-domains a::after {
+  content: attr(data-domain);
+  position: absolute;
+  top: 4px;
+  left: 10px;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+@keyframes gwDomainGlitch {
+  0%, 96%, 100% { opacity: 0; clip-path: inset(0 0 0 0); }
+  97% { opacity: 0.7; color: #0ff; clip-path: inset(0 0 50% 0); transform: translateX(-2px); }
+  98% { opacity: 0.5; color: #f33; clip-path: inset(50% 0 0 0); transform: translateX(2px); }
+  99% { opacity: 0; }
+}
+.gw-domains a:hover::after {
+  animation: gwDomainGlitch 0.4s ease-in-out 1;
+}
+/* Ambient domain glitch on staggered timers */
+.gw-domains a:nth-child(2)::after {
+  animation: gwDomainGlitch 18s ease-in-out 4s infinite;
+}
+.gw-domains a:nth-child(5)::after {
+  animation: gwDomainGlitch 22s ease-in-out 8s infinite;
+}
+.gw-domains a:nth-child(7)::after {
+  animation: gwDomainGlitch 25s ease-in-out 12s infinite;
+}
+
+/* ===== YEAR ===== */
+.gw-year {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(var(--fg), 0.12);
+  z-index: 10;
+  opacity: 0;
+  animation: gwFadeUp 1s ease forwards 2.5s;
+}
+
+/* ===== THEME TOGGLE (inherits from styles.css) ===== */
+/* Position override for gateway: same as portfolio */
+.gw-theme-toggle {
+  opacity: 0;
+  animation: gwFadeUp 1s ease forwards 2.8s;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes gwFadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 680px) {
+  .gw-company {
+    font-size: clamp(20px, 7vw, 36px);
+    letter-spacing: clamp(3px, 1vw, 8px);
+  }
+  .gw-tagline {
+    font-size: 9px;
+    letter-spacing: 3px;
+  }
+  .gw-closing-vision { font-size: 10px; letter-spacing: 3px; }
+  .gw-closing-name { font-size: 14px; letter-spacing: 2px; }
+  .gw-closing-purpose { font-size: 9px; letter-spacing: 2px; }
+  .gw-closing-motto { font-size: 16px; letter-spacing: 3px; }
+  .gw-closing-brief { font-size: 10px; letter-spacing: 3px; }
+  .gw-preview p {
+    font-size: 13px;
+    line-height: 1.9;
+  }
+  .gw-enter-btn {
+    font-size: 11px;
+    letter-spacing: 4px;
+    padding: 12px 32px;
+  }
+  .gw-domains {
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 90vw;
+    bottom: 16px;
+    gap: 2px 0;
+  }
+  .gw-domains a + a::before {
+    display: none;
+  }
+  .gw-domains a {
+    padding: 3px 8px;
+    font-size: 9px;
+  }
+  .gw-year {
+    bottom: 10px;
+    right: 16px;
+    font-size: 9px;
+  }
+  .gw-stage {
+    padding: 40px 16px 100px;
+  }
+}
+</style>
 </head>
 <body>
 
+<!-- Statue Background Layers -->
+<div class="gw-bg" aria-hidden="true">
+  <div class="gw-bg-layer gw-bg-statue"></div>
+  <div class="gw-bg-layer gw-bg-ghost-right"></div>
+  <div class="gw-bg-layer gw-bg-ghost-left"></div>
+  <div class="gw-bg-layer gw-bg-faces"></div>
+  <div class="gw-bg-layer gw-bg-vignette"></div>
+</div>
+
 <!-- Theme Toggle -->
-<button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">
+<button class="theme-toggle gw-theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">
   <svg class="icon-moon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg>
   <svg class="icon-sun" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg>
 </button>
 
-<a class="skip-nav" href="#sec-about">Skip to content</a>
-
-<!-- Ship Watermark (dark mode) -->
-<img class="ship-watermark" src="img/ship.png" alt="" role="presentation" loading="lazy">
-
-<!-- Roman Statue Watermark (light mode only, hidden in dark via CSS) -->
-<img class="statue-watermark" src="img/statue.webp" alt="" role="presentation" aria-hidden="true" loading="lazy">
-
-<!-- Scroll progress line (light mode only) -->
-<div class="scroll-progress-track" aria-hidden="true"><div class="scroll-progress-fill"></div></div>
-
-<!-- Glitch statue left (dark: ghost-right faces inward; light: original stone face) -->
-<div class="glitch-statue-left" aria-hidden="true">
-  <!-- Light mode: original stone face close-up (statue-faces.webp) -->
-  <img class="glitch-layer glitch-a glitch-light" src="img/statue-faces.webp" alt="" role="presentation">
-  <img class="glitch-layer glitch-b glitch-light" src="img/statue.webp" alt="" role="presentation">
-  <img class="glitch-layer glitch-c glitch-light" src="img/statue-faces.webp" alt="" role="presentation">
-  <!-- Dark mode: ghost-right — faces point RIGHT, inward toward center -->
-  <img class="glitch-layer glitch-a glitch-dark" src="img/statue-ghost-right.png" alt="" role="presentation">
-  <img class="glitch-layer glitch-b glitch-dark" src="img/statue.webp" alt="" role="presentation">
-  <img class="glitch-layer glitch-c glitch-dark" src="img/statue-ghost-right.png" alt="" role="presentation">
-</div>
-
-<!-- Glitch statue right (dark: ghost-left faces inward; light: hidden) -->
-<div class="glitch-statue-right" aria-hidden="true">
-  <!-- ghost-left — faces point LEFT, inward toward center; no scaleX flip needed -->
-  <img class="glitch-layer glitch-a" src="img/statue-ghost-left.png" alt="" role="presentation">
-  <img class="glitch-layer glitch-b" src="img/statue.webp" alt="" role="presentation">
-  <img class="glitch-layer glitch-c" src="img/statue-ghost-left.png" alt="" role="presentation">
-</div>
-
-<div class="page">
-
-  <!-- Hero -->
-  <section class="hero" id="sec-hero">
-    <img class="hero-script-logo hero-script-dark" src="thumbs/lance-fisher-script-transparent.png" alt="Lance Fisher">
-    <img class="hero-script-logo hero-script-light" src="thumbs/lance-fisher-script-transparent.png" alt="Lance Fisher">
-    <h1 class="hero-name">
-      <span class="line">Lance</span>
-      <span class="line">F<span class="morph-letter" id="morph-i"><span class="morph-char">i</span><span class="glitch-line"></span></span>sh<span class="morph-letter" id="morph-e"><span class="morph-char">e</span><span class="glitch-line"></span></span>r</span>
-    </h1>
-    <div class="hero-rule"></div>
-    <p class="hero-subtitle">Leader &middot; Builder &middot; Father &middot; Husband</p>
-    <p class="hero-company"><span class="sovereign-glitch" data-text="Fisher Sovereign Systems">Fisher Sovereign Systems</span></p>
-    <p class="hero-motto">Mens clara in tenebris</p>
-    <div class="hero-domains">
-      <a href="https://lancewfisher.com" target="_blank" rel="noopener noreferrer"><span>lancewfisher.com</span></a>
-      <a href="one-three/brand.html" rel="noopener noreferrer"><span>one-three.net</span></a>
-      <a href="https://fisher13.com" target="_blank" rel="noopener noreferrer"><span>fisher13.com</span></a>
-      <a href="https://f1sh3r.net" target="_blank" rel="noopener noreferrer"><span>f1sh3r.net</span></a>
-      <a href="https://fishersovereign.com" target="_blank" rel="noopener noreferrer"><span>fishersovereign.com</span></a>
-      <a href="https://fishersovereign.systems" target="_blank" rel="noopener noreferrer"><span>fishersovereign.systems</span></a>
-      <a href="https://teamfisher.us" target="_blank" rel="noopener noreferrer"><span>teamfisher.us</span></a>
-    </div>
-    <div class="hero-ctas">
-      <a href="#sec-contact" class="hero-cta hero-cta-primary">Book a Call</a>
-      <a href="#sec-projects" class="hero-cta hero-cta-ghost">See the Work</a>
-    </div>
-    <div class="scroll-indicator" id="scrollIndicator">
-      <div class="scroll-line"></div>
-    </div>
-  </section>
-
-  <!-- About -->
-  <section class="section" id="sec-about" data-reveal style="max-width:1000px;">
-    <div class="section-label">About</div>
-    <div class="about-card">
-      <div class="portrait-section">
-        <div class="portrait-frame" id="portrait-carousel">
-          <img class="portrait-primary" src="img/portrait.jpg" alt="Lance W. Fisher">
-          <img class="portrait-secondary" src="img/photo-jamison1.jpg" alt="Lance at a sporting event" loading="lazy">
-          <img class="portrait-secondary" src="img/photo-jamison2.jpg" alt="Lance outdoors" loading="lazy">
-          <img class="portrait-secondary" src="img/photo-jamison3.jpg" alt="Lance at a formal event" loading="lazy">
-          <img class="portrait-secondary" src="img/photo-portrait1.jpg" alt="Lance W. Fisher in a suit" loading="lazy">
-          <div class="portrait-scanline"></div>
-        </div>
-        <div>
-          <div class="section-title">The work<br>speaks<br>for itself</div>
-          <div class="body-text">
-            Lance Fisher is the founder of Fisher Sovereign Systems, LLC — a senior technology leader and builder who has spent fifteen years making systems that outlast the moment they were made for.
-          </div>
-          <div class="body-text" style="margin-top:14px;">
-            Lance Fisher operates with a quiet severity shaped by discipline and principle. He believes leadership without integrity is performance and participation without moral foundation is erosion. His standard is internal and fixed, untouched by pressure or applause. He moves deliberately and corrects what is corrupt. He does not build for attention. He builds for consequence. His decisions are measured against long-term impact rather than short-term approval. He builds with permanence in view and regards legacy as duty, not ambition. His pride is a clear mind in darkness, <em>mens clara in tenebris</em>, and his legacy is designed to endure.
-          </div>
-          <div class="body-text" style="margin-top:14px;">
-            On his own time, he builds. Not as a career engineer, but as a leader who recognized what AI tooling made possible and moved on it. Full-stack production applications for real businesses. Multi-agent autonomous trading systems. A 3D platformer built for his son. Encrypted messaging platforms. An AI framework running on his own hardware. A nautical apparel brand. A custom app studio for local businesses. Over <em>80,000 lines of code</em> across <em>25+ projects</em>, all designed, architected, and shipped alone, most with the disciplined use of large language models as a force multiplier. Every tile on this page represents something he built from nothing, on his own time, because the work itself is the point.
-          </div>
-          <div style="margin-top:24px;">
-            <a href="#sec-contact" class="contact-shortcut">Get in touch <span>&#8595;</span></a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="spacer-lg"></div>
-  <div class="thin-line" style="height:100px;"></div>
-  <div class="spacer-lg"></div>
-
-  <!-- Fisher Sovereign Systems — Combined Mission + Sovereignty -->
-  <section class="section fs-mega" id="sec-fisher-sovereign" data-reveal style="max-width:1100px;">
-    <div class="fs-wordmark">
-      <svg class="fs-glyph" width="20" height="28" viewBox="0 0 20 28" fill="none" aria-hidden="true">
-        <line x1="4"  y1="1"  x2="4"  y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="16" y1="1"  x2="16" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="4"  y1="14" x2="16" y2="14" stroke="currentColor" stroke-width="1.5"/>
-        <line x1="1"  y1="1"  x2="7"  y2="1"  stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="13" y1="1"  x2="19" y2="1"  stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="1"  y1="27" x2="7"  y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="13" y1="27" x2="19" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-      <div class="fs-wordmark-text">
-        <div class="fs-wordmark-name">FISHER SOVEREIGN</div>
-        <div class="fs-wordmark-rule"></div>
-        <div class="fs-wordmark-entity">SYSTEMS, LLC</div>
-      </div>
-    </div>
-    <p class="fs-tagline">Building the Architecture for Independence</p>
-    <h2 class="fs-headline">You are not using the product.<br>You are the product.</h2>
-    <p class="fs-subheadline">The algorithm does not work for you. It works on you.</p>
-    <div class="fs-mission">
-      <p>To observe, categorize, and convert your behavior into revenue. Every search, every click, every pause is a data point inside a system you didn&rsquo;t design, can&rsquo;t inspect, and rarely benefit from. You were never the customer. You were the inventory.</p>
-      <p>Fisher Sovereign Systems is the refusal. Encrypted. Local. Sovereign. Infrastructure engineered to answer to the person using it &mdash; not the company profiting from it.</p>
-    </div>
-
-    <!-- Digital Sovereignty -->
-    <div class="fs-sovereignty-block">
-      <div class="section-title" style="font-size:clamp(28px, 4vw, 42px); margin-bottom:16px;">Digital Sovereignty</div>
-      <p class="sov-intro">A throughline connects every project in this portfolio: the conviction that critical systems should run on hardware you own, process data that never leaves your network, and answer to no one&rsquo;s terms of service but your own.</p>
-    </div>
-    <div class="fs-pillars-label">The Infrastructure</div>
-    <div class="sovereignty-grid">
-      <div class="sov-item">
-        <div class="sov-item-title">Local AI</div>
-        <div class="sov-item-desc">Auton and MoltBot run Qwen 2.5 14B on a local RTX 4070. No API keys. No rate limits. No data leaving the machine. The GPU is the moat.</div>
-      </div>
-      <div class="sov-item">
-        <div class="sov-item-title">E2E Encryption</div>
-        <div class="sov-item-desc">Sovereign Signal implements Signal-grade X3DH key exchange and Double Ratchet. Messages are plaintext only on sender and receiver devices. The relay server sees nothing.</div>
-      </div>
-      <div class="sov-item">
-        <div class="sov-item-title">Self-Hosted Bots</div>
-        <div class="sov-item-desc">Every trading bot runs locally. Market data streams through private WebSocket connections. No cloud functions. No third-party dashboards. The execution path is yours.</div>
-      </div>
-      <div class="sov-item">
-        <div class="sov-item-title">Home Hub</div>
-        <div class="sov-item-desc">Project Hub serves 22 projects from localhost. No SaaS project manager. No Jira. No Notion dependency. The workspace is a single machine with a single source of truth.</div>
-      </div>
-    </div>
-
-    <!-- Article teaser card -->
-    <div class="fs-teaser-card">
-      <div class="fs-teaser-info">
-        <div class="fs-teaser-eyebrow">The Case</div>
-        <div class="fs-teaser-title">Architect of Independence</div>
-        <div class="fs-teaser-subtitle">Lance Fisher and the Quiet Rebellion Against the Surveillance Economy</div>
-        <blockquote class="fs-teaser-quote">&ldquo;People did not sign up to become datasets. They signed up to use services. The rest happened quietly behind the scenes.&rdquo;</blockquote>
-        <div class="fs-teaser-sublabel">The case for why this company exists &mdash; and the problem it was built to solve.</div>
-        <a href="fisher-sovereign.html" class="hero-cta hero-cta-ghost fs-teaser-cta">Read the Brief &rarr;</a>
-      </div>
-      <div class="fs-teaser-deco" aria-hidden="true">
-        <span class="fs-teaser-quote-mark">&ldquo;</span>
-      </div>
-    </div>
-  </section>
-
-  <div class="spacer-lg"></div>
-  <div class="thin-line" style="height:100px;"></div>
-  <div class="spacer-lg"></div>
-
-  <!-- The Work — Combined Now + Method -->
-  <section class="section" id="sec-now" data-reveal style="max-width:1100px;">
-    <div class="section-label">The Work</div>
-    <div class="section-title">What he builds<br>&amp; how he builds it</div>
-    <div class="body-text" style="margin-bottom:40px;">
-      Lance is not a software engineer by trade. He is an operations leader with 15+ years managing teams, facilities, and complex systems at scale. The projects on this page were built the way a leader builds: identify the problem, architect the solution, direct the tooling, and ship. Large language models are the force multiplier. He sets the standard. The tooling executes.
-    </div>
-    <div class="build-method-grid" style="margin-bottom:48px;">
-      <div class="build-method-item">
-        <div class="build-method-label">Identify</div>
-        <div class="build-method-text">Real problems for real people. Every project starts with a need, not a technology.</div>
-      </div>
-      <div class="build-method-item">
-        <div class="build-method-label">Architect</div>
-        <div class="build-method-text">Design the system before writing a line. Data flow, dependencies, failure modes, user experience.</div>
-      </div>
-      <div class="build-method-item">
-        <div class="build-method-label">Direct</div>
-        <div class="build-method-text">LLMs as force multipliers under disciplined guidance. The human sets the standard. The tooling executes.</div>
-      </div>
-    </div>
-    <div class="fs-pillars-label">Active Projects</div>
-    <div class="now-list">
-      <div class="now-item">
-        <div class="now-dot"></div>
-        <div>
-          <div class="now-text">Building custom mobile apps for Northern Colorado businesses through <strong>NoCo App Studio</strong> &mdash; 10 live demos ready for real business owners.</div>
-          <div class="now-meta">TypeScript &middot; React Native &middot; NestJS &middot; Stripe</div>
-        </div>
-      </div>
-      <div class="now-item">
-        <div class="now-dot"></div>
-        <div>
-          <div class="now-text">Operating an autonomous multi-agent <strong>trading desk</strong> across Binance, Polymarket, Solana, and ETH DeFi with 4 baseline strategies and real-time dashboards.</div>
-          <div class="now-meta">Python &middot; TypeScript &middot; asyncio &middot; ccxt</div>
-        </div>
-      </div>
-      <div class="now-item">
-        <div class="now-dot"></div>
-        <div>
-          <div class="now-text">Growing <strong>Fisher One-Three</strong>, a nautical lifestyle apparel brand with 24 original designs and a direct storefront.</div>
-          <div class="now-meta">Brand &middot; Apparel &middot; Creative &middot; E-Commerce</div>
-        </div>
-      </div>
-      <div class="now-item">
-        <div class="now-dot"></div>
-        <div>
-          <div class="now-text">Building <strong>Jump Quest!</strong> &mdash; a 3D platformer game built for his son. Unity + Three.js web version with Xbox controller support.</div>
-          <div class="now-meta">Unity &middot; C# &middot; Three.js &middot; WebGL</div>
-        </div>
-      </div>
-      <div class="now-item">
-        <div class="now-dot"></div>
-        <div>
-          <div class="now-text">Designing <strong>Bloodlines</strong>, a dynasty-driven medieval real-time strategy game with nine founding houses, seven interconnected systems, and a 62-section Design Bible spanning 15,000+ lines of design documentation.</div>
-          <div class="now-meta">TypeScript &middot; Canvas 2D &middot; ECS &middot; Deterministic Lockstep</div>
-        </div>
-      </div>
-      <div class="now-item">
-        <div class="now-dot"></div>
-        <div>
-          <div class="now-text">Developing <strong>Sovereign Signal</strong>, an E2EE messenger with X3DH key exchange, Double Ratchet protocol, and WebAuthn vault.</div>
-          <div class="now-meta">TypeScript &middot; Next.js &middot; libsodium &middot; WebAuthn</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="spacer-lg"></div>
-  <div class="thin-line" style="height:100px;"></div>
-  <div class="spacer-lg"></div>
-
-  <!-- Projects -the main showcase -->
-  <section class="section" id="sec-projects" data-reveal style="max-width:1100px;">
-    <div class="section-label">Projects</div>
-    <div class="section-title">Systems &amp; Leadership</div>
-
-    <div class="project-filters">
-      <button class="pf-btn active" data-filter="all">All</button>
-      <button class="pf-btn" data-filter="apps">Apps</button>
-      <button class="pf-btn" data-filter="trading">Trading</button>
-      <button class="pf-btn" data-filter="games">Games</button>
-      <button class="pf-btn" data-filter="tools">Tools &amp; AI</button>
-    </div>
-
-    <div class="project-gallery" id="projectGallery">
-
-      <!-- FTDA -Fisher Team Development Architecture (Premium Card) -->
-      <div class="project-card ftda-flagship" id="ftda-section" data-tags="tools">
-        <div class="project-info">
-          <div class="p-number ftda-accent">Featured</div>
-          <div class="p-title ftda-accent">Fisher Team Development Architecture</div>
-          <div class="p-desc">A comprehensive onboarding, shift integration, and team development playbook built from 15+ years of operational leadership. Tested in live operations. Refined through repeated cycles. Protected document.</div>
-          <div class="p-tech">Leadership Framework / Onboarding Architecture / Team Culture</div>
-          <div class="p-status ftda-protected">&#x1F512; Protected</div>
-        </div>
-        <div class="project-thumb-wrap ftda-thumb-border">
-          <canvas id="ftda-canvas"></canvas>
-          <div class="thumb-label">Protected</div>
-        </div>
-        <div class="project-detail ftda-detail-expand">
-          <div class="detail-inner">
-            <div class="ftda-summary-scroll">
-              <div class="ftda-summary-text"></div>
-            </div>
-            <div class="ftda-detail-right">
-              <div class="ftda-stats">
-                <div class="ftda-stat">
-                  <div class="ftda-stat-value">15+</div>
-                  <div class="ftda-stat-label">Years Leading</div>
-                </div>
-                <div class="ftda-stat">
-                  <div class="ftda-stat-value">19</div>
-                  <div class="ftda-stat-label">Sections</div>
-                </div>
-                <div class="ftda-stat">
-                  <div class="ftda-stat-value">1</div>
-                  <div class="ftda-stat-label">Document</div>
-                </div>
-              </div>
-              <button class="ftda-cta"><span class="ftda-cta-lock">&#x1F512;</span>Open Architecture</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 01 Booking Platform -->
-      <div class="project-card" data-tags="apps">
-        <div class="project-info">
-          <div class="p-number">01</div>
-          <div class="p-title">Medical Spa Booking Platform</div>
-          <div class="p-desc">Production mobile booking system built for a medical spa practice. Full client-facing app with provider scheduling, Stripe payments, and admin analytics.</div>
-          <div class="p-tech">React Native / Expo / NestJS / PostgreSQL / Stripe</div>
-          <div class="p-status active">In Development</div>
-          <a class="p-demo-link" href="harmony/" target="_blank" rel="noopener noreferrer"><span class="demo-icon">&#9654;</span> App Preview</a>
-          <a class="p-demo-link" href="harmony/admin/" target="_blank" rel="noopener" style="margin-left:8px;"><span class="demo-icon">&#9654;</span> Admin</a>
-        </div>
-        <div class="project-thumb-wrap">
-          <img src="thumbs/thumb-harmony.jpg" alt="Medical Spa Booking Platform preview" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
-          <div class="thumb-label">Preview</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">This project was born from watching a real practice struggle with scheduling inefficiency. Every screen, every booking flow, every push notification exists because Lance observed the pain points firsthand and decided to solve them. The app was designed for a real business with actual providers, services, and live client workflows.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>15+ production screens</em> covering onboarding, booking, checkout, and profile management</li>
-                <li>Integrated <em>Stripe payment processing</em> with tokenized card storage and receipt generation</li>
-                <li>Real-time <em>provider calendar</em> with conflict detection and availability windows</li>
-                <li>Push notification system for <em>appointment reminders</em>, cancellations, and promotions</li>
-                <li>Dedicated <em>admin dashboard</em> with revenue analytics, booking metrics, and provider management</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li>Cross-platform mobile app using <em>Expo + React Native</em> targeting iOS and Android</li>
-                <li>REST API backend on <em>NestJS</em> with role-based authentication and JWT sessions</li>
-                <li><em>PostgreSQL</em> database with normalized schema for services, providers, and appointments</li>
-                <li>Designed for a <em>real business</em> with actual providers, services, and live client workflows</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">15+</div><div class="ds-label">Screens</div></div>
-              <div class="detail-stat"><div class="ds-value">5</div><div class="ds-label">Providers</div></div>
-              <div class="detail-stat"><div class="ds-value">30+</div><div class="ds-label">Services</div></div>
-              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">User Roles</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 04 Bloodlines — Medieval Real-Time Strategy Game (In Development) -->
-      <div class="project-card" data-tags="games">
-        <div class="project-info">
-          <div class="p-number">02</div>
-          <div class="p-title">Bloodlines</div>
-          <div class="p-desc">Dynasty-driven medieval real-time strategy game where faith, sacrifice, and bloodline shape the fate of civilizations. Nine founding houses. Seven interconnected systems. Four ancient faith covenants. Matches designed for 2 to 10+ hours of deep strategic play.</div>
-          <div class="p-tech">Game Design / Systems Architecture / Markdown Archive / Web Bible Viewer</div>
-          <div class="p-status active">In Development</div>
-          <a class="p-demo-link" href="bloodlines/" target="_blank" rel="noopener noreferrer"><span class="demo-icon">&#128214;</span> Design Bible</a>
-        </div>
-        <div class="project-thumb-wrap">
-          <div class="bloodlines-thumb-composite">
-            <div class="bl-viewer-bar">
-              <div class="bl-sigil-mark">B</div>
-              <div class="bl-brand-text">
-                <div class="bl-brand-title">Bloodlines</div>
-                <div class="bl-brand-sub">Design Archive &mdash; Session 9</div>
-              </div>
-              <div class="bl-stats">
-                <div class="bl-stat"><span class="bl-stat-val">62</span><span class="bl-stat-label">Sections</span></div>
-                <div class="bl-stat-div"></div>
-                <div class="bl-stat"><span class="bl-stat-val">15k+</span><span class="bl-stat-label">Lines</span></div>
-                <div class="bl-stat-div"></div>
-                <div class="bl-stat"><span class="bl-stat-val">9</span><span class="bl-stat-label">Houses</span></div>
-                <div class="bl-stat-div"></div>
-                <div class="bl-stat"><span class="bl-stat-val">7</span><span class="bl-stat-label">Systems</span></div>
-              </div>
-              <div class="bl-phase">Phase 1 Complete</div>
-            </div>
-            <div class="bl-sidebar-strip">
-              <div class="bl-nav-section">
-                <div class="bl-nav-header">Project</div>
-                <div class="bl-nav-item active">&#x2B21; Overview</div>
-                <div class="bl-nav-item">&#x25C8; Project Status</div>
-                <div class="bl-nav-item">&#x25C8; Canonical Rules</div>
-              </div>
-              <div class="bl-nav-section">
-                <div class="bl-nav-header">Design Bible</div>
-                <div class="bl-nav-item">&#x1F4D6; Complete Bible v3.0</div>
-                <div class="bl-nav-item">&#x1F9E0; Master Memory</div>
-              </div>
-              <div class="bl-nav-section">
-                <div class="bl-nav-header">Core Systems</div>
-                <div class="bl-nav-item">&#x2699; Conviction</div>
-                <div class="bl-nav-item">&#x2699; Faith</div>
-                <div class="bl-nav-item">&#x2699; Population</div>
-                <div class="bl-nav-item">&#x2699; Resource</div>
-                <div class="bl-nav-item">&#x2699; Territory</div>
-                <div class="bl-nav-item">&#x2699; Dynastic</div>
-                <div class="bl-nav-item">&#x2699; Born of Sacrifice</div>
-              </div>
-              <div class="bl-nav-section">
-                <div class="bl-nav-header">World</div>
-                <div class="bl-nav-item">&#x1F30D; Four Ancient Faiths</div>
-                <div class="bl-nav-item">&#x1F30D; Timeline</div>
-              </div>
-            </div>
-            <div class="bl-mockup-layer">
-              <img class="bl-mockup-img" src="thumbs/bloodlines-mockup.png" alt="Bloodlines concept mockup">
-            </div>
-            <div class="bl-content-overlay">
-              <div class="bl-overview-title">Bloodlines</div>
-              <div class="bl-overview-tagline">"What it costs to build something that outlasts you."</div>
-              <div class="bl-mini-stats">
-                <div class="bl-mini-stat"><div class="bl-mini-stat-val">2,813</div><div class="bl-mini-stat-label">Bible Lines</div></div>
-                <div class="bl-mini-stat"><div class="bl-mini-stat-val">9</div><div class="bl-mini-stat-label">Houses</div></div>
-                <div class="bl-mini-stat"><div class="bl-mini-stat-val">28+</div><div class="bl-mini-stat-label">Events</div></div>
-                <div class="bl-mini-stat"><div class="bl-mini-stat-val">6</div><div class="bl-mini-stat-label">Victory Paths</div></div>
-              </div>
-            </div>
-            <div class="bl-mockup-label">Concept &middot; Pre-Alpha</div>
-          </div>
-          <div class="thumb-label">Design Archive</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">Bloodlines is not a quick skirmish game. It is a civilization simulator built around dynastic rule, where your ruling bloodline expands across a massive procedurally generated world. You govern territory through loyalty and military presence, shape your civilization through four ancient faith covenants, and escalate into late-game divergence through economy, warfare, prestige, or divine right. The combat layer stays pure Command and Conquer: clean counters, readable unit roles, and fast engagements, even under 6 to 10 hour stress tests.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>Nine founding houses</em>: Trueborn, Highborne, Ironmark, Goldgrave, Stonehelm, Westland, Hartvale, Whitehall, Oldcrest, each with unique units, squad traits, and strategic identity</li>
-                <li><em>Seven interconnected systems</em>: Conviction, Faith, Population, Resource, Territory, Dynastic, Born of Sacrifice</li>
-                <li><em>Four ancient faith covenants</em>: Old Light, Blood Dominion, The Order, The Wild, each with dual light/dark doctrine paths</li>
-                <li><em>Conviction axis</em>: moral tracking with amplifying penalties, where repeated dark actions compound consequences</li>
-                <li><em>28+ political events</em>: named world events with triggers, effects, counter-play, and resolution mechanics</li>
-                <li><em>Born of Sacrifice</em>: elite army forging through genuine sacrifice, the moral core of the game</li>
-                <li><em>Six victory paths</em>: Military Conquest, Economic Dominance, Dynastic Prestige, Faith Divine Right, Alliance Victory, Trueborn Rise</li>
-                <li><em>62-section Design Bible</em>: complete design foundation across all systems, houses, and mechanics</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li><em>Zero runtime dependencies</em>: pure TypeScript with Canvas 2D rendering</li>
-                <li><em>Deterministic lockstep simulation</em> using fixed-point math for multiplayer-ready replay and sync stability</li>
-                <li><em>Seeded RNG</em> for deterministic outcomes: same inputs always produce the same state</li>
-                <li>ECS-inspired architecture: entities, components, systems cleanly separated</li>
-                <li><em>A* pathfinding</em> with terrain costs and collision avoidance for large-scale unit movement</li>
-                <li>Isometric projection: tile W=64, H=32, elevation offset 16px per level</li>
-                <li><em>Procedural world generation</em>: biome distribution, resource placement, terrain features</li>
-                <li><em>15,000+ lines</em> of design documentation across 20 structured directories</li>
-              </ul>
-            </div>
-            <div class="bl-detail-links">
-              <a href="bloodlines/" class="brand-link-primary" target="_blank">Read the Design Bible &rarr;</a>
-            </div>
-            <div class="bl-detail-footer">
-              <div>
-                <div class="bl-houses-header">The Nine Houses</div>
-                <div class="bl-houses-strip">
-                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#e8dcc8;"></div><span class="bl-house-name">Trueborn</span></div>
-                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#c9a84c;"></div><span class="bl-house-name">Highborne</span></div>
-                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#c94b1a;"></div><span class="bl-house-name">Ironmark</span></div>
-                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#d4a843;"></div><span class="bl-house-name">Goldgrave</span></div>
-                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#8a8a8a;"></div><span class="bl-house-name">Stonehelm</span></div>
-                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#4a7a6a;"></div><span class="bl-house-name">Westland</span></div>
-                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#5a8a4a;"></div><span class="bl-house-name">Hartvale</span></div>
-                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#b8c8d8;"></div><span class="bl-house-name">Whitehall</span></div>
-                  <div class="bl-house-tag"><div class="bl-house-dot" style="background:#7a6a5a;"></div><span class="bl-house-name">Oldcrest</span></div>
-                </div>
-              </div>
-              <div class="bl-scope-row">
-                <div class="bl-scope-item">
-                  <div class="bl-scope-label">Design Bible</div>
-                  <div class="bl-scope-bar-track"><div class="bl-scope-bar-fill" style="width:100%; background:linear-gradient(90deg, var(--gold-1776), rgba(201,168,76,0.3));"></div></div>
-                  <div class="bl-scope-val">62 sections &middot; 2,813 lines</div>
-                </div>
-                <div class="bl-scope-item">
-                  <div class="bl-scope-label">Core Systems</div>
-                  <div class="bl-scope-bar-track"><div class="bl-scope-bar-fill" style="width:100%; background:linear-gradient(90deg, #c94b1a, rgba(201,75,26,0.3));"></div></div>
-                  <div class="bl-scope-val">7 systems &middot; all interconnected</div>
-                </div>
-                <div class="bl-scope-item">
-                  <div class="bl-scope-label">World Events</div>
-                  <div class="bl-scope-bar-track"><div class="bl-scope-bar-fill" style="width:85%; background:linear-gradient(90deg, rgba(var(--fg),0.5), rgba(var(--fg),0.1));"></div></div>
-                  <div class="bl-scope-val">28+ political events &middot; 6 victory paths</div>
-                </div>
-                <div class="bl-scope-item">
-                  <div class="bl-scope-label">Documentation</div>
-                  <div class="bl-scope-bar-track"><div class="bl-scope-bar-fill" style="width:95%; background:linear-gradient(90deg, rgba(var(--fg),0.4), rgba(var(--fg),0.1));"></div></div>
-                  <div class="bl-scope-val">15,000+ lines &middot; 20 directories</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 05 Platformer -->
-      <div class="project-card" data-tags="games">
-        <div class="project-info">
-          <div class="p-number">03</div>
-          <div class="p-title">Jump Quest!</div>
-          <div class="p-desc">Fully realized 3D platformer built for his son. Xbox controller support, XP leveling, skill trees, cosmetics shop, and a procedural Level Draft Wizard. Designed for children ages 4&ndash;10.</div>
-          <div class="p-tech">Unity / C# / Three.js / Xbox Controller</div>
-          <div class="p-status shipped">Playable</div>
-          <a class="p-demo-link" href="jumpquest/" target="_blank" rel="noopener noreferrer"><span class="demo-icon">&#9654;</span> Play in Browser</a>
-        </div>
-        <div class="project-thumb-wrap">
-          <img src="thumbs/thumb-jumpquest.jpg" alt="Jump Quest gameplay preview" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
-          <div class="thumb-label">Gameplay</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">The best code Lance has ever written was for his son. A kid doesn't care about the architecture or the procedural level generation. He cares that the coins sparkle and the jump feels good. Honestly, that's the highest bar there is.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li>Built as a personal project, a <em>real, playable game</em> his son plays on the iPad and in the browser</li>
-                <li><em>Xbox controller support</em> (A=Jump, RT=Run, X=Boost, Y=Shield) plus WASD + touch joystick</li>
-                <li><em>XP leveling system</em> with progression, skill tree (8 unlockable nodes), and cosmetics shop</li>
-                <li><em>Level Draft Wizard</em> for procedural level generation:infinite replayability</li>
-                <li>Dual platform: <em>Unity native</em> (iOS) and <em>Three.js web version</em> playable in any browser</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li>All UI built <em>programmatically</em>: no prefab dependencies, JSON-driven level data</li>
-                <li>Singleton <em>GameManager</em> pattern with state machine for scenes and transitions</li>
-                <li>Web version is a <em>single HTML file</em> with the same JSON levels and controller support</li>
-                <li>Designed for children ages 4&ndash;10 with <em>colorful visuals</em> and forgiving mechanics</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">8</div><div class="ds-label">Skill Nodes</div></div>
-              <div class="detail-stat"><div class="ds-value">2</div><div class="ds-label">Platforms</div></div>
-              <div class="detail-stat"><div class="ds-value">&infin;</div><div class="ds-label">Levels</div></div>
-              <div class="detail-stat"><div class="ds-value">1</div><div class="ds-label">Happy Kid</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 02 Trading Engine -->
-      <div class="project-card" data-tags="trading">
-        <div class="project-info">
-          <div class="p-number">04</div>
-          <div class="p-title">Multi-Chain Trading Engine</div>
-          <div class="p-desc">Unified execution layer spanning six engines across five exchanges and blockchains. Real-time WebSocket dashboard with autonomous operation, paper-first discipline, and live P&amp;L tracking.</div>
-          <div class="p-tech">TypeScript / ccxt / ethers.js / WebSocket / Claude AI</div>
-          <div class="p-status active">Active</div>
-          <a class="p-demo-link" href="projects/detail.html?p=trading-engine" target="_blank" rel="noopener noreferrer"><span class="demo-icon">&#9654;</span> Project Overview</a>
-        </div>
-        <div class="project-thumb-wrap">
-          <canvas data-project="trading"></canvas>
-          <div class="thumb-label">Dashboard</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">Lance built this engine on a simple conviction: speed, discipline, and brutal honesty. Six engines across five exchanges isn't about complexity for its own sake. It's about never being locked into a single venue. Paper-first is non-negotiable. He'd rather miss a trade than lose capital to an untested strategy.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>Six independent engines</em>: Solana (Jupiter/DexScreener), Polymarket CLOB, Binance, Coinbase, Kraken, and ETH DeFi</li>
-                <li>Real-time <em>WebSocket dashboard</em> streaming live market data, positions, and P&amp;L</li>
-                <li><em>Claude AI integration</em> for strategy analysis, market commentary, and continuous learning</li>
-                <li><em>Paper-first discipline</em>: every engine defaults to DRY_RUN; live trading requires explicit promotion</li>
-                <li>Cross-chain order execution with <em>sub-second latency</em> on supported venues</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li>Modular engine architecture: each exchange runs <em>independently</em> with its own config and state</li>
-                <li>Unified <em>ccxt abstraction</em> for centralized exchanges with custom adapters for DeFi</li>
-                <li><em>ethers.js</em> for on-chain operations including Polymarket CLOB and Uniswap/1inch routing</li>
-                <li>Event-driven design with <em>WebSocket pub/sub</em> for real-time UI updates</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">6</div><div class="ds-label">Engines</div></div>
-              <div class="detail-stat"><div class="ds-value">5</div><div class="ds-label">Exchanges</div></div>
-              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Chains</div></div>
-              <div class="detail-stat"><div class="ds-value">24/7</div><div class="ds-label">Uptime</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 10 Fisher Sovereign Hub -->
-      <div class="project-card" data-tags="tools">
-        <div class="project-info">
-          <div class="p-number">05</div>
-          <div class="p-title">Fisher Sovereign Hub</div>
-          <div class="p-desc">Single pane of glass for every project in the portfolio. Live git status, sync tracking, manifest-driven indexing, and automatic GitHub sync every five minutes. The operational backbone that keeps 25+ projects organized and current.</div>
-          <div class="p-tech">Python / PowerShell / Git / JSON Manifest</div>
-          <div class="p-status active">Active</div>
-          <a class="p-demo-link" href="projects/detail.html?p=sovereign-hub" target="_blank" rel="noopener noreferrer"><span class="demo-icon">&#9654;</span> View Project</a>
-        </div>
-        <div class="project-thumb-wrap">
-          <canvas data-project="projecthub"></canvas>
-          <div class="thumb-label">Dashboard</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">This is the project that watches all the other projects. Lance got tired of context-switching between repos, forgetting what he pushed from his phone, and losing track of which project needed attention. ProjectHub solves it by treating the entire workspace as a single system. Every repo, every sync, every status check flows through one place.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>Automatic GitHub sync</em> every 5 minutes pulls phone changes to PC instantly</li>
-                <li><em>Manifest-driven index</em> with status, tags, entry points, and last-touched dates</li>
-                <li>Operational dashboard showing <em>dirty/clean/ahead/behind</em> status for every repo</li>
-                <li>One-click <em>sync-now</em> for manual pulls with verbose logging</li>
-                <li>Full <em>runbook</em> documenting daily workflow, conflict resolution, and recovery</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li><em>PowerShell sync engine</em> with ff-only pulls, dirty-repo protection, and divergence detection</li>
-                <li>Windows <em>Scheduled Task</em> for unattended 5-minute sync cycles</li>
-                <li>JSON config for <em>per-repo control</em>: enable/disable, push policy, pull strategy</li>
-                <li>Structured <em>sync logs</em> with timestamps, actions taken, and error tracking</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">19</div><div class="ds-label">Repos</div></div>
-              <div class="detail-stat"><div class="ds-value">5m</div><div class="ds-label">Sync Interval</div></div>
-              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Cloud Deps</div></div>
-              <div class="detail-stat"><div class="ds-value">24/7</div><div class="ds-label">Uptime</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Fisher One-Three: Nautical apparel brand (links to brand site) -->
-      <div class="project-card" data-tags="apps" onclick="window.open('one-three/brand.html','_blank')" style="cursor:pointer;">
-        <div class="project-info">
-          <div class="p-number">06</div>
-          <div class="p-title">Fisher One-Three</div>
-          <div class="p-desc">Nautical-themed apparel and lifestyle brand. 24 original limited-run designs celebrating the spirit of coastal living and maritime adventure. One part land, three parts sea. Full brand website with integrated storefront.</div>
-          <div class="p-tech">Brand Design / Apparel / E-Commerce / HTML / CSS / JavaScript</div>
-          <div class="p-status active">Active | Visit Site &rarr;</div>
-        </div>
-        <div class="project-thumb-wrap">
-          <div class="ot-thumb-composite">
-            <img class="ot-hero-bg" src="thumbs/ot-golden-anchor.jpg" alt="Fisher One-Three golden anchor" loading="lazy">
-            <div class="ot-hero-overlay"></div>
-            <div class="ot-brand-mark">
-              <div class="ot-brand-name">One-Three</div>
-              <div class="ot-brand-tagline">One part land, three parts sea</div>
-            </div>
-            <div class="ot-design-strip">
-              <img src="thumbs/ot-skull.jpg" alt="Design" loading="lazy">
-              <img src="thumbs/ot-mountain-moon.jpg" alt="Design" loading="lazy">
-              <img src="thumbs/ot-classic-anchor.jpg" alt="Design" loading="lazy">
-              <img src="thumbs/ot-eagle-13.jpg" alt="Design" loading="lazy">
-            </div>
-            <div class="ot-strip-label">24 Original Designs</div>
-          </div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">Fisher One-Three started as a sketch on a napkin and became a full brand with its own ethos, website, and storefront. Every design is original, every color choice deliberate, every run limited. The name encodes the Fisher surname and the maritime ratio that drives everything: one part land, three parts sea. It is wearable art for people who dream of the ocean even when they are nowhere near it.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>24 original founder designs</em>: every graphic hand-crafted from concept to final print</li>
-                <li><em>Full brand website</em> with collection gallery, category filters, brand story, and integrated store</li>
-                <li><em>Size-inclusive</em> range from XS to 5XL, because great style should be accessible to all</li>
-                <li><em>$1 per shirt donated</em> to ocean and waterway conservation efforts worldwide</li>
-                <li>Full brand identity system: <em>logo suite, typography, color palette</em>, and brand guidelines</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Brand Architecture</h4>
-              <ul>
-                <li><em>Design collections</em>: nautical emblems, coastal scenes, marine life, maritime adventure themes</li>
-                <li><em>Integrated storefront</em> with cart, sizing, and direct purchase flow built from scratch</li>
-                <li>Multi-domain presence: <em>fisher13.com, f1sh3r.net, one-three.net</em></li>
-                <li>Social channels on <em>X, Facebook, Instagram</em> with cohesive brand voice and visual identity</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">24</div><div class="ds-label">Designs</div></div>
-              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Domains</div></div>
-              <div class="detail-stat"><div class="ds-value">1:3</div><div class="ds-label">Land : Sea</div></div>
-              <div class="detail-stat"><div class="ds-value">5XL</div><div class="ds-label">Max Size</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- NoCo App Studio: Custom apps for Northern Colorado businesses -->
-      <div class="project-card" data-tags="apps" onclick="window.open('noco/index.html','_blank')" style="cursor:pointer;">
-        <div class="project-info">
-          <div class="p-number">07</div>
-          <div class="p-title">NoCo App Studio</div>
-          <div class="p-desc">Custom mobile app development studio for Northern Colorado businesses. 10 fully interactive live demos built for real med spas, salons, fitness studios, pet groomers, and chiropractors. Online booking, wallets, loyalty, push notifications, and branded mobile apps.</div>
-          <div class="p-tech">HTML / CSS / JavaScript / React Native / NestJS / Stripe</div>
-          <div class="p-status active">Active | See Demos &rarr;</div>
-        </div>
-        <div class="project-thumb-wrap">
-          <img src="thumbs/thumb-noco.jpg" alt="NoCo App Studio demos" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
-          <div class="thumb-label">Demos</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">Every local business deserves a branded mobile app. Not a Vagaro page. Not a Booksy listing. Their own app, with their name, their colors, on their clients' home screens. NoCo App Studio is the vehicle for that vision. Lance built 10 fully interactive phone mockup demos for real businesses across Northern Colorado, each with their actual services, branding, staff, and pricing. The pitch is simple: your clients will book from your app, not a third-party marketplace.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>10 live interactive demos</em> built for real NoCo businesses across 6 verticals</li>
-                <li><em>Phone mockup simulator</em> with real app UI, tabbed navigation, and business-specific branding</li>
-                <li><em>Category filters</em>: Med Spas, Nail Salons, Hair &amp; Barber, Fitness, Pet Grooming, Chiropractic</li>
-                <li><em>Transparent pricing</em>: $2,500 setup + $199/mo starter, scaling to enterprise custom</li>
-                <li>Every demo shows <em>real services, staff, scheduling</em>, and payment processing</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li><em>Zero-dependency frontend</em>: pure HTML/CSS/JS with modular business data architecture</li>
-                <li><em>35KB data layer</em> (businesses.js) powering all 10 business configurations</li>
-                <li>Interactive phone mockup: <em>300x600px viewport</em> with notch, home indicator, tab bar</li>
-                <li>Production apps built on <em>React Native + NestJS + Stripe + PostgreSQL</em> stack</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">10</div><div class="ds-label">Businesses</div></div>
-              <div class="detail-stat"><div class="ds-value">6</div><div class="ds-label">Verticals</div></div>
-              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Cities</div></div>
-              <div class="detail-stat"><div class="ds-value">$199</div><div class="ds-label">Per Month</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <button class="portfolio-expand-btn" id="portfolioExpandBtn" onclick="togglePortfolio()">
-        View Full Portfolio (8 more projects) <span class="expand-arrow">&#9660;</span>
-      </button>
-
-      <div class="portfolio-remaining" id="portfolioRemaining">
-
-      <!-- Autonomous Trading Desk -->
-      <div class="project-card" data-tags="trading">
-        <div class="project-info">
-          <div class="p-number">08</div>
-          <div class="p-title">Autonomous Trading Desk</div>
-          <div class="p-desc">Multi-agent AI system with six specialized agents orchestrating four independent trading strategies. Rigorous backtesting and risk gates required before any strategy goes live.</div>
-          <div class="p-tech">Python / asyncio / NumPy / YAML / EventBus</div>
-          <div class="p-status active">Active</div>
-          <a class="p-demo-link" href="projects/detail.html?p=trading-desk" target="_blank" rel="noopener noreferrer"><span class="demo-icon">&#9654;</span> Project Overview</a>
-        </div>
-        <div class="project-thumb-wrap">
-          <canvas data-project="profitdesk"></canvas>
-          <div class="thumb-label">Agents</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">This is where AI stops being a buzzword and starts being accountable. Six agents, each with a specific job, each required to justify its decisions. The promotion gates are intentionally harsh. No strategy goes live without proving itself over weeks of paper trading. Lance built this because he doesn't trust black boxes, and neither should anyone else.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>Six autonomous agents</em>:Portfolio Manager, Researcher, Backtester, Risk Manager, Execution Trader, Ops Monitor</li>
-                <li>Four independent strategies: <em>Momentum</em> (EMA crossover), <em>Mean Reversion</em> (Bollinger Bands + RSI), <em>Breakout</em> (Donchian), <em>Whale Flow</em></li>
-                <li><em>Promotion gates</em> before live: PF &ge; 1.35, max drawdown &le; 6%, 80+ trades, 10+ days of paper results</li>
-                <li>Three operating modes: <em>BACKTEST</em>, <em>PAPER</em> (default), and <em>LIVE</em>: disciplined pipeline</li>
-                <li>Wraps the Multi-Chain Trading Engine for <em>end-to-end autonomous execution</em></li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li><em>EventBus pub/sub</em> architecture: agents communicate asynchronously via typed events</li>
-                <li>Each agent runs as an <em>independent asyncio task</em> with its own state and decision loop</li>
-                <li>YAML-driven configuration for <em>risk limits</em>, universe selection, and strategy parameters</li>
-                <li>Comprehensive <em>journal and audit trail</em> for every trade decision and agent action</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">6</div><div class="ds-label">Agents</div></div>
-              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Strategies</div></div>
-              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Modes</div></div>
-              <div class="detail-stat"><div class="ds-value">&le;6%</div><div class="ds-label">Max Drawdown</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Sovereign Signal E2EE Messenger -->
-      <div class="project-card" data-tags="tools">
-        <div class="project-info">
-          <div class="p-number">09</div>
-          <div class="p-title">Sovereign Signal</div>
-          <div class="p-desc">E2EE peer-to-peer messaging platform with Signal-grade cryptography. X3DH key exchange, Double Ratchet forward secrecy, and passwordless WebAuthn vault.</div>
-          <div class="p-tech">TypeScript / Next.js / libsodium / WebAuthn / Vitest</div>
-          <div class="p-status active">In Development</div>
-          <a class="p-demo-link" href="projects/detail.html?p=sovereign-signal" target="_blank" rel="noopener noreferrer"><span class="demo-icon">&#9654;</span> View Project</a>
-        </div>
-        <div class="project-thumb-wrap">
-          <canvas data-project="messenger"></canvas>
-          <div class="thumb-label">Interface</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">Privacy isn't a feature. It's a right. Lance built this because he believes Americans should be able to have a conversation without a corporation reading it. Zero-knowledge architecture means the server literally cannot see the messages. No backdoors, no compromises. The kind of tool the Founders would have appreciated.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>Signal-grade cryptography</em>:X3DH key exchange with Double Ratchet for forward secrecy on every message</li>
-                <li><em>Passwordless authentication</em> using WebAuthn (biometrics/hardware keys):no passwords to steal</li>
-                <li><em>Zero-knowledge architecture</em>: server is a relay only, never sees plaintext content</li>
-                <li>Full <em>peer-to-peer</em> messaging with encrypted key vault stored client-side</li>
-                <li>Comprehensive <em>test suite</em> with Vitest covering crypto primitives and protocol flows</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li>Monorepo: <em>packages/crypto</em> (X3DH, Double Ratchet, vault), <em>apps/server</em> (relay), <em>apps/web</em> (Next.js)</li>
-                <li><em>libsodium</em> for all cryptographic operations:proven, audited library</li>
-                <li>Express relay server with <em>minimal surface area</em>: stores only encrypted blobs</li>
-                <li>Next.js client with <em>Tailwind CSS</em> for responsive, modern interface</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">E2EE</div><div class="ds-label">Encryption</div></div>
-              <div class="detail-stat"><div class="ds-value">X3DH</div><div class="ds-label">Key Exchange</div></div>
-              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Passwords</div></div>
-              <div class="detail-stat"><div class="ds-value">P2P</div><div class="ds-label">Architecture</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Home Hub -->
-      <div class="project-card" data-tags="tools">
-        <div class="project-info">
-          <div class="p-number">10</div>
-          <div class="p-title">Home Hub</div>
-          <div class="p-desc">Local-first home automation and network security dashboard with device discovery, camera feeds, network traffic monitoring, and real-time alerts. Full-stack with force-directed network visualization and WebSocket streaming.</div>
-          <div class="p-tech">TypeScript / React 19 / Fastify / SQLite / WebSocket</div>
-          <div class="p-status active">Active</div>
-          <a class="p-demo-link" href="projects/detail.html?p=home-hub" target="_blank" rel="noopener noreferrer"><span class="demo-icon">&#9654;</span> Project Overview</a>
-        </div>
-        <div class="project-thumb-wrap">
-          <canvas data-project="homehub"></canvas>
-          <div class="thumb-label">Dashboard</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">A man's home is his castle, and he should know exactly what's happening inside its walls and on its network. Lance built Home Hub because he doesn't trust cloud cameras or third-party monitoring. Every byte of data stays local in SQLite, every camera feed streams on his LAN, and every unknown device that joins his network triggers an alert. Sovereignty starts at home.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>Device discovery</em> via ARP, ping sweep, and nmap:auto-detects every device on the LAN with vendor OUI lookup</li>
-                <li><em>Camera management</em> supporting RTSP, HLS, and snapshot feeds with health monitoring and Eufy integration</li>
-                <li><em>Network traffic monitoring</em> with pluggable collectors (SNMP, Pcap, Router API) and per-device bandwidth tracking</li>
-                <li>Real-time <em>alerting engine</em>: new devices, camera offline, bandwidth thresholds, quiet hours, webhook notifications</li>
-                <li><em>Force-directed graph</em> visualization of network topology with interactive device management and CSV export</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li><em>React 19 + Vite</em> frontend with Tailwind CSS, Recharts, and React Force Graph 2D</li>
-                <li><em>Fastify 5</em> backend with SQLite persistence, Winston logging, and cron-scheduled discovery</li>
-                <li><em>WebSocket + polling hybrid</em> for real-time UI updates across all dashboards</li>
-                <li><em>Local-first</em>: all data stored in SQLite, LAN-accessible on port 3210, zero cloud dependency</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">5</div><div class="ds-label">Pages</div></div>
-              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Alert Types</div></div>
-              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Collectors</div></div>
-              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Cloud Deps</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Market Dashboard: Real-time trading terminal -->
-      <div class="project-card" data-tags="trading">
-        <div class="project-info">
-          <div class="p-number">11</div>
-          <div class="p-title">Market Dashboard</div>
-          <div class="p-desc">Real-time multi-market trading terminal. Canvas-rendered candlestick charts, order book visualization, trade tape, configurable watchlist. Python server proxies live exchange data. Zero dependencies.</div>
-          <div class="p-tech">Python / Canvas 2D / WebSocket / Zero Dependencies</div>
-          <div class="p-status active">Active</div>
-          <a class="p-demo-link" href="dashboard/" target="_blank" rel="noopener noreferrer"><span class="demo-icon">&#9654;</span> Live Demo</a>
-        </div>
-        <div class="project-thumb-wrap">
-          <img src="thumbs/thumb-dashboard.jpg" alt="Market Dashboard terminal" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
-          <div class="thumb-label">Terminal</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">Every trader needs a terminal they can trust, and trusting something means building it yourself. This dashboard pulls live data from crypto.com Exchange API through a Python proxy and renders it all on raw Canvas 2D. Candlestick charts, order book depth, live trade tape, multi-market watchlist. No charting library. No framework. Every pixel is mine.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>Canvas-rendered candlestick charts</em> with OHLCV data, volume bars, and crosshair tooltip</li>
-                <li><em>Order book visualization</em> with depth bars, spread indicator, and mid-price</li>
-                <li><em>Live trade tape</em> streaming buys and sells with color-coded direction</li>
-                <li><em>Multi-market watchlist</em> with configurable instruments and timeframes</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li><em>Python proxy server</em> handles exchange API auth, rate limiting, and WebSocket relay</li>
-                <li><em>Zero-dependency frontend</em>: vanilla HTML/CSS/JS with Canvas 2D rendering</li>
-                <li><em>60fps render loop</em> for smooth chart updates and interactive crosshair</li>
-                <li>Designed to feed into the <em>autonomous trading desk</em> as visual monitoring layer</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Dependencies</div></div>
-              <div class="detail-stat"><div class="ds-value">60</div><div class="ds-label">FPS</div></div>
-              <div class="detail-stat"><div class="ds-value">Live</div><div class="ds-label">Data Feed</div></div>
-              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Views</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 07 Polymarket Bot -->
-      <div class="project-card" data-tags="trading">
-        <div class="project-info">
-          <div class="p-number">12</div>
-          <div class="p-title">Prediction Market Assistant</div>
-          <div class="p-desc">Real-time technical analysis assistant for Polymarket BTC 15-minute markets. Chainlink and Binance price feeds, full indicator suite, and an autonomous copy-trading bot.</div>
-          <div class="p-tech">JavaScript / ethers.js / Chainlink / WebSocket</div>
-          <div class="p-status active">Active</div>
-          <a class="p-demo-link" href="projects/detail.html?p=prediction-market" target="_blank" rel="noopener noreferrer"><span class="demo-icon">&#9654;</span> Project Overview</a>
-        </div>
-        <div class="project-thumb-wrap">
-          <canvas data-project="polymarket"></canvas>
-          <div class="thumb-label">Terminal</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">Prediction markets are the purest form of putting your money where your mouth is. This tool started as a quick terminal script on Lance's phone and evolved into a full TA suite with copy-trading. Reading Chainlink oracles directly means no middleman for price data. Decentralized conviction, backed by code.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li>Real-time <em>Polymarket contract prices</em> alongside Chainlink BTC/USD and Binance spot feeds</li>
-                <li>Full indicator suite: <em>Heiken Ashi</em>, RSI(14), MACD, VWAP:all computed locally in real-time</li>
-                <li>Generates <em>directional signals</em> with confidence scoring for BTC Up/Down 15-minute markets</li>
-                <li>Includes an autonomous <em>copy-trading bot</em> that mirrors profitable target traders via Polymarket Data API</li>
-                <li>Console-based TA dashboard with <em>live streaming output</em> and color-coded signals</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li>Direct <em>Chainlink oracle</em> reads via ethers.js for trustless BTC price data</li>
-                <li><em>WebSocket streams</em> from Binance for sub-second price updates</li>
-                <li>CopyBot subdirectory with <em>independent execution</em>: monitors and mirrors target wallets</li>
-                <li>Originally built on <em>iOS via Claude</em>, extracted and expanded on desktop</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">15m</div><div class="ds-label">Market Window</div></div>
-              <div class="detail-stat"><div class="ds-value">4</div><div class="ds-label">Indicators</div></div>
-              <div class="detail-stat"><div class="ds-value">2</div><div class="ds-label">Price Feeds</div></div>
-              <div class="detail-stat"><div class="ds-value">Auto</div><div class="ds-label">Copy Trading</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 08 X Bookmark Bot -->
-      <div class="project-card" data-tags="tools">
-        <div class="project-info">
-          <div class="p-number">13</div>
-          <div class="p-title">X Bookmark Bot</div>
-          <div class="p-desc">Local-first automation tool that transforms saved X/Twitter bookmarks into actionable improvements for existing projects. Intelligent codebase scanning, idea extraction, and approval-gated implementation with zero external dependencies.</div>
-          <div class="p-tech">Python / Zero Dependencies / File-Based Agents / CLI</div>
-          <div class="p-status active">Active</div>
-          <a class="p-demo-link" href="projects/detail.html?p=bookmark-bot" target="_blank" rel="noopener noreferrer"><span class="demo-icon">&#9654;</span> View Project</a>
-        </div>
-        <div class="project-thumb-wrap">
-          <canvas data-project="bookmarkbot"></canvas>
-          <div class="thumb-label">Pipeline</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">Lance bookmarks dozens of ideas on X every week: threads about new patterns, clever API tricks, architecture insights. This bot turns that passive scrolling into real improvements across his entire project portfolio. Zero dependencies, pure Python stdlib, and absolutely nothing happens without his explicit approval. The bridge between inspiration and implementation.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>Bookmark-to-code pipeline</em>: ingests X/Twitter bookmarks and matches ideas intelligently to relevant projects</li>
-                <li><em>Multi-tier import</em>:X API, HTML/JSON file import, or manual entry for maximum flexibility</li>
-                <li>Three safe implementation modes: <em>Branch</em>, <em>Clone</em> (isolated workspace), and <em>Patch</em> (diff-only)</li>
-                <li><em>Agent system</em> with file-based message bus:Research, Code Audit, and Patch Builder agents working in concert</li>
-                <li><em>Nothing without approval</em>: every change requires explicit user consent, fully traceable with complete rollback</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li><em>Pure Python stdlib</em>: zero external dependencies, runs anywhere Python 3.14+ is installed</li>
-                <li>Modular CLI pipeline: <em>index &rarr; ingest &rarr; extract &rarr; match &rarr; propose &rarr; implement</em></li>
-                <li>File-based agent <em>message bus</em> (inbox/outbox/logs) for inter-agent coordination</li>
-                <li>Read-only project scanning: <em>never writes</em> to source projects during analysis phase</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Dependencies</div></div>
-              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Agents</div></div>
-              <div class="detail-stat"><div class="ds-value">3</div><div class="ds-label">Safe Modes</div></div>
-              <div class="detail-stat"><div class="ds-value">6</div><div class="ds-label">CLI Commands</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 11 Galleon Splash -->
-      <div class="project-card" data-tags="apps">
-        <div class="project-info">
-          <div class="p-number">14</div>
-          <div class="p-title">Galleon Splash Page</div>
-          <div class="p-desc">The original cinematic concept for lancewfisher.com. Storm lightning, matrix rain, HUD overlays, scroll-reveal dossier cards, and a dawn color transition, all in a single HTML file with zero dependencies.</div>
-          <div class="p-tech">HTML / CSS / Canvas 2D / Zero Dependencies</div>
-          <div class="p-status shipped">Shipped</div>
-          <a class="p-demo-link" href="projects/detail.html?p=galleon-splash" target="_blank" rel="noopener noreferrer"><span class="demo-icon">&#9654;</span> View Project</a>
-        </div>
-        <div class="project-thumb-wrap">
-          <canvas data-project="galleon"></canvas>
-          <div class="thumb-label">Live</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">This is where it all started. A single HTML file with storms, lightning, and a galleon sailing through the rain. Twelve different concepts explored, each one pushing what's possible without a single npm dependency. The final design being viewed now was born from the lessons of every concept that came before it. The archive lives on in the concepts gallery below.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>Cinematic experience</em>: storm lightning, matrix rain, parallax ship watermark, dawn transition on scroll</li>
-                <li><em>12 original concept designs</em> explored before selecting the final direction for this site</li>
-                <li>Full <em>scroll-reveal dossier</em> with animated stat counters and section transitions</li>
-                <li>Canvas-rendered effects with <em>no JavaScript libraries</em>: pure browser APIs only</li>
-                <li>Served as the <em>creative foundation</em> for the current Minimalist Luxury design you're viewing now</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li><em>Single HTML file</em>: inline CSS and JavaScript, completely self-contained</li>
-                <li>requestAnimationFrame loop for <em>60fps canvas effects</em> (lightning, rain, particles)</li>
-                <li>IntersectionObserver for <em>scroll-reveal</em> with staggered section animations</li>
-                <li>All 12 concept variants preserved in <em>/concepts</em> directory as a design archive</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">12</div><div class="ds-label">Concepts</div></div>
-              <div class="detail-stat"><div class="ds-value">1</div><div class="ds-label">HTML File</div></div>
-              <div class="detail-stat"><div class="ds-value">0</div><div class="ds-label">Dependencies</div></div>
-              <div class="detail-stat"><div class="ds-value">60</div><div class="ds-label">FPS</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Auton: Autonomous background worker -->
-      <div class="project-card" data-tags="tools">
-        <div class="project-info">
-          <div class="p-number">15</div>
-          <div class="p-title">Auton</div>
-          <div class="p-desc">Autonomous background worker that scans the entire workspace, learns from all projects, and proposes improvements, documentation, and maintenance. Multi-agent architecture with 6 agents, approval gates, and kill switch. DRY_RUN by default.</div>
-          <div class="p-tech">Python / asyncio / Ollama / Multi-Agent / Local AI</div>
-          <div class="p-status active">Active</div>
-          <a class="p-demo-link" href="projects/detail.html?p=auton" target="_blank" rel="noopener noreferrer"><span class="demo-icon">&#9654;</span> Project Overview</a>
-        </div>
-        <div class="project-thumb-wrap">
-          <canvas data-project="auton"></canvas>
-          <div class="thumb-label">Agents</div>
-        </div>
-        <div class="project-detail">
-          <div class="detail-inner">
-            <p class="p-opinion">Auton is the project that watches all other projects. It scans the entire workspace, reads every CLAUDE.md, every session log, every git history, and proposes improvements. It runs Qwen 2.5 14B on a local GPU through Ollama, so nothing ever leaves the machine. The multi-agent architecture mirrors the trading desk: Scanner, Planner, Executor, Tester, Reviewer, Monitor. DRY_RUN by default, promotion gates for any real changes. It is the future of how Lance maintains 25+ projects at scale.</p>
-            <div class="detail-col">
-              <h4>Highlights</h4>
-              <ul>
-                <li><em>6 autonomous agents</em>: Scanner, Planner, Executor, Tester, Reviewer, Monitor</li>
-                <li><em>Local LLM</em> via Ollama (Qwen 2.5 14B) running on RTX 4070 GPU, fully private</li>
-                <li><em>4 strategy modes</em>: Documenter, Maintainer, Improver, Creator (opt-in only)</li>
-                <li><em>6-layer safety model</em>: DRY_RUN default, SafetyGuard, kill switch, credential isolation, audit log, rollback</li>
-              </ul>
-            </div>
-            <div class="detail-col">
-              <h4>Architecture</h4>
-              <ul>
-                <li><em>EventBus pub/sub</em> coordination between agents with async message passing</li>
-                <li><em>Journal + StateStore</em> for persistent audit trail and workspace state tracking</li>
-                <li>REST API at <em>localhost:8095</em> for health, task management, approve/reject/rollback</li>
-                <li><em>3 promotion modes</em>: DRY_RUN &rarr; SUPERVISED &rarr; AUTONOMOUS, each with gates</li>
-              </ul>
-            </div>
-            <div class="detail-status-row">
-              <div class="detail-stat"><div class="ds-value">6</div><div class="ds-label">Agents</div></div>
-              <div class="detail-stat"><div class="ds-value">14B</div><div class="ds-label">LLM Params</div></div>
-              <div class="detail-stat"><div class="ds-value">25+</div><div class="ds-label">Projects Scanned</div></div>
-              <div class="detail-stat"><div class="ds-value">GPU</div><div class="ds-label">RTX 4070</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      </div><!-- /portfolio-remaining -->
-
-    </div>
-  </section>
-
-  <div class="spacer-lg"></div>
-  <div class="thin-line" style="height:100px;"></div>
-  <div class="spacer-lg"></div>
-
-  <!-- Ventures -->
-  <section class="section" id="sec-ventures" data-reveal style="max-width:1000px;">
-    <div class="section-label">Ventures</div>
-    <div class="section-title">Three ventures,<br>one operator</div>
-    <div class="ventures-grid">
-
-      <a href="noco/" class="venture-card-v3">
-        <div class="vc3-header">
-          <div class="vc3-icon">&#9678;</div>
-          <div class="vc3-status">Active</div>
-        </div>
-        <div class="vc3-name">NoCo App Studio</div>
-        <div class="vc3-tagline">Custom apps for local businesses</div>
-        <div class="vc3-desc">Custom mobile apps for med spas, salons, studios, and service businesses across Northern Colorado. 10 live demos built for real businesses. Online booking, wallets, loyalty, push notifications.</div>
-        <div class="vc3-chips">
-          <span class="vc3-chip">10 demos</span>
-          <span class="vc3-chip">6 verticals</span>
-          <span class="vc3-chip">$2,500 setup</span>
-        </div>
-        <div class="vc3-tech">TypeScript &middot; React Native &middot; NestJS &middot; Stripe</div>
-        <div class="vc3-arrow">&rarr;</div>
-      </a>
-
-      <a href="one-three/brand.html" class="venture-card-v3">
-        <div class="vc3-header">
-          <div class="vc3-icon">&#9670;</div>
-          <div class="vc3-status">Active</div>
-        </div>
-        <div class="vc3-name">Fisher One-Three</div>
-        <div class="vc3-tagline">One part land, three parts sea</div>
-        <div class="vc3-desc">Nautical lifestyle apparel brand. 24 original designs. Direct storefront. A philosophy of freedom, courage, and self-determination rooted in maritime tradition.</div>
-        <div class="vc3-chips">
-          <span class="vc3-chip">24 designs</span>
-          <span class="vc3-chip">XS&ndash;5XL</span>
-          <span class="vc3-chip">$34.99</span>
-        </div>
-        <div class="vc3-tech">Brand &middot; Apparel &middot; Creative &middot; E-Commerce</div>
-        <div class="vc3-arrow">&rarr;</div>
-      </a>
-
-      <div class="venture-card-v3">
-        <div class="vc3-header">
-          <div class="vc3-icon">&#9686;</div>
-          <div class="vc3-status">Active</div>
-        </div>
-        <div class="vc3-name">Autonomous Trading</div>
-        <div class="vc3-tagline">Multi-agent, multi-strategy, zero shortcuts</div>
-        <div class="vc3-desc">Multi-agent trading desk with 4 strategies, backtesting, risk management, and real-time dashboards. Paper-first discipline. Binance, Polymarket, Solana, and ETH DeFi coverage.</div>
-        <div class="vc3-chips">
-          <span class="vc3-chip">4 strategies</span>
-          <span class="vc3-chip">6 agents</span>
-          <span class="vc3-chip">4 chains</span>
-        </div>
-        <div class="vc3-tech">Python &middot; TypeScript &middot; asyncio &middot; ccxt</div>
-      </div>
-
-    </div>
-  </section>
-
-  <div class="spacer-lg"></div>
-  <div class="thin-line" style="height:100px;"></div>
-  <div class="spacer-lg"></div>
-
-  <!-- NoCo App Studio CTA -->
-  <section class="section noco-cta" id="sec-noco" data-reveal style="max-width:900px;">
-    <div class="section-label">App Development</div>
-    <div class="section-title">Custom apps for<br>Northern Colorado</div>
-    <div class="noco-cta-content">
-      <div class="noco-cta-text">
-        <p>Every local business deserves a branded mobile app. Not a Vagaro page. Not a Booksy listing. Their own app, with their name, their colors, on their clients' home screens.</p>
-        <p>NoCo App Studio builds custom booking and client management apps for med spas, nail salons, hair salons, fitness studios, pet groomers, chiropractors, and more. Each app includes online booking, push notifications, prepaid wallets, loyalty programs, and a full admin dashboard.</p>
-        <p>10 live demos have been built for real Northern Colorado businesses. The platform is proven, the pricing is transparent, and the work is ready.</p>
-        <a href="noco/" class="noco-cta-link">See Live Demos &rarr;</a>
-      </div>
-      <div class="noco-cta-stats">
-        <div class="noco-stat">
-          <div class="noco-stat-val">10</div>
-          <div class="noco-stat-label">Business Demos</div>
-        </div>
-        <div class="noco-stat">
-          <div class="noco-stat-val">$2,500</div>
-          <div class="noco-stat-label">Starting Setup</div>
-        </div>
-        <div class="noco-stat">
-          <div class="noco-stat-val">$199</div>
-          <div class="noco-stat-label">Per Month</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="spacer-lg"></div>
-  <div class="thin-line" style="height:100px;"></div>
-  <div class="spacer-lg"></div>
-
-  <!-- Fisher One-Three Brand Teaser -->
-  <section class="section" id="sec-brand" data-reveal>
-    <div class="section-label">Fisher One-Three</div>
-    <div class="section-title">One part land,<br>three parts sea</div>
-    <div class="brand-teaser-philosophy">The sea does not ask who you are or where you came from. It only asks whether you are willing to face what is ahead of you. Fisher One-Three is a reminder that the courage to leave shore is the beginning of every life worth living.</div>
-
-    <!-- Brand Visual Mosaic -->
-    <div class="brand-mosaic">
-      <div class="brand-mosaic-item brand-mosaic-tall">
-        <img src="thumbs/ot-golden-anchor.jpg" alt="One-Three golden anchor design" loading="lazy">
-      </div>
-      <div class="brand-mosaic-item">
-        <img src="thumbs/ot-skull.jpg" alt="One-Three skull design" loading="lazy">
-      </div>
-      <div class="brand-mosaic-item">
-        <img src="thumbs/ot-eagle-sword.jpg" alt="One-Three eagle design" loading="lazy">
-      </div>
-      <div class="brand-mosaic-item">
-        <img src="thumbs/ot-mountain-moon.jpg" alt="One-Three mountain moon design" loading="lazy">
-      </div>
-      <div class="brand-mosaic-item">
-        <img src="thumbs/ot-classic-anchor.jpg" alt="One-Three classic anchor design" loading="lazy">
-      </div>
-    </div>
-
-    <div class="brand-teaser-details">
-      <div class="brand-teaser-detail">
-        <div class="brand-teaser-val">24</div>
-        <div class="brand-teaser-label">Original Designs</div>
-      </div>
-      <div class="brand-teaser-detail">
-        <div class="brand-teaser-val">$34.99</div>
-        <div class="brand-teaser-label">Per Tee</div>
-      </div>
-      <div class="brand-teaser-detail">
-        <div class="brand-teaser-val">XS&ndash;5XL</div>
-        <div class="brand-teaser-label">Size Range</div>
-      </div>
-    </div>
-    <div class="brand-teaser-links">
-      <a href="one-three/brand.html" class="brand-link-primary">See the Full Collection &rarr;</a>
-    </div>
-  </section>
-
-  <div class="spacer-lg"></div>
-  <div class="thin-line" style="height:100px;"></div>
-  <div class="spacer-lg"></div>
-
-  <!-- Architecture -->
-  <section class="section" id="sec-architecture" data-reveal>
-    <div class="section-label">Architecture</div>
-    <div class="section-title">Trading Ecosystem</div>
-    <div class="arch-diagram">
-      <svg viewBox="0 0 800 420" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Background grid lines -->
-        <line x1="0" y1="105" x2="800" y2="105" stroke="rgba(201,168,76,0.06)" stroke-dasharray="4 8"/>
-        <line x1="0" y1="210" x2="800" y2="210" stroke="rgba(201,168,76,0.06)" stroke-dasharray="4 8"/>
-        <line x1="0" y1="315" x2="800" y2="315" stroke="rgba(201,168,76,0.06)" stroke-dasharray="4 8"/>
-
-        <!-- Layer 0: Profit Desk (Brain) -->
-        <rect x="250" y="20" width="300" height="60" rx="4" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
-        <text x="400" y="42" text-anchor="middle" fill="rgba(201,168,76,0.8)" font-family="Cormorant Garamond, serif" font-size="15" font-weight="400" letter-spacing="3">PROFIT DESK</text>
-        <text x="400" y="63" text-anchor="middle" fill="rgba(240,235,224,0.25)" font-family="Inter, sans-serif" font-size="10" font-weight="300">Multi-Agent Strategy Brain</text>
-        <!-- Agent labels -->
-        <text x="270" y="98" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">PM</text>
-        <text x="320" y="98" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">Researcher</text>
-        <text x="410" y="98" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">Backtester</text>
-        <text x="500" y="98" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">Risk Mgr</text>
-        <text x="580" y="98" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">Exec Trader</text>
-
-        <!-- Arrow down -->
-        <line x1="400" y1="80" x2="400" y2="125" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
-        <polygon points="394,120 400,130 406,120" fill="rgba(201,168,76,0.3)"/>
-        <text x="418" y="113" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">signals</text>
-
-        <!-- Layer 1: Master Trade Bot (Execution) -->
-        <rect x="200" y="130" width="400" height="60" rx="4" fill="rgba(240,235,224,0.03)" stroke="rgba(240,235,224,0.12)" stroke-width="1"/>
-        <text x="400" y="152" text-anchor="middle" fill="rgba(240,235,224,0.6)" font-family="Cormorant Garamond, serif" font-size="15" font-weight="400" letter-spacing="3">MASTER TRADE BOT</text>
-        <text x="400" y="173" text-anchor="middle" fill="rgba(240,235,224,0.2)" font-family="Inter, sans-serif" font-size="10" font-weight="300">Unified Execution Layer &middot; 6 Engines</text>
-
-        <!-- Arrow down to engines -->
-        <line x1="250" y1="190" x2="250" y2="240" stroke="rgba(240,235,224,0.1)" stroke-width="1"/>
-        <line x1="400" y1="190" x2="400" y2="240" stroke="rgba(240,235,224,0.1)" stroke-width="1"/>
-        <line x1="550" y1="190" x2="550" y2="240" stroke="rgba(240,235,224,0.1)" stroke-width="1"/>
-
-        <!-- Layer 2: Engines -->
-        <rect x="60" y="240" width="130" height="50" rx="3" fill="rgba(130,200,160,0.04)" stroke="rgba(130,200,160,0.15)" stroke-width="1"/>
-        <text x="125" y="260" text-anchor="middle" fill="rgba(130,200,160,0.5)" font-family="Inter, sans-serif" font-size="10" font-weight="400">Solana</text>
-        <text x="125" y="276" text-anchor="middle" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">Jupiter / DexScreener</text>
-
-        <rect x="210" y="240" width="130" height="50" rx="3" fill="rgba(130,200,160,0.04)" stroke="rgba(130,200,160,0.15)" stroke-width="1"/>
-        <text x="275" y="260" text-anchor="middle" fill="rgba(130,200,160,0.5)" font-family="Inter, sans-serif" font-size="10" font-weight="400">Polymarket</text>
-        <text x="275" y="276" text-anchor="middle" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">CLOB Sniper</text>
-
-        <rect x="360" y="240" width="130" height="50" rx="3" fill="rgba(130,200,160,0.04)" stroke="rgba(130,200,160,0.15)" stroke-width="1"/>
-        <text x="425" y="260" text-anchor="middle" fill="rgba(130,200,160,0.5)" font-family="Inter, sans-serif" font-size="10" font-weight="400">CEX (ccxt)</text>
-        <text x="425" y="276" text-anchor="middle" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">Binance / Coinbase</text>
-
-        <rect x="510" y="240" width="130" height="50" rx="3" fill="rgba(130,200,160,0.04)" stroke="rgba(130,200,160,0.15)" stroke-width="1"/>
-        <text x="575" y="260" text-anchor="middle" fill="rgba(130,200,160,0.5)" font-family="Inter, sans-serif" font-size="10" font-weight="400">ETH DeFi</text>
-        <text x="575" y="276" text-anchor="middle" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">Uniswap / 1inch</text>
-
-        <!-- Connect lines from MTB to engines -->
-        <line x1="250" y1="220" x2="125" y2="240" stroke="rgba(240,235,224,0.08)" stroke-width="1"/>
-        <line x1="300" y1="220" x2="275" y2="240" stroke="rgba(240,235,224,0.08)" stroke-width="1"/>
-        <line x1="450" y1="220" x2="425" y2="240" stroke="rgba(240,235,224,0.08)" stroke-width="1"/>
-        <line x1="550" y1="220" x2="575" y2="240" stroke="rgba(240,235,224,0.08)" stroke-width="1"/>
-
-        <!-- Arrow down to exchanges -->
-        <line x1="125" y1="290" x2="125" y2="330" stroke="rgba(240,235,224,0.06)" stroke-width="1" stroke-dasharray="3 5"/>
-        <line x1="275" y1="290" x2="275" y2="330" stroke="rgba(240,235,224,0.06)" stroke-width="1" stroke-dasharray="3 5"/>
-        <line x1="425" y1="290" x2="425" y2="330" stroke="rgba(240,235,224,0.06)" stroke-width="1" stroke-dasharray="3 5"/>
-        <line x1="575" y1="290" x2="575" y2="330" stroke="rgba(240,235,224,0.06)" stroke-width="1" stroke-dasharray="3 5"/>
-
-        <!-- Layer 3: Exchanges/Markets -->
-        <text x="125" y="348" text-anchor="middle" fill="rgba(240,235,224,0.12)" font-family="JetBrains Mono, monospace" font-size="9">Raydium</text>
-        <text x="275" y="348" text-anchor="middle" fill="rgba(240,235,224,0.12)" font-family="JetBrains Mono, monospace" font-size="9">Polygon</text>
-        <text x="425" y="348" text-anchor="middle" fill="rgba(240,235,224,0.12)" font-family="JetBrains Mono, monospace" font-size="9">Binance</text>
-        <text x="575" y="348" text-anchor="middle" fill="rgba(240,235,224,0.12)" font-family="JetBrains Mono, monospace" font-size="9">Ethereum</text>
-
-        <!-- Side annotation: Dashboard -->
-        <rect x="660" y="130" width="120" height="50" rx="3" fill="rgba(0,212,255,0.03)" stroke="rgba(0,212,255,0.12)" stroke-width="1"/>
-        <text x="720" y="152" text-anchor="middle" fill="rgba(0,212,255,0.4)" font-family="Inter, sans-serif" font-size="10" font-weight="400">Dashboard</text>
-        <text x="720" y="167" text-anchor="middle" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">WebSocket :4000</text>
-        <line x1="600" y1="160" x2="660" y2="160" stroke="rgba(0,212,255,0.12)" stroke-width="1" stroke-dasharray="3 4"/>
-
-        <!-- Side annotation: Risk / Kill Switch -->
-        <rect x="20" y="130" width="120" height="50" rx="3" fill="rgba(255,61,87,0.03)" stroke="rgba(255,61,87,0.12)" stroke-width="1"/>
-        <text x="80" y="152" text-anchor="middle" fill="rgba(255,61,87,0.4)" font-family="Inter, sans-serif" font-size="10" font-weight="400">Risk Manager</text>
-        <text x="80" y="167" text-anchor="middle" fill="rgba(240,235,224,0.15)" font-family="JetBrains Mono, monospace" font-size="8">Kill Switch</text>
-        <line x1="140" y1="160" x2="200" y2="160" stroke="rgba(255,61,87,0.12)" stroke-width="1" stroke-dasharray="3 4"/>
-
-        <!-- Safety annotation -->
-        <text x="400" y="390" text-anchor="middle" fill="rgba(201,168,76,0.15)" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="4">DRY_RUN=true BY DEFAULT</text>
-        <text x="400" y="410" text-anchor="middle" fill="rgba(240,235,224,0.1)" font-family="Inter, sans-serif" font-size="8">Paper-first discipline. No live execution without promotion gates.</text>
-      </svg>
-    </div>
-    <p class="arch-caption">Four engines, one orchestrator, one brain. Every trade flows from strategy research through risk validation to execution. DRY_RUN by default. Live requires promotion gates.</p>
-  </section>
-
-  <div class="spacer-lg"></div>
-  <div class="thin-line" style="height:100px;"></div>
-  <div class="spacer-lg"></div>
-
-  <!-- Principles -->
-  <section class="section" id="sec-principles" data-reveal>
-    <div class="section-label">Principles</div>
-    <div class="section-title">Convictions</div>
-    <div class="principle">
-      <div class="p-title">Build With Purpose</div>
-      <div class="p-text">Every line of code serves a mission. No vanity projects. Ship solutions that matter to real people.</div>
-    </div>
-    <div class="principle">
-      <div class="p-title">Own the Full Stack</div>
-      <div class="p-text">Mastery across every layer. From schema to screen, from onboarding to operations. No blind spots in the architecture or the team.</div>
-    </div>
-    <div class="principle">
-      <div class="p-title">Lead by Example</div>
-      <div class="p-text">Father, husband, builder. Show up for the work and for the people who depend on you.</div>
-    </div>
-    <div class="principle">
-      <div class="p-title">Never Stop Shipping</div>
-      <div class="p-text">Velocity compounds. Deploy fast, iterate faster, learn fastest. Twenty systems shipped and accelerating. Build teams that ship the same way.</div>
-    </div>
-    <div class="principle">
-      <div class="p-title">Security First</div>
-      <div class="p-text">End-to-end encryption is a foundation, not a feature. Zero trust by default.</div>
-    </div>
-    <div class="principle">
-      <div class="p-title">Own Your Infrastructure</div>
-      <div class="p-text">If it runs on someone else's server, it's someone else's system. Local data, local AI, local control. Sovereignty is not a feature request.</div>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section class="section" id="sec-contact" data-reveal>
-    <div class="section-label">Contact</div>
-    <div class="section-title">Reach Out</div>
-    <div class="body-text" style="margin-bottom:32px; max-width:680px;">
-      Whether it's a professional opportunity, a technical collaboration, or a conversation about leadership and building things that matter, the line is open. Lance operates with directness and respect, and values people who do the same. If something on this page resonated, don't hesitate.
-    </div>
-    <div class="booking-form-wrap" id="bookingFormWrap">
-      <form class="booking-form" id="bookingForm" action="api/booking.php" method="POST">
-        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
-        <input type="hidden" name="website" value="" tabindex="-1">
-        <div class="booking-row">
-          <div class="booking-field">
-            <label class="booking-label" for="booking-name">Name</label>
-            <input class="booking-input" type="text" id="booking-name" name="name" placeholder="Your name" required>
-          </div>
-          <div class="booking-field">
-            <label class="booking-label" for="booking-email">Email</label>
-            <input class="booking-input" type="email" id="booking-email" name="email" placeholder="you@example.com" required>
-          </div>
-        </div>
-        <div class="booking-row">
-          <div class="booking-field">
-            <label class="booking-label" for="booking-phone">Phone</label>
-            <input class="booking-input" type="tel" id="booking-phone" name="phone" placeholder="(555) 123-4567">
-          </div>
-          <div class="booking-field">
-            <label class="booking-label" for="booking-topic">Topic</label>
-            <select class="booking-select" id="booking-topic" name="topic" required>
-              <option value="" disabled selected>Select a topic</option>
-              <option value="Professional Opportunity">Professional Opportunity</option>
-              <option value="Technical Collaboration">Technical Collaboration</option>
-              <option value="App Development (NoCo Studio)">App Development (NoCo Studio)</option>
-              <option value="Trading Systems">Trading Systems</option>
-              <option value="General Inquiry">General Inquiry</option>
-            </select>
-          </div>
-        </div>
-        <div class="booking-field full">
-          <label class="booking-label" for="booking-message">Message</label>
-          <textarea class="booking-textarea" id="booking-message" name="message" placeholder="What would you like to discuss?" rows="4" required></textarea>
-        </div>
-        <button type="submit" class="booking-submit" id="bookingSubmit">Send Request</button>
-      </form>
-      <div class="booking-success" id="bookingSuccess">
-        <div class="booking-success-icon">&#9993;</div>
-        <div class="booking-success-title">Request Received</div>
-        <div class="booking-success-text">Lance will review your message and get back to you within 24 hours. If your request is urgent, call the number below.</div>
-      </div>
-    </div>
-    <div class="contact-grid">
-      <a href="mailto:lance@lancewfisher.com" class="contact-row">
-        <span class="c-label">Email</span>
-        <span class="c-value">lance@lancewfisher.com</span>
-      </a>
-      <span class="contact-row" id="ph-business" style="cursor:pointer;">
-        <span class="c-label">Phone</span>
-        <span class="c-value" data-p="MzA3LTM5OS05MzEz"></span>
-      </span>
-      <span class="contact-row" id="ph-mobile" style="cursor:pointer;">
-        <span class="c-label">Mobile</span>
-        <span class="c-value" data-p="OTE4LTkwNi02OTYz"></span>
-      </span>
-      <a href="https://x.com/lancefisher_" target="_blank" rel="noopener noreferrer" class="contact-row">
-        <span class="c-label">X</span>
-        <span class="c-value">@lancefisher_</span>
-      </a>
-      <div class="contact-row" style="cursor:default;">
-        <span class="c-label">Location</span>
-        <span class="c-value">Wyoming</span>
-      </div>
-      <a href="resume.html" target="_blank" rel="noopener" class="contact-row">
-        <span class="c-label">Resume</span>
-        <span class="c-value" style="color:var(--gold-1776);">View Full Resume &rarr;</span>
-      </a>
-      <a href="one-pager.html" target="_blank" rel="noopener" class="contact-row">
-        <span class="c-label">One-Pager</span>
-        <span class="c-value" style="color:var(--gold-1776);">Download PDF &rarr;</span>
-      </a>
-    </div>
-
-    <!-- Other Splash Concepts -->
-    <div class="concept-gallery" style="margin-top:80px;">
-      <div class="section-label" style="margin-bottom:24px;">Splash Page Concepts</div>
-      <div class="concept-row" id="conceptRow">
-        <a class="concept-card" href="concepts/01-noir-dossier.html">
-          <div class="concept-thumb" data-src="concepts/01-noir-dossier.html"><div class="concept-placeholder">&#9670;</div></div>
-          <div class="concept-name">Noir Dossier</div>
-        </a>
-        <a class="concept-card" href="concepts/02-star-chart.html">
-          <div class="concept-thumb" data-src="concepts/02-star-chart.html"><div class="concept-placeholder">&#9733;</div></div>
-          <div class="concept-name">Star Chart</div>
-        </a>
-        <a class="concept-card" href="concepts/03-sonar-pulse.html">
-          <div class="concept-thumb" data-src="concepts/03-sonar-pulse.html"><div class="concept-placeholder">&#9673;</div></div>
-          <div class="concept-name">Sonar Pulse</div>
-        </a>
-        <a class="concept-card" href="concepts/04-blueprint.html">
-          <div class="concept-thumb" data-src="concepts/04-blueprint.html"><div class="concept-placeholder">&#9635;</div></div>
-          <div class="concept-name">Blueprint</div>
-        </a>
-        <a class="concept-card" href="concepts/05-ocean-depth.html">
-          <div class="concept-thumb" data-src="concepts/05-ocean-depth.html"><div class="concept-placeholder">&#8767;</div></div>
-          <div class="concept-name">Ocean Depth</div>
-        </a>
-        <a class="concept-card" href="concepts/06-forge.html">
-          <div class="concept-thumb" data-src="concepts/06-forge.html"><div class="concept-placeholder">&#9878;</div></div>
-          <div class="concept-name">The Forge</div>
-        </a>
-        <a class="concept-card" href="concepts/07-cartographer.html">
-          <div class="concept-thumb" data-src="concepts/07-cartographer.html"><div class="concept-placeholder">&#9788;</div></div>
-          <div class="concept-name">Cartographer</div>
-        </a>
-        <a class="concept-card" href="concepts/08-terminal.html">
-          <div class="concept-thumb" data-src="concepts/08-terminal.html"><div class="concept-placeholder">&gt;_</div></div>
-          <div class="concept-name">Terminal</div>
-        </a>
-        <a class="concept-card" href="concepts/09-northern-lights.html">
-          <div class="concept-thumb" data-src="concepts/09-northern-lights.html"><div class="concept-placeholder">&#9740;</div></div>
-          <div class="concept-name">Northern Lights</div>
-        </a>
-        <a class="concept-card" href="concepts/10-war-room.html">
-          <div class="concept-thumb" data-src="concepts/10-war-room.html"><div class="concept-placeholder">&#9876;</div></div>
-          <div class="concept-name">War Room</div>
-        </a>
-        <a class="concept-card" href="concepts/11-shipwreck.html">
-          <div class="concept-thumb" data-src="concepts/11-shipwreck.html"><div class="concept-placeholder">&#9875;</div></div>
-          <div class="concept-name">Shipwreck</div>
-        </a>
-        <a class="concept-card" href="concepts/12-constellation.html">
-          <div class="concept-thumb" data-src="concepts/12-constellation.html"><div class="concept-placeholder">&#10022;</div></div>
-          <div class="concept-name">Minimalist Luxury</div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <div class="spacer-lg"></div>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-motto">Mens clara in tenebris</div>
-    <div class="footer-name">Lance W. Fisher</div>
-    <div class="footer-year">MMXXVI</div>
-    <div class="footer-stars">&#9733; &#9733; &#9733;</div>
-  </footer>
-
-</div>
-
-<!-- Nav dots -->
-<nav class="nav-dots" id="navDots">
-  <div class="nav-dot active" data-target="sec-hero"></div>
-  <div class="nav-dot" data-target="sec-about"></div>
-  <div class="nav-dot" data-target="sec-fisher-sovereign"></div>
-  <div class="nav-dot" data-target="sec-now"></div>
-  <div class="nav-dot" data-target="sec-projects"></div>
-  <div class="nav-dot" data-target="sec-ventures"></div>
-  <div class="nav-dot" data-target="sec-noco"></div>
-  <div class="nav-dot" data-target="sec-brand"></div>
-  <div class="nav-dot" data-target="sec-architecture"></div>
-  <div class="nav-dot" data-target="sec-principles"></div>
-  <div class="nav-dot" data-target="sec-contact"></div>
-</nav>
-
-<script src="main.js?v=20260321"></script>
-
-<!-- FTDA: Passkey Modal -->
-<div class="ftda-passkey-overlay" id="ftda-passkey-overlay" aria-hidden="true" role="dialog" aria-label="Passkey required">
-  <div class="ftda-passkey-box">
-    <button class="ftda-passkey-close" aria-label="Close">&times;</button>
-    <svg class="ftda-passkey-shield" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 2L4 10v12c0 11.1 6.8 21.4 16 24 9.2-2.6 16-12.9 16-24V10L20 2z" stroke="rgba(201,168,76,0.4)" stroke-width="1.5" fill="rgba(201,168,76,0.04)"/>
-      <path d="M20 8l-10 5v8c0 7.4 4.5 14.3 10 16 5.5-1.7 10-8.6 10-16v-8l-10-5z" stroke="rgba(201,168,76,0.15)" stroke-width="0.8" fill="none"/>
-    </svg>
-    <div class="ftda-passkey-heading">Protected Document</div>
-    <div class="ftda-passkey-sub">Enter passkey to access this framework</div>
-    <input type="password" class="ftda-passkey-input" placeholder="Passkey" autocomplete="off" spellcheck="false">
-    <button class="ftda-passkey-submit">Unlock</button>
-    <div class="ftda-passkey-error">Invalid passkey</div>
+<!-- Main Stage (click anywhere to enter) -->
+<div class="gw-stage" id="gwStage">
+
+  <h1 class="gw-company">
+    <span class="gw-company-glitch" data-text="Fisher Sovereign Systems">Fisher Sovereign Systems</span>
+  </h1>
+
+  <p class="gw-tagline">Building the Architecture for Independence</p>
+
+  <div class="gw-rule"></div>
+
+  <div class="gw-preview">
+    <p class="gw-glitch-text" data-text="Mobile applications">Mobile applications</p>
+    <p class="gw-glitch-text" data-text="Encrypted infrastructure">Encrypted infrastructure</p>
+    <p class="gw-glitch-text" data-text="Autonomous trading systems">Autonomous trading systems</p>
+    <p class="gw-glitch-text" data-text="Local AI on private hardware">Local AI on private hardware</p>
+    <p class="gw-glitch-text" data-text="Original creative work">Original creative work</p>
   </div>
-</div>
 
-<!-- FTDA: Document Reader -->
-<div class="ftda-reader-overlay" id="ftda-reader-overlay" aria-hidden="true" role="dialog" aria-label="FTDA Document Reader">
-  <div class="ftda-reader-topbar">
-    <div class="ftda-reader-topbar-left">
-      <span class="ftda-reader-title-bar">FTDA Reader</span>
-      <span class="ftda-reader-status"><span class="ftda-reader-status-dot"></span>Unlocked</span>
-    </div>
-    <div class="ftda-reader-topbar-right">
-      <button class="ftda-reader-btn active" data-ftda-watermark>Watermark: On</button>
-      <button class="ftda-reader-btn" data-ftda-secure>Secure: Off</button>
-      <button class="ftda-reader-btn" data-ftda-lock>Lock</button>
-      <button class="ftda-reader-close" aria-label="Close reader">&times;</button>
-    </div>
+  <div class="gw-enter-wrap" id="gwEnterWrap">
+    <a href="/home.html" class="gw-enter-btn" id="gwEnterBtn">Enter &rarr;</a>
+    <svg class="gw-enter-svg" id="gwEnterSvg"><rect rx="0" ry="0"/></svg>
   </div>
-  <div class="ftda-reader-body">
-    <nav class="ftda-reader-toc" aria-label="Document navigation">
-      <div class="ftda-toc-heading">Contents</div>
-    </nav>
-    <div class="ftda-reader-content"></div>
+
+  <div class="gw-closing">
+    <p class="gw-closing-vision">the vision of</p>
+    <p class="gw-closing-name">Lance W. Fisher</p>
+    <p class="gw-closing-purpose">for Privacy and Digital Sovereignty</p>
+    <p class="gw-closing-motto" id="gwMotto">
+      <span class="gw-motto-text" id="gwMottoLatin">mens clara in tenebris</span>
+      <span class="gw-motto-text gw-motto-translation" id="gwMottoEn">a clear mind in darkness</span>
+    </p>
+    <a href="/fisher-sovereign.html" class="gw-closing-brief" id="gwBriefLink">Read the Brief &rarr;</a>
   </div>
+
 </div>
 
-<!-- FTDA: Watermark overlay -->
-<div class="ftda-watermark" style="display:none;">
-  <div class="ftda-watermark-inner"></div>
+<!-- Domain Strip -->
+<div class="gw-domains" id="gwDomains">
+  <a href="/home.html" data-domain="lancewfisher.com">lancewfisher.com</a>
+  <a href="/home.html" data-domain="fishersovereign.com">fishersovereign.com</a>
+  <a href="/home.html" data-domain="fishersovereign.systems">fishersovereign.systems</a>
+  <a href="https://fisher13.com" data-domain="fisher13.com">fisher13.com</a>
+  <a href="https://f1sh3r.net" data-domain="f1sh3r.net">f1sh3r.net</a>
+  <a href="https://one-three.net" data-domain="one-three.net">one-three.net</a>
+  <a href="https://teamfisher.us" data-domain="teamfisher.us">teamfisher.us</a>
 </div>
 
-<!-- JSON-LD Structured Data -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Lance W. Fisher",
-  "url": "https://lancewfisher.com",
-  "image": "https://lancewfisher.com/img/portrait.jpg",
-  "jobTitle": "Data Center Technician Manager",
-  "worksFor": {
-    "@type": "Organization",
-    "name": "Technology Operations"
-  },
-  "description": "Technical operations leader, culture architect, and full-stack builder. 25+ production systems shipped across trading, AI, encrypted messaging, and games.",
-  "address": {
-    "@type": "PostalAddress",
-    "addressRegion": "WY",
-    "addressCountry": "US"
-  },
-  "email": "lance@lancewfisher.com",
-  "sameAs": [
-    "https://x.com/lancefisher_"
-  ],
-  "knowsAbout": [
-    "Technical Operations",
-    "Data Center Infrastructure",
-    "Full-Stack Development",
-    "Trading Systems",
-    "Artificial Intelligence",
-    "Team Leadership",
-    "TypeScript",
-    "Python",
-    "React",
-    "Node.js"
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Lance W. Fisher",
-  "url": "https://lancewfisher.com",
-  "description": "Personal website of Lance W. Fisher. Technical operations leader, culture architect, and full-stack builder.",
-  "author": {
-    "@type": "Person",
-    "name": "Lance W. Fisher"
+<!-- Year -->
+<div class="gw-year">MMXXVI</div>
+
+<script>
+(function(){
+  // ===== THEME TOGGLE =====
+  var toggleBtn = document.getElementById('themeToggle');
+  function setTheme(t) {
+    if (t === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+    localStorage.setItem('lf-theme', t);
   }
-}
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+  }
+
+  // ===== STAGE CLICK → ENTER =====
+  var stage = document.getElementById('gwStage');
+  var domains = document.getElementById('gwDomains');
+  var enterBtn = document.getElementById('gwEnterBtn');
+
+  if (stage) {
+    stage.addEventListener('click', function() {
+      window.location.href = '/home.html';
+    });
+  }
+  // Enter button: follow its href, stop propagation so stage handler doesn't double-fire
+  if (enterBtn) {
+    enterBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  }
+  // Domain links: stop propagation
+  if (domains) {
+    domains.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  }
+  // Brief link: stop propagation so it navigates to the article
+  var briefLink = document.getElementById('gwBriefLink');
+  if (briefLink) {
+    briefLink.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  }
+
+  // ===== SVG BORDER DRAW =====
+  function initBorderDraw() {
+    var wrap = document.getElementById('gwEnterWrap');
+    var svg = document.getElementById('gwEnterSvg');
+    if (!wrap || !svg) return;
+    var rect = svg.querySelector('rect');
+    var w = wrap.offsetWidth;
+    var h = wrap.offsetHeight;
+    var perimeter = 2 * (w + h);
+    rect.setAttribute('x', '0.5');
+    rect.setAttribute('y', '0.5');
+    rect.setAttribute('width', (w - 1).toString());
+    rect.setAttribute('height', (h - 1).toString());
+    rect.style.strokeDasharray = perimeter;
+    rect.style.strokeDashoffset = perimeter;
+    rect.style.transition = 'stroke-dashoffset 1.4s cubic-bezier(0.4, 0, 0.2, 1)';
+    // Trigger after a small delay so the animation is visible
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        rect.style.strokeDashoffset = '0';
+      });
+    });
+  }
+  // Wait for fonts to load so measurements are accurate
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(initBorderDraw);
+  } else {
+    window.addEventListener('load', initBorderDraw);
+  }
+
+  // ===== MOUSE PROXIMITY GLOW =====
+  var company = document.querySelector('.gw-company');
+  if (company) {
+    document.addEventListener('mousemove', function(e) {
+      var rect = company.getBoundingClientRect();
+      var cx = rect.left + rect.width / 2;
+      var cy = rect.top + rect.height / 2;
+      var dist = Math.sqrt(Math.pow(e.clientX - cx, 2) + Math.pow(e.clientY - cy, 2));
+      var threshold = 220;
+      if (dist < threshold) {
+        var brightness = 1 + (1 - dist / threshold) * 0.15;
+        company.style.filter = 'brightness(' + brightness + ')';
+      } else {
+        company.style.filter = '';
+      }
+    });
+  }
+
+  // ===== MOTTO GLITCH TO TRANSLATION =====
+  var latinEl = document.getElementById('gwMottoLatin');
+  var enEl = document.getElementById('gwMottoEn');
+  if (latinEl && enEl) {
+    var mottoGlitchChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&';
+    var latinText = 'mens clara in tenebris';
+    var enText = 'a clear mind in darkness';
+    var mottoShowing = 'latin';
+
+    function mottoScramble(fromEl, toEl, targetText, callback) {
+      fromEl.style.display = 'none';
+      toEl.style.display = 'inline';
+      var len = targetText.length;
+      var iterations = 0;
+      var maxIterations = 12;
+      var interval = setInterval(function() {
+        var scrambled = '';
+        for (var i = 0; i < len; i++) {
+          if (targetText[i] === ' ') {
+            scrambled += ' ';
+          } else if (iterations >= maxIterations - 3 && Math.random() > 0.4) {
+            scrambled += targetText[i];
+          } else {
+            scrambled += mottoGlitchChars[Math.floor(Math.random() * mottoGlitchChars.length)];
+          }
+        }
+        toEl.textContent = scrambled;
+        iterations++;
+        if (iterations >= maxIterations) {
+          clearInterval(interval);
+          toEl.textContent = targetText;
+          if (callback) callback();
+        }
+      }, 50);
+    }
+
+    function mottoGlitchCycle() {
+      if (mottoShowing === 'latin') {
+        mottoScramble(latinEl, enEl, enText, function() {
+          mottoShowing = 'en';
+          setTimeout(function() {
+            mottoScramble(enEl, latinEl, latinText, function() {
+              mottoShowing = 'latin';
+            });
+          }, 3000);
+        });
+      }
+    }
+
+    // First glitch after 5s, then every 10-16s
+    setTimeout(function() {
+      mottoGlitchCycle();
+      setInterval(mottoGlitchCycle, 10000 + Math.random() * 6000);
+    }, 5000);
+  }
+})();
 </script>
-
-<!-- FTDA Scripts -->
-<script src="ftda/config.js"></script>
-<script src="ftda/ftda.js"></script>
-
 </body>
 </html>

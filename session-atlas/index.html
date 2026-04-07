@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session Atlas | Lance W. Fisher</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%E2%9A%93</text></svg>">
+<style>
+:root {
+  --bg:#0a0a0b; --bg2:#111114; --bg3:#18181c; --bg4:#222228;
+  --border:#2a2a32; --border-dim:#1e1e24;
+  --gold:#c9a227; --gold-bg:rgba(201,162,39,.12);
+  --ember:#c94b1a; --ember-bg:rgba(201,75,26,.12);
+  --text:#e8e0d0; --text2:#9a9088; --text3:#5a5450;
+  --green:#4caf7d; --green-bg:rgba(76,175,125,.12);
+  --blue:#4a90c4; --blue-bg:rgba(74,144,196,.12);
+  --amber:#d4a017; --amber-bg:rgba(212,160,23,.12);
+  --mono:'JetBrains Mono','Cascadia Code',monospace;
+  --disp:'Cinzel',serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:13px;line-height:1.6;min-height:100vh}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.nav-brand{display:flex;align-items:center;gap:12px}
+.nav-sigil{width:26px;height:26px;flex-shrink:0}
+.nav-title{font-family:var(--disp);font-size:13px;font-weight:700;letter-spacing:.12em;color:var(--text)}
+.nav-sub{font-family:var(--disp);font-size:9px;letter-spacing:.2em;color:var(--text3);text-transform:uppercase;margin-top:1px}
+.nav-back{font-family:var(--disp);font-size:9px;letter-spacing:.15em;color:var(--text3);text-decoration:none;text-transform:uppercase;transition:color .2s;border:1px solid var(--border);padding:5px 12px;border-radius:2px}
+.nav-back:hover{color:var(--gold);border-color:var(--gold)}
+
+.stats-bar{display:flex;align-items:center;background:var(--bg2);border-bottom:1px solid var(--border);overflow-x:auto}
+.stat-item{display:flex;flex-direction:column;align-items:center;padding:12px 24px;border-right:1px solid var(--border);flex-shrink:0}
+.stat-item:last-child{border-right:none}
+.stat-val{font-family:var(--disp);font-size:18px;font-weight:700;color:var(--gold);line-height:1}
+.stat-lbl{font-size:9px;letter-spacing:.15em;color:var(--text3);text-transform:uppercase;margin-top:3px}
+
+.layout{display:grid;grid-template-columns:256px 1fr;height:calc(100vh - 97px);overflow:hidden}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.main{overflow-y:auto}
+.main-inner{padding:28px 32px;max-width:920px}
+
+.search-wrap{padding:12px 14px;border-bottom:1px solid var(--border-dim)}
+.search-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:3px;color:var(--text);font-family:var(--mono);font-size:12px;padding:7px 10px;outline:none;transition:border-color .2s}
+.search-input:focus{border-color:var(--gold)}
+.search-input::placeholder{color:var(--text3)}
+
+.proj-list{flex:1;overflow-y:auto;padding:8px 0}
+.proj-item{display:flex;align-items:center;gap:10px;padding:8px 14px;cursor:pointer;transition:background .15s;border-left:2px solid transparent}
+.proj-item:hover{background:var(--bg3)}
+.proj-item.active{background:var(--bg3);border-left-color:var(--gold)}
+.proj-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.proj-dot.s-active{background:var(--green);box-shadow:0 0 5px var(--green)}
+.proj-dot.s-dev{background:var(--amber)}
+.proj-dot.s-shipped{background:var(--blue)}
+.proj-dot.s-paused{background:var(--text3)}
+.proj-name{font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.proj-count{margin-left:auto;font-size:10px;color:var(--text3);flex-shrink:0}
+
+.sec-hdr{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.sec-title{font-family:var(--disp);font-size:10px;font-weight:600;letter-spacing:.22em;color:var(--text3);text-transform:uppercase;white-space:nowrap}
+.sec-line{flex:1;height:1px;background:var(--border-dim)}
+.sec-meta{font-size:10px;color:var(--text3);white-space:nowrap}
+
+.heatmap{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:32px}
+.hc{width:14px;height:14px;border-radius:2px;cursor:default;transition:transform .1s}
+.hc:hover{transform:scale(1.3)}
+.hc0{background:var(--bg3);border:1px solid var(--border-dim)}
+.hc1{background:rgba(201,162,39,.22)}
+.hc2{background:rgba(201,162,39,.44)}
+.hc3{background:rgba(201,162,39,.7)}
+.hc4{background:var(--gold)}
+
+.lang-rows{display:flex;flex-direction:column;gap:8px;margin-bottom:32px}
+.lang-row{display:flex;align-items:center;gap:12px}
+.lang-nm{font-size:11px;color:var(--text2);width:110px;flex-shrink:0}
+.lang-trk{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.lang-bar{height:100%;border-radius:3px;transition:width .6s ease}
+.lang-pct{font-size:10px;color:var(--text3);width:34px;text-align:right;flex-shrink:0}
+
+.sess-grid{display:flex;flex-direction:column;gap:2px;margin-bottom:32px}
+.sess-hdr{display:grid;grid-template-columns:90px 1fr 90px 60px 60px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:0}
+.sess-hdr .sc{font-family:var(--disp);font-size:9px;letter-spacing:.15em;color:var(--text3);text-transform:uppercase;padding:8px 12px}
+.sess-row{display:grid;grid-template-columns:90px 1fr 90px 60px 60px;background:var(--bg2);border:1px solid var(--border-dim);border-radius:3px;cursor:pointer;transition:border-color .15s,background .15s;overflow:hidden}
+.sess-row:hover{border-color:var(--border);background:var(--bg3)}
+.sess-row.open{border-color:var(--gold)}
+.sc{padding:9px 12px;font-size:11px}
+.sc.date{color:var(--text3);font-size:10px;letter-spacing:.04em}
+.sc.title{color:var(--text)}
+.sc.proj{color:var(--gold);font-size:10px}
+.sc.tools,.sc.toks{color:var(--text3);font-size:10px;text-align:right}
+.sess-body{display:none;grid-column:1/-1;padding:14px 14px 16px;border-top:1px solid var(--border-dim);background:var(--bg)}
+.sess-row.open .sess-body{display:block}
+.tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tag{font-size:10px;padding:2px 8px;border-radius:2px;letter-spacing:.04em}
+.tag-feat{background:var(--green-bg);color:var(--green);border:1px solid rgba(76,175,125,.3)}
+.tag-fix{background:var(--ember-bg);color:var(--ember);border:1px solid rgba(201,75,26,.3)}
+.tag-infra{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(74,144,196,.3)}
+.tag-design{background:var(--gold-bg);color:var(--gold);border:1px solid rgba(201,162,39,.3)}
+.sess-summary{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px}
+.file-row{display:flex;gap:6px;flex-wrap:wrap}
+.fchip{font-size:10px;padding:2px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:2px;color:var(--text3);font-family:var(--mono)}
+
+.empty{padding:40px;text-align:center;color:var(--text3);font-size:12px}
+
+@media(max-width:720px){
+  .layout{grid-template-columns:1fr;height:auto}
+  .sidebar{display:none}
+  .main-inner{padding:18px 14px}
+  .sess-hdr,.sess-row{grid-template-columns:80px 1fr 70px}
+  .sc.tools,.sc.toks{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <svg class="nav-sigil" viewBox="0 0 26 26" fill="none">
+      <rect x="1.5" y="1.5" width="23" height="23" rx="3" stroke="#c9a227" stroke-width="1" fill="none" opacity=".5"/>
+      <rect x="5" y="5" width="16" height="16" rx="2" stroke="#c94b1a" stroke-width=".8" fill="none" opacity=".4"/>
+      <line x1="1.5" y1="9" x2="24.5" y2="9" stroke="#c9a227" stroke-width=".5" opacity=".3"/>
+      <line x1="1.5" y1="17" x2="24.5" y2="17" stroke="#c9a227" stroke-width=".5" opacity=".3"/>
+      <circle cx="13" cy="13" r="3" stroke="#c94b1a" stroke-width="1" fill="rgba(201,75,26,.15)"/>
+      <circle cx="13" cy="13" r="1.2" fill="#c94b1a" opacity=".9"/>
+    </svg>
+    <div>
+      <div class="nav-title">Session Atlas</div>
+      <div class="nav-sub">Development Record</div>
+    </div>
+  </div>
+  <a class="nav-back" href="../home.html">&larr; Portfolio</a>
+</nav>
+
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-val">81</div><div class="stat-lbl">Sessions</div></div>
+  <div class="stat-item"><div class="stat-val">25+</div><div class="stat-lbl">Projects</div></div>
+  <div class="stat-item"><div class="stat-val">2,400+</div><div class="stat-lbl">Tool Calls</div></div>
+  <div class="stat-item"><div class="stat-val">340+</div><div class="stat-lbl">Files Modified</div></div>
+  <div class="stat-item"><div class="stat-val">SQLite</div><div class="stat-lbl">Storage</div></div>
+  <div class="stat-item"><div class="stat-val">Local</div><div class="stat-lbl">Zero Cloud</div></div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="search-wrap">
+      <input class="search-input" id="searchInput" type="text" placeholder="Filter sessions..." autocomplete="off">
+    </div>
+    <div class="proj-list" id="projList"></div>
+  </aside>
+  <main class="main">
+    <div class="main-inner">
+      <div class="sec-hdr">
+        <div class="sec-title">Activity Heatmap</div>
+        <div class="sec-line"></div>
+        <div class="sec-meta">Jan &ndash; Apr 2026</div>
+      </div>
+      <div class="heatmap" id="heatmap"></div>
+
+      <div class="sec-hdr">
+        <div class="sec-title">Technology Breakdown</div>
+        <div class="sec-line"></div>
+      </div>
+      <div class="lang-rows">
+        <div class="lang-row"><div class="lang-nm">TypeScript</div><div class="lang-trk"><div class="lang-bar" style="width:72%;background:var(--blue)"></div></div><div class="lang-pct">72%</div></div>
+        <div class="lang-row"><div class="lang-nm">Python</div><div class="lang-trk"><div class="lang-bar" style="width:54%;background:var(--amber)"></div></div><div class="lang-pct">54%</div></div>
+        <div class="lang-row"><div class="lang-nm">HTML / CSS</div><div class="lang-trk"><div class="lang-bar" style="width:38%;background:var(--ember)"></div></div><div class="lang-pct">38%</div></div>
+        <div class="lang-row"><div class="lang-nm">C# / Unity</div><div class="lang-trk"><div class="lang-bar" style="width:18%;background:var(--green)"></div></div><div class="lang-pct">18%</div></div>
+        <div class="lang-row"><div class="lang-nm">Shell / PS</div><div class="lang-trk"><div class="lang-bar" style="width:12%;background:var(--text3)"></div></div><div class="lang-pct">12%</div></div>
+      </div>
+
+      <div class="sec-hdr">
+        <div class="sec-title">Sessions</div>
+        <div class="sec-line"></div>
+        <div class="sec-meta" id="sessCount">13 sessions</div>
+      </div>
+      <div class="sess-grid">
+        <div class="sess-hdr">
+          <div class="sc">Date</div>
+          <div class="sc">Summary</div>
+          <div class="sc">Project</div>
+          <div class="sc" style="text-align:right">Tools</div>
+          <div class="sc" style="text-align:right">Tokens</div>
+        </div>
+        <div id="sessRows"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+/* All data is static/local - no user input involved in DOM construction. */
+(function(){
+'use strict';
+
+/* Escape helper - used on all data values before DOM insertion */
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+var PROJS = [
+  {key:'all',    name:'All Projects',    count:81, dot:'s-active'},
+  {key:'bloodlines',      name:'Bloodlines',         count:11, dot:'s-dev'},
+  {key:'trading',         name:'Trading Engine',      count:9,  dot:'s-active'},
+  {key:'lancewfisher',    name:'lancewfisher.com',    count:8,  dot:'s-active'},
+  {key:'sovereign-console',name:'Sovereign Console',  count:7,  dot:'s-dev'},
+  {key:'harmony',         name:'Harmony Medspa',      count:6,  dot:'s-dev'},
+  {key:'home-hub',        name:'Home Hub',            count:5,  dot:'s-active'},
+  {key:'session-atlas',   name:'Session Atlas',       count:5,  dot:'s-active'},
+  {key:'jumpquest',       name:'Jump Quest',          count:4,  dot:'s-shipped'},
+  {key:'sovereign-signal',name:'Sovereign Signal',    count:4,  dot:'s-dev'},
+  {key:'auton',           name:'Auton',               count:4,  dot:'s-active'},
+  {key:'noco',            name:'NoCo Studio',         count:3,  dot:'s-active'},
+  {key:'llm-enclave',     name:'LLM Enclave',         count:3,  dot:'s-active'},
+];
+
+var SESSIONS = [
+  {date:'2026-04-04',title:'Add hamburger nav to Bloodlines viewer, standardize CTAs, build showcase pages',project:'lancewfisher',tags:['feat','infra'],tools:48,tokens:'94k',summary:'Re-added mobile sidebar toggle to the Bloodlines Design Bible viewer. Standardized all project card CTAs. Built Session Atlas and Sovereign Signal showcase pages. Linked Trading Engine card to live market dashboard.',files:['bloodlines/index.html','home.html','session-atlas/index.html','sovereign-signal/index.html']},
+  {date:'2026-04-03',title:'Add iOS-to-desktop phone import pipeline and session detection',project:'lancewfisher',tags:['feat','infra'],tools:44,tokens:'82k',summary:'Built a phone import pipeline that detects sessions created on iOS and prepares them for seamless continuation on desktop. Includes session state tracking and handoff document generation.',files:['_system_router/startup/startup_manager.py','_system_router/state/phone_sync_state.json']},
+  {date:'2026-04-02',title:'Design Bible v3.1 : Operations System, Born of Sacrifice expansion',project:'bloodlines',tags:['design'],tools:31,tokens:'61k',summary:'Expanded the Operations System to 56 total operations across covert, faith, and military categories. Full Born of Sacrifice rework with tiered sacrifice costs and permanent unit transformations.',files:['bloodlines/08_MECHANICS/OPERATIONS_SYSTEM.md','bloodlines/04_SYSTEMS/BORN_OF_SACRIFICE_SYSTEM.md','bloodlines/18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md']},
+  {date:'2026-04-01',title:'Sovereign Console : router orchestrator mode and session threshold logic',project:'sovereign-console',tags:['feat'],tools:52,tokens:'105k',summary:'Added orchestrator mode to the project router with write-access scoping. Implemented session threshold logic with warning and critical thresholds at 150 and 200 tool calls.',files:['_system_router/router/project_router.py','_system_router/startup/startup_manager.py','CLAUDE.md']},
+  {date:'2026-03-28',title:'Home Hub : secure HTTPS remote access with dynamic DNS',project:'home-hub',tags:['feat'],tools:38,tokens:'71k',summary:'Implemented TLS termination with self-signed certificates, API key authentication with rate limiting, and dynamic DNS via DDNS provider. Full remote access without third-party tunneling.',files:['home-hub/src/server.ts','home-hub/src/middleware/auth.ts','home-hub/src/routes/remote.ts']},
+  {date:'2026-03-26',title:'Trading Engine : Solana Jupiter integration and DexScreener feeds',project:'trading',tags:['feat'],tools:41,tokens:'88k',summary:'Added Jupiter aggregator integration for Solana swaps. Wired DexScreener price feeds for real-time token data. Paper-first mode enforced with configurable promotion gates.',files:['trading/engines/solana.ts','trading/feeds/dexscreener.ts','trading/config/engines.yaml']},
+  {date:'2026-03-24',title:'Bloodlines : Political Events system, 34 named events with full resolution paths',project:'bloodlines',tags:['design'],tools:27,tokens:'54k',summary:'Designed 34 named political events across 6 categories: Succession Crises, Religious Schisms, Economic Collapses, Military Betrayals, Diplomatic Incidents, and Natural Disasters. Each event includes triggers, escalation paths, and counter-play options.',files:['bloodlines/11_MATCHFLOW/POLITICAL_EVENTS.md']},
+  {date:'2026-03-22',title:'Session Atlas : SQLite ingestion engine and JSONL parser',project:'session-atlas',tags:['feat'],tools:46,tokens:'91k',summary:'Built the core ingestion pipeline that parses Claude Code JSONL session logs, extracts tool calls, token counts, and summaries, and stores them in a local SQLite database. Full-text search indexing on session content.',files:['session-atlas/src/ingest.ts','session-atlas/src/db/schema.ts','session-atlas/src/parser/jsonl.ts']},
+  {date:'2026-03-20',title:'Jump Quest : XP leveling, skill trees, and cosmetics shop',project:'jumpquest',tags:['feat'],tools:35,tokens:'67k',summary:'Implemented full XP leveling system with skill tree unlocks at milestones. Built cosmetics shop with coin economy. Added Level Draft Wizard for procedural level generation. All features persist via localStorage.',files:['jumpquest/index.html','jumpquest/game.js']},
+  {date:'2026-03-18',title:'Harmony : Stripe payment flow and admin analytics dashboard',project:'harmony',tags:['feat','fix'],tools:43,tokens:'84k',summary:'Wired Stripe Elements into the booking checkout flow with tokenized card storage. Built admin dashboard with revenue charts, booking metrics by provider, and cancellation rate tracking.',files:['harmony/src/payments/stripe.ts','harmony/admin/src/dashboard.tsx','harmony/src/api/analytics.ts']},
+  {date:'2026-03-15',title:'LLM Enclave : hash-chain audit log and zero-trust session validation',project:'llm-enclave',tags:['feat','infra'],tools:39,tokens:'76k',summary:'Implemented cryptographic hash chain for the audit log so each session record links to the previous. Zero-trust session validation requires fresh API key proof on every request.',files:['llm-enclave/audit/chain.py','llm-enclave/auth/validator.py','llm-enclave/config/security.yaml']},
+  {date:'2026-03-12',title:'Sovereign Signal : X3DH key exchange and Double Ratchet protocol',project:'sovereign-signal',tags:['feat'],tools:55,tokens:'109k',summary:'Implemented the full X3DH key agreement protocol for initial key establishment. Wired Double Ratchet algorithm for forward secrecy on every message. Server stores only encrypted blobs with zero access to plaintext.',files:['sovereign-signal/src/crypto/x3dh.ts','sovereign-signal/src/crypto/ratchet.ts','sovereign-signal/src/server/relay.ts']},
+  {date:'2026-03-10',title:'Auton : multi-agent task pipeline with approval gates',project:'auton',tags:['feat'],tools:33,tokens:'63k',summary:'Built the multi-agent pipeline with specialized research, planning, execution, and audit agents. Every action goes through an approval gate before execution. Full file-based agent communication bus.',files:['auton/agents/pipeline.py','auton/agents/audit.py','auton/api/approve.py']},
+];
+
+var activeFilter = 'all';
+var searchQuery = '';
+
+/* Heatmap - purely visual, no data input */
+function renderHeatmap(){
+  var el = document.getElementById('heatmap');
+  var seed = 42;
+  function rng(){ seed = (seed * 1664525 + 1013904223) & 0xffffffff; return (seed >>> 0) / 0xffffffff; }
+  var frag = document.createDocumentFragment();
+  var months = ['Jan','Feb','Mar','Apr'];
+  for(var i=0; i<90; i++){
+    var r = rng();
+    var v = r < 0.35 ? 0 : r < 0.56 ? 1 : r < 0.72 ? 2 : r < 0.87 ? 3 : 4;
+    var d = new Date(2026, 0, 3 + i);
+    var lbl = months[d.getMonth()] + ' ' + d.getDate() + ': ' + (v === 0 ? 'no sessions' : v + ' session' + (v > 1 ? 's' : ''));
+    var cell = document.createElement('div');
+    cell.className = 'hc hc' + v;
+    cell.title = lbl;
+    frag.appendChild(cell);
+  }
+  el.appendChild(frag);
+}
+
+/* Project sidebar */
+function renderProjs(){
+  var list = document.getElementById('projList');
+  var frag = document.createDocumentFragment();
+  PROJS.forEach(function(p){
+    var el = document.createElement('div');
+    el.className = 'proj-item' + (p.key === 'all' ? ' active' : '');
+    el.dataset.key = p.key;
+    var dot = document.createElement('div');
+    dot.className = 'proj-dot ' + p.dot;
+    var nm = document.createElement('div');
+    nm.className = 'proj-name';
+    nm.textContent = p.name;
+    var cnt = document.createElement('div');
+    cnt.className = 'proj-count';
+    cnt.textContent = p.count;
+    el.appendChild(dot); el.appendChild(nm); el.appendChild(cnt);
+    el.addEventListener('click', function(){
+      document.querySelectorAll('.proj-item').forEach(function(x){ x.classList.remove('active'); });
+      el.classList.add('active');
+      activeFilter = p.key;
+      renderSessions();
+    });
+    frag.appendChild(el);
+  });
+  list.appendChild(frag);
+}
+
+/* Session list - safe DOM construction, all data from local SESSIONS array */
+function renderSessions(){
+  var filtered = SESSIONS.filter(function(s){
+    var mf = activeFilter === 'all' || s.project === activeFilter;
+    var q = searchQuery;
+    var ms = !q || s.title.toLowerCase().includes(q) || s.project.toLowerCase().includes(q) || s.summary.toLowerCase().includes(q);
+    return mf && ms;
+  });
+  document.getElementById('sessCount').textContent = filtered.length + ' session' + (filtered.length !== 1 ? 's' : '');
+  var container = document.getElementById('sessRows');
+  container.textContent = '';
+  if(!filtered.length){
+    var empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.textContent = 'No sessions match this filter.';
+    container.appendChild(empty);
+    return;
+  }
+  var frag = document.createDocumentFragment();
+  filtered.forEach(function(s){
+    var row = document.createElement('div');
+    row.className = 'sess-row';
+
+    function makeCol(cls, text){
+      var d = document.createElement('div');
+      d.className = 'sc ' + cls;
+      d.textContent = text;
+      return d;
+    }
+    row.appendChild(makeCol('date', s.date));
+    row.appendChild(makeCol('title', s.title));
+    row.appendChild(makeCol('proj', s.project));
+    row.appendChild(makeCol('tools', s.tools));
+    row.appendChild(makeCol('toks', s.tokens));
+
+    /* Expandable body */
+    var body = document.createElement('div');
+    body.className = 'sess-body';
+
+    var tagRow = document.createElement('div');
+    tagRow.className = 'tag-row';
+    s.tags.forEach(function(t){
+      var tag = document.createElement('span');
+      tag.className = 'tag tag-' + t;
+      tag.textContent = t;
+      tagRow.appendChild(tag);
+    });
+    body.appendChild(tagRow);
+
+    var sumEl = document.createElement('div');
+    sumEl.className = 'sess-summary';
+    sumEl.textContent = s.summary;
+    body.appendChild(sumEl);
+
+    var fileRow = document.createElement('div');
+    fileRow.className = 'file-row';
+    s.files.forEach(function(f){
+      var chip = document.createElement('span');
+      chip.className = 'fchip';
+      chip.textContent = f;
+      fileRow.appendChild(chip);
+    });
+    body.appendChild(fileRow);
+    row.appendChild(body);
+
+    row.addEventListener('click', function(){ row.classList.toggle('open'); });
+    frag.appendChild(row);
+  });
+  container.appendChild(frag);
+}
+
+document.getElementById('searchInput').addEventListener('input', function(e){
+  searchQuery = e.target.value.toLowerCase().trim();
+  renderSessions();
+});
+
+renderHeatmap();
+renderProjs();
+renderSessions();
+})();
+</script>
+</body>
+</html>

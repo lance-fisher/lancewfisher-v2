@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trading Desk | Lance W. Fisher</title>
+<meta name="description" content="Architecture showcase: profit-desk multi-agent brain feeding master-trade-bot execution. Paper-first discipline, DRY_RUN default, six specialized agents.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230a0a0b'/%3E%3Cpath d='M6 22 L10 14 L14 18 L20 8 L26 16' stroke='%23c9a84c' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='26' cy='16' r='2' fill='%234ade80'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0b;
+  --surface:#111113;
+  --surface2:#1a1a1d;
+  --surface3:#202024;
+  --border:#2a2a2e;
+  --border-strong:#3a3a40;
+  --gold:#C9A84C;
+  --gold-bright:#e3c068;
+  --gold-dim:#8a7433;
+  --gold-faint:rgba(201,168,76,0.15);
+  --green:#4ade80;
+  --green-dim:#22a35a;
+  --red:#f87171;
+  --red-dim:#a83030;
+  --blue:#60a5fa;
+  --purple:#a78bfa;
+  --orange:#fb923c;
+  --text:#e8e8ec;
+  --text-dim:#71717a;
+  --text-mid:#a1a1aa;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --sans:'Inter',-apple-system,sans-serif;
+  --display:'Cinzel',serif;
+}
+html{font-size:15px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;min-height:100vh;overflow-x:hidden}
+a{color:var(--gold);text-decoration:none;transition:color .15s}
+a:hover{color:var(--gold-bright)}
+
+/* DRY RUN BANNER */
+.dry-run-banner{
+  position:sticky;top:0;z-index:100;
+  background:linear-gradient(90deg,#1f1500,#3a2700,#1f1500);
+  border-bottom:1px solid var(--gold-dim);
+  padding:10px 16px;
+  text-align:center;
+  font-family:var(--mono);
+  font-size:.78rem;
+  color:var(--gold-bright);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.dry-run-banner .dot{
+  display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:var(--gold);margin-right:10px;vertical-align:1px;
+  animation:pulse 2.4s infinite;
+  box-shadow:0 0 8px var(--gold);
+}
+.dry-run-banner strong{color:#fff;font-weight:600;margin:0 4px}
+
+/* NAV BAR */
+nav.topnav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 24px;
+  background:#111;
+  border-bottom:1px solid rgba(201,168,76,0.3);
+}
+nav.topnav .back{font-size:.85rem;color:var(--text-mid);font-weight:500}
+nav.topnav .back:hover{color:var(--gold)}
+nav.topnav .page-title{
+  font-family:var(--display);font-size:.95rem;
+  color:var(--gold);letter-spacing:.12em;text-transform:uppercase;
+}
+nav.topnav .badges{display:flex;gap:8px;align-items:center}
+.badge{
+  font-family:var(--mono);font-size:.65rem;
+  padding:4px 10px;border-radius:3px;
+  letter-spacing:.08em;font-weight:600;text-transform:uppercase;
+}
+.badge-paper{background:#1f1500;color:var(--gold);border:1px solid var(--gold-dim)}
+.badge-arch{background:#0a1a1a;color:var(--blue);border:1px solid #1f3a4a}
+
+/* HERO HEADER */
+header.hero{
+  text-align:center;
+  padding:56px 24px 36px;
+  background:radial-gradient(ellipse at top, rgba(201,168,76,0.06), transparent 60%);
+}
+header.hero h1{
+  font-family:var(--display);font-weight:600;
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  color:var(--gold);
+  letter-spacing:.06em;
+  margin-bottom:14px;
+}
+header.hero .tagline{
+  color:var(--text-mid);font-size:.95rem;
+  max-width:680px;margin:0 auto 18px;line-height:1.6;
+}
+header.hero .sub-meta{
+  font-family:var(--mono);font-size:.7rem;
+  color:var(--text-dim);letter-spacing:.05em;
+}
+header.hero .sub-meta span{color:var(--gold-dim)}
+
+/* CONTAINER */
+.container{max-width:1200px;margin:0 auto;padding:0 20px 80px}
+.section{margin-top:48px}
+.section-title{
+  font-family:var(--display);
+  font-size:1.05rem;
+  color:var(--gold);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:6px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:baseline;
+}
+.section-title .count{
+  font-family:var(--mono);font-size:.7rem;
+  color:var(--text-dim);letter-spacing:.04em;
+  text-transform:none;
+}
+.section-desc{
+  color:var(--text-mid);font-size:.85rem;
+  margin:10px 0 18px;max-width:780px;line-height:1.6;
+}
+
+/* SIGNAL FLOW DIAGRAM */
+.flow-wrap{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:32px 24px;
+  overflow-x:auto;
+}
+.flow{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:0;min-width:760px;
+}
+.flow-stage{
+  flex:1;text-align:center;position:relative;
+  padding:18px 12px;
+  border:1px solid var(--border);
+  border-radius:6px;
+  background:var(--surface2);
+}
+.flow-stage.brain{border-color:var(--gold-dim);background:linear-gradient(180deg,#1f1700,#1a1500)}
+.flow-stage.exec{border-color:#1f3a4a;background:linear-gradient(180deg,#0a1822,#08141c)}
+.flow-stage.market{border-color:#1f3a1f;background:linear-gradient(180deg,#0a1a0a,#08160a)}
+.flow-icon{
+  font-family:var(--mono);font-size:1.2rem;
+  margin-bottom:8px;display:block;
+}
+.flow-name{
+  font-family:var(--display);font-size:.85rem;
+  color:var(--gold);letter-spacing:.06em;
+  margin-bottom:4px;text-transform:uppercase;
+}
+.flow-role{font-size:.7rem;color:var(--text-mid);margin-bottom:8px}
+.flow-detail{
+  font-family:var(--mono);font-size:.65rem;
+  color:var(--text-dim);line-height:1.5;
+}
+.flow-arrow{
+  flex:0 0 60px;
+  display:flex;flex-direction:column;align-items:center;
+  color:var(--gold-dim);font-family:var(--mono);font-size:1.1rem;
+  position:relative;
+}
+.flow-arrow .arrow-label{
+  font-size:.6rem;color:var(--text-dim);letter-spacing:.06em;
+  margin-bottom:4px;text-transform:uppercase;
+}
+.flow-arrow .arrow-line{
+  width:100%;height:1px;background:var(--gold-dim);position:relative;
+}
+.flow-arrow .arrow-line::after{
+  content:'';position:absolute;right:-2px;top:-3px;
+  width:0;height:0;
+  border-left:7px solid var(--gold-dim);
+  border-top:4px solid transparent;
+  border-bottom:4px solid transparent;
+}
+
+/* AGENT GRID */
+.agent-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+  gap:14px;
+}
+.agent-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:18px;
+  display:flex;gap:14px;align-items:flex-start;
+  transition:border-color .2s,transform .2s;
+}
+.agent-card:hover{border-color:var(--gold-dim);transform:translateY(-1px)}
+.agent-icon{
+  width:42px;height:42px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:.85rem;font-weight:600;
+  flex-shrink:0;
+  color:var(--gold);
+  background:var(--surface2);
+  border:1px solid var(--gold-dim);
+}
+.agent-info{flex:1;min-width:0}
+.agent-name{
+  font-weight:600;font-size:.92rem;
+  color:var(--text);margin-bottom:3px;
+}
+.agent-file{
+  font-family:var(--mono);font-size:.65rem;
+  color:var(--gold-dim);margin-bottom:8px;
+}
+.agent-role{
+  font-size:.78rem;color:var(--text-mid);
+  line-height:1.5;margin-bottom:10px;
+}
+.agent-resp{
+  list-style:none;padding:0;
+  font-family:var(--mono);font-size:.68rem;
+  color:var(--text-dim);line-height:1.7;
+}
+.agent-resp li{padding-left:12px;position:relative}
+.agent-resp li::before{
+  content:'>';position:absolute;left:0;color:var(--gold-dim);
+}
+
+/* STRATEGY GRID */
+.strategy-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:14px;
+}
+.strategy-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:6px;
+  overflow:hidden;
+  transition:border-color .2s;
+}
+.strategy-card:hover{border-color:var(--gold-dim)}
+.strat-header{
+  padding:16px;
+  border-bottom:1px solid var(--border);
+}
+.strat-title-row{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:8px;
+}
+.strat-title{
+  font-weight:600;font-size:.95rem;
+  color:var(--text);
+}
+.strat-mode{
+  font-family:var(--mono);font-size:.6rem;
+  padding:3px 9px;border-radius:3px;
+  letter-spacing:.06em;font-weight:600;
+  flex-shrink:0;
+}
+.mode-paper{background:#1f1500;color:var(--gold);border:1px solid var(--gold-dim)}
+.mode-research{background:#0a1a2a;color:var(--blue);border:1px solid #1f3a5a}
+.strat-file{
+  font-family:var(--mono);font-size:.65rem;
+  color:var(--gold-dim);
+}
+.strat-body{padding:14px 16px}
+.strat-desc{
+  font-size:.78rem;color:var(--text-mid);
+  line-height:1.55;margin-bottom:12px;
+}
+.strat-params{
+  display:grid;grid-template-columns:auto 1fr;gap:6px 12px;
+  font-family:var(--mono);font-size:.7rem;
+}
+.strat-params dt{color:var(--text-dim)}
+.strat-params dd{color:var(--text);text-align:right}
+.strat-live{
+  margin-top:14px;padding-top:12px;
+  border-top:1px dashed var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--mono);font-size:.68rem;
+}
+.strat-live-label{color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em}
+.strat-live-value{color:var(--text-dim);font-weight:500}
+
+/* RISK TABLE */
+.risk-table-wrap{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:6px;
+  overflow-x:auto;
+}
+.risk-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.82rem;
+}
+.risk-table th{
+  text-align:left;
+  padding:14px 18px;
+  font-family:var(--display);font-weight:600;
+  font-size:.75rem;
+  color:var(--gold);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  background:var(--surface2);
+  border-bottom:1px solid var(--border-strong);
+}
+.risk-table td{
+  padding:13px 18px;
+  border-bottom:1px solid var(--border);
+  vertical-align:top;
+}
+.risk-table tr:last-child td{border-bottom:none}
+.risk-table tr:hover td{background:var(--surface2)}
+.risk-table .param{
+  font-family:var(--mono);font-size:.78rem;
+  color:var(--gold);font-weight:500;
+}
+.risk-table .value{
+  font-family:var(--mono);
+  color:var(--text);font-weight:600;
+}
+.risk-table .desc{
+  color:var(--text-mid);font-size:.78rem;
+  line-height:1.5;
+}
+
+/* PROMOTION GATE */
+.gate-wrap{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:24px;
+}
+.gate-stages{
+  display:flex;align-items:stretch;justify-content:space-between;
+  gap:0;min-width:560px;
+}
+.gate-stage{
+  flex:1;
+  text-align:center;
+  padding:18px 12px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:6px;
+  position:relative;
+}
+.gate-stage.gate-final{border-color:var(--gold-dim);background:linear-gradient(180deg,#1f1500,#1a1200)}
+.gate-num{
+  font-family:var(--mono);font-size:.65rem;
+  color:var(--gold-dim);letter-spacing:.1em;
+  margin-bottom:6px;
+}
+.gate-name{
+  font-family:var(--display);font-size:.85rem;
+  color:var(--text);letter-spacing:.05em;
+  text-transform:uppercase;margin-bottom:6px;
+}
+.gate-detail{
+  font-size:.7rem;color:var(--text-dim);
+  line-height:1.5;
+}
+.gate-connector{
+  flex:0 0 28px;
+  align-self:center;
+  text-align:center;
+  color:var(--gold-dim);font-family:var(--mono);font-size:1rem;
+}
+.gate-criteria{
+  margin-top:24px;padding-top:20px;
+  border-top:1px solid var(--border);
+}
+.gate-criteria h4{
+  font-family:var(--display);font-size:.78rem;
+  color:var(--gold);letter-spacing:.06em;
+  text-transform:uppercase;margin-bottom:12px;
+}
+.criteria-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:8px 16px;
+  font-family:var(--mono);font-size:.72rem;
+}
+.criteria-grid div{
+  color:var(--text-mid);
+  padding:6px 10px;background:var(--surface2);
+  border-left:2px solid var(--gold-dim);border-radius:2px;
+}
+.criteria-grid div b{color:var(--gold);font-weight:500}
+
+/* LIVE STRIP */
+.live-strip{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:12px;
+}
+.live-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:16px;
+  text-align:center;
+}
+.live-label{
+  font-size:.65rem;color:var(--text-dim);
+  text-transform:uppercase;letter-spacing:.08em;
+  margin-bottom:8px;
+}
+.live-value{
+  font-family:var(--mono);font-size:1.4rem;
+  color:var(--text-dim);font-weight:600;
+}
+.live-note{
+  font-size:.62rem;color:var(--text-dim);
+  margin-top:6px;font-style:italic;
+}
+
+/* HONEST NOTICE */
+.honest-notice{
+  background:var(--surface);
+  border:1px solid var(--gold-dim);
+  border-left:3px solid var(--gold);
+  border-radius:4px;
+  padding:16px 20px;
+  margin:14px 0 0;
+  font-size:.82rem;
+  color:var(--text-mid);
+  line-height:1.6;
+}
+.honest-notice strong{color:var(--gold);font-weight:600}
+
+/* TECH STACK */
+.tech-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+.tech-block{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:18px 20px;
+}
+.tech-block h4{
+  font-family:var(--display);font-size:.82rem;
+  color:var(--gold);letter-spacing:.06em;
+  text-transform:uppercase;margin-bottom:12px;
+  padding-bottom:8px;border-bottom:1px solid var(--border);
+}
+.tech-list{
+  list-style:none;padding:0;
+  font-family:var(--mono);font-size:.72rem;
+  color:var(--text-mid);line-height:1.9;
+}
+.tech-list li{
+  display:flex;justify-content:space-between;
+  padding:3px 0;
+}
+.tech-list .key{color:var(--text-mid)}
+.tech-list .val{color:var(--gold)}
+
+/* SAFETY RAILS */
+.rails-list{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:6px 0;
+}
+.rails-list li{
+  list-style:none;
+  padding:14px 22px;
+  border-bottom:1px solid var(--border);
+  display:flex;gap:14px;align-items:flex-start;
+}
+.rails-list li:last-child{border-bottom:none}
+.rail-tag{
+  font-family:var(--mono);font-size:.62rem;
+  color:var(--gold);
+  background:var(--gold-faint);
+  border:1px solid var(--gold-dim);
+  padding:3px 9px;border-radius:3px;
+  letter-spacing:.06em;font-weight:600;
+  flex-shrink:0;text-transform:uppercase;
+  min-width:88px;text-align:center;
+}
+.rail-text{
+  font-size:.82rem;color:var(--text-mid);
+  line-height:1.55;
+}
+.rail-text strong{color:var(--text);font-weight:600}
+
+/* FOOTER */
+footer{
+  text-align:center;padding:36px 16px 24px;
+  color:var(--text-dim);font-size:.72rem;
+  border-top:1px solid var(--border);
+  margin-top:60px;
+}
+footer p{margin:4px 0}
+footer a{color:var(--gold-dim)}
+footer a:hover{color:var(--gold)}
+
+/* RESPONSIVE */
+@media(max-width:760px){
+  .agent-grid,.strategy-grid,.tech-grid{grid-template-columns:1fr}
+  header.hero{padding:36px 18px 24px}
+  .flow{min-width:680px}
+  .gate-stages{min-width:520px}
+}
+@media(max-width:480px){
+  .live-strip{grid-template-columns:1fr 1fr}
+  .risk-table th,.risk-table td{padding:10px 12px}
+  .container{padding:0 14px 60px}
+}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+</style>
+</head>
+<body>
+<!-- FSS-BRAND-BLOCK-V1 -->
+<div style="position:relative;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 22px;background:#08080a;border-bottom:1px solid rgba(201,168,76,0.28);font-family:'Inter','Helvetica Neue',Arial,sans-serif;">
+  <a href="../home.html" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:rgba(201,168,76,0.92);">
+    <svg width="13" height="18" viewBox="0 0 20 28" fill="none" aria-hidden="true" style="color:rgba(201,168,76,0.92);flex-shrink:0"><line x1="4" y1="1" x2="4" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="1" x2="16" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="14" x2="16" y2="14" stroke="currentColor" stroke-width="1.5"/><line x1="1" y1="1" x2="7" y2="1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="1" x2="19" y2="1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="27" x2="7" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="27" x2="19" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <span style="font-family:'Crimson Pro','Cinzel',Georgia,serif;font-size:0.92rem;font-weight:600;letter-spacing:0.2em;color:rgba(201,168,76,0.92);">FISHER SOVEREIGN</span>
+  </a>
+  <a href="../home.html" style="font-size:0.72rem;font-weight:500;letter-spacing:0.06em;color:#6b6b75;text-decoration:none;">&larr; Portfolio</a>
+</div>
+
+
+<div class="dry-run-banner">
+  <span class="dot"></span>
+  <strong>DRY_RUN = TRUE</strong>. Paper trading only, no real capital at risk
+</div>
+
+<nav class="topnav">
+  <a href="../home.html" class="back">&larr; Portfolio</a>
+  <span class="page-title">Trading Desk</span>
+  <div class="badges">
+    <span class="badge badge-arch">Architecture</span>
+    <span class="badge badge-paper">Paper-First</span>
+  </div>
+</nav>
+
+<header class="hero">
+  <h1>Autonomous Trading Desk</h1>
+  <p class="tagline">A multi-agent trading system. <em>profit-desk</em> is the brain that researches, decides, and risk-checks. <em>master-trade-bot</em> is the execution layer that talks to exchanges. Every strategy is paper-first and must clear a promotion gate before a single dollar of real capital is allocated.</p>
+  <p class="sub-meta">profit-desk <span>/</span> master-trade-bot <span>/</span> trading-shared</p>
+</header>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-title">Signal Flow <span class="count">brain &rarr; execution &rarr; market</span></div>
+    <p class="section-desc">All trading signals originate in profit-desk. Strategies emit candidate trades. The Risk Manager veto-gates them. Approved orders are dispatched over the event bus to master-trade-bot, which is the only component permitted to talk to exchanges. Dashboards are read-only consumers of the same bus.</p>
+    <div class="flow-wrap" id="flowWrap"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Agent Architecture <span class="count">6 agents / profit-desk</span></div>
+    <p class="section-desc">Six specialized agents run inside profit-desk. Each owns one slice of the trading lifecycle. They communicate over an in-process event bus with structured event types. No agent reaches across boundaries to mutate another agent's state.</p>
+    <div class="agent-grid" id="agentGrid"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Strategies <span class="count">4 strategies / profit-desk/strategies</span></div>
+    <p class="section-desc">Each strategy is a self-contained module under profit-desk/strategies. They share a common base class and emit signals into the same risk pipeline. None of them are live. The two oldest are running in paper mode against real market data; the two newest are still in research and backtest.</p>
+    <div class="strategy-grid" id="strategyGrid"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Risk Parameters <span class="count">profit-desk/config.yaml</span></div>
+    <p class="section-desc">Hard limits enforced by the Risk Manager agent before any order leaves profit-desk. These are real values from the project's config file. Position sizing, drawdown caps, and exposure limits are checked on every signal before it can become an order.</p>
+    <div class="risk-table-wrap" id="riskTableWrap"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Promotion Gate <span class="count">backtest &rarr; paper &rarr; live</span></div>
+    <p class="section-desc">No strategy goes live on a hunch. The promotion gate is a hard-coded checklist a strategy must satisfy across a sustained paper-trading window before it earns a live capital allocation. As of today, zero strategies have been promoted.</p>
+    <div class="gate-wrap" id="gateWrap"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Live Snapshot <span class="count">read-only</span></div>
+    <p class="section-desc">This page is a static portfolio showcase, not a live dashboard. The values below are intentionally blank, since there is no API connection here. The real dashboard runs locally and pulls from the profit-desk event bus and the master-trade-bot status endpoint.</p>
+    <div class="live-strip" id="liveStrip"></div>
+    <div class="honest-notice">
+      <strong>Honest mode.</strong> You are looking at architecture, not telemetry. If a number on this page were updating, it would be fake. The system is real and runs on my own machines, but this public page does not phone home to it.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Tech Stack</div>
+    <p class="section-desc">Two repositories, two languages, one event bus. profit-desk is Python because the strategy and research work lives there. master-trade-bot is TypeScript because every exchange SDK that matters ships in JS.</p>
+    <div class="tech-grid" id="techGrid"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Safety Rails <span class="count">non-negotiable</span></div>
+    <p class="section-desc">These are not aspirational. They are encoded in the code, the configs, and the project-level governance files. Any change to any of them requires explicit operator approval; the default for every bot, every config, every fresh checkout is the safest possible setting.</p>
+    <ul class="rails-list" id="railsList"></ul>
+  </div>
+
+</div>
+
+<!-- FSS-BRAND-FOOTER-V1 -->
+<footer style="text-align:center;padding:60px 32px 26px;border-top:1px solid #26262c;background:#0a0a0b;font-family:'Inter','Helvetica Neue',Arial,sans-serif;">
+  <div style="display:inline-flex;align-items:center;gap:14px;margin-bottom:14px;">
+    <svg width="16" height="22" viewBox="0 0 20 28" fill="none" aria-hidden="true" style="color:rgba(201,168,76,0.92);flex-shrink:0"><line x1="4" y1="1" x2="4" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="1" x2="16" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="14" x2="16" y2="14" stroke="currentColor" stroke-width="1.5"/><line x1="1" y1="1" x2="7" y2="1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="1" x2="19" y2="1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="27" x2="7" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="27" x2="19" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <span style="font-family:'Crimson Pro','Cinzel',Georgia,serif;font-size:1.4rem;font-weight:600;color:rgba(201,168,76,0.92);letter-spacing:0.22em;">FISHER SOVEREIGN</span>
+  </div>
+  <div style="font-size:0.68rem;font-weight:500;color:#6b6b75;text-transform:uppercase;letter-spacing:0.22em;margin-bottom:18px;">Building the Architecture for Independence</div>
+  <p style="font-family:'Crimson Pro',Georgia,serif;font-style:italic;font-size:0.98rem;color:#a1a1aa;max-width:520px;margin:0 auto 28px;line-height:1.6;">Fisher Sovereign Systems is being built to return control to the individual.</p>
+  <a href="../home.html" style="display:inline-block;padding:10px 24px;border:1px solid #8a7433;border-radius:6px;font-size:0.74rem;font-weight:500;color:#e3c068;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;background:rgba(201,168,76,0.04);">Visit lancewfisher.com &rarr;</a>
+  <div style="margin-top:32px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.05);font-size:0.66rem;color:#6b6b75;letter-spacing:0.06em;">&copy; 2026 Fisher Sovereign Systems, LLC. All rights reserved.</div>
+</footer>
+
+
+<script>
+(function() {
+  'use strict';
+
+  // -------- DATA --------
+
+  var flowStages = [
+    {
+      cls: 'brain',
+      icon: 'profit-desk',
+      name: 'profit-desk',
+      role: 'The brain',
+      detail: 'Python\n6 agents\n4 strategies\nEvent bus core'
+    },
+    {
+      cls: 'exec',
+      icon: 'master-trade-bot',
+      name: 'master-trade-bot',
+      role: 'Execution layer',
+      detail: 'TypeScript\nSole exchange client\nOrder routing\nFill reconciliation'
+    },
+    {
+      cls: 'market',
+      icon: 'exchanges',
+      name: 'Exchanges',
+      role: 'Markets',
+      detail: 'CEX adapters\nOn-chain venues\nPaper sandbox\nReal venues gated'
+    }
+  ];
+
+  var agents = [
+    {
+      code: 'PM',
+      name: 'Portfolio Manager',
+      file: 'profit-desk/agents/pm.py',
+      role: 'Coordinates the desk. Decides which strategies run, which signals get attention, and how capital is allocated across the active set.',
+      resp: [
+        'Owns the active strategy roster',
+        'Routes signals through risk before execution',
+        'Maintains the desk-wide objective state'
+      ]
+    },
+    {
+      code: 'RX',
+      name: 'Researcher',
+      file: 'profit-desk/agents/researcher.py',
+      role: 'Pulls market data, computes features, and surfaces conditions that should trigger a strategy reconsideration. Read-only with respect to capital.',
+      resp: [
+        'Ingests price feeds and on-chain data',
+        'Computes feature sets per strategy',
+        'Flags regime changes to the PM'
+      ]
+    },
+    {
+      code: 'BT',
+      name: 'Backtester',
+      file: 'profit-desk/agents/backtester.py',
+      role: 'Replays strategy logic against historical bars. Produces the metrics the promotion gate consumes. Runs continuously on candidate strategies.',
+      resp: [
+        'Walk-forward backtests with no look-ahead',
+        'Profit factor, drawdown, win rate',
+        'Feeds the promotion gate'
+      ]
+    },
+    {
+      code: 'RM',
+      name: 'Risk Manager',
+      file: 'profit-desk/agents/risk_manager.py',
+      role: 'The veto. Every signal hits this agent before it can become an order. Position sizing, drawdown limits, exposure caps, and concentration checks are all enforced here.',
+      resp: [
+        'Pre-trade position sizing',
+        'Hard drawdown cutoff per strategy',
+        'Cross-strategy exposure ceiling'
+      ]
+    },
+    {
+      code: 'EX',
+      name: 'Execution',
+      file: 'profit-desk/agents/execution.py',
+      role: 'The handoff. Translates approved internal signals into the order format master-trade-bot expects, then publishes them on the event bus and tracks fills.',
+      resp: [
+        'Signal to order envelope translation',
+        'Publishes to master-trade-bot bus',
+        'Reconciles fills back to strategies'
+      ]
+    },
+    {
+      code: 'OPS',
+      name: 'Ops Monitor',
+      file: 'profit-desk/agents/ops.py',
+      role: 'Watches the desk itself. Bus latency, agent heartbeats, journal write health, adapter freshness. If something looks wrong, the desk pauses before anything bad ships.',
+      resp: [
+        'Heartbeats per agent',
+        'Adapter and feed freshness checks',
+        'Auto-pause on anomalies'
+      ]
+    }
+  ];
+
+  var strategies = [
+    {
+      name: 'Momentum',
+      file: 'strategies/momentum.py',
+      mode: 'PAPER',
+      modeClass: 'mode-paper',
+      desc: 'EMA(9) over EMA(21) crossover. Trend continuation entry when the fast EMA crosses the slow EMA, exit on the inverse cross. Runs against every symbol in the universe.',
+      params: [
+        ['Indicator', 'EMA 9 / EMA 21'],
+        ['Entry', 'Bullish cross'],
+        ['Exit', 'Bearish cross'],
+        ['Universe', 'BTC ETH SOL XRP']
+      ]
+    },
+    {
+      name: 'Mean Reversion',
+      file: 'strategies/mean_reversion.py',
+      mode: 'PAPER',
+      modeClass: 'mode-paper',
+      desc: 'Bollinger Bands plus RSI. Fades extremes back to the mean: enters on RSI 30 oversold and Bollinger lower band touch, exits on band re-entry or RSI 70.',
+      params: [
+        ['Indicators', 'BB + RSI'],
+        ['Long trigger', 'RSI < 30'],
+        ['Short trigger', 'RSI > 70'],
+        ['Confirm', 'BB band touch']
+      ]
+    },
+    {
+      name: 'Breakout',
+      file: 'strategies/breakout.py',
+      mode: 'PAPER',
+      modeClass: 'mode-paper',
+      desc: 'Donchian channel breakout. Twenty-period highest-high / lowest-low envelope. Enters on a close beyond the channel boundary in the direction of the break.',
+      params: [
+        ['Style', 'Donchian channel'],
+        ['Period', '20 bars'],
+        ['Long', 'Close above HH'],
+        ['Short', 'Close below LL']
+      ]
+    },
+    {
+      name: 'Whale Flow',
+      file: 'strategies/whale_flow.py',
+      mode: 'PAPER',
+      modeClass: 'mode-paper',
+      desc: 'Unusual Whales options and dark pool flow follower. Polls the UW API on a 60s cadence and emits signals when premium or dark pool notional crosses the configured floor.',
+      params: [
+        ['Source', 'Unusual Whales API'],
+        ['Poll', '60s'],
+        ['Min premium', '$100,000'],
+        ['Min dark pool', '$1,000,000']
+      ]
+    }
+  ];
+
+  var riskRows = [
+    ['DRY_RUN', 'master switch', 'Master kill switch shared with master-trade-bot. When DRY_RUN is true no order ever leaves the execution layer for a real exchange. The default for every fresh checkout and every restart.'],
+    ['daily_max_loss_pct', '2.0% desk wide', 'Daily realized plus unrealized loss ceiling. The Risk Manager continuously monitors and trips the desk-wide kill switch when this is breached, journaled under category=risk.'],
+    ['max_drawdown_pct', '8.0% desk wide', 'Equity drawdown circuit breaker. Continuous _monitor_risk loop trips the kill switch on breach and publishes a KILL_SWITCH event with reason=drawdown.'],
+    ['max_position_pct', '10.0% per position', 'Maximum capital any single open position can occupy. Enforced pre-trade by evaluate_signal in core/risk.py before the signal is allowed to become an order.'],
+    ['max_leverage', '1.0x', 'No leverage. Notional cannot exceed equity. Prevents catastrophic margin events on any venue.'],
+    ['max_open_positions', '4', 'Concurrent open position cap across the entire desk. Caps simultaneous exposure regardless of which strategies are firing.'],
+    ['min_liquidity_usd', '$500,000', 'Minimum 24h liquidity floor on any symbol the desk will touch. Filters illiquid pairs where slippage and stop hunting dominate strategy edge.'],
+    ['slippage_bps_limit', '10 bps', 'Maximum tolerated slippage on a fill before the order is treated as anomalous. Logged and surfaced through the Ops Monitor.'],
+    ['kill_switch_on_data_gap_seconds', '120s', 'If any subscribed price feed goes silent longer than this, the desk publishes a data_gap alert. The bias is always toward stopping rather than guessing.'],
+    ['promotion_criteria', 'gate block', 'Live promotion is gated by profit_factor, max_drawdown_pct, min_trades, min_days, expectancy_per_trade_pct. Defined in config.yaml under promotion_criteria, not a runtime flag.']
+  ];
+
+  var liveMetrics = [
+    { label: 'DRY_RUN State', value: 'TRUE', note: 'config default' },
+    { label: 'Open Positions', value: '--', note: 'no live link' },
+    { label: 'Daily P&L', value: '--', note: 'no live link' },
+    { label: 'Active Strategies', value: '--', note: 'no live link' },
+    { label: 'Desk Status', value: '--', note: 'no live link' }
+  ];
+
+  var techStack = {
+    'profit-desk (brain)': [
+      ['Language', 'Python'],
+      ['Pattern', 'Multi-agent'],
+      ['Comms', 'Event bus'],
+      ['Persistence', 'Journal'],
+      ['Adapters', 'CCXT, on-chain'],
+      ['Config', 'config.yaml']
+    ],
+    'master-trade-bot (exec)': [
+      ['Language', 'TypeScript'],
+      ['Runtime', 'Node'],
+      ['Role', 'Execution only'],
+      ['Surfaces', 'Status, dispatch'],
+      ['Exchanges', 'CEX + on-chain'],
+      ['Defaults', 'DRY_RUN=true']
+    ]
+  };
+
+  var rails = [
+    { tag: 'DRY_RUN', text: 'DRY_RUN=true is the mandatory default for every trading bot, every config, every restart. Disabling it requires explicit operator approval and is never automated.' },
+    { tag: 'Sole exec', text: 'master-trade-bot is the only component allowed to talk to an exchange. profit-desk has no exchange credentials in scope, by design. A bug in a strategy cannot directly send an order.' },
+    { tag: 'Wallet sep', text: 'Polygon and Solana wallets are documented in trading-shared/WALLET_REGISTRY.md. Credentials live in .env files that are never committed and never echoed in any output, including error logs.' },
+    { tag: 'Read-only UI', text: 'Dashboards and visualizations cannot place orders. UI is strictly a read-only consumer of the event bus. Execution authority lives only in master-trade-bot.' },
+    { tag: 'Risk veto', text: 'Every signal passes through the Risk Manager agent before it can become an order. Position sizing, drawdown caps, exposure caps, and cooldowns are pre-trade checks, not post-trade alerts.' },
+    { tag: 'Promo gate', text: 'No strategy is promoted from paper to live without satisfying the promotion gate criteria across a sustained window. Currently zero strategies have been promoted.' },
+    { tag: 'Auto-pause', text: 'The Ops Monitor pauses the desk on anomalies: stale feeds, missing heartbeats, journal write failures, or adapter errors. The bias is always toward stopping rather than guessing.' }
+  ];
+
+  // -------- HELPERS --------
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined && text !== null) e.textContent = text;
+    return e;
+  }
+
+  function appendChildren(parent, kids) {
+    for (var i = 0; i < kids.length; i++) parent.appendChild(kids[i]);
+  }
+
+  // -------- SIGNAL FLOW --------
+
+  var flowWrap = document.getElementById('flowWrap');
+  var flow = el('div', 'flow');
+
+  flowStages.forEach(function(stage, i) {
+    if (i > 0) {
+      var arrow = el('div', 'flow-arrow');
+      arrow.appendChild(el('div', 'arrow-label', i === 1 ? 'orders' : 'fills'));
+      arrow.appendChild(el('div', 'arrow-line'));
+      flow.appendChild(arrow);
+    }
+    var s = el('div', 'flow-stage ' + stage.cls);
+    s.appendChild(el('div', 'flow-icon', stage.icon));
+    s.appendChild(el('div', 'flow-name', stage.name));
+    s.appendChild(el('div', 'flow-role', stage.role));
+    var detailEl = el('div', 'flow-detail');
+    var lines = stage.detail.split('\n');
+    lines.forEach(function(line, idx) {
+      detailEl.appendChild(document.createTextNode(line));
+      if (idx < lines.length - 1) detailEl.appendChild(document.createElement('br'));
+    });
+    s.appendChild(detailEl);
+    flow.appendChild(s);
+  });
+
+  flowWrap.appendChild(flow);
+
+  // -------- AGENT GRID --------
+
+  var agentGrid = document.getElementById('agentGrid');
+
+  agents.forEach(function(a) {
+    var card = el('div', 'agent-card');
+
+    var icon = el('div', 'agent-icon');
+    icon.textContent = a.code;
+    card.appendChild(icon);
+
+    var info = el('div', 'agent-info');
+    info.appendChild(el('div', 'agent-name', a.name));
+    info.appendChild(el('div', 'agent-file', a.file));
+    info.appendChild(el('div', 'agent-role', a.role));
+
+    var ul = el('ul', 'agent-resp');
+    a.resp.forEach(function(r) {
+      ul.appendChild(el('li', null, r));
+    });
+    info.appendChild(ul);
+
+    card.appendChild(info);
+    agentGrid.appendChild(card);
+  });
+
+  // -------- STRATEGY GRID --------
+
+  var strategyGrid = document.getElementById('strategyGrid');
+
+  strategies.forEach(function(s) {
+    var card = el('div', 'strategy-card');
+
+    var header = el('div', 'strat-header');
+    var titleRow = el('div', 'strat-title-row');
+    titleRow.appendChild(el('div', 'strat-title', s.name));
+    titleRow.appendChild(el('span', 'strat-mode ' + s.modeClass, s.mode));
+    header.appendChild(titleRow);
+    header.appendChild(el('div', 'strat-file', s.file));
+    card.appendChild(header);
+
+    var body = el('div', 'strat-body');
+    body.appendChild(el('div', 'strat-desc', s.desc));
+
+    var dl = el('dl', 'strat-params');
+    s.params.forEach(function(p) {
+      dl.appendChild(el('dt', null, p[0]));
+      dl.appendChild(el('dd', null, p[1]));
+    });
+    body.appendChild(dl);
+
+    var live = el('div', 'strat-live');
+    live.appendChild(el('span', 'strat-live-label', 'live PnL'));
+    live.appendChild(el('span', 'strat-live-value', '--'));
+    body.appendChild(live);
+
+    card.appendChild(body);
+    strategyGrid.appendChild(card);
+  });
+
+  // -------- RISK TABLE --------
+
+  var riskTableWrap = document.getElementById('riskTableWrap');
+  var table = el('table', 'risk-table');
+  var thead = el('thead');
+  var headRow = el('tr');
+  headRow.appendChild(el('th', null, 'Parameter'));
+  headRow.appendChild(el('th', null, 'Scope'));
+  headRow.appendChild(el('th', null, 'Description'));
+  thead.appendChild(headRow);
+  table.appendChild(thead);
+
+  var tbody = el('tbody');
+  riskRows.forEach(function(row) {
+    var tr = el('tr');
+    var paramTd = el('td', 'param');
+    paramTd.textContent = row[0];
+    tr.appendChild(paramTd);
+    var valTd = el('td', 'value');
+    valTd.textContent = row[1];
+    tr.appendChild(valTd);
+    var descTd = el('td', 'desc');
+    descTd.textContent = row[2];
+    tr.appendChild(descTd);
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  riskTableWrap.appendChild(table);
+
+  // -------- PROMOTION GATE --------
+
+  var gateWrap = document.getElementById('gateWrap');
+  var gateStages = [
+    { num: 'STAGE 1', name: 'Backtest', detail: 'Walk-forward replay over historical bars. No look-ahead. Honest fees and slippage.' },
+    { num: 'STAGE 2', name: 'Paper', detail: 'Live market data, simulated fills. Sustained run window required before evaluation.' },
+    { num: 'STAGE 3', name: 'Promotion Gate', detail: 'Profit factor, drawdown ceiling, minimum trade count, minimum days in paper.' },
+    { num: 'STAGE 4', name: 'Live', detail: 'Tiny initial allocation, exposure cap, hard drawdown circuit breaker.' }
+  ];
+
+  var stagesWrap = el('div', 'gate-stages');
+  gateStages.forEach(function(g, i) {
+    if (i > 0) {
+      var conn = el('div', 'gate-connector', '\u2192');
+      stagesWrap.appendChild(conn);
+    }
+    var s = el('div', 'gate-stage' + (i === 2 ? ' gate-final' : ''));
+    s.appendChild(el('div', 'gate-num', g.num));
+    s.appendChild(el('div', 'gate-name', g.name));
+    s.appendChild(el('div', 'gate-detail', g.detail));
+    stagesWrap.appendChild(s);
+  });
+  gateWrap.appendChild(stagesWrap);
+
+  var criteriaSection = el('div', 'gate-criteria');
+  criteriaSection.appendChild(el('h4', null, 'Promotion criteria (all must pass, config.yaml)'));
+  var criteria = [
+    { b: 'profit_factor', t: '>= 1.35 across the paper window' },
+    { b: 'max_drawdown_pct', t: '<= 6.0 (gate cap, tighter than the desk-wide 8.0)' },
+    { b: 'min_trades', t: '>= 80 closed trades for statistical signal' },
+    { b: 'min_days', t: '>= 10 elapsed days under live data, simulated fills' },
+    { b: 'expectancy_per_trade_pct', t: '>= 0.05% expected value per trade' }
+  ];
+  var criteriaGrid = el('div', 'criteria-grid');
+  criteria.forEach(function(c) {
+    var d = el('div');
+    var b = el('b', null, c.b + ': ');
+    d.appendChild(b);
+    d.appendChild(document.createTextNode(c.t));
+    criteriaGrid.appendChild(d);
+  });
+  criteriaSection.appendChild(criteriaGrid);
+  gateWrap.appendChild(criteriaSection);
+
+  // -------- LIVE STRIP --------
+
+  var liveStrip = document.getElementById('liveStrip');
+  liveMetrics.forEach(function(m) {
+    var card = el('div', 'live-card');
+    card.appendChild(el('div', 'live-label', m.label));
+    var v = el('div', 'live-value', m.value);
+    if (m.value === 'TRUE') v.style.color = 'var(--gold)';
+    card.appendChild(v);
+    card.appendChild(el('div', 'live-note', m.note));
+    liveStrip.appendChild(card);
+  });
+
+  // -------- TECH STACK --------
+
+  var techGrid = document.getElementById('techGrid');
+  Object.keys(techStack).forEach(function(blockName) {
+    var block = el('div', 'tech-block');
+    block.appendChild(el('h4', null, blockName));
+    var ul = el('ul', 'tech-list');
+    techStack[blockName].forEach(function(pair) {
+      var li = el('li');
+      li.appendChild(el('span', 'key', pair[0]));
+      li.appendChild(el('span', 'val', pair[1]));
+      ul.appendChild(li);
+    });
+    block.appendChild(ul);
+    techGrid.appendChild(block);
+  });
+
+  // -------- SAFETY RAILS --------
+
+  var railsList = document.getElementById('railsList');
+  rails.forEach(function(r) {
+    var li = document.createElement('li');
+    var tag = el('span', 'rail-tag', r.tag);
+    var text = el('div', 'rail-text');
+    text.textContent = r.text;
+    li.appendChild(tag);
+    li.appendChild(text);
+    railsList.appendChild(li);
+  });
+
+})();
+</script>
+
+</body>
+</html>
