@@ -1771,7 +1771,7 @@
     ctx.beginPath(); ctx.moveTo(0, 28*s); ctx.lineTo(w, 28*s); ctx.stroke();
     ctx.fillStyle = aClr(p,0.6); ctx.fillRect(0, 0, 3*s, 28*s);
     ctx.fillStyle = tClr(p,0.75); ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
-    ctx.textAlign = 'left'; ctx.fillText('ProjectHub', 14*s, 18*s);
+    ctx.textAlign = 'left'; ctx.fillText('Sovereign Hub', 14*s, 18*s);
 
     // Sync status
     ctx.beginPath(); ctx.arc(w-14*s, 14*s, 3*s, 0, Math.PI*2);
@@ -2383,6 +2383,699 @@
     drawCorners(ctx, w, h, 14*s, aClr(p,0.12));
   }
 
+  // ---- OPERATOR CONSOLE: Service health command center ----
+  function drawOperatorConsole(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(80, 200, 140);
+
+    // Dark terminal bg
+    var bg = ctx.createLinearGradient(0, 0, 0, h);
+    if (p.light) { bg.addColorStop(0, '#e2ece7'); bg.addColorStop(1, '#dde8e3'); }
+    else { bg.addColorStop(0, '#060d0a'); bg.addColorStop(1, '#040908'); }
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    // Subtle grid
+    ctx.strokeStyle = aClr(p, 0.025); ctx.lineWidth = 0.5*s;
+    for (var gx = 0; gx < w; gx += 20*s) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke(); }
+    for (var gy = 0; gy < h; gy += 20*s) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke(); }
+
+    // Header bar
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, aClr(p, 0.08)); hGrad.addColorStop(1, aClr(p, 0.02));
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
+    ctx.strokeStyle = aClr(p, 0.1); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
+    ctx.fillStyle = aClr(p, 0.55); ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = tClr(p, 0.65); ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('Operator Console', 14*s, 16*s);
+    ctx.fillStyle = aClr(p, 0.4); ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('CONTROL PLANE', w-14*s, 16*s); ctx.textAlign = 'left';
+
+    // Service health grid (4 columns x 3 rows)
+    var services = [
+      {name:'Sovereign Hub', st:'online', up:'99.9%', c:'0,200,120'},
+      {name:'Open-WebUI', st:'online', up:'99.7%', c:'0,200,120'},
+      {name:'Session Atlas', st:'online', up:'98.4%', c:'0,200,120'},
+      {name:'Home Hub', st:'online', up:'97.1%', c:'0,200,120'},
+      {name:'Auton', st:'online', up:'99.2%', c:'0,200,120'},
+      {name:'Ollama', st:'online', up:'100%', c:'0,200,120'},
+      {name:'Git Sync', st:'online', up:'99.8%', c:'0,200,120'},
+      {name:'profit-desk', st:'standby', up:'DRY', c:'220,180,60'},
+      {name:'master-trade', st:'standby', up:'DRY', c:'220,180,60'},
+      {name:'Sovereign DB', st:'online', up:'99.5%', c:'0,200,120'},
+      {name:'MoltBot', st:'online', up:'98.9%', c:'0,200,120'},
+      {name:'Enclave', st:'offline', up:'---', c:'180,60,60'}
+    ];
+    var cols = 4, rows = 3;
+    var gridX = 10*s, gridY = 32*s;
+    var cellW = (w - 20*s) / cols, cellH = (h - gridY - 30*s) / rows;
+    for (var si = 0; si < services.length; si++) {
+      var svc = services[si];
+      var col = si % cols, row = Math.floor(si / cols);
+      var cx = gridX + col*cellW, cy = gridY + row*cellH;
+      // Cell bg
+      ctx.fillStyle = 'rgba('+svc.c+',0.03)'; ctx.fillRect(cx+1*s, cy+1*s, cellW-2*s, cellH-2*s);
+      ctx.strokeStyle = 'rgba('+svc.c+',0.1)'; ctx.lineWidth = 0.5*s;
+      ctx.strokeRect(cx+1*s, cy+1*s, cellW-2*s, cellH-2*s);
+      // Status dot
+      ctx.fillStyle = 'rgba('+svc.c+',0.55)';
+      ctx.beginPath(); ctx.arc(cx+7*s, cy+7*s, 2.5*s, 0, Math.PI*2); ctx.fill();
+      // Name
+      ctx.fillStyle = 'rgba('+svc.c+',0.45)'; ctx.font = '400 '+(4*s)+'px Inter, sans-serif';
+      ctx.fillText(svc.name, cx+13*s, cy+9*s);
+      // Uptime
+      ctx.fillStyle = 'rgba('+svc.c+',0.25)'; ctx.font = (3.5*s)+'px monospace';
+      ctx.fillText(svc.up, cx+7*s, cy+cellH-6*s);
+    }
+
+    // Bottom bar
+    var barY = h - 22*s;
+    ctx.fillStyle = aClr(p, 0.04); ctx.fillRect(0, barY, w, 22*s);
+    ctx.strokeStyle = aClr(p, 0.08); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY); ctx.lineTo(w, barY); ctx.stroke();
+    ctx.fillStyle = 'rgba(0,200,120,0.4)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillText('11/12 online', 10*s, barY+14*s);
+    ctx.textAlign = 'center'; ctx.fillStyle = aClr(p, 0.3); ctx.fillText('24/7 monitoring', w/2, barY+14*s);
+    ctx.textAlign = 'right'; ctx.fillText('v2.4.1', w-10*s, barY+14*s); ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, aClr(p, 0.15));
+  }
+
+  // ---- SESSION ATLAS: Session activity heatmap ----
+  function drawSessionAtlas(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(201, 168, 76);
+
+    // Warm bg
+    var bg = ctx.createLinearGradient(0, 0, 0, h);
+    if (p.light) { bg.addColorStop(0, '#edeade'); bg.addColorStop(1, '#e8e5d9'); }
+    else { bg.addColorStop(0, '#0d0b06'); bg.addColorStop(1, '#090807'); }
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    // Header bar
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, aClr(p, 0.07)); hGrad.addColorStop(1, aClr(p, 0.01));
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
+    ctx.strokeStyle = aClr(p, 0.09); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
+    ctx.fillStyle = aClr(p, 0.5); ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = tClr(p, 0.65); ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('Session Atlas', 14*s, 16*s);
+    ctx.fillStyle = aClr(p, 0.35); ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('INTELLIGENCE', w-14*s, 16*s); ctx.textAlign = 'left';
+
+    // Activity heatmap (14 weeks x 7 days)
+    var mapX = 10*s, mapY = 30*s;
+    var weeks = 14, days = 7;
+    var cellSz = Math.min((w - 20*s) / weeks, 10*s);
+    var seed = [8,5,12,3,9,15,4,11,7,14,6,13,10,2,8,5,12,3,9,15,4,11,7,14,6,0,0,0,0,3,
+                7,12,4,9,3,14,1,8,12,5,11,7,15,4,2,9,6,13,0,0,0,8,5,12,3,9,15,4,11,7,
+                0,0,0,0,0,0,0,5,3,10,8,15,4,12,6,11,2,9,7,14,1,8,5,12,3,9,15,4,11,7,
+                9,6,14,3,10,2,13,5,11,7,0,0,0,4,8,15,2,9,6,13,1,10,5,12,3,14,7,11,4,8];
+    for (var wk = 0; wk < weeks; wk++) {
+      for (var dy = 0; dy < days; dy++) {
+        var intensity = seed[(wk*days+dy) % seed.length] / 15;
+        var bx = mapX + wk*(cellSz+1*s), by = mapY + dy*(cellSz+1*s);
+        ctx.fillStyle = intensity < 0.01
+          ? aClr(p, 0.04)
+          : 'rgba(201,168,76,'+(0.08 + intensity*0.45)+')';
+        ctx.fillRect(bx, by, cellSz, cellSz);
+      }
+    }
+
+    // Day labels
+    var dayLabels = ['M','T','W','T','F','S','S'];
+    ctx.fillStyle = aClr(p, 0.3); ctx.font = (3*s)+'px monospace';
+    for (var dl = 0; dl < 7; dl++) {
+      ctx.fillText(dayLabels[dl], mapX - 6*s, mapY + dl*(cellSz+1*s) + cellSz*0.7);
+    }
+
+    // Project breakdown bars below heatmap
+    var barSectionY = mapY + days*(cellSz+1*s) + 10*s;
+    var projects = [
+      {name:'FisherSovereign', pct:0.28, c:'201,168,76'},
+      {name:'Bloodlines', pct:0.18, c:'160,120,220'},
+      {name:'LocalClaude', pct:0.15, c:'80,160,220'},
+      {name:'Trading', pct:0.12, c:'80,200,140'},
+      {name:'HomeHub', pct:0.10, c:'100,180,220'},
+      {name:'Others', pct:0.17, c:'140,140,140'}
+    ];
+    var barTotalW = w - 20*s;
+    var bX = 10*s;
+    for (var pi = 0; pi < projects.length; pi++) {
+      var proj = projects[pi];
+      var bW = barTotalW * proj.pct;
+      ctx.fillStyle = 'rgba('+proj.c+',0.35)';
+      ctx.fillRect(bX, barSectionY, bW - 1*s, 8*s);
+      bX += bW;
+    }
+    // Bar label
+    ctx.fillStyle = aClr(p, 0.3); ctx.font = '200 '+(3.5*s)+'px Inter, sans-serif';
+    ctx.fillText('Session distribution across 20 active projects', 10*s, barSectionY + 14*s);
+
+    // Sparkline: sessions per week
+    var spkY = barSectionY + 20*s;
+    var spkH = h - spkY - 26*s;
+    var spkData = [4,6,5,9,7,12,8,11,10,15,12,14,9,13];
+    var spkMax = 15;
+    ctx.strokeStyle = aClr(p, 0.08); ctx.lineWidth = 0.5*s;
+    ctx.strokeRect(10*s, spkY, w-20*s, spkH);
+    ctx.fillStyle = aClr(p, 0.2); ctx.font = '200 '+(4*s)+'px Inter, sans-serif';
+    ctx.fillText('WEEKLY SESSIONS', 16*s, spkY+8*s);
+    var spkW = (w - 30*s) / spkData.length;
+    ctx.beginPath();
+    for (var sk = 0; sk < spkData.length; sk++) {
+      var sx2 = 15*s + sk*spkW + spkW/2;
+      var sy2 = spkY + spkH - 4*s - (spkData[sk]/spkMax)*(spkH-14*s);
+      if (sk === 0) ctx.moveTo(sx2, sy2); else ctx.lineTo(sx2, sy2);
+    }
+    ctx.strokeStyle = aClr(p, 0.4); ctx.lineWidth = 1*s; ctx.stroke();
+
+    // Bottom bar
+    var barY2 = h - 22*s;
+    ctx.fillStyle = aClr(p, 0.03); ctx.fillRect(0, barY2, w, 22*s);
+    ctx.strokeStyle = aClr(p, 0.07); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY2); ctx.lineTo(w, barY2); ctx.stroke();
+    ctx.fillStyle = aClr(p, 0.35); ctx.font = (5*s)+'px monospace';
+    ctx.fillText('81 sessions', 10*s, barY2+14*s);
+    ctx.textAlign = 'center'; ctx.fillText('20 projects', w/2, barY2+14*s);
+    ctx.textAlign = 'right'; ctx.fillText(':8092', w-10*s, barY2+14*s); ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, aClr(p, 0.15));
+  }
+
+  // ---- PRIVATE INTELLIGENCE PLATFORM: Local LLM chat UI ----
+  function drawPrivateIntelligence(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(80, 160, 220);
+
+    // Deep blue bg
+    var bg = ctx.createLinearGradient(0, 0, w*0.3, h);
+    if (p.light) { bg.addColorStop(0, '#e2e8f0'); bg.addColorStop(1, '#dce4ec'); }
+    else { bg.addColorStop(0, '#060a10'); bg.addColorStop(1, '#04070d'); }
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    // Subtle scan-line pattern
+    for (var sl = 0; sl < h; sl += 4*s) {
+      ctx.fillStyle = p.light ? 'rgba(80,160,220,0.015)' : 'rgba(80,160,220,0.008)';
+      ctx.fillRect(0, sl, w, 1*s);
+    }
+
+    // Header bar
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, aClr(p, 0.07)); hGrad.addColorStop(1, aClr(p, 0.01));
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
+    ctx.strokeStyle = aClr(p, 0.09); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
+    ctx.fillStyle = aClr(p, 0.5); ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = tClr(p, 0.65); ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('Private Intelligence', 14*s, 16*s);
+    ctx.fillStyle = 'rgba(0,220,100,0.45)'; ctx.font = '200 '+(5*s)+'px monospace';
+    ctx.textAlign = 'right'; ctx.fillText('100% LOCAL', w-14*s, 16*s); ctx.textAlign = 'left';
+
+    // Sidebar: model list
+    var sideW = 56*s;
+    ctx.fillStyle = aClr(p, 0.03); ctx.fillRect(0, 24*s, sideW, h-24*s);
+    ctx.strokeStyle = aClr(p, 0.06); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(sideW, 24*s); ctx.lineTo(sideW, h); ctx.stroke();
+    ctx.fillStyle = aClr(p, 0.25); ctx.font = '200 '+(3.5*s)+'px Inter, sans-serif';
+    ctx.fillText('MODELS', 6*s, 34*s);
+    var models = [
+      {name:'qwen2.5:72b', provider:'Ollama', active:true},
+      {name:'llama3.3:70b', provider:'Ollama', active:false},
+      {name:'deepseek-r1', provider:'Ollama', active:false},
+      {name:'gemma3:27b', provider:'Ollama', active:false},
+      {name:'phi4:14b', provider:'Ollama', active:false}
+    ];
+    for (var mi = 0; mi < models.length; mi++) {
+      var m = models[mi];
+      var my = 40*s + mi*18*s;
+      if (m.active) { ctx.fillStyle = aClr(p, 0.07); ctx.fillRect(1*s, my-2*s, sideW-2*s, 16*s); }
+      ctx.fillStyle = m.active ? aClr(p, 0.6) : aClr(p, 0.25);
+      ctx.font = '400 '+(3.5*s)+'px monospace';
+      ctx.fillText(m.name, 6*s, my+7*s);
+      ctx.fillStyle = m.active ? 'rgba(0,220,100,0.4)' : aClr(p, 0.15);
+      ctx.font = (3*s)+'px Inter, sans-serif';
+      ctx.fillText(m.provider, 6*s, my+12*s);
+    }
+
+    // Chat area
+    var chatX = sideW + 6*s;
+    var chatW = w - chatX - 6*s;
+    var msgs = [
+      {role:'user', text:'Analyze trading patterns from the last 30 days', y:30*s},
+      {role:'ai', text:'Reviewing profit-desk logs... Found 3 high-confidence signals on BTC/ETH correlation. Recommendation: increase position size on next SOL breakout above $185.', y:46*s},
+      {role:'user', text:'What is the risk exposure on current open positions?', y:80*s},
+      {role:'ai', text:'Total exposure: $12,400. DRY_RUN mode active — no live capital at risk. All signals are paper-traded.', y:96*s}
+    ];
+    for (var ci2 = 0; ci2 < msgs.length; ci2++) {
+      var msg = msgs[ci2];
+      var isUser = msg.role === 'user';
+      var msgX = chatX + (isUser ? chatW*0.12 : 2*s);
+      var msgW2 = chatW * 0.86;
+      // Bubble bg
+      ctx.fillStyle = isUser ? aClr(p, 0.06) : aClr(p, 0.03);
+      ctx.fillRect(msgX, 24*s + msg.y, msgW2, 14*s);
+      ctx.strokeStyle = aClr(p, isUser ? 0.12 : 0.05); ctx.lineWidth = 0.5*s;
+      ctx.strokeRect(msgX, 24*s + msg.y, msgW2, 14*s);
+      // Role label
+      ctx.fillStyle = isUser ? aClr(p, 0.4) : 'rgba(0,200,120,0.35)';
+      ctx.font = '600 '+(3.5*s)+'px Inter, sans-serif';
+      ctx.fillText(isUser ? 'You' : 'Qwen', msgX+4*s, 24*s + msg.y + 6*s);
+      // Message text (truncated)
+      ctx.fillStyle = tClr(p, 0.45); ctx.font = (3.2*s)+'px Inter, sans-serif';
+      ctx.fillText(msg.text.substring(0, 52), msgX+4*s, 24*s + msg.y + 11*s);
+    }
+
+    // Input bar
+    var inputY = h - 44*s;
+    ctx.fillStyle = aClr(p, 0.04); ctx.fillRect(chatX, inputY, chatW, 16*s);
+    ctx.strokeStyle = aClr(p, 0.1); ctx.lineWidth = 0.5*s;
+    ctx.strokeRect(chatX, inputY, chatW, 16*s);
+    ctx.fillStyle = aClr(p, 0.2); ctx.font = (3.5*s)+'px Inter, sans-serif';
+    ctx.fillText('Message Claude...', chatX+6*s, inputY+10*s);
+    // Cursor blink
+    ctx.fillStyle = aClr(p, 0.5); ctx.fillRect(chatX+6*s+38*s, inputY+4*s, 1*s, 7*s);
+
+    // Bottom bar
+    var barY3 = h - 22*s;
+    ctx.fillStyle = aClr(p, 0.04); ctx.fillRect(0, barY3, w, 22*s);
+    ctx.strokeStyle = aClr(p, 0.07); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY3); ctx.lineTo(w, barY3); ctx.stroke();
+    ctx.fillStyle = aClr(p, 0.35); ctx.font = (5*s)+'px monospace';
+    ctx.fillText('5 models', 10*s, barY3+14*s);
+    ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(0,220,100,0.35)'; ctx.fillText('fully local', w/2, barY3+14*s);
+    ctx.textAlign = 'right'; ctx.fillStyle = aClr(p, 0.35); ctx.fillText('zero cloud', w-10*s, barY3+14*s); ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, aClr(p, 0.15));
+  }
+
+  // ---- LLM ENCLAVE: Zero-trust AI isolation visual ----
+  function drawLLMEnclave(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(220, 80, 60);
+
+    // Dark bg with slight red tint
+    var bg = ctx.createLinearGradient(0, 0, 0, h);
+    if (p.light) { bg.addColorStop(0, '#ede8e7'); bg.addColorStop(1, '#e8e2e1'); }
+    else { bg.addColorStop(0, '#100604'); bg.addColorStop(1, '#0a0403'); }
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    // Header bar
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, aClr(p, 0.07)); hGrad.addColorStop(1, aClr(p, 0.01));
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
+    ctx.strokeStyle = aClr(p, 0.1); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
+    ctx.fillStyle = aClr(p, 0.55); ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = tClr(p, 0.65); ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('LLM Enclave', 14*s, 16*s);
+    ctx.fillStyle = aClr(p, 0.4); ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('ZERO-TRUST', w-14*s, 16*s); ctx.textAlign = 'left';
+
+    // Concentric security rings
+    var cx3 = w * 0.38, cy3 = h * 0.52;
+    var rings = [
+      {r: 78*s, label: 'Network Perimeter', c: '220,80,60', alpha: 0.06},
+      {r: 60*s, label: 'Process Isolation', c: '220,130,60', alpha: 0.08},
+      {r: 44*s, label: 'Memory Vault', c: '200,180,60', alpha: 0.1},
+      {r: 28*s, label: 'LLM Core', c: '80,200,140', alpha: 0.14},
+      {r: 14*s, label: 'Keys', c: '80,160,220', alpha: 0.2}
+    ];
+    for (var ri = 0; ri < rings.length; ri++) {
+      var ring = rings[ri];
+      ctx.strokeStyle = 'rgba('+ring.c+','+ring.alpha+')'; ctx.lineWidth = 1.5*s;
+      ctx.beginPath(); ctx.arc(cx3, cy3, ring.r, 0, Math.PI*2); ctx.stroke();
+      // Dashed segment
+      ctx.setLineDash([3*s, 4*s]);
+      ctx.strokeStyle = 'rgba('+ring.c+','+(ring.alpha*1.5)+')'; ctx.lineWidth = 0.5*s;
+      ctx.beginPath(); ctx.arc(cx3, cy3, ring.r, -Math.PI*0.1, Math.PI*0.1); ctx.stroke();
+      ctx.setLineDash([]);
+      // Label at right of ring
+      if (ri < 4) {
+        ctx.fillStyle = 'rgba('+ring.c+','+(ring.alpha*3)+')'; ctx.font = '200 '+(3.5*s)+'px Inter, sans-serif';
+        ctx.fillText(ring.label, cx3+ring.r+4*s, cy3-1*s);
+      }
+    }
+    // Center dot
+    ctx.fillStyle = 'rgba(80,200,140,0.4)';
+    ctx.beginPath(); ctx.arc(cx3, cy3, 4*s, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = 'rgba(80,200,140,0.15)';
+    ctx.beginPath(); ctx.arc(cx3, cy3, 8*s, 0, Math.PI*2); ctx.fill();
+
+    // Right panel: access control matrix
+    var panX = w * 0.62, panY = 30*s, panW = w*0.35, panH = h - 56*s;
+    ctx.fillStyle = aClr(p, 0.02); ctx.fillRect(panX, panY, panW, panH);
+    ctx.strokeStyle = aClr(p, 0.06); ctx.lineWidth = 0.5*s;
+    ctx.strokeRect(panX, panY, panW, panH);
+    ctx.fillStyle = aClr(p, 0.25); ctx.font = '200 '+(3.5*s)+'px Inter, sans-serif';
+    ctx.fillText('ACCESS POLICY', panX+4*s, panY+9*s);
+    var policies = [
+      {name:'Network', val:'DENIED', c:'220,80,60'},
+      {name:'Filesystem', val:'READ-ONLY', c:'220,150,60'},
+      {name:'GPU', val:'ALLOWED', c:'80,200,140'},
+      {name:'Memory', val:'ISOLATED', c:'80,160,220'},
+      {name:'External', val:'BLOCKED', c:'220,80,60'},
+      {name:'Logs', val:'ENCRYPTED', c:'80,200,140'}
+    ];
+    for (var pol = 0; pol < policies.length; pol++) {
+      var py3 = panY + 14*s + pol*9.5*s;
+      ctx.fillStyle = 'rgba('+policies[pol].c+',0.04)'; ctx.fillRect(panX+2*s, py3, panW-4*s, 8*s);
+      ctx.fillStyle = tClr(p, 0.35); ctx.font = (3.2*s)+'px Inter, sans-serif';
+      ctx.fillText(policies[pol].name, panX+5*s, py3+6*s);
+      ctx.fillStyle = 'rgba('+policies[pol].c+',0.45)'; ctx.font = '600 '+(3.2*s)+'px monospace';
+      ctx.textAlign = 'right'; ctx.fillText(policies[pol].val, panX+panW-4*s, py3+6*s); ctx.textAlign = 'left';
+    }
+
+    // Bottom bar
+    var barY4 = h - 22*s;
+    ctx.fillStyle = aClr(p, 0.04); ctx.fillRect(0, barY4, w, 22*s);
+    ctx.strokeStyle = aClr(p, 0.08); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY4); ctx.lineTo(w, barY4); ctx.stroke();
+    ctx.fillStyle = 'rgba(80,200,140,0.4)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillText('air-gapped', 10*s, barY4+14*s);
+    ctx.textAlign = 'center'; ctx.fillStyle = aClr(p, 0.3); ctx.fillText('zero-trust', w/2, barY4+14*s);
+    ctx.textAlign = 'right'; ctx.fillText('local GPU', w-10*s, barY4+14*s); ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, aClr(p, 0.15));
+  }
+
+  // ---- SOVEREIGN TRADE ENGINE: Signal-to-exchange flow ----
+  function drawSovereignTradeEngine(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(201, 168, 76);
+
+    // Dark gold-tinted bg
+    var bg = ctx.createLinearGradient(0, 0, 0, h);
+    if (p.light) { bg.addColorStop(0, '#ece8dc'); bg.addColorStop(1, '#e6e2d6'); }
+    else { bg.addColorStop(0, '#0d0b06'); bg.addColorStop(1, '#090807'); }
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    // Header bar
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, aClr(p, 0.08)); hGrad.addColorStop(1, aClr(p, 0.01));
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
+    ctx.strokeStyle = aClr(p, 0.1); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
+    ctx.fillStyle = aClr(p, 0.5); ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = tClr(p, 0.65); ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('Sovereign Trade Engine', 14*s, 16*s);
+    ctx.fillStyle = 'rgba(220,80,60,0.45)'; ctx.font = '600 '+(5.5*s)+'px monospace';
+    ctx.textAlign = 'right'; ctx.fillText('DRY RUN', w-14*s, 16*s); ctx.textAlign = 'left';
+
+    // Signal flow pipeline
+    var pipeNodes = [
+      {label:'Market\nData', icon:'\u25CB', x:0.1, c:'80,160,220'},
+      {label:'Signal\nEngine', icon:'\u25C7', x:0.3, c:'201,168,76'},
+      {label:'profit-\ndesk', icon:'\u25D0', x:0.5, c:'201,168,76'},
+      {label:'Master\nTrade Bot', icon:'\u25B7', x:0.7, c:'80,200,140'},
+      {label:'Exchanges', icon:'\u25A0', x:0.9, c:'120,160,200'}
+    ];
+    var pipeY = h * 0.42;
+    var nodeR = 14*s;
+    // Connecting lines first
+    for (var pni = 0; pni < pipeNodes.length-1; pni++) {
+      var na = pipeNodes[pni], nb = pipeNodes[pni+1];
+      var ax2 = na.x*w, bx2 = nb.x*w;
+      // Signal pulse dots
+      for (var pk = 1; pk <= 3; pk++) {
+        var fx = ax2 + (bx2-ax2)*pk/4;
+        ctx.fillStyle = aClr(p, 0.08+(pk*0.02));
+        ctx.beginPath(); ctx.arc(fx, pipeY, 1.5*s, 0, Math.PI*2); ctx.fill();
+      }
+      ctx.strokeStyle = aClr(p, 0.1); ctx.lineWidth = 0.5*s;
+      ctx.setLineDash([2*s, 2*s]);
+      ctx.beginPath(); ctx.moveTo(ax2+nodeR, pipeY); ctx.lineTo(bx2-nodeR, pipeY); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    // Nodes
+    for (var pnj = 0; pnj < pipeNodes.length; pnj++) {
+      var nd = pipeNodes[pnj];
+      var nx = nd.x*w;
+      ctx.fillStyle = 'rgba('+nd.c+',0.06)';
+      ctx.beginPath(); ctx.arc(nx, pipeY, nodeR, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle = 'rgba('+nd.c+',0.2)'; ctx.lineWidth = 0.8*s;
+      ctx.beginPath(); ctx.arc(nx, pipeY, nodeR, 0, Math.PI*2); ctx.stroke();
+      ctx.fillStyle = 'rgba('+nd.c+',0.5)'; ctx.font = (6*s)+'px monospace';
+      ctx.textAlign = 'center'; ctx.fillText(nd.icon, nx, pipeY+2*s);
+      var labelLines = nd.label.split('\n');
+      ctx.fillStyle = 'rgba('+nd.c+',0.35)'; ctx.font = '200 '+(3.5*s)+'px Inter, sans-serif';
+      ctx.fillText(labelLines[0], nx, pipeY+nodeR+7*s);
+      if (labelLines[1]) ctx.fillText(labelLines[1], nx, pipeY+nodeR+11*s);
+      ctx.textAlign = 'left';
+    }
+
+    // Mini OHLC candlestick chart below pipeline
+    var chartX = 10*s, chartY = pipeY + nodeR + 22*s;
+    var chartW = w - 20*s, chartH = h - chartY - 30*s;
+    ctx.fillStyle = aClr(p, 0.02); ctx.fillRect(chartX, chartY, chartW, chartH);
+    ctx.strokeStyle = aClr(p, 0.05); ctx.lineWidth = 0.5*s;
+    ctx.strokeRect(chartX, chartY, chartW, chartH);
+    ctx.fillStyle = aClr(p, 0.2); ctx.font = '200 '+(3.5*s)+'px Inter, sans-serif';
+    ctx.fillText('BTC/USDT — 4H', chartX+5*s, chartY+8*s);
+    var candles = [
+      {o:0.55,h:0.85,l:0.4,c:0.75,bull:true},
+      {o:0.75,h:0.88,l:0.65,c:0.82,bull:true},
+      {o:0.82,h:0.9,l:0.7,c:0.68,bull:false},
+      {o:0.68,h:0.72,l:0.5,c:0.6,bull:false},
+      {o:0.6,h:0.78,l:0.55,c:0.76,bull:true},
+      {o:0.76,h:0.92,l:0.72,c:0.88,bull:true},
+      {o:0.88,h:0.95,l:0.8,c:0.85,bull:false},
+      {o:0.85,h:0.96,l:0.82,c:0.93,bull:true}
+    ];
+    var cW = (chartW - 16*s) / candles.length;
+    for (var ci3 = 0; ci3 < candles.length; ci3++) {
+      var cd = candles[ci3];
+      var cxPos = chartX + 8*s + ci3*cW;
+      var clr = cd.bull ? 'rgba(80,200,140,0.45)' : 'rgba(220,80,60,0.45)';
+      // Wick
+      ctx.strokeStyle = clr; ctx.lineWidth = 0.8*s;
+      var hiY = chartY+chartH-4*s - cd.h*(chartH-14*s);
+      var loY = chartY+chartH-4*s - cd.l*(chartH-14*s);
+      ctx.beginPath(); ctx.moveTo(cxPos+cW/2, hiY); ctx.lineTo(cxPos+cW/2, loY); ctx.stroke();
+      // Body
+      var oY = chartY+chartH-4*s - cd.o*(chartH-14*s);
+      var cY2 = chartY+chartH-4*s - cd.c*(chartH-14*s);
+      ctx.fillStyle = clr; ctx.fillRect(cxPos+1*s, Math.min(oY,cY2), cW-2*s, Math.max(2*s,Math.abs(oY-cY2)));
+    }
+
+    // Bottom bar
+    var barY5 = h - 22*s;
+    ctx.fillStyle = aClr(p, 0.04); ctx.fillRect(0, barY5, w, 22*s);
+    ctx.strokeStyle = aClr(p, 0.08); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY5); ctx.lineTo(w, barY5); ctx.stroke();
+    ctx.fillStyle = aClr(p, 0.35); ctx.font = (5*s)+'px monospace';
+    ctx.fillText('BTC / ETH / SOL', 10*s, barY5+14*s);
+    ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(220,80,60,0.4)'; ctx.fillText('DRY_RUN active', w/2, barY5+14*s);
+    ctx.textAlign = 'right'; ctx.fillStyle = aClr(p, 0.35); ctx.fillText('multi-exchange', w-10*s, barY5+14*s); ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, aClr(p, 0.15));
+  }
+
+  // ---- PRIVATE TAX: Document pipeline & finance dashboard ----
+  function drawPrivateTax(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(100, 130, 190);
+
+    // Cool blue-grey bg
+    var bg = ctx.createLinearGradient(0, 0, 0, h);
+    if (p.light) { bg.addColorStop(0, '#e5e7ed'); bg.addColorStop(1, '#e0e3ea'); }
+    else { bg.addColorStop(0, '#070810'); bg.addColorStop(1, '#05060d'); }
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    // Header bar
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, aClr(p, 0.07)); hGrad.addColorStop(1, aClr(p, 0.01));
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
+    ctx.strokeStyle = aClr(p, 0.09); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
+    ctx.fillStyle = aClr(p, 0.5); ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = tClr(p, 0.65); ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('Private Tax & Finance', 14*s, 16*s);
+    ctx.fillStyle = 'rgba(80,200,140,0.4)'; ctx.font = '200 '+(5.5*s)+'px monospace';
+    ctx.textAlign = 'right'; ctx.fillText('ENCRYPTED', w-14*s, 16*s); ctx.textAlign = 'left';
+
+    // Document pipeline stages
+    var stages = [
+      {name:'Raw Docs', icon:'\u2750', count:'847', c:'100,130,190'},
+      {name:'Parsed', icon:'\u2B62', count:'812', c:'80,160,220'},
+      {name:'Categorized', icon:'\u25A4', count:'798', c:'80,200,140'},
+      {name:'LLM Tagged', icon:'\u25C9', count:'784', c:'201,168,76'},
+      {name:'Tax Ready', icon:'\u2714', count:'741', c:'80,200,140'}
+    ];
+    var stageW = (w - 20*s) / stages.length;
+    var stageY = 32*s;
+    for (var sti = 0; sti < stages.length; sti++) {
+      var stg = stages[sti];
+      var stx = 10*s + sti*stageW;
+      // Stage box
+      ctx.fillStyle = 'rgba('+stg.c+',0.04)'; ctx.fillRect(stx+1*s, stageY, stageW-2*s, 32*s);
+      ctx.strokeStyle = 'rgba('+stg.c+',0.1)'; ctx.lineWidth = 0.5*s;
+      ctx.strokeRect(stx+1*s, stageY, stageW-2*s, 32*s);
+      // Icon
+      ctx.fillStyle = 'rgba('+stg.c+',0.4)'; ctx.font = (8*s)+'px monospace';
+      ctx.textAlign = 'center'; ctx.fillText(stg.icon, stx+stageW/2, stageY+12*s);
+      // Count
+      ctx.fillStyle = 'rgba('+stg.c+',0.55)'; ctx.font = '600 '+(7*s)+'px Inter, sans-serif';
+      ctx.fillText(stg.count, stx+stageW/2, stageY+22*s);
+      // Name
+      ctx.fillStyle = 'rgba('+stg.c+',0.3)'; ctx.font = '200 '+(3*s)+'px Inter, sans-serif';
+      ctx.fillText(stg.name, stx+stageW/2, stageY+29*s);
+      // Arrow
+      if (sti < stages.length-1) {
+        ctx.strokeStyle = aClr(p, 0.12); ctx.lineWidth = 0.5*s;
+        ctx.beginPath(); ctx.moveTo(stx+stageW-1*s, stageY+16*s); ctx.lineTo(stx+stageW+1*s, stageY+16*s); ctx.stroke();
+      }
+    }
+    ctx.textAlign = 'left';
+
+    // Account summary table
+    var tableY = stageY + 40*s;
+    ctx.fillStyle = aClr(p, 0.02); ctx.fillRect(10*s, tableY, w-20*s, h-tableY-26*s);
+    ctx.strokeStyle = aClr(p, 0.05); ctx.lineWidth = 0.5*s;
+    ctx.strokeRect(10*s, tableY, w-20*s, h-tableY-26*s);
+    ctx.fillStyle = aClr(p, 0.2); ctx.font = '200 '+(3.5*s)+'px Inter, sans-serif';
+    ctx.fillText('ACCOUNT SUMMARY', 16*s, tableY+8*s);
+    var accounts = [
+      {name:'Checking', type:'Plaid', bal:'$12,450', chg:'+2.1%', c:'80,200,140'},
+      {name:'Brokerage', type:'Manual', bal:'$84,200', chg:'+5.4%', c:'80,200,140'},
+      {name:'Crypto', type:'API', bal:'$18,770', chg:'-1.2%', c:'220,80,60'},
+      {name:'Savings', type:'Plaid', bal:'$31,100', chg:'+0.8%', c:'80,200,140'}
+    ];
+    var colW = (w-30*s)/4;
+    for (var ai2 = 0; ai2 < accounts.length; ai2++) {
+      var ac = accounts[ai2];
+      var aX = 15*s + ai2*colW, aY = tableY+14*s;
+      ctx.fillStyle = 'rgba('+ac.c+',0.03)'; ctx.fillRect(aX, aY, colW-4*s, h-tableY-40*s);
+      ctx.strokeStyle = 'rgba('+ac.c+',0.07)'; ctx.lineWidth = 0.5*s;
+      ctx.strokeRect(aX, aY, colW-4*s, h-tableY-40*s);
+      ctx.fillStyle = tClr(p, 0.5); ctx.font = '400 '+(4*s)+'px Inter, sans-serif';
+      ctx.fillText(ac.name, aX+4*s, aY+8*s);
+      ctx.fillStyle = aClr(p, 0.25); ctx.font = (3*s)+'px monospace';
+      ctx.fillText(ac.type, aX+4*s, aY+14*s);
+      ctx.fillStyle = 'rgba('+ac.c+',0.55)'; ctx.font = '600 '+(6*s)+'px Inter, sans-serif';
+      ctx.fillText(ac.bal, aX+4*s, aY+25*s);
+      ctx.fillStyle = 'rgba('+ac.c+',0.4)'; ctx.font = (3.5*s)+'px monospace';
+      ctx.fillText(ac.chg, aX+4*s, aY+32*s);
+    }
+
+    // Bottom bar
+    var barY6 = h - 22*s;
+    ctx.fillStyle = aClr(p, 0.04); ctx.fillRect(0, barY6, w, 22*s);
+    ctx.strokeStyle = aClr(p, 0.07); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY6); ctx.lineTo(w, barY6); ctx.stroke();
+    ctx.fillStyle = aClr(p, 0.35); ctx.font = (5*s)+'px monospace';
+    ctx.fillText('847 docs', 10*s, barY6+14*s);
+    ctx.textAlign = 'center'; ctx.fillText('4 accounts', w/2, barY6+14*s);
+    ctx.textAlign = 'right'; ctx.fillText('5 tax years', w-10*s, barY6+14*s); ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, aClr(p, 0.15));
+  }
+
+  // ---- PREDICTION MARKET EXECUTOR: Paused CLOB order book ----
+  function drawPredictionMarketExecutor(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(140, 100, 200);
+
+    // Dark purple bg — desaturated for paused state
+    var bg = ctx.createLinearGradient(0, 0, 0, h);
+    if (p.light) { bg.addColorStop(0, '#e9e7ef'); bg.addColorStop(1, '#e4e2ea'); }
+    else { bg.addColorStop(0, '#0b090f'); bg.addColorStop(1, '#08070d'); }
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    // Header bar
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, aClr(p, 0.05)); hGrad.addColorStop(1, aClr(p, 0.01));
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
+    ctx.strokeStyle = aClr(p, 0.07); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
+    ctx.fillStyle = aClr(p, 0.4); ctx.fillRect(0, 0, 3*s, 24*s);
+    ctx.fillStyle = tClr(p, 0.45); ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('Prediction Market Executor', 14*s, 16*s);
+    ctx.fillStyle = 'rgba(180,160,160,0.35)'; ctx.font = '600 '+(5.5*s)+'px monospace';
+    ctx.textAlign = 'right'; ctx.fillText('PAUSED', w-14*s, 16*s); ctx.textAlign = 'left';
+
+    // CLOB order book — left half
+    var bookX = 10*s, bookY = 30*s;
+    var bookW = (w - 20*s) * 0.48, bookH = h - bookY - 30*s;
+    ctx.fillStyle = aClr(p, 0.02); ctx.fillRect(bookX, bookY, bookW, bookH);
+    ctx.strokeStyle = aClr(p, 0.05); ctx.lineWidth = 0.5*s;
+    ctx.strokeRect(bookX, bookY, bookW, bookH);
+    ctx.fillStyle = aClr(p, 0.2); ctx.font = '200 '+(3.5*s)+'px Inter, sans-serif';
+    ctx.fillText('ORDER BOOK — YES', bookX+4*s, bookY+8*s);
+    // Bids (YES orders)
+    var bids = [0.72,0.71,0.70,0.69,0.68,0.67];
+    var rowH = (bookH-16*s)/12;
+    for (var bi2 = 0; bi2 < bids.length; bi2++) {
+      var barFill = (0.72-bids[bi2]+0.04)*3;
+      ctx.fillStyle = 'rgba(80,200,140,0.08)';
+      ctx.fillRect(bookX+2*s, bookY+12*s+bi2*rowH*2, bookW*barFill, rowH*1.6);
+      ctx.fillStyle = 'rgba(80,200,140,0.25)'; ctx.font = (3.5*s)+'px monospace';
+      ctx.fillText(bids[bi2].toFixed(2), bookX+4*s, bookY+12*s+bi2*rowH*2+rowH*1.2);
+      ctx.textAlign = 'right';
+      ctx.fillText(Math.floor(200-bi2*18)+' sh', bookX+bookW-4*s, bookY+12*s+bi2*rowH*2+rowH*1.2);
+      ctx.textAlign = 'left';
+    }
+    // Asks (NO orders)
+    var asks = [0.28,0.29,0.30,0.31,0.32,0.33];
+    for (var ai3 = 0; ai3 < asks.length; ai3++) {
+      var askFill = (asks[ai3]-0.27)*3;
+      ctx.fillStyle = 'rgba(220,80,60,0.06)';
+      ctx.fillRect(bookX+2*s, bookY+12*s+(ai3+6)*rowH*2, bookW*askFill, rowH*1.6);
+      ctx.fillStyle = 'rgba(220,80,60,0.2)'; ctx.font = (3.5*s)+'px monospace';
+      ctx.fillText(asks[ai3].toFixed(2), bookX+4*s, bookY+12*s+(ai3+6)*rowH*2+rowH*1.2);
+      ctx.textAlign = 'right';
+      ctx.fillText(Math.floor(150+ai3*22)+' sh', bookX+bookW-4*s, bookY+12*s+(ai3+6)*rowH*2+rowH*1.2);
+      ctx.textAlign = 'left';
+    }
+
+    // Right side: market info and stats
+    var infoX = bookX + bookW + 8*s, infoW = w - infoX - 10*s;
+    ctx.fillStyle = aClr(p, 0.02); ctx.fillRect(infoX, bookY, infoW, bookH);
+    ctx.strokeStyle = aClr(p, 0.05); ctx.lineWidth = 0.5*s;
+    ctx.strokeRect(infoX, bookY, infoW, bookH);
+    ctx.fillStyle = aClr(p, 0.2); ctx.font = '200 '+(3.5*s)+'px Inter, sans-serif';
+    ctx.fillText('MARKET', infoX+4*s, bookY+8*s);
+    ctx.fillStyle = tClr(p, 0.35); ctx.font = '400 '+(3.8*s)+'px Inter, sans-serif';
+    ctx.fillText('BTC > $100k', infoX+4*s, bookY+16*s);
+    ctx.fillText('by Dec 2025?', infoX+4*s, bookY+21*s);
+    // Price
+    ctx.fillStyle = 'rgba(80,200,140,0.35)'; ctx.font = '600 '+(10*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('72¢', infoX+infoW/2, bookY+38*s); ctx.textAlign = 'left';
+    // Stats
+    var infoStats = [
+      {l:'Vol', v:'$1.2M'}, {l:'Res.', v:'Dec 31'}, {l:'Pos.', v:'$0'}, {l:'P&L', v:'$0'}
+    ];
+    for (var is = 0; is < infoStats.length; is++) {
+      var isy = bookY+50*s+is*12*s;
+      ctx.fillStyle = aClr(p, 0.15); ctx.font = (3.2*s)+'px Inter, sans-serif';
+      ctx.fillText(infoStats[is].l, infoX+4*s, isy);
+      ctx.fillStyle = tClr(p, 0.3); ctx.font = '500 '+(4*s)+'px monospace';
+      ctx.fillText(infoStats[is].v, infoX+4*s, isy+7*s);
+    }
+
+    // PAUSED overlay diagonal stripe
+    ctx.save();
+    ctx.globalAlpha = 0.035;
+    ctx.strokeStyle = p.light ? '#6050a0' : '#8070c0'; ctx.lineWidth = 4*s;
+    for (var ps = -h; ps < w+h; ps += 16*s) {
+      ctx.beginPath(); ctx.moveTo(ps, 0); ctx.lineTo(ps+h, h); ctx.stroke();
+    }
+    ctx.restore();
+
+    // Bottom bar
+    var barY7 = h - 22*s;
+    ctx.fillStyle = aClr(p, 0.03); ctx.fillRect(0, barY7, w, 22*s);
+    ctx.strokeStyle = aClr(p, 0.06); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY7); ctx.lineTo(w, barY7); ctx.stroke();
+    ctx.fillStyle = 'rgba(180,160,160,0.3)'; ctx.font = (5*s)+'px monospace';
+    ctx.fillText('Polymarket', 10*s, barY7+14*s);
+    ctx.textAlign = 'center'; ctx.fillText('CLOB execution', w/2, barY7+14*s);
+    ctx.textAlign = 'right'; ctx.fillText('paused', w-10*s, barY7+14*s); ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, aClr(p, 0.1));
+  }
+
   // ===== DISPATCH =====
   var renderers = {
     booking: drawBooking, trading: drawTrading, profitdesk: drawProfitDesk,
@@ -2390,7 +3083,14 @@
     polymarket: drawPolymarket, galleon: drawGalleon,
     bookmarkbot: drawBookmarkBot, homehub: drawHomeHub,
     projecthub: drawProjectHub, fisher13: drawFisher13,
-    noco: drawNoCo, marketdash: drawMarketDash, auton: drawAuton
+    noco: drawNoCo, marketdash: drawMarketDash, auton: drawAuton,
+    'operator-console': drawOperatorConsole,
+    'session-atlas': drawSessionAtlas,
+    'private-intelligence': drawPrivateIntelligence,
+    'llm-enclave': drawLLMEnclave,
+    'sovereign-trade-engine': drawSovereignTradeEngine,
+    'private-tax': drawPrivateTax,
+    'prediction-market-executor': drawPredictionMarketExecutor
   };
 
   function initProjectCanvases() {
@@ -2400,9 +3100,62 @@
     });
   }
 
+  // ===== FOOTER MOTTO: Latin ↔ English scramble =====
+  function initFooterMotto() {
+    var latinEl = document.getElementById('footerMottoLatin');
+    var enEl = document.getElementById('footerMottoEn');
+    if (!latinEl || !enEl) return;
+    var glitchChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    var latinText = 'Mens clara in tenebris';
+    var enText = 'A clear mind in darkness';
+    var showing = 'latin';
+    function scramble(fromEl, toEl, targetText, callback) {
+      fromEl.style.display = 'none';
+      toEl.style.display = 'inline';
+      var len = targetText.length;
+      var iterations = 0;
+      var maxIterations = 14;
+      var interval = setInterval(function() {
+        var out = '';
+        for (var i = 0; i < len; i++) {
+          if (targetText[i] === ' ') {
+            out += ' ';
+          } else if (iterations >= maxIterations - 4 && Math.random() > 0.45) {
+            out += targetText[i];
+          } else {
+            out += glitchChars[Math.floor(Math.random() * glitchChars.length)];
+          }
+        }
+        toEl.textContent = out;
+        iterations++;
+        if (iterations >= maxIterations) {
+          clearInterval(interval);
+          toEl.textContent = targetText;
+          if (callback) callback();
+        }
+      }, 55);
+    }
+    function cycle() {
+      if (showing === 'latin') {
+        scramble(latinEl, enEl, enText, function() {
+          showing = 'en';
+          setTimeout(function() {
+            scramble(enEl, latinEl, latinText, function() { showing = 'latin'; });
+          }, 3500);
+        });
+      }
+    }
+    // First cycle after 8s, then every 14-20s — subtle, not distracting
+    setTimeout(function() {
+      cycle();
+      setInterval(cycle, 14000 + Math.random() * 6000);
+    }, 8000);
+  }
+
   // Init
   window.addEventListener('load', function() {
     initProjectCanvases();
+    initFooterMotto();
   });
   var resizeTimer;
   window.addEventListener('resize', function() {

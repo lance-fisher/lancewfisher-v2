@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sovereign Hub | Lance W. Fisher</title>
+  <meta name="description" content="Sovereign Hub: a static snapshot of the Fisher Sovereign project registry. Browse, search, and filter the active project ecosystem.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80'>&#9875;</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0a0a0a; --bg-card: #111113; --bg-card-hover: #18181b;
+      --gold: #C9A84C; --gold-soft: #d4b76a;
+      --gold-dim: rgba(201,168,76,0.3); --gold-glow: rgba(201,168,76,0.08);
+      --fg: 240,235,224;
+      --green: #34d399; --amber: #fbbf24; --grey: #6b7280;
+      --font-head: 'Cinzel', serif; --font-body: 'Inter', sans-serif; --font-mono: 'JetBrains Mono', monospace;
+      --radius: 8px; --gap: 16px;
+    }
+    html { font-size: 15px; scroll-behavior: smooth; }
+    body { background: var(--bg); color: rgba(var(--fg), 0.85); font-family: var(--font-body); line-height: 1.6; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+    a { color: var(--gold); text-decoration: none; transition: color 0.15s; }
+    a:hover { color: var(--gold-soft); text-decoration: underline; }
+
+    /* NAV */
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: #111; border-bottom: 1px solid rgba(201,168,76,0.3); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
+    .nav-left { display: flex; align-items: center; gap: 18px; }
+    .nav-back { font-family: var(--font-mono); font-size: 0.78rem; color: rgba(var(--fg), 0.55); letter-spacing: 0.02em; }
+    .nav-back:hover { color: var(--gold); text-decoration: none; }
+    .nav-title { font-family: var(--font-head); font-size: 1.15rem; font-weight: 600; color: var(--gold); letter-spacing: 0.06em; }
+    .nav-right { font-family: var(--font-mono); font-size: 0.7rem; color: rgba(var(--fg), 0.4); letter-spacing: 0.04em; }
+
+    /* HERO */
+    .hero { padding: 36px 24px 24px; border-bottom: 1px solid rgba(var(--fg), 0.06); max-width: 1200px; margin: 0 auto; }
+    .hero h1 { font-family: var(--font-head); font-size: 1.85rem; font-weight: 600; color: rgba(var(--fg), 0.95); margin-bottom: 8px; letter-spacing: 0.02em; }
+    .hero h1 .accent { color: var(--gold); }
+    .hero p { font-size: 0.95rem; color: rgba(var(--fg), 0.6); max-width: 680px; margin-bottom: 14px; }
+    .hero-note { display: inline-block; font-family: var(--font-mono); font-size: 0.7rem; color: rgba(var(--fg), 0.4); padding: 4px 10px; border: 1px solid rgba(var(--fg), 0.1); border-radius: 4px; letter-spacing: 0.02em; }
+    .hero-note .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-right: 6px; vertical-align: middle; }
+
+    /* STATS */
+    .stats { display: flex; flex-wrap: wrap; gap: 6px 28px; padding: 18px 24px; border-bottom: 1px solid rgba(var(--fg), 0.06); background: var(--bg-card); max-width: 1200px; margin: 0 auto; }
+    .stat { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.8rem; }
+    .stat-val { color: var(--gold); font-weight: 500; font-size: 0.95rem; }
+    .stat-lbl { color: rgba(var(--fg), 0.45); letter-spacing: 0.02em; }
+    .stat-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+    /* TOOLBAR */
+    .toolbar { padding: 18px 24px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; max-width: 1200px; margin: 0 auto; }
+    .search-box { flex: 1; min-width: 220px; max-width: 420px; background: var(--bg-card); border: 1px solid rgba(var(--fg), 0.1); border-radius: var(--radius); padding: 9px 14px; font-family: var(--font-mono); font-size: 0.84rem; color: rgba(var(--fg), 0.9); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+    .search-box::placeholder { color: rgba(var(--fg), 0.3); }
+    .search-box:focus { border-color: var(--gold-dim); box-shadow: 0 0 0 2px var(--gold-glow); }
+    .filter-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .filter-label { font-family: var(--font-mono); font-size: 0.68rem; color: rgba(var(--fg), 0.4); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
+    .filter-tab { font-family: var(--font-mono); font-size: 0.74rem; padding: 5px 12px; border-radius: 4px; border: 1px solid rgba(var(--fg), 0.08); background: transparent; color: rgba(var(--fg), 0.55); cursor: pointer; transition: all 0.15s; }
+    .filter-tab:hover { color: rgba(var(--fg), 0.85); border-color: rgba(var(--fg), 0.2); }
+    .filter-tab.active { color: var(--gold); border-color: var(--gold-dim); background: var(--gold-glow); }
+    .stack-select { background: var(--bg-card); border: 1px solid rgba(var(--fg), 0.1); border-radius: 4px; padding: 5px 10px; font-family: var(--font-mono); font-size: 0.74rem; color: rgba(var(--fg), 0.85); cursor: pointer; outline: none; }
+    .stack-select:focus { border-color: var(--gold-dim); }
+    .stack-select option { background: var(--bg-card); color: rgba(var(--fg), 0.9); }
+
+    /* GRID */
+    .content { max-width: 1200px; margin: 0 auto; padding: 0 24px 60px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--gap); padding-top: 8px; }
+    .card { background: var(--bg-card); border: 1px solid rgba(var(--fg), 0.06); border-radius: var(--radius); padding: 18px; cursor: pointer; transition: all 0.2s; position: relative; display: flex; flex-direction: column; gap: 10px; min-height: 200px; }
+    .card:hover { background: var(--bg-card-hover); border-color: var(--gold-dim); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+    .card-head { display: flex; align-items: center; gap: 10px; }
+    .card-status { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .card-name { font-family: var(--font-head); font-size: 1rem; color: rgba(var(--fg), 0.95); flex: 1; letter-spacing: 0.01em; }
+    .card-cat { display: inline-block; font-family: var(--font-mono); font-size: 0.62rem; padding: 2px 8px; border-radius: 3px; background: var(--gold-glow); color: var(--gold); border: 1px solid var(--gold-dim); letter-spacing: 0.06em; align-self: flex-start; }
+    .card-desc { font-size: 0.82rem; color: rgba(var(--fg), 0.6); line-height: 1.5; flex: 1; }
+    .card-techs { display: flex; flex-wrap: wrap; gap: 4px; }
+    .tech-badge { font-family: var(--font-mono); font-size: 0.62rem; padding: 2px 7px; border-radius: 3px; background: rgba(var(--fg), 0.05); color: rgba(var(--fg), 0.55); border: 1px solid rgba(var(--fg), 0.05); }
+    .card-foot { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; border-top: 1px solid rgba(var(--fg), 0.05); font-family: var(--font-mono); font-size: 0.7rem; }
+    .card-port { color: var(--gold); }
+    .card-port-empty { color: rgba(var(--fg), 0.25); }
+    .card-gh { color: rgba(var(--fg), 0.5); transition: color 0.15s; }
+    .card-gh:hover { color: var(--gold); text-decoration: none; }
+
+    /* MODAL */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.78); z-index: 200; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(4px); }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--bg-card); border: 1px solid var(--gold-dim); border-radius: 12px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 32px; position: relative; }
+    .modal-close { position: absolute; top: 14px; right: 18px; background: none; border: none; color: rgba(var(--fg), 0.4); font-size: 1.3rem; cursor: pointer; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: all 0.15s; }
+    .modal-close:hover { color: var(--gold); background: rgba(var(--fg), 0.05); }
+    .modal h2 { font-family: var(--font-head); font-size: 1.4rem; color: var(--gold); margin-bottom: 6px; letter-spacing: 0.02em; }
+    .modal-statusline { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.78rem; color: rgba(var(--fg), 0.55); margin-bottom: 16px; }
+    .modal-desc { color: rgba(var(--fg), 0.7); font-size: 0.92rem; margin-bottom: 20px; line-height: 1.6; }
+    .modal-section { margin-bottom: 18px; }
+    .modal-section h3 { font-family: var(--font-mono); font-size: 0.7rem; color: rgba(var(--fg), 0.4); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .modal-row { font-family: var(--font-mono); font-size: 0.8rem; color: rgba(var(--fg), 0.7); padding: 4px 0; display: flex; gap: 10px; }
+    .modal-row .row-key { color: rgba(var(--fg), 0.4); min-width: 90px; }
+    .modal-row .row-val { color: rgba(var(--fg), 0.85); }
+    .modal-techs { display: flex; flex-wrap: wrap; gap: 5px; }
+    .modal-link { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.78rem; padding: 8px 14px; border-radius: 5px; border: 1px solid var(--gold-dim); background: var(--gold-glow); color: var(--gold); margin-top: 4px; margin-right: 8px; transition: all 0.15s; }
+    .modal-link:hover { background: var(--gold-dim); text-decoration: none; color: var(--gold-soft); }
+
+    /* NO RESULTS */
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: rgba(var(--fg), 0.35);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      display: none;
+    }
+
+    /* FOOTER */
+    .foot {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+      border-top: 1px solid rgba(var(--fg), 0.06);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: rgba(var(--fg), 0.35);
+      text-align: center;
+      line-height: 1.7;
+    }
+    .foot a { color: rgba(var(--fg), 0.5); }
+    .foot a:hover { color: var(--gold); }
+
+    /* RESPONSIVE */
+    @media (max-width: 700px) {
+      .hero { padding: 24px 16px 18px; }
+      .hero h1 { font-size: 1.5rem; }
+      .stats { padding: 14px 16px; gap: 6px 18px; }
+      .toolbar { padding: 14px 16px; }
+      .content { padding: 0 16px 40px; }
+      .grid { grid-template-columns: 1fr; }
+      .nav { padding: 12px 16px; }
+      .nav-title { font-size: 1rem; }
+      .modal { padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+<!-- FSS-BRAND-BLOCK-V1 -->
+<div style="position:relative;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 22px;background:#08080a;border-bottom:1px solid rgba(201,168,76,0.28);font-family:'Inter','Helvetica Neue',Arial,sans-serif;">
+  <a href="../home.html" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:rgba(201,168,76,0.92);">
+    <svg width="13" height="18" viewBox="0 0 20 28" fill="none" aria-hidden="true" style="color:rgba(201,168,76,0.92);flex-shrink:0"><line x1="4" y1="1" x2="4" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="1" x2="16" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="14" x2="16" y2="14" stroke="currentColor" stroke-width="1.5"/><line x1="1" y1="1" x2="7" y2="1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="1" x2="19" y2="1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="27" x2="7" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="27" x2="19" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <span style="font-family:'Crimson Pro','Cinzel',Georgia,serif;font-size:0.92rem;font-weight:600;letter-spacing:0.2em;color:rgba(201,168,76,0.92);">FISHER SOVEREIGN</span>
+  </a>
+  <a href="../home.html" style="font-size:0.72rem;font-weight:500;letter-spacing:0.06em;color:#6b6b75;text-decoration:none;">&larr; Portfolio</a>
+</div>
+
+
+<nav class="nav">
+  <div class="nav-left">
+    <a href="../home.html" class="nav-back">&larr; Portfolio</a>
+    <span class="nav-title">Sovereign Hub</span>
+  </div>
+  <span class="nav-right">PROJECT REGISTRY</span>
+</nav>
+
+<header class="hero">
+  <h1>Project <span class="accent">Registry</span></h1>
+  <p>A browsable view of the Fisher Sovereign project ecosystem: trading bots, web properties, infrastructure services, games, and tools. Each entry below corresponds to a real local project tracked in the registry.</p>
+  <span class="hero-note"><span class="dot"></span>Static snapshot &middot; not a live API</span>
+</header>
+
+<div class="stats" id="statsBanner"></div>
+
+<div class="toolbar">
+  <input type="text" class="search-box" id="searchBox" placeholder="Search by name, description, or tag..." autocomplete="off">
+  <div class="filter-group">
+    <span class="filter-label">Status:</span>
+    <button class="filter-tab active" data-filter="all">All</button>
+    <button class="filter-tab" data-filter="active">Active</button>
+    <button class="filter-tab" data-filter="paused">Paused</button>
+    <button class="filter-tab" data-filter="archived">Archived</button>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">Stack:</span>
+    <select class="stack-select" id="stackSelect">
+      <option value="all">Any</option>
+    </select>
+  </div>
+</div>
+
+<div class="content">
+  <div class="grid" id="projectGrid"></div>
+  <div class="no-results" id="noResults">No projects match your filters.</div>
+</div>
+
+<!-- FSS-BRAND-FOOTER-V1 -->
+<footer style="text-align:center;padding:60px 32px 26px;border-top:1px solid #26262c;background:#0a0a0b;font-family:'Inter','Helvetica Neue',Arial,sans-serif;">
+  <div style="display:inline-flex;align-items:center;gap:14px;margin-bottom:14px;">
+    <svg width="16" height="22" viewBox="0 0 20 28" fill="none" aria-hidden="true" style="color:rgba(201,168,76,0.92);flex-shrink:0"><line x1="4" y1="1" x2="4" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="1" x2="16" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="14" x2="16" y2="14" stroke="currentColor" stroke-width="1.5"/><line x1="1" y1="1" x2="7" y2="1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="1" x2="19" y2="1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="27" x2="7" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="27" x2="19" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <span style="font-family:'Crimson Pro','Cinzel',Georgia,serif;font-size:1.4rem;font-weight:600;color:rgba(201,168,76,0.92);letter-spacing:0.22em;">FISHER SOVEREIGN</span>
+  </div>
+  <div style="font-size:0.68rem;font-weight:500;color:#6b6b75;text-transform:uppercase;letter-spacing:0.22em;margin-bottom:18px;">Building the Architecture for Independence</div>
+  <p style="font-family:'Crimson Pro',Georgia,serif;font-style:italic;font-size:0.98rem;color:#a1a1aa;max-width:520px;margin:0 auto 28px;line-height:1.6;">Fisher Sovereign Systems is being built to return control to the individual.</p>
+  <a href="../home.html" style="display:inline-block;padding:10px 24px;border:1px solid #8a7433;border-radius:6px;font-size:0.74rem;font-weight:500;color:#e3c068;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;background:rgba(201,168,76,0.04);">Visit lancewfisher.com &rarr;</a>
+  <div style="margin-top:32px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.05);font-size:0.66rem;color:#6b6b75;letter-spacing:0.06em;">&copy; 2026 Fisher Sovereign Systems, LLC. All rights reserved.</div>
+</footer>
+
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ── PROJECT DATA ──
+  // Sanitized snapshot from D:/ProjectsHome/PROJECTS.json. Public fields only:
+  // name, category, status, description, tech stack, public port, github repo slug.
+  // No credentials, wallet keys, .env content, or private tokens are included.
+  var projects = [
+    {
+      name: 'Profit Desk',
+      cat: 'Trading',
+      status: 'active',
+      desc: 'Multi-agent autonomous trading desk. Six concurrent agents (PM, Researcher, Backtester, Risk Manager, Execution, Ops) running baseline strategies. Wraps master-trade-bot via adapters. PAPER mode by default.',
+      tech: ['Python', 'asyncio', 'aiohttp', 'PyYAML', 'numpy'],
+      port: 8091,
+      github: 'lance-fisher/profit-desk'
+    },
+    {
+      name: 'Sovereign Trade Engine',
+      cat: 'Trading',
+      status: 'active',
+      desc: 'Execution layer of the trading ecosystem. Multi-chain engines spanning Solana DEX, Polymarket, CEX (Binance, Coinbase, Kraken), and ETH DeFi. Receives signals from Profit Desk. DRY_RUN by default with real-time WebSocket dashboard at localhost:4000.',
+      tech: ['TypeScript', 'Node.js', 'ccxt', 'ethers.js', '@solana/web3.js'],
+      port: 4000,
+      github: 'lance-fisher/master-trade-bot'
+    },
+    {
+      name: 'Sovereign Signal',
+      cat: 'Infrastructure',
+      status: 'active',
+      desc: 'End-to-end encrypted peer-to-peer messenger. Zero-knowledge relay, passwordless auth via WebAuthn biometrics or hardware keys, forward secrecy on every message. Built on libsodium.',
+      tech: ['TypeScript', 'Next.js', 'libsodium', 'WebAuthn', 'Express'],
+      port: null,
+      github: 'lance-fisher/e2ee-messenger'
+    },
+    {
+      name: 'Serenity Medspa Demo',
+      cat: 'App',
+      status: 'active',
+      desc: 'Full-stack booking application for a medical spa. Client scheduling, payments, staff management, and appointment reminders. Mobile-first React Native client on a NestJS API with Prisma and PostgreSQL.',
+      tech: ['TypeScript', 'React Native', 'Expo', 'NestJS', 'Prisma', 'PostgreSQL', 'Stripe'],
+      port: 3000,
+      github: 'lance-fisher/medspa-demo'
+    },
+    {
+      name: 'Home Hub',
+      cat: 'Infrastructure',
+      status: 'active',
+      desc: 'Home network monitoring dashboard. Tracks devices, services, uptime, DNS queries, and network health across the LAN. React frontend on a Fastify API backed by SQLite.',
+      tech: ['TypeScript', 'Fastify', 'React', 'Vite', 'Tailwind', 'SQLite'],
+      port: 3210,
+      github: 'lance-fisher/home-hub'
+    },
+    {
+      name: 'JumpQuest',
+      cat: 'Game',
+      status: 'active',
+      desc: '3D obstacle course game built for my son Jamison. Unity-based with a Three.js web companion. Procedurally generated levels and jump physics.',
+      tech: ['Unity', 'C#', 'Three.js'],
+      port: 5173,
+      github: 'lance-fisher/jumpquest'
+    },
+    {
+      name: 'Bloodlines',
+      cat: 'Game',
+      status: 'active',
+      desc: 'Turn-based strategy game with deep faction lore, territorial control, and asymmetric unit design. Currently in pre-prototype. The Design Bible is at v3.0 and is the source of truth for all mechanics, factions, and canon.',
+      tech: ['Game Design', 'Documentation', 'Markdown'],
+      port: null,
+      github: 'lance-fisher/bloodlines'
+    },
+    {
+      name: 'NoCo App Studio',
+      cat: 'App',
+      status: 'active',
+      desc: 'Directory of Northern Colorado businesses. Community-curated with categories, mobile-first card layout, and local recommendations.',
+      tech: ['HTML', 'CSS', 'Vanilla JS'],
+      port: null,
+      github: 'lance-fisher/noco-app-demos'
+    },
+    {
+      name: 'one-three.net',
+      cat: 'Brand',
+      status: 'active',
+      desc: 'One-Three brand network site. Connects Fisher Sovereign properties under a unified identity and brand system.',
+      tech: ['HTML', 'CSS', 'JS'],
+      port: null,
+      github: 'lance-fisher/one-three-net'
+    },
+    {
+      name: 'Session Atlas',
+      cat: 'Tool',
+      status: 'active',
+      desc: 'Dashboard tracking AI coding sessions across the ecosystem. Maps 80+ sessions and 20+ projects with timeline, filter, and 3D relationship views.',
+      tech: ['Python', 'SQLite', 'Three.js', 'D3.js'],
+      port: 8092,
+      github: 'lance-fisher/session-atlas'
+    },
+    {
+      name: 'LLM Enclave',
+      cat: 'Infrastructure',
+      status: 'active',
+      desc: 'Local LLM orchestration layer. Runs Qwen 2.5 Coder 35B via Ollama with PowerShell management scripts. Keeps inference entirely on-device.',
+      tech: ['Python', 'PowerShell', 'Ollama'],
+      port: 8094,
+      github: 'lance-fisher/llm-enclave'
+    },
+    {
+      name: 'Auton',
+      cat: 'Infrastructure',
+      status: 'active',
+      desc: 'Autonomous background worker. LLM-driven decision loop with a signed journal, dry-run by default, and aiohttp control plane for inspection.',
+      tech: ['Python', 'asyncio', 'aiohttp', 'PyNaCl'],
+      port: 8095,
+      github: 'lance-fisher/auton'
+    },
+    {
+      name: 'Sovereign Console',
+      cat: 'Infrastructure',
+      status: 'active',
+      desc: 'Operator control plane for the entire ecosystem. Service management, deployment, monitoring, and a hardened auth flow with passkeys and mTLS.',
+      tech: ['TypeScript', 'Fastify', 'Next.js', 'Node.js', 'PostgreSQL', 'Redis'],
+      port: 3100,
+      github: 'lance-fisher/sovereign-console'
+    },
+    {
+      name: 'lancewfisher-v2',
+      cat: 'Brand',
+      status: 'active',
+      desc: 'Personal portfolio and brand site. Static HTML/CSS/JS deployed to lancewfisher.com via Hostinger. Hosts this Sovereign Hub showcase.',
+      tech: ['HTML', 'CSS', 'JS'],
+      port: 8077,
+      github: 'lance-fisher/lancewfisher-v2'
+    },
+    {
+      name: 'Media Organizer',
+      cat: 'Tool',
+      status: 'active',
+      desc: 'Media migration and organization tool. Sorts, deduplicates, and catalogs files on the E: drive with a strict no-delete policy.',
+      tech: ['Python', 'Pillow', 'FFprobe'],
+      port: null,
+      github: 'lance-fisher/media-organizer'
+    },
+    {
+      name: 'Sovereign Hub',
+      cat: 'Infrastructure',
+      status: 'active',
+      desc: 'Central project management dashboard. Port registry, health checks, and ecosystem overview for all registered projects. Powers the registry view you are looking at right now.',
+      tech: ['Python', 'HTML', 'JavaScript'],
+      port: 8090,
+      github: 'lance-fisher/sovereign-hub'
+    },
+    {
+      name: 'Bookmark Bot',
+      cat: 'Tool',
+      status: 'active',
+      desc: 'Automated bookmark manager. Captures, categorizes, and indexes bookmarks from multiple sources. Async Python backend with a zero-dependency vanilla JS frontend.',
+      tech: ['Python', 'asyncio', 'vanilla-js'],
+      port: null,
+      github: 'lance-fisher/bookmark-bot'
+    },
+    {
+      name: 'Private Tax Platform',
+      cat: 'App',
+      status: 'active',
+      desc: 'Private tax preparation tooling. OCR-driven document ingestion and PDF parsing for multi-year returns. Runs entirely on local hardware, no third-party data sharing.',
+      tech: ['Python', 'OCR', 'PDF parsing'],
+      port: 8000,
+      github: 'lance-fisher/private-tax-platform'
+    },
+    {
+      name: 'Polymarket Sniper',
+      cat: 'Trading',
+      status: 'paused',
+      desc: 'Fast-execution bot for Polymarket prediction markets. Currently paused pending regulatory review.',
+      tech: ['Python', 'Web3.py', 'Polygon'],
+      port: null,
+      github: 'lance-fisher/polymarket-sniper'
+    },
+    {
+      name: 'Trading Profit Engine',
+      cat: 'Trading',
+      status: 'active',
+      desc: 'Real-money profit engine for the trading stack. Async Python service that coordinates execution across venues and reports PnL back to Profit Desk.',
+      tech: ['Python', 'asyncio', 'aiohttp'],
+      port: null,
+      github: 'lance-fisher/trading-profit-engine'
+    },
+    {
+      name: 'Crown & Conquest',
+      cat: 'Game',
+      status: 'archived',
+      desc: 'Original iOS strategy game concept. Evolved into Bloodlines. Code preserved for reference and history.',
+      tech: ['Swift', 'SpriteKit'],
+      port: null,
+      github: 'lance-fisher/crown-conquest'
+    },
+    {
+      name: 'Exo',
+      cat: 'Tool',
+      status: 'active',
+      desc: 'iOS carrier repo with multiple feature branches. Extraction pipeline that moves working features into their own standalone projects. Origin point for several current tools.',
+      tech: ['Python', 'Various'],
+      port: null,
+      github: 'lance-fisher/exo'
+    },
+    {
+      name: 'frontier-bastion',
+      cat: 'Game',
+      status: 'archived',
+      desc: 'Stale exo clone from the Crown & Conquest iOS era. Superseded by Bloodlines and kept for archaeology.',
+      tech: ['Swift'],
+      port: null,
+      github: null
+    },
+    {
+      name: 'old-portfolio',
+      cat: 'Brand',
+      status: 'archived',
+      desc: 'Previous portfolio site. Replaced by lancewfisher-v2 with a full redesign and the current dark/gold aesthetic.',
+      tech: ['HTML', 'CSS'],
+      port: null,
+      github: null
+    },
+    {
+      name: 'LocalClaude',
+      cat: 'App',
+      status: 'active',
+      desc: 'Desktop application for running Claude-style workflows locally. Electron shell with a React UI on a Fastify backend, SQLite for state, and Ollama for local model inference.',
+      tech: ['TypeScript', 'Electron', 'React', 'Fastify', 'Tailwind', 'SQLite', 'Ollama'],
+      port: null,
+      github: 'lance-fisher/localclaude'
+    }
+  ];
+
+  var statusColors = {
+    active: '#34d399',
+    paused: '#fbbf24',
+    archived: '#6b7280'
+  };
+  var catColors = {
+    Trading: '#f59e0b',
+    App: '#3b82f6',
+    Tool: '#8b5cf6',
+    Game: '#ec4899',
+    Brand: '#c9a84c',
+    Infrastructure: '#06b6d4'
+  };
+
+  // ── STATE ──
+  var state = {
+    search: '',
+    status: 'all',
+    stack: 'all'
+  };
+
+  // ── HELPERS ──
+  function el(tag, className, text) {
+    var node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text != null) node.textContent = text;
+    return node;
+  }
+
+  function clear(node) {
+    while (node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function countBy(predicate) {
+    var n = 0;
+    for (var i = 0; i < projects.length; i++) if (predicate(projects[i])) n++;
+    return n;
+  }
+
+  function uniqueStacks() {
+    var seen = {};
+    var out = [];
+    projects.forEach(function(p) {
+      p.tech.forEach(function(t) {
+        if (!seen[t]) { seen[t] = true; out.push(t); }
+      });
+    });
+    out.sort(function(a, b) { return a.toLowerCase() < b.toLowerCase() ? -1 : 1; });
+    return out;
+  }
+
+  // ── STATS BANNER ──
+  function renderStats() {
+    var banner = document.getElementById('statsBanner');
+    clear(banner);
+
+    var statsData = [
+      { val: String(projects.length), lbl: 'Total', dot: null },
+      { val: String(countBy(function(p) { return p.status === 'active'; })), lbl: 'Active', dot: '#34d399' },
+      { val: String(countBy(function(p) { return p.status === 'paused'; })), lbl: 'Paused', dot: '#fbbf24' },
+      { val: String(countBy(function(p) { return p.status === 'archived'; })), lbl: 'Archived', dot: '#6b7280' },
+      { val: String(countBy(function(p) { return p.port != null && p.status === 'active'; })), lbl: 'Active Ports', dot: '#c9a84c' },
+      { val: String(countBy(function(p) { return p.github != null; })), lbl: 'On GitHub', dot: null }
+    ];
+
+    statsData.forEach(function(s) {
+      var wrap = el('div', 'stat');
+      if (s.dot) {
+        var dot = el('span', 'stat-dot');
+        dot.style.background = s.dot;
+        wrap.appendChild(dot);
+      }
+      wrap.appendChild(el('span', 'stat-val', s.val));
+      wrap.appendChild(el('span', 'stat-lbl', s.lbl));
+      banner.appendChild(wrap);
+    });
+  }
+
+  // ── STACK SELECT ──
+  function renderStackSelect() {
+    var sel = document.getElementById('stackSelect');
+    var stacks = uniqueStacks();
+    stacks.forEach(function(t) {
+      var opt = document.createElement('option');
+      opt.value = t;
+      opt.textContent = t;
+      sel.appendChild(opt);
+    });
+    sel.addEventListener('change', function() {
+      state.stack = sel.value;
+      renderGrid();
+    });
+  }
+
+  // ── FILTER TABS ──
+  function bindFilterTabs() {
+    var tabs = document.querySelectorAll('.filter-tab');
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        state.status = tab.getAttribute('data-filter');
+        tabs.forEach(function(t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        renderGrid();
+      });
+    });
+  }
+
+  // ── PROJECT MATCHING ──
+  function matchStatus(p) {
+    if (state.status === 'all') return true;
+    return p.status === state.status;
+  }
+
+  function matchStack(p) {
+    if (state.stack === 'all') return true;
+    return p.tech.indexOf(state.stack) !== -1;
+  }
+
+  function matchSearch(p) {
+    if (!state.search) return true;
+    var q = state.search.toLowerCase();
+    var hay = (p.name + ' ' + p.cat + ' ' + p.desc + ' ' + p.tech.join(' ')).toLowerCase();
+    return hay.indexOf(q) !== -1;
+  }
+
+  // ── CARD ──
+  function createCard(p) {
+    var card = el('div', 'card');
+    card.setAttribute('data-project', p.name);
+
+    var head = el('div', 'card-head');
+    var dot = el('span', 'card-status');
+    dot.style.background = statusColors[p.status] || '#888';
+    var name = el('span', 'card-name', p.name);
+    head.appendChild(dot);
+    head.appendChild(name);
+    card.appendChild(head);
+
+    var cat = el('span', 'card-cat', p.cat.toUpperCase());
+    var color = catColors[p.cat] || '#c9a84c';
+    cat.style.color = color;
+    cat.style.borderColor = color + '55';
+    cat.style.background = color + '14';
+    card.appendChild(cat);
+
+    var desc = el('p', 'card-desc', p.desc);
+    card.appendChild(desc);
+
+    var techs = el('div', 'card-techs');
+    p.tech.forEach(function(t) {
+      techs.appendChild(el('span', 'tech-badge', t));
+    });
+    card.appendChild(techs);
+
+    var foot = el('div', 'card-foot');
+    if (p.port != null) {
+      foot.appendChild(el('span', 'card-port', 'localhost:' + p.port));
+    } else {
+      foot.appendChild(el('span', 'card-port-empty', 'no port'));
+    }
+    if (p.github) {
+      var ghLink = document.createElement('a');
+      ghLink.className = 'card-gh';
+      ghLink.href = 'https://github.com/' + p.github;
+      ghLink.target = '_blank';
+      ghLink.rel = 'noopener noreferrer';
+      ghLink.textContent = 'GitHub \u2197';
+      ghLink.addEventListener('click', function(e) { e.stopPropagation(); });
+      foot.appendChild(ghLink);
+    } else {
+      foot.appendChild(el('span', 'card-port-empty', 'local only'));
+    }
+    card.appendChild(foot);
+
+    card.addEventListener('click', function() { openModal(p); });
+    return card;
+  }
+
+  // ── GRID ──
+  function renderGrid() {
+    var grid = document.getElementById('projectGrid');
+    var noResults = document.getElementById('noResults');
+    clear(grid);
+    var count = 0;
+    projects.forEach(function(p) {
+      if (matchStatus(p) && matchStack(p) && matchSearch(p)) {
+        grid.appendChild(createCard(p));
+        count++;
+      }
+    });
+    noResults.style.display = count === 0 ? 'block' : 'none';
+  }
+
+  // ── MODAL ──
+  function openModal(p) {
+    var overlay = document.getElementById('modalOverlay');
+    var modal = document.getElementById('modal');
+    clear(modal);
+
+    var closeBtn = el('button', 'modal-close', '\u2715');
+    closeBtn.setAttribute('aria-label', 'Close');
+    closeBtn.addEventListener('click', closeModal);
+    modal.appendChild(closeBtn);
+
+    modal.appendChild(el('h2', null, p.name));
+
+    var statusLine = el('div', 'modal-statusline');
+    var sDot = el('span', 'card-status');
+    sDot.style.background = statusColors[p.status] || '#888';
+    statusLine.appendChild(sDot);
+    var statusText = p.status.charAt(0).toUpperCase() + p.status.slice(1) + '  \u00b7  ' + p.cat;
+    statusLine.appendChild(el('span', null, statusText));
+    modal.appendChild(statusLine);
+
+    modal.appendChild(el('p', 'modal-desc', p.desc));
+
+    // Details section
+    var detailSec = el('div', 'modal-section');
+    detailSec.appendChild(el('h3', null, 'Details'));
+
+    function addRow(key, val) {
+      var row = el('div', 'modal-row');
+      row.appendChild(el('span', 'row-key', key));
+      row.appendChild(el('span', 'row-val', val));
+      detailSec.appendChild(row);
+    }
+    addRow('Status', p.status);
+    addRow('Category', p.cat);
+    addRow('Port', p.port != null ? 'localhost:' + p.port : 'none');
+    addRow('GitHub', p.github ? p.github : 'local only');
+    modal.appendChild(detailSec);
+
+    // Stack section
+    var techSec = el('div', 'modal-section');
+    techSec.appendChild(el('h3', null, 'Tech Stack'));
+    var techWrap = el('div', 'modal-techs');
+    p.tech.forEach(function(t) {
+      techWrap.appendChild(el('span', 'tech-badge', t));
+    });
+    techSec.appendChild(techWrap);
+    modal.appendChild(techSec);
+
+    // Links section
+    if (p.github) {
+      var linkSec = el('div', 'modal-section');
+      linkSec.appendChild(el('h3', null, 'Links'));
+      var ghBtn = document.createElement('a');
+      ghBtn.className = 'modal-link';
+      ghBtn.href = 'https://github.com/' + p.github;
+      ghBtn.target = '_blank';
+      ghBtn.rel = 'noopener noreferrer';
+      ghBtn.textContent = 'View on GitHub \u2197';
+      linkSec.appendChild(ghBtn);
+      modal.appendChild(linkSec);
+    }
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ── EVENT WIRING ──
+  document.getElementById('searchBox').addEventListener('input', function(e) {
+    state.search = e.target.value;
+    renderGrid();
+  });
+
+  document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === e.currentTarget) closeModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  // ── INITIAL RENDER ──
+  renderStats();
+  renderStackSelect();
+  bindFilterTabs();
+  renderGrid();
+
+})();
+</script>
+</body>
+</html>

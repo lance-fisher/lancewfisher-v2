@@ -306,6 +306,20 @@ span.hero-domain-dot {
   50% { transform: scaleY(0.5); opacity: 0.2; }
 }
 
+.scroll-chevron {
+  width: 8px;
+  height: 8px;
+  border-right: 1px solid rgba(var(--fg), 0.35);
+  border-bottom: 1px solid rgba(var(--fg), 0.35);
+  transform: rotate(45deg);
+  margin: 6px auto 0;
+  animation: chevronBounce 2s ease-in-out infinite;
+}
+@keyframes chevronBounce {
+  0%, 100% { transform: rotate(45deg) translateY(0); opacity: 0.35; }
+  50% { transform: rotate(45deg) translateY(4px); opacity: 0.65; }
+}
+
 /* ===== SECTION COMMON ===== */
 .section {
   padding: 0 40px;
@@ -379,6 +393,23 @@ span.hero-domain-dot {
   right: 20%;
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.35), transparent);
+}
+/* About section text color consistency: lift body copy out of the
+   washed-out 0.35 baseline and tone down em highlights so they don't
+   strobe against the rest. One readable shade across the section. */
+.about-card .body-text {
+  color: rgba(var(--fg), 0.74);
+}
+.about-card .body-text em {
+  color: rgba(var(--fg), 0.95);
+  font-style: normal;
+  font-weight: 400;
+}
+[data-theme="light"] .about-card .body-text {
+  color: rgba(28, 26, 24, 0.78);
+}
+[data-theme="light"] .about-card .body-text em {
+  color: rgba(28, 26, 24, 0.95);
 }
 
 /* ===== PORTRAIT ===== */
@@ -484,6 +515,40 @@ span.hero-domain-dot {
   background: rgba(240, 235, 224, 0.01);
 }
 
+/* Project group labels */
+.project-group-label {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 40px 0 8px;
+  border-bottom: none;
+}
+.pgl-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(201,168,76,0.25), transparent);
+}
+.pgl-line-right {
+  background: linear-gradient(270deg, rgba(201,168,76,0.25), transparent);
+}
+.pgl-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: rgba(201, 168, 76, 0.5);
+  white-space: nowrap;
+}
+[data-theme="light"] .pgl-line {
+  background: linear-gradient(90deg, rgba(201,168,76,0.5), transparent);
+}
+[data-theme="light"] .pgl-line-right {
+  background: linear-gradient(270deg, rgba(201,168,76,0.5), transparent);
+}
+[data-theme="light"] .pgl-text {
+  color: rgba(150, 110, 30, 0.8);
+}
+
 /* FTDA flagship hover -warm gold glow instead of white */
 .ftda-flagship:hover {
   background:
@@ -493,9 +558,9 @@ span.hero-domain-dot {
   border-color: rgba(201, 168, 76, 0.3) !important;
 }
 
-/* Alternating layout */
-.project-card:nth-child(even) .project-info { order: 2; }
-.project-card:nth-child(even) .project-thumb-wrap { order: 1; }
+/* Alternating layout — uses :nth-child(of selector) so group labels don't break the count */
+.project-card:nth-child(even of .project-card) .project-info { order: 2; }
+.project-card:nth-child(even of .project-card) .project-thumb-wrap { order: 1; }
 
 .project-card .p-number {
   font-family: 'Inter', sans-serif;
@@ -567,6 +632,11 @@ span.hero-domain-dot {
   border-color: rgba(200, 180, 130, 0.2);
   color: rgba(200, 180, 130, 0.5);
   background: rgba(200, 180, 130, 0.03);
+}
+.p-status.paused {
+  border-color: rgba(180, 180, 180, 0.15);
+  color: rgba(180, 180, 180, 0.4);
+  background: rgba(180, 180, 180, 0.02);
 }
 
 /* Live demo link */
@@ -1310,14 +1380,36 @@ span.hero-domain-dot {
   line-height: 1.8;
   color: rgba(240, 235, 224, 0.3);
 }
+.sov-response-prompt {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(13px, 1.6vw, 17px);
+  letter-spacing: 2px;
+  color: rgba(var(--fg), 0.38);
+  margin-bottom: 10px;
+}
+.contact-shortcut.brief-link:hover span {
+  transform: translateX(3px);
+}
 .sov-intro {
   font-family: 'Inter', sans-serif;
-  font-weight: 200;
+  font-weight: 300;
   font-size: 15px;
   line-height: 2;
-  color: rgba(240, 235, 224, 0.35);
+  color: rgba(var(--fg), 0.60);
   max-width: 600px;
 }
+.projects-intro {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.9;
+  color: rgba(var(--fg), 0.55);
+  max-width: 680px;
+  margin-bottom: 32px;
+}
+[data-theme="light"] .projects-intro { color: rgba(28,26,24,0.60); }
 
 /* ===== CONTACT ===== */
 .contact-grid {
@@ -1491,6 +1583,20 @@ span.hero-domain-dot {
   letter-spacing: 12px;
   color: rgba(201, 168, 76, 0.12);
 }
+.footer-concepts-link {
+  display: block;
+  margin-top: 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(240, 235, 224, 0.18);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.footer-concepts-link:hover { color: rgba(201, 168, 76, 0.5); }
+[data-theme="light"] .footer-concepts-link { color: rgba(26, 26, 28, 0.25); }
+[data-theme="light"] .footer-concepts-link:hover { color: rgba(201, 168, 76, 0.7); }
 
 /* ===== NAV DOTS ===== */
 .nav-dots {
@@ -1999,6 +2105,40 @@ span.hero-domain-dot {
 .venture-card-v3:hover .vc3-arrow {
   color: var(--gold-1776);
   transform: translateX(4px);
+}
+
+/* Flagship venture card — spans full grid width, horizontal layout */
+.venture-card-v3.vc3-flagship {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 0 40px;
+  border-color: rgba(201,168,76,0.14);
+  background: rgba(201,168,76,0.025);
+  padding: 32px 36px;
+}
+.venture-card-v3.vc3-flagship .vc3-header { grid-column: 1; grid-row: 1; }
+.venture-card-v3.vc3-flagship .vc3-name   { grid-column: 1; grid-row: 2; font-size: 22px; letter-spacing: 0.02em; }
+.venture-card-v3.vc3-flagship .vc3-tagline{ grid-column: 1; grid-row: 3; }
+.venture-card-v3.vc3-flagship .vc3-desc   { grid-column: 2; grid-row: 1 / 4; display: flex; flex-direction: column; justify-content: center; font-size: 14px; line-height: 1.7; opacity: 0.7; margin-top: 0; }
+.venture-card-v3.vc3-flagship .vc3-chips  { grid-column: 1; grid-row: 4; margin-top: 20px; }
+.venture-card-v3.vc3-flagship .vc3-tech   { grid-column: 2; grid-row: 4; display: flex; align-items: flex-end; margin-top: 20px; }
+.venture-card-v3.vc3-flagship .vc3-arrow  { bottom: 32px; right: 36px; }
+.venture-card-v3.vc3-flagship:hover { border-color: rgba(201,168,76,0.28); background: rgba(201,168,76,0.04); }
+@media (max-width: 640px) {
+  .venture-card-v3.vc3-flagship {
+    grid-template-columns: 1fr;
+    display: block;
+  }
+}
+[data-theme="light"] .venture-card-v3.vc3-flagship {
+  border-color: rgba(201,168,76,0.2);
+  background: rgba(201,168,76,0.04);
+}
+[data-theme="light"] .venture-card-v3.vc3-flagship:hover {
+  border-color: rgba(201,168,76,0.35);
+  background: rgba(201,168,76,0.07);
 }
 
 /* ===== PROJECT FILTERS ===== */
@@ -2842,6 +2982,11 @@ span.hero-domain-dot {
   color: rgba(50,50,55,0.85);
   background: rgba(50,50,55,0.08);
 }
+[data-theme="light"] .p-status.paused {
+  border-color: rgba(100,100,100,0.25);
+  color: rgba(80,80,80,0.7);
+  background: rgba(100,100,100,0.06);
+}
 [data-theme="light"] .p-status {
   border-color: rgba(42,42,46,0.2);
   color: rgba(42,42,46,0.7);
@@ -2950,7 +3095,7 @@ span.hero-domain-dot {
 [data-theme="light"] .contact-row:hover .c-value { color: #3a3a3c; }
 
 /* ---- SOVEREIGNTY SECTION ---- */
-[data-theme="light"] .sov-intro { color: rgba(28,26,24,0.75); }
+[data-theme="light"] .sov-intro { color: rgba(28,26,24,0.65); }
 [data-theme="light"] .sov-item-desc { color: rgba(28,26,24,0.72); }
 
 /* ---- DETAIL SECTIONS ---- */
@@ -3356,7 +3501,7 @@ span.hero-domain-dot {
 .fs-wordmark-name { font-family: 'Crimson Pro', Georgia, serif; font-size: 28px; letter-spacing: 0.25em; font-weight: 600; color: rgba(201, 168, 76, 1); line-height: 1; }
 .fs-wordmark-rule { height: 1px; background: rgba(201, 168, 76, 0.4); margin: 2px 0; }
 .fs-wordmark-entity { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.3em; font-weight: 400; color: rgba(var(--fg), 0.45); text-transform: uppercase; line-height: 1; }
-.fs-headline { font-family: 'Crimson Pro', Georgia, serif; font-size: clamp(32px, 5vw, 52px); font-weight: 600; letter-spacing: -0.01em; line-height: 1.15; color: rgba(var(--fg), 0.92); margin-bottom: 16px; max-width: 760px; }
+.fs-headline { font-family: 'Cormorant Garamond', serif; font-size: clamp(34px, 5.5vw, 56px); font-weight: 400; letter-spacing: 0.01em; line-height: 1.2; color: rgba(var(--fg), 0.92); margin-bottom: 16px; max-width: 760px; }
 .fs-tagline { font-family: 'Inter', sans-serif; font-size: 15px; letter-spacing: 0.18em; font-weight: 400; color: rgba(201, 168, 76, 0.9); text-transform: uppercase; margin-bottom: 36px; }
 .fs-mission { max-width: 680px; margin-bottom: 40px; }
 .fs-mission p { font-family: 'Inter', sans-serif; font-size: 17px; line-height: 1.75; color: rgba(var(--fg), 0.72); margin-bottom: 18px; }
@@ -3430,17 +3575,18 @@ span.hero-domain-dot {
 
 /* Fisher Sovereign subheadline */
 .fs-subheadline {
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: 'Cormorant Garamond', serif;
   font-size: clamp(17px, 2.2vw, 22px);
   font-style: italic;
   font-weight: 400;
-  color: rgba(var(--fg), 0.60);
+  color: rgba(var(--fg), 0.72);
   line-height: 1.5;
   margin: 0 0 28px 0;
   letter-spacing: 0.01em;
 }
 
 /* ===== HERO COMPANY NAME ===== */
+/* Legacy — unused after hero restructure */
 .hero-company {
   font-family: 'Inter', sans-serif;
   font-size: 13px;
@@ -3451,6 +3597,136 @@ span.hero-domain-dot {
   margin-top: 6px;
   margin-bottom: 4px;
 }
+
+/* Primary business name — hero top element */
+.hero-business-primary {
+  font-family: 'Cormorant SC', serif;
+  font-weight: 600;
+  font-size: clamp(28px, 5.5vw, 64px);
+  letter-spacing: clamp(6px, 1.5vw, 18px);
+  text-transform: uppercase;
+  color: var(--gold-1776);
+  text-align: center;
+  text-shadow: 0 0 60px rgba(201,168,76,0.18), 0 0 120px rgba(201,168,76,0.06);
+  opacity: 0;
+  animation: heroReveal 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+}
+.hero-for-line {
+  font-family: 'Cormorant SC', serif;
+  font-weight: 300;
+  font-size: clamp(8px, 1.1vw, 11px);
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--warm-white-dim);
+  text-align: center;
+  margin-top: 18px;
+  margin-bottom: 6px;
+  opacity: 0;
+  animation: fadeIn 1.5s ease forwards 1.8s;
+}
+.hero-name-attr {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(44px, 8vw, 104px);
+  letter-spacing: clamp(8px, 1.8vw, 22px);
+  text-transform: uppercase;
+  color: var(--warm-white);
+  text-align: center;
+  line-height: 1.0;
+  margin: 6px 0 0;
+  opacity: 0;
+  animation: fadeIn 1.5s ease forwards 2.1s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.05em;
+}
+.hero-name-first {
+  display: block;
+  font-weight: 300;
+  font-size: 0.55em;
+  letter-spacing: clamp(6px, 1.4vw, 16px);
+  color: rgba(var(--fg), 0.78);
+}
+.hero-name-last {
+  display: inline-block;
+  position: relative;
+  font-weight: 400;
+  letter-spacing: clamp(10px, 2.2vw, 26px);
+  color: var(--warm-white);
+  text-shadow: 0 0 32px rgba(201, 168, 76, 0.18), 0 0 64px rgba(201, 168, 76, 0.06);
+  white-space: nowrap;
+}
+[data-theme="light"] .hero-name-last {
+  text-shadow: none;
+  color: rgba(28, 26, 24, 0.92);
+}
+[data-theme="light"] .hero-name-first {
+  color: rgba(28, 26, 24, 0.78);
+}
+/* Per-glyph crossfade for I->1 and E->3.
+   inline-grid stacks letter and digit in the same cell so the box auto-sizes
+   to the LARGER glyph and never reflows. lining-nums tabular-nums forces
+   full cap-height, matched-width digits (Cormorant defaults to old-style). */
+.hn-glyph {
+  display: inline-grid;
+  grid-template-columns: max-content;
+  vertical-align: baseline;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "lnum" 1, "tnum" 1;
+}
+.hn-letter,
+.hn-digit {
+  grid-area: 1 / 1;
+  transition: opacity 480ms cubic-bezier(.4, 0, .2, 1),
+              text-shadow 480ms ease,
+              transform 480ms cubic-bezier(.4, 0, .2, 1);
+  will-change: opacity, transform;
+}
+.hn-digit {
+  color: var(--gold-1776);
+  text-shadow: 0 0 18px rgba(201, 168, 76, 0.40),
+               0 0 36px rgba(201, 168, 76, 0.18);
+}
+.hn-glyph .hn-letter { opacity: 1; transform: translateY(0); }
+.hn-glyph .hn-digit  { opacity: 0; transform: translateY(0.04em); }
+.hn-glyph.is-digit .hn-letter { opacity: 0; transform: translateY(-0.04em); }
+.hn-glyph.is-digit .hn-digit  { opacity: 1; transform: translateY(0); }
+.hero-tagline {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: clamp(8px, 1.1vw, 11px);
+  letter-spacing: clamp(3px, 0.7vw, 8px);
+  text-transform: uppercase;
+  color: var(--gold-1776);
+  text-align: center;
+  margin-top: 12px;
+  opacity: 0;
+  animation: fadeIn 1.5s ease forwards 1.0s;
+}
+.hero-motto {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(13px, 1.8vw, 20px);
+  letter-spacing: 4px;
+  color: var(--gold-1776);
+  text-align: center;
+  margin-top: 8px;
+  text-shadow: 0 0 40px rgba(201, 168, 76, 0.25), 0 0 80px rgba(201, 168, 76, 0.08);
+  display: block;
+  opacity: 0;
+  animation: fadeIn 1.5s ease forwards 2.5s;
+}
+.hero-motto-text { display: inline; }
+.hero-motto-translation { display: none; }
+[data-theme="light"] .hero-business-primary {
+  text-shadow: none;
+  color: rgba(120,95,30,0.9);
+}
+[data-theme="light"] .hero-name-attr { color: rgba(28,26,24,0.88); }
+[data-theme="light"] .hero-tagline { color: rgba(120,95,30,0.8); }
+[data-theme="light"] .hero-motto { text-shadow: none; color: rgba(120,95,30,0.85); }
 
 /* Sovereign Systems glitch flash effect */
 .sovereign-glitch {
@@ -3506,7 +3782,17 @@ span.hero-domain-dot {
 .fs-sovereignty-block {
   margin-top: 48px;
   padding-top: 40px;
-  border-top: 1px solid var(--warm-white-ghost);
+  border-top: none;
+  position: relative;
+}
+.fs-sovereignty-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.25), transparent);
 }
 
 .fs-pillars-label {

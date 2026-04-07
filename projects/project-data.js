@@ -288,6 +288,257 @@ var PROJECT_DATA = {
       { value: "3", label: "Modes" },
       { value: "GPU", label: "Local AI" }
     ]
+  },
+
+  "operator-console": {
+    title: "Operator Console",
+    number: "16",
+    tagline: "Unified control plane for the entire Sovereign ecosystem",
+    disclosure: "restricted-detail",
+    status: "Active",
+    statusClass: "active",
+    tech: ["Python", "TypeScript", "REST API", "WebSocket", "Local AI"],
+    overview: "A unified operator control plane for the entire ecosystem. Provides real-time visibility and control over all running services, AI agents, trading systems, and background workers through a single authenticated interface. Designed as a command center for managing a private technology infrastructure stack running 25+ projects across multiple machines.",
+    philosophy: "Managing 25 separate systems through individual terminals and dashboards is untenable at scale. Every service in the ecosystem exposes health endpoints and control surfaces. This console aggregates them all into one authenticated interface with real authority to start, stop, and reconfigure anything. Not a monitoring widget. A command center.",
+    capabilities: [
+      "Real-time health monitoring across all running services and background workers",
+      "Unified control surface for AI agents, trading systems, automation workers, and network services",
+      "Authenticated REST API with session management and role-based access",
+      "Service registry integration with PROJECTS.json for automatic discovery",
+      "Execution control: start, stop, pause, and reconfigure any registered service",
+      "Live log streaming from all services with filtering and search"
+    ],
+    approach: [
+      "PROJECTS.json as the service registry for zero-config service discovery",
+      "WebSocket-based real-time status streaming for instant health feedback",
+      "Authentication layer with session tokens and configurable access policies",
+      "Modular adapter architecture: each service integration is a pluggable connector"
+    ],
+    stats: [
+      { value: "25+", label: "Services" },
+      { value: "1", label: "Interface" },
+      { value: "REST", label: "API" },
+      { value: "Auth", label: "Protected" }
+    ]
+  },
+
+  "session-atlas": {
+    title: "Session Atlas",
+    number: "17",
+    tagline: "Complete map of every AI development session across all projects",
+    disclosure: "public-curated",
+    status: "Active",
+    statusClass: "active",
+    tech: ["TypeScript", "React", "Fastify", "SQLite", "JSONL Parsing"],
+    overview: "A local-first dashboard that ingests every Claude Code session log and builds a complete navigable map of AI-assisted development work across all projects and time. Search by project, topic, date, or keyword. See the full conversation history, tool use patterns, and work completed in every session. The session record for an entire software ecosystem, queryable in real time.",
+    philosophy: "Every hour of AI-assisted development produces a session log that disappears once the context window closes. Session Atlas treats those logs as a durable record of how software actually gets built. Every decision, every correction, every code path explored is in there. This dashboard makes the entire record navigable, searchable, and useful across all 25+ projects.",
+    capabilities: [
+      "Ingests and indexes JSONL session logs from all Claude Code projects",
+      "Full-text search across sessions, projects, topics, and tool use history",
+      "Timeline view of all development activity across the entire portfolio",
+      "Per-project session breakdown with completion tracking and pattern analysis",
+      "81+ sessions indexed across 20+ projects with sub-second search response"
+    ],
+    approach: [
+      "JSONL log ingestion with streaming parse for large session files",
+      "SQLite full-text search with indexed project, date, and tool-use columns",
+      "React frontend with real-time filtering and timeline visualization",
+      "Fastify server at port 8092 with local-only access by default"
+    ],
+    stats: [
+      { value: "81+", label: "Sessions" },
+      { value: "20+", label: "Projects" },
+      { value: "FTS", label: "Search" },
+      { value: "0", label: "Cloud Deps" }
+    ]
+  },
+
+  "private-intelligence-platform": {
+    title: "Private Intelligence Platform",
+    number: "18",
+    tagline: "Fully local AI workstation — every model on your hardware, zero external APIs",
+    disclosure: "public-curated",
+    status: "Active",
+    statusClass: "active",
+    tech: ["TypeScript", "Electron", "Ollama", "React", "RTX 4070"],
+    overview: "A full-featured AI workstation built as an Electron desktop app. All inference runs locally on an RTX 4070 via Ollama. Includes a unified chat UI, code assistant, model management dashboard, service health monitoring, and remote phone access. No API keys. No subscriptions. No data leaving the machine.",
+    philosophy: "The mainstream AI pitch is convenience at the cost of your data, your privacy, and your independence. This platform rejects that entirely. Every model runs on your own GPU. Every conversation stays on your own hardware. The goal isn't to mirror what cloud AI services offer — it's to build something genuinely sovereign: AI that works for you, not for a company's training pipeline.",
+    capabilities: [
+      "Unified chat interface across all locally-running Ollama models — no external API calls",
+      "Code assistant with project-aware context and multi-file editing support",
+      "Model management: pull, update, and remove Ollama models with VRAM monitoring",
+      "Service dashboard showing health status of all ecosystem services in real time",
+      "Remote phone access for AI queries from iOS routed through the local inference stack"
+    ],
+    approach: [
+      "Electron for native desktop integration with local filesystem and process management",
+      "Ollama backend: all inference on local RTX 4070 — zero external model calls ever",
+      "Vite client at :5174, Express server at :3500, Ollama at :11434",
+      "Phases 0-3 MVP complete; model expansion via Ollama registry ongoing"
+    ],
+    stats: [
+      { value: "100%", label: "Local" },
+      { value: "0", label: "External APIs" },
+      { value: "RTX", label: "4070 GPU" },
+      { value: "Phone", label: "Access" }
+    ]
+  },
+
+  "llm-enclave": {
+    title: "LLM Enclave",
+    number: "19",
+    tagline: "Hardened zero-trust security enclave for local LLM inference",
+    disclosure: "public-curated",
+    status: "Active",
+    statusClass: "active",
+    tech: ["Python", "PowerShell", "Ollama", "Zero-Trust", "Audit Trail"],
+    overview: "A hardened security enclave for running local LLM inference with controlled workspace access. The LLM operates inside a policy-gated environment where file access is explicitly whitelisted in a bridge policy. Every file read, every write, every path the model touches is recorded in a hash-chain audit trail. The model sees exactly what you allow it to see, nothing more.",
+    philosophy: "When an LLM has access to your filesystem, the question is not whether to trust it, but how to define and enforce the boundaries of that trust. Zero-trust applied to AI means the model starts with no permissions. Access to any workspace file requires an explicit policy grant. Every action is logged in a tamper-evident chain. If something unexpected happens, the audit trail shows exactly what the model touched and when.",
+    capabilities: [
+      "Zero-trust security model: LLM starts with no file system permissions by default",
+      "Policy-gated workspace bridge controlled by bridge_policy.yaml configuration",
+      "Hash-chain audit trail providing tamper-evident log of all file access and operations",
+      "Explicit path allowlisting: only whitelisted directories and files are accessible to the model",
+      "Ollama integration for local model inference within the hardened environment"
+    ],
+    approach: [
+      "Python runtime enforcing policy checks before any file operation is passed to the LLM",
+      "PowerShell integration for Windows-native process and filesystem management",
+      "YAML-defined bridge policy specifying exact allowed read and write paths per project",
+      "Hash-chain implementation recording every operation with cryptographic linkage for tamper detection"
+    ],
+    stats: [
+      { value: "Zero", label: "Trust Model" },
+      { value: "Policy", label: "Gated Access" },
+      { value: "Hash", label: "Chain Audit" },
+      { value: "Local", label: "Inference" }
+    ]
+  },
+
+  "private-tax-platform": {
+    title: "Private Tax & Finance Platform",
+    number: "20",
+    tagline: "Automated tax prep pipeline for multi-entity filers with trading income",
+    disclosure: "public-curated",
+    status: "Active",
+    statusClass: "active",
+    tech: ["Python", "TypeScript", "PDF Processing", "IRS Schemas", "Automation"],
+    overview: "A personal tax preparation and financial data system that automates the full pipeline from raw financial data ingestion through form population to final output. Handles multiple entity types, income sources, and deduction categories. Processes brokerage statements, W-2s, 1099s, and Schedule K-1s programmatically. Built for the complexity of trading income, business revenue, and standard filings running simultaneously.",
+    philosophy: "Tax software is designed to extract maximum time from the user. A developer with trading income, business revenue, multiple entities, and dozens of 1099s should not be clicking through a wizard for six hours. Tax preparation is a data transformation problem: clean inputs, defined schemas, deterministic outputs, full audit trail.",
+    capabilities: [
+      "Automated ingestion of brokerage statements, W-2s, 1099s, and Schedule K-1s",
+      "Multi-entity filing support across personal and business returns simultaneously",
+      "Trading income aggregation from multiple exchanges with wash sale detection",
+      "Form population engine targeting standard IRS schedule formats",
+      "Validation layer with cross-form consistency checks before final output"
+    ],
+    approach: [
+      "PDF parsing pipeline for structured extraction from financial institution documents",
+      "Schema-validated data model for each form type with transformation rules",
+      "Trading income processor handling multi-exchange CSV exports and cost basis tracking",
+      "Output targeting both human-readable summary and machine-readable formats"
+    ],
+    stats: [
+      { value: "Multi", label: "Entity" },
+      { value: "Auto", label: "Ingestion" },
+      { value: "IRS", label: "Schemas" },
+      { value: "Full", label: "Audit Trail" }
+    ]
+  },
+
+  "medspa-demo": {
+    title: "Serenity Medspa Demo",
+    number: "21",
+    tagline: "Full-stack medspa booking platform built for a real NoCo business",
+    disclosure: "public-safe",
+    status: "Active",
+    statusClass: "active",
+    tech: ["React Native", "Expo", "NestJS", "PostgreSQL", "Stripe"],
+    overview: "A production-ready medspa booking platform built for a real Northern Colorado med spa. Includes a full-featured mobile app prototype with appointment booking, service catalog, staff profiles, treatment consultation flows, and Stripe payment integration. Part of the NoCo App Studio portfolio — the live embedded demo shows the complete client experience from discovery through checkout.",
+    philosophy: "Every local business deserves a branded app on their clients' home screens. Not a Vagaro listing. Not a generic booking widget. Their app, their brand, their client relationship. Serenity Medspa Demo is the proof of that conviction, live and interactive. The pitch is simple: your clients will book from your app, not a third-party marketplace.",
+    capabilities: [
+      "Full appointment booking flow with service selection, staff choice, and time slot management",
+      "Service catalog with treatment descriptions, pricing, and consultation options",
+      "Stripe payment integration for deposits and full service payments",
+      "Staff profiles with specialties, certifications, and availability management",
+      "Push notifications for appointment reminders and booking confirmations",
+      "Client loyalty program with visit tracking and reward redemption"
+    ],
+    approach: [
+      "React Native + Expo for cross-platform mobile deployment (iOS and Android)",
+      "NestJS backend with PostgreSQL for appointment and client data management",
+      "Stripe Elements for PCI-compliant payment capture",
+      "Interactive HTML prototype served from the portfolio for live sales demos"
+    ],
+    stats: [
+      { value: "Live", label: "Demo" },
+      { value: "Stripe", label: "Payments" },
+      { value: "Full", label: "Booking Flow" },
+      { value: "NoCo", label: "Market" }
+    ]
+  },
+
+  "sovereign-trade-engine": {
+    title: "Sovereign Trade Engine",
+    number: "22",
+    tagline: "Unified execution layer across six engines and three blockchains",
+    disclosure: "restricted-detail",
+    status: "Active",
+    statusClass: "active",
+    tech: ["TypeScript", "ccxt", "ethers.js", "Solana web3.js", "Risk Management"],
+    overview: "The execution core of the trading ecosystem. A unified trade execution system that receives signals from the Autonomous Trading Desk and routes orders to the appropriate engine based on asset class, liquidity conditions, and risk parameters. Spans centralized exchanges via ccxt, on-chain Solana DEX trading via Jupiter, and Polymarket CLOB execution. Operates all six engines simultaneously with independent circuit breakers, position limits, and a central kill switch.",
+    philosophy: "The Sovereign Trade Engine does not think. It executes. Every order it routes came from a strategy that passed promotion gates in the Autonomous Trading Desk. Its job is to be fast, correct, and safe in that order. The kill switch is always one key press away. DRY_RUN is always the default. Real capital only flows after explicit promotion.",
+    capabilities: [
+      "Six simultaneous engines: Solana (Jupiter/DexScreener), Polymarket CLOB, Binance, Coinbase, Kraken, ETH DeFi",
+      "Signal intake from the Autonomous Trading Desk via internal typed message bus",
+      "Independent circuit breakers per engine with configurable loss thresholds",
+      "Central kill switch halting all execution instantly across all six engines",
+      "Real-time position tracking and P&L reporting across all active venues",
+      "DRY_RUN mode by default with explicit promotion required for live execution"
+    ],
+    approach: [
+      "TypeScript with ccxt for standardized CEX connectivity and custom adapters for DeFi",
+      "Solana web3.js and Jupiter v6 API for on-chain Solana DEX execution",
+      "Event-driven signal intake from the Profit Desk agent via typed message bus",
+      "Configurable per-engine position limits, daily loss limits, and slippage thresholds"
+    ],
+    stats: [
+      { value: "6", label: "Engines" },
+      { value: "5", label: "Exchanges" },
+      { value: "3", label: "Chains" },
+      { value: "DRY", label: "Default Mode" }
+    ]
+  },
+
+  "prediction-market-executor": {
+    title: "Prediction Market Executor",
+    number: "23",
+    tagline: "Autonomous CLOB execution bot for Polymarket prediction markets",
+    disclosure: "restricted-detail",
+    status: "Paused",
+    statusClass: "paused",
+    tech: ["JavaScript", "Polymarket CLOB API", "ethers.js", "Polygon", "On-Chain"],
+    overview: "An autonomous execution bot purpose-built for Polymarket's Central Limit Order Book. Monitors target market conditions, calculates optimal entry prices against the live order book, and executes positions directly against the CLOB API using a Polygon wallet. Superseded by the Prediction Market Assistant and Sovereign Trade Engine architecture, which subsume this capability with better risk management and ecosystem integration.",
+    philosophy: "This was the first serious on-chain execution bot. Direct CLOB access, real Polygon wallet, autonomous position sizing. Everything the later prediction market tools built on. Paused because the Sovereign Trade Engine architecture now subsumes it cleanly, but it earned its place as the first proof that on-chain autonomous execution for prediction markets was viable.",
+    capabilities: [
+      "Direct Polymarket CLOB API integration for limit and market order placement",
+      "Live order book analysis for optimal entry price calculation",
+      "Autonomous position sizing based on configured capital allocation rules",
+      "Polygon wallet integration via ethers.js for on-chain execution",
+      "Target market monitoring with configurable entry condition triggers"
+    ],
+    approach: [
+      "JavaScript with ethers.js for Polygon network interaction and wallet management",
+      "Polymarket CLOB REST API for order placement and order book streaming",
+      "Configurable strategy parameters for entry thresholds and position sizing",
+      "Paper mode for strategy validation before real capital deployment"
+    ],
+    stats: [
+      { value: "CLOB", label: "Order Book" },
+      { value: "Polygon", label: "Chain" },
+      { value: "Auto", label: "Execution" },
+      { value: "Paused", label: "Status" }
+    ]
   }
 
 };

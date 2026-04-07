@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign Signal | Lance W. Fisher</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%94%92</text></svg>">
+<style>
+:root {
+  --bg: #0b0c0f; --bg2: #12141a; --bg3: #1a1c24; --bg4: #22252e;
+  --border: #2a2d38; --border-dim: #1e2028;
+  --accent: #4a90e2; --accent-bg: rgba(74,144,226,.1); --accent-glow: rgba(74,144,226,.2);
+  --green: #2ecc71; --green-bg: rgba(46,204,113,.1);
+  --gold: #c9a227; --gold-bg: rgba(201,162,39,.1);
+  --text: #e2e6f0; --text2: #8892a4; --text3: #4a5068;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', system-ui, sans-serif;
+  --disp: 'Cinzel', serif;
+  --sent-bg: rgba(74,144,226,.12); --recv-bg: #1a1c24;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.5;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* ── Nav ── */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)}
+.nav-left{display:flex;align-items:center;gap:12px}
+.nav-icon{width:28px;height:28px;background:var(--accent-bg);border:1px solid rgba(74,144,226,.3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.nav-name{font-family:var(--disp);font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--text)}
+.nav-tagline{font-size:10px;color:var(--text3);letter-spacing:.05em;margin-top:1px}
+.nav-back{font-family:var(--disp);font-size:9px;letter-spacing:.15em;color:var(--text3);text-decoration:none;text-transform:uppercase;transition:color .2s;border:1px solid var(--border);padding:5px 12px;border-radius:2px}
+.nav-back:hover{color:var(--accent);border-color:var(--accent)}
+
+/* ── Hero ── */
+.hero{background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);border-bottom:1px solid var(--border);padding:40px 28px 32px}
+.hero-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.hero-text{}
+.hero-label{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:12px}
+.hero-title{font-family:var(--disp);font-size:28px;font-weight:700;letter-spacing:.06em;color:var(--text);line-height:1.15;margin-bottom:12px}
+.hero-desc{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:20px}
+.hero-tags{display:flex;gap:8px;flex-wrap:wrap}
+.htag{font-family:var(--mono);font-size:10px;padding:3px 10px;border-radius:3px;letter-spacing:.05em}
+.htag-e2ee{background:var(--accent-bg);color:var(--accent);border:1px solid rgba(74,144,226,.3)}
+.htag-zk{background:var(--green-bg);color:var(--green);border:1px solid rgba(46,204,113,.25)}
+.htag-pw{background:var(--gold-bg);color:var(--gold);border:1px solid rgba(201,162,39,.25)}
+
+/* ── Stats ── */
+.stats{display:flex;gap:0;border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-top:24px}
+.stat{flex:1;padding:14px 16px;text-align:center;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-val{font-family:var(--disp);font-size:16px;font-weight:700;color:var(--accent)}
+.stat-lbl{font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+
+/* ── Demo window ── */
+.demo-window{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.5);position:relative}
+.demo-titlebar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg3);border-bottom:1px solid var(--border)}
+.demo-dots{display:flex;gap:6px}
+.demo-dot{width:10px;height:10px;border-radius:50%}
+.demo-dot-r{background:#ff5f57}
+.demo-dot-y{background:#ffbd2e}
+.demo-dot-g{background:#28c840}
+.demo-appname{font-family:var(--disp);font-size:10px;letter-spacing:.12em;color:var(--text3)}
+.demo-enc-badge{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--green)}
+.demo-enc-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green)}
+
+.demo-layout{display:grid;grid-template-columns:160px 1fr;height:340px}
+.contact-list{border-right:1px solid var(--border);overflow-y:auto}
+.contact{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;transition:background .15s;border-bottom:1px solid var(--border-dim)}
+.contact:hover,.contact.active{background:var(--bg4)}
+.contact-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.ca-blue{background:rgba(74,144,226,.2);color:var(--accent)}
+.ca-green{background:rgba(46,204,113,.2);color:var(--green)}
+.ca-gold{background:rgba(201,162,39,.2);color:var(--gold)}
+.contact-info{overflow:hidden}
+.contact-name{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.contact-preview{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.contact-enc{font-size:9px;color:var(--green);margin-top:2px}
+
+.chat-area{display:flex;flex-direction:column}
+.chat-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.chat-peer{font-size:12px;font-weight:500;color:var(--text)}
+.chat-enc-status{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;color:var(--green)}
+.chat-enc-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:enc-pulse 2.4s ease-in-out infinite}
+@keyframes enc-pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 var(--green)}50%{opacity:.7;box-shadow:0 0 0 3px rgba(46,204,113,.15)}}
+.chat-messages{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:78%;display:flex;flex-direction:column;gap:2px}
+.msg.sent{align-self:flex-end;align-items:flex-end}
+.msg.recv{align-self:flex-start;align-items:flex-start}
+.msg-bubble{padding:8px 12px;border-radius:12px;font-size:12px;line-height:1.5}
+.msg.sent .msg-bubble{background:var(--sent-bg);border:1px solid rgba(74,144,226,.2);border-bottom-right-radius:3px;color:var(--text)}
+.msg.recv .msg-bubble{background:var(--recv-bg);border:1px solid var(--border-dim);border-bottom-left-radius:3px;color:var(--text)}
+.msg-meta{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text3)}
+.msg-enc{color:var(--green);font-family:var(--mono)}
+.chat-input{display:flex;align-items:center;gap:8px;padding:10px 14px;border-top:1px solid var(--border);background:var(--bg3)}
+.chat-input-box{flex:1;background:var(--bg4);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--text);font-family:var(--sans);outline:none}
+.chat-send{width:28px;height:28px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;flex-shrink:0;transition:background .15s}
+.chat-send:hover{background:#3a7fd4}
+
+/* ── Architecture section ── */
+.arch{max-width:960px;margin:0 auto;padding:40px 28px}
+.arch-title{font-family:var(--disp);font-size:11px;font-weight:600;letter-spacing:.22em;color:var(--text3);text-transform:uppercase;margin-bottom:24px}
+.arch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px}
+.arch-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:20px}
+.arch-card-icon{font-size:22px;margin-bottom:12px}
+.arch-card-title{font-family:var(--disp);font-size:12px;font-weight:600;letter-spacing:.1em;color:var(--text);margin-bottom:8px}
+.arch-card-desc{font-size:12px;color:var(--text2);line-height:1.65}
+.arch-card.accent-blue{border-color:rgba(74,144,226,.3)}
+.arch-card.accent-green{border-color:rgba(46,204,113,.25)}
+.arch-card.accent-gold{border-color:rgba(201,162,39,.25)}
+
+/* ── Key exchange diagram ── */
+.kex{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:40px}
+.kex-title{font-family:var(--disp);font-size:10px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:16px}
+.kex-flow{display:flex;align-items:center;gap:0;overflow-x:auto}
+.kex-node{text-align:center;padding:12px 16px;flex-shrink:0}
+.kex-node-label{font-family:var(--disp);font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--text);margin-bottom:4px}
+.kex-node-sub{font-family:var(--mono);font-size:9px;color:var(--text3)}
+.kex-arrow{display:flex;flex-direction:column;align-items:center;flex-shrink:0;padding:0 4px}
+.kex-arrow-line{width:48px;height:1px;background:var(--border);position:relative}
+.kex-arrow-line::after{content:'';position:absolute;right:-4px;top:-3px;border:4px solid transparent;border-left-color:var(--border)}
+.kex-arrow-label{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:4px;white-space:nowrap}
+.kex-server{background:var(--bg4);border:1px solid var(--border);border-radius:6px;padding:12px 16px;text-align:center;flex-shrink:0}
+.kex-server-label{font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:4px}
+.kex-server-note{font-size:10px;color:var(--accent)}
+
+/* ── Tech stack ── */
+.tech-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px}
+.tech-chip{font-family:var(--mono);font-size:11px;padding:4px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;color:var(--text2)}
+
+/* ── Footer ── */
+.page-footer{border-top:1px solid var(--border);padding:24px 28px;text-align:center;font-size:12px;color:var(--text3);max-width:960px;margin:0 auto}
+
+@media(max-width:720px){
+  .hero-inner{grid-template-columns:1fr;gap:28px}
+  .demo-window{display:none}
+  .arch-grid{grid-template-columns:1fr}
+  .kex-flow{flex-direction:column;align-items:flex-start}
+  .kex-arrow{flex-direction:row;padding:4px 0}
+  .kex-arrow-line{width:24px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-left">
+    <div class="nav-icon">&#128274;</div>
+    <div>
+      <div class="nav-name">Sovereign Signal</div>
+      <div class="nav-tagline">End-to-end encrypted &bull; Zero-knowledge &bull; Passwordless</div>
+    </div>
+  </div>
+  <a class="nav-back" href="../home.html">&larr; Portfolio</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-label">Project 11 | In Development</div>
+      <div class="hero-title">Sovereign Signal</div>
+      <div class="hero-desc">A peer-to-peer encrypted messaging platform built on Signal-grade cryptography. Messages are encrypted on the sender's device and can only be decrypted by the intended recipient. The server functions as a pure relay with zero ability to read message content.</div>
+      <div class="hero-tags">
+        <span class="htag htag-e2ee">E2E Encrypted</span>
+        <span class="htag htag-zk">Zero-Knowledge Server</span>
+        <span class="htag htag-pw">Passwordless Auth</span>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-val">X3DH</div><div class="stat-lbl">Key Exchange</div></div>
+        <div class="stat"><div class="stat-val">DR</div><div class="stat-lbl">Ratchet</div></div>
+        <div class="stat"><div class="stat-val">0</div><div class="stat-lbl">Passwords</div></div>
+        <div class="stat"><div class="stat-val">P2P</div><div class="stat-lbl">Architecture</div></div>
+      </div>
+    </div>
+
+    <div class="demo-window">
+      <div class="demo-titlebar">
+        <div class="demo-dots">
+          <div class="demo-dot demo-dot-r"></div>
+          <div class="demo-dot demo-dot-y"></div>
+          <div class="demo-dot demo-dot-g"></div>
+        </div>
+        <div class="demo-appname">Sovereign Signal</div>
+        <div class="demo-enc-badge">Encrypted</div>
+      </div>
+      <div class="demo-layout">
+        <div class="contact-list">
+          <div class="contact active" onclick="switchContact(this,'Sarah K.','Ratchet key #47')">
+            <div class="contact-avatar ca-blue">S</div>
+            <div class="contact-info">
+              <div class="contact-name">Sarah K.</div>
+              <div class="contact-preview">Sounds good</div>
+              <div class="contact-enc">&#128274; Verified</div>
+            </div>
+          </div>
+          <div class="contact" onclick="switchContact(this,'James R.','Ratchet key #12')">
+            <div class="contact-avatar ca-green">J</div>
+            <div class="contact-info">
+              <div class="contact-name">James R.</div>
+              <div class="contact-preview">Let me check</div>
+              <div class="contact-enc">&#128274; Verified</div>
+            </div>
+          </div>
+          <div class="contact" onclick="switchContact(this,'Mia T.','Ratchet key #8')">
+            <div class="contact-avatar ca-gold">M</div>
+            <div class="contact-info">
+              <div class="contact-name">Mia T.</div>
+              <div class="contact-preview">On my way</div>
+              <div class="contact-enc">&#128274; Verified</div>
+            </div>
+          </div>
+        </div>
+        <div class="chat-area">
+          <div class="chat-header">
+            <div class="chat-peer" id="chatPeer">Sarah K.</div>
+            <div class="chat-enc-status" id="chatEncStatus">Ratchet key #47</div>
+          </div>
+          <div class="chat-messages" id="chatMessages">
+            <div class="msg recv">
+              <div class="msg-bubble">Hey, did you review the proposal?</div>
+              <div class="msg-meta"><span class="msg-enc">&#128274;</span> 2:14 PM</div>
+            </div>
+            <div class="msg sent">
+              <div class="msg-bubble">Yes, looks solid. Sending my notes now.</div>
+              <div class="msg-meta">2:15 PM <span class="msg-enc">&#128274;</span></div>
+            </div>
+            <div class="msg recv">
+              <div class="msg-bubble">Perfect. Let's connect at 4.</div>
+              <div class="msg-meta"><span class="msg-enc">&#128274;</span> 2:16 PM</div>
+            </div>
+            <div class="msg sent">
+              <div class="msg-bubble">Sounds good.</div>
+              <div class="msg-meta">2:16 PM <span class="msg-enc">&#128274;</span></div>
+            </div>
+          </div>
+          <div class="chat-input">
+            <input class="chat-input-box" id="chatBox" type="text" placeholder="Message (encrypted on send)" autocomplete="off">
+            <button class="chat-send" onclick="sendDemoMessage()">&#9654;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="arch">
+  <div class="arch-title">Architecture</div>
+  <div class="arch-grid">
+    <div class="arch-card accent-blue">
+      <div class="arch-card-icon">&#128272;</div>
+      <div class="arch-card-title">X3DH Key Agreement</div>
+      <div class="arch-card-desc">Extended Triple Diffie-Hellman establishes a shared secret between two parties without the server ever seeing the keys. One-time prekeys ensure each conversation starts fresh even if a device is compromised later.</div>
+    </div>
+    <div class="arch-card accent-green">
+      <div class="arch-card-icon">&#128260;</div>
+      <div class="arch-card-title">Double Ratchet</div>
+      <div class="arch-card-desc">Every message uses a new encryption key derived from the previous one. Forward secrecy means past messages stay safe even if current keys are compromised. Break-in recovery means future messages are safe even after a breach.</div>
+    </div>
+    <div class="arch-card accent-gold">
+      <div class="arch-card-icon">&#128065;</div>
+      <div class="arch-card-title">Zero-Knowledge Server</div>
+      <div class="arch-card-desc">The relay server stores only opaque encrypted blobs. It routes packets, stores nothing readable, and has no access to message content, sender identity, or recipient identity. No metadata collection.</div>
+    </div>
+  </div>
+
+  <div class="kex">
+    <div class="kex-title">X3DH + Double Ratchet Protocol Flow</div>
+    <div class="kex-flow">
+      <div class="kex-node">
+        <div class="kex-node-label">Alice</div>
+        <div class="kex-node-sub">Generates IK, SPK, OPK</div>
+      </div>
+      <div class="kex-arrow">
+        <div class="kex-arrow-line"></div>
+        <div class="kex-arrow-label">Publish prekeys</div>
+      </div>
+      <div class="kex-server">
+        <div class="kex-server-label">Relay Server</div>
+        <div class="kex-server-note">Stores public keys only</div>
+      </div>
+      <div class="kex-arrow">
+        <div class="kex-arrow-line"></div>
+        <div class="kex-arrow-label">Fetch Alice&rsquo;s prekeys</div>
+      </div>
+      <div class="kex-node">
+        <div class="kex-node-label">Bob</div>
+        <div class="kex-node-sub">Computes shared secret</div>
+      </div>
+      <div class="kex-arrow">
+        <div class="kex-arrow-line"></div>
+        <div class="kex-arrow-label">Encrypted initial message</div>
+      </div>
+      <div class="kex-node">
+        <div class="kex-node-label">Alice</div>
+        <div class="kex-node-sub">Derives same secret &rarr; DR</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arch-title">Authentication</div>
+  <div class="arch-grid" style="margin-bottom:32px">
+    <div class="arch-card">
+      <div class="arch-card-icon">&#128442;</div>
+      <div class="arch-card-title">WebAuthn / Passkeys</div>
+      <div class="arch-card-desc">No passwords. Authentication uses biometrics or hardware security keys via the WebAuthn standard. Credentials never leave the device. Phishing-resistant by design.</div>
+    </div>
+    <div class="arch-card">
+      <div class="arch-card-icon">&#128273;</div>
+      <div class="arch-card-title">Client-Side Key Vault</div>
+      <div class="arch-card-desc">Private keys are stored locally, encrypted at rest using keys derived from the passkey credential. The server never receives, stores, or touches private key material.</div>
+    </div>
+    <div class="arch-card">
+      <div class="arch-card-icon">&#9874;</div>
+      <div class="arch-card-title">Comprehensive Test Suite</div>
+      <div class="arch-card-desc">Cryptographic primitives, key derivation functions, ratchet state machines, and protocol flows all covered. Security properties verified independently from application logic.</div>
+    </div>
+  </div>
+
+  <div class="arch-title">Stack</div>
+  <div class="tech-grid">
+    <span class="tech-chip">TypeScript</span>
+    <span class="tech-chip">Next.js</span>
+    <span class="tech-chip">libsodium</span>
+    <span class="tech-chip">WebAuthn</span>
+    <span class="tech-chip">X3DH Protocol</span>
+    <span class="tech-chip">Double Ratchet</span>
+    <span class="tech-chip">Vitest</span>
+    <span class="tech-chip">Node.js Relay</span>
+  </div>
+
+  <div class="page-footer">
+    Built on the conviction that private communication is a right, not a feature. <a href="../home.html" style="color:var(--accent);text-decoration:none">Lance W. Fisher</a>
+  </div>
+</div>
+
+<script>
+/* Static demo interaction - no external data, no user input processed server-side */
+(function(){
+'use strict';
+
+var CONVOS = {
+  'Sarah K.': {
+    key: 'Ratchet key #47',
+    msgs: [
+      {dir:'recv', text:'Hey, did you review the proposal?', time:'2:14 PM'},
+      {dir:'sent', text:'Yes, looks solid. Sending my notes now.', time:'2:15 PM'},
+      {dir:'recv', text:'Perfect. Let\u2019s connect at 4.', time:'2:16 PM'},
+      {dir:'sent', text:'Sounds good.', time:'2:16 PM'},
+    ]
+  },
+  'James R.': {
+    key: 'Ratchet key #12',
+    msgs: [
+      {dir:'recv', text:'Can you share the updated specs?', time:'1:02 PM'},
+      {dir:'sent', text:'Sending now.', time:'1:04 PM'},
+      {dir:'recv', text:'Let me check and get back to you.', time:'1:05 PM'},
+    ]
+  },
+  'Mia T.': {
+    key: 'Ratchet key #8',
+    msgs: [
+      {dir:'sent', text:'Are you close?', time:'3:48 PM'},
+      {dir:'recv', text:'On my way, 10 min.', time:'3:49 PM'},
+    ]
+  }
+};
+
+var activeName = 'Sarah K.';
+
+window.switchContact = function(el, name, key) {
+  document.querySelectorAll('.contact').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+  activeName = name;
+  document.getElementById('chatPeer').textContent = name;
+  document.getElementById('chatEncStatus').textContent = key;
+  renderMessages(name);
+};
+
+function renderMessages(name) {
+  var container = document.getElementById('chatMessages');
+  container.textContent = '';
+  var convo = CONVOS[name];
+  if (!convo) return;
+  var frag = document.createDocumentFragment();
+  convo.msgs.forEach(function(m) {
+    var row = document.createElement('div');
+    row.className = 'msg ' + m.dir;
+    var bubble = document.createElement('div');
+    bubble.className = 'msg-bubble';
+    bubble.textContent = m.text;
+    var meta = document.createElement('div');
+    meta.className = 'msg-meta';
+    var enc = document.createElement('span');
+    enc.className = 'msg-enc';
+    enc.textContent = '\uD83D\uDD12';
+    if (m.dir === 'sent') {
+      meta.appendChild(document.createTextNode(m.time + ' '));
+      meta.appendChild(enc);
+    } else {
+      meta.appendChild(enc);
+      meta.appendChild(document.createTextNode(' ' + m.time));
+    }
+    row.appendChild(bubble);
+    row.appendChild(meta);
+    frag.appendChild(row);
+  });
+  container.appendChild(frag);
+  container.scrollTop = container.scrollHeight;
+}
+
+window.sendDemoMessage = function() {
+  var box = document.getElementById('chatBox');
+  var text = box.value.trim();
+  if (!text) return;
+  box.value = '';
+
+  var convo = CONVOS[activeName];
+  var now = new Date();
+  var h = now.getHours(), m = now.getMinutes();
+  var time = h + ':' + (m < 10 ? '0' + m : m) + (h >= 12 ? ' PM' : ' AM');
+  convo.msgs.push({dir:'sent', text: text, time: time});
+  renderMessages(activeName);
+
+  /* Simulate a reply after a short delay */
+  var replies = ['Got it.','Understood.','Thanks.','On it.','Will do.','Acknowledged.'];
+  setTimeout(function(){
+    var reply = replies[Math.floor(Math.random() * replies.length)];
+    convo.msgs.push({dir:'recv', text: reply, time: time});
+    renderMessages(activeName);
+  }, 900);
+};
+
+document.getElementById('chatBox').addEventListener('keydown', function(e){
+  if (e.key === 'Enter') window.sendDemoMessage();
+});
+
+})();
+</script>
+</body>
+</html>
