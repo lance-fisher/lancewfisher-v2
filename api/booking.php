@@ -15,6 +15,9 @@ define('FROM_ADDRESS', 'noreply@lancewfisher.com');
 define('RATE_WINDOW',  300);   // 5 minutes
 define('RATE_LIMIT',   3);     // max submissions per window
 
+// SMS notification via Verizon email-to-SMS gateway
+define('SMS_TO', '9189066963@vtext.com');
+
 // ─── Headers ─────────────────────────────────────────────────────
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
@@ -183,6 +186,15 @@ if ($sent) {
     $replyHeaders .= "Content-Type: text/plain; charset=UTF-8\r\n";
     $replyBody = "Hi $name,\n\nThank you for reaching out. I've received your message about \"$topic\" and will respond within 24 hours.\n\nBest,\nLance Fisher\nlancewfisher.com";
     @mail($email, $replySubject, $replyBody, $replyHeaders);
+
+    // SMS notification via Verizon email-to-SMS gateway
+    if (defined('SMS_TO') && SMS_TO !== '') {
+        $smsSubject = 'lancewfisher.com';
+        $smsBody = "New message from $name ($topic). Check email.";
+        $smsHeaders = "From: " . FROM_ADDRESS . "\r\n";
+        $smsHeaders .= "Content-Type: text/plain; charset=UTF-8\r\n";
+        @mail(SMS_TO, $smsSubject, $smsBody, $smsHeaders);
+    }
 
     echo json_encode(['ok' => true, 'message' => 'Your request has been sent.']);
 } else {
