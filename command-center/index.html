@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign Command Center | Fisher Sovereign Systems</title>
+<meta name="description" content="Fisher Sovereign Command Center: unified sovereignty dashboard showing AI governance, identity trust, network control, encrypted communications, and infrastructure health across the Fisher Sovereign ecosystem.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80'>&#9878;</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════
+   SOVEREIGN COMMAND CENTER
+   Fisher Sovereign Systems: Building the Architecture for Independence
+   Self-contained page. No external CSS dependencies.
+   ═══════════════════════════════════════════════════════ */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0b;
+  --bg-panel: #0e0f12;
+  --bg-panel-hi: #14161b;
+  --bg-elev: #1a1d23;
+  --bg-elev-2: #21252e;
+  --border: rgba(228,234,242,0.07);
+  --border-hi: rgba(228,234,242,0.14);
+  --border-strong: rgba(228,234,242,0.22);
+  --fg-strong: rgba(228,234,242,0.94);
+  --fg: rgba(195,205,218,0.72);
+  --fg-dim: rgba(195,205,218,0.45);
+  --fg-faint: rgba(195,205,218,0.28);
+  --green: #6ee7a0;
+  --green-dim: rgba(110,231,160,0.10);
+  --green-line: rgba(110,231,160,0.32);
+  --amber: #fbbf24;
+  --amber-dim: rgba(251,191,36,0.10);
+  --amber-line: rgba(251,191,36,0.32);
+  --red: #f87171;
+  --red-dim: rgba(248,113,113,0.10);
+  --red-line: rgba(248,113,113,0.32);
+  --blue: #7dd3fc;
+  --blue-dim: rgba(125,211,252,0.10);
+  --blue-line: rgba(125,211,252,0.32);
+  --purple: #a78bfa;
+  --purple-dim: rgba(167,139,250,0.10);
+  --purple-line: rgba(167,139,250,0.32);
+  --cyan: #67e8f9;
+  --cyan-dim: rgba(103,232,249,0.10);
+  --cyan-line: rgba(103,232,249,0.32);
+  --font-display: 'Cinzel', serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --radius: 8px;
+  --radius-sm: 5px;
+  --gap: 14px;
+  --max-w: 1400px;
+}
+
+html { scroll-behavior: smooth; font-size: 15px; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  line-height: 1.55;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--fg-strong); text-decoration: none; transition: color 0.15s; }
+a:hover { color: #fff; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+/* ─── NAV ─── */
+.nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 24px;
+  background: rgba(10,10,11,0.92);
+  border-bottom: 1px solid var(--border-hi);
+  position: sticky; top: 0; z-index: 100;
+  backdrop-filter: blur(16px);
+}
+.nav-left { display: flex; align-items: center; gap: 20px; }
+.nav-back {
+  font-family: var(--font-mono); font-size: 0.73rem;
+  color: var(--fg-dim); letter-spacing: 0.03em;
+}
+.nav-back:hover { color: var(--fg-strong); }
+.nav-back::before { content: '\2190\00a0'; }
+.nav-title {
+  font-family: var(--font-display); font-size: 0.82rem; font-weight: 600;
+  color: var(--fg-strong); letter-spacing: 0.16em; text-transform: uppercase;
+}
+.nav-right { display: flex; align-items: center; gap: 14px; }
+.status-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 999px;
+  font-family: var(--font-mono); font-size: 0.64rem;
+  letter-spacing: 0.05em; text-transform: uppercase;
+}
+.status-pill.live {
+  border: 1px solid var(--green-line); background: var(--green-dim); color: var(--green);
+}
+.status-pill.local {
+  border: 1px solid var(--purple-line); background: var(--purple-dim); color: var(--purple);
+}
+.pulse-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+  box-shadow: 0 0 0 0 rgba(110,231,160,0.5);
+  animation: pulse 2.4s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(110,231,160,0.45); }
+  70% { box-shadow: 0 0 0 8px rgba(110,231,160,0); }
+  100% { box-shadow: 0 0 0 0 rgba(110,231,160,0); }
+}
+
+/* ─── HERO ─── */
+.hero {
+  max-width: var(--max-w); margin: 0 auto;
+  padding: 40px 28px 8px;
+}
+.hero-eyebrow {
+  font-family: var(--font-mono); font-size: 0.66rem;
+  color: var(--fg-faint); letter-spacing: 0.12em; text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.hero h1 {
+  font-family: var(--font-display); font-size: 2rem; font-weight: 600;
+  color: var(--fg-strong); letter-spacing: 0.02em; line-height: 1.15;
+  margin-bottom: 12px;
+}
+.hero-sub {
+  font-family: var(--font-serif); font-size: 1.12rem; font-style: italic;
+  color: var(--fg); max-width: 680px; line-height: 1.55;
+}
+
+/* ─── STATS STRIP ─── */
+.stats-strip {
+  max-width: var(--max-w); margin: 0 auto;
+  padding: 20px 28px 6px;
+  display: flex; flex-wrap: wrap; gap: 10px;
+}
+.stat-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px; border-radius: var(--radius);
+  background: var(--bg-panel); border: 1px solid var(--border);
+  font-family: var(--font-mono); font-size: 0.72rem;
+}
+.stat-chip .stat-val {
+  font-weight: 500; color: var(--fg-strong); font-size: 0.82rem;
+}
+.stat-chip .stat-label { color: var(--fg-dim); letter-spacing: 0.04em; }
+
+/* ─── SECTION TABS ─── */
+.section-tabs-wrap {
+  max-width: var(--max-w); margin: 0 auto;
+  padding: 20px 28px 0;
+}
+.section-tabs {
+  display: flex; flex-wrap: wrap; gap: 2px;
+  border-bottom: 1px solid var(--border);
+}
+.section-tab {
+  font-family: var(--font-mono); font-size: 0.72rem;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--fg-dim); padding: 11px 16px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.section-tab:hover { color: var(--fg-strong); }
+.section-tab.active { color: var(--fg-strong); border-bottom-color: var(--fg-strong); }
+.tab-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+/* ─── PANELS ─── */
+.panels-wrap {
+  max-width: var(--max-w); margin: 0 auto;
+  padding: 24px 28px 80px;
+}
+.panel { display: none; }
+.panel.active { display: block; animation: fadePanel 0.25s ease; }
+@keyframes fadePanel {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.panel-header { margin-bottom: 20px; }
+.panel-header h2 {
+  font-family: var(--font-display); font-size: 1.35rem; font-weight: 600;
+  color: var(--fg-strong); letter-spacing: 0.02em; margin-bottom: 6px;
+}
+.panel-header .lede {
+  font-size: 0.88rem; color: var(--fg); max-width: 680px;
+}
+
+/* ─── CARD GRID ─── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--gap);
+}
+.card-grid-3 { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+/* ─── CARD ─── */
+.card {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px;
+  transition: all 0.18s; position: relative;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.card:hover {
+  background: var(--bg-panel-hi); border-color: var(--border-hi);
+  transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+}
+.card.clickable { cursor: pointer; }
+.card-kicker {
+  font-family: var(--font-mono); font-size: 0.62rem;
+  color: var(--fg-faint); letter-spacing: 0.1em; text-transform: uppercase;
+}
+.card h3 {
+  font-family: var(--font-display); font-size: 1.05rem; font-weight: 600;
+  color: var(--fg-strong); letter-spacing: 0.01em; line-height: 1.2;
+}
+.card p { font-size: 0.82rem; color: var(--fg); line-height: 1.55; }
+.card-meta {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px;
+}
+.tag {
+  font-family: var(--font-mono); font-size: 0.62rem;
+  padding: 3px 8px; border-radius: 3px; letter-spacing: 0.04em;
+}
+.tag-green  { background: var(--green-dim);  border: 1px solid var(--green-line);  color: var(--green); }
+.tag-amber  { background: var(--amber-dim);  border: 1px solid var(--amber-line);  color: var(--amber); }
+.tag-blue   { background: var(--blue-dim);   border: 1px solid var(--blue-line);   color: var(--blue); }
+.tag-purple { background: var(--purple-dim); border: 1px solid var(--purple-line); color: var(--purple); }
+.tag-red    { background: var(--red-dim);    border: 1px solid var(--red-line);    color: var(--red); }
+.tag-cyan   { background: var(--cyan-dim);   border: 1px solid var(--cyan-line);   color: var(--cyan); }
+.tag-ghost  { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--fg-dim); }
+
+/* ─── STATUS BAR ─── */
+.status-bar {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 0.68rem;
+}
+.status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.status-dot.green  { background: var(--green); box-shadow: 0 0 6px rgba(110,231,160,0.4); }
+.status-dot.amber  { background: var(--amber); box-shadow: 0 0 6px rgba(251,191,36,0.4); }
+.status-dot.red    { background: var(--red);   box-shadow: 0 0 6px rgba(248,113,113,0.4); }
+.status-dot.blue   { background: var(--blue);  box-shadow: 0 0 6px rgba(125,211,252,0.4); }
+.status-dot.purple { background: var(--purple); box-shadow: 0 0 6px rgba(167,139,250,0.4); }
+
+/* ─── ARCHITECTURE DIAGRAM ─── */
+.arch-diagram {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px;
+  margin-bottom: 20px; overflow-x: auto;
+}
+.arch-layers { display: flex; flex-direction: column; gap: 16px; min-width: 700px; }
+.arch-layer {
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 14px 16px;
+}
+.arch-layer-label {
+  font-family: var(--font-mono); font-size: 0.6rem;
+  color: var(--fg-faint); letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.arch-boxes { display: flex; flex-wrap: wrap; gap: 8px; }
+.arch-box {
+  flex: 1; min-width: 120px;
+  background: var(--bg-elev); border: 1px solid var(--border-hi);
+  border-radius: var(--radius-sm); padding: 10px 12px;
+  font-family: var(--font-mono); font-size: 0.7rem;
+  color: var(--fg); text-align: center; line-height: 1.4;
+}
+.arch-box strong { display: block; color: var(--fg-strong); font-size: 0.74rem; margin-bottom: 2px; }
+.arch-connector {
+  display: flex; justify-content: center; color: var(--fg-faint);
+  font-family: var(--font-mono); font-size: 0.72rem; padding: 2px 0;
+}
+
+/* ─── EVENT FEED ─── */
+.event-feed {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px; margin-top: 20px;
+}
+.event-feed-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.event-feed-title {
+  font-family: var(--font-mono); font-size: 0.72rem;
+  color: var(--fg-dim); letter-spacing: 0.08em; text-transform: uppercase;
+}
+.event-list { display: flex; flex-direction: column; gap: 6px; }
+.event-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 7px 10px; border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.015);
+  font-size: 0.78rem;
+}
+.event-time {
+  font-family: var(--font-mono); font-size: 0.66rem;
+  color: var(--fg-faint); white-space: nowrap; min-width: 56px; padding-top: 1px;
+}
+.event-icon { font-size: 0.82rem; flex-shrink: 0; padding-top: 1px; }
+.event-text { color: var(--fg); flex: 1; }
+.event-source { color: var(--fg-strong); font-weight: 500; }
+
+/* ─── POSTURE METERS ─── */
+.posture-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--gap); margin-bottom: 20px;
+}
+.posture-card {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px; text-align: center;
+}
+.posture-label {
+  font-family: var(--font-mono); font-size: 0.62rem;
+  color: var(--fg-faint); letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.posture-value {
+  font-family: var(--font-mono); font-size: 1.6rem; font-weight: 500;
+  margin-bottom: 4px;
+}
+.posture-note {
+  font-family: var(--font-mono); font-size: 0.64rem; color: var(--fg-dim);
+}
+.meter-bar {
+  height: 4px; border-radius: 2px; background: rgba(255,255,255,0.06);
+  margin-top: 10px; overflow: hidden;
+}
+.meter-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+
+/* ─── GOVERNANCE TABLE ─── */
+.tier-table {
+  width: 100%; border-collapse: collapse; font-size: 0.8rem;
+}
+.tier-table th {
+  font-family: var(--font-mono); font-size: 0.66rem;
+  color: var(--fg-faint); letter-spacing: 0.08em; text-transform: uppercase;
+  text-align: left; padding: 10px 14px;
+  border-bottom: 1px solid var(--border-hi);
+}
+.tier-table td {
+  padding: 10px 14px; border-bottom: 1px solid var(--border);
+  color: var(--fg); vertical-align: top;
+}
+.tier-table tr:hover td { background: rgba(255,255,255,0.015); }
+.tier-num { font-family: var(--font-mono); font-weight: 600; font-size: 0.88rem; }
+
+/* ─── PRODUCT LINKS ─── */
+.product-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: 0.72rem;
+  color: var(--fg-dim); letter-spacing: 0.03em;
+  padding: 6px 12px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: all 0.15s; margin-top: 8px;
+}
+.product-link:hover {
+  color: var(--fg-strong); border-color: var(--border-hi);
+  background: rgba(255,255,255,0.03);
+}
+
+/* ─── FOOTER ─── */
+.page-footer {
+  max-width: var(--max-w); margin: 0 auto;
+  padding: 0 28px 48px;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+  display: flex; flex-wrap: wrap; justify-content: space-between;
+  align-items: center; gap: 16px;
+}
+.footer-brand {
+  font-family: var(--font-display); font-size: 0.72rem;
+  color: var(--fg-dim); letter-spacing: 0.12em; text-transform: uppercase;
+}
+.footer-links {
+  display: flex; gap: 18px;
+  font-family: var(--font-mono); font-size: 0.68rem;
+}
+.footer-links a { color: var(--fg-faint); }
+.footer-links a:hover { color: var(--fg-strong); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .nav { padding: 10px 16px; }
+  .nav-title { font-size: 0.7rem; letter-spacing: 0.1em; }
+  .hero { padding: 28px 18px 8px; }
+  .hero h1 { font-size: 1.5rem; }
+  .stats-strip { padding: 16px 18px 4px; }
+  .section-tabs-wrap { padding: 16px 18px 0; }
+  .section-tab { padding: 9px 10px; font-size: 0.66rem; }
+  .panels-wrap { padding: 18px 18px 60px; }
+  .card-grid, .card-grid-3 { grid-template-columns: 1fr; }
+  .posture-grid { grid-template-columns: repeat(2, 1fr); }
+  .arch-diagram { padding: 16px; }
+  .page-footer { padding: 0 18px 36px; }
+  .nav-right .status-pill:last-child { display: none; }
+}
+@media (max-width: 480px) {
+  .posture-grid { grid-template-columns: 1fr; }
+  .stats-strip { gap: 6px; }
+  .stat-chip { padding: 6px 10px; font-size: 0.66rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav">
+  <div class="nav-left">
+    <a href="../home.html" class="nav-back">Portfolio</a>
+    <span class="nav-title">Sovereign Command Center</span>
+  </div>
+  <div class="nav-right">
+    <span class="status-pill live"><span class="pulse-dot"></span> All Systems Nominal</span>
+    <span class="status-pill local">Local Only</span>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-eyebrow">Fisher Sovereign Systems</div>
+  <h1>Sovereignty Posture at a Glance</h1>
+  <p class="hero-sub">A unified view of identity, AI governance, network control, encrypted communications, and infrastructure health across the Fisher Sovereign ecosystem.</p>
+</section>
+
+<!-- ═══ STATS STRIP ═══ -->
+<div class="stats-strip">
+  <div class="stat-chip"><span class="stat-val">25+</span><span class="stat-label">Active Systems</span></div>
+  <div class="stat-chip"><span class="stat-val">80K+</span><span class="stat-label">Lines of Code</span></div>
+  <div class="stat-chip"><span class="stat-val">5</span><span class="stat-label">Product Families</span></div>
+  <div class="stat-chip"><span class="stat-val">130</span><span class="stat-label">Security Tests</span></div>
+  <div class="stat-chip"><span class="stat-val">0</span><span class="stat-label">Cloud Dependencies</span></div>
+  <div class="stat-chip"><span class="stat-val">Tier 0</span><span class="stat-label">Current Authority</span></div>
+</div>
+
+<!-- ═══ SECTION TABS ═══ -->
+<div class="section-tabs-wrap">
+  <div class="section-tabs" id="sectionTabs">
+    <button class="section-tab active" data-panel="overview"><span class="tab-dot" style="background:var(--fg-strong)"></span> Overview</button>
+    <button class="section-tab" data-panel="ai-command"><span class="tab-dot" style="background:var(--purple)"></span> AI Command</button>
+    <button class="section-tab" data-panel="identity"><span class="tab-dot" style="background:var(--cyan)"></span> Identity &amp; Trust</button>
+    <button class="section-tab" data-panel="home-control"><span class="tab-dot" style="background:var(--green)"></span> Home Control</button>
+    <button class="section-tab" data-panel="comms"><span class="tab-dot" style="background:var(--blue)"></span> Communications</button>
+    <button class="section-tab" data-panel="governance"><span class="tab-dot" style="background:var(--amber)"></span> Governance</button>
+  </div>
+</div>
+
+<!-- ═══ PANELS ═══ -->
+<div class="panels-wrap">
+
+  <!-- ──── OVERVIEW ──── -->
+  <div class="panel active" id="panel-overview">
+    <div class="panel-header">
+      <h2>Ecosystem Overview</h2>
+      <p class="lede">Five product families form a coherent sovereignty stack. Each family addresses a distinct control boundary. Together they eliminate every major dependency on external trust.</p>
+    </div>
+
+    <div class="posture-grid">
+      <div class="posture-card">
+        <div class="posture-label">AI Governance</div>
+        <div class="posture-value" style="color:var(--green)">Enforced</div>
+        <div class="posture-note">5-tier policy active</div>
+        <div class="meter-bar"><div class="meter-fill" style="width:92%;background:var(--green)"></div></div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Identity Trust</div>
+        <div class="posture-value" style="color:var(--cyan)">Verified</div>
+        <div class="posture-note">Passkey + device bound</div>
+        <div class="meter-bar"><div class="meter-fill" style="width:88%;background:var(--cyan)"></div></div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Network Health</div>
+        <div class="posture-value" style="color:var(--green)">Nominal</div>
+        <div class="posture-note">All endpoints scanned</div>
+        <div class="meter-bar"><div class="meter-fill" style="width:95%;background:var(--green)"></div></div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Encryption</div>
+        <div class="posture-value" style="color:var(--green)">Active</div>
+        <div class="posture-note">X3DH + Double Ratchet</div>
+        <div class="meter-bar"><div class="meter-fill" style="width:100%;background:var(--green)"></div></div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Cloud Exposure</div>
+        <div class="posture-value" style="color:var(--green)">Zero</div>
+        <div class="posture-note">All processing local</div>
+        <div class="meter-bar"><div class="meter-fill" style="width:100%;background:var(--green)"></div></div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Backup Integrity</div>
+        <div class="posture-value" style="color:var(--amber)">Partial</div>
+        <div class="posture-note">Snapshot system active</div>
+        <div class="meter-bar"><div class="meter-fill" style="width:65%;background:var(--amber)"></div></div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card clickable" onclick="switchTab('ai-command')">
+        <div class="card-kicker">Family 01</div>
+        <h3>AI Command</h3>
+        <p>Multi-model orchestration with policy enforcement, task routing, data sensitivity classification, and hash-chain audit trails. Local Ollama inference on RTX 4070, cloud Claude as opt-in fallback.</p>
+        <div class="status-bar"><span class="status-dot purple"></span><span style="color:var(--purple)">5 components integrated</span></div>
+        <div class="card-meta">
+          <span class="tag tag-purple">Orchestrator</span>
+          <span class="tag tag-purple">Enclave</span>
+          <span class="tag tag-purple">Auton</span>
+          <span class="tag tag-ghost">~15K LOC</span>
+        </div>
+      </div>
+
+      <div class="card clickable" onclick="switchTab('identity')">
+        <div class="card-kicker">Family 02</div>
+        <h3>Identity &amp; Trust</h3>
+        <p>WebAuthn passkey authentication, device trust enrollment, TOTP step-up verification, X3DH key exchange, and approval token lifecycle management. No passwords, no cloud identity providers.</p>
+        <div class="status-bar"><span class="status-dot cyan"></span><span style="color:var(--cyan)">174 security tests passing</span></div>
+        <div class="card-meta">
+          <span class="tag tag-cyan">Vault</span>
+          <span class="tag tag-cyan">Consent</span>
+          <span class="tag tag-cyan">WebAuthn</span>
+          <span class="tag tag-ghost">FIDO2</span>
+        </div>
+      </div>
+
+      <div class="card clickable" onclick="switchTab('home-control')">
+        <div class="card-kicker">Family 03</div>
+        <h3>Home Control</h3>
+        <p>Network device discovery, 13-factor trust scoring, camera monitoring, traffic analysis, D3 topology visualization, and real-time alerting. All data stays on the local network.</p>
+        <div class="status-bar"><span class="status-dot green"></span><span style="color:var(--green)">Production MVP operational</span></div>
+        <div class="card-meta">
+          <span class="tag tag-green">HomeHub</span>
+          <span class="tag tag-green">Network Intel</span>
+          <span class="tag tag-green">Incidents</span>
+          <span class="tag tag-ghost">~8K LOC</span>
+        </div>
+      </div>
+
+      <div class="card clickable" onclick="switchTab('comms')">
+        <div class="card-kicker">Family 04</div>
+        <h3>Secure Communications</h3>
+        <p>End-to-end encrypted P2P messaging with Signal-grade cryptography. X3DH key exchange, Double Ratchet forward secrecy, WebAuthn local vault. Zero-knowledge relay server.</p>
+        <div class="status-bar"><span class="status-dot blue"></span><span style="color:var(--blue)">44 crypto tests passing</span></div>
+        <div class="card-meta">
+          <span class="tag tag-blue">Sovereign Signal</span>
+          <span class="tag tag-blue">E2E Encrypted</span>
+          <span class="tag tag-ghost">~7K LOC</span>
+        </div>
+      </div>
+
+      <div class="card clickable" onclick="switchTab('governance')">
+        <div class="card-kicker">Family 05</div>
+        <h3>Governance &amp; Standards</h3>
+        <p>37,500+ lines of governance specification across 30 documents defining: 5-tier approval system, 8 session authority states, intent-based routing, protected path enforcement, and formal approval artifacts.</p>
+        <div class="status-bar"><span class="status-dot amber"></span><span style="color:var(--amber)">Production-grade framework</span></div>
+        <div class="card-meta">
+          <span class="tag tag-amber">Standards</span>
+          <span class="tag tag-amber">Policy Engine</span>
+          <span class="tag tag-amber">Audit Trail</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-kicker">Platform Layer</div>
+        <h3>Shared Primitives</h3>
+        <p>Reusable platform services shared across all product families: identity and key management, policy engine, encrypted storage, trust scoring, audit trail, and backup/snapshot infrastructure.</p>
+        <div class="status-bar"><span class="status-dot green"></span><span style="color:var(--fg-dim)">8 shared services</span></div>
+        <div class="card-meta">
+          <span class="tag tag-ghost">SQLite</span>
+          <span class="tag tag-ghost">libsodium</span>
+          <span class="tag tag-ghost">Fastify</span>
+          <span class="tag tag-ghost">React</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Architecture Diagram -->
+    <div class="arch-diagram" style="margin-top:20px">
+      <div class="arch-layers">
+        <div class="arch-layer" style="border-color:var(--border-hi)">
+          <div class="arch-layer-label">Presentation Layer</div>
+          <div class="arch-boxes">
+            <div class="arch-box"><strong>Command Center</strong>Unified Dashboard</div>
+            <div class="arch-box"><strong>Product Pages</strong>Portfolio Showcase</div>
+            <div class="arch-box"><strong>Live Demos</strong>Interactive Proofs</div>
+          </div>
+        </div>
+        <div class="arch-connector">&darr;</div>
+        <div class="arch-layer" style="border-color:var(--purple-line)">
+          <div class="arch-layer-label">Application Layer</div>
+          <div class="arch-boxes">
+            <div class="arch-box" style="border-color:var(--purple-line)"><strong>AI Orchestrator</strong>Task Routing &amp; Policy</div>
+            <div class="arch-box" style="border-color:var(--cyan-line)"><strong>Identity Vault</strong>Keys &amp; Credentials</div>
+            <div class="arch-box" style="border-color:var(--green-line)"><strong>HomeHub</strong>Network &amp; Devices</div>
+            <div class="arch-box" style="border-color:var(--blue-line)"><strong>Signal</strong>E2E Messaging</div>
+            <div class="arch-box" style="border-color:var(--amber-line)"><strong>Governance</strong>Standards &amp; Audit</div>
+          </div>
+        </div>
+        <div class="arch-connector">&darr;</div>
+        <div class="arch-layer">
+          <div class="arch-layer-label">Platform Primitives</div>
+          <div class="arch-boxes">
+            <div class="arch-box"><strong>Identity</strong>WebAuthn, X3DH</div>
+            <div class="arch-box"><strong>Policy</strong>Tier 0-4 Gates</div>
+            <div class="arch-box"><strong>Audit</strong>Hash-Chain Log</div>
+            <div class="arch-box"><strong>Storage</strong>Encrypted SQLite</div>
+            <div class="arch-box"><strong>Trust</strong>13-Factor Scoring</div>
+            <div class="arch-box"><strong>Backup</strong>Snapshot Engine</div>
+          </div>
+        </div>
+        <div class="arch-connector">&darr;</div>
+        <div class="arch-layer" style="border-color:var(--border)">
+          <div class="arch-layer-label">Infrastructure</div>
+          <div class="arch-boxes">
+            <div class="arch-box"><strong>Ollama</strong>Local LLM (RTX 4070)</div>
+            <div class="arch-box"><strong>SQLite</strong>WAL Mode</div>
+            <div class="arch-box"><strong>Fastify</strong>TypeScript Server</div>
+            <div class="arch-box"><strong>React</strong>Vite + Tailwind</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event Feed -->
+    <div class="event-feed">
+      <div class="event-feed-header">
+        <span class="event-feed-title">Recent Activity</span>
+        <span class="status-pill live" style="font-size:0.58rem"><span class="pulse-dot"></span> Live</span>
+      </div>
+      <div class="event-list" id="eventFeed"></div>
+    </div>
+  </div>
+
+  <!-- ──── AI COMMAND ──── -->
+  <div class="panel" id="panel-ai-command">
+    <div class="panel-header">
+      <h2>AI Command</h2>
+      <p class="lede">Governed AI orchestration across local and cloud models. Every AI action is classified, policy-checked, and audit-logged before execution.</p>
+    </div>
+
+    <div class="posture-grid" style="margin-bottom:24px">
+      <div class="posture-card">
+        <div class="posture-label">Active Models</div>
+        <div class="posture-value" style="color:var(--purple)">3</div>
+        <div class="posture-note">Qwen 2.5, Llama 3, Claude</div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Policy Engine</div>
+        <div class="posture-value" style="color:var(--green)">Active</div>
+        <div class="posture-note">5-tier enforcement</div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Inference Mode</div>
+        <div class="posture-value" style="color:var(--purple)">Local</div>
+        <div class="posture-note">RTX 4070 / Ollama :11434</div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Autonomous Agents</div>
+        <div class="posture-value" style="color:var(--amber)">DRY_RUN</div>
+        <div class="posture-note">6 agents, safe mode</div>
+      </div>
+    </div>
+
+    <div class="card-grid-3 card-grid">
+      <div class="card">
+        <div class="card-kicker">Component</div>
+        <h3>System Router</h3>
+        <p>Project resolution, zone permissions, command safety classification, session continuity. Python CLI with 8 zone types and fuzzy matching.</p>
+        <div class="card-meta"><span class="tag tag-green">Operational</span><span class="tag tag-ghost">4,143 LOC</span></div>
+      </div>
+      <div class="card">
+        <div class="card-kicker">Component</div>
+        <h3>LLM Enclave</h3>
+        <p>Zero-trust security enclave for local inference. Policy-gated file access, hash-chain audit trail, workspace bridge isolation. No outbound network.</p>
+        <div class="card-meta"><span class="tag tag-green">Functional</span><span class="tag tag-ghost">1,416 LOC</span></div>
+      </div>
+      <div class="card">
+        <div class="card-kicker">Component</div>
+        <h3>LocalClaude</h3>
+        <p>Hybrid local+cloud AI workstation. Multi-provider abstraction (Ollama, Claude, OpenAI-compat), streaming chat, conversation persistence.</p>
+        <div class="card-meta"><span class="tag tag-green">Active MVP</span><span class="tag tag-ghost">2,506 LOC</span></div>
+      </div>
+      <div class="card">
+        <div class="card-kicker">Component</div>
+        <h3>Auton</h3>
+        <p>Autonomous background worker with 6 specialized agents: scanner, planner, executor, tester, reviewer, monitor. SafetyGuard enforces path sandboxing and rate limits.</p>
+        <div class="card-meta"><span class="tag tag-amber">DRY_RUN</span><span class="tag tag-ghost">6 agents</span></div>
+      </div>
+      <div class="card">
+        <div class="card-kicker">Component</div>
+        <h3>Governance Framework</h3>
+        <p>37,500+ line specification across 30 documents defining tier system, approval policy, session states, routing rules, agent boundaries, and operational standards.</p>
+        <div class="card-meta"><span class="tag tag-green">Production</span><span class="tag tag-ghost">30 docs</span></div>
+      </div>
+      <div class="card">
+        <div class="card-kicker">Component</div>
+        <h3>Session Atlas</h3>
+        <p>Intelligence dashboard analyzing 80+ Claude Code sessions. Three.js 3D terrain visualization, D3 heatmaps, hour-of-day work pattern analysis.</p>
+        <div class="card-meta"><span class="tag tag-green">Operational</span><span class="tag tag-ghost">Port :8092</span></div>
+      </div>
+    </div>
+
+    <a href="../llm-enclave/index.html" class="product-link">View LLM Enclave &rarr;</a>
+    <a href="../sovereign-hub/index.html" class="product-link" style="margin-left:8px">View Sovereign Hub &rarr;</a>
+  </div>
+
+  <!-- ──── IDENTITY & TRUST ──── -->
+  <div class="panel" id="panel-identity">
+    <div class="panel-header">
+      <h2>Identity &amp; Trust</h2>
+      <p class="lede">Passwordless authentication, device trust management, and cryptographic identity anchoring. No cloud identity providers. No password databases. Hardware-backed keys only.</p>
+    </div>
+
+    <div class="posture-grid" style="margin-bottom:24px">
+      <div class="posture-card">
+        <div class="posture-label">Auth Method</div>
+        <div class="posture-value" style="color:var(--cyan)">Passkey</div>
+        <div class="posture-note">FIDO2 / WebAuthn</div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Enrolled Devices</div>
+        <div class="posture-value" style="color:var(--fg-strong)">2</div>
+        <div class="posture-note">Laptop + iPhone</div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Step-Up Auth</div>
+        <div class="posture-value" style="color:var(--green)">TOTP</div>
+        <div class="posture-note">For destructive ops</div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Active Tokens</div>
+        <div class="posture-value" style="color:var(--fg-strong)">0</div>
+        <div class="posture-note">No pending approvals</div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-kicker">Sovereign Operator Console</div>
+        <h3>Production Control Plane</h3>
+        <p>Single-operator development control plane with VPS-hosted broker, browser console UI, and local Windows agent. All traffic encrypted with mTLS. Writes require explicit approval tokens.</p>
+        <div class="status-bar"><span class="status-dot green"></span><span style="color:var(--green)">130/130 tests passing</span></div>
+        <div class="card-meta">
+          <span class="tag tag-green">98% Production</span>
+          <span class="tag tag-ghost">15,142 LOC</span>
+          <span class="tag tag-ghost">WebAuthn</span>
+          <span class="tag tag-ghost">mTLS</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-kicker">Security Features</div>
+        <h3>Approval Token System</h3>
+        <p>Single-use, time-limited (10-minute TTL), bound to device_id + session_id + payload_hash. Protected path patterns prevent .env, *.key, and credentials.json writes.</p>
+        <div class="card-meta">
+          <span class="tag tag-cyan">Hash-Verified</span>
+          <span class="tag tag-cyan">TTL Enforced</span>
+          <span class="tag tag-cyan">Device-Bound</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-kicker">Cryptographic Foundation</div>
+        <h3>Key Management</h3>
+        <p>X3DH key exchange for session establishment. PGP identity anchoring for long-term identity. Safety numbers for contact verification. HKDF key derivation. Local vault with WebAuthn unlock.</p>
+        <div class="card-meta">
+          <span class="tag tag-blue">X3DH</span>
+          <span class="tag tag-blue">PGP</span>
+          <span class="tag tag-blue">HKDF</span>
+          <span class="tag tag-ghost">44 tests</span>
+        </div>
+      </div>
+    </div>
+    <a href="../operator-console/index.html" class="product-link">View Operator Console &rarr;</a>
+  </div>
+
+  <!-- ──── HOME CONTROL ──── -->
+  <div class="panel" id="panel-home-control">
+    <div class="panel-header">
+      <h2>Home Control</h2>
+      <p class="lede">Local-first home infrastructure monitoring. Device discovery, trust scoring, camera feeds, network topology, and real-time alerting. Every byte stays on your network.</p>
+    </div>
+
+    <div class="posture-grid" style="margin-bottom:24px">
+      <div class="posture-card">
+        <div class="posture-label">Discovered Devices</div>
+        <div class="posture-value" style="color:var(--fg-strong)">24</div>
+        <div class="posture-note">ARP + ping + nmap</div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Active Cameras</div>
+        <div class="posture-value" style="color:var(--green)">4</div>
+        <div class="posture-note">RTSP + HLS + Snapshot</div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Trust Score</div>
+        <div class="posture-value" style="color:var(--green)">87%</div>
+        <div class="posture-note">13-factor analysis</div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Active Alerts</div>
+        <div class="posture-value" style="color:var(--green)">0</div>
+        <div class="posture-note">All clear</div>
+      </div>
+    </div>
+
+    <div class="card-grid-3 card-grid">
+      <div class="card"><div class="card-kicker">Module</div><h3>Device Discovery</h3><p>ARP scan + ping sweep + nmap integration. Continuous monitoring with automatic trust classification based on 13 behavioral and network factors.</p><div class="card-meta"><span class="tag tag-green">Active</span></div></div>
+      <div class="card"><div class="card-kicker">Module</div><h3>Network Topology</h3><p>D3 force-directed graph showing all devices, connections, and trust zones. Real-time updates via WebSocket event bus. Interactive zoom and filtering.</p><div class="card-meta"><span class="tag tag-green">Active</span></div></div>
+      <div class="card"><div class="card-kicker">Module</div><h3>Camera Grid</h3><p>Multi-layout camera monitoring supporting RTSP, HLS, and HTTP snapshot protocols. Adjustable grid layout with per-camera settings.</p><div class="card-meta"><span class="tag tag-green">Active</span></div></div>
+      <div class="card"><div class="card-kicker">Module</div><h3>Traffic Monitor</h3><p>Real-time network traffic analysis via Python/Scapy. Protocol breakdown, bandwidth tracking, anomaly detection with configurable alerting thresholds.</p><div class="card-meta"><span class="tag tag-green">Active</span></div></div>
+      <div class="card"><div class="card-kicker">Module</div><h3>Event Timeline</h3><p>Unified cross-system event stream. Device joins, disconnects, trust changes, alert triggers, and manual actions. Filterable and searchable.</p><div class="card-meta"><span class="tag tag-green">Active</span></div></div>
+      <div class="card"><div class="card-kicker">Module</div><h3>Alert Engine</h3><p>Configurable alert rules with snooze, acknowledge, and escalation. Integrates with device trust scoring and network anomaly detection.</p><div class="card-meta"><span class="tag tag-green">Active</span></div></div>
+    </div>
+    <a href="../home-hub/index.html" class="product-link">View HomeHub &rarr;</a>
+  </div>
+
+  <!-- ──── COMMUNICATIONS ──── -->
+  <div class="panel" id="panel-comms">
+    <div class="panel-header">
+      <h2>Secure Communications</h2>
+      <p class="lede">Signal-grade end-to-end encrypted messaging built from first principles. No message storage on any server. Forward secrecy on every message. Biometric-only authentication.</p>
+    </div>
+
+    <div class="posture-grid" style="margin-bottom:24px">
+      <div class="posture-card">
+        <div class="posture-label">Protocol</div>
+        <div class="posture-value" style="color:var(--blue)">X3DH</div>
+        <div class="posture-note">Extended Triple Diffie-Hellman</div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Forward Secrecy</div>
+        <div class="posture-value" style="color:var(--green)">Active</div>
+        <div class="posture-note">Double Ratchet per message</div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Server Storage</div>
+        <div class="posture-value" style="color:var(--green)">Zero</div>
+        <div class="posture-note">Relay only, no persistence</div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Authentication</div>
+        <div class="posture-value" style="color:var(--cyan)">WebAuthn</div>
+        <div class="posture-note">Biometric / hardware key</div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-kicker">Cryptographic Core</div>
+        <h3>Protocol Stack</h3>
+        <p>X3DH key exchange establishes shared secrets between previously unknown parties. Double Ratchet provides forward secrecy and break-in recovery. HKDF derives per-message keys. libsodium handles all primitives.</p>
+        <div class="card-meta"><span class="tag tag-blue">44 Tests</span><span class="tag tag-ghost">libsodium</span><span class="tag tag-ghost">OpenPGP.js</span></div>
+      </div>
+      <div class="card">
+        <div class="card-kicker">Architecture</div>
+        <h3>Zero-Knowledge Relay</h3>
+        <p>Express relay server routes encrypted blobs between peers. No message content is ever decrypted server-side. WebRTC for direct P2P when both parties are online, relay fallback when not.</p>
+        <div class="card-meta"><span class="tag tag-blue">WebRTC P2P</span><span class="tag tag-blue">WS Relay</span><span class="tag tag-ghost">Express</span></div>
+      </div>
+      <div class="card">
+        <div class="card-kicker">Client</div>
+        <h3>Web Application</h3>
+        <p>Next.js PWA with offline capability. WebAuthn-protected local vault stores private keys. Safety numbers for contact verification. No account creation required on any server.</p>
+        <div class="card-meta"><span class="tag tag-blue">PWA</span><span class="tag tag-blue">Offline</span><span class="tag tag-ghost">Next.js</span></div>
+      </div>
+    </div>
+    <a href="../sovereign-signal/index.html" class="product-link">View Sovereign Signal &rarr;</a>
+  </div>
+
+  <!-- ──── GOVERNANCE ──── -->
+  <div class="panel" id="panel-governance">
+    <div class="panel-header">
+      <h2>Governance &amp; Standards</h2>
+      <p class="lede">A production-grade governance framework that defines how AI agents, infrastructure systems, and human operators interact within explicit authority boundaries. Not theory. Enforced policy.</p>
+    </div>
+
+    <div class="posture-grid" style="margin-bottom:24px">
+      <div class="posture-card">
+        <div class="posture-label">Framework Size</div>
+        <div class="posture-value" style="color:var(--fg-strong)">37K+</div>
+        <div class="posture-note">Lines across 30 docs</div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Approval Tiers</div>
+        <div class="posture-value" style="color:var(--amber)">5</div>
+        <div class="posture-note">Tier 0 through Tier 4</div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Session States</div>
+        <div class="posture-value" style="color:var(--fg-strong)">8</div>
+        <div class="posture-note">Distinct authority levels</div>
+      </div>
+      <div class="posture-card">
+        <div class="posture-label">Protected Paths</div>
+        <div class="posture-value" style="color:var(--red)">5</div>
+        <div class="posture-note">Hash-verified integrity</div>
+      </div>
+    </div>
+
+    <h3 style="font-family:var(--font-display);font-size:1.05rem;color:var(--fg-strong);margin-bottom:14px">Tiered Approval System</h3>
+
+    <div style="overflow-x:auto;margin-bottom:24px">
+      <table class="tier-table">
+        <thead><tr><th style="width:60px">Tier</th><th style="width:140px">Classification</th><th>Scope</th><th style="width:220px">Approval Required</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tier-num" style="color:var(--green)">0</span></td><td style="color:var(--green)">Observational</td><td>Read, analyze, plan, inspect, report. Default safe posture.</td><td>None</td></tr>
+          <tr><td><span class="tier-num" style="color:var(--blue)">1</span></td><td style="color:var(--blue)">Additive</td><td>Create new files, directories, branches, configs, documentation.</td><td>None (non-destructive)</td></tr>
+          <tr><td><span class="tier-num" style="color:var(--amber)">2</span></td><td style="color:var(--amber)">Controlled Modify</td><td>Edit existing files, refactor code, update configs, modify state.</td><td>Plan-review-proceed cycle</td></tr>
+          <tr><td><span class="tier-num" style="color:var(--red)">3</span></td><td style="color:var(--red)">Destructive</td><td>Delete files, force push, hard reset, drop data, irreversible changes.</td><td>Formal artifact + exact phrase + op-id + 10min TTL</td></tr>
+          <tr><td><span class="tier-num" style="color:var(--purple)">4</span></td><td style="color:var(--purple)">Governance</td><td>Modify governance files, policy changes, authority redefinitions.</td><td>All Tier 3 gates + governance-diff validation</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card-grid">
+      <div class="card"><div class="card-kicker">Standard</div><h3>Local-First Decision Policy</h3><p>All data processing and inference default to local hardware. Cloud services are opt-in, isolated, and require explicit justification. No implicit cloud dependencies.</p><div class="card-meta"><span class="tag tag-amber">Enforced</span></div></div>
+      <div class="card"><div class="card-kicker">Standard</div><h3>Dependency Scoring Model</h3><p>Every external dependency is scored on: cloud reliance, vendor lock-in, outage exposure, telemetry risk, portability, and single points of trust failure.</p><div class="card-meta"><span class="tag tag-amber">Defined</span></div></div>
+      <div class="card"><div class="card-kicker">Standard</div><h3>Hash-Chain Audit Trail</h3><p>Every state transition, permission grant, and AI decision is logged in append-only NDJSON format with SHA-256 chain integrity. Tamper detection on every read.</p><div class="card-meta"><span class="tag tag-amber">Operational</span></div></div>
+      <div class="card"><div class="card-kicker">Standard</div><h3>Agent Boundary Enforcement</h3><p>Each AI agent operates within explicit authority scopes. Cross-agent relay is logged. Agents cannot execute suggestions from other agents without operator confirmation.</p><div class="card-meta"><span class="tag tag-amber">Enforced</span></div></div>
+    </div>
+  </div>
+
+</div><!-- /panels-wrap -->
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="page-footer">
+  <span class="footer-brand">Fisher Sovereign Systems</span>
+  <div class="footer-links">
+    <a href="../home.html">Portfolio</a>
+    <a href="../sovereign-hub/index.html">Sovereign Hub</a>
+    <a href="../operator-console/index.html">Operator Console</a>
+    <a href="../fisher-sovereign.html">The Brief</a>
+  </div>
+</footer>
+
+<!-- ═══ SCRIPT ═══ -->
+<script>
+(function() {
+  'use strict';
+
+  /* ── Tab switching ── */
+  var tabs = document.querySelectorAll('.section-tab');
+  var panels = document.querySelectorAll('.panel');
+
+  function switchTab(panelId) {
+    tabs.forEach(function(t) { t.classList.remove('active'); });
+    panels.forEach(function(p) { p.classList.remove('active'); });
+    var targetTab = document.querySelector('[data-panel="' + panelId + '"]');
+    var targetPanel = document.getElementById('panel-' + panelId);
+    if (targetTab) targetTab.classList.add('active');
+    if (targetPanel) targetPanel.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  window.switchTab = switchTab;
+
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() { switchTab(tab.dataset.panel); });
+  });
+
+  /* ── Event feed (DOM-safe, no innerHTML) ── */
+  var events = [
+    { time: '00:03', icon: '\u2713', source: 'Governance', text: 'Policy engine heartbeat: 5-tier system nominal' },
+    { time: '00:02', icon: '\u26a1', source: 'AI Command', text: 'Ollama inference request routed locally (qwen2.5-coder:14b)' },
+    { time: '00:02', icon: '\ud83d\udd12', source: 'Identity', text: 'Device trust verified: laptop (passkey challenge/response)' },
+    { time: '00:01', icon: '\ud83d\udce1', source: 'HomeHub', text: 'Network scan complete: 24 devices, 0 anomalies, trust score 87%' },
+    { time: '00:01', icon: '\ud83d\udee1\ufe0f', source: 'Enclave', text: 'Zero-trust boundary check passed. No outbound connections.' },
+    { time: '00:00', icon: '\ud83d\udcdd', source: 'Audit', text: 'Hash-chain integrity verified. 0 tamper events. Chain: 1,247 entries.' },
+    { time: '-0:01', icon: '\u2713', source: 'Signal', text: 'Relay server health check: online, 0 stored messages (relay-only)' },
+    { time: '-0:02', icon: '\u26a1', source: 'Auton', text: 'Background scan complete. 3 proposals generated (DRY_RUN, not executed).' },
+    { time: '-0:03', icon: '\ud83d\udcca', source: 'Atlas', text: '82 sessions indexed. Activity terrain updated.' },
+    { time: '-0:04', icon: '\ud83d\udd0d', source: 'Hub', text: 'Health check: 9/9 monitored services responding.' }
+  ];
+
+  var feedEl = document.getElementById('eventFeed');
+  if (feedEl) {
+    events.forEach(function(e) {
+      var row = document.createElement('div');
+      row.className = 'event-row';
+
+      var timeSpan = document.createElement('span');
+      timeSpan.className = 'event-time';
+      timeSpan.textContent = e.time + 'm';
+
+      var iconSpan = document.createElement('span');
+      iconSpan.className = 'event-icon';
+      iconSpan.textContent = e.icon;
+
+      var textSpan = document.createElement('span');
+      textSpan.className = 'event-text';
+
+      var sourceSpan = document.createElement('span');
+      sourceSpan.className = 'event-source';
+      sourceSpan.textContent = e.source;
+
+      textSpan.appendChild(sourceSpan);
+      textSpan.appendChild(document.createTextNode(' ' + e.text));
+
+      row.appendChild(timeSpan);
+      row.appendChild(iconSpan);
+      row.appendChild(textSpan);
+      feedEl.appendChild(row);
+    });
+  }
+
+  /* ── Animate posture meters on scroll ── */
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.meter-fill').forEach(function(fill) {
+          var width = fill.style.width;
+          fill.style.width = '0%';
+          requestAnimationFrame(function() {
+            requestAnimationFrame(function() { fill.style.width = width; });
+          });
+        });
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.posture-grid').forEach(function(grid) {
+    observer.observe(grid);
+  });
+
+})();
+</script>
+
+</body>
+</html>

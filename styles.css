@@ -8,10 +8,13 @@
   --warm-white-breath: rgba(240, 235, 224, 0.04);
   --warm-white-soft: rgba(240, 235, 224, 0.12);
   --accent: rgba(240, 235, 224, 0.6);
-  --gold-1776: #c9a84c;
+  /* FF25 silver brand: gold-* tokens are now SILVER aliases.
+     Old --gold-1776 and gold-* names are kept so existing rules
+     keep working with the new neutral silver palette. */
+  --gold-1776: rgba(248, 246, 240, 0.92);
   --navy-1776: #1a2744;
-  --gold-dim: rgba(201, 168, 76, 0.25);
-  --gold-ghost: rgba(201, 168, 76, 0.08);
+  --gold-dim: rgba(248, 246, 240, 0.28);
+  --gold-ghost: rgba(248, 246, 240, 0.06);
   /* Theme-adaptive foreground: use rgba(var(--fg), alpha) for any new text color */
   --fg: 240, 235, 224;
 }
@@ -145,7 +148,7 @@ body {
 .hero-rule {
   width: 60px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-1776), transparent);
+  background: linear-gradient(90deg, transparent, rgba(248, 246, 240, 0.55), transparent);
   margin: 40px auto 36px;
   opacity: 0;
   animation: fadeIn 1.5s ease forwards 1.5s;
@@ -170,12 +173,12 @@ body {
   font-style: italic;
   font-size: clamp(16px, 2.5vw, 22px);
   letter-spacing: 6px;
-  color: var(--gold-1776);
+  color: rgba(248, 246, 240, 0.88);
   text-align: center;
   margin-top: 34px;
   opacity: 0;
   animation: fadeIn 1.5s ease forwards 2.5s;
-  text-shadow: 0 0 30px rgba(201, 168, 76, 0.15);
+  text-shadow: 0 0 30px rgba(248, 246, 240, 0.12);
 }
 
 .hero-motto::before,
@@ -195,7 +198,7 @@ body {
   font-weight: 400;
   font-size: clamp(18px, 2.8vw, 28px);
   letter-spacing: 5px;
-  color: var(--gold-1776);
+  color: rgba(248, 246, 240, 0.88);
   text-align: center;
   margin-top: 18px;
   opacity: 0;
@@ -207,7 +210,7 @@ body {
   font-size: 10px;
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: rgba(201, 168, 76, 0.45);
+  color: rgba(248, 246, 240, 0.55);
   text-align: center;
   margin-top: 14px;
   opacity: 0;
@@ -236,17 +239,17 @@ body {
   padding: 8px 0;
   text-decoration: none;
   position: relative;
-  border-bottom: 1px solid rgba(201,168,76,0.07);
+  border-bottom: 1px solid rgba(248, 246, 240, 0.07);
   transition: background 0.2s ease;
   counter-increment: domain-counter;
 }
-.hero-domains a:first-child { border-top: 1px solid rgba(201,168,76,0.07); }
+.hero-domains a:first-child { border-top: 1px solid rgba(248, 246, 240, 0.07); }
 .hero-domains a::before {
   content: "0" counter(domain-counter);
   font-family: 'JetBrains Mono', monospace;
   font-size: 8px;
   letter-spacing: 0.5px;
-  color: rgba(201,168,76,0.2);
+  color: rgba(248, 246, 240, 0.22);
   transition: color 0.3s ease;
   line-height: 1;
 }
@@ -254,15 +257,15 @@ body {
   content: '→';
   font-family: 'Inter', sans-serif;
   font-size: 11px;
-  color: rgba(201,168,76,0.12);
+  color: rgba(248, 246, 240, 0.14);
   transition: color 0.3s ease, transform 0.3s ease;
   transform: translateX(0);
   text-align: right;
   line-height: 1;
 }
-.hero-domains a:hover::before { color: rgba(201,168,76,0.5); }
+.hero-domains a:hover::before { color: rgba(248, 246, 240, 0.55); }
 .hero-domains a:hover::after {
-  color: rgba(201,168,76,0.6);
+  color: rgba(248, 246, 240, 0.65);
   transform: translateX(3px);
 }
 .hero-domains span {
@@ -270,12 +273,12 @@ body {
   font-weight: 400;
   font-size: 10px;
   letter-spacing: 1.8px;
-  color: rgba(201,168,76,0.38);
+  color: rgba(248, 246, 240, 0.42);
   text-transform: lowercase;
   transition: color 0.3s ease;
 }
 .hero-domains a:hover span {
-  color: rgba(201,168,76,0.72);
+  color: rgba(248, 246, 240, 0.82);
 }
 span.hero-domain-dot {
   display: none;
@@ -377,7 +380,7 @@ span.hero-domain-dot {
 .about-card {
   position: relative;
   background: rgba(240, 235, 224, 0.018);
-  border: 1px solid rgba(201, 168, 76, 0.1);
+  border: 1px solid rgba(248, 246, 240, 0.1);
   border-radius: 14px;
   padding: 48px 44px 44px;
   margin-top: 16px;
@@ -392,7 +395,7 @@ span.hero-domain-dot {
   left: 20%;
   right: 20%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.35), transparent);
+  background: linear-gradient(90deg, transparent, rgba(248, 246, 240, 0.35), transparent);
 }
 /* About section text color consistency: lift body copy out of the
    washed-out 0.35 baseline and tone down em highlights so they don't
@@ -526,24 +529,24 @@ span.hero-domain-dot {
 .pgl-line {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, rgba(201,168,76,0.25), transparent);
+  background: linear-gradient(90deg, rgba(248,246,240,0.25), transparent);
 }
 .pgl-line-right {
-  background: linear-gradient(270deg, rgba(201,168,76,0.25), transparent);
+  background: linear-gradient(270deg, rgba(248,246,240,0.25), transparent);
 }
 .pgl-text {
   font-family: 'JetBrains Mono', monospace;
   font-size: 9px;
   letter-spacing: 5px;
   text-transform: uppercase;
-  color: rgba(201, 168, 76, 0.5);
+  color: rgba(248, 246, 240, 0.5);
   white-space: nowrap;
 }
 [data-theme="light"] .pgl-line {
-  background: linear-gradient(90deg, rgba(201,168,76,0.5), transparent);
+  background: linear-gradient(90deg, rgba(248,246,240,0.5), transparent);
 }
 [data-theme="light"] .pgl-line-right {
-  background: linear-gradient(270deg, rgba(201,168,76,0.5), transparent);
+  background: linear-gradient(270deg, rgba(248,246,240,0.5), transparent);
 }
 [data-theme="light"] .pgl-text {
   color: rgba(150, 110, 30, 0.8);
@@ -552,10 +555,10 @@ span.hero-domain-dot {
 /* FTDA flagship hover -warm gold glow instead of white */
 .ftda-flagship:hover {
   background:
-    linear-gradient(135deg, rgba(201,168,76,0.06) 0%, transparent 40%),
-    linear-gradient(315deg, rgba(201,168,76,0.04) 0%, transparent 40%),
+    linear-gradient(135deg, rgba(248,246,240,0.06) 0%, transparent 40%),
+    linear-gradient(315deg, rgba(248,246,240,0.04) 0%, transparent 40%),
     linear-gradient(180deg, rgba(10,10,11,1) 0%, rgba(14,13,16,1) 100%) !important;
-  border-color: rgba(201, 168, 76, 0.3) !important;
+  border-color: rgba(248, 246, 240, 0.3) !important;
 }
 
 /* Alternating layout — uses :nth-child(of selector) so group labels don't break the count */
@@ -645,7 +648,7 @@ span.hero-domain-dot {
   align-items: center;
   gap: 6px;
   font-family: 'Inter', sans-serif;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 11px;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -653,17 +656,27 @@ span.hero-domain-dot {
   padding: 6px 16px;
   margin-top: 10px;
   margin-left: 8px;
-  border: 1px solid var(--gold-dim);
-  color: var(--gold-1776);
-  background: var(--gold-ghost);
+  border: 1px solid rgba(248, 246, 240, 0.22);
+  color: rgba(248, 246, 240, 0.88);
+  background: rgba(248, 246, 240, 0.04);
   transition: all 0.3s ease;
   cursor: pointer;
 }
 .p-demo-link:hover {
-  background: rgba(201, 168, 76, 0.15);
-  border-color: rgba(201, 168, 76, 0.5);
-  color: #e0c56a;
+  background: rgba(248, 246, 240, 0.1);
+  border-color: rgba(248, 246, 240, 0.55);
+  color: #ffffff;
   transform: translateY(-1px);
+}
+[data-theme="light"] .p-demo-link {
+  border-color: rgba(26, 26, 28, 0.28);
+  color: rgba(26, 26, 28, 0.88);
+  background: rgba(26, 26, 28, 0.04);
+}
+[data-theme="light"] .p-demo-link:hover {
+  background: rgba(26, 26, 28, 0.1);
+  border-color: rgba(26, 26, 28, 0.6);
+  color: #000000;
 }
 .p-demo-link .demo-icon {
   font-size: 13px;
@@ -1039,7 +1052,7 @@ span.hero-domain-dot {
   font-size: 8px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(201, 168, 76, 0.6);
+  color: rgba(248, 246, 240, 0.6);
 }
 .ot-design-strip {
   position: absolute;
@@ -1206,8 +1219,8 @@ span.hero-domain-dot {
   gap: 32px;
   margin-top: 24px;
   padding: 28px 32px;
-  border: 1px solid rgba(201, 168, 76, 0.12);
-  background: rgba(201, 168, 76, 0.02);
+  border: 1px solid rgba(248, 246, 240, 0.12);
+  background: rgba(248, 246, 240, 0.02);
 }
 .son-callout-photo {
   flex-shrink: 0;
@@ -1215,7 +1228,7 @@ span.hero-domain-dot {
   height: 90px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(201, 168, 76, 0.2);
+  border: 2px solid rgba(248, 246, 240, 0.2);
   filter: grayscale(0.3) contrast(1.05);
 }
 .son-callout-text {
@@ -1265,8 +1278,8 @@ span.hero-domain-dot {
 }
 .build-method-item {
   padding: 20px;
-  border: 1px solid rgba(201, 168, 76, 0.08);
-  background: rgba(201, 168, 76, 0.015);
+  border: 1px solid rgba(248, 246, 240, 0.08);
+  background: rgba(248, 246, 240, 0.015);
 }
 .build-method-label {
   font-family: 'Inter', sans-serif;
@@ -1274,7 +1287,7 @@ span.hero-domain-dot {
   font-size: 11px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: rgba(201, 168, 76, 0.6);
+  color: rgba(248, 246, 240, 0.6);
   margin-bottom: 8px;
 }
 .build-method-text {
@@ -1299,12 +1312,12 @@ span.hero-domain-dot {
   font-weight: 400;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: rgba(201, 168, 76, 0.5);
+  color: rgba(248, 246, 240, 0.5);
   text-decoration: none;
   transition: color 0.3s;
 }
 .contact-shortcut:hover {
-  color: rgba(201, 168, 76, 0.85);
+  color: rgba(248, 246, 240, 0.85);
 }
 .contact-shortcut span {
   margin-left: 6px;
@@ -1321,9 +1334,9 @@ span.hero-domain-dot {
   width: 100%;
   padding: 20px;
   margin: 40px 0 0 0;
-  background: rgba(201, 168, 76, 0.03);
-  border: 1px solid rgba(201, 168, 76, 0.1);
-  color: rgba(201, 168, 76, 0.6);
+  background: rgba(248, 246, 240, 0.03);
+  border: 1px solid rgba(248, 246, 240, 0.1);
+  color: rgba(248, 246, 240, 0.6);
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 400;
@@ -1333,9 +1346,9 @@ span.hero-domain-dot {
   transition: all 0.3s;
 }
 .portfolio-expand-btn:hover {
-  background: rgba(201, 168, 76, 0.06);
-  border-color: rgba(201, 168, 76, 0.2);
-  color: rgba(201, 168, 76, 0.85);
+  background: rgba(248, 246, 240, 0.06);
+  border-color: rgba(248, 246, 240, 0.2);
+  color: rgba(248, 246, 240, 0.85);
 }
 .portfolio-expand-btn .expand-arrow {
   display: inline-block;
@@ -1581,7 +1594,7 @@ span.hero-domain-dot {
   margin-top: 16px;
   font-size: 8px;
   letter-spacing: 12px;
-  color: rgba(201, 168, 76, 0.12);
+  color: rgba(248, 246, 240, 0.12);
 }
 .footer-concepts-link {
   display: block;
@@ -1594,9 +1607,9 @@ span.hero-domain-dot {
   text-transform: uppercase;
   transition: color 0.2s;
 }
-.footer-concepts-link:hover { color: rgba(201, 168, 76, 0.5); }
+.footer-concepts-link:hover { color: rgba(248, 246, 240, 0.5); }
 [data-theme="light"] .footer-concepts-link { color: rgba(26, 26, 28, 0.25); }
-[data-theme="light"] .footer-concepts-link:hover { color: rgba(201, 168, 76, 0.7); }
+[data-theme="light"] .footer-concepts-link:hover { color: rgba(248, 246, 240, 0.7); }
 
 /* ===== NAV DOTS ===== */
 .nav-dots {
@@ -1819,7 +1832,7 @@ span.hero-domain-dot {
 
 .contact-row:focus-visible {
   outline-offset: 0;
-  background: rgba(201, 168, 76, 0.04);
+  background: rgba(248, 246, 240, 0.04);
 }
 
 .nav-dot:focus-visible {
@@ -1894,22 +1907,45 @@ span.hero-domain-dot {
   transition: all 0.35s;
 }
 .hero-cta-primary {
-  background: var(--gold-1776);
-  color: var(--bg);
+  background: rgba(248, 246, 240, 0.92);
+  color: #0a0a0b;
+  border: 1px solid rgba(248, 246, 240, 0.92);
 }
 .hero-cta-primary:hover {
-  background: #ddb868;
-  box-shadow: 0 4px 24px rgba(201,168,76,0.2);
+  background: #ffffff;
+  color: #0a0a0b;
+  border-color: #ffffff;
+  box-shadow: 0 4px 24px rgba(248, 246, 240, 0.18);
 }
 .hero-cta-ghost {
   background: transparent;
-  color: rgba(240, 235, 224, 0.3);
-  border: 1px solid rgba(201,168,76,0.15);
+  color: rgba(248, 246, 240, 0.55);
+  border: 1px solid rgba(248, 246, 240, 0.22);
 }
 .hero-cta-ghost:hover {
-  color: rgba(240, 235, 224, 0.6);
-  border-color: var(--gold-1776);
-  background: var(--gold-ghost);
+  color: rgba(248, 246, 240, 0.92);
+  border-color: rgba(248, 246, 240, 0.78);
+  background: rgba(248, 246, 240, 0.04);
+}
+[data-theme="light"] .hero-cta-primary {
+  background: #1a1a1c;
+  color: #f5f3ee;
+  border-color: #1a1a1c;
+}
+[data-theme="light"] .hero-cta-primary:hover {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+[data-theme="light"] .hero-cta-ghost {
+  color: rgba(26, 26, 28, 0.65);
+  border-color: rgba(26, 26, 28, 0.28);
+}
+[data-theme="light"] .hero-cta-ghost:hover {
+  color: #1a1a1c;
+  border-color: #1a1a1c;
+  background: rgba(26, 26, 28, 0.04);
 }
 
 /* ===== CREDIBILITY STATS STRIP ===== */
@@ -1933,12 +1969,12 @@ span.hero-domain-dot {
 .stats-strip-item {
   text-align: center;
   padding: 28px 16px;
-  border: 1px solid rgba(201,168,76,0.08);
-  background: rgba(201,168,76,0.015);
+  border: 1px solid rgba(248,246,240,0.08);
+  background: rgba(248,246,240,0.015);
   transition: border-color 0.3s;
 }
 .stats-strip-item:hover {
-  border-color: rgba(201,168,76,0.18);
+  border-color: rgba(248,246,240,0.18);
 }
 .stats-strip-val {
   font-family: 'Cormorant Garamond', serif;
@@ -1978,7 +2014,7 @@ span.hero-domain-dot {
   margin-top: 10px;
   flex-shrink: 0;
   opacity: 0.7;
-  box-shadow: 0 0 8px rgba(201,168,76,0.3);
+  box-shadow: 0 0 8px rgba(248,246,240,0.3);
   animation: nowPulse 3s ease-in-out infinite;
 }
 @keyframes nowPulse {
@@ -2015,7 +2051,7 @@ span.hero-domain-dot {
 .venture-card-v3 {
   padding: 28px;
   background: rgba(240, 235, 224, 0.018);
-  border: 1px solid rgba(201,168,76,0.08);
+  border: 1px solid rgba(248,246,240,0.08);
   transition: all 0.35s;
   text-decoration: none;
   color: inherit;
@@ -2023,8 +2059,8 @@ span.hero-domain-dot {
   position: relative;
 }
 .venture-card-v3:hover {
-  border-color: rgba(201,168,76,0.2);
-  background: rgba(201,168,76,0.025);
+  border-color: rgba(248,246,240,0.2);
+  background: rgba(248,246,240,0.025);
 }
 .vc3-header {
   display: flex;
@@ -2043,9 +2079,9 @@ span.hero-domain-dot {
   font-size: 9px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: rgba(201,168,76,0.5);
+  color: rgba(248,246,240,0.5);
   padding: 3px 8px;
-  border: 1px solid rgba(201,168,76,0.15);
+  border: 1px solid rgba(248,246,240,0.15);
 }
 .vc3-name {
   font-family: 'Cormorant Garamond', serif;
@@ -2084,7 +2120,7 @@ span.hero-domain-dot {
   letter-spacing: 1px;
   opacity: 0.6;
   padding: 3px 10px;
-  border: 1px solid rgba(201,168,76,0.12);
+  border: 1px solid rgba(248,246,240,0.12);
 }
 .vc3-tech {
   font-family: 'Inter', sans-serif;
@@ -2114,8 +2150,8 @@ span.hero-domain-dot {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto;
   gap: 0 40px;
-  border-color: rgba(201,168,76,0.14);
-  background: rgba(201,168,76,0.025);
+  border-color: rgba(248,246,240,0.14);
+  background: rgba(248,246,240,0.025);
   padding: 32px 36px;
 }
 .venture-card-v3.vc3-flagship .vc3-header { grid-column: 1; grid-row: 1; }
@@ -2125,7 +2161,7 @@ span.hero-domain-dot {
 .venture-card-v3.vc3-flagship .vc3-chips  { grid-column: 1; grid-row: 4; margin-top: 20px; }
 .venture-card-v3.vc3-flagship .vc3-tech   { grid-column: 2; grid-row: 4; display: flex; align-items: flex-end; margin-top: 20px; }
 .venture-card-v3.vc3-flagship .vc3-arrow  { bottom: 32px; right: 36px; }
-.venture-card-v3.vc3-flagship:hover { border-color: rgba(201,168,76,0.28); background: rgba(201,168,76,0.04); }
+.venture-card-v3.vc3-flagship:hover { border-color: rgba(248,246,240,0.28); background: rgba(248,246,240,0.04); }
 @media (max-width: 640px) {
   .venture-card-v3.vc3-flagship {
     grid-template-columns: 1fr;
@@ -2133,12 +2169,12 @@ span.hero-domain-dot {
   }
 }
 [data-theme="light"] .venture-card-v3.vc3-flagship {
-  border-color: rgba(201,168,76,0.2);
-  background: rgba(201,168,76,0.04);
+  border-color: rgba(248,246,240,0.2);
+  background: rgba(248,246,240,0.04);
 }
 [data-theme="light"] .venture-card-v3.vc3-flagship:hover {
-  border-color: rgba(201,168,76,0.35);
-  background: rgba(201,168,76,0.07);
+  border-color: rgba(248,246,240,0.35);
+  background: rgba(248,246,240,0.07);
 }
 
 /* ===== PROJECT FILTERS ===== */
@@ -2150,7 +2186,7 @@ span.hero-domain-dot {
 }
 .pf-btn {
   padding: 8px 18px;
-  border: 1px solid rgba(201,168,76,0.08);
+  border: 1px solid rgba(248,246,240,0.08);
   background: transparent;
   color: rgba(240, 235, 224, 0.2);
   cursor: pointer;
@@ -2162,7 +2198,7 @@ span.hero-domain-dot {
   transition: all 0.3s;
 }
 .pf-btn:hover {
-  border-color: rgba(201,168,76,0.2);
+  border-color: rgba(248,246,240,0.2);
   color: rgba(240, 235, 224, 0.4);
 }
 .pf-btn.active {
@@ -2200,8 +2236,8 @@ span.hero-domain-dot {
 .noco-stat {
   text-align: center;
   padding: 24px 16px;
-  border: 1px solid rgba(201,168,76,0.08);
-  background: rgba(201,168,76,0.015);
+  border: 1px solid rgba(248,246,240,0.08);
+  background: rgba(248,246,240,0.015);
 }
 .noco-stat-val {
   font-family: 'Cormorant Garamond', serif;
@@ -2238,7 +2274,7 @@ span.hero-domain-dot {
 }
 .noco-cta-link:hover {
   background: #ddb868;
-  box-shadow: 0 4px 24px rgba(201,168,76,0.15);
+  box-shadow: 0 4px 24px rgba(248,246,240,0.15);
 }
 
 /* ===== BRAND TEASER ===== */
@@ -2354,7 +2390,7 @@ span.hero-domain-dot {
 }
 .brand-link-primary:hover {
   background: #ddb868;
-  box-shadow: 0 4px 24px rgba(201,168,76,0.15);
+  box-shadow: 0 4px 24px rgba(248,246,240,0.15);
 }
 .brand-link-ghost {
   display: inline-flex;
@@ -2363,7 +2399,7 @@ span.hero-domain-dot {
   padding: 12px 24px;
   background: transparent;
   color: rgba(240, 235, 224, 0.25);
-  border: 1px solid rgba(201,168,76,0.15);
+  border: 1px solid rgba(248,246,240,0.15);
   font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 400;
@@ -2408,7 +2444,7 @@ span.hero-domain-dot {
 }
 .booking-input, .booking-textarea {
   background: rgba(240, 235, 224, 0.03);
-  border: 1px solid rgba(201,168,76,0.1);
+  border: 1px solid rgba(248,246,240,0.1);
   color: var(--warm-white);
   font-family: 'Inter', sans-serif;
   font-size: 14px;
@@ -2418,7 +2454,7 @@ span.hero-domain-dot {
   outline: none;
 }
 .booking-input:focus, .booking-textarea:focus {
-  border-color: rgba(201,168,76,0.35);
+  border-color: rgba(248,246,240,0.35);
   background: rgba(240, 235, 224, 0.05);
 }
 .booking-input::placeholder, .booking-textarea::placeholder {
@@ -2430,7 +2466,7 @@ span.hero-domain-dot {
 }
 .booking-select {
   background: rgba(240, 235, 224, 0.03);
-  border: 1px solid rgba(201,168,76,0.1);
+  border: 1px solid rgba(248,246,240,0.1);
   color: var(--warm-white);
   font-family: 'Inter', sans-serif;
   font-size: 14px;
@@ -2440,13 +2476,13 @@ span.hero-domain-dot {
   outline: none;
   appearance: none;
   -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c9a84c' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23f8f6f0' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 16px center;
   cursor: pointer;
 }
 .booking-select:focus {
-  border-color: rgba(201,168,76,0.35);
+  border-color: rgba(248,246,240,0.35);
   background-color: rgba(240, 235, 224, 0.05);
 }
 .booking-select option {
@@ -2473,7 +2509,7 @@ span.hero-domain-dot {
 }
 .booking-submit:hover {
   background: #ddb868;
-  box-shadow: 0 4px 24px rgba(201,168,76,0.2);
+  box-shadow: 0 4px 24px rgba(248,246,240,0.2);
 }
 .booking-submit:disabled {
   opacity: 0.5;
@@ -2528,8 +2564,8 @@ span.hero-domain-dot {
 .morph-letter.scanning {
   font-family: 'JetBrains Mono', monospace;
   font-weight: 300;
-  color: rgba(201, 168, 76, 0.5);
-  text-shadow: 0 0 6px rgba(201, 168, 76, 0.3);
+  color: rgba(248, 246, 240, 0.5);
+  text-shadow: 0 0 6px rgba(248, 246, 240, 0.3);
   animation: morphStatic 0.08s steps(1) infinite;
 }
 
@@ -2539,9 +2575,9 @@ span.hero-domain-dot {
   font-weight: 300;
   color: var(--gold-1776);
   text-shadow:
-    0 0 6px rgba(201, 168, 76, 0.5),
-    0 0 18px rgba(201, 168, 76, 0.25),
-    0 0 36px rgba(201, 168, 76, 0.1);
+    0 0 6px rgba(248, 246, 240, 0.5),
+    0 0 18px rgba(248, 246, 240, 0.25),
+    0 0 36px rgba(248, 246, 240, 0.1);
   animation: decodePulse 0.6s ease-out forwards;
 }
 
@@ -2549,8 +2585,8 @@ span.hero-domain-dot {
 .morph-letter.reverting {
   font-family: 'JetBrains Mono', monospace;
   font-weight: 300;
-  color: rgba(201, 168, 76, 0.4);
-  text-shadow: 0 0 4px rgba(201, 168, 76, 0.2);
+  color: rgba(248, 246, 240, 0.4);
+  text-shadow: 0 0 4px rgba(248, 246, 240, 0.2);
   animation: morphStatic 0.06s steps(1) infinite;
 }
 
@@ -2567,8 +2603,8 @@ span.hero-domain-dot {
   15% { opacity: 0.85; transform: translateX(0.5px); }
   30% { opacity: 1; }
   100% { opacity: 1; transform: translateX(0); text-shadow:
-    0 0 4px rgba(201, 168, 76, 0.35),
-    0 0 12px rgba(201, 168, 76, 0.15);
+    0 0 4px rgba(248, 246, 240, 0.35),
+    0 0 12px rgba(248, 246, 240, 0.15);
   }
 }
 
@@ -2578,7 +2614,7 @@ span.hero-domain-dot {
   left: -20%;
   width: 140%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.6), rgba(201, 168, 76, 0.8), rgba(201, 168, 76, 0.6), transparent);
+  background: linear-gradient(90deg, transparent, rgba(248, 246, 240, 0.6), rgba(248, 246, 240, 0.8), rgba(248, 246, 240, 0.6), transparent);
   pointer-events: none;
   opacity: 0;
   z-index: 10;
@@ -2632,8 +2668,8 @@ span.hero-domain-dot {
     to bottom,
     transparent 0px,
     transparent 2px,
-    rgba(201, 168, 76, 0.06) 2px,
-    rgba(201, 168, 76, 0.06) 3px
+    rgba(248, 246, 240, 0.06) 2px,
+    rgba(248, 246, 240, 0.06) 3px
   );
 }
 .portrait-scanline.active {
@@ -2781,7 +2817,7 @@ span.hero-domain-dot {
   top: 96px;
   bottom: 96px;
   width: 1px;
-  background: rgba(201,168,76,0.07);
+  background: rgba(248,246,240,0.07);
   pointer-events: none;
   z-index: 10;
 }
@@ -2794,7 +2830,7 @@ span.hero-domain-dot {
   height: 100%;
   transform-origin: top center;
   transform: scaleY(var(--sp, 0));
-  background: linear-gradient(to bottom, rgba(201,168,76,0.65), rgba(201,168,76,0.10));
+  background: linear-gradient(to bottom, rgba(248,246,240,0.65), rgba(248,246,240,0.10));
 }
 
 [data-theme="light"] .scroll-progress-fill::after {
@@ -2805,8 +2841,8 @@ span.hero-domain-dot {
   transform: translate(-50%, 50%) rotate(45deg);
   width: 5px;
   height: 5px;
-  background: rgba(201,168,76,0.75);
-  box-shadow: 0 0 6px rgba(201,168,76,0.3);
+  background: rgba(248,246,240,0.75);
+  box-shadow: 0 0 6px rgba(248,246,240,0.3);
 }
 
 /* ---- HERO ---- */
@@ -3495,25 +3531,206 @@ span.hero-domain-dot {
    FISHER SOVEREIGN SYSTEMS -- SECTION & ARTICLE
    ================================================ */
 
-.fs-wordmark { display: flex; align-items: center; gap: 14px; margin-bottom: 40px; }
-.fs-glyph { flex-shrink: 0; color: rgba(201, 168, 76, 1); }
-.fs-wordmark-text { display: flex; flex-direction: column; gap: 4px; }
-.fs-wordmark-name { font-family: 'Crimson Pro', Georgia, serif; font-size: 28px; letter-spacing: 0.25em; font-weight: 600; color: rgba(201, 168, 76, 1); line-height: 1; }
-.fs-wordmark-rule { height: 1px; background: rgba(201, 168, 76, 0.4); margin: 2px 0; }
-.fs-wordmark-entity { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.3em; font-weight: 400; color: rgba(var(--fg), 0.45); text-transform: uppercase; line-height: 1; }
+/* FSS Brand Wordmark -- FF25 (Old Standard TT 400, FFFF format)
+   Centered hero Fisher + tracked SOVEREIGN SYSTEMS subline +
+   center-fading rule + motto. Picked from brand-sampler.html FF25. */
+.fs-wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 24px;
+  text-align: center;
+}
+.fs-wordmark-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  min-width: 0;
+}
+.fs-wordmark-name {
+  margin: 0;
+  line-height: 1.0;
+  text-align: center;
+}
+/* Single-layer background gradient for max browser compatibility.
+   The bright white/silver vertical metallic is the base appearance.
+   The matrix shine sweep is layered via a separate ::after pseudo
+   that uses content: attr(data-text) to duplicate the text and
+   animates its own background-position to sweep a bright stripe. */
+.fs-wm-1 {
+  display: block;
+  position: relative;
+  font-family: 'Old Standard TT', 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(80px, 9.5vw, 140px);
+  font-weight: 400;
+  letter-spacing: 0;
+  background: linear-gradient(180deg,
+    #ffffff 0%,
+    #faf9f5 22%,
+    #f0eeea 55%,
+    #e0dfd9 85%,
+    #cfcdc7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* Dark-mode emboss: darker top rim + brighter silver bottom rim + sharper
+     outline + layered silver ambient halo (inner + outer) + deep dark drop
+     shadow. Mirrors the engraved feel of the light-mode override, inverted
+     for dark background, amped for visibility. */
+  filter:
+    drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.95))
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.32))
+    drop-shadow(0 0 2px rgba(0, 0, 0, 0.85))
+    drop-shadow(0 0 14px rgba(248, 246, 240, 0.28))
+    drop-shadow(0 0 36px rgba(248, 246, 240, 0.18))
+    drop-shadow(0 10px 40px rgba(0, 0, 0, 0.8));
+  text-align: center;
+  line-height: 1.0;
+  margin-bottom: -0.18em;
+}
+/* Matrix shine sweep overlay - duplicates the text via attr(data-text) */
+.fs-wm-1::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  background: linear-gradient(100deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 42%,
+    rgba(255,255,255,0.95) 49%,
+    rgba(255,255,255,1) 50%,
+    rgba(255,255,255,0.95) 51%,
+    rgba(255,255,255,0) 58%,
+    rgba(255,255,255,0) 100%);
+  background-size: 250% 100%;
+  background-position: 0% 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  pointer-events: none;
+  animation: fsShine 14s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+}
+
+.fs-wm-2 {
+  display: block;
+  position: relative;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(13px, 1.4vw, 18px);
+  font-weight: 500;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  background: linear-gradient(180deg,
+    #f6f4ef 0%,
+    #e8e6df 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  margin-top: 6px;
+  padding-left: 0.5em;
+  text-align: center;
+  /* Matching emboss treatment for SOVEREIGN SYSTEMS caps, amped */
+  filter:
+    drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.85))
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.3))
+    drop-shadow(0 0 1.5px rgba(0, 0, 0, 0.85))
+    drop-shadow(0 0 10px rgba(248, 246, 240, 0.22))
+    drop-shadow(0 3px 14px rgba(0, 0, 0, 0.65));
+}
+.fs-wm-2::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding-left: 0.5em;
+  text-align: center;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-transform: uppercase;
+  background: linear-gradient(100deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 42%,
+    rgba(255,255,255,0.95) 49%,
+    rgba(255,255,255,1) 50%,
+    rgba(255,255,255,0.95) 51%,
+    rgba(255,255,255,0) 58%,
+    rgba(255,255,255,0) 100%);
+  background-size: 250% 100%;
+  background-position: 0% 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  pointer-events: none;
+  animation: fsShine 14s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+  animation-delay: 0.25s;
+}
+
+/* Matrix-style shine sweep: bright stripe traverses the wordmark once per
+   cycle then rests off-screen. 14s cycle = one sweep every ~14 seconds. */
+@keyframes fsShine {
+  0% { background-position: 0% 0; }
+  22% { background-position: 100% 0; }
+  100% { background-position: 100% 0; }
+}
+
+/* Respect user motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .fs-wm-1::after, .fs-wm-2::after { animation: none; }
+}
+.fs-wordmark-rule {
+  height: 1px;
+  width: 100%;
+  max-width: 620px;
+  background: linear-gradient(to right,
+    transparent 0%,
+    rgba(248, 246, 240, 0.08) 10%,
+    rgba(248, 246, 240, 0.55) 50%,
+    rgba(248, 246, 240, 0.08) 90%,
+    transparent 100%);
+  margin: 10px auto 6px;
+}
+.fs-wordmark-entity {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(13px, 1.1vw, 16px);
+  letter-spacing: 0.035em;
+  font-weight: 400;
+  color: rgba(220, 217, 211, 0.78);
+  line-height: 1.2;
+  text-align: center;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+}
 .fs-headline { font-family: 'Cormorant Garamond', serif; font-size: clamp(34px, 5.5vw, 56px); font-weight: 400; letter-spacing: 0.01em; line-height: 1.2; color: rgba(var(--fg), 0.92); margin-bottom: 16px; max-width: 760px; }
-.fs-tagline { font-family: 'Inter', sans-serif; font-size: 15px; letter-spacing: 0.18em; font-weight: 400; color: rgba(201, 168, 76, 0.9); text-transform: uppercase; margin-bottom: 36px; }
+.fs-tagline { font-family: 'Inter', sans-serif; font-size: 15px; letter-spacing: 0.18em; font-weight: 400; color: rgba(248, 246, 240, 0.9); text-transform: uppercase; margin-bottom: 36px; }
 .fs-mission { max-width: 680px; margin-bottom: 40px; }
 .fs-mission p { font-family: 'Inter', sans-serif; font-size: 17px; line-height: 1.75; color: rgba(var(--fg), 0.72); margin-bottom: 18px; }
 .fs-mission p:last-child { margin-bottom: 0; }
 .fs-mission em { font-style: italic; color: rgba(var(--fg), 0.85); }
 .fs-ctas { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 56px; }
-.fs-teaser-card { display: flex; align-items: flex-start; gap: 32px; padding: 40px 44px; border: 1px solid rgba(var(--fg), 0.1); border-left: 3px solid rgba(201, 168, 76, 0.8); background: rgba(var(--fg), 0.03); position: relative; overflow: hidden; max-width: 760px; }
+.fs-teaser-card { display: flex; align-items: flex-start; gap: 32px; padding: 40px 44px; border: 1px solid rgba(var(--fg), 0.1); border-left: 3px solid rgba(248, 246, 240, 0.8); background: rgba(var(--fg), 0.03); position: relative; overflow: hidden; max-width: 760px; }
 .fs-teaser-info { flex: 1; min-width: 0; }
-.fs-teaser-eyebrow { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(201, 168, 76, 0.9); font-weight: 600; margin-bottom: 12px; }
+.fs-teaser-eyebrow { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(248, 246, 240, 0.9); font-weight: 600; margin-bottom: 12px; }
 .fs-teaser-title { font-family: 'Crimson Pro', Georgia, serif; font-size: 28px; font-weight: 600; color: rgba(var(--fg), 0.92); line-height: 1.2; margin-bottom: 6px; }
 .fs-teaser-subtitle { font-family: 'Inter', sans-serif; font-size: 13px; color: rgba(var(--fg), 0.55); margin-bottom: 20px; letter-spacing: 0.01em; line-height: 1.5; }
-.fs-teaser-quote { font-family: 'Crimson Pro', Georgia, serif; font-size: 18px; font-style: italic; color: rgba(var(--fg), 0.78); border-left: 2px solid rgba(201, 168, 76, 0.7); padding-left: 16px; margin: 0 0 20px 0; line-height: 1.6; }
+.fs-teaser-quote { font-family: 'Crimson Pro', Georgia, serif; font-size: 18px; font-style: italic; color: rgba(var(--fg), 0.78); border-left: 2px solid rgba(248, 246, 240, 0.7); padding-left: 16px; margin: 0 0 20px 0; line-height: 1.6; }
 .fs-teaser-sublabel { font-family: 'Inter', sans-serif; font-size: 13px; color: rgba(var(--fg), 0.5); margin-bottom: 24px; line-height: 1.6; }
 .fs-teaser-cta { display: inline-block; }
 .fs-teaser-deco { flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 80px; }
@@ -3522,31 +3739,33 @@ span.hero-domain-dot {
 /* ARTICLE SUB-PAGE */
 .fs-article-nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; background: rgba(10, 10, 11, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(var(--fg), 0.08); }
 .fs-article-nav-wordmark { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-.fs-article-nav-name { font-family: 'Crimson Pro', Georgia, serif; font-size: 18px; letter-spacing: 0.2em; font-weight: 600; color: rgba(201, 168, 76, 0.9); }
+.fs-article-nav-name { font-family: 'Old Standard TT', 'Cormorant Garamond', Georgia, serif; font-size: 19px; letter-spacing: 0; font-weight: 400; color: rgba(252, 250, 246, 0.96); text-shadow: 0 1px 0 rgba(0,0,0,0.5), 0 2px 10px rgba(0,0,0,0.45); }
 .fs-article-nav-back { font-family: 'Inter', sans-serif; font-size: 13px; letter-spacing: 0.08em; color: rgba(var(--fg), 0.5); text-decoration: none; transition: color 0.2s; }
 .fs-article-nav-back:hover { color: rgba(var(--fg), 0.85); }
 .fs-article-hero { position: relative; padding: 80px 32px 60px; max-width: 760px; margin: 0 auto; overflow: hidden; }
 .fs-article-ghost { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -38%); font-family: 'Crimson Pro', Georgia, serif; font-size: clamp(48px, 8vw, 88px); font-weight: 700; white-space: nowrap; color: rgba(var(--fg), 0.06); pointer-events: none; user-select: none; letter-spacing: -0.02em; line-height: 1; z-index: 0; }
 .fs-article-hero-inner { position: relative; z-index: 1; }
-.fs-article-eyebrow { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(201, 168, 76, 0.85); font-weight: 600; margin-bottom: 20px; }
+.fs-article-eyebrow { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(248, 246, 240, 0.85); font-weight: 600; margin-bottom: 20px; }
 .fs-article-title { font-family: 'Crimson Pro', Georgia, serif; font-size: clamp(40px, 7vw, 64px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; color: rgba(var(--fg), 0.95); margin-bottom: 16px; }
 .fs-article-deck { font-family: 'Inter', sans-serif; font-size: 17px; line-height: 1.6; color: rgba(var(--fg), 0.6); margin-bottom: 20px; max-width: 600px; }
 .fs-article-byline { font-family: 'Inter', sans-serif; font-size: 12px; letter-spacing: 0.08em; color: rgba(var(--fg), 0.4); text-transform: uppercase; }
-.fs-article-hero-rule { height: 1px; background: linear-gradient(90deg, rgba(201, 168, 76, 0.6) 0%, transparent 100%); margin-top: 40px; }
+.fs-article-hero-rule { height: 1px; background: linear-gradient(90deg, rgba(248, 246, 240, 0.6) 0%, transparent 100%); margin-top: 40px; }
 .fs-article-body { max-width: 680px; margin: 0 auto; padding: 48px 32px 80px; }
 .fs-article-body p { font-family: 'Inter', sans-serif; font-size: 17px; line-height: 1.78; color: rgba(var(--fg), 0.75); margin-bottom: 24px; }
 .fs-article-section-head { font-family: 'Crimson Pro', Georgia, serif; font-size: 22px; letter-spacing: 0.12em; font-weight: 600; color: rgba(var(--fg), 0.88); margin: 48px 0 20px; text-transform: uppercase; }
-.fs-article-pull { font-family: 'Crimson Pro', Georgia, serif; font-size: 22px; font-style: italic; color: rgba(var(--fg), 0.82); border-left: 2px solid rgba(201, 168, 76, 0.8); background: rgba(var(--fg), 0.04); padding: 20px 24px; margin: 36px 0; line-height: 1.55; }
+.fs-article-pull { font-family: 'Crimson Pro', Georgia, serif; font-size: 22px; font-style: italic; color: rgba(var(--fg), 0.82); border-left: 2px solid rgba(248, 246, 240, 0.8); background: rgba(var(--fg), 0.04); padding: 20px 24px; margin: 36px 0; line-height: 1.55; }
 .fs-article-end { max-width: 680px; margin: 0 auto; padding: 64px 32px; border-top: 1px solid rgba(var(--fg), 0.1); text-align: center; }
 .fs-article-end-wordmark { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; }
-.fs-article-end-name { font-family: 'Crimson Pro', Georgia, serif; font-size: 22px; letter-spacing: 0.22em; color: rgba(201, 168, 76, 0.9); }
+.fs-article-end-name { font-family: 'Old Standard TT', 'Cormorant Garamond', Georgia, serif; font-size: 28px; letter-spacing: 0; font-weight: 400; color: rgba(252, 250, 246, 0.96); text-shadow: 0 1px 0 rgba(0,0,0,0.5), 0 2px 10px rgba(0,0,0,0.45); }
 .fs-article-end-tagline { font-family: 'Inter', sans-serif; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(var(--fg), 0.45); margin-bottom: 16px; }
 .fs-article-end-statement { font-family: 'Inter', sans-serif; font-size: 15px; color: rgba(var(--fg), 0.6); margin-bottom: 32px; line-height: 1.65; max-width: 420px; margin-left: auto; margin-right: auto; }
 .fs-article-end-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 .fs-article-footer { text-align: center; padding: 24px 32px; border-top: 1px solid rgba(var(--fg), 0.07); font-family: 'Inter', sans-serif; font-size: 12px; color: rgba(var(--fg), 0.35); letter-spacing: 0.06em; }
 
 @media (max-width: 768px) {
-  .fs-wordmark-name { font-size: 22px; }
+  .fs-wm-1 { font-size: clamp(56px, 13vw, 80px); }
+  .fs-wm-2 { font-size: 11px; letter-spacing: 0.36em; }
+  .fs-wordmark-entity { font-size: 12px; letter-spacing: 0.03em; }
   .fs-headline { font-size: 28px; }
   .fs-teaser-card { flex-direction: column; padding: 28px 24px; }
   .fs-teaser-deco { display: none; }
@@ -3561,17 +3780,85 @@ span.hero-domain-dot {
   .fs-teaser-cta { min-height: 44px; }
 }
 
-[data-theme="light"] .fs-glyph { color: rgba(201, 168, 76, 1); }
-[data-theme="light"] .fs-wordmark-name { color: rgba(42, 26, 6, 1); }
-[data-theme="light"] .fs-wordmark-rule { background: rgba(201, 168, 76, 0.5); }
+[data-theme="light"] .fs-wordmark-name {
+  color: rgba(38, 42, 50, 0.94);
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55),
+    0 2px 10px rgba(28, 32, 40, 0.14);
+}
+/* Light mode: dark graphite metallic gradient + lighter highlight sweep */
+[data-theme="light"] .fs-wm-1 {
+  background: linear-gradient(180deg,
+    #26292f 0%,
+    #383c44 35%,
+    #4c505a 70%,
+    #5a5e68 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5)) drop-shadow(0 2px 10px rgba(28, 32, 40, 0.18));
+}
+[data-theme="light"] .fs-wm-1::after {
+  background: linear-gradient(100deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 42%,
+    rgba(255,255,255,0.55) 48%,
+    rgba(255,255,255,0.85) 50%,
+    rgba(255,255,255,0.55) 52%,
+    rgba(255,255,255,0) 58%,
+    rgba(255,255,255,0) 100%);
+  background-size: 250% 100%;
+  background-position: 0% 0;
+  background-repeat: no-repeat;
+  /* Re-apply clip: the `background:` shorthand above resets background-clip
+     to border-box, which made the shine gradient render as a visible
+     rectangular plate behind the wordmark. Pin it back to text. */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+[data-theme="light"] .fs-wm-2 {
+  background: linear-gradient(180deg,
+    #32363e 0%,
+    #4a4e58 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5));
+}
+[data-theme="light"] .fs-wm-2::after {
+  background: linear-gradient(100deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 42%,
+    rgba(255,255,255,0.55) 48%,
+    rgba(255,255,255,0.85) 50%,
+    rgba(255,255,255,0.55) 52%,
+    rgba(255,255,255,0) 58%,
+    rgba(255,255,255,0) 100%);
+  background-size: 250% 100%;
+  background-position: 0% 0;
+  background-repeat: no-repeat;
+  /* Same clip-reset fix as .fs-wm-1::after above. */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+[data-theme="light"] .fs-shield {
+  color: rgba(48, 52, 60, 0.78);
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5)) drop-shadow(0 2px 8px rgba(20, 24, 32, 0.12));
+}
+[data-theme="light"] .fs-wordmark-rule {
+  background: linear-gradient(to right, rgba(70, 76, 88, 0.45), rgba(110, 116, 128, 0.18) 70%, transparent);
+}
+[data-theme="light"] .fs-wordmark-entity { color: rgba(70, 76, 88, 0.62); }
 [data-theme="light"] .fs-tagline { color: rgba(140, 100, 20, 0.9); }
-[data-theme="light"] .fs-teaser-card { background: rgba(var(--fg), 0.03); border-color: rgba(var(--fg), 0.12); border-left-color: rgba(201, 168, 76, 0.7); }
+[data-theme="light"] .fs-teaser-card { background: rgba(var(--fg), 0.03); border-color: rgba(var(--fg), 0.12); border-left-color: rgba(248, 246, 240, 0.7); }
 [data-theme="light"] .fs-teaser-eyebrow { color: rgba(140, 100, 20, 0.9); }
-[data-theme="light"] .fs-teaser-quote { border-left-color: rgba(201, 168, 76, 0.7); }
-[data-theme="light"] .fs-article-pull { border-left-color: rgba(201, 168, 76, 0.7); }
-[data-theme="light"] .fs-article-end-name { color: rgba(140, 100, 20, 0.9); }
+[data-theme="light"] .fs-teaser-quote { border-left-color: rgba(248, 246, 240, 0.7); }
+[data-theme="light"] .fs-article-pull { border-left-color: rgba(248, 246, 240, 0.7); }
 [data-theme="light"] .fs-article-nav { background: rgba(197, 198, 200, 0.92); }
-[data-theme="light"] .fs-article-nav-name { color: rgba(140, 100, 20, 0.9); }
+[data-theme="light"] .fs-article-nav-name { color: rgba(38, 42, 50, 0.92); text-shadow: 0 1px 0 rgba(255,255,255,0.55); }
+[data-theme="light"] .fs-article-end-name { color: rgba(38, 42, 50, 0.92); text-shadow: 0 1px 0 rgba(255,255,255,0.55); }
 
 /* Fisher Sovereign subheadline */
 .fs-subheadline {
@@ -3593,21 +3880,24 @@ span.hero-domain-dot {
   font-weight: 500;
   letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: var(--gold-1776);
+  color: rgba(248, 246, 240, 0.85);
   margin-top: 6px;
   margin-bottom: 4px;
 }
 
-/* Primary business name — hero top element */
+/* Primary business name — hero top element.
+   The H1 wrapper (.hero-business-primary) handles layout and fade-in.
+   The inner .sovereign-glitch span carries the metallic silver gradient
+   via background-clip: text (same technique as the gateway .gw-company-glitch).
+   background-clip: text does NOT inherit to children, so the gradient must
+   live on the element that contains the visible text — the inner span. */
 .hero-business-primary {
   font-family: 'Cormorant SC', serif;
   font-weight: 600;
   font-size: clamp(28px, 5.5vw, 64px);
   letter-spacing: clamp(6px, 1.5vw, 18px);
   text-transform: uppercase;
-  color: var(--gold-1776);
   text-align: center;
-  text-shadow: 0 0 60px rgba(201,168,76,0.18), 0 0 120px rgba(201,168,76,0.06);
   opacity: 0;
   animation: heroReveal 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
 }
@@ -3654,7 +3944,7 @@ span.hero-domain-dot {
   font-weight: 400;
   letter-spacing: clamp(10px, 2.2vw, 26px);
   color: var(--warm-white);
-  text-shadow: 0 0 32px rgba(201, 168, 76, 0.18), 0 0 64px rgba(201, 168, 76, 0.06);
+  text-shadow: 0 0 32px rgba(248, 246, 240, 0.18), 0 0 64px rgba(248, 246, 240, 0.06);
   white-space: nowrap;
 }
 [data-theme="light"] .hero-name-last {
@@ -3684,9 +3974,9 @@ span.hero-domain-dot {
   will-change: opacity, transform;
 }
 .hn-digit {
-  color: var(--gold-1776);
-  text-shadow: 0 0 18px rgba(201, 168, 76, 0.40),
-               0 0 36px rgba(201, 168, 76, 0.18);
+  color: rgba(248, 246, 240, 0.95);
+  text-shadow: 0 0 18px rgba(248, 246, 240, 0.40),
+               0 0 36px rgba(248, 246, 240, 0.18);
 }
 .hn-glyph .hn-letter { opacity: 1; transform: translateY(0); }
 .hn-glyph .hn-digit  { opacity: 0; transform: translateY(0.04em); }
@@ -3698,7 +3988,7 @@ span.hero-domain-dot {
   font-size: clamp(8px, 1.1vw, 11px);
   letter-spacing: clamp(3px, 0.7vw, 8px);
   text-transform: uppercase;
-  color: var(--gold-1776);
+  color: rgba(248, 246, 240, 0.85);
   text-align: center;
   margin-top: 12px;
   opacity: 0;
@@ -3710,10 +4000,10 @@ span.hero-domain-dot {
   font-style: italic;
   font-size: clamp(13px, 1.8vw, 20px);
   letter-spacing: 4px;
-  color: var(--gold-1776);
+  color: rgba(248, 246, 240, 0.92);
   text-align: center;
   margin-top: 8px;
-  text-shadow: 0 0 40px rgba(201, 168, 76, 0.25), 0 0 80px rgba(201, 168, 76, 0.08);
+  text-shadow: 0 0 40px rgba(248, 246, 240, 0.22), 0 0 80px rgba(248, 246, 240, 0.08);
   display: block;
   opacity: 0;
   animation: fadeIn 1.5s ease forwards 2.5s;
@@ -3722,16 +4012,52 @@ span.hero-domain-dot {
 .hero-motto-translation { display: none; }
 [data-theme="light"] .hero-business-primary {
   text-shadow: none;
-  color: rgba(120,95,30,0.9);
 }
 [data-theme="light"] .hero-name-attr { color: rgba(28,26,24,0.88); }
-[data-theme="light"] .hero-tagline { color: rgba(120,95,30,0.8); }
-[data-theme="light"] .hero-motto { text-shadow: none; color: rgba(120,95,30,0.85); }
+[data-theme="light"] .hero-tagline { color: rgba(42, 42, 46, 0.78); }
+[data-theme="light"] .hero-motto { text-shadow: none; color: rgba(42, 42, 46, 0.82); }
 
-/* Sovereign Systems glitch flash effect */
+/* Sovereign Systems brand wordmark + glitch effect.
+   Lives on the INNER span (.sovereign-glitch) because background-clip: text
+   does not inherit from a parent. Base layer = bright silver metallic gradient.
+   ::before / ::after ghost layers override the parent's transparent fill via
+   -webkit-text-fill-color: currentColor + background: none so the RGB-split
+   glitch still renders on top of the silver base. Matches the gateway. */
 .sovereign-glitch {
   position: relative;
   display: inline-block;
+  background: linear-gradient(100deg,
+    #d8d6d0 0%,
+    #ecebe6 25%,
+    #ffffff 48%,
+    #ffffff 52%,
+    #ecebe6 75%,
+    #d8d6d0 100%);
+  background-size: 220% 100%;
+  background-position: 0% 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.35)) drop-shadow(0 3px 22px rgba(0, 0, 0, 0.48));
+}
+[data-theme="light"] .sovereign-glitch {
+  background: linear-gradient(100deg,
+    #4a4e58 0%,
+    #383c44 25%,
+    #1f2228 48%,
+    #1f2228 52%,
+    #383c44 75%,
+    #4a4e58 100%);
+  background-size: 220% 100%;
+  background-position: 0% 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: none;
 }
 .sovereign-glitch::before,
 .sovereign-glitch::after {
@@ -3742,15 +4068,17 @@ span.hero-domain-dot {
   width: 100%;
   height: 100%;
   opacity: 0;
+  background: none;
+  -webkit-text-fill-color: currentColor;
 }
 .sovereign-glitch::before {
-  color: #fff;
-  text-shadow: 0 0 8px rgba(201, 168, 76, 0.8);
+  color: #0ff;
+  text-shadow: 0 0 6px rgba(0, 255, 255, 0.35);
   animation: sovereignFlash 8s ease-in-out infinite;
 }
 .sovereign-glitch::after {
-  color: var(--gold-1776);
-  text-shadow: -2px 0 rgba(201, 168, 76, 0.4), 2px 0 rgba(255, 255, 255, 0.2);
+  color: #f66;
+  text-shadow: -1px 0 rgba(255, 60, 60, 0.35), 1px 0 rgba(255, 255, 255, 0.2);
   animation: sovereignGlitch 8s ease-in-out infinite;
 }
 
@@ -3792,7 +4120,7 @@ span.hero-domain-dot {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.25), transparent);
+  background: linear-gradient(90deg, transparent, rgba(248, 246, 240, 0.28), transparent);
 }
 
 .fs-pillars-label {
@@ -3801,6 +4129,305 @@ span.hero-domain-dot {
   font-weight: 500;
   letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: var(--gold-1776);
+  color: rgba(248, 246, 240, 0.78);
   margin: 32px 0 24px;
 }
+[data-theme="light"] .fs-sovereignty-block::before {
+  background: linear-gradient(90deg, transparent, rgba(42, 42, 46, 0.28), transparent);
+}
+[data-theme="light"] .fs-pillars-label { color: rgba(42, 42, 46, 0.78); }
+
+/* ========================================================================
+   FSS BRAND BLOCK V3 — No H icon. FF25 mini wordmark (Old Standard TT)
+   Replaces the V1 (gold + H icon + Crimson Pro caps) and V2 (silver + H
+   icon + Old Standard TT) patterns. Used in nav top-bar + footer of every
+   showcase page. Two variants: .fssb-v3-top (compact) and .fssb-v3-foot
+   (larger, includes the motto).
+   ======================================================================== */
+.fssb-v3-top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 22px 12px;
+  background: #08080a;
+  border-bottom: 1px solid rgba(220, 220, 216, 0.12);
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+}
+.fssb-v3-top-link {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-decoration: none;
+  gap: 1px;
+  min-width: 0;
+}
+.fssb-v3-top-name {
+  font-family: 'Old Standard TT', 'Cormorant Garamond', Georgia, serif;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: 0;
+  background: linear-gradient(180deg,
+    #ffffff 0%,
+    #f4f2ee 30%,
+    #d8d5cf 70%,
+    #b8b5af 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* Scaled-down emboss matching hero .fs-wm-1, nav-strip size. */
+  filter:
+    drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.85))
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.28))
+    drop-shadow(0 0 1px rgba(0, 0, 0, 0.75))
+    drop-shadow(0 0 6px rgba(248, 246, 240, 0.2))
+    drop-shadow(0 3px 12px rgba(0, 0, 0, 0.7));
+}
+.fssb-v3-top-rule {
+  display: block;
+  width: 120px;
+  height: 1px;
+  margin: 3px 0 2px;
+  background: linear-gradient(to right,
+    transparent 0%,
+    rgba(248, 246, 240, 0.1) 15%,
+    rgba(248, 246, 240, 0.55) 50%,
+    rgba(248, 246, 240, 0.1) 85%,
+    transparent 100%);
+}
+.fssb-v3-top-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(220, 217, 211, 0.82);
+  padding-left: 0.3em;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+}
+.fssb-v3-top-back {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(180, 180, 186, 0.72);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+.fssb-v3-top-back:hover { color: rgba(248, 246, 240, 0.92); }
+
+.fssb-v3-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 48px 24px 36px;
+  background: #08080a;
+  border-top: 1px solid rgba(220, 220, 216, 0.12);
+  text-align: center;
+}
+.fssb-v3-foot-name {
+  font-family: 'Old Standard TT', 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(38px, 5vw, 52px);
+  font-weight: 400;
+  line-height: 1.0;
+  letter-spacing: 0;
+  background: linear-gradient(180deg,
+    #ffffff 0%,
+    #f4f2ee 30%,
+    #d8d5cf 70%,
+    #b8b5af 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* Footer wordmark: stronger halo than top strip; scaled from hero. */
+  filter:
+    drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.9))
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.32))
+    drop-shadow(0 0 1.5px rgba(0, 0, 0, 0.8))
+    drop-shadow(0 0 12px rgba(248, 246, 240, 0.24))
+    drop-shadow(0 0 26px rgba(248, 246, 240, 0.14))
+    drop-shadow(0 6px 24px rgba(0, 0, 0, 0.75));
+  margin: 0;
+}
+.fssb-v3-foot-rule {
+  display: block;
+  width: 220px;
+  height: 1px;
+  margin: 14px auto 10px;
+  background: linear-gradient(to right,
+    transparent 0%,
+    rgba(248, 246, 240, 0.08) 10%,
+    rgba(248, 246, 240, 0.55) 50%,
+    rgba(248, 246, 240, 0.08) 90%,
+    transparent 100%);
+}
+.fssb-v3-foot-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(11px, 1.1vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(220, 217, 211, 0.85);
+  padding-left: 0.4em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+  margin: 0;
+}
+.fssb-v3-foot-motto {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(10px, 0.9vw, 12px);
+  font-weight: 400;
+  letter-spacing: 0.035em;
+  color: rgba(220, 217, 211, 0.72);
+  margin: 10px 0 0;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+}
+.fssb-v3-foot-back {
+  display: inline-block;
+  margin-top: 22px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(180, 180, 186, 0.6);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.fssb-v3-foot-back:hover { color: rgba(248, 246, 240, 0.92); }
+
+/* Light mode overrides for the brand block */
+[data-theme="light"] .fssb-v3-top,
+[data-theme="light"] .fssb-v3-foot {
+  background: #f5f3ee;
+  border-color: rgba(42, 42, 46, 0.18);
+}
+[data-theme="light"] .fssb-v3-top-name,
+[data-theme="light"] .fssb-v3-foot-name {
+  background: linear-gradient(180deg,
+    #1f2228 0%,
+    #2c3038 30%,
+    #3a3e48 70%,
+    #4a4e58 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* Light-mode emboss: white rim + soft dark shadow, same direction as hero. */
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.55))
+    drop-shadow(0 2px 10px rgba(28, 32, 40, 0.18));
+}
+[data-theme="light"] .fssb-v3-top-rule,
+[data-theme="light"] .fssb-v3-foot-rule {
+  background: linear-gradient(to right,
+    transparent 0%,
+    rgba(42, 42, 46, 0.1) 15%,
+    rgba(42, 42, 46, 0.5) 50%,
+    rgba(42, 42, 46, 0.1) 85%,
+    transparent 100%);
+}
+[data-theme="light"] .fssb-v3-top-sub,
+[data-theme="light"] .fssb-v3-foot-sub { color: rgba(42, 42, 46, 0.78); text-shadow: none; }
+[data-theme="light"] .fssb-v3-foot-motto { color: rgba(42, 42, 46, 0.62); text-shadow: none; }
+[data-theme="light"] .fssb-v3-top-back,
+[data-theme="light"] .fssb-v3-foot-back { color: rgba(42, 42, 46, 0.58); }
+[data-theme="light"] .fssb-v3-top-back:hover,
+[data-theme="light"] .fssb-v3-foot-back:hover { color: rgba(26, 26, 28, 0.92); }
+
+@media (max-width: 640px) {
+  .fssb-v3-top-name { font-size: 22px; }
+  .fssb-v3-top-rule { width: 90px; }
+  .fssb-v3-top-sub { font-size: 8px; letter-spacing: 0.25em; }
+  .fssb-v3-foot-name { font-size: 32px; }
+  .fssb-v3-foot-rule { width: 160px; }
+}
+
+/* ========================================================================
+   PROJECT CARD — BENEFIT STRIP + STATE LABEL
+   Adds a visible "how this helps you" line and an honest user-experience
+   state label to every .project-card on home.html.
+   ======================================================================== */
+.p-benefit {
+  position: relative;
+  display: block;
+  margin: 12px 0 14px;
+  padding: 10px 14px 10px 16px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(14px, 1.15vw, 16.5px);
+  line-height: 1.45;
+  color: rgba(var(--fg), 0.92);
+  background: linear-gradient(90deg,
+    rgba(248, 246, 240, 0.05) 0%,
+    rgba(248, 246, 240, 0.02) 100%);
+  border-left: 2px solid rgba(248, 246, 240, 0.55);
+  border-radius: 0 3px 3px 0;
+}
+.p-benefit::before {
+  content: 'For you:';
+  display: inline-block;
+  margin-right: 8px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.7em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(var(--fg), 0.62);
+  vertical-align: 0.08em;
+}
+[data-theme="light"] .p-benefit {
+  background: linear-gradient(90deg,
+    rgba(26, 26, 28, 0.04) 0%,
+    rgba(26, 26, 28, 0.01) 100%);
+  border-left-color: rgba(42, 42, 46, 0.55);
+  color: rgba(26, 26, 28, 0.88);
+}
+
+/* State label: one honest chip per card telling visitors what to expect.
+   Sits next to p-status in the info column. Six variants. */
+.p-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 8px;
+  padding: 3px 9px;
+  border-radius: 2px;
+  font-family: 'Inter', sans-serif;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  background: transparent;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.p-state::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.p-state-public-alpha { color: #6ee7a0; }
+.p-state-interactive  { color: #7dd3fc; }
+.p-state-demo         { color: #c4b5fd; }
+.p-state-architecture { color: rgba(220, 217, 211, 0.75); }
+.p-state-protected    { color: #fbbf24; }
+.p-state-internal     { color: rgba(148, 148, 158, 0.75); }
+
+[data-theme="light"] .p-state-public-alpha { color: #1d7f40; }
+[data-theme="light"] .p-state-interactive  { color: #0369a1; }
+[data-theme="light"] .p-state-demo         { color: #6d28d9; }
+[data-theme="light"] .p-state-architecture { color: rgba(42, 42, 46, 0.72); }
+[data-theme="light"] .p-state-protected    { color: #b45309; }
+[data-theme="light"] .p-state-internal     { color: rgba(80, 80, 90, 0.72); }

@@ -1,0 +1,2786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Hub | Lance W. Fisher</title>
+<meta name="description" content="Home Hub , a TypeScript + Fastify + React dashboard for visualizing, classifying, and securing devices on a home network.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230a0a0b'/><path d='M16 5L4 15h3v11h7v-7h4v7h7V15h3L16 5z' fill='%23c3cdda'/><circle cx='16' cy='16' r='3' fill='%236ee7a0'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0b;
+  --bg2:#0e0f12;
+  --bg3:#0b0c0f;
+  --bg4:#15161a;
+  --panel:#0e0f12;
+  --panel-2:#13141a;
+  --border:rgba(228,234,242,0.10);
+  --border-strong:rgba(228,234,242,0.18);
+  --border-accent:rgba(228,234,242,0.28);
+  --text:rgba(228,234,242,0.94);
+  --text-mid:rgba(195,205,218,0.72);
+  --text-dim:rgba(195,205,218,0.48);
+  --text-faint:rgba(195,205,218,0.32);
+  --silver:#c3cdda;
+  --silver-strong:#e4eaf2;
+  --green:#6ee7a0;
+  --blue:#7dd3fc;
+  --amber:#fbbf24;
+  --red:#f87171;
+  --violet:#a78bfa;
+  --mono:'JetBrains Mono',Menlo,monospace;
+  --sans:'Inter',system-ui,sans-serif;
+  --display:'Cinzel',serif;
+}
+html,body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:13px;
+  line-height:1.55;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+body{overflow-x:hidden}
+a{color:var(--silver-strong);text-decoration:none}
+a:hover{color:#ffffff}
+
+/* ===========================================
+   TOP NAV
+   =========================================== */
+.app-nav{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:13px 28px;
+  background:#0a0a0b;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:90;
+  backdrop-filter:blur(8px);
+}
+.app-nav-back{
+  font-size:11px;
+  color:var(--text-dim);
+  letter-spacing:0.05em;
+  transition:color 0.2s;
+}
+.app-nav-back:hover{color:var(--silver-strong)}
+.app-nav-title{
+  font-family:var(--display);
+  font-size:16px;
+  font-weight:600;
+  color:var(--text);
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+}
+.app-nav-meta{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-dim);
+  letter-spacing:0.08em;
+}
+.app-nav-port{
+  background:rgba(110,231,160,0.10);
+  color:var(--green);
+  padding:4px 9px;
+  border-radius:3px;
+  border:1px solid rgba(110,231,160,0.30);
+}
+
+/* ===========================================
+   HONEST SIGNALING BANNER
+   =========================================== */
+.sim-banner{
+  background:rgba(228,234,242,0.04);
+  border-bottom:1px solid var(--border);
+  padding:10px 28px;
+  text-align:center;
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--text-mid);
+  letter-spacing:0.04em;
+}
+.sim-banner b{color:var(--text);font-weight:500}
+.sim-banner .sim-dot{
+  display:inline-block;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--amber);
+  box-shadow:0 0 8px rgba(251,191,36,0.6);
+  margin-right:8px;
+  vertical-align:middle;
+  animation:pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:0.9;transform:scale(1)}
+  50%{opacity:0.5;transform:scale(0.85)}
+}
+
+/* ===========================================
+   HEADER STRIP
+   =========================================== */
+.app-header{
+  padding:26px 28px 22px;
+  border-bottom:1px solid var(--border);
+  background:radial-gradient(ellipse 900px 240px at 50% 0%, rgba(125,211,252,0.04), transparent);
+}
+.app-header-inner{
+  max-width:1320px;
+  margin:0 auto;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:30px;
+  flex-wrap:wrap;
+}
+.app-header-left{flex:1;min-width:280px}
+.app-header-eyebrow{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-dim);
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.app-header-title{
+  font-family:var(--display);
+  font-size:26px;
+  font-weight:600;
+  color:var(--text);
+  letter-spacing:0.05em;
+  margin-bottom:6px;
+}
+.app-header-sub{
+  font-size:13px;
+  color:var(--text-mid);
+  max-width:680px;
+  line-height:1.6;
+}
+.app-header-status{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  align-items:flex-end;
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--text-mid);
+}
+.hs-row{display:flex;align-items:center;gap:8px}
+.hs-dot{width:7px;height:7px;border-radius:50%}
+.hs-dot.online{background:var(--green);box-shadow:0 0 6px rgba(110,231,160,0.6)}
+.hs-dot.warn{background:var(--amber);box-shadow:0 0 6px rgba(251,191,36,0.5)}
+.hs-val{color:var(--text);font-weight:500}
+
+/* ===========================================
+   TAB BAR
+   =========================================== */
+.tab-bar{
+  display:flex;
+  align-items:stretch;
+  padding:0 28px;
+  background:#0a0a0b;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:48px;
+  z-index:80;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{
+  background:transparent;
+  border:none;
+  padding:14px 20px 12px;
+  cursor:pointer;
+  font-family:var(--sans);
+  font-size:12px;
+  font-weight:500;
+  color:var(--text-dim);
+  letter-spacing:0.07em;
+  text-transform:uppercase;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border-bottom:2px solid transparent;
+  transition:color 0.18s, border-color 0.18s;
+  white-space:nowrap;
+}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{
+  color:var(--silver-strong);
+  border-bottom-color:var(--silver-strong);
+}
+.tab-btn .tab-glyph{
+  font-family:var(--mono);
+  font-size:13px;
+  opacity:0.85;
+}
+.tab-btn .tab-count{
+  font-family:var(--mono);
+  font-size:9px;
+  background:rgba(228,234,242,0.10);
+  color:var(--text-mid);
+  padding:2px 6px;
+  border-radius:8px;
+  letter-spacing:0.04em;
+}
+.tab-btn.active .tab-count{
+  background:rgba(228,234,242,0.18);
+  color:var(--silver-strong);
+}
+
+/* ===========================================
+   TAB PANES
+   =========================================== */
+.tab-pane{
+  display:none;
+  padding:28px;
+  max-width:1320px;
+  margin:0 auto;
+}
+.tab-pane.active{display:block}
+
+.section-head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  margin-bottom:18px;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--border);
+  flex-wrap:wrap;
+  gap:10px;
+}
+.section-title{
+  font-family:var(--display);
+  font-size:14px;
+  font-weight:600;
+  color:var(--text);
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+}
+.section-tag{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-dim);
+  letter-spacing:0.08em;
+}
+
+/* ===========================================
+   OVERVIEW: ACTIVITY CARDS
+   =========================================== */
+.activity-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:12px;
+  margin-bottom:24px;
+}
+.activity-card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:18px 18px 16px;
+  position:relative;
+  overflow:hidden;
+}
+.activity-card::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--border-accent), transparent);
+}
+.activity-card .ac-label{
+  font-family:var(--mono);
+  font-size:9px;
+  color:var(--text-dim);
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+.activity-card .ac-value{
+  font-family:var(--mono);
+  font-size:22px;
+  font-weight:500;
+  color:var(--silver-strong);
+  letter-spacing:0.02em;
+  line-height:1.1;
+}
+.ac-frac{color:var(--text-faint);font-size:14px}
+.activity-card .ac-sub{
+  font-size:10px;
+  color:var(--text-mid);
+  margin-top:6px;
+}
+.activity-card .ac-sub.up{color:var(--green)}
+.activity-card .ac-sub.warn{color:var(--amber)}
+.activity-card .ac-sub.bad{color:var(--red)}
+
+/* ===========================================
+   OVERVIEW: SYSTEM HEALTH STRIP
+   =========================================== */
+.health-strip{
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  border-radius:6px;
+  overflow:hidden;
+  margin-bottom:24px;
+}
+.health-cell{
+  background:var(--panel);
+  padding:14px 16px;
+}
+.health-cell .hc-label{
+  font-family:var(--mono);
+  font-size:9px;
+  color:var(--text-dim);
+  letter-spacing:0.10em;
+  text-transform:uppercase;
+  margin-bottom:5px;
+}
+.health-cell .hc-value{
+  font-family:var(--mono);
+  font-size:14px;
+  color:var(--text);
+  font-weight:500;
+}
+.health-cell .hc-bar{
+  height:3px;
+  background:rgba(228,234,242,0.08);
+  border-radius:2px;
+  margin-top:7px;
+  overflow:hidden;
+}
+.health-cell .hc-bar-fill{
+  height:100%;
+  background:linear-gradient(90deg, var(--green), #4ade80);
+  border-radius:2px;
+}
+.health-cell .hc-bar-fill.warn{background:linear-gradient(90deg, var(--amber), #f59e0b)}
+
+/* ===========================================
+   OVERVIEW: TWO-COL LAYOUT
+   =========================================== */
+.overview-cols{
+  display:grid;
+  grid-template-columns:1.4fr 1fr;
+  gap:18px;
+  margin-bottom:24px;
+}
+@media(max-width:980px){
+  .overview-cols{grid-template-columns:1fr}
+}
+
+.panel{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:18px 20px;
+}
+.panel-head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  margin-bottom:14px;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--border);
+}
+.panel-title{
+  font-family:var(--display);
+  font-size:12px;
+  font-weight:600;
+  color:var(--text);
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+}
+.panel-tag{
+  font-family:var(--mono);
+  font-size:9px;
+  color:var(--text-dim);
+  letter-spacing:0.08em;
+}
+
+/* Recent alerts list */
+.alerts-list{display:flex;flex-direction:column;gap:9px}
+.alert-row{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:12px;
+  align-items:center;
+  padding:10px 12px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-left:2px solid var(--amber);
+  border-radius:4px;
+}
+.alert-row.warn{border-left-color:var(--amber)}
+.alert-row.crit{border-left-color:var(--red)}
+.alert-row.info{border-left-color:var(--blue)}
+.alert-icon{
+  font-family:var(--mono);
+  font-size:13px;
+  width:22px;
+  text-align:center;
+  color:var(--amber);
+}
+.alert-row.crit .alert-icon{color:var(--red)}
+.alert-row.info .alert-icon{color:var(--blue)}
+.alert-msg{
+  font-size:12px;
+  color:var(--text);
+  line-height:1.45;
+}
+.alert-meta{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-dim);
+}
+.alert-time{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-dim);
+  white-space:nowrap;
+}
+
+/* Trust & Risk engine card */
+.factors-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+@media(max-width:680px){
+  .factors-grid{grid-template-columns:1fr}
+}
+.factors-col{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:5px;
+  padding:14px 14px 10px;
+}
+.factors-col-head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  padding-bottom:8px;
+  margin-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+.factors-col-title{
+  font-family:var(--display);
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:0.10em;
+  text-transform:uppercase;
+  color:var(--text);
+}
+.factors-col-meta{
+  font-family:var(--mono);
+  font-size:9px;
+  color:var(--text-dim);
+  letter-spacing:0.06em;
+}
+.factor-row{
+  display:grid;
+  grid-template-columns:1fr 50px 28px;
+  gap:9px;
+  align-items:center;
+  padding:5px 0;
+}
+.factor-name{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text);
+  letter-spacing:0.02em;
+}
+.factor-bar{
+  height:4px;
+  background:rgba(228,234,242,0.06);
+  border-radius:2px;
+  overflow:hidden;
+}
+.factor-bar-fill{
+  height:100%;
+  border-radius:2px;
+}
+.factor-bar-fill.trust{background:linear-gradient(90deg, rgba(110,231,160,0.45), rgba(110,231,160,0.85))}
+.factor-bar-fill.risk{background:linear-gradient(90deg, rgba(248,113,113,0.45), rgba(248,113,113,0.85))}
+.factor-weight{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-mid);
+  text-align:right;
+}
+
+/* Unknown devices feed */
+.unknown-feed{display:flex;flex-direction:column;gap:10px}
+.unknown-row{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:14px;
+  align-items:center;
+  padding:14px 16px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-left:2px solid var(--red);
+  border-radius:5px;
+  transition:opacity 0.4s, transform 0.4s;
+}
+.unknown-row.dismissing{opacity:0;transform:translateX(40px)}
+.unknown-icon{
+  width:34px;
+  height:34px;
+  border-radius:6px;
+  background:rgba(248,113,113,0.10);
+  border:1px solid rgba(248,113,113,0.30);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--mono);
+  font-size:14px;
+  color:var(--red);
+}
+.unknown-info{display:flex;flex-direction:column;gap:3px}
+.unknown-mac{
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--silver-strong);
+  font-weight:500;
+}
+.unknown-meta{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-dim);
+}
+.unknown-actions{display:flex;gap:6px}
+.action-btn{
+  font-family:var(--mono);
+  font-size:10px;
+  padding:6px 11px;
+  background:rgba(228,234,242,0.05);
+  border:1px solid var(--border-strong);
+  color:var(--text-mid);
+  border-radius:3px;
+  cursor:pointer;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+  transition:all 0.15s;
+}
+.action-btn:hover{
+  background:rgba(228,234,242,0.10);
+  color:var(--silver-strong);
+  border-color:var(--border-accent);
+}
+.action-btn.danger:hover{
+  border-color:rgba(248,113,113,0.5);
+  color:var(--red);
+}
+.action-btn.good:hover{
+  border-color:rgba(110,231,160,0.5);
+  color:var(--green);
+}
+
+/* ===========================================
+   NETWORK MAP TAB (preserves original SVG)
+   =========================================== */
+.topo-wrap{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:20px;
+}
+.topo-toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:14px;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--border);
+  flex-wrap:wrap;
+  gap:10px;
+}
+.topo-controls{display:flex;gap:6px}
+.topo-btn{
+  padding:5px 12px;
+  background:rgba(228,234,242,0.04);
+  border:1px solid var(--border);
+  border-radius:3px;
+  color:var(--text-mid);
+  cursor:pointer;
+  transition:all 0.15s;
+  font-family:var(--mono);
+  font-size:11px;
+}
+.topo-btn:hover{
+  background:rgba(228,234,242,0.08);
+  color:var(--silver-strong);
+  border-color:var(--border-accent);
+}
+.topo-btn.active{
+  background:rgba(228,234,242,0.10);
+  color:var(--silver-strong);
+  border-color:var(--border-accent);
+}
+.topo-btn.mode{
+  background:transparent;
+  border-color:var(--border-strong);
+}
+.topo-btn.mode.active{
+  background:rgba(248,113,113,0.10);
+  border-color:rgba(248,113,113,0.40);
+  color:var(--red);
+}
+.topo-legend{
+  display:flex;
+  gap:14px;
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-dim);
+}
+.topo-legend span{display:flex;align-items:center;gap:5px}
+.legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.legend-dot.gateway{background:var(--silver-strong);box-shadow:0 0 6px rgba(228,234,242,0.4)}
+.legend-dot.trusted{background:var(--green)}
+.legend-dot.guest{background:var(--blue)}
+.legend-dot.iot{background:var(--amber)}
+.legend-dot.unknown{background:var(--red)}
+.topo-canvas-wrap{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9;
+  background:radial-gradient(ellipse at center, rgba(228,234,242,0.025), transparent 70%);
+  border:1px solid var(--border);
+  border-radius:5px;
+  overflow:hidden;
+}
+.topo-canvas-wrap svg{
+  width:100%;
+  height:100%;
+  display:block;
+}
+.topo-edge{
+  stroke:rgba(228,234,242,0.16);
+  stroke-width:1;
+  fill:none;
+}
+.topo-edge.active{
+  stroke:rgba(110,231,160,0.36);
+  stroke-width:1.4;
+  stroke-dasharray:4 8;
+  animation:flow 3s linear infinite;
+}
+@keyframes flow{
+  0%{stroke-dashoffset:24}
+  100%{stroke-dashoffset:0}
+}
+.topo-node{cursor:pointer;transition:filter 0.2s}
+.topo-node:hover{filter:brightness(1.4)}
+.topo-node.selected circle{stroke:var(--silver-strong);stroke-width:2.5}
+.topo-node-label{
+  font-family:var(--sans);
+  font-size:9px;
+  fill:var(--text-mid);
+  pointer-events:none;
+  font-weight:500;
+}
+.topo-node-icon{
+  font-size:11px;
+  pointer-events:none;
+  text-anchor:middle;
+}
+
+/* ===========================================
+   DEVICES TAB
+   =========================================== */
+.devices-toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:14px;
+  margin-bottom:16px;
+  padding:14px 18px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+}
+.devices-search{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex:1;
+  min-width:240px;
+  max-width:360px;
+}
+.devices-search input{
+  flex:1;
+  background:var(--bg3);
+  border:1px solid var(--border-strong);
+  color:var(--text);
+  font-family:var(--mono);
+  font-size:12px;
+  padding:8px 12px;
+  border-radius:4px;
+  outline:none;
+  transition:border-color 0.15s;
+}
+.devices-search input:focus{border-color:var(--border-accent)}
+.devices-chips{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.chip{
+  font-family:var(--mono);
+  font-size:10px;
+  padding:5px 11px;
+  background:rgba(228,234,242,0.04);
+  border:1px solid var(--border);
+  border-radius:11px;
+  color:var(--text-mid);
+  cursor:pointer;
+  letter-spacing:0.04em;
+  transition:all 0.15s;
+}
+.chip:hover{color:var(--silver-strong);border-color:var(--border-accent)}
+.chip.active{
+  background:rgba(228,234,242,0.10);
+  color:var(--silver-strong);
+  border-color:var(--border-accent);
+}
+.export-btn{
+  font-family:var(--mono);
+  font-size:11px;
+  padding:7px 14px;
+  background:rgba(125,211,252,0.08);
+  color:var(--blue);
+  border:1px solid rgba(125,211,252,0.30);
+  border-radius:4px;
+  cursor:pointer;
+  letter-spacing:0.04em;
+  transition:all 0.15s;
+}
+.export-btn:hover{
+  background:rgba(125,211,252,0.16);
+  border-color:rgba(125,211,252,0.50);
+}
+.devices-table-wrap{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+  overflow-x:auto;
+}
+.devices-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+  min-width:900px;
+}
+.devices-table thead{background:var(--bg3)}
+.devices-table th{
+  text-align:left;
+  padding:11px 14px;
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:500;
+  color:var(--text-dim);
+  text-transform:uppercase;
+  letter-spacing:0.10em;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  user-select:none;
+}
+.devices-table th:hover{color:var(--silver-strong)}
+.devices-table th.sorted{color:var(--silver-strong)}
+.devices-table td{
+  padding:11px 14px;
+  border-bottom:1px solid var(--border);
+  color:var(--text);
+  vertical-align:middle;
+}
+.devices-table tbody tr{cursor:pointer;transition:background 0.12s}
+.devices-table tbody tr:hover td{background:rgba(228,234,242,0.03)}
+.dt-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:24px;
+  height:24px;
+  border-radius:5px;
+  background:var(--bg4);
+  font-family:var(--mono);
+  font-size:12px;
+}
+.dt-host{
+  font-weight:500;
+  color:var(--silver-strong);
+}
+.dt-mac{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--text-mid);
+  cursor:help;
+}
+.dt-vendor{font-size:11px;color:var(--text-mid)}
+.dt-bar{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.dt-bar-track{
+  width:62px;
+  height:5px;
+  background:rgba(228,234,242,0.06);
+  border-radius:3px;
+  overflow:hidden;
+}
+.dt-bar-fill{height:100%;border-radius:3px}
+.dt-bar-fill.trust-high{background:var(--green)}
+.dt-bar-fill.trust-mid{background:var(--amber)}
+.dt-bar-fill.trust-low{background:var(--red)}
+.dt-bar-fill.risk-high{background:var(--red)}
+.dt-bar-fill.risk-mid{background:var(--amber)}
+.dt-bar-fill.risk-low{background:var(--green)}
+.dt-bar-val{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-mid);
+  width:24px;
+}
+.dt-status{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-mid);
+}
+.dt-status .dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 6px rgba(110,231,160,0.5);
+}
+.dt-status.offline .dot{background:var(--red);box-shadow:none}
+.dt-tag-pill{
+  display:inline-block;
+  font-family:var(--mono);
+  font-size:9px;
+  padding:2px 7px;
+  border-radius:8px;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+}
+.dt-tag-pill.trusted{background:rgba(110,231,160,0.10);color:var(--green);border:1px solid rgba(110,231,160,0.30)}
+.dt-tag-pill.guest{background:rgba(125,211,252,0.10);color:var(--blue);border:1px solid rgba(125,211,252,0.30)}
+.dt-tag-pill.iot{background:rgba(251,191,36,0.10);color:var(--amber);border:1px solid rgba(251,191,36,0.30)}
+.dt-tag-pill.unknown{background:rgba(248,113,113,0.10);color:var(--red);border:1px solid rgba(248,113,113,0.30)}
+.dt-tag-pill.gateway{background:rgba(228,234,242,0.10);color:var(--silver-strong);border:1px solid var(--border-accent)}
+.dt-tag-pill.group{background:rgba(228,234,242,0.04);color:var(--text-mid);border:1px solid var(--border)}
+
+/* ===========================================
+   CAMERAS TAB
+   =========================================== */
+.cam-toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+  padding:14px 18px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.cam-meta{
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--text-mid);
+}
+.cam-meta b{color:var(--silver-strong);font-weight:500}
+.cam-layout-toggle{display:flex;gap:6px}
+
+.cam-grid{
+  display:grid;
+  gap:14px;
+}
+.cam-grid.layout-2{grid-template-columns:repeat(2,1fr)}
+.cam-grid.layout-3{grid-template-columns:repeat(3,1fr)}
+.cam-grid.layout-focus{
+  grid-template-columns:2fr 1fr;
+  grid-template-rows:auto auto;
+}
+.cam-grid.layout-focus .cam-tile:first-child{
+  grid-row:1 / span 2;
+}
+@media(max-width:760px){
+  .cam-grid.layout-2,.cam-grid.layout-3,.cam-grid.layout-focus{grid-template-columns:1fr}
+  .cam-grid.layout-focus .cam-tile:first-child{grid-row:auto}
+}
+
+.cam-tile{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+.cam-feed{
+  aspect-ratio:16/9;
+  background:linear-gradient(135deg, #1a1b20 0%, #0e0f12 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  color:var(--text-dim);
+  gap:10px;
+  position:relative;
+}
+.cam-feed::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(228,234,242,0.015) 4px, rgba(228,234,242,0.015) 5px);
+  pointer-events:none;
+}
+.cam-feed.offline{
+  background:linear-gradient(135deg, #1a0d0d 0%, #0e0808 100%);
+}
+.cam-feed-icon{
+  font-family:var(--mono);
+  font-size:32px;
+  color:var(--text-faint);
+}
+.cam-feed.offline .cam-feed-icon{color:rgba(248,113,113,0.4)}
+.cam-feed-name{
+  font-family:var(--display);
+  font-size:13px;
+  letter-spacing:0.10em;
+  color:var(--text-mid);
+}
+.cam-feed-msg{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-faint);
+  letter-spacing:0.04em;
+}
+.cam-tile-foot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:11px 14px;
+  border-top:1px solid var(--border);
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-dim);
+}
+.cam-status-dot{
+  display:inline-block;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--green);
+  margin-right:6px;
+  box-shadow:0 0 6px rgba(110,231,160,0.6);
+}
+.cam-status-dot.offline{background:var(--red);box-shadow:none}
+
+/* ===========================================
+   EVENTS TAB
+   =========================================== */
+.events-toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+  padding:14px 18px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.events-chips{display:flex;gap:6px;flex-wrap:wrap}
+.events-pause{
+  font-family:var(--mono);
+  font-size:11px;
+  padding:6px 14px;
+  background:rgba(110,231,160,0.10);
+  color:var(--green);
+  border:1px solid rgba(110,231,160,0.30);
+  border-radius:4px;
+  cursor:pointer;
+}
+.events-pause.paused{
+  background:rgba(251,191,36,0.10);
+  color:var(--amber);
+  border-color:rgba(251,191,36,0.30);
+}
+.events-feed{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+  overflow:hidden;
+}
+.event-row{
+  display:grid;
+  grid-template-columns:auto 1fr auto auto;
+  gap:14px;
+  align-items:center;
+  padding:12px 18px;
+  border-bottom:1px solid var(--border);
+  animation:slide-in 0.6s ease-out;
+}
+.event-row:last-child{border-bottom:none}
+@keyframes slide-in{
+  0%{opacity:0;transform:translateY(-12px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+.event-sev{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  flex-shrink:0;
+}
+.event-sev.info{background:var(--blue);box-shadow:0 0 6px rgba(125,211,252,0.4)}
+.event-sev.warn{background:var(--amber);box-shadow:0 0 6px rgba(251,191,36,0.5)}
+.event-sev.crit{background:var(--red);box-shadow:0 0 6px rgba(248,113,113,0.5)}
+.event-sev.good{background:var(--green);box-shadow:0 0 6px rgba(110,231,160,0.5)}
+.event-msg{
+  font-size:12px;
+  color:var(--text);
+}
+.event-msg .et-type{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-dim);
+  margin-right:8px;
+  letter-spacing:0.04em;
+}
+.event-source{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-dim);
+  letter-spacing:0.04em;
+}
+.event-time{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-mid);
+  white-space:nowrap;
+}
+
+/* ===========================================
+   SETTINGS TAB
+   =========================================== */
+.yaml-wrap{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+  overflow:hidden;
+}
+.yaml-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 18px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg3);
+  font-family:var(--mono);
+  font-size:11px;
+}
+.yaml-head .yh-path{color:var(--text-mid)}
+.yaml-head .yh-status{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:var(--green);
+}
+.yaml-head .yh-status .dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 6px rgba(110,231,160,0.5);
+}
+.yaml-body{
+  padding:18px 22px;
+  font-family:var(--mono);
+  font-size:12px;
+  line-height:1.65;
+  color:var(--text);
+  white-space:pre;
+  overflow-x:auto;
+}
+.yk{color:var(--blue)}
+.yv{color:var(--green)}
+.yc{color:var(--text-faint)}
+.yn{color:var(--violet)}
+
+/* ===========================================
+   RULES TAB
+   =========================================== */
+.rules-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(360px, 1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
+.rule-card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:16px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.rule-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.rule-name{
+  font-family:var(--display);
+  font-size:13px;
+  color:var(--text);
+  letter-spacing:0.05em;
+}
+.rule-desc{
+  font-size:11px;
+  color:var(--text-mid);
+  line-height:1.55;
+}
+.rule-foot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-dim);
+  padding-top:8px;
+  border-top:1px solid var(--border);
+}
+.rule-trig{color:var(--text-mid)}
+.rule-trig b{color:var(--silver-strong);font-weight:500}
+.toggle{
+  position:relative;
+  width:38px;
+  height:20px;
+  background:rgba(228,234,242,0.08);
+  border:1px solid var(--border-strong);
+  border-radius:11px;
+  cursor:pointer;
+  transition:all 0.2s;
+  flex-shrink:0;
+}
+.toggle::after{
+  content:'';
+  position:absolute;
+  top:2px;
+  left:2px;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:var(--text-mid);
+  transition:all 0.2s;
+}
+.toggle.on{
+  background:rgba(110,231,160,0.20);
+  border-color:rgba(110,231,160,0.50);
+}
+.toggle.on::after{
+  left:20px;
+  background:var(--green);
+}
+
+.rules-foot{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:14px 18px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:6px;
+}
+.rules-add-btn{
+  font-family:var(--mono);
+  font-size:11px;
+  padding:8px 16px;
+  background:rgba(228,234,242,0.04);
+  color:var(--text-dim);
+  border:1px solid var(--border);
+  border-radius:4px;
+  cursor:not-allowed;
+  letter-spacing:0.05em;
+}
+.rules-foot .hint{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-dim);
+}
+
+/* ===========================================
+   SLIDE-IN SIDEBAR
+   =========================================== */
+.sidebar-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  z-index:200;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.25s;
+}
+.sidebar-overlay.open{
+  opacity:1;
+  pointer-events:auto;
+}
+.sidebar{
+  position:fixed;
+  top:0;
+  right:0;
+  bottom:0;
+  width:400px;
+  max-width:100vw;
+  background:var(--panel);
+  border-left:1px solid var(--border-accent);
+  z-index:210;
+  transform:translateX(100%);
+  transition:transform 0.30s ease-out;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+}
+.sidebar.open{transform:translateX(0)}
+.sidebar-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 22px;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  background:var(--panel);
+  z-index:5;
+}
+.sidebar-title{
+  font-family:var(--display);
+  font-size:14px;
+  color:var(--text);
+  letter-spacing:0.10em;
+  text-transform:uppercase;
+}
+.sidebar-close{
+  background:transparent;
+  border:none;
+  color:var(--text-mid);
+  font-size:20px;
+  cursor:pointer;
+  padding:0 4px;
+  line-height:1;
+}
+.sidebar-close:hover{color:var(--silver-strong)}
+.sidebar-body{padding:20px 22px 32px;flex:1}
+
+.sb-name{
+  font-family:var(--display);
+  font-size:18px;
+  color:var(--silver-strong);
+  letter-spacing:0.04em;
+  margin-bottom:4px;
+}
+.sb-tag-row{
+  display:flex;
+  gap:6px;
+  margin-bottom:18px;
+  flex-wrap:wrap;
+}
+.sb-section{
+  margin-bottom:18px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--border);
+}
+.sb-section:last-child{border-bottom:none}
+.sb-section-title{
+  font-family:var(--mono);
+  font-size:9px;
+  color:var(--text-dim);
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.sb-row{
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  padding:5px 0;
+}
+.sb-label{color:var(--text-dim)}
+.sb-val{font-family:var(--mono);color:var(--text)}
+.sb-gauge{
+  margin-bottom:12px;
+}
+.sb-gauge-head{
+  display:flex;
+  justify-content:space-between;
+  font-family:var(--mono);
+  font-size:11px;
+  margin-bottom:5px;
+}
+.sb-gauge-label{color:var(--text-mid);text-transform:uppercase;letter-spacing:0.04em}
+.sb-gauge-val{color:var(--silver-strong);font-weight:500}
+.sb-gauge-track{
+  height:6px;
+  background:rgba(228,234,242,0.06);
+  border-radius:3px;
+  overflow:hidden;
+}
+.sb-gauge-fill{
+  height:100%;
+  border-radius:3px;
+}
+.sb-events{display:flex;flex-direction:column;gap:7px}
+.sb-event{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--text-mid);
+  padding:6px 10px;
+  background:var(--bg3);
+  border-left:2px solid var(--border-strong);
+  border-radius:3px;
+}
+.sb-event b{color:var(--text);font-weight:500}
+
+@media(max-width:520px){
+  .sidebar{width:100%}
+}
+
+/* ===========================================
+   TOAST SYSTEM
+   =========================================== */
+.toast-stack{
+  position:fixed;
+  bottom:24px;
+  right:24px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  z-index:300;
+  pointer-events:none;
+}
+.toast{
+  pointer-events:auto;
+  background:var(--panel);
+  border:1px solid var(--border-accent);
+  border-left:3px solid var(--green);
+  border-radius:5px;
+  padding:12px 18px;
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--text);
+  letter-spacing:0.04em;
+  box-shadow:0 8px 24px rgba(0,0,0,0.5);
+  animation:toast-in 0.3s ease-out;
+  min-width:220px;
+}
+.toast.warn{border-left-color:var(--amber)}
+.toast.bad{border-left-color:var(--red)}
+.toast.info{border-left-color:var(--blue)}
+.toast.fading{animation:toast-out 0.4s ease-in forwards}
+@keyframes toast-in{
+  0%{opacity:0;transform:translateX(40px)}
+  100%{opacity:1;transform:translateX(0)}
+}
+@keyframes toast-out{
+  0%{opacity:1;transform:translateX(0)}
+  100%{opacity:0;transform:translateX(40px)}
+}
+
+/* ===========================================
+   FOOTER
+   =========================================== */
+.app-footer{
+  padding:30px 28px 50px;
+  text-align:center;
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--text-dim);
+  letter-spacing:0.05em;
+}
+
+/* ===========================================
+   RESPONSIVE
+   =========================================== */
+@media(max-width:1100px){
+  .activity-grid{grid-template-columns:repeat(3,1fr)}
+  .health-strip{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:680px){
+  .activity-grid{grid-template-columns:repeat(2,1fr)}
+  .health-strip{grid-template-columns:repeat(2,1fr)}
+  .tab-pane{padding:20px 16px}
+  .app-header{padding:22px 18px}
+  .app-nav{padding:11px 18px}
+  .tab-bar{padding:0 14px}
+  .tab-btn{padding:12px 14px 10px;font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<!-- FSS-BRAND-BLOCK-V3 (FF25 wordmark, no H icon) -->
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/brand.css?v=20260408v3">
+<div class="fssb-v3-top">
+  <a href="../home.html" class="fssb-v3-top-link" aria-label="Fisher Sovereign Systems">
+    <span class="fssb-v3-top-name">Fisher</span>
+    <span class="fssb-v3-top-rule"></span>
+    <span class="fssb-v3-top-sub">Sovereign Systems</span>
+  </a>
+  <a href="../home.html" class="fssb-v3-top-back">&larr; Portfolio</a>
+</div>
+
+<nav class="app-nav">
+  <a href="../home.html" class="app-nav-back">&larr; Portfolio</a>
+  <span class="app-nav-title">Home Hub</span>
+  <span class="app-nav-meta">
+    <span>localhost</span>
+    <span class="app-nav-port">:3210</span>
+  </span>
+</nav>
+
+<div class="sim-banner">
+  <span class="sim-dot"></span>
+  <b>Interactive Dashboard Simulation</b> &middot; All device and event data is representative &middot; Real deployments run on localhost:3210
+</div>
+
+<header class="app-header">
+  <div class="app-header-inner">
+    <div class="app-header-left">
+      <div class="app-header-eyebrow">Local Infrastructure / Network Observability</div>
+      <h1 class="app-header-title">Home Hub Operations Dashboard</h1>
+      <p class="app-header-sub">
+        Self-hosted TypeScript + Fastify + React platform that scans, classifies, and secures every
+        device on a residential LAN. This is an interactive walkthrough of the operator dashboard.
+      </p>
+    </div>
+    <div class="app-header-status">
+      <div class="hs-row"><span class="hs-dot online"></span><span>server <span class="hs-val">online</span></span></div>
+      <div class="hs-row"><span class="hs-dot online"></span><span>db <span class="hs-val">homehub.db</span></span></div>
+      <div class="hs-row"><span class="hs-dot warn"></span><span>discovery <span class="hs-val">5m interval</span></span></div>
+    </div>
+  </div>
+</header>
+
+<div class="page-benefit">
+  Know exactly what is on your network, who it belongs to, and what it is doing, before it does something it should not.
+</div>
+
+<nav class="tab-bar" id="tab-bar">
+  <button class="tab-btn active" data-tab="overview"><span class="tab-glyph">&#9678;</span><span>Overview</span></button>
+  <button class="tab-btn" data-tab="map"><span class="tab-glyph">&#9670;</span><span>Network Map</span><span class="tab-count">15</span></button>
+  <button class="tab-btn" data-tab="devices"><span class="tab-glyph">&#9632;</span><span>Devices</span><span class="tab-count">15</span></button>
+  <button class="tab-btn" data-tab="cameras"><span class="tab-glyph">&#9635;</span><span>Cameras</span><span class="tab-count">3/4</span></button>
+  <button class="tab-btn" data-tab="events"><span class="tab-glyph">&#9660;</span><span>Events</span><span class="tab-count" id="events-tab-count">12</span></button>
+  <button class="tab-btn" data-tab="rules"><span class="tab-glyph">&#9650;</span><span>Rules</span><span class="tab-count">5</span></button>
+  <button class="tab-btn" data-tab="settings"><span class="tab-glyph">&#9881;</span><span>Settings</span></button>
+</nav>
+
+<!-- =====================================================
+     OVERVIEW PANE
+     ===================================================== -->
+<section class="tab-pane active" id="pane-overview">
+
+  <div class="activity-grid">
+    <div class="activity-card">
+      <div class="ac-label">Devices Online</div>
+      <div class="ac-value">24<span class="ac-frac"> / 28</span></div>
+      <div class="ac-sub up">+2 since 6h</div>
+    </div>
+    <div class="activity-card">
+      <div class="ac-label">Alerts Today</div>
+      <div class="ac-value">3</div>
+      <div class="ac-sub warn">1 unack</div>
+    </div>
+    <div class="activity-card">
+      <div class="ac-label">Blocks Today</div>
+      <div class="ac-value">7</div>
+      <div class="ac-sub up">rules engine</div>
+    </div>
+    <div class="activity-card">
+      <div class="ac-label">Data Through</div>
+      <div class="ac-value">2.3<span class="ac-frac"> GB</span></div>
+      <div class="ac-sub">last 24h</div>
+    </div>
+    <div class="activity-card">
+      <div class="ac-label">New Devices 24h</div>
+      <div class="ac-value">2</div>
+      <div class="ac-sub bad">unverified</div>
+    </div>
+    <div class="activity-card">
+      <div class="ac-label">Cameras Online</div>
+      <div class="ac-value">3<span class="ac-frac"> / 4</span></div>
+      <div class="ac-sub bad">garage offline</div>
+    </div>
+  </div>
+
+  <div class="health-strip">
+    <div class="health-cell"><div class="hc-label">CPU</div><div class="hc-value">14%</div><div class="hc-bar"><div class="hc-bar-fill" style="width:14%"></div></div></div>
+    <div class="health-cell"><div class="hc-label">RAM</div><div class="hc-value">412 MB</div><div class="hc-bar"><div class="hc-bar-fill" style="width:32%"></div></div></div>
+    <div class="health-cell"><div class="hc-label">Temp</div><div class="hc-value">48&deg;C</div><div class="hc-bar"><div class="hc-bar-fill" style="width:48%"></div></div></div>
+    <div class="health-cell"><div class="hc-label">Uptime</div><div class="hc-value">14d 06h</div><div class="hc-bar"><div class="hc-bar-fill" style="width:90%"></div></div></div>
+    <div class="health-cell"><div class="hc-label">Disk</div><div class="hc-value">62 GB</div><div class="hc-bar"><div class="hc-bar-fill" style="width:24%"></div></div></div>
+    <div class="health-cell"><div class="hc-label">Connections</div><div class="hc-value">18</div><div class="hc-bar"><div class="hc-bar-fill" style="width:18%"></div></div></div>
+    <div class="health-cell"><div class="hc-label">Sandbox</div><div class="hc-value">Active</div><div class="hc-bar"><div class="hc-bar-fill" style="width:100%"></div></div></div>
+    <div class="health-cell"><div class="hc-label">DB</div><div class="hc-value">homehub.db</div><div class="hc-bar"><div class="hc-bar-fill" style="width:88%"></div></div></div>
+  </div>
+
+  <div class="overview-cols">
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Recent Alerts</div>
+        <div class="panel-tag">last 24h / 3 events</div>
+      </div>
+      <div class="alerts-list">
+        <div class="alert-row warn">
+          <div class="alert-icon">&#9888;</div>
+          <div>
+            <div class="alert-msg">Unknown vendor detected on 192.168.1.187</div>
+            <div class="alert-meta">rule: block-unknown-vendors / device 88:66:5a:11:33:55</div>
+          </div>
+          <div class="alert-time">14m</div>
+        </div>
+        <div class="alert-row crit">
+          <div class="alert-icon">&#9650;</div>
+          <div>
+            <div class="alert-msg">High risk score on visitor-laptop (45)</div>
+            <div class="alert-meta">trust-score / quarantined automatically</div>
+          </div>
+          <div class="alert-time">2h</div>
+        </div>
+        <div class="alert-row info">
+          <div class="alert-icon">&#9679;</div>
+          <div>
+            <div class="alert-msg">Discovery sweep completed: 24 devices online</div>
+            <div class="alert-meta">scan duration 4.2s / interval 5m</div>
+          </div>
+          <div class="alert-time">3h</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Trust &amp; Risk Engine</div>
+        <div class="panel-tag">trust-score.ts / 13 factors</div>
+      </div>
+      <div class="factors-grid" id="factors-grid"></div>
+    </div>
+
+  </div>
+
+  <div class="panel" style="margin-bottom:24px">
+    <div class="panel-head">
+      <div class="panel-title">Unknown Devices Feed</div>
+      <div class="panel-tag">2 awaiting review</div>
+    </div>
+    <div class="unknown-feed" id="unknown-feed"></div>
+  </div>
+
+</section>
+
+<!-- =====================================================
+     NETWORK MAP PANE  (preserves SVG topology)
+     ===================================================== -->
+<section class="tab-pane" id="pane-map">
+  <div class="topo-wrap">
+    <div class="topo-toolbar">
+      <div class="topo-controls">
+        <button class="topo-btn active" data-filter="all">All</button>
+        <button class="topo-btn" data-filter="trusted">Trusted</button>
+        <button class="topo-btn" data-filter="guest">Guest</button>
+        <button class="topo-btn" data-filter="iot">IoT</button>
+        <button class="topo-btn" data-filter="unknown">Unknown</button>
+        <button class="topo-btn mode" id="risk-mode-btn">Risk Mode</button>
+      </div>
+      <div class="topo-legend" id="topo-legend">
+        <span><span class="legend-dot gateway"></span>Gateway</span>
+        <span><span class="legend-dot trusted"></span>Trusted</span>
+        <span><span class="legend-dot guest"></span>Guest</span>
+        <span><span class="legend-dot iot"></span>IoT</span>
+        <span><span class="legend-dot unknown"></span>Unknown</span>
+      </div>
+    </div>
+    <div class="topo-canvas-wrap" id="topo-canvas-wrap"></div>
+  </div>
+</section>
+
+<!-- =====================================================
+     DEVICES PANE
+     ===================================================== -->
+<section class="tab-pane" id="pane-devices">
+  <div class="devices-toolbar">
+    <div class="devices-search">
+      <input type="text" id="devices-search-input" placeholder="search hostname, ip, vendor, mac...">
+    </div>
+    <div class="devices-chips" id="devices-chips">
+      <button class="chip active" data-chip="all">All</button>
+      <button class="chip" data-chip="trusted">Trusted</button>
+      <button class="chip" data-chip="guest">Guest</button>
+      <button class="chip" data-chip="iot">IoT</button>
+      <button class="chip" data-chip="unknown">Unknown</button>
+      <button class="chip" data-chip="online">Online</button>
+      <button class="chip" data-chip="risk">Risk &gt; 50</button>
+    </div>
+    <button class="export-btn" id="export-csv-btn">Export CSV</button>
+  </div>
+  <div class="devices-table-wrap">
+    <table class="devices-table">
+      <thead>
+        <tr id="devices-thead-row">
+          <th data-sort="icon" style="width:32px"></th>
+          <th data-sort="hostname">Hostname</th>
+          <th data-sort="ip">IP</th>
+          <th data-sort="mac">MAC</th>
+          <th data-sort="vendor">Vendor</th>
+          <th data-sort="trust">Trust</th>
+          <th data-sort="risk">Risk</th>
+          <th data-sort="lastSeen">Last Seen</th>
+          <th data-sort="status">Status</th>
+        </tr>
+      </thead>
+      <tbody id="devices-tbody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- =====================================================
+     CAMERAS PANE
+     ===================================================== -->
+<section class="tab-pane" id="pane-cameras">
+  <div class="cam-toolbar">
+    <div class="cam-meta">
+      Cameras: <b>4 configured</b> &middot; <b>3 online</b> &middot; <b>1 offline</b>
+    </div>
+    <div class="cam-layout-toggle">
+      <button class="topo-btn active" data-cam-layout="2">2&times;2</button>
+      <button class="topo-btn" data-cam-layout="3">3&times;3</button>
+      <button class="topo-btn" data-cam-layout="focus">Focus</button>
+    </div>
+  </div>
+  <div class="cam-grid layout-2" id="cam-grid"></div>
+</section>
+
+<!-- =====================================================
+     EVENTS PANE
+     ===================================================== -->
+<section class="tab-pane" id="pane-events">
+  <div class="events-toolbar">
+    <div class="events-chips" id="events-chips">
+      <button class="chip active" data-evt-filter="all">All</button>
+      <button class="chip" data-evt-filter="device">Device</button>
+      <button class="chip" data-evt-filter="alert">Alert</button>
+      <button class="chip" data-evt-filter="camera">Camera</button>
+      <button class="chip" data-evt-filter="traffic">Traffic</button>
+      <button class="chip" data-evt-filter="connector">Connector</button>
+      <button class="chip" data-evt-filter="network">Network</button>
+      <button class="chip" data-evt-filter="warn">Warning+</button>
+    </div>
+    <button class="events-pause" id="events-pause-btn">Pause feed</button>
+  </div>
+  <div class="events-feed" id="events-feed"></div>
+</section>
+
+<!-- =====================================================
+     RULES PANE
+     ===================================================== -->
+<section class="tab-pane" id="pane-rules">
+  <div class="rules-grid" id="rules-grid"></div>
+  <div class="rules-foot">
+    <button class="rules-add-btn" title="requires authenticated session">+ Add Rule</button>
+    <span class="hint">requires authenticated session</span>
+  </div>
+</section>
+
+<!-- =====================================================
+     SETTINGS PANE
+     ===================================================== -->
+<section class="tab-pane" id="pane-settings">
+  <div class="yaml-wrap">
+    <div class="yaml-head">
+      <span class="yh-path">config/config.yaml</span>
+      <span class="yh-status"><span class="dot"></span> validation passed</span>
+    </div>
+    <div class="yaml-body" id="yaml-body"></div>
+  </div>
+</section>
+
+<!-- =====================================================
+     SLIDE-IN SIDEBAR
+     ===================================================== -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-head">
+    <div class="sidebar-title">Device Detail</div>
+    <button class="sidebar-close" id="sidebar-close">&times;</button>
+  </div>
+  <div class="sidebar-body" id="sidebar-body">
+    <div style="color:var(--text-mid);font-size:12px">Click any device to inspect.</div>
+  </div>
+</aside>
+
+<!-- =====================================================
+     TOAST STACK
+     ===================================================== -->
+<div class="toast-stack" id="toast-stack"></div>
+
+<!-- FSS-BRAND-FOOTER-V3 (FF25 wordmark, no H icon) -->
+<footer class="fssb-v3-foot">
+  <h2 class="fssb-v3-foot-name">Fisher</h2>
+  <span class="fssb-v3-foot-rule"></span>
+  <div class="fssb-v3-foot-sub">Sovereign Systems</div>
+  <div class="fssb-v3-foot-motto">Building the Architecture for Independence</div>
+  <p style="font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:0.98rem;color:rgba(220,217,211,0.72);max-width:520px;margin:28px auto 0;line-height:1.6;">Fisher Sovereign Systems is being built to return control to the individual.</p>
+  <a href="../home.html" class="fssb-v3-foot-back">&larr; Visit lancewfisher.com</a>
+  <div style="margin-top:32px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.05);font-size:0.66rem;color:#6b6b75;letter-spacing:0.06em;">&copy; 2026 Fisher Sovereign Systems, LLC. All rights reserved.</div>
+</footer>
+
+<script>
+(function(){
+  /* =========================================================
+     SEEDED DATA
+     ========================================================= */
+
+  // 15 devices, must match map AND table
+  var devices = [
+    {id:'d01', icon:'\u25CE', host:'gateway',          mac:'00:1a:2b:3c:4d:5e', ip:'192.168.1.1',   vendor:'Ubiquiti',              tag:'gateway', group:'gateway',        trust:100, risk:0,  online:true,  firstSeen:'2025-09-10T09:00:00Z', lastSeenMin:0},
+    {id:'d02', icon:'\u25A0', host:'lance-workstation',mac:'a4:c3:f0:12:34:56', ip:'192.168.1.100', vendor:'Apple',                 tag:'trusted', group:'workstations',   trust:92,  risk:5,  online:true,  firstSeen:'2025-09-12T10:00:00Z', lastSeenMin:0},
+    {id:'d03', icon:'\u25A0', host:'lance-macbook',    mac:'bc:d0:74:aa:bb:cc', ip:'192.168.1.101', vendor:'Apple',                 tag:'trusted', group:'laptops',        trust:88,  risk:8,  online:true,  firstSeen:'2025-10-01T08:00:00Z', lastSeenMin:1},
+    {id:'d04', icon:'\u25A0', host:'lance-iphone',     mac:'48:65:ee:dd:ee:ff', ip:'192.168.1.102', vendor:'Apple',                 tag:'trusted', group:'mobile',         trust:85,  risk:10, online:true,  firstSeen:'2025-10-08T18:00:00Z', lastSeenMin:0},
+    {id:'d05', icon:'\u25CE', host:'nas-01',           mac:'00:11:22:33:44:55', ip:'192.168.1.50',  vendor:'Synology',              tag:'trusted', group:'infrastructure', trust:95,  risk:2,  online:true,  firstSeen:'2025-08-22T07:00:00Z', lastSeenMin:0},
+    {id:'d06', icon:'\u25A0', host:'work-mbp',         mac:'a0:99:9b:66:77:88', ip:'192.168.1.105', vendor:'Apple',                 tag:'trusted', group:'work',           trust:80,  risk:12, online:true,  firstSeen:'2025-10-15T09:00:00Z', lastSeenMin:3},
+    {id:'d07', icon:'\u25C6', host:'living-tv',        mac:'f0:2f:74:11:22:33', ip:'192.168.1.150', vendor:'LG',                    tag:'iot',     group:'tvs',            trust:55,  risk:25, online:true,  firstSeen:'2025-11-02T19:00:00Z', lastSeenMin:1},
+    {id:'d08', icon:'\u25C6', host:'xbox-01',          mac:'7c:ed:8d:aa:11:22', ip:'192.168.1.151', vendor:'Microsoft',             tag:'iot',     group:'consoles',       trust:60,  risk:20, online:true,  firstSeen:'2025-11-10T20:00:00Z', lastSeenMin:2},
+    {id:'d09', icon:'\u25C6', host:'ecobee-01',        mac:'44:61:32:bb:cc:dd', ip:'192.168.1.160', vendor:'ecobee',                tag:'iot',     group:'other',          trust:65,  risk:15, online:true,  firstSeen:'2025-11-15T11:00:00Z', lastSeenMin:5},
+    {id:'d10', icon:'\u25C6', host:'porch-cam',        mac:'c4:2c:03:ee:ff:00', ip:'192.168.1.170', vendor:'Ubiquiti',              tag:'iot',     group:'cameras',        trust:70,  risk:10, online:true,  firstSeen:'2025-11-22T15:00:00Z', lastSeenMin:0},
+    {id:'d11', icon:'\u25C6', host:'hp-printer',       mac:'3c:52:82:dd:ee:00', ip:'192.168.1.180', vendor:'HP',                    tag:'iot',     group:'other',          trust:50,  risk:18, online:false, firstSeen:'2025-12-04T10:00:00Z', lastSeenMin:240},
+    {id:'d12', icon:'\u25CB', host:'unknown-iphone',   mac:'88:66:5a:11:33:55', ip:'192.168.1.200', vendor:'Apple',                 tag:'guest',   group:'guest',          trust:35,  risk:40, online:true,  firstSeen:'2026-04-04T19:30:00Z', lastSeenMin:6},
+    {id:'d13', icon:'\u25CB', host:'visitor-laptop',   mac:'94:65:9c:22:44:66', ip:'192.168.1.201', vendor:'Dell',                  tag:'guest',   group:'guest',          trust:32,  risk:45, online:true,  firstSeen:'2026-04-05T14:00:00Z', lastSeenMin:11},
+    {id:'d14', icon:'?',      host:'(unnamed)',        mac:'b8:27:eb:a3:14:f2', ip:'192.168.1.187', vendor:'Raspberry Pi Foundation', tag:'unknown', group:'other',         trust:15,  risk:72, online:true,  firstSeen:'2026-04-06T22:00:00Z', lastSeenMin:14},
+    {id:'d15', icon:'?',      host:'(unnamed)',        mac:'00:1a:2b:cc:dd:ee', ip:'192.168.1.203', vendor:'Unknown',               tag:'unknown', group:'other',          trust:8,   risk:85, online:true,  firstSeen:'2026-04-07T08:30:00Z', lastSeenMin:22}
+  ];
+
+  // Position devices around the gateway for the SVG topology
+  var positions = [
+    {cx:480, cy:280, r:22},
+    {cx:280, cy:180, r:14},
+    {cx:200, cy:300, r:14},
+    {cx:300, cy:400, r:14},
+    {cx:160, cy:240, r:14},
+    {cx:240, cy:430, r:14},
+    {cx:680, cy:170, r:13},
+    {cx:740, cy:240, r:13},
+    {cx:760, cy:330, r:13},
+    {cx:680, cy:420, r:13},
+    {cx:580, cy:460, r:13},
+    {cx:130, cy:140, r:13},
+    {cx:420, cy:120, r:13},
+    {cx:830, cy:160, r:13},
+    {cx:830, cy:400, r:13}
+  ];
+
+  for (var pi = 0; pi < devices.length; pi++) {
+    devices[pi].cx = positions[pi].cx;
+    devices[pi].cy = positions[pi].cy;
+    devices[pi].r  = positions[pi].r;
+  }
+
+  // Trust factors come straight from server/src/services/trust-score.ts
+  var trustFactors = [
+    {name:'user_tagged',       weight:30},
+    {name:'stable_presence',   weight:20},
+    {name:'known_vendor',      weight:15},
+    {name:'is_infrastructure', weight:15},
+    {name:'has_hostname',      weight:10},
+    {name:'currently_online',  weight:5},
+    {name:'has_notes',         weight:5}
+  ];
+  var riskFactors = [
+    {name:'unknown_tag',       weight:25},
+    {name:'recently_appeared', weight:20},
+    {name:'anomaly_history',   weight:20},
+    {name:'unknown_vendor',    weight:15},
+    {name:'no_hostname',       weight:10},
+    {name:'guest_device',      weight:10}
+  ];
+
+  // 4 cameras
+  var cameras = [
+    {id:'c01', name:'Front Door', online:true,  lastMotion:'2 min ago'},
+    {id:'c02', name:'Porch',      online:true,  lastMotion:'18 min ago'},
+    {id:'c03', name:'Garage',     online:false, lastMotion:'(offline 4h)'},
+    {id:'c04', name:'Driveway',   online:true,  lastMotion:'47 sec ago'}
+  ];
+
+  // 12 seeded historical events
+  var seededEvents = [
+    {type:'device.discovered',     cat:'device',    sev:'info', source:'discovery',   msg:'New device detected: 192.168.1.187 (Raspberry Pi)',           min:14},
+    {type:'alert.created',         cat:'alert',     sev:'warn', source:'rules',       msg:'Unknown vendor flagged on 192.168.1.187',                     min:14},
+    {type:'device.risk_changed',   cat:'device',    sev:'warn', source:'trust-score', msg:'Risk changed: 32 -> 45 for visitor-laptop',                    min:120},
+    {type:'camera.offline',        cat:'camera',    sev:'warn', source:'cameras',     msg:'Garage camera went offline',                                   min:240},
+    {type:'device.disappeared',    cat:'device',    sev:'info', source:'discovery',   msg:'hp-printer dropped from sweep',                                min:240},
+    {type:'connector.health_check',cat:'connector', sev:'info', source:'connectors',  msg:'Synology connector responded in 142ms',                        min:300},
+    {type:'traffic.spike',         cat:'traffic',   sev:'warn', source:'pcap',        msg:'Traffic spike on 192.168.1.151 (xbox-01) +320%',               min:360},
+    {type:'device.trust_changed',  cat:'device',    sev:'info', source:'trust-score', msg:'Trust changed: 78 -> 92 for lance-workstation',                min:480},
+    {type:'network.scan_started',  cat:'network',   sev:'info', source:'discovery',   msg:'Discovery sweep started (interval: 5m)',                       min:540},
+    {type:'network.scan_completed',cat:'network',   sev:'info', source:'discovery',   msg:'Discovery sweep completed: 24 devices, 4.2s',                  min:541},
+    {type:'device.ip_changed',     cat:'device',    sev:'info', source:'discovery',   msg:'IP changed: 192.168.1.105 (work-mbp)',                         min:720},
+    {type:'alert.created',         cat:'alert',     sev:'warn', source:'rules',       msg:'Quarantine triggered: new device exceeded trust window',      min:840}
+  ];
+
+  // 5 rules
+  var rules = [
+    {name:'Block Unknown Vendors',     desc:'Auto-quarantine any device whose MAC OUI is not in the recognized vendor database.',     on:true, count:3},
+    {name:'Quarantine New Devices',    desc:'Place all newly-discovered devices in a holding zone until operator review.',           on:true, count:2},
+    {name:'Alert on Firmware Change',  desc:'Trigger an alert when a known device reports a different firmware fingerprint.',        on:true, count:1},
+    {name:'Traffic Spike Threshold',   desc:'Fire when a single device exceeds 300% of its 24h baseline within a 5-minute window.',  on:false,count:0},
+    {name:'Guest Isolation',           desc:'Prevent guest-tagged devices from initiating connections to the trusted subnet.',       on:true, count:0}
+  ];
+
+  // YAML preview as structured tokens (rendered without innerHTML)
+  var yamlLines = [
+    {tokens:[{c:'yc', t:'# homehub configuration'}]},
+    {tokens:[{c:'yc', t:'# validated against schemas/config.schema.json'}]},
+    {tokens:[{c:'',   t:''}]},
+    {tokens:[{c:'yk', t:'server'}, {c:'', t:':'}]},
+    {tokens:[{c:'',   t:'  '}, {c:'yk', t:'port'}, {c:'', t:': '}, {c:'yn', t:'3210'}]},
+    {tokens:[{c:'',   t:'  '}, {c:'yk', t:'bind'}, {c:'', t:': '}, {c:'yv', t:'"127.0.0.1"'}]},
+    {tokens:[{c:'',   t:'  '}, {c:'yk', t:'cors_origins'}, {c:'', t:': ['}, {c:'yv', t:'"http://localhost:5173"'}, {c:'', t:']'}]},
+    {tokens:[{c:'',   t:''}]},
+    {tokens:[{c:'yk', t:'discovery'}, {c:'', t:':'}]},
+    {tokens:[{c:'',   t:'  '}, {c:'yk', t:'interval_seconds'}, {c:'', t:': '}, {c:'yn', t:'300'}]},
+    {tokens:[{c:'',   t:'  '}, {c:'yk', t:'subnets'}, {c:'', t:':'}]},
+    {tokens:[{c:'',   t:'    - '}, {c:'yv', t:'"192.168.1.0/24"'}]},
+    {tokens:[{c:'',   t:'  '}, {c:'yk', t:'use_arp'}, {c:'', t:': '}, {c:'yn', t:'true'}]},
+    {tokens:[{c:'',   t:'  '}, {c:'yk', t:'use_ping'}, {c:'', t:': '}, {c:'yn', t:'true'}]},
+    {tokens:[{c:'',   t:'  '}, {c:'yk', t:'use_nmap'}, {c:'', t:': '}, {c:'yn', t:'false'}]},
+    {tokens:[{c:'',   t:''}]},
+    {tokens:[{c:'yk', t:'trust'}, {c:'', t:':'}]},
+    {tokens:[{c:'',   t:'  '}, {c:'yk', t:'recompute_on_event'}, {c:'', t:': '}, {c:'yn', t:'true'}]},
+    {tokens:[{c:'',   t:'  '}, {c:'yk', t:'significant_change'}, {c:'', t:': '}, {c:'yn', t:'10'}]},
+    {tokens:[{c:'',   t:''}]},
+    {tokens:[{c:'yk', t:'alerts'}, {c:'', t:':'}]},
+    {tokens:[{c:'',   t:'  '}, {c:'yk', t:'quiet_hours'}, {c:'', t:': '}, {c:'yv', t:'"22:00-07:00"'}]},
+    {tokens:[{c:'',   t:'  '}, {c:'yk', t:'channels'}, {c:'', t:': ['}, {c:'yv', t:'"ui"'}, {c:'', t:', '}, {c:'yv', t:'"event_bus"'}, {c:'', t:']'}]},
+    {tokens:[{c:'',   t:''}]},
+    {tokens:[{c:'yk', t:'cameras'}, {c:'', t:':'}]},
+    {tokens:[{c:'',   t:'  - '}, {c:'yk', t:'id'}, {c:'', t:': '}, {c:'yv', t:'front_door'}]},
+    {tokens:[{c:'',   t:'    '}, {c:'yk', t:'type'}, {c:'', t:': '}, {c:'yv', t:'rtsp'}]},
+    {tokens:[{c:'',   t:'    '}, {c:'yk', t:'url'}, {c:'', t:': '}, {c:'yv', t:'"rtsp://192.168.1.170/stream1"'}]},
+    {tokens:[{c:'',   t:'  - '}, {c:'yk', t:'id'}, {c:'', t:': '}, {c:'yv', t:'porch'}]},
+    {tokens:[{c:'',   t:'    '}, {c:'yk', t:'type'}, {c:'', t:': '}, {c:'yv', t:'snapshot'}]},
+    {tokens:[{c:'',   t:'    '}, {c:'yk', t:'url'}, {c:'', t:': '}, {c:'yv', t:'"http://192.168.1.171/snap.jpg"'}]}
+  ];
+
+  /* =========================================================
+     STATE
+     ========================================================= */
+  var state = {
+    activeTab:        'overview',
+    devicesFilter:    'all',
+    devicesSearch:    '',
+    devicesSort:      {col:'trust', dir:'desc'},
+    riskMode:         false,
+    camLayout:        '2',
+    eventsFilter:     'all',
+    eventsPaused:     false,
+    liveEvents:       seededEvents.slice(),
+    eventsTimer:      null
+  };
+
+  var trustColor = {
+    gateway:'#e4eaf2',
+    trusted:'#6ee7a0',
+    guest:'#7dd3fc',
+    iot:'#fbbf24',
+    unknown:'#f87171'
+  };
+
+  function riskColor(risk){
+    if (risk >= 70) return '#f87171';
+    if (risk >= 40) return '#fbbf24';
+    if (risk >= 20) return '#fde68a';
+    return '#6ee7a0';
+  }
+
+  function $(id){ return document.getElementById(id); }
+
+  function clearChildren(el){
+    while (el.firstChild) el.removeChild(el.firstChild);
+  }
+
+  function el(tag, className, text){
+    var e = document.createElement(tag);
+    if (className) e.className = className;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  /* =========================================================
+     TABS
+     ========================================================= */
+  var tabBtns = document.querySelectorAll('.tab-btn');
+  for (var t = 0; t < tabBtns.length; t++) {
+    tabBtns[t].addEventListener('click', function(e){
+      var target = e.currentTarget.getAttribute('data-tab');
+      switchTab(target);
+    });
+  }
+
+  function switchTab(name){
+    state.activeTab = name;
+    var btns = document.querySelectorAll('.tab-btn');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].classList.toggle('active', btns[i].getAttribute('data-tab') === name);
+    }
+    var panes = document.querySelectorAll('.tab-pane');
+    for (var j = 0; j < panes.length; j++) {
+      panes[j].classList.toggle('active', panes[j].id === 'pane-' + name);
+    }
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  /* =========================================================
+     OVERVIEW: TRUST & RISK FACTOR CARD
+     ========================================================= */
+  function renderFactorsCol(parent, title, kind, factors){
+    var col = el('div', 'factors-col');
+
+    var head = el('div', 'factors-col-head');
+    head.appendChild(el('div', 'factors-col-title', title));
+    head.appendChild(el('div', 'factors-col-meta', factors.length + ' / 100 wt'));
+    col.appendChild(head);
+
+    factors.forEach(function(f){
+      var row  = el('div', 'factor-row');
+      row.appendChild(el('div', 'factor-name', f.name));
+
+      var bar  = el('div', 'factor-bar');
+      var fill = el('div', 'factor-bar-fill ' + kind);
+      fill.style.width = (f.weight * 3.2) + '%';
+      bar.appendChild(fill);
+      row.appendChild(bar);
+
+      row.appendChild(el('div', 'factor-weight', String(f.weight)));
+      col.appendChild(row);
+    });
+
+    parent.appendChild(col);
+  }
+
+  var factorsEl = $('factors-grid');
+  renderFactorsCol(factorsEl, 'Trust Factors', 'trust', trustFactors);
+  renderFactorsCol(factorsEl, 'Risk Factors',  'risk',  riskFactors);
+
+  /* =========================================================
+     OVERVIEW: UNKNOWN DEVICES FEED
+     ========================================================= */
+  var unknownFeed = $('unknown-feed');
+  var unknownDevices = devices.filter(function(d){ return d.tag === 'unknown'; });
+
+  unknownDevices.forEach(function(d){
+    var row = el('div', 'unknown-row');
+    row.setAttribute('data-id', d.id);
+
+    row.appendChild(el('div', 'unknown-icon', '?'));
+
+    var info = el('div', 'unknown-info');
+    info.appendChild(el('div', 'unknown-mac',  d.mac));
+    info.appendChild(el('div', 'unknown-meta', d.ip + ' / ' + d.vendor + ' / risk ' + d.risk));
+    row.appendChild(info);
+
+    var actions = el('div', 'unknown-actions');
+
+    var qBtn = el('button', 'action-btn danger', 'Quarantine');
+    qBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      handleUnknown(d.id, 'quarantine', row);
+    });
+
+    var aBtn = el('button', 'action-btn good', 'Allow');
+    aBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      handleUnknown(d.id, 'allow', row);
+    });
+
+    var iBtn = el('button', 'action-btn', 'Investigate');
+    iBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      openSidebar(d.id);
+    });
+
+    actions.appendChild(qBtn);
+    actions.appendChild(aBtn);
+    actions.appendChild(iBtn);
+    row.appendChild(actions);
+
+    row.addEventListener('click', function(){ openSidebar(d.id); });
+
+    unknownFeed.appendChild(row);
+  });
+
+  function handleUnknown(deviceId, action, rowEl){
+    rowEl.classList.add('dismissing');
+    setTimeout(function(){
+      if (rowEl.parentNode) rowEl.parentNode.removeChild(rowEl);
+    }, 420);
+    if (action === 'quarantine') {
+      toast('Device quarantined: ' + deviceId, 'bad');
+      pushLiveEvent({
+        type:'alert.created', cat:'alert', sev:'warn', source:'rules',
+        msg:'Device ' + deviceId + ' quarantined by operator'
+      });
+    } else {
+      toast('Device allowed and tagged trusted', 'info');
+      pushLiveEvent({
+        type:'device.trust_changed', cat:'device', sev:'good', source:'operator',
+        msg:'Device ' + deviceId + ' moved to trusted'
+      });
+    }
+  }
+
+  /* =========================================================
+     NETWORK MAP - SVG (preserved + expanded)
+     ========================================================= */
+  var svgNS = 'http://www.w3.org/2000/svg';
+  var topoWrap = $('topo-canvas-wrap');
+  var svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('viewBox', '0 0 960 560');
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+  var gw = devices[0];
+
+  // Edges from gateway to every other device
+  devices.forEach(function(node, i){
+    if (i === 0) return;
+    var line = document.createElementNS(svgNS, 'line');
+    line.setAttribute('x1', gw.cx);
+    line.setAttribute('y1', gw.cy);
+    line.setAttribute('x2', node.cx);
+    line.setAttribute('y2', node.cy);
+    line.setAttribute('class', 'topo-edge' + (node.tag === 'trusted' || node.tag === 'gateway' ? ' active' : ''));
+    line.setAttribute('data-trust', node.tag);
+    svg.appendChild(line);
+  });
+
+  // Subnet hint rings
+  var subnetRings = [
+    {cx:gw.cx, cy:gw.cy, r:170, opacity:0.07},
+    {cx:gw.cx, cy:gw.cy, r:260, opacity:0.04}
+  ];
+  subnetRings.forEach(function(ring){
+    var c = document.createElementNS(svgNS, 'circle');
+    c.setAttribute('cx', ring.cx);
+    c.setAttribute('cy', ring.cy);
+    c.setAttribute('r', ring.r);
+    c.setAttribute('fill', 'none');
+    c.setAttribute('stroke', 'rgba(228,234,242,' + ring.opacity + ')');
+    c.setAttribute('stroke-width', '1');
+    c.setAttribute('stroke-dasharray', '2 6');
+    svg.appendChild(c);
+  });
+
+  // Nodes
+  devices.forEach(function(node){
+    var g = document.createElementNS(svgNS, 'g');
+    g.setAttribute('class', 'topo-node');
+    g.setAttribute('data-id', node.id);
+    g.setAttribute('data-trust', node.tag);
+
+    var circ = document.createElementNS(svgNS, 'circle');
+    circ.setAttribute('cx', node.cx);
+    circ.setAttribute('cy', node.cy);
+    circ.setAttribute('r', node.r);
+    circ.setAttribute('fill', '#0e0f12');
+    circ.setAttribute('stroke', trustColor[node.tag]);
+    circ.setAttribute('stroke-width', node.tag === 'gateway' ? '2.4' : '1.6');
+    if (node.tag === 'gateway') {
+      circ.setAttribute('filter', 'drop-shadow(0 0 8px rgba(228,234,242,0.4))');
+    }
+    g.appendChild(circ);
+
+    var iconText = document.createElementNS(svgNS, 'text');
+    iconText.setAttribute('class', 'topo-node-icon');
+    iconText.setAttribute('x', node.cx);
+    iconText.setAttribute('y', node.cy + 4);
+    iconText.setAttribute('fill', trustColor[node.tag]);
+    iconText.textContent = node.icon;
+    g.appendChild(iconText);
+
+    var labelText = document.createElementNS(svgNS, 'text');
+    labelText.setAttribute('class', 'topo-node-label');
+    labelText.setAttribute('x', node.cx);
+    labelText.setAttribute('y', node.cy + node.r + 14);
+    labelText.setAttribute('text-anchor', 'middle');
+    labelText.textContent = node.host;
+    g.appendChild(labelText);
+
+    g.addEventListener('click', function(){ openSidebar(node.id); });
+    svg.appendChild(g);
+  });
+
+  topoWrap.appendChild(svg);
+
+  // Filter buttons
+  var filterBtns = document.querySelectorAll('.topo-btn[data-filter]');
+  for (var fb = 0; fb < filterBtns.length; fb++) {
+    filterBtns[fb].addEventListener('click', function(e){
+      var btn = e.currentTarget;
+      var filter = btn.getAttribute('data-filter');
+      for (var k = 0; k < filterBtns.length; k++) { filterBtns[k].classList.remove('active'); }
+      btn.classList.add('active');
+      var nodes = document.querySelectorAll('.topo-node');
+      for (var n = 0; n < nodes.length; n++) {
+        var trust = nodes[n].getAttribute('data-trust');
+        var visible = (filter === 'all') || (trust === filter) || (trust === 'gateway');
+        nodes[n].style.opacity = visible ? '1' : '0.18';
+      }
+      var edges = document.querySelectorAll('.topo-edge');
+      for (var e2 = 0; e2 < edges.length; e2++) {
+        var et = edges[e2].getAttribute('data-trust');
+        var ev = (filter === 'all') || (et === filter);
+        edges[e2].style.opacity = ev ? '1' : '0.15';
+      }
+    });
+  }
+
+  // Risk mode toggle - recolors nodes by risk score instead of trust tag
+  var riskBtn = $('risk-mode-btn');
+  riskBtn.addEventListener('click', function(){
+    state.riskMode = !state.riskMode;
+    riskBtn.classList.toggle('active', state.riskMode);
+    riskBtn.textContent = state.riskMode ? 'Trust Mode' : 'Risk Mode';
+    var nodeEls = document.querySelectorAll('.topo-node');
+    for (var i = 0; i < nodeEls.length; i++) {
+      var id = nodeEls[i].getAttribute('data-id');
+      var dev = null;
+      for (var j = 0; j < devices.length; j++) {
+        if (devices[j].id === id) { dev = devices[j]; break; }
+      }
+      if (!dev) continue;
+      var color = state.riskMode ? riskColor(dev.risk) : trustColor[dev.tag];
+      var circle = nodeEls[i].querySelector('circle');
+      var iconEl = nodeEls[i].querySelector('.topo-node-icon');
+      circle.setAttribute('stroke', color);
+      iconEl.setAttribute('fill', color);
+    }
+  });
+
+  /* =========================================================
+     DEVICES TABLE
+     ========================================================= */
+  function lastSeenLabel(min){
+    if (min === 0) return 'just now';
+    if (min < 60) return min + 'm ago';
+    var h = Math.floor(min / 60);
+    if (h < 24) return h + 'h ago';
+    return Math.floor(h / 24) + 'd ago';
+  }
+
+  function trustClass(v){
+    if (v >= 70) return 'trust-high';
+    if (v >= 40) return 'trust-mid';
+    return 'trust-low';
+  }
+  function riskClass(v){
+    if (v >= 50) return 'risk-high';
+    if (v >= 25) return 'risk-mid';
+    return 'risk-low';
+  }
+
+  function buildBarCell(value, fillClass){
+    var td = el('td');
+    var bar = el('div', 'dt-bar');
+    var track = el('div', 'dt-bar-track');
+    var fill = el('div', 'dt-bar-fill ' + fillClass);
+    fill.style.width = value + '%';
+    track.appendChild(fill);
+    bar.appendChild(track);
+    bar.appendChild(el('div', 'dt-bar-val', String(value)));
+    td.appendChild(bar);
+    return td;
+  }
+
+  function renderDevices(){
+    var tbody = $('devices-tbody');
+    clearChildren(tbody);
+
+    var filter = state.devicesFilter;
+    var search = state.devicesSearch.toLowerCase();
+    var rows = devices.filter(function(d){
+      if (filter === 'trusted' && d.tag !== 'trusted') return false;
+      if (filter === 'guest'   && d.tag !== 'guest')   return false;
+      if (filter === 'iot'     && d.tag !== 'iot')     return false;
+      if (filter === 'unknown' && d.tag !== 'unknown') return false;
+      if (filter === 'online'  && !d.online)           return false;
+      if (filter === 'risk'    && d.risk <= 50)        return false;
+      if (search) {
+        var hay = (d.host + ' ' + d.ip + ' ' + d.vendor + ' ' + d.mac).toLowerCase();
+        if (hay.indexOf(search) === -1) return false;
+      }
+      return true;
+    });
+
+    // sort
+    var s = state.devicesSort;
+    rows.sort(function(a,b){
+      var av, bv;
+      switch (s.col) {
+        case 'hostname': av = a.host;        bv = b.host;        break;
+        case 'ip':       av = a.ip;          bv = b.ip;          break;
+        case 'mac':      av = a.mac;         bv = b.mac;         break;
+        case 'vendor':   av = a.vendor;      bv = b.vendor;      break;
+        case 'trust':    av = a.trust;       bv = b.trust;       break;
+        case 'risk':     av = a.risk;        bv = b.risk;        break;
+        case 'lastSeen': av = a.lastSeenMin; bv = b.lastSeenMin; break;
+        case 'status':   av = a.online ? 1 : 0; bv = b.online ? 1 : 0; break;
+        default: return 0;
+      }
+      if (av < bv) return s.dir === 'asc' ? -1 : 1;
+      if (av > bv) return s.dir === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    rows.forEach(function(d){
+      var tr = el('tr');
+      tr.addEventListener('click', function(){ openSidebar(d.id); });
+
+      // Icon cell
+      var tdIcon = el('td');
+      var iconBox = el('span', 'dt-icon', d.icon);
+      iconBox.style.color = trustColor[d.tag];
+      tdIcon.appendChild(iconBox);
+      tr.appendChild(tdIcon);
+
+      // Hostname cell
+      var tdHost = el('td');
+      var hostName = el('div', 'dt-host', d.host);
+      var pill = el('span', 'dt-tag-pill ' + d.tag, d.tag);
+      pill.style.marginLeft = '8px';
+      hostName.appendChild(pill);
+      tdHost.appendChild(hostName);
+      tr.appendChild(tdHost);
+
+      // IP cell
+      var tdIp = el('td', null, d.ip);
+      tdIp.style.fontFamily = 'var(--mono)';
+      tdIp.style.fontSize   = '11px';
+      tdIp.style.color      = 'var(--text-mid)';
+      tr.appendChild(tdIp);
+
+      // MAC (truncated, full on hover)
+      var tdMac = el('td');
+      var macSpan = el('span', 'dt-mac', d.mac.substr(0, 8) + '...');
+      macSpan.title = d.mac;
+      tdMac.appendChild(macSpan);
+      tr.appendChild(tdMac);
+
+      // Vendor
+      tr.appendChild(el('td', 'dt-vendor', d.vendor));
+
+      // Trust + Risk bars
+      tr.appendChild(buildBarCell(d.trust, trustClass(d.trust)));
+      tr.appendChild(buildBarCell(d.risk,  riskClass(d.risk)));
+
+      // Last Seen
+      var tdSeen = el('td', null, lastSeenLabel(d.lastSeenMin));
+      tdSeen.style.fontFamily = 'var(--mono)';
+      tdSeen.style.fontSize   = '11px';
+      tdSeen.style.color      = 'var(--text-mid)';
+      tr.appendChild(tdSeen);
+
+      // Status
+      var tdStat = el('td');
+      var stat = el('span', 'dt-status' + (d.online ? '' : ' offline'));
+      stat.appendChild(el('span', 'dot'));
+      stat.appendChild(el('span', null, d.online ? 'online' : 'offline'));
+      tdStat.appendChild(stat);
+      tr.appendChild(tdStat);
+
+      tbody.appendChild(tr);
+    });
+
+    // header sort indicators
+    var ths = document.querySelectorAll('.devices-table th[data-sort]');
+    for (var i = 0; i < ths.length; i++) {
+      ths[i].classList.toggle('sorted', ths[i].getAttribute('data-sort') === state.devicesSort.col);
+    }
+  }
+
+  // chip filters
+  var chips = document.querySelectorAll('#devices-chips .chip');
+  for (var c = 0; c < chips.length; c++) {
+    chips[c].addEventListener('click', function(e){
+      var btn = e.currentTarget;
+      for (var k = 0; k < chips.length; k++) chips[k].classList.remove('active');
+      btn.classList.add('active');
+      state.devicesFilter = btn.getAttribute('data-chip');
+      renderDevices();
+    });
+  }
+
+  // search input
+  $('devices-search-input').addEventListener('input', function(e){
+    state.devicesSearch = e.target.value;
+    renderDevices();
+  });
+
+  // sort
+  var sortHeaders = document.querySelectorAll('.devices-table th[data-sort]');
+  for (var sh = 0; sh < sortHeaders.length; sh++) {
+    sortHeaders[sh].addEventListener('click', function(e){
+      var col = e.currentTarget.getAttribute('data-sort');
+      if (col === 'icon') return;
+      if (state.devicesSort.col === col) {
+        state.devicesSort.dir = state.devicesSort.dir === 'asc' ? 'desc' : 'asc';
+      } else {
+        state.devicesSort.col = col;
+        state.devicesSort.dir = 'desc';
+      }
+      renderDevices();
+    });
+  }
+
+  // CSV export
+  $('export-csv-btn').addEventListener('click', function(){
+    var headers = ['hostname','ip','mac','vendor','tag','group','trust_score','risk_score','online','first_seen','last_seen_min'];
+    var lines = [headers.join(',')];
+    devices.forEach(function(d){
+      var row = [d.host, d.ip, d.mac, d.vendor, d.tag, d.group, d.trust, d.risk, d.online ? 'true' : 'false', d.firstSeen, d.lastSeenMin];
+      lines.push(row.map(function(v){
+        var sv = String(v);
+        return sv.indexOf(',') >= 0 ? '"' + sv + '"' : sv;
+      }).join(','));
+    });
+    var blob = new Blob([lines.join('\n')], {type:'text/csv'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'home-hub-devices-' + new Date().toISOString().substr(0,10) + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast('Exported ' + devices.length + ' devices to CSV', 'info');
+  });
+
+  renderDevices();
+
+  /* =========================================================
+     CAMERAS
+     ========================================================= */
+  function renderCameras(){
+    var grid = $('cam-grid');
+    clearChildren(grid);
+    grid.className = 'cam-grid layout-' + state.camLayout;
+
+    cameras.forEach(function(cam){
+      var tile = el('div', 'cam-tile');
+
+      var feed = el('div', 'cam-feed' + (cam.online ? '' : ' offline'));
+
+      // generic gray "no signal" placeholder
+      var icon = el('div', 'cam-feed-icon');
+      var iconText = document.createTextNode('\u25A3');
+      icon.appendChild(iconText);
+      feed.appendChild(icon);
+
+      feed.appendChild(el('div', 'cam-feed-name', cam.name));
+      feed.appendChild(el('div', 'cam-feed-msg', cam.online ? 'Feed unavailable in public demo' : 'No signal'));
+      tile.appendChild(feed);
+
+      var foot = el('div', 'cam-tile-foot');
+      var statusWrap = el('div');
+      statusWrap.appendChild(el('span', 'cam-status-dot' + (cam.online ? '' : ' offline')));
+      statusWrap.appendChild(el('span', null, cam.online ? 'online' : 'offline'));
+      foot.appendChild(statusWrap);
+      foot.appendChild(el('span', null, 'motion: ' + cam.lastMotion));
+      tile.appendChild(foot);
+
+      grid.appendChild(tile);
+    });
+  }
+
+  var camLayoutBtns = document.querySelectorAll('[data-cam-layout]');
+  for (var cl = 0; cl < camLayoutBtns.length; cl++) {
+    camLayoutBtns[cl].addEventListener('click', function(e){
+      var btn = e.currentTarget;
+      state.camLayout = btn.getAttribute('data-cam-layout');
+      for (var k = 0; k < camLayoutBtns.length; k++) camLayoutBtns[k].classList.remove('active');
+      btn.classList.add('active');
+      renderCameras();
+    });
+  }
+  renderCameras();
+
+  /* =========================================================
+     EVENTS FEED
+     ========================================================= */
+  function evtTimeLabel(min){
+    if (min < 1) return 'just now';
+    if (min < 60) return min + 'm';
+    var h = Math.floor(min / 60);
+    if (h < 24) return h + 'h';
+    return Math.floor(h / 24) + 'd';
+  }
+
+  function severityClass(sev){
+    if (sev === 'crit') return 'crit';
+    if (sev === 'warn') return 'warn';
+    if (sev === 'good') return 'good';
+    return 'info';
+  }
+
+  function eventMatchesFilter(evt, filter){
+    if (filter === 'all') return true;
+    if (filter === 'warn') return (evt.sev === 'warn' || evt.sev === 'crit');
+    return evt.cat === filter;
+  }
+
+  function renderEvents(){
+    var feed = $('events-feed');
+    clearChildren(feed);
+    var visible = state.liveEvents.filter(function(e){
+      return eventMatchesFilter(e, state.eventsFilter);
+    });
+    visible.forEach(function(evt){
+      var row = el('div', 'event-row');
+
+      row.appendChild(el('div', 'event-sev ' + severityClass(evt.sev)));
+
+      var msg = el('div', 'event-msg');
+      msg.appendChild(el('span', 'et-type', evt.type));
+      msg.appendChild(document.createTextNode(evt.msg));
+      row.appendChild(msg);
+
+      row.appendChild(el('div', 'event-source', evt.source));
+      row.appendChild(el('div', 'event-time', evtTimeLabel(evt.min || 0)));
+
+      feed.appendChild(row);
+    });
+    $('events-tab-count').textContent = state.liveEvents.length;
+  }
+
+  function pushLiveEvent(evt){
+    evt.min = 0;
+    state.liveEvents.unshift(evt);
+    if (state.liveEvents.length > 30) {
+      state.liveEvents = state.liveEvents.slice(0, 30);
+    }
+    renderEvents();
+  }
+
+  // Event pool for live insertion
+  var eventPool = [
+    {type:'device.discovered',     cat:'device',    sev:'info', source:'discovery',   msg:'New device pinged at 192.168.1.{N}'},
+    {type:'device.disappeared',    cat:'device',    sev:'info', source:'discovery',   msg:'Device dropped from sweep: {HOST}'},
+    {type:'device.ip_changed',     cat:'device',    sev:'info', source:'discovery',   msg:'IP changed for {HOST}: {OLD} -> {NEW}'},
+    {type:'device.trust_changed',  cat:'device',    sev:'info', source:'trust-score', msg:'Trust changed: {OLD} -> {NEW} for {HOST}'},
+    {type:'device.risk_changed',   cat:'device',    sev:'warn', source:'trust-score', msg:'Risk changed: {OLD} -> {NEW} for {HOST}'},
+    {type:'alert.created',         cat:'alert',     sev:'warn', source:'rules',       msg:'Rule {RULE} fired on {HOST}'},
+    {type:'camera.online',         cat:'camera',    sev:'good', source:'cameras',     msg:'{CAM} camera back online'},
+    {type:'camera.offline',        cat:'camera',    sev:'warn', source:'cameras',     msg:'{CAM} camera went offline'},
+    {type:'traffic.spike',         cat:'traffic',   sev:'warn', source:'pcap',        msg:'Traffic spike on {HOST} +{PCT}%'},
+    {type:'connector.health_check',cat:'connector', sev:'info', source:'connectors',  msg:'{CON} connector responded in {MS}ms'},
+    {type:'network.scan_started',  cat:'network',   sev:'info', source:'discovery',   msg:'Discovery sweep started (interval: 5m)'},
+    {type:'network.scan_completed',cat:'network',   sev:'info', source:'discovery',   msg:'Discovery sweep completed: {N} devices, {T}s'}
+  ];
+
+  var ruleNames = ['block-unknown-vendors','quarantine-new','firmware-change','traffic-spike','guest-isolation'];
+  var camNames  = ['Front Door','Porch','Garage','Driveway'];
+  var conNames  = ['Synology','Ubiquiti','HomeKit','Plex'];
+
+  function fillTemplate(tpl){
+    var d = devices[Math.floor(Math.random() * devices.length)];
+    return tpl
+      .replace('{N}',    String(120 + Math.floor(Math.random() * 100)))
+      .replace('{HOST}', d.host)
+      .replace('{OLD}',  String(Math.floor(Math.random() * 100)))
+      .replace('{NEW}',  String(Math.floor(Math.random() * 100)))
+      .replace('{RULE}', ruleNames[Math.floor(Math.random() * ruleNames.length)])
+      .replace('{CAM}',  camNames[Math.floor(Math.random() * camNames.length)])
+      .replace('{PCT}',  String(180 + Math.floor(Math.random() * 250)))
+      .replace('{CON}',  conNames[Math.floor(Math.random() * conNames.length)])
+      .replace('{MS}',   String(80 + Math.floor(Math.random() * 320)))
+      .replace('{T}',    (3 + Math.random() * 4).toFixed(1));
+  }
+
+  function scheduleNextEvent(){
+    if (state.eventsTimer) clearTimeout(state.eventsTimer);
+    var interval = 25000 + Math.random() * 20000; // 25-45 seconds
+    state.eventsTimer = setTimeout(function(){
+      if (!state.eventsPaused) {
+        var template = eventPool[Math.floor(Math.random() * eventPool.length)];
+        var newEvent = {
+          type:   template.type,
+          cat:    template.cat,
+          sev:    template.sev,
+          source: template.source,
+          msg:    fillTemplate(template.msg)
+        };
+        pushLiveEvent(newEvent);
+      }
+      scheduleNextEvent();
+    }, interval);
+  }
+
+  // events filters
+  var evtChips = document.querySelectorAll('#events-chips .chip');
+  for (var ec = 0; ec < evtChips.length; ec++) {
+    evtChips[ec].addEventListener('click', function(e){
+      var btn = e.currentTarget;
+      for (var k = 0; k < evtChips.length; k++) evtChips[k].classList.remove('active');
+      btn.classList.add('active');
+      state.eventsFilter = btn.getAttribute('data-evt-filter');
+      renderEvents();
+    });
+  }
+
+  // pause / resume
+  $('events-pause-btn').addEventListener('click', function(){
+    state.eventsPaused = !state.eventsPaused;
+    var btn = $('events-pause-btn');
+    btn.classList.toggle('paused', state.eventsPaused);
+    btn.textContent = state.eventsPaused ? 'Resume feed' : 'Pause feed';
+  });
+
+  renderEvents();
+  scheduleNextEvent();
+
+  /* =========================================================
+     RULES
+     ========================================================= */
+  function renderRules(){
+    var grid = $('rules-grid');
+    clearChildren(grid);
+    rules.forEach(function(rule, idx){
+      var card = el('div', 'rule-card');
+
+      var head = el('div', 'rule-head');
+      head.appendChild(el('div', 'rule-name', rule.name));
+
+      var toggle = el('div', 'toggle' + (rule.on ? ' on' : ''));
+      toggle.addEventListener('click', function(){
+        rule.on = !rule.on;
+        toggle.classList.toggle('on', rule.on);
+        toast('Rule ' + (rule.on ? 'enabled' : 'disabled') + ': ' + rule.name, rule.on ? 'info' : 'warn');
+      });
+      head.appendChild(toggle);
+      card.appendChild(head);
+
+      card.appendChild(el('div', 'rule-desc', rule.desc));
+
+      var foot = el('div', 'rule-foot');
+      var trig = el('div', 'rule-trig');
+      trig.appendChild(document.createTextNode('triggered: '));
+      var b = el('b', null, rule.count + 'x');
+      trig.appendChild(b);
+      trig.appendChild(document.createTextNode(' today'));
+      foot.appendChild(trig);
+
+      var idLabel = el('div', null, 'rule_' + String(idx + 1).padStart(2, '0'));
+      idLabel.style.color = 'var(--text-faint)';
+      foot.appendChild(idLabel);
+
+      card.appendChild(foot);
+
+      grid.appendChild(card);
+    });
+  }
+  renderRules();
+
+  /* =========================================================
+     SETTINGS YAML
+     ========================================================= */
+  function renderYaml(){
+    var body = $('yaml-body');
+    clearChildren(body);
+    yamlLines.forEach(function(line, idx){
+      line.tokens.forEach(function(tok){
+        if (tok.c) {
+          var span = el('span', tok.c, tok.t);
+          body.appendChild(span);
+        } else {
+          body.appendChild(document.createTextNode(tok.t));
+        }
+      });
+      if (idx < yamlLines.length - 1) {
+        body.appendChild(document.createTextNode('\n'));
+      }
+    });
+  }
+  renderYaml();
+
+  /* =========================================================
+     SLIDE-IN SIDEBAR
+     ========================================================= */
+  function buildGauge(parent, label, value, fillColor){
+    var gauge = el('div', 'sb-gauge');
+
+    var head = el('div', 'sb-gauge-head');
+    head.appendChild(el('span', 'sb-gauge-label', label));
+    head.appendChild(el('span', 'sb-gauge-val',   value + ' / 100'));
+    gauge.appendChild(head);
+
+    var track = el('div', 'sb-gauge-track');
+    var fill  = el('div', 'sb-gauge-fill');
+    fill.style.width      = value + '%';
+    fill.style.background = fillColor;
+    track.appendChild(fill);
+    gauge.appendChild(track);
+
+    parent.appendChild(gauge);
+  }
+
+  function openSidebar(deviceId){
+    var d = null;
+    for (var i = 0; i < devices.length; i++) {
+      if (devices[i].id === deviceId) { d = devices[i]; break; }
+    }
+    if (!d) return;
+
+    var body = $('sidebar-body');
+    clearChildren(body);
+
+    body.appendChild(el('div', 'sb-name', d.host));
+
+    var tagRow = el('div', 'sb-tag-row');
+    tagRow.appendChild(el('span', 'dt-tag-pill ' + d.tag, d.tag));
+    tagRow.appendChild(el('span', 'dt-tag-pill group', d.group));
+    body.appendChild(tagRow);
+
+    // Identifiers
+    var idSection = el('div', 'sb-section');
+    idSection.appendChild(el('div', 'sb-section-title', 'Identifiers'));
+    [
+      ['MAC',    d.mac],
+      ['IP',     d.ip],
+      ['Vendor', d.vendor],
+      ['Group',  d.group],
+      ['Tag',    d.tag]
+    ].forEach(function(pair){
+      var row = el('div', 'sb-row');
+      row.appendChild(el('span', 'sb-label', pair[0]));
+      row.appendChild(el('span', 'sb-val',   pair[1]));
+      idSection.appendChild(row);
+    });
+    body.appendChild(idSection);
+
+    // Scores
+    var scoreSection = el('div', 'sb-section');
+    scoreSection.appendChild(el('div', 'sb-section-title', 'Scores'));
+    buildGauge(scoreSection, 'Trust', d.trust, '#6ee7a0');
+    buildGauge(scoreSection, 'Risk',  d.risk,  riskColor(d.risk));
+    body.appendChild(scoreSection);
+
+    // Presence
+    var presence = el('div', 'sb-section');
+    presence.appendChild(el('div', 'sb-section-title', 'Presence'));
+    [
+      ['First seen', d.firstSeen.substr(0,10)],
+      ['Last seen',  lastSeenLabel(d.lastSeenMin)],
+      ['Status',     d.online ? 'online' : 'offline']
+    ].forEach(function(pair){
+      var row = el('div', 'sb-row');
+      row.appendChild(el('span', 'sb-label', pair[0]));
+      row.appendChild(el('span', 'sb-val',   pair[1]));
+      presence.appendChild(row);
+    });
+    body.appendChild(presence);
+
+    // Notes
+    var notesSection = el('div', 'sb-section');
+    notesSection.appendChild(el('div', 'sb-section-title', 'Notes'));
+    var notesText = d.tag === 'unknown'
+      ? 'Awaiting operator review. No history beyond initial discovery.'
+      : (d.tag === 'gateway' ? 'Network gateway. Tagged infrastructure. Trust pinned high.' : 'No operator notes.');
+    var notes = el('div', null, notesText);
+    notes.style.fontSize   = '12px';
+    notes.style.color      = 'var(--text-mid)';
+    notes.style.lineHeight = '1.55';
+    notesSection.appendChild(notes);
+    body.appendChild(notesSection);
+
+    // Recent events
+    var evtSection = el('div', 'sb-section');
+    evtSection.appendChild(el('div', 'sb-section-title', 'Recent Events'));
+    var evtList = el('div', 'sb-events');
+    var sample = [
+      {label:'discovery',   text:'Polled successfully ' + lastSeenLabel(d.lastSeenMin)},
+      {label:'trust-score', text:'Score recomputed: trust=' + d.trust + ' risk=' + d.risk},
+      {label:'connector',   text:'Connector ping ok'}
+    ];
+    sample.forEach(function(s){
+      var ev = el('div', 'sb-event');
+      var b = el('b', null, s.label);
+      ev.appendChild(b);
+      ev.appendChild(document.createTextNode(' \u00B7 ' + s.text));
+      evtList.appendChild(ev);
+    });
+    evtSection.appendChild(evtList);
+    body.appendChild(evtSection);
+
+    $('sidebar-overlay').classList.add('open');
+    $('sidebar').classList.add('open');
+  }
+
+  function closeSidebar(){
+    $('sidebar-overlay').classList.remove('open');
+    $('sidebar').classList.remove('open');
+  }
+
+  $('sidebar-close').addEventListener('click', closeSidebar);
+  $('sidebar-overlay').addEventListener('click', closeSidebar);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') closeSidebar();
+  });
+
+  /* =========================================================
+     TOAST SYSTEM
+     ========================================================= */
+  function toast(msg, kind){
+    var stack = $('toast-stack');
+    var t = el('div', 'toast' + (kind ? ' ' + kind : ''), msg);
+    stack.appendChild(t);
+    setTimeout(function(){
+      t.classList.add('fading');
+      setTimeout(function(){
+        if (t.parentNode) t.parentNode.removeChild(t);
+      }, 400);
+    }, 3200);
+  }
+
+})();
+</script>
+</body>
+</html>

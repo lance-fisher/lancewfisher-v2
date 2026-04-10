@@ -1,0 +1,582 @@
+/* ============================================================
+   FISHER SOVEREIGN SYSTEMS - SHARED FF25 BRAND WORDMARK
+   ============================================================
+   Opt-in stylesheet for productized pages that want to render
+   the FF25 wordmark block (Old Standard TT 400, bright white/silver
+   metallic with occasional matrix shine sweep).
+
+   USAGE (in any page that wants the FF25 block):
+
+   <head>
+     <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+     <link rel="stylesheet" href="/_shared/brand.css?v=20260408ff25">
+   </head>
+   <body>
+     <div class="fs-wordmark">
+       <div class="fs-wordmark-text">
+         <h2 class="fs-wordmark-name">
+           <span class="fs-wm-1">Fisher</span>
+           <span class="fs-wm-2">Sovereign Systems</span>
+         </h2>
+         <div class="fs-wordmark-rule"></div>
+         <div class="fs-wordmark-entity">Building the Architecture for Independence</div>
+       </div>
+     </div>
+   </body>
+
+   The rules below are intentionally scoped to .fs-wordmark and its
+   children so they do not collide with page-level styles.
+   ============================================================ */
+
+.fs-wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto 24px;
+  text-align: center;
+}
+.fs-wordmark-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  min-width: 0;
+}
+.fs-wordmark-name {
+  margin: 0;
+  line-height: 1.0;
+  text-align: center;
+}
+
+/* Hero "Fisher" — large Old Standard TT with metallic gradient + shine */
+/* Single-layer base + ::after pseudo for the shine sweep.
+   The HTML must include data-text attributes on the spans, e.g.:
+     <span class="fs-wm-1" data-text="Fisher">Fisher</span>
+     <span class="fs-wm-2" data-text="Sovereign Systems">Sovereign Systems</span> */
+.fs-wordmark .fs-wm-1 {
+  display: block;
+  position: relative;
+  font-family: 'Old Standard TT', 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(80px, 9.5vw, 140px);
+  font-weight: 400;
+  letter-spacing: 0;
+  background: linear-gradient(180deg,
+    #ffffff 0%,
+    #faf9f5 22%,
+    #f0eeea 55%,
+    #e0dfd9 85%,
+    #cfcdc7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.4)) drop-shadow(0 3px 22px rgba(0, 0, 0, 0.55));
+  text-align: center;
+  line-height: 1.0;
+  margin-bottom: -0.18em;
+}
+.fs-wordmark .fs-wm-1::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  background: linear-gradient(100deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 42%,
+    rgba(255,255,255,0.95) 49%,
+    rgba(255,255,255,1) 50%,
+    rgba(255,255,255,0.95) 51%,
+    rgba(255,255,255,0) 58%,
+    rgba(255,255,255,0) 100%);
+  background-size: 250% 100%;
+  background-position: 0% 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  pointer-events: none;
+  animation: fsShine 14s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+}
+
+/* Subline "Sovereign Systems" — smaller Inter tracked uppercase */
+.fs-wordmark .fs-wm-2 {
+  display: block;
+  position: relative;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(13px, 1.4vw, 18px);
+  font-weight: 500;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  background: linear-gradient(180deg,
+    #f6f4ef 0%,
+    #e8e6df 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  margin-top: 6px;
+  padding-left: 0.5em;
+  text-align: center;
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.35));
+}
+.fs-wordmark .fs-wm-2::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding-left: 0.5em;
+  text-align: center;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-transform: uppercase;
+  background: linear-gradient(100deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 42%,
+    rgba(255,255,255,0.95) 49%,
+    rgba(255,255,255,1) 50%,
+    rgba(255,255,255,0.95) 51%,
+    rgba(255,255,255,0) 58%,
+    rgba(255,255,255,0) 100%);
+  background-size: 250% 100%;
+  background-position: 0% 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  pointer-events: none;
+  animation: fsShine 14s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+  animation-delay: 0.25s;
+}
+
+/* Center-fading horizontal rule between wordmark and motto */
+.fs-wordmark-rule {
+  height: 1px;
+  width: 100%;
+  max-width: 620px;
+  background: linear-gradient(to right,
+    transparent 0%,
+    rgba(248, 246, 240, 0.08) 10%,
+    rgba(248, 246, 240, 0.55) 50%,
+    rgba(248, 246, 240, 0.08) 90%,
+    transparent 100%);
+  margin: 10px auto 6px;
+}
+
+/* Motto line */
+.fs-wordmark-entity {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(13px, 1.1vw, 16px);
+  letter-spacing: 0.035em;
+  font-weight: 400;
+  color: rgba(220, 217, 211, 0.78);
+  line-height: 1.2;
+  text-align: center;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Matrix-style shine sweep: 14s cycle, bright stripe traverses the
+   wordmark once then rests off-screen for the remainder. */
+@keyframes fsShine {
+  0%   { background-position: 0% 0; }
+  22%  { background-position: 100% 0; }
+  100% { background-position: 100% 0; }
+}
+
+/* Responsive sizing for mobile */
+@media (max-width: 768px) {
+  .fs-wordmark .fs-wm-1 { font-size: clamp(56px, 13vw, 80px); }
+  .fs-wordmark .fs-wm-2 { font-size: 11px; letter-spacing: 0.36em; }
+  .fs-wordmark-entity { font-size: 12px; letter-spacing: 0.03em; }
+}
+
+/* Respect user motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .fs-wordmark .fs-wm-1::after,
+  .fs-wordmark .fs-wm-2::after { animation: none; }
+}
+
+/* Light mode: dark graphite metallic + pale highlight sweep */
+[data-theme="light"] .fs-wordmark .fs-wm-1 {
+  background: linear-gradient(180deg,
+    #26292f 0%,
+    #383c44 35%,
+    #4c505a 70%,
+    #5a5e68 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5)) drop-shadow(0 2px 10px rgba(28, 32, 40, 0.18));
+}
+[data-theme="light"] .fs-wordmark .fs-wm-1::after {
+  background: linear-gradient(100deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 42%,
+    rgba(255,255,255,0.55) 48%,
+    rgba(255,255,255,0.85) 50%,
+    rgba(255,255,255,0.55) 52%,
+    rgba(255,255,255,0) 58%,
+    rgba(255,255,255,0) 100%);
+  background-size: 250% 100%;
+  background-position: 0% 0;
+  background-repeat: no-repeat;
+}
+[data-theme="light"] .fs-wordmark .fs-wm-2 {
+  background: linear-gradient(180deg,
+    #32363e 0%,
+    #4a4e58 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5));
+}
+[data-theme="light"] .fs-wordmark .fs-wm-2::after {
+  background: linear-gradient(100deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 42%,
+    rgba(255,255,255,0.55) 48%,
+    rgba(255,255,255,0.85) 50%,
+    rgba(255,255,255,0.55) 52%,
+    rgba(255,255,255,0) 58%,
+    rgba(255,255,255,0) 100%);
+  background-size: 250% 100%;
+  background-position: 0% 0;
+  background-repeat: no-repeat;
+}
+[data-theme="light"] .fs-wordmark-rule {
+  background: linear-gradient(to right, transparent, rgba(70, 76, 88, 0.45), rgba(110, 116, 128, 0.18) 70%, transparent);
+}
+[data-theme="light"] .fs-wordmark-entity {
+  color: rgba(70, 76, 88, 0.72);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* ============================================================
+   FSS BRAND BLOCK V3 — Nav + footer wordmark
+   ============================================================
+   Used in showcase page top-bar and footer positions. Replaces
+   the older V1 (gold + H icon + Crimson Pro caps) and V2 (silver
+   + H icon + Old Standard TT) patterns. NO H icon. FF25 wordmark
+   in compact (.fssb-v3-top) and medium (.fssb-v3-foot) sizes.
+   ============================================================ */
+.fssb-v3-top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 22px 12px;
+  background: #08080a;
+  border-bottom: 1px solid rgba(220, 220, 216, 0.12);
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+}
+.fssb-v3-top-link {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-decoration: none;
+  gap: 1px;
+  min-width: 0;
+}
+.fssb-v3-top-name {
+  font-family: 'Old Standard TT', 'Cormorant Garamond', Georgia, serif;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: 0;
+  background: linear-gradient(180deg,
+    #ffffff 0%,
+    #f4f2ee 30%,
+    #d8d5cf 70%,
+    #b8b5af 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* Scaled-down emboss: dark top rim + silver bottom rim + thin outline +
+     compact silver halo + drop shadow. Matches the hero .fs-wm-1 treatment
+     at nav-strip scale. */
+  filter:
+    drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.85))
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.28))
+    drop-shadow(0 0 1px rgba(0, 0, 0, 0.75))
+    drop-shadow(0 0 6px rgba(248, 246, 240, 0.2))
+    drop-shadow(0 3px 12px rgba(0, 0, 0, 0.7));
+}
+.fssb-v3-top-rule {
+  display: block;
+  width: 120px;
+  height: 1px;
+  margin: 3px 0 2px;
+  background: linear-gradient(to right,
+    transparent 0%,
+    rgba(248, 246, 240, 0.1) 15%,
+    rgba(248, 246, 240, 0.55) 50%,
+    rgba(248, 246, 240, 0.1) 85%,
+    transparent 100%);
+}
+.fssb-v3-top-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(220, 217, 211, 0.82);
+  padding-left: 0.3em;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+}
+.fssb-v3-top-back {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(180, 180, 186, 0.72);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+.fssb-v3-top-back:hover { color: rgba(248, 246, 240, 0.92); }
+
+.fssb-v3-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 48px 24px 36px;
+  background: #08080a;
+  border-top: 1px solid rgba(220, 220, 216, 0.12);
+  text-align: center;
+}
+.fssb-v3-foot-name {
+  font-family: 'Old Standard TT', 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(38px, 5vw, 52px);
+  font-weight: 400;
+  line-height: 1.0;
+  letter-spacing: 0;
+  background: linear-gradient(180deg,
+    #ffffff 0%,
+    #f4f2ee 30%,
+    #d8d5cf 70%,
+    #b8b5af 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* Footer wordmark emboss: stronger than the top strip because the footer
+     has room for a fuller halo. Matches hero .fs-wm-1 at ~40% scale. */
+  filter:
+    drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.9))
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.32))
+    drop-shadow(0 0 1.5px rgba(0, 0, 0, 0.8))
+    drop-shadow(0 0 12px rgba(248, 246, 240, 0.24))
+    drop-shadow(0 0 26px rgba(248, 246, 240, 0.14))
+    drop-shadow(0 6px 24px rgba(0, 0, 0, 0.75));
+  margin: 0;
+}
+.fssb-v3-foot-rule {
+  display: block;
+  width: 220px;
+  height: 1px;
+  margin: 14px auto 10px;
+  background: linear-gradient(to right,
+    transparent 0%,
+    rgba(248, 246, 240, 0.08) 10%,
+    rgba(248, 246, 240, 0.55) 50%,
+    rgba(248, 246, 240, 0.08) 90%,
+    transparent 100%);
+}
+.fssb-v3-foot-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(11px, 1.1vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(220, 217, 211, 0.85);
+  padding-left: 0.4em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+  margin: 0;
+}
+.fssb-v3-foot-motto {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(10px, 0.9vw, 12px);
+  font-weight: 400;
+  letter-spacing: 0.035em;
+  color: rgba(220, 217, 211, 0.72);
+  margin: 10px 0 0;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+}
+.fssb-v3-foot-back {
+  display: inline-block;
+  margin-top: 22px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(180, 180, 186, 0.6);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.fssb-v3-foot-back:hover { color: rgba(248, 246, 240, 0.92); }
+
+[data-theme="light"] .fssb-v3-top,
+[data-theme="light"] .fssb-v3-foot {
+  background: #f5f3ee;
+  border-color: rgba(42, 42, 46, 0.18);
+}
+[data-theme="light"] .fssb-v3-top-name,
+[data-theme="light"] .fssb-v3-foot-name {
+  background: linear-gradient(180deg,
+    #1f2228 0%,
+    #2c3038 30%,
+    #3a3e48 70%,
+    #4a4e58 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* Light-mode emboss: white rim highlight below the letters + soft dark
+     drop shadow. Same engraved-plate direction as the hero .fs-wm-1 light
+     treatment. */
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.55))
+    drop-shadow(0 2px 10px rgba(28, 32, 40, 0.18));
+}
+[data-theme="light"] .fssb-v3-top-rule,
+[data-theme="light"] .fssb-v3-foot-rule {
+  background: linear-gradient(to right,
+    transparent 0%,
+    rgba(42, 42, 46, 0.1) 15%,
+    rgba(42, 42, 46, 0.5) 50%,
+    rgba(42, 42, 46, 0.1) 85%,
+    transparent 100%);
+}
+[data-theme="light"] .fssb-v3-top-sub,
+[data-theme="light"] .fssb-v3-foot-sub { color: rgba(42, 42, 46, 0.78); text-shadow: none; }
+[data-theme="light"] .fssb-v3-foot-motto { color: rgba(42, 42, 46, 0.62); text-shadow: none; }
+[data-theme="light"] .fssb-v3-top-back,
+[data-theme="light"] .fssb-v3-foot-back { color: rgba(42, 42, 46, 0.58); }
+[data-theme="light"] .fssb-v3-top-back:hover,
+[data-theme="light"] .fssb-v3-foot-back:hover { color: rgba(26, 26, 28, 0.92); }
+
+@media (max-width: 640px) {
+  .fssb-v3-top-name { font-size: 22px; }
+  .fssb-v3-top-rule { width: 90px; }
+  .fssb-v3-top-sub { font-size: 8px; letter-spacing: 0.25em; }
+  .fssb-v3-foot-name { font-size: 32px; }
+  .fssb-v3-foot-rule { width: 160px; }
+}
+
+/* ============================================================
+   PAGE BENEFIT STRIP — drop-in module for showcase pages
+   ============================================================
+   Answers "How does this help me?" in one prominent italic line
+   right below the hero. Mirrors the home.html .p-benefit but
+   sized up for in-page prominence. Drop <div class="page-benefit">
+   into any page that links _shared/brand.css. Pair with .page-sim
+   banner above for honest Interactive Preview signaling.
+   ============================================================ */
+.page-benefit {
+  display: block;
+  max-width: 960px;
+  margin: 32px auto 8px;
+  padding: 16px 22px 16px 22px;
+  background: linear-gradient(90deg, rgba(248, 246, 240, 0.06) 0%, rgba(248, 246, 240, 0.02) 100%);
+  border-left: 3px solid rgba(248, 246, 240, 0.6);
+  border-radius: 0 4px 4px 0;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(16px, 1.4vw, 19px);
+  line-height: 1.5;
+  color: rgba(240, 244, 252, 0.94);
+  box-shadow: 0 1px 0 rgba(248, 246, 240, 0.04) inset;
+}
+.page-benefit::before {
+  content: 'For you';
+  display: inline-block;
+  margin-right: 12px;
+  padding: 2px 8px;
+  background: rgba(248, 246, 240, 0.1);
+  border-radius: 2px;
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 0.62em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(248, 246, 240, 0.72);
+  vertical-align: 0.1em;
+}
+
+.page-sim-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: rgba(125, 211, 252, 0.08);
+  border-bottom: 1px solid rgba(125, 211, 252, 0.2);
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7dd3fc;
+  font-weight: 500;
+}
+.page-sim-banner::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7dd3fc;
+  box-shadow: 0 0 0 0 rgba(125, 211, 252, 0.6);
+  animation: page-sim-pulse 2.4s ease-in-out infinite;
+}
+@keyframes page-sim-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(125, 211, 252, 0.5); }
+  50% { box-shadow: 0 0 0 4px rgba(125, 211, 252, 0); }
+}
+
+[data-theme="light"] .page-benefit {
+  background: linear-gradient(90deg, rgba(26, 26, 28, 0.05) 0%, rgba(26, 26, 28, 0.01) 100%);
+  border-left-color: rgba(42, 42, 46, 0.6);
+  color: rgba(26, 26, 28, 0.88);
+}
+[data-theme="light"] .page-benefit::before {
+  background: rgba(26, 26, 28, 0.08);
+  color: rgba(26, 26, 28, 0.7);
+}
+[data-theme="light"] .page-sim-banner {
+  background: rgba(3, 105, 161, 0.08);
+  border-bottom-color: rgba(3, 105, 161, 0.22);
+  color: #0369a1;
+}
+[data-theme="light"] .page-sim-banner::before {
+  background: #0369a1;
+  box-shadow: 0 0 0 0 rgba(3, 105, 161, 0.5);
+}
+
+@media (max-width: 640px) {
+  .page-benefit {
+    margin: 24px 16px 4px;
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+  .page-benefit::before {
+    display: block;
+    margin-bottom: 4px;
+  }
+}

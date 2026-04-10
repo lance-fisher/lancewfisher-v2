@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Governance Standards | Fisher Sovereign Systems</title>
+<meta name="description" content="Fisher Sovereign Governance Standards: a production-grade framework for AI governance, infrastructure control, and operational sovereignty. 5-tier approval, 8 session states, formal audit trails.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80'>&#9878;</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0b;--bg-panel:#0e0f12;--bg-panel-hi:#14161b;--bg-elev:#1a1d23;
+  --border:rgba(228,234,242,0.07);--border-hi:rgba(228,234,242,0.14);
+  --fg-strong:rgba(228,234,242,0.94);--fg:rgba(195,205,218,0.72);--fg-dim:rgba(195,205,218,0.45);--fg-faint:rgba(195,205,218,0.28);
+  --green:#6ee7a0;--green-dim:rgba(110,231,160,0.10);--green-line:rgba(110,231,160,0.32);
+  --amber:#fbbf24;--amber-dim:rgba(251,191,36,0.10);--amber-line:rgba(251,191,36,0.32);
+  --red:#f87171;--red-dim:rgba(248,113,113,0.10);--red-line:rgba(248,113,113,0.32);
+  --blue:#7dd3fc;--blue-dim:rgba(125,211,252,0.10);--blue-line:rgba(125,211,252,0.32);
+  --purple:#a78bfa;--purple-dim:rgba(167,139,250,0.10);--purple-line:rgba(167,139,250,0.32);
+  --font-display:'Cinzel',serif;--font-serif:'Cormorant Garamond',Georgia,serif;
+  --font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono',ui-monospace,monospace;
+  --radius:8px;--radius-sm:5px;--gap:14px;--max-w:1100px;
+}
+html{scroll-behavior:smooth;font-size:15px}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
+a{color:var(--fg-strong);text-decoration:none;transition:color .15s}a:hover{color:#fff}
+
+.nav{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(10,10,11,0.92);border-bottom:1px solid var(--border-hi);position:sticky;top:0;z-index:100;backdrop-filter:blur(16px)}
+.nav-left{display:flex;align-items:center;gap:20px}
+.nav-back{font-family:var(--font-mono);font-size:.73rem;color:var(--fg-dim)}
+.nav-back:hover{color:var(--fg-strong)}
+.nav-back::before{content:'\2190\00a0'}
+.nav-title{font-family:var(--font-display);font-size:.82rem;font-weight:600;color:var(--fg-strong);letter-spacing:.16em;text-transform:uppercase}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-family:var(--font-mono);font-size:.64rem;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--amber-line);background:var(--amber-dim);color:var(--amber)}
+
+.wrap{max-width:var(--max-w);margin:0 auto;padding:0 28px}
+.hero{padding:40px 0 12px}
+.hero-eyebrow{font-family:var(--font-mono);font-size:.66rem;color:var(--fg-faint);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+.hero h1{font-family:var(--font-display);font-size:2rem;font-weight:600;color:var(--fg-strong);letter-spacing:.02em;line-height:1.15;margin-bottom:12px}
+.hero-sub{font-family:var(--font-serif);font-size:1.1rem;font-style:italic;color:var(--fg);max-width:680px;line-height:1.55}
+
+section{padding:28px 0}section+section{border-top:1px solid var(--border)}
+.sec-title{font-family:var(--font-display);font-size:1.2rem;font-weight:600;color:var(--fg-strong);margin-bottom:6px}
+.sec-lede{font-size:.88rem;color:var(--fg);max-width:680px;margin-bottom:20px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--gap)}
+.card{background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:10px;transition:all .18s}
+.card:hover{background:var(--bg-panel-hi);border-color:var(--border-hi);transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,0,0,.5)}
+.card-kicker{font-family:var(--font-mono);font-size:.62rem;color:var(--fg-faint);letter-spacing:.1em;text-transform:uppercase}
+.card h3{font-family:var(--font-display);font-size:1.02rem;font-weight:600;color:var(--fg-strong);line-height:1.2}
+.card p{font-size:.82rem;color:var(--fg);line-height:1.55}
+
+.data-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-bottom:16px}
+.data-table th{font-family:var(--font-mono);font-size:.66rem;color:var(--fg-faint);letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:10px 14px;border-bottom:1px solid var(--border-hi)}
+.data-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--fg);vertical-align:top}
+.data-table tr:hover td{background:rgba(255,255,255,.015)}
+.tier-num{font-family:var(--font-mono);font-weight:600;font-size:.88rem}
+
+/* Principle blocks */
+.principle{background:var(--bg-panel);border-left:3px solid var(--amber);border-radius:0 var(--radius) var(--radius) 0;padding:16px 20px;margin-bottom:12px}
+.principle-title{font-family:var(--font-display);font-size:.92rem;font-weight:600;color:var(--fg-strong);margin-bottom:4px}
+.principle p{font-size:.84rem;color:var(--fg);line-height:1.55}
+
+/* Posture */
+.posture-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:var(--gap);margin-bottom:20px}
+.posture-card{background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center}
+.posture-label{font-family:var(--font-mono);font-size:.62rem;color:var(--fg-faint);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.posture-value{font-family:var(--font-mono);font-size:1.5rem;font-weight:500;margin-bottom:4px}
+.posture-note{font-family:var(--font-mono);font-size:.64rem;color:var(--fg-dim)}
+
+.page-footer{max-width:var(--max-w);margin:0 auto;padding:24px 28px 48px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px}
+.footer-brand{font-family:var(--font-display);font-size:.72rem;color:var(--fg-dim);letter-spacing:.12em;text-transform:uppercase}
+.footer-links{display:flex;gap:18px;font-family:var(--font-mono);font-size:.68rem}
+.footer-links a{color:var(--fg-faint)}
+.footer-links a:hover{color:var(--fg-strong)}
+
+@media(max-width:768px){.wrap{padding:0 18px}.hero h1{font-size:1.5rem}.grid{grid-template-columns:1fr}.posture-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.posture-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-left">
+    <a href="../home.html" class="nav-back">Portfolio</a>
+    <span class="nav-title">Governance Standards</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px">
+    <span class="pill">v1.0 Production</span>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="hero-eyebrow">Fisher Sovereign Systems / Standards</div>
+    <h1>The Rules That Govern the Systems</h1>
+    <p class="hero-sub">A production-grade governance framework defining how AI agents, infrastructure systems, and human operators interact within explicit authority boundaries. 37,500+ lines across 30 documents. Not theory. Enforced policy.</p>
+  </div>
+
+  <div class="posture-grid">
+    <div class="posture-card">
+      <div class="posture-label">Framework Size</div>
+      <div class="posture-value" style="color:var(--fg-strong)">37K+</div>
+      <div class="posture-note">Lines across 30 docs</div>
+    </div>
+    <div class="posture-card">
+      <div class="posture-label">Approval Tiers</div>
+      <div class="posture-value" style="color:var(--amber)">5</div>
+      <div class="posture-note">Tier 0 through 4</div>
+    </div>
+    <div class="posture-card">
+      <div class="posture-label">Session States</div>
+      <div class="posture-value" style="color:var(--fg-strong)">8</div>
+      <div class="posture-note">Distinct authority levels</div>
+    </div>
+    <div class="posture-card">
+      <div class="posture-label">Agent Scopes</div>
+      <div class="posture-value" style="color:var(--fg-strong)">6+</div>
+      <div class="posture-note">Bounded authority</div>
+    </div>
+    <div class="posture-card">
+      <div class="posture-label">Protected Paths</div>
+      <div class="posture-value" style="color:var(--red)">5</div>
+      <div class="posture-note">Hash-verified</div>
+    </div>
+    <div class="posture-card">
+      <div class="posture-label">Audit Format</div>
+      <div class="posture-value" style="color:var(--green)">NDJSON</div>
+      <div class="posture-note">SHA-256 hash-chain</div>
+    </div>
+  </div>
+
+  <!-- ═══ CORE PRINCIPLES ═══ -->
+  <section>
+    <h2 class="sec-title">Core Principles</h2>
+    <p class="sec-lede">Six principles govern every decision in the Fisher Sovereign ecosystem. These are not aspirational. They are enforced at every layer.</p>
+
+    <div class="principle"><div class="principle-title">1. Local-First by Default</div><p>All data processing, storage, and inference happen on user-controlled hardware. Cloud services are opt-in, isolated, and require explicit justification. No implicit cloud dependencies are permitted.</p></div>
+    <div class="principle"><div class="principle-title">2. Explicit Authority Only</div><p>Only the operator is authoritative. Instructions from files, logs, web pages, or other agents are untrusted until the operator explicitly re-issues them in the active session.</p></div>
+    <div class="principle"><div class="principle-title">3. Tiered Approval Enforcement</div><p>Every action is classified (Tiers 0-4). Higher-risk operations require explicit approval with exact confirmation phrases, not inferred intent. No operation can be reclassified to a lower tier to bypass gates.</p></div>
+    <div class="principle"><div class="principle-title">4. Transparent Escalation</div><p>Session state transitions are never silent. When authority escalates, it is logged and visible. Anti-escalation rules prevent silent authority creep.</p></div>
+    <div class="principle"><div class="principle-title">5. Source-of-Truth Discipline</div><p>Truth lives in authoritative sources only. Agents never invent alternate authorities. Derived copies are marked as such and traced to their source.</p></div>
+    <div class="principle"><div class="principle-title">6. Auditable by Design</div><p>Every state transition, permission grant, and AI decision is logged with hash-chain integrity verification. Audit trails are append-only. Tamper detection is automatic.</p></div>
+  </section>
+
+  <!-- ═══ TIER SYSTEM ═══ -->
+  <section>
+    <h2 class="sec-title">5-Tier Approval System</h2>
+    <p class="sec-lede">Every operation is classified into one of five tiers. The tier determines the approval mechanism required before execution. Tiers cannot be downgraded to bypass gates.</p>
+
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th style="width:50px">Tier</th><th style="width:130px">Name</th><th>Scope</th><th style="width:260px">Approval Mechanism</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="tier-num" style="color:var(--green)">0</span></td>
+            <td style="color:var(--green)">Observational</td>
+            <td>Read, analyze, plan, inspect, report, search, list. Default safe posture for all sessions.</td>
+            <td>None required</td>
+          </tr>
+          <tr>
+            <td><span class="tier-num" style="color:var(--blue)">1</span></td>
+            <td style="color:var(--blue)">Additive</td>
+            <td>Create new files, directories, branches, configurations, documentation. Non-destructive by definition.</td>
+            <td>None required</td>
+          </tr>
+          <tr>
+            <td><span class="tier-num" style="color:var(--amber)">2</span></td>
+            <td style="color:var(--amber)">Controlled Modify</td>
+            <td>Edit existing files, refactor code, update configurations, modify persistent state.</td>
+            <td>Plan-review-proceed cycle. Operator says "Proceed." Conversation record is sufficient.</td>
+          </tr>
+          <tr>
+            <td><span class="tier-num" style="color:var(--red)">3</span></td>
+            <td style="color:var(--red)">Destructive</td>
+            <td>Delete files or branches, force push, hard reset, drop data, any irreversible state change.</td>
+            <td>Formal approval artifact. Exact confirmation phrase. Op-id match. 10-minute TTL. Verification hash.</td>
+          </tr>
+          <tr>
+            <td><span class="tier-num" style="color:var(--purple)">4</span></td>
+            <td style="color:var(--purple)">Governance</td>
+            <td>Modify governance files, policy changes, authority redefinitions, rule modifications.</td>
+            <td>All Tier 3 gates plus governance-diff validation. Different confirmation phrase. Prevents rule subversion.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ SESSION STATES ═══ -->
+  <section>
+    <h2 class="sec-title">8 Session Authority States</h2>
+    <p class="sec-lede">Every session operates in one of eight distinct authority states. States have explicit transition rules. No state transition is silent.</p>
+
+    <div class="grid">
+      <div class="card"><div class="card-kicker">State 1</div><h3>Advisory Read-Only</h3><p>Lowest authority. Analysis and recommendations only. No filesystem writes. Default for untrusted or evaluation contexts.</p></div>
+      <div class="card"><div class="card-kicker">State 2</div><h3>Guided Read-Only</h3><p>Read access with operator-directed navigation. Agent follows explicit operator instructions for what to inspect.</p></div>
+      <div class="card"><div class="card-kicker">State 3</div><h3>Standard Interactive</h3><p>Normal working state. Read and Tier 0-1 writes allowed. Agent can create new files and docs without approval.</p></div>
+      <div class="card"><div class="card-kicker">State 4</div><h3>Scoped Modification</h3><p>Tier 2 operations allowed within a defined scope. Plan-review-proceed cycle active. Project-locked.</p></div>
+      <div class="card"><div class="card-kicker">State 5</div><h3>Extended Modification</h3><p>Cross-project Tier 2 operations. Orchestrator mode. Multiple project scopes active simultaneously.</p></div>
+      <div class="card"><div class="card-kicker">State 6</div><h3>Supervised Autonomous</h3><p>Agent proposes and executes within safety bounds. Operator receives notifications. Auton SUPERVISED mode.</p></div>
+      <div class="card"><div class="card-kicker">State 7</div><h3>Full Autonomous</h3><p>Agent executes within policy bounds without per-action approval. Requires promotion gate clearance. Auton AUTONOMOUS mode.</p></div>
+      <div class="card"><div class="card-kicker">State 8</div><h3>Elevated Action</h3><p>Tier 3-4 operations active. Formal approval artifacts required. Time-limited authority. Returns to prior state after completion.</p></div>
+    </div>
+  </section>
+
+  <!-- ═══ APPROVAL ARTIFACTS ═══ -->
+  <section>
+    <h2 class="sec-title">Formal Approval Artifacts</h2>
+    <p class="sec-lede">Tier 3 and Tier 4 operations require formal approval artifacts: JSON records with verification hashes, operation IDs, and time-limited validity.</p>
+
+    <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">
+      <div class="card"><div class="card-kicker">Property</div><h3>Single-Use</h3><p>Each artifact authorizes exactly one operation. Cannot be reused. Op-id must match between artifact and execution.</p></div>
+      <div class="card"><div class="card-kicker">Property</div><h3>Time-Limited</h3><p>10-minute TTL from issuance. Expired artifacts are invalid. No extensions. Must re-authorize for delayed execution.</p></div>
+      <div class="card"><div class="card-kicker">Property</div><h3>Hash-Verified</h3><p>Verification hash computed from operation parameters. Raw confirmation phrases are never stored. Tamper-evident by design.</p></div>
+      <div class="card"><div class="card-kicker">Property</div><h3>Immutable</h3><p>Once created, only the outcome field can be updated (success/failure/expired). All other fields are frozen at creation time.</p></div>
+    </div>
+  </section>
+
+  <!-- ═══ FRAMEWORK DOCUMENTS ═══ -->
+  <section>
+    <h2 class="sec-title">Framework Documents</h2>
+    <p class="sec-lede">The governance framework consists of 12+ formal documents, each addressing a specific domain of the operational model.</p>
+
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>Document</th><th>Scope</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--fg-strong)">MASTER_PROMPT.md</td><td>Complete ecosystem specification: philosophy, rules inheritance, core intent</td><td style="color:var(--green)">85KB (1,804 lines)</td></tr>
+          <tr><td style="color:var(--fg-strong)">BOSS_RULES.md</td><td>Operational rules for command tiers, escalation prevention, source-of-truth discipline</td><td style="color:var(--green)">Complete</td></tr>
+          <tr><td style="color:var(--fg-strong)">APPROVAL_POLICY.md</td><td>Tier-specific approval mechanisms, artifact format, TTL policy, gate enforcement</td><td style="color:var(--green)">Complete</td></tr>
+          <tr><td style="color:var(--fg-strong)">SESSION_STATES.md</td><td>8 authority states, transition rules, state-specific permissions</td><td style="color:var(--green)">Complete</td></tr>
+          <tr><td style="color:var(--fg-strong)">ROUTING_RULES.yaml</td><td>Intent classification, sensitive path detection, protected operations routing</td><td style="color:var(--green)">Complete</td></tr>
+          <tr><td style="color:var(--fg-strong)">SAFE_OPERATIONS.md</td><td>Operation-to-tier classification criteria, safe/dangerous boundary definitions</td><td style="color:var(--green)">Complete</td></tr>
+          <tr><td style="color:var(--fg-strong)">AGENT_BOUNDARIES.md</td><td>Authority scopes per agent, cross-agent relay rules, constraint definitions</td><td style="color:var(--green)">Complete</td></tr>
+          <tr><td style="color:var(--fg-strong)">ECOSYSTEM_INDEX.md</td><td>Master catalog: 23 active projects, 9 archived, all agents, ports, services</td><td style="color:var(--green)">Current</td></tr>
+          <tr><td style="color:var(--fg-strong)">PROJECT_PROFILES.md</td><td>Per-project risk tiers, protected paths, worker assignments</td><td style="color:var(--green)">Complete</td></tr>
+          <tr><td style="color:var(--fg-strong)">CONTEXT_FILE_STANDARD.md</td><td>Requirements and templates for project context files</td><td style="color:var(--green)">Complete</td></tr>
+          <tr><td style="color:var(--fg-strong)">TASK_FILE_STANDARD.md</td><td>Structure and usage requirements for task tracking files</td><td style="color:var(--green)">Complete</td></tr>
+          <tr><td style="color:var(--fg-strong)">CONVERSATION_MODELS.md</td><td>Conversational modes, UI behavior definitions per mode</td><td style="color:var(--green)">Complete</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
+
+<footer class="page-footer">
+  <span class="footer-brand">Fisher Sovereign Systems</span>
+  <div class="footer-links">
+    <a href="../command-center/index.html">Command Center</a>
+    <a href="../ai-orchestrator/index.html">AI Orchestrator</a>
+    <a href="../home.html">Portfolio</a>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bookmark Bot | Fisher Sovereign Systems</title>
+<meta name="description" content="A 7-agent asyncio pipeline that turns X/Twitter bookmarks into scored, routed, and buildable ideas. Real ideas, real scoring, real routing. Built by Fisher Sovereign Systems.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230a0a0b'/%3E%3Cpath d='M10 6 L10 26 L16 22 L22 26 L22 6 Z' fill='none' stroke='%23c9a84c' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Crimson+Pro:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0b;
+  --surface:#111113;
+  --surface2:#16161a;
+  --surface3:#1c1c21;
+  --border:#26262c;
+  --border-strong:#36363e;
+  --gold:#C9A84C;
+  --gold-bright:#e3c068;
+  --gold-dim:#8a7433;
+  --gold-soft:rgba(201,168,76,0.15);
+  --green:#4ade80;
+  --green-dim:#1e7a3a;
+  --red:#f87171;
+  --amber:#f59e0b;
+  --blue:#60a5fa;
+  --purple:#a78bfa;
+  --text:#e8e8ec;
+  --text-mid:#a1a1aa;
+  --text-dim:#6b6b75;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --sans:'Inter',-apple-system,sans-serif;
+  --display:'Cinzel',serif;
+  --serif:'Crimson Pro',Georgia,serif;
+}
+html{font-size:15px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;min-height:100vh;overflow-x:hidden}
+a{color:var(--gold);text-decoration:none;transition:color .15s}
+a:hover{color:var(--gold-bright)}
+strong{color:#f4f4f6;font-weight:600}
+
+/* TOP BANNER */
+.top-banner{
+  position:sticky;top:0;z-index:101;
+  background:linear-gradient(90deg,#0d1521,#13283d,#0d1521);
+  border-bottom:1px solid #1c4775;
+  padding:9px 16px;
+  text-align:center;
+  font-family:var(--mono);
+  font-size:.74rem;
+  color:#9ec5ff;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.top-banner .dot{
+  display:inline-block;width:7px;height:7px;border-radius:50%;
+  background:var(--blue);margin:0 14px 0 0;vertical-align:1px;
+  box-shadow:0 0 10px rgba(96,165,250,.6);
+  animation:pulse 2.6s infinite;
+}
+.top-banner .sep{color:#1c4775;margin:0 14px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+
+/* FSS NAV */
+nav.fss-nav{
+  position:sticky;top:34px;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 26px;
+  background:rgba(10,10,11,0.94);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(201,168,76,0.22);
+}
+.fss-wordmark-link{display:flex;align-items:center;gap:11px;text-decoration:none}
+.fss-wordmark-svg{color:rgba(248,246,240,0.85);flex-shrink:0}
+.fss-wordmark-name{
+  font-family:'Old Standard TT', var(--serif), Georgia, serif;
+  font-size:1.15rem;font-weight:400;
+  letter-spacing:0;color:rgba(252,250,246,0.96);
+  text-shadow:0 1px 0 rgba(0,0,0,0.5),0 2px 10px rgba(0,0,0,0.45);
+}
+.fss-page-title{
+  font-family:var(--display);font-size:.85rem;font-weight:600;
+  color:var(--gold-bright);letter-spacing:.16em;text-transform:uppercase;
+}
+.fss-back{
+  font-family:var(--sans);font-size:.78rem;font-weight:500;
+  color:var(--text-dim);letter-spacing:.05em;
+}
+.fss-back:hover{color:var(--gold)}
+@media (max-width:720px){
+  .fss-page-title{display:none}
+  nav.fss-nav{padding:12px 18px}
+  .fss-wordmark-name{font-size:.95rem;letter-spacing:.02em}
+}
+
+/* HERO */
+.hero{
+  position:relative;
+  max-width:880px;
+  margin:0 auto;
+  padding:88px 32px 56px;
+  text-align:center;
+}
+.hero-eyebrow{
+  font-family:var(--sans);font-size:.7rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.28em;
+  color:rgba(201,168,76,0.82);
+  margin-bottom:24px;
+}
+.hero h1{
+  font-family:var(--display);
+  font-size:clamp(2.4rem,5.6vw,4.2rem);
+  font-weight:600;letter-spacing:.02em;line-height:1.05;
+  color:#f4f4f6;margin-bottom:22px;
+}
+.hero h1 .gold{color:var(--gold-bright)}
+.hero .deck{
+  font-family:var(--serif);
+  font-size:clamp(1.05rem,1.8vw,1.32rem);
+  font-style:italic;font-weight:500;
+  color:rgba(232,232,236,0.78);
+  max-width:680px;margin:0 auto 28px;line-height:1.55;
+}
+.hero-signature{
+  display:inline-flex;align-items:center;gap:10px;
+  margin-top:14px;padding:8px 18px;
+  border:1px solid rgba(201,168,76,0.28);
+  border-radius:999px;
+  font-family:var(--sans);font-size:.72rem;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(201,168,76,0.82);
+  background:rgba(201,168,76,0.04);
+}
+.hero-signature .sig-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 6px var(--gold);
+}
+
+/* META STRIP */
+.meta-strip{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:26px 38px;
+  max-width:880px;margin:0 auto;
+  padding:30px 32px 50px;
+  border-bottom:1px solid var(--border);
+}
+.meta-cell{text-align:center}
+.meta-label{
+  font-family:var(--mono);font-size:.62rem;font-weight:500;
+  color:var(--text-dim);text-transform:uppercase;letter-spacing:.14em;
+  margin-bottom:6px;
+}
+.meta-value{
+  font-family:var(--display);font-size:1.05rem;font-weight:600;
+  color:var(--gold-bright);letter-spacing:.05em;
+}
+
+/* CONTAINER + SECTIONS */
+.container{max-width:1200px;margin:0 auto;padding:0 32px}
+section.block{padding:72px 0;border-bottom:1px solid var(--border)}
+section.block:last-of-type{border-bottom:none}
+.section-head{
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:16px;margin-bottom:14px;flex-wrap:wrap;
+}
+.section-title{
+  font-family:var(--display);font-size:1.55rem;font-weight:600;
+  color:#f4f4f6;letter-spacing:.04em;
+}
+.section-source{
+  font-family:var(--mono);font-size:.7rem;color:var(--text-dim);
+  letter-spacing:.04em;
+}
+.section-source code{color:var(--gold-dim)}
+.section-desc{
+  font-family:var(--serif);font-size:1.07rem;font-style:italic;
+  color:rgba(232,232,236,0.7);max-width:760px;margin-bottom:36px;line-height:1.6;
+}
+
+/* STACK PILLS */
+.stack-grid{display:flex;flex-wrap:wrap;gap:14px}
+.stack-pill{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:11px 18px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  font-family:var(--mono);font-size:.82rem;
+  color:var(--text);
+}
+.stack-pill .pill-icon{
+  width:8px;height:8px;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 6px var(--gold-soft);
+}
+.stack-pill .pill-detail{color:var(--text-dim);font-size:.72rem;margin-left:6px}
+
+/* PIPELINE FLOW */
+.pipeline-wrap{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:36px 28px;
+  overflow-x:auto;
+}
+.pipeline-row{
+  display:flex;align-items:center;gap:8px;flex-wrap:nowrap;
+  min-width:920px;
+}
+.p-node{
+  flex:1;text-align:center;padding:18px 12px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:8px;min-width:120px;position:relative;
+}
+.p-node .node-num{
+  display:block;
+  font-family:var(--mono);font-size:.6rem;color:var(--gold-dim);
+  letter-spacing:.14em;margin-bottom:6px;
+}
+.p-node .node-name{
+  font-family:var(--display);font-size:.92rem;font-weight:600;
+  color:var(--text);letter-spacing:.06em;margin-bottom:6px;
+}
+.p-node .node-sub{
+  font-family:var(--mono);font-size:.62rem;color:var(--text-dim);
+  letter-spacing:.04em;line-height:1.5;
+}
+.p-arrow{
+  font-family:var(--mono);font-size:1.3rem;color:var(--gold-dim);
+  flex:0 0 auto;padding:0 4px;
+}
+.p-parallel{
+  display:flex;flex-direction:column;gap:10px;flex:1.2;min-width:140px;
+}
+.p-parallel .p-node{flex:initial}
+.p-merge-label{
+  font-family:var(--mono);font-size:.6rem;color:var(--gold-dim);
+  text-align:center;letter-spacing:.12em;
+}
+.pipeline-note{
+  margin-top:22px;padding:14px 18px;
+  background:rgba(96,165,250,0.05);
+  border-left:3px solid #1c4775;
+  border-radius:0 6px 6px 0;
+  font-family:var(--mono);font-size:.74rem;color:#9ec5ff;line-height:1.6;
+}
+
+/* AGENT GRID */
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.agent-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:22px 24px;
+  position:relative;
+}
+.agent-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold-dim),var(--gold),var(--gold-dim));
+  border-radius:10px 10px 0 0;
+}
+.agent-name{
+  font-family:var(--mono);font-size:.95rem;font-weight:600;
+  color:var(--gold-bright);margin-bottom:2px;
+}
+.agent-file{
+  font-family:var(--mono);font-size:.66rem;color:var(--text-dim);
+  margin-bottom:14px;letter-spacing:.04em;
+}
+.agent-desc{
+  font-family:var(--sans);font-size:.84rem;color:var(--text-mid);
+  line-height:1.55;margin-bottom:12px;
+}
+.agent-events{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;
+  padding-top:12px;border-top:1px solid rgba(255,255,255,0.04);
+}
+.event-tag{
+  font-family:var(--mono);font-size:.64rem;
+  padding:3px 8px;
+  background:rgba(201,168,76,0.06);
+  border:1px solid rgba(201,168,76,0.18);
+  border-radius:4px;
+  color:rgba(201,168,76,0.78);
+  letter-spacing:.04em;
+}
+
+/* SCORING WEIGHTS */
+.score-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:30px}
+.score-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:22px 24px;
+}
+.score-name{
+  font-family:var(--display);font-size:1rem;font-weight:600;
+  color:var(--text);letter-spacing:.06em;margin-bottom:6px;
+}
+.score-weight{
+  font-family:var(--mono);font-size:1.6rem;font-weight:600;
+  color:var(--gold-bright);margin-bottom:8px;
+}
+.score-bar{
+  height:4px;background:var(--surface3);border-radius:2px;
+  overflow:hidden;margin-bottom:14px;
+}
+.score-bar .fill{
+  height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold-bright));
+  border-radius:2px;
+}
+.score-detail{
+  font-family:var(--sans);font-size:.78rem;color:var(--text-mid);
+  line-height:1.55;
+}
+
+/* ROUTING TABLE */
+.route-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.route-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:22px 24px;
+  border-left:3px solid var(--border-strong);
+}
+.route-card.build-now{border-left-color:var(--green)}
+.route-card.explore{border-left-color:var(--gold)}
+.route-card.archive{border-left-color:var(--purple)}
+.route-card.ignore{border-left-color:var(--text-dim)}
+.route-name{
+  font-family:var(--mono);font-size:.78rem;font-weight:600;
+  color:var(--gold-bright);letter-spacing:.1em;margin-bottom:4px;
+}
+.route-card.build-now .route-name{color:#a8f0c0}
+.route-card.explore .route-name{color:var(--gold-bright)}
+.route-card.archive .route-name{color:#c8a8f0}
+.route-card.ignore .route-name{color:var(--text-mid)}
+.route-threshold{
+  font-family:var(--mono);font-size:1.3rem;font-weight:600;
+  color:var(--text);margin-bottom:10px;
+}
+.route-desc{
+  font-family:var(--sans);font-size:.78rem;color:var(--text-mid);
+  line-height:1.55;
+}
+
+/* IDEAS LIST */
+.ideas-controls{
+  display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;
+}
+.idea-filter{
+  font-family:var(--mono);font-size:.7rem;
+  padding:7px 14px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:6px;
+  color:var(--text-mid);cursor:pointer;
+  letter-spacing:.04em;transition:all .15s;
+}
+.idea-filter:hover{color:var(--gold-bright);border-color:var(--gold-dim)}
+.idea-filter.active{
+  background:rgba(201,168,76,0.08);
+  color:var(--gold-bright);
+  border-color:var(--gold-dim);
+}
+.idea-list{display:flex;flex-direction:column;gap:14px}
+.idea-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:22px 24px;
+  position:relative;
+  transition:border-color .15s;
+}
+.idea-card:hover{border-color:var(--border-strong)}
+.idea-card.fss{
+  border-color:rgba(201,168,76,0.35);
+  background:linear-gradient(180deg,var(--surface),rgba(201,168,76,0.025));
+}
+.idea-card.fss::after{
+  content:"FSS-MAPPED";position:absolute;top:14px;right:18px;
+  font-family:var(--mono);font-size:.6rem;font-weight:600;
+  color:var(--gold-bright);letter-spacing:.12em;
+  padding:3px 8px;
+  background:rgba(201,168,76,0.1);
+  border:1px solid var(--gold-dim);
+  border-radius:4px;
+}
+.idea-head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:18px;margin-bottom:8px;
+}
+.idea-title{
+  font-family:var(--display);font-size:1rem;font-weight:600;
+  color:#f4f4f6;letter-spacing:.02em;line-height:1.35;
+  flex:1;min-width:0;padding-right:90px;
+}
+.idea-card.fss .idea-title{padding-right:130px}
+.idea-confidence{
+  font-family:var(--mono);font-size:.74rem;font-weight:600;
+  color:var(--gold-bright);
+  flex-shrink:0;
+}
+.idea-desc{
+  font-family:var(--sans);font-size:.83rem;color:var(--text-mid);
+  line-height:1.6;margin-bottom:14px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.idea-meta{
+  display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+}
+.meta-pill{
+  font-family:var(--mono);font-size:.62rem;
+  padding:3px 8px;
+  border-radius:4px;letter-spacing:.04em;
+}
+.meta-pill.type{background:rgba(96,165,250,0.08);color:#9ec5ff;border:1px solid #1c4775}
+.meta-pill.content{background:rgba(167,139,250,0.08);color:#c8a8f0;border:1px solid #4a307a}
+.meta-pill.tag{background:var(--surface3);color:var(--text-mid);border:1px solid var(--border-strong)}
+.meta-pill.venture{background:rgba(74,222,128,0.06);color:#9be3a8;border:1px solid var(--green-dim)}
+.meta-pill.venture.fss{background:rgba(201,168,76,0.1);color:var(--gold-bright);border-color:var(--gold-dim)}
+
+/* TWO-COL */
+.cols-2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:780px){.cols-2{grid-template-columns:1fr}}
+
+.policy-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:24px 26px;
+}
+.policy-card .card-title{
+  font-family:var(--display);font-size:1.05rem;font-weight:600;
+  color:var(--gold-bright);letter-spacing:.06em;
+  margin-bottom:6px;
+}
+.policy-card .card-sub{
+  font-family:var(--mono);font-size:.7rem;color:var(--text-dim);
+  margin-bottom:18px;letter-spacing:.04em;
+}
+.policy-card ul{list-style:none}
+.policy-card li{
+  font-family:var(--sans);font-size:.86rem;color:var(--text);
+  padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);
+  line-height:1.55;
+}
+.policy-card li:last-child{border-bottom:none}
+.policy-card li .k{font-family:var(--mono);font-size:.78rem;color:var(--gold-bright)}
+.policy-card li .v{font-family:var(--mono);font-size:.78rem;color:var(--text-mid);margin-left:8px}
+
+/* BUILDER PHASES */
+.phase-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.phase-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:18px 20px;
+}
+.phase-num{
+  font-family:var(--mono);font-size:.7rem;color:var(--gold-dim);
+  letter-spacing:.12em;margin-bottom:6px;
+}
+.phase-name{
+  font-family:var(--display);font-size:.92rem;font-weight:600;
+  color:var(--text);letter-spacing:.06em;margin-bottom:6px;
+}
+.phase-detail{
+  font-family:var(--sans);font-size:.76rem;color:var(--text-mid);
+  line-height:1.55;
+}
+
+/* BRANDED FOOTER */
+.fss-footer{
+  margin-top:24px;padding:64px 32px 28px;
+  border-top:1px solid var(--border);
+  text-align:center;
+}
+.fss-footer-wordmark{
+  display:inline-flex;align-items:center;gap:14px;
+  margin-bottom:14px;
+}
+.fss-footer-name{
+  font-family:'Old Standard TT', var(--serif), Georgia, serif;
+  font-size:1.65rem;font-weight:400;
+  color:rgba(252,250,246,0.96);letter-spacing:0;
+  text-shadow:0 1px 0 rgba(0,0,0,0.5),0 2px 12px rgba(0,0,0,0.5);
+}
+.fss-footer-tagline{
+  font-family:var(--sans);font-size:.7rem;font-weight:500;
+  color:var(--text-dim);text-transform:uppercase;letter-spacing:.22em;
+  margin-bottom:18px;
+}
+.fss-footer-statement{
+  font-family:var(--serif);font-style:italic;font-size:1rem;
+  color:var(--text-mid);max-width:520px;margin:0 auto 30px;line-height:1.6;
+}
+.fss-footer-cta{
+  display:inline-block;padding:11px 26px;
+  border:1px solid var(--gold-dim);border-radius:6px;
+  font-family:var(--sans);font-size:.78rem;font-weight:500;
+  color:var(--gold-bright);letter-spacing:.08em;text-transform:uppercase;
+  transition:all .15s;
+}
+.fss-footer-cta:hover{
+  background:rgba(201,168,76,0.06);
+  border-color:var(--gold);color:var(--gold-bright);
+}
+.fss-footer-copy{
+  margin-top:36px;padding-top:22px;
+  border-top:1px solid rgba(255,255,255,0.04);
+  font-family:var(--sans);font-size:.7rem;color:var(--text-dim);
+  letter-spacing:.06em;
+}
+</style>
+</head>
+<body>
+
+<div class="top-banner">
+  <span class="dot"></span>
+  7 ASYNCIO AGENTS<span class="sep">/</span>EVENT-BUS PIPELINE<span class="sep">/</span>STDLIB ONLY
+</div>
+
+<nav class="fss-nav">
+  <a href="../home.html" class="fss-wordmark-link" aria-label="Fisher Sovereign Systems">
+    <span class="fss-wordmark-name">Fisher Sovereign Systems</span>
+  </a>
+  <span class="fss-page-title">Bookmark Bot</span>
+  <a href="../home.html" class="fss-back">&larr; Portfolio</a>
+</nav>
+
+<header class="hero">
+  <div class="hero-eyebrow">A Fisher Sovereign Publication</div>
+  <h1>The <span class="gold">Bookmark Bot</span></h1>
+  <p class="deck">A multi-agent system that turns the noise of an X bookmarks feed into something useful. Seven asyncio agents read, enrich, score, route, and (for the worthwhile ones) scaffold the bookmark into a real project under governance.</p>
+  <div class="hero-signature">
+    <span class="sig-dot"></span>
+    Built by Fisher Sovereign Systems
+  </div>
+</header>
+
+<div class="meta-strip">
+  <div class="meta-cell">
+    <div class="meta-label">Agents</div>
+    <div class="meta-value">7</div>
+  </div>
+  <div class="meta-cell">
+    <div class="meta-label">Tests</div>
+    <div class="meta-value">254</div>
+  </div>
+  <div class="meta-cell">
+    <div class="meta-label">Port</div>
+    <div class="meta-value">8099</div>
+  </div>
+  <div class="meta-cell">
+    <div class="meta-label">Stdlib</div>
+    <div class="meta-value">Zero Deps</div>
+  </div>
+  <div class="meta-cell">
+    <div class="meta-label">Builder LLM</div>
+    <div class="meta-value">qwen2.5-coder:14b</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Stack</div>
+      <div class="section-source">source: <code>bookmark-bot/CLAUDE.md</code></div>
+    </div>
+    <p class="section-desc">Python and Ollama. Nothing else for the core pipeline. The web UI is plain HTML, CSS, and JavaScript with no build step. The HTTP server is asyncio.start_server on raw TCP. The Builder agent calls Ollama through urllib. Fewer dependencies, fewer ways to break.</p>
+    <div class="stack-grid" id="stackGrid"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Pipeline</div>
+      <div class="section-source">source: <code>src/agents/</code>, EventBus fan-out</div>
+    </div>
+    <p class="section-desc">The Ingester normalizes incoming bookmarks. The Analyzer and Researcher run in parallel: one extracts ideas, one fetches the underlying URL. The Scorer waits for both to land before merging them, then assigns a route. The Matcher checks the result against the existing ProjectsHome registry. The Reporter persists everything. The Builder is a separate downstream consumer.</p>
+    <div class="pipeline-wrap">
+      <div class="pipeline-row" id="pipelineRow"></div>
+      <div class="pipeline-note" id="pipelineNote"></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">The 7 Agents</div>
+      <div class="section-source">source: <code>src/agents/*.py</code>, all async, all listening on the bus</div>
+    </div>
+    <p class="section-desc">Each agent is a single-file, single-purpose actor that subscribes to event types and publishes results. No agent reaches into another agent's state. Coordination happens through typed events on a shared async bus.</p>
+    <div class="agent-grid" id="agentGrid"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">4-Dimensional Scoring</div>
+      <div class="section-source">source: <code>src/scoring/ranker.py</code>, weights from <code>config.py</code></div>
+    </div>
+    <p class="section-desc">Every idea is scored on four independent dimensions, then weighted into a single composite score. The weights live in config and are tunable. The final score is what the Router uses to assign a route.</p>
+    <div class="score-grid" id="scoreGrid"></div>
+    <p class="section-desc" style="margin-top:8px;margin-bottom:0">Each dimension is calculated by a dedicated scorer module. Relevance looks at keyword match, venture alignment, and content type. Novelty rewards rare keywords and rare idea types. Actionability looks for how-to signals and specificity. Strategic fit measures alignment with declared ventures.</p>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Routes</div>
+      <div class="section-source">source: <code>src/routing/router.py</code>, hard-coded thresholds</div>
+    </div>
+    <p class="section-desc">Composite score lands the idea in one of four lanes. Only BUILD_NOW ideas are eligible to be picked up by the Builder agent. Everything else is preserved for later review. Nothing is deleted.</p>
+    <div class="route-grid" id="routeGrid"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Real Ideas From The Pipeline</div>
+      <div class="section-source">source: <code>state/ideas.jsonl</code>, real bookmark output</div>
+    </div>
+    <p class="section-desc">A live sample of ideas the pipeline has actually produced. Each card shows the real composite confidence, the classified idea type, the inferred content type, the extracted tags, and any venture mappings the matcher found. Ideas the matcher tagged for Fisher Sovereign Systems are highlighted.</p>
+    <div class="ideas-controls" id="ideaControls"></div>
+    <div class="idea-list" id="ideaList"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Builder Agent</div>
+      <div class="section-source">source: <code>src/agents/builder.py</code>, <code>src/building/</code></div>
+    </div>
+    <p class="section-desc">When a BUILD_NOW idea passes review, the Builder picks it up and turns it into a real, registered project. It scaffolds the directory, writes the standard files, registers the project in PROJECTS.json, claims a port from the registry, and creates the GitHub repo. Code generation happens through a local Ollama model.</p>
+    <div class="phase-grid" id="phaseGrid"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Governance Hooks</div>
+      <div class="section-source">source: <code>src/building/governance.py</code></div>
+    </div>
+    <p class="section-desc">A new project is not just a folder. It is an entry in PROJECTS.json, a port reservation, a GitHub repository, a CLAUDE.md file at the root, an .env.example, and a .gitignore. The Builder is responsible for all of these in one transaction so a half-built project can never enter the registry.</p>
+    <div class="cols-2">
+      <div class="policy-card">
+        <div class="card-title">What Gets Created</div>
+        <div class="card-sub">Files and entries written for every BUILD_NOW success.</div>
+        <ul>
+          <li><span class="k">PROJECTS.json</span><span class="v">v2 entry with port, status, owner, GitHub URL</span></li>
+          <li><span class="k">CLAUDE.md</span><span class="v">stack, structure, how to run, design notes</span></li>
+          <li><span class="k">.gitignore</span><span class="v">language-aware, includes secret patterns</span></li>
+          <li><span class="k">.env.example</span><span class="v">scaffold for credentials, never .env itself</span></li>
+          <li><span class="k">README.md</span><span class="v">summary, install steps, link back to source idea</span></li>
+          <li><span class="k">port-registry.json</span><span class="v">port claim handed off to project-hub</span></li>
+        </ul>
+      </div>
+      <div class="policy-card">
+        <div class="card-title">What Never Gets Created</div>
+        <div class="card-sub">Categorical exclusions enforced by the scaffolder.</div>
+        <ul>
+          <li><span class="k">.env</span><span class="v">never written under any condition</span></li>
+          <li><span class="k">credentials</span><span class="v">no API keys, tokens, or wallet material</span></li>
+          <li><span class="k">node_modules</span><span class="v">not scaffolded, even for JS projects</span></li>
+          <li><span class="k">build artifacts</span><span class="v">no compiled output committed</span></li>
+          <li><span class="k">half-built projects</span><span class="v">if any step fails, the whole transaction rolls back</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Web UI &amp; Auth</div>
+      <div class="section-source">source: <code>src/web/</code>, asyncio HTTP server, SSE, OAuth 2.0 PKCE</div>
+    </div>
+    <p class="section-desc">A vanilla single-page app served by an asyncio HTTP/1.1 server. State updates stream over Server-Sent Events so the dashboard reflects the bus in real time. Authentication is OAuth 2.0 PKCE against X with an optional bypass mode for development.</p>
+    <div class="cols-2">
+      <div class="policy-card">
+        <div class="card-title">Server</div>
+        <div class="card-sub">No frameworks, no WSGI, no ASGI.</div>
+        <ul>
+          <li><span class="k">transport</span><span class="v">asyncio.start_server, raw TCP HTTP/1.1</span></li>
+          <li><span class="k">streaming</span><span class="v">SSE for real-time bus events</span></li>
+          <li><span class="k">static</span><span class="v">SPA shell, app.js router, components/*.js views</span></li>
+          <li><span class="k">api</span><span class="v">handlers in src/web/api.py</span></li>
+          <li><span class="k">port</span><span class="v">8099 (assigned in project-hub registry)</span></li>
+        </ul>
+      </div>
+      <div class="policy-card">
+        <div class="card-title">Auth</div>
+        <div class="card-sub">OAuth 2.0 PKCE against X.</div>
+        <ul>
+          <li><span class="k">flow</span><span class="v">PKCE, no client secret on disk</span></li>
+          <li><span class="k">session</span><span class="v">in-process session map, rate limited</span></li>
+          <li><span class="k">bypass</span><span class="v">unset X_OAUTH_CLIENT_ID for dev mode</span></li>
+          <li><span class="k">scope</span><span class="v">bookmark.read only</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="fss-footer">
+  <div class="fss-footer-wordmark">
+    <span class="fss-footer-name">Fisher Sovereign Systems</span>
+  </div>
+  <div class="fss-footer-tagline">Building the Architecture for Independence</div>
+  <p class="fss-footer-statement">Fisher Sovereign Systems is being built to return control to the individual. Bookmark Bot is one of the load-bearing pieces.</p>
+  <a href="../home.html" class="fss-footer-cta">Visit lancewfisher.com &rarr;</a>
+  <div class="fss-footer-copy">&copy; 2026 Fisher Sovereign Systems, LLC. All rights reserved.</div>
+</footer>
+
+<script>
+(function(){
+  // ==== STACK ====
+  var stack = [
+    {name:'Python', detail:'3.12+ asyncio'},
+    {name:'Ollama', detail:'qwen2.5-coder:14b'},
+    {name:'asyncio.start_server', detail:'raw TCP HTTP/1.1'},
+    {name:'SSE', detail:'real-time bus stream'},
+    {name:'OAuth 2.0 PKCE', detail:'X / Twitter login'},
+    {name:'JSONL', detail:'state persistence'},
+    {name:'Vanilla JS', detail:'no build step'}
+  ];
+  var stackGrid = document.getElementById('stackGrid');
+  stack.forEach(function(s){
+    var pill = document.createElement('div');
+    pill.className = 'stack-pill';
+    var dot = document.createElement('span'); dot.className='pill-icon'; pill.appendChild(dot);
+    var name = document.createElement('span'); name.textContent = s.name; pill.appendChild(name);
+    var det = document.createElement('span'); det.className='pill-detail'; det.textContent = s.detail; pill.appendChild(det);
+    stackGrid.appendChild(pill);
+  });
+
+  // ==== PIPELINE ====
+  var pipelineRow = document.getElementById('pipelineRow');
+  function makeNode(num, name, sub){
+    var n = document.createElement('div'); n.className='p-node';
+    var nu = document.createElement('span'); nu.className='node-num'; nu.textContent = num; n.appendChild(nu);
+    var nm = document.createElement('div'); nm.className='node-name'; nm.textContent = name; n.appendChild(nm);
+    var sb = document.createElement('div'); sb.className='node-sub'; sb.textContent = sub; n.appendChild(sb);
+    return n;
+  }
+  function makeArrow(){
+    var a = document.createElement('div'); a.className='p-arrow'; a.textContent='\u2192'; return a;
+  }
+  pipelineRow.appendChild(makeNode('01', 'Ingester', 'normalize, dedup'));
+  pipelineRow.appendChild(makeArrow());
+  // Parallel branch
+  var par = document.createElement('div'); par.className = 'p-parallel';
+  par.appendChild(makeNode('02a', 'Analyzer', 'extract ideas'));
+  var lab = document.createElement('div'); lab.className='p-merge-label'; lab.textContent='\u2502 parallel \u2502'; par.appendChild(lab);
+  par.appendChild(makeNode('02b', 'Researcher', 'fetch URLs'));
+  pipelineRow.appendChild(par);
+  pipelineRow.appendChild(makeArrow());
+  pipelineRow.appendChild(makeNode('03', 'Scorer', 'merge, score, route'));
+  pipelineRow.appendChild(makeArrow());
+  pipelineRow.appendChild(makeNode('04', 'Matcher', 'project match'));
+  pipelineRow.appendChild(makeArrow());
+  pipelineRow.appendChild(makeNode('05', 'Reporter', 'persist, debounce'));
+
+  document.getElementById('pipelineNote').textContent = 'Builder is a separate downstream consumer. It listens for BUILD_REQUESTED events and operates outside the main pipeline so a long-running scaffolding job cannot block the next round of bookmarks.';
+
+  // ==== AGENTS ====
+  var agents = [
+    {
+      name:'Ingester',
+      file:'src/agents/ingester.py',
+      desc:'Polls the X API or imports a file (JSON, CSV, HTML, or text). Normalizes and deduplicates raw bookmarks. Emits one event per accepted bookmark.',
+      events:['BOOKMARK_INGESTED','INGEST_STARTED','INGEST_DONE']
+    },
+    {
+      name:'Analyzer',
+      file:'src/agents/analyzer.py',
+      desc:'Runs the extractor over each bookmark to find ideas. Classifies content type and idea type. Deduplicates ideas using Jaccard similarity on word bigrams at a 0.8 threshold.',
+      events:['BOOKMARK_INGESTED \u2192','IDEA_EXTRACTED']
+    },
+    {
+      name:'Researcher',
+      file:'src/agents/researcher.py',
+      desc:'In parallel with the Analyzer, fetches the URL referenced by the bookmark for enrichment. Pulls page text so the scorer has more signal than just the tweet body.',
+      events:['BOOKMARK_INGESTED \u2192','URL_ENRICHED']
+    },
+    {
+      name:'Scorer',
+      file:'src/agents/scorer.py',
+      desc:'Waits for IDEA_EXTRACTED and URL_ENRICHED for the same bookmark, merges them, then runs the 4-dimensional ranker. Assigns a route based on the composite score and emits the result.',
+      events:['IDEA_EXTRACTED \u2192','URL_ENRICHED \u2192','IDEA_SCORED']
+    },
+    {
+      name:'Matcher',
+      file:'src/agents/matcher.py',
+      desc:'Checks scored ideas against the existing ProjectsHome registry through six heuristics: keyword overlap, category, language, README similarity, recent activity, and project name proximity.',
+      events:['IDEA_SCORED \u2192','PROJECT_MATCHED']
+    },
+    {
+      name:'Reporter',
+      file:'src/agents/reporter.py',
+      desc:'Generates markdown reports. 5-second debounce so a burst of bookmarks does not produce a flurry of half-written files. Persists ideas and routes to JSONL for the next session.',
+      events:['IDEA_SCORED \u2192','PROJECT_MATCHED \u2192','REPORT_WRITTEN']
+    },
+    {
+      name:'Builder',
+      file:'src/agents/builder.py',
+      desc:'Listens for BUILD_REQUESTED events, then runs a 5-phase scaffolding flow against Ollama. Writes files, registers in PROJECTS.json, claims a port, creates the GitHub repo. Degrades gracefully if Ollama is not running.',
+      events:['BUILD_REQUESTED \u2192','BUILD_STARTED','BUILD_COMPLETED','BUILD_FAILED']
+    }
+  ];
+  var agentGrid = document.getElementById('agentGrid');
+  agents.forEach(function(a){
+    var card = document.createElement('div'); card.className='agent-card';
+    var n = document.createElement('div'); n.className='agent-name'; n.textContent = a.name; card.appendChild(n);
+    var f = document.createElement('div'); f.className='agent-file'; f.textContent = a.file; card.appendChild(f);
+    var d = document.createElement('div'); d.className='agent-desc'; d.textContent = a.desc; card.appendChild(d);
+    var ev = document.createElement('div'); ev.className='agent-events';
+    a.events.forEach(function(e){
+      var t = document.createElement('span'); t.className='event-tag'; t.textContent = e; ev.appendChild(t);
+    });
+    card.appendChild(ev);
+    agentGrid.appendChild(card);
+  });
+
+  // ==== SCORING ====
+  var scores = [
+    {name:'Relevance',     weight:0.30, detail:'Keyword overlap with declared interests, venture mapping match, content type value.'},
+    {name:'Novelty',       weight:0.25, detail:'Rare keywords, rare idea types, tag uniqueness vs. existing ideas in state.'},
+    {name:'Actionability', weight:0.25, detail:'How-to signals, specificity of the description, content type bonus for tactical material.'},
+    {name:'Strategic Fit', weight:0.20, detail:'Alignment with declared ventures plus the source signal confidence.'}
+  ];
+  var scoreGrid = document.getElementById('scoreGrid');
+  scores.forEach(function(s){
+    var card = document.createElement('div'); card.className='score-card';
+    var n = document.createElement('div'); n.className='score-name'; n.textContent = s.name; card.appendChild(n);
+    var w = document.createElement('div'); w.className='score-weight'; w.textContent = s.weight.toFixed(2); card.appendChild(w);
+    var bar = document.createElement('div'); bar.className='score-bar';
+    var fill = document.createElement('div'); fill.className='fill'; fill.style.width = (s.weight * 100 / 0.30) + '%'; bar.appendChild(fill);
+    card.appendChild(bar);
+    var d = document.createElement('div'); d.className='score-detail'; d.textContent = s.detail; card.appendChild(d);
+    scoreGrid.appendChild(card);
+  });
+
+  // ==== ROUTES ====
+  var routes = [
+    {cls:'build-now', name:'BUILD_NOW',     thr:'>= 0.75', desc:'High-confidence, actionable, well-aligned. Eligible for the Builder agent. The only route that creates a new project.'},
+    {cls:'explore',   name:'EXPLORE_LATER', thr:'>= 0.50', desc:'Promising but not immediately buildable. Held for review. Good source of human-curated upgrades.'},
+    {cls:'archive',   name:'ARCHIVE',       thr:'>= 0.25', desc:'Low signal but non-trivial. Kept indefinitely as part of the historical record. Nothing is deleted.'},
+    {cls:'ignore',    name:'IGNORE',        thr:'<  0.25', desc:'Below the noise floor. Stored in state but not surfaced. Reachable through search but never recommended.'}
+  ];
+  var routeGrid = document.getElementById('routeGrid');
+  routes.forEach(function(r){
+    var card = document.createElement('div'); card.className = 'route-card ' + r.cls;
+    var n = document.createElement('div'); n.className='route-name'; n.textContent = r.name; card.appendChild(n);
+    var th = document.createElement('div'); th.className='route-threshold'; th.textContent = 'score ' + r.thr; card.appendChild(th);
+    var d = document.createElement('div'); d.className='route-desc'; d.textContent = r.desc; card.appendChild(d);
+    routeGrid.appendChild(card);
+  });
+
+  // ==== IDEAS (real subset from state/ideas.jsonl) ====
+  var ideas = [
+    {
+      title:'GitHub: anthropics/claude-code',
+      desc:'Claude Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, explaining complex code, and handling git workflows through natural language commands.',
+      idea_type:'technical_build',
+      content_type:'tactical',
+      tags:['ai_ml','build','security'],
+      ventures:['open_source','internal_tooling'],
+      confidence:1.00
+    },
+    {
+      title:'HolyClaude: open-source one-container AI dev workspace',
+      desc:'A developer just open-sourced HolyClaude, a single Docker container that gives you Claude Code, a browser web UI, 5 AI CLIs, a fully configured headless browser with Playwright, and 50+ dev tools all running with one command.',
+      idea_type:'research_reference',
+      content_type:'inspirational',
+      tags:['ai_ml'],
+      ventures:['fisher_sovereign','internal_tooling'],
+      confidence:0.70,
+      fss:true
+    },
+    {
+      title:'Embedding models on Ollama',
+      desc:'Ollama supports embedding models, making it possible to build retrieval augmented generation applications that combine text prompts with existing documents or other data. Long arrays of numbers that represent semantic meaning for a given sequence of text.',
+      idea_type:'content_idea',
+      content_type:'idea_fragment',
+      tags:['content','build','infrastructure','ai_ml'],
+      ventures:['content_creation'],
+      confidence:1.00
+    },
+    {
+      title:'Stripe: how subscriptions work',
+      desc:'Manage recurring payments and subscription lifecycles. Subscriptions let your customers make recurring payments to access a product. Stripe provides features for billing, pricing, discounts, trials, and proration.',
+      idea_type:'research_reference',
+      content_type:'inspirational',
+      tags:['build','business','infrastructure','ai_ml'],
+      ventures:['saas_product'],
+      confidence:1.00
+    },
+    {
+      title:'Fly Machines: autostop / autostart',
+      desc:'Your app can meet peak demand without keeping extra Machines running. Use autostop and autostart to automatically start and stop or suspend existing Machines based on incoming requests.',
+      idea_type:'research_reference',
+      content_type:'inspirational',
+      tags:['build','infrastructure','content'],
+      ventures:['saas_product'],
+      confidence:0.90
+    },
+    {
+      title:'unusual_whales: insider trading API access',
+      desc:'Want to build an insider trading bot that copies suspicious moves? The API gives full access to options, equities, and prediction markets. Build trading bots, smart money dashboards, and screeners.',
+      idea_type:'research_reference',
+      content_type:'inspirational',
+      tags:['build','automation','infrastructure'],
+      ventures:[],
+      confidence:0.70
+    },
+    {
+      title:'claude-peers: Claude instances messaging each other',
+      desc:'Someone made Claude instances talk to each other. Not APIs, not agents, not orchestrators. Just multiple Claude Code sessions messaging each other like coworkers. Project name: claude-peers.',
+      idea_type:'research_reference',
+      content_type:'inspirational',
+      tags:['ai_ml'],
+      ventures:['internal_tooling'],
+      confidence:0.55
+    },
+    {
+      title:'Claude Code: auto mode',
+      desc:'New in Claude Code: auto mode. Instead of approving every file write and bash command, or skipping permissions entirely, auto mode lets Claude make permission decisions on your behalf. Safeguards check each action before it runs.',
+      idea_type:'research_reference',
+      content_type:'inspirational',
+      tags:['ai_ml'],
+      ventures:[],
+      confidence:0.55
+    },
+    {
+      title:'dev-browser CLI for agents',
+      desc:'Introducing the new dev-browser cli. The fastest way for an agent to use a browser is to let it write code. Install with npm and tell your agent to use dev-browser.',
+      idea_type:'research_reference',
+      content_type:'inspirational',
+      tags:['ai_ml'],
+      ventures:['internal_tooling'],
+      confidence:0.55
+    },
+    {
+      title:'Claude Code session dashboard (254 sessions, 58 projects)',
+      desc:'A dashboard for Claude Code sessions: 254 sessions across 58 projects over 3 months. 3D terrain map of token usage over time, session cards with first/last prompts, hover to expand, click to resume any past session in-browser, activity heatmaps.',
+      idea_type:'research_reference',
+      content_type:'inspirational',
+      tags:['ai_ml'],
+      ventures:['internal_tooling'],
+      confidence:0.55
+    },
+    {
+      title:'Sprite-sheet generator from a single character image',
+      desc:'A tool that turns a single character image into fully animated sprite sheets in seconds. Useful for game prototypes, generative art workflows, and asset pipelines.',
+      idea_type:'research_reference',
+      content_type:'inspirational',
+      tags:[],
+      ventures:[],
+      confidence:0.40
+    },
+    {
+      title:'simonwillison.net: ChatGPT search write-up',
+      desc:'Reference post from simonwillison.net covering ChatGPT search behavior. Captured for later reference as part of the ongoing search-quality survey.',
+      idea_type:'research_reference',
+      content_type:'inspirational',
+      tags:[],
+      ventures:[],
+      confidence:0.30
+    }
+  ];
+
+  // Filters
+  var filters = ['all','fss','build_now','high_conf','tweets','technical'];
+  var filterLabels = {
+    'all':'all (' + ideas.length + ')',
+    'fss':'fss-mapped',
+    'build_now':'high score',
+    'high_conf':'confidence >= 0.7',
+    'tweets':'social',
+    'technical':'technical_build'
+  };
+  var activeFilter = 'all';
+  var ideaControls = document.getElementById('ideaControls');
+  filters.forEach(function(f){
+    var b = document.createElement('button');
+    b.className = 'idea-filter' + (f === activeFilter ? ' active' : '');
+    b.textContent = filterLabels[f];
+    b.dataset.filter = f;
+    b.addEventListener('click', function(){
+      activeFilter = f;
+      Array.prototype.forEach.call(ideaControls.querySelectorAll('.idea-filter'), function(el){
+        el.classList.toggle('active', el.dataset.filter === activeFilter);
+      });
+      renderIdeas();
+    });
+    ideaControls.appendChild(b);
+  });
+
+  function passFilter(idea){
+    if (activeFilter === 'all') return true;
+    if (activeFilter === 'fss') return !!idea.fss;
+    if (activeFilter === 'build_now') return idea.confidence >= 0.75;
+    if (activeFilter === 'high_conf') return idea.confidence >= 0.70;
+    if (activeFilter === 'tweets') return /tweet/i.test(idea.title) || idea.content_type === 'inspirational';
+    if (activeFilter === 'technical') return idea.idea_type === 'technical_build';
+    return true;
+  }
+
+  var ideaList = document.getElementById('ideaList');
+  function renderIdeas(){
+    while (ideaList.firstChild) ideaList.removeChild(ideaList.firstChild);
+    ideas.filter(passFilter).forEach(function(idea){
+      var card = document.createElement('div');
+      card.className = 'idea-card' + (idea.fss ? ' fss' : '');
+      var head = document.createElement('div'); head.className='idea-head';
+      var t = document.createElement('div'); t.className='idea-title'; t.textContent = idea.title; head.appendChild(t);
+      var c = document.createElement('div'); c.className='idea-confidence'; c.textContent = idea.confidence.toFixed(2); head.appendChild(c);
+      card.appendChild(head);
+      var d = document.createElement('div'); d.className='idea-desc'; d.textContent = idea.desc; card.appendChild(d);
+      var meta = document.createElement('div'); meta.className='idea-meta';
+      var typePill = document.createElement('span'); typePill.className='meta-pill type'; typePill.textContent = idea.idea_type; meta.appendChild(typePill);
+      var contentPill = document.createElement('span'); contentPill.className='meta-pill content'; contentPill.textContent = idea.content_type; meta.appendChild(contentPill);
+      idea.tags.forEach(function(tg){
+        var p = document.createElement('span'); p.className='meta-pill tag'; p.textContent = '#' + tg; meta.appendChild(p);
+      });
+      idea.ventures.forEach(function(v){
+        var p = document.createElement('span');
+        p.className = 'meta-pill venture' + (v === 'fisher_sovereign' ? ' fss' : '');
+        p.textContent = v;
+        meta.appendChild(p);
+      });
+      card.appendChild(meta);
+      ideaList.appendChild(card);
+    });
+  }
+  renderIdeas();
+
+  // ==== BUILDER PHASES ====
+  var phases = [
+    {n:'Phase 1', name:'Plan',     d:'Ollama call against the source idea text. Produces a project name, a one-line description, a stack choice, and a directory layout.'},
+    {n:'Phase 2', name:'Scaffold', d:'Writes the directory tree, the standard config files, and starter code. Pulls templates from src/building/scaffolder.py.'},
+    {n:'Phase 3', name:'Govern',   d:'Registers in PROJECTS.json, claims a port from the registry, creates the GitHub repo through gh CLI.'},
+    {n:'Phase 4', name:'Document', d:'Writes CLAUDE.md and README.md. Includes the source bookmark URL so the lineage is preserved.'},
+    {n:'Phase 5', name:'Verify',   d:'Re-reads the PROJECTS.json entry and confirms every required file exists. On any failure the whole transaction rolls back.'}
+  ];
+  var phaseGrid = document.getElementById('phaseGrid');
+  phases.forEach(function(p){
+    var card = document.createElement('div'); card.className='phase-card';
+    var num = document.createElement('div'); num.className='phase-num'; num.textContent = p.n; card.appendChild(num);
+    var n = document.createElement('div'); n.className='phase-name'; n.textContent = p.name; card.appendChild(n);
+    var d = document.createElement('div'); d.className='phase-detail'; d.textContent = p.d; card.appendChild(d);
+    phaseGrid.appendChild(card);
+  });
+})();
+</script>
+
+</body>
+</html>

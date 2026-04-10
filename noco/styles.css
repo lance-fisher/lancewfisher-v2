@@ -43,15 +43,22 @@ body {
   color: var(--bg-black);
 }
 
-/* ===== NAV ===== */
+/* ===== NAV =====
+   Was position:fixed. Now sticky so it sits below the FSS V3 brand block
+   at the top of the page, then sticks to the viewport top as the user
+   scrolls past the brand block. Keeps NoCo's warm gold identity while
+   making room for the parent FSS wordmark. */
 nav {
-  position: fixed;
+  position: sticky;
   top: 0;
   width: 100%;
   z-index: 100;
   padding: 0 32px;
   transition: all 0.5s;
   border-bottom: 1px solid transparent;
+  background: rgba(7,5,3,0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 nav.scrolled {
