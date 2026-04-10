@@ -1133,98 +1133,154 @@
     drawBg(ctx, w, h, 138, 106, 212);
     var p = pal(138, 106, 212);
 
-    // App header bar
-    ctx.fillStyle = aClr(p,0.05); ctx.fillRect(0, 0, w, 26*s);
+    // App header bar (window chrome)
+    ctx.fillStyle = aClr(p,0.05); ctx.fillRect(0, 0, w, 22*s);
     ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s;
-    ctx.beginPath(); ctx.moveTo(0, 26*s); ctx.lineTo(w, 26*s); ctx.stroke();
-    ctx.fillStyle = aClr(p,0.5); ctx.fillRect(0, 0, 3*s, 26*s);
-
-    // Contact avatar + name
-    ctx.beginPath(); ctx.arc(22*s, 13*s, 8*s, 0, Math.PI*2);
-    ctx.fillStyle = aClr(p,0.2); ctx.fill();
-    ctx.fillStyle = tClr(p,0.5); ctx.font = '500 '+(7*s)+'px Inter, sans-serif';
-    ctx.textAlign = 'center'; ctx.fillText('A', 22*s, 16*s);
+    ctx.beginPath(); ctx.moveTo(0, 22*s); ctx.lineTo(w, 22*s); ctx.stroke();
+    ctx.fillStyle = aClr(p,0.5); ctx.fillRect(0, 0, 3*s, 22*s);
+    ctx.fillStyle = tClr(p,0.7); ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('Sovereign Signal', 14*s, 14*s);
+    // Lock badge (encrypted)
+    ctx.fillStyle = aClr(p,0.45); ctx.font = (6*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('\uD83D\uDD12 E2EE', w-12*s, 14*s);
     ctx.textAlign = 'left';
 
-    ctx.fillStyle = tClr(p,0.7); ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
-    ctx.fillText('Alex Chen', 36*s, 11*s);
-    ctx.fillStyle = aClr(p,0.4); ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
-    ctx.fillText('Online', 36*s, 21*s);
-    // Online dot
-    ctx.beginPath(); ctx.arc(58*s, 18*s, 2*s, 0, Math.PI*2);
-    ctx.fillStyle = '#4ade80'; ctx.fill();
+    // ----- Conversation list sidebar (left) -----
+    var sideX = 0, sideY = 22*s, sideW = w*0.36, sideH = h - sideY;
+    ctx.fillStyle = aClr(p,0.025); ctx.fillRect(sideX, sideY, sideW, sideH);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(sideX+sideW, sideY); ctx.lineTo(sideX+sideW, h); ctx.stroke();
 
-    // Lock badge
-    ctx.fillStyle = aClr(p,0.4); ctx.font = (7*s)+'px Inter, sans-serif';
-    ctx.textAlign = 'right'; ctx.fillText('\uD83D\uDD12 Encrypted', w-12*s, 16*s);
-    ctx.textAlign = 'left';
+    // Search box
+    var searchY = sideY + 6*s;
+    roundRect(ctx, sideX+6*s, searchY, sideW-12*s, 14*s, 4*s);
+    ctx.fillStyle = aClr(p,0.04); ctx.fill();
+    ctx.strokeStyle = aClr(p,0.07); ctx.lineWidth = 0.5*s; ctx.stroke();
+    ctx.fillStyle = tClr(p,0.18); ctx.font = '300 '+(5*s)+'px Inter, sans-serif';
+    ctx.fillText('Search...', sideX+12*s, searchY+9.5*s);
 
-    // Chat area with better-spaced bubbles
-    var chatY = 32*s;
-    var msgs = [
-      {in:true, text:'Hey, the new build looks solid', time:'2:41 PM'},
-      {in:false, text:'Thanks! Just pushed the auth flow', time:'2:42 PM'},
-      {in:true, text:'X3DH handshake working perfectly', time:'2:42 PM'},
-      {in:true, text:'Forward secrecy is verified', time:'2:43 PM'},
-      {in:false, text:'Double Ratchet rekeying every msg', time:'2:44 PM'},
-      {in:true, text:'Ship it', time:'2:44 PM'},
+    // 6 conversations
+    var convs = [
+      {name:'Alex Chen',     last:'Ship it',                  time:'2:44',  unread:0, active:true,  color:'#a78bfa'},
+      {name:'Maria Vasquez', last:'X3DH handshake works',     time:'2:31',  unread:2, active:false, color:'#f472b6'},
+      {name:'Dev Channel',   last:'Sarah: PR ready for review', time:'1:58', unread:5, active:false, color:'#60a5fa'},
+      {name:'Trading Desk',  last:'Liam: DRY mode confirmed', time:'12:14', unread:0, active:false, color:'#34d399'},
+      {name:'Mom',           last:'Call me when you can',     time:'11:02', unread:1, active:false, color:'#fbbf24'},
+      {name:'Sovereign Ops', last:'Auto-sync complete',       time:'Yest',  unread:0, active:false, color:'#94a3b8'}
     ];
-    var my = chatY + 8*s;
+    var convStartY = searchY + 18*s;
+    var convH = (sideH - (convStartY - sideY) - 6*s) / convs.length;
+    convH = Math.min(convH, 26*s);
+    for (var ci = 0; ci < convs.length; ci++) {
+      var c = convs[ci];
+      var cy = convStartY + ci*convH;
+      // Active highlight
+      if (c.active) {
+        ctx.fillStyle = aClr(p,0.08); ctx.fillRect(sideX, cy, sideW, convH);
+        ctx.fillStyle = aClr(p,0.55); ctx.fillRect(sideX, cy, 2*s, convH);
+      }
+      // Avatar
+      ctx.beginPath(); ctx.arc(sideX+12*s, cy+convH/2, 7*s, 0, Math.PI*2);
+      ctx.fillStyle = c.color; ctx.globalAlpha = 0.25; ctx.fill();
+      ctx.strokeStyle = c.color; ctx.globalAlpha = 0.5; ctx.lineWidth = 0.6*s; ctx.stroke();
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = c.color; ctx.globalAlpha = 0.7;
+      ctx.font = '600 '+(5.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText(c.name.charAt(0), sideX+12*s, cy+convH/2+2*s);
+      ctx.textAlign = 'left'; ctx.globalAlpha = 1;
+      // Name
+      ctx.fillStyle = tClr(p, c.active ? 0.7 : 0.5);
+      ctx.font = (c.active ? '500 ' : '400 ')+(5.5*s)+'px Inter, sans-serif';
+      ctx.fillText(c.name, sideX+22*s, cy+convH/2-1*s);
+      // Last message preview
+      ctx.fillStyle = tClr(p,0.22); ctx.font = '300 '+(4.5*s)+'px Inter, sans-serif';
+      var preview = c.last.length > 22 ? c.last.substring(0,21)+'\u2026' : c.last;
+      ctx.fillText(preview, sideX+22*s, cy+convH/2+8*s);
+      // Time
+      ctx.fillStyle = tClr(p,0.2); ctx.font = (4*s)+'px monospace';
+      ctx.textAlign = 'right'; ctx.fillText(c.time, sideX+sideW-6*s, cy+convH/2-1*s);
+      ctx.textAlign = 'left';
+      // Unread badge
+      if (c.unread > 0) {
+        ctx.beginPath(); ctx.arc(sideX+sideW-9*s, cy+convH/2+6*s, 4*s, 0, Math.PI*2);
+        ctx.fillStyle = aClr(p,0.7); ctx.fill();
+        ctx.fillStyle = (p.light ? 'rgba(255,255,255,0.95)' : 'rgba(13,13,14,0.95)');
+        ctx.font = '600 '+(4*s)+'px Inter, sans-serif';
+        ctx.textAlign = 'center'; ctx.fillText(String(c.unread), sideX+sideW-9*s, cy+convH/2+8*s);
+        ctx.textAlign = 'left';
+      }
+    }
+
+    // ----- Thread area (right) -----
+    var threadX = sideW, threadY = 22*s, threadW = w - threadX, threadH = h - threadY;
+
+    // Thread header (selected contact)
+    ctx.fillStyle = aClr(p,0.03); ctx.fillRect(threadX, threadY, threadW, 22*s);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(threadX, threadY+22*s); ctx.lineTo(w, threadY+22*s); ctx.stroke();
+    // Avatar in header
+    ctx.beginPath(); ctx.arc(threadX+14*s, threadY+11*s, 7*s, 0, Math.PI*2);
+    ctx.fillStyle = '#a78bfa'; ctx.globalAlpha = 0.25; ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = 'rgba(167,139,250,0.7)'; ctx.font = '600 '+(6*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('A', threadX+14*s, threadY+13*s);
+    ctx.textAlign = 'left';
+    // Name + presence
+    ctx.fillStyle = tClr(p,0.65); ctx.font = '500 '+(7*s)+'px Inter, sans-serif';
+    ctx.fillText('Alex Chen', threadX+25*s, threadY+10*s);
+    ctx.beginPath(); ctx.arc(threadX+27*s, threadY+17*s, 1.5*s, 0, Math.PI*2);
+    ctx.fillStyle = '#4ade80'; ctx.fill();
+    ctx.fillStyle = aClr(p,0.4); ctx.font = '200 '+(5*s)+'px Inter, sans-serif';
+    ctx.fillText('Online', threadX+31*s, threadY+18*s);
+
+    // Chat messages
+    var chatStartY = threadY + 28*s;
+    var msgs = [
+      {in:true,  text:'Build looks solid',         time:'2:41'},
+      {in:false, text:'Pushed the auth flow',      time:'2:42'},
+      {in:true,  text:'X3DH handshake works',      time:'2:42'},
+      {in:false, text:'Double Ratchet rekeying',   time:'2:43'},
+      {in:true,  text:'Ship it',                    time:'2:44'}
+    ];
+    var my = chatStartY;
     for (var mi = 0; mi < msgs.length; mi++) {
       var msg = msgs[mi];
-      ctx.font = (7*s)+'px Inter, sans-serif';
+      ctx.font = (5.5*s)+'px Inter, sans-serif';
       var textW = ctx.measureText(msg.text).width;
-      var mw = Math.min(w*0.55, textW + 24*s);
-      mw = Math.max(mw, 60*s);
-      var mh = 20*s;
-      var mx = msg.in ? 12*s : w - mw - 12*s;
+      var mw = Math.min(threadW*0.7, textW + 16*s);
+      mw = Math.max(mw, 32*s);
+      var mh = 14*s;
+      var mx = msg.in ? threadX+8*s : threadX+threadW-mw-8*s;
 
-      // Bubble
-      roundRect(ctx, mx, my, mw, mh, msg.in ? [2*s, 8*s, 8*s, 8*s] : [8*s, 2*s, 8*s, 8*s]);
-      // Use simple roundRect since custom radii not supported, just use uniform
-      roundRect(ctx, mx, my, mw, mh, 6*s);
-      ctx.fillStyle = msg.in ? aClr(p,0.07) : aClr(p,0.16);
+      roundRect(ctx, mx, my, mw, mh, 5*s);
+      ctx.fillStyle = msg.in ? aClr(p,0.06) : aClr(p,0.16);
       ctx.fill();
       ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s; ctx.stroke();
 
-      // Text
       ctx.fillStyle = msg.in ? tClr(p,0.5) : tClr(p,0.6);
-      ctx.font = '300 '+(7*s)+'px Inter, sans-serif';
-      ctx.textAlign = 'left'; ctx.fillText(msg.text, mx+8*s, my+13*s);
+      ctx.font = '300 '+(5.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'left'; ctx.fillText(msg.text, mx+6*s, my+9*s);
 
-      // Timestamp
-      ctx.fillStyle = tClr(p,0.12); ctx.font = '200 '+(4.5*s)+'px Inter, sans-serif';
-      ctx.textAlign = 'right'; ctx.fillText(msg.time, mx+mw-6*s, my+13*s);
+      ctx.fillStyle = tClr(p,0.18); ctx.font = '200 '+(3.8*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'right'; ctx.fillText(msg.time, mx+mw-4*s, my+12*s);
       ctx.textAlign = 'left';
 
-      // Read receipt for outgoing
-      if (!msg.in) {
-        ctx.fillStyle = aClr(p,0.3); ctx.font = (4*s)+'px Inter, sans-serif';
-        ctx.textAlign = 'right'; ctx.fillText('\u2713\u2713', mx+mw-4*s, my+mh-2*s);
-        ctx.textAlign = 'left';
-      }
-
-      my += mh + 6*s;
+      my += mh + 4*s;
+      if (my > h - 32*s) break;
     }
 
-    // Input bar
-    roundRect(ctx, 10*s, h-30*s, w-20*s, 22*s, 8*s);
+    // Input bar (thread area only)
+    var inH = 16*s;
+    roundRect(ctx, threadX+8*s, h-inH-8*s, threadW-16*s, inH, 6*s);
     ctx.fillStyle = aClr(p,0.04); ctx.fill();
     ctx.strokeStyle = aClr(p,0.08); ctx.lineWidth = 0.5*s; ctx.stroke();
-    ctx.fillStyle = tClr(p,0.15); ctx.font = '200 '+(7*s)+'px Inter, sans-serif';
-    ctx.fillText('Message...', 22*s, h-16*s);
+    ctx.fillStyle = tClr(p,0.16); ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
+    ctx.fillText('Message...', threadX+16*s, h-inH);
     // Send button
-    ctx.beginPath(); ctx.arc(w-22*s, h-19*s, 8*s, 0, Math.PI*2);
-    ctx.fillStyle = aClr(p,0.2); ctx.fill();
-    ctx.fillStyle = aClr(p,0.5); ctx.font = (7*s)+'px Inter, sans-serif';
-    ctx.textAlign = 'center'; ctx.fillText('\u2191', w-22*s, h-16*s);
-    ctx.textAlign = 'left';
-
-    // Encryption protocol badge at bottom
-    roundRect(ctx, 10*s, h-52*s, w-20*s, 16*s, 4*s);
-    ctx.fillStyle = aClr(p,0.04); ctx.fill();
-    ctx.fillStyle = aClr(p,0.25); ctx.font = '200 '+(5*s)+'px monospace';
-    ctx.textAlign = 'center'; ctx.fillText('X3DH \u00B7 Double Ratchet \u00B7 WebAuthn \u00B7 libsodium', w/2, h-41.5*s);
+    ctx.beginPath(); ctx.arc(w-16*s, h-inH/2-8*s, 5.5*s, 0, Math.PI*2);
+    ctx.fillStyle = aClr(p,0.25); ctx.fill();
+    ctx.fillStyle = aClr(p,0.6); ctx.font = (5*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('\u2191', w-16*s, h-inH/2-6*s);
     ctx.textAlign = 'left';
 
     drawCorners(ctx, w, h, 14*s, aClr(p,0.15));
@@ -1594,8 +1650,27 @@
     ctx.fillStyle = 'rgba(74,222,128,0.5)'; ctx.font = (6*s)+'px monospace';
     ctx.textAlign = 'right'; ctx.fillText('SECURE', w-22*s, 17*s); ctx.textAlign = 'left';
 
+    // Tab strip (7-tab dashboard nav)
+    var hhTabsY = 28*s, hhTabsH = 14*s;
+    ctx.fillStyle = aClr(p,0.025); ctx.fillRect(0, hhTabsY, w, hhTabsH);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, hhTabsY+hhTabsH); ctx.lineTo(w, hhTabsY+hhTabsH); ctx.stroke();
+    var hhTabs = ['Devices','Cameras','Network','Alerts','Bandwidth','Logs','Settings'];
+    var hhTabW = w / hhTabs.length;
+    for (var hht = 0; hht < hhTabs.length; hht++) {
+      var hhtx = hht*hhTabW;
+      if (hht === 1) {
+        ctx.fillStyle = aClr(p,0.08); ctx.fillRect(hhtx, hhTabsY, hhTabW, hhTabsH);
+        ctx.fillStyle = aClr(p,0.7); ctx.fillRect(hhtx, hhTabsY+hhTabsH-1.5*s, hhTabW, 1.5*s);
+      }
+      ctx.fillStyle = hht === 1 ? tClr(p,0.6) : tClr(p,0.25);
+      ctx.font = (hht === 1 ? '500 ' : '300 ')+(5.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText(hhTabs[hht], hhtx+hhTabW/2, hhTabsY+9.5*s);
+    }
+    ctx.textAlign = 'left';
+
     // Left panel: Camera feeds (2x2)
-    var camX = 6*s, camY = 34*s, camW = w*0.44, camH = h*0.52;
+    var camX = 6*s, camY = 48*s, camW = w*0.44, camH = h*0.48;
     ctx.fillStyle = aClr(p,0.02); ctx.fillRect(camX, camY, camW, camH);
     ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s; ctx.strokeRect(camX, camY, camW, camH);
     ctx.fillStyle = aClr(p,0.35); ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
@@ -1658,7 +1733,7 @@
     }
 
     // Right panel: Network topology
-    var netX = camX+camW+6*s, netY = 34*s, netW = w-netX-6*s, netH = h*0.52;
+    var netX = camX+camW+6*s, netY = 48*s, netW = w-netX-6*s, netH = h*0.48;
     ctx.fillStyle = aClr(p,0.02); ctx.fillRect(netX, netY, netW, netH);
     ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s; ctx.strokeRect(netX, netY, netW, netH);
     ctx.fillStyle = aClr(p,0.35); ctx.font = '200 '+(5.5*s)+'px Inter, sans-serif';
@@ -1779,8 +1854,28 @@
     ctx.fillStyle = 'rgba(74,222,128,0.5)'; ctx.font = (6*s)+'px monospace';
     ctx.textAlign = 'right'; ctx.fillText('SYNCED', w-22*s, 17*s); ctx.textAlign = 'left';
 
+    // Tab strip (7-tab command surface)
+    var tabsY = 28*s, tabsH = 14*s;
+    ctx.fillStyle = aClr(p,0.025); ctx.fillRect(0, tabsY, w, tabsH);
+    ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, tabsY+tabsH); ctx.lineTo(w, tabsY+tabsH); ctx.stroke();
+    var hubTabs = ['Overview','Repos','Sync','Activity','Logs','Health','Settings'];
+    var hubTabW = w / hubTabs.length;
+    for (var ht = 0; ht < hubTabs.length; ht++) {
+      var htx = ht*hubTabW;
+      if (ht === 0) {
+        // Active tab indicator
+        ctx.fillStyle = aClr(p,0.08); ctx.fillRect(htx, tabsY, hubTabW, tabsH);
+        ctx.fillStyle = aClr(p,0.7); ctx.fillRect(htx, tabsY+tabsH-1.5*s, hubTabW, 1.5*s);
+      }
+      ctx.fillStyle = ht === 0 ? tClr(p,0.6) : tClr(p,0.25);
+      ctx.font = (ht === 0 ? '500 ' : '300 ')+(5.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText(hubTabs[ht], htx+hubTabW/2, tabsY+9.5*s);
+    }
+    ctx.textAlign = 'left';
+
     // Left side: Project list table
-    var tableX = 6*s, tableY = 34*s, tableW = w*0.55, tableH = h - 70*s;
+    var tableX = 6*s, tableY = 48*s, tableW = w*0.55, tableH = h - 84*s;
     ctx.fillStyle = aClr(p,0.02); ctx.fillRect(tableX, tableY, tableW, tableH);
     ctx.strokeStyle = aClr(p,0.06); ctx.lineWidth = 0.5*s; ctx.strokeRect(tableX, tableY, tableW, tableH);
 
@@ -1837,7 +1932,7 @@
     }
 
     // Right side: Stats and activity
-    var rX = tableX+tableW+8*s, rY = 34*s, rW = w-rX-6*s;
+    var rX = tableX+tableW+8*s, rY = 48*s, rW = w-rX-6*s;
 
     // Big stat cards
     var statCards = [
@@ -2411,6 +2506,33 @@
     ctx.fillStyle = aClr(p, 0.4); ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
     ctx.textAlign = 'right'; ctx.fillText('CONTROL PLANE', w-14*s, 16*s); ctx.textAlign = 'left';
 
+    // Tab strip (5-tab console)
+    var ocTabsY = 24*s, ocTabsH = 14*s;
+    ctx.fillStyle = aClr(p, 0.025); ctx.fillRect(0, ocTabsY, w, ocTabsH);
+    ctx.strokeStyle = aClr(p, 0.07); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, ocTabsY+ocTabsH); ctx.lineTo(w, ocTabsY+ocTabsH); ctx.stroke();
+    var ocTabs = ['Health','Approvals','Logs','Audit','Config'];
+    var ocTabW = w / ocTabs.length;
+    for (var oct = 0; oct < ocTabs.length; oct++) {
+      var octx = oct*ocTabW;
+      if (oct === 0) {
+        ctx.fillStyle = aClr(p, 0.08); ctx.fillRect(octx, ocTabsY, ocTabW, ocTabsH);
+        ctx.fillStyle = aClr(p, 0.7); ctx.fillRect(octx, ocTabsY+ocTabsH-1.5*s, ocTabW, 1.5*s);
+      }
+      ctx.fillStyle = oct === 0 ? tClr(p, 0.6) : tClr(p, 0.25);
+      ctx.font = (oct === 0 ? '500 ' : '300 ')+(5.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText(ocTabs[oct], octx+ocTabW/2, ocTabsY+9.5*s);
+      // Pending count badge on Approvals tab
+      if (oct === 1) {
+        ctx.beginPath(); ctx.arc(octx+ocTabW/2+18*s, ocTabsY+5*s, 3.5*s, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(220,180,60,0.7)'; ctx.fill();
+        ctx.fillStyle = (p.light ? 'rgba(255,255,255,0.95)' : 'rgba(13,13,14,0.95)');
+        ctx.font = '600 '+(3.5*s)+'px Inter, sans-serif';
+        ctx.fillText('3', octx+ocTabW/2+18*s, ocTabsY+6.5*s);
+      }
+    }
+    ctx.textAlign = 'left';
+
     // Service health grid (4 columns x 3 rows)
     var services = [
       {name:'Sovereign Hub', st:'online', up:'99.9%', c:'0,200,120'},
@@ -2427,7 +2549,7 @@
       {name:'Enclave', st:'offline', up:'---', c:'180,60,60'}
     ];
     var cols = 4, rows = 3;
-    var gridX = 10*s, gridY = 32*s;
+    var gridX = 10*s, gridY = 44*s;
     var cellW = (w - 20*s) / cols, cellH = (h - gridY - 30*s) / rows;
     for (var si = 0; si < services.length; si++) {
       var svc = services[si];
@@ -3076,6 +3198,270 @@
     drawCorners(ctx, w, h, 14*s, aClr(p, 0.1));
   }
 
+  // ---- COMMAND CENTER: Unified sovereignty dashboard ----
+  function drawCommandCenter(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(140, 160, 200);
+
+    // Dark panel bg
+    var bg = ctx.createLinearGradient(0, 0, 0, h);
+    if (p.light) { bg.addColorStop(0, '#e4e6ec'); bg.addColorStop(1, '#dfe1e7'); }
+    else { bg.addColorStop(0, '#08090c'); bg.addColorStop(1, '#050608'); }
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    // Subtle grid
+    ctx.strokeStyle = aClr(p, 0.02); ctx.lineWidth = 0.5*s;
+    for (var gx = 0; gx < w; gx += 20*s) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke(); }
+    for (var gy = 0; gy < h; gy += 20*s) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke(); }
+
+    // Header bar
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, aClr(p, 0.06)); hGrad.addColorStop(1, aClr(p, 0.02));
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 22*s);
+    ctx.strokeStyle = aClr(p, 0.08); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 22*s); ctx.lineTo(w, 22*s); ctx.stroke();
+    ctx.fillStyle = tClr(p, 0.6); ctx.font = '500 '+(7*s)+'px Inter, sans-serif';
+    ctx.fillText('SOVEREIGN COMMAND CENTER', 12*s, 14.5*s);
+    ctx.fillStyle = 'rgba(80,200,120,0.5)'; ctx.font = '400 '+(5*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('ALL SYSTEMS NOMINAL', w-12*s, 14.5*s); ctx.textAlign = 'left';
+
+    // 6-tab strip
+    var tabY = 22*s, tabH = 12*s;
+    ctx.fillStyle = aClr(p, 0.02); ctx.fillRect(0, tabY, w, tabH);
+    ctx.strokeStyle = aClr(p, 0.06); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, tabY+tabH); ctx.lineTo(w, tabY+tabH); ctx.stroke();
+    var tabs = ['Overview','AI Cmd','Identity','Home','Comms','Gov'];
+    var tabW = w / tabs.length;
+    for (var ti = 0; ti < tabs.length; ti++) {
+      if (ti === 0) {
+        ctx.fillStyle = aClr(p, 0.06); ctx.fillRect(ti*tabW, tabY, tabW, tabH);
+        ctx.fillStyle = aClr(p, 0.6); ctx.fillRect(ti*tabW, tabY+tabH-1.5*s, tabW, 1.5*s);
+      }
+      ctx.fillStyle = ti === 0 ? tClr(p, 0.55) : tClr(p, 0.2);
+      ctx.font = (ti === 0 ? '500 ' : '300 ')+(4.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText(tabs[ti], ti*tabW+tabW/2, tabY+8.5*s);
+    }
+    ctx.textAlign = 'left';
+
+    // Posture meter cards (5 across)
+    var mY = 40*s, mH = 28*s, mW = (w - 60*s) / 5;
+    var meters = [
+      {label:'AI GOV', val: 92, c:'80,200,120'},
+      {label:'IDENTITY', val: 88, c:'80,200,120'},
+      {label:'NETWORK', val: 95, c:'80,200,120'},
+      {label:'ENCRYPT', val: 100, c:'80,200,120'},
+      {label:'CLOUD', val: 0, c:'140,160,200'}
+    ];
+    for (var mi = 0; mi < meters.length; mi++) {
+      var mx = 10*s + mi*(mW+10*s);
+      ctx.fillStyle = aClr(p, 0.025); ctx.fillRect(mx, mY, mW, mH);
+      ctx.strokeStyle = aClr(p, 0.06); ctx.lineWidth = 0.5*s; ctx.strokeRect(mx, mY, mW, mH);
+      ctx.fillStyle = tClr(p, 0.3); ctx.font = '500 '+(3.5*s)+'px Inter, sans-serif';
+      ctx.fillText(meters[mi].label, mx+4*s, mY+10*s);
+      // Bar
+      var barX = mx+4*s, barW = mW-8*s, barH2 = 4*s, barY2 = mY+16*s;
+      ctx.fillStyle = aClr(p, 0.04); ctx.fillRect(barX, barY2, barW, barH2);
+      ctx.fillStyle = 'rgba('+meters[mi].c+',0.35)'; ctx.fillRect(barX, barY2, barW*(meters[mi].val/100), barH2);
+      ctx.fillStyle = 'rgba('+meters[mi].c+',0.45)'; ctx.font = '600 '+(3.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'right'; ctx.fillText(meters[mi].val+'%', mx+mW-4*s, mY+10*s); ctx.textAlign = 'left';
+    }
+
+    // Product family cards (3x2 grid)
+    var families = ['AI Command','Identity & Trust','Home Control','Communications','Governance','Session Atlas'];
+    var cardW = (w - 30*s) / 3, cardH2 = 20*s, cardY = 74*s;
+    for (var fi = 0; fi < families.length; fi++) {
+      var col = fi % 3, row = Math.floor(fi / 3);
+      var fx = 10*s + col*(cardW+5*s), fy = cardY + row*(cardH2+5*s);
+      ctx.fillStyle = aClr(p, 0.025); ctx.fillRect(fx, fy, cardW, cardH2);
+      ctx.strokeStyle = aClr(p, 0.05); ctx.lineWidth = 0.5*s; ctx.strokeRect(fx, fy, cardW, cardH2);
+      ctx.fillStyle = 'rgba(80,200,120,0.3)';
+      ctx.beginPath(); ctx.arc(fx+6*s, fy+cardH2/2, 2*s, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = tClr(p, 0.35); ctx.font = '400 '+(3.8*s)+'px Inter, sans-serif';
+      ctx.fillText(families[fi], fx+12*s, fy+cardH2/2+1.5*s);
+    }
+
+    // Event feed at bottom
+    var feedY = h - 36*s;
+    ctx.fillStyle = aClr(p, 0.03); ctx.fillRect(0, feedY, w, 36*s);
+    ctx.strokeStyle = aClr(p, 0.06); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, feedY); ctx.lineTo(w, feedY); ctx.stroke();
+    ctx.fillStyle = tClr(p, 0.25); ctx.font = '500 '+(4*s)+'px Inter, sans-serif';
+    ctx.fillText('LIVE EVENT FEED', 10*s, feedY+10*s);
+    var events = ['Tier 0 auto-approved','Ollama inference OK','Session state: Advisory','Hub sync complete'];
+    for (var ei = 0; ei < events.length; ei++) {
+      ctx.fillStyle = tClr(p, 0.18); ctx.font = '300 '+(3.2*s)+'px monospace';
+      ctx.fillText(events[ei], 10*s, feedY+18*s+ei*5*s);
+    }
+
+    drawCorners(ctx, w, h, 14*s, aClr(p, 0.12));
+  }
+
+  // ---- AI ORCHESTRATOR: Multi-model governance flow ----
+  function drawAIOrchestrator(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(60, 180, 200);
+
+    // Dark bg
+    var bg = ctx.createLinearGradient(0, 0, 0, h);
+    if (p.light) { bg.addColorStop(0, '#e2ecee'); bg.addColorStop(1, '#dde8ea'); }
+    else { bg.addColorStop(0, '#060b0c'); bg.addColorStop(1, '#04080a'); }
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    // Grid
+    ctx.strokeStyle = aClr(p, 0.02); ctx.lineWidth = 0.5*s;
+    for (var gx = 0; gx < w; gx += 20*s) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke(); }
+    for (var gy = 0; gy < h; gy += 20*s) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke(); }
+
+    // Header
+    ctx.fillStyle = aClr(p, 0.05); ctx.fillRect(0, 0, w, 22*s);
+    ctx.strokeStyle = aClr(p, 0.08); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 22*s); ctx.lineTo(w, 22*s); ctx.stroke();
+    ctx.fillStyle = tClr(p, 0.6); ctx.font = '500 '+(7*s)+'px Inter, sans-serif';
+    ctx.fillText('AI ORCHESTRATOR', 12*s, 14.5*s);
+    ctx.fillStyle = aClr(p, 0.4); ctx.font = '400 '+(5*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('LOCAL-FIRST', w-12*s, 14.5*s); ctx.textAlign = 'left';
+
+    // Posture meters (3 across)
+    var pmY = 28*s, pmH = 22*s, pmW = (w - 40*s) / 3;
+    var pms = [{l:'INFERENCE',v:'Local'},{l:'POLICY',v:'Active'},{l:'AUDIT',v:'Chain'}];
+    for (var pi = 0; pi < pms.length; pi++) {
+      var px = 10*s + pi*(pmW+10*s);
+      ctx.fillStyle = aClr(p, 0.025); ctx.fillRect(px, pmY, pmW, pmH);
+      ctx.strokeStyle = aClr(p, 0.06); ctx.lineWidth = 0.5*s; ctx.strokeRect(px, pmY, pmW, pmH);
+      ctx.fillStyle = tClr(p, 0.25); ctx.font = '500 '+(3.5*s)+'px Inter, sans-serif';
+      ctx.fillText(pms[pi].l, px+5*s, pmY+9*s);
+      ctx.fillStyle = aClr(p, 0.5); ctx.font = '600 '+(5*s)+'px Inter, sans-serif';
+      ctx.fillText(pms[pi].v, px+5*s, pmY+17*s);
+    }
+
+    // Flow diagram: 6 steps with arrows
+    var flowY = 56*s, flowH = 16*s;
+    var steps = ['Request','Classify','Route','Enforce','Execute','Audit'];
+    var stepW = (w - 20*s - (steps.length-1)*8*s) / steps.length;
+    for (var si = 0; si < steps.length; si++) {
+      var sx = 10*s + si*(stepW+8*s);
+      ctx.fillStyle = aClr(p, 0.04); ctx.fillRect(sx, flowY, stepW, flowH);
+      ctx.strokeStyle = aClr(p, 0.1); ctx.lineWidth = 0.5*s; ctx.strokeRect(sx, flowY, stepW, flowH);
+      ctx.fillStyle = tClr(p, 0.35); ctx.font = '400 '+(3.5*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText(steps[si], sx+stepW/2, flowY+flowH/2+1.5*s);
+      // Arrow
+      if (si < steps.length - 1) {
+        var ax = sx + stepW + 1*s, ay = flowY + flowH/2;
+        ctx.fillStyle = aClr(p, 0.25);
+        ctx.beginPath(); ctx.moveTo(ax, ay-2*s); ctx.lineTo(ax+5*s, ay); ctx.lineTo(ax, ay+2*s); ctx.closePath(); ctx.fill();
+      }
+    }
+    ctx.textAlign = 'left';
+
+    // Component cards (2x3 grid)
+    var components = ['System Router','LLM Enclave','LocalClaude','Auton','Governance','Session Atlas'];
+    var ccW = (w - 30*s) / 3, ccH = 18*s, ccY = 78*s;
+    for (var ci = 0; ci < components.length; ci++) {
+      var col = ci % 3, row = Math.floor(ci / 3);
+      var cx2 = 10*s + col*(ccW+5*s), cy2 = ccY + row*(ccH+4*s);
+      ctx.fillStyle = aClr(p, 0.025); ctx.fillRect(cx2, cy2, ccW, ccH);
+      ctx.strokeStyle = aClr(p, 0.05); ctx.lineWidth = 0.5*s; ctx.strokeRect(cx2, cy2, ccW, ccH);
+      ctx.fillStyle = 'rgba(60,180,200,0.3)';
+      ctx.beginPath(); ctx.arc(cx2+6*s, cy2+ccH/2, 2*s, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = tClr(p, 0.32); ctx.font = '400 '+(3.5*s)+'px Inter, sans-serif';
+      ctx.fillText(components[ci], cx2+12*s, cy2+ccH/2+1.5*s);
+    }
+
+    // Model routing table
+    var tableY = h - 38*s;
+    ctx.fillStyle = aClr(p, 0.03); ctx.fillRect(0, tableY, w, 38*s);
+    ctx.strokeStyle = aClr(p, 0.06); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, tableY); ctx.lineTo(w, tableY); ctx.stroke();
+    ctx.fillStyle = tClr(p, 0.25); ctx.font = '500 '+(4*s)+'px Inter, sans-serif';
+    ctx.fillText('MODEL ROUTING', 10*s, tableY+10*s);
+    var models = ['Qwen 2.5  Local','Llama 3   Local','Claude    Cloud','GPT-compat Cloud'];
+    for (var mdi = 0; mdi < models.length; mdi++) {
+      ctx.fillStyle = tClr(p, 0.18); ctx.font = '300 '+(3*s)+'px monospace';
+      ctx.fillText(models[mdi], 10*s, tableY+18*s+mdi*5*s);
+      var isLocal = mdi < 2;
+      ctx.fillStyle = isLocal ? 'rgba(80,200,120,0.3)' : 'rgba(220,180,60,0.3)';
+      ctx.beginPath(); ctx.arc(w-20*s, tableY+17*s+mdi*5*s, 2*s, 0, Math.PI*2); ctx.fill();
+    }
+
+    drawCorners(ctx, w, h, 14*s, aClr(p, 0.12));
+  }
+
+  // ---- GOVERNANCE STANDARDS: Tier and session state framework ----
+  function drawGovernance(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(200, 170, 60);
+
+    // Dark bg
+    var bg = ctx.createLinearGradient(0, 0, 0, h);
+    if (p.light) { bg.addColorStop(0, '#edebe2'); bg.addColorStop(1, '#e8e6dd'); }
+    else { bg.addColorStop(0, '#0c0b06'); bg.addColorStop(1, '#090805'); }
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    // Grid
+    ctx.strokeStyle = aClr(p, 0.015); ctx.lineWidth = 0.5*s;
+    for (var gx = 0; gx < w; gx += 20*s) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke(); }
+    for (var gy = 0; gy < h; gy += 20*s) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke(); }
+
+    // Header
+    ctx.fillStyle = aClr(p, 0.04); ctx.fillRect(0, 0, w, 22*s);
+    ctx.strokeStyle = aClr(p, 0.08); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 22*s); ctx.lineTo(w, 22*s); ctx.stroke();
+    ctx.fillStyle = tClr(p, 0.6); ctx.font = '500 '+(7*s)+'px Inter, sans-serif';
+    ctx.fillText('GOVERNANCE STANDARDS', 12*s, 14.5*s);
+    ctx.fillStyle = aClr(p, 0.4); ctx.font = '400 '+(5*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('37K+ LINES', w-12*s, 14.5*s); ctx.textAlign = 'left';
+
+    // 5-tier approval table
+    var tiers = [
+      {name:'Tier 0', desc:'Auto-Approve', c:'80,200,120'},
+      {name:'Tier 1', desc:'Notify', c:'100,180,220'},
+      {name:'Tier 2', desc:'Confirm', c:'200,170,60'},
+      {name:'Tier 3', desc:'Elevated', c:'200,80,80'},
+      {name:'Tier 4', desc:'Emergency', c:'160,100,200'}
+    ];
+    var tierY = 28*s, tierH = 10*s;
+    ctx.fillStyle = tClr(p, 0.25); ctx.font = '500 '+(4*s)+'px Inter, sans-serif';
+    ctx.fillText('APPROVAL TIERS', 10*s, tierY+7*s);
+    for (var tii = 0; tii < tiers.length; tii++) {
+      var ty = tierY + 12*s + tii*tierH;
+      // Color bar left edge
+      ctx.fillStyle = 'rgba('+tiers[tii].c+',0.25)'; ctx.fillRect(10*s, ty, 3*s, tierH-2*s);
+      ctx.fillStyle = aClr(p, 0.02); ctx.fillRect(13*s, ty, w-23*s, tierH-2*s);
+      ctx.strokeStyle = aClr(p, 0.04); ctx.lineWidth = 0.5*s; ctx.strokeRect(13*s, ty, w-23*s, tierH-2*s);
+      ctx.fillStyle = 'rgba('+tiers[tii].c+',0.45)'; ctx.font = '500 '+(3.5*s)+'px Inter, sans-serif';
+      ctx.fillText(tiers[tii].name, 18*s, ty+6.5*s);
+      ctx.fillStyle = tClr(p, 0.25); ctx.font = '300 '+(3.5*s)+'px Inter, sans-serif';
+      ctx.fillText(tiers[tii].desc, 50*s, ty+6.5*s);
+    }
+
+    // Session states (4x2 grid)
+    var states = ['Advisory','Read-Only','Guided','Standard','Approved','Elevated','Restricted','Emergency'];
+    var stW = (w - 30*s) / 4, stH = 14*s, stY = tierY + 12*s + 5*tierH + 6*s;
+    ctx.fillStyle = tClr(p, 0.25); ctx.font = '500 '+(4*s)+'px Inter, sans-serif';
+    ctx.fillText('SESSION STATES', 10*s, stY - 2*s);
+    for (var sti = 0; sti < states.length; sti++) {
+      var col = sti % 4, row = Math.floor(sti / 4);
+      var stx = 10*s + col*(stW+3.3*s), sty = stY + 4*s + row*(stH+3*s);
+      ctx.fillStyle = aClr(p, 0.025); ctx.fillRect(stx, sty, stW, stH);
+      ctx.strokeStyle = aClr(p, 0.05); ctx.lineWidth = 0.5*s; ctx.strokeRect(stx, sty, stW, stH);
+      ctx.fillStyle = tClr(p, 0.28); ctx.font = '400 '+(3.2*s)+'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText(states[sti], stx+stW/2, sty+stH/2+1.2*s);
+    }
+    ctx.textAlign = 'left';
+
+    // Bottom stats bar
+    var barY3 = h - 20*s;
+    ctx.fillStyle = aClr(p, 0.03); ctx.fillRect(0, barY3, w, 20*s);
+    ctx.strokeStyle = aClr(p, 0.06); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY3); ctx.lineTo(w, barY3); ctx.stroke();
+    ctx.fillStyle = aClr(p, 0.35); ctx.font = '500 '+(4*s)+'px monospace';
+    ctx.fillText('5 tiers', 10*s, barY3+13*s);
+    ctx.textAlign = 'center'; ctx.fillText('8 states', w/2, barY3+13*s);
+    ctx.textAlign = 'right'; ctx.fillText('30 docs', w-10*s, barY3+13*s); ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, aClr(p, 0.1));
+  }
+
   // ===== DISPATCH =====
   var renderers = {
     booking: drawBooking, trading: drawTrading, profitdesk: drawProfitDesk,
@@ -3090,7 +3476,10 @@
     'llm-enclave': drawLLMEnclave,
     'sovereign-trade-engine': drawSovereignTradeEngine,
     'private-tax': drawPrivateTax,
-    'prediction-market-executor': drawPredictionMarketExecutor
+    'prediction-market-executor': drawPredictionMarketExecutor,
+    'command-center': drawCommandCenter,
+    'ai-orchestrator': drawAIOrchestrator,
+    'governance': drawGovernance
   };
 
   function initProjectCanvases() {
