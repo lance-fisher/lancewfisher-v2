@@ -92,7 +92,7 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
-  padding: 0 40px 120px;
+  padding: 42px 40px 120px;
 }
 
 /* Scripted name logo -subtle watermark behind hero text */
@@ -3282,7 +3282,7 @@ span.hero-domain-dot {
   height: 750px;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.12;
+  opacity: 0.22;
   mix-blend-mode: screen;
   -webkit-mask-image:
     linear-gradient(to left, transparent 0%, black 20%, black 100%),
@@ -3305,7 +3305,7 @@ span.hero-domain-dot {
   height: 750px;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.35;
+  opacity: 0.45;
   mix-blend-mode: screen;
   -webkit-mask-image:
     linear-gradient(to right, transparent 0%, black 20%, black 100%),
@@ -3328,7 +3328,7 @@ span.hero-domain-dot {
 
 /* Light mode overrides — left statue */
 [data-theme="light"] .glitch-statue-left {
-  opacity: 0.18;
+  opacity: 0.25;
   mix-blend-mode: normal;
 }
 
@@ -3566,30 +3566,55 @@ span.hero-domain-dot {
   font-size: clamp(80px, 9.5vw, 140px);
   font-weight: 400;
   letter-spacing: 0;
+  /* Dark-mode metallic stack: brighter face with internal bevel layers so
+     the lettering lifts off the dark field without needing a backdrop. */
   background: linear-gradient(180deg,
     #ffffff 0%,
-    #faf9f5 22%,
-    #f0eeea 55%,
-    #e0dfd9 85%,
-    #cfcdc7 100%);
+    #fffdf8 14%,
+    #eee7db 36%,
+    #8f877b 47%,
+    #f4eee4 66%,
+    #fffdf8 82%,
+    #fffdf8 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  /* Dark-mode emboss: darker top rim + brighter silver bottom rim + sharper
-     outline + layered silver ambient halo (inner + outer) + deep dark drop
-     shadow. Mirrors the engraved feel of the light-mode override, inverted
-     for dark background, amped for visibility. */
   filter:
-    drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.95))
-    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.32))
-    drop-shadow(0 0 2px rgba(0, 0, 0, 0.85))
-    drop-shadow(0 0 14px rgba(248, 246, 240, 0.28))
-    drop-shadow(0 0 36px rgba(248, 246, 240, 0.18))
-    drop-shadow(0 10px 40px rgba(0, 0, 0, 0.8));
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.96))
+    drop-shadow(0 2px 0 rgba(255, 255, 255, 0.3))
+    drop-shadow(0 6px 0 rgba(0, 0, 0, 0.96))
+    drop-shadow(0 18px 32px rgba(0, 0, 0, 0.98));
   text-align: center;
   line-height: 1.0;
   margin-bottom: -0.18em;
+}
+.fs-wm-1::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 54%,
+    rgba(116, 108, 97, 0.36) 68%,
+    rgba(14, 16, 20, 0.96) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  clip-path: inset(51% 0 0 0);
+  transform: translateY(3px);
+  opacity: 1;
+  pointer-events: none;
 }
 /* Matrix shine sweep overlay - duplicates the text via attr(data-text) */
 .fs-wm-1::after {
@@ -3607,21 +3632,27 @@ span.hero-domain-dot {
   line-height: inherit;
   background: linear-gradient(100deg,
     rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0) 42%,
-    rgba(255,255,255,0.95) 49%,
+    rgba(255,255,255,0) 24%,
+    rgba(255,255,255,0.16) 35%,
+    rgba(255,255,255,0.48) 43%,
+    rgba(255,255,255,0.96) 48.2%,
     rgba(255,255,255,1) 50%,
-    rgba(255,255,255,0.95) 51%,
-    rgba(255,255,255,0) 58%,
+    rgba(255,255,255,0.96) 51.8%,
+    rgba(255,255,255,0.48) 57%,
+    rgba(255,255,255,0.16) 65%,
+    rgba(255,255,255,0) 76%,
     rgba(255,255,255,0) 100%);
-  background-size: 250% 100%;
-  background-position: 0% 0;
+  background-size: 380% 100%;
+  background-position: 115% 0;
   background-repeat: no-repeat;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  opacity: 0.98;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.28));
   pointer-events: none;
-  animation: fsShine 14s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+  animation: fsShine 12s linear infinite;
 }
 
 .fs-wm-2 {
@@ -3632,9 +3663,12 @@ span.hero-domain-dot {
   font-weight: 500;
   letter-spacing: 0.5em;
   text-transform: uppercase;
+  /* Simple bright silver for SOVEREIGN SYSTEMS caps */
   background: linear-gradient(180deg,
-    #f6f4ef 0%,
-    #e8e6df 100%);
+    #ffffff 0%,
+    #f7f3ea 38%,
+    #978f83 48.5%,
+    #f4efe6 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -3642,13 +3676,38 @@ span.hero-domain-dot {
   margin-top: 6px;
   padding-left: 0.5em;
   text-align: center;
-  /* Matching emboss treatment for SOVEREIGN SYSTEMS caps, amped */
   filter:
-    drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.85))
-    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.3))
-    drop-shadow(0 0 1.5px rgba(0, 0, 0, 0.85))
-    drop-shadow(0 0 10px rgba(248, 246, 240, 0.22))
-    drop-shadow(0 3px 14px rgba(0, 0, 0, 0.65));
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.9))
+    drop-shadow(0 5px 0 rgba(0, 0, 0, 0.9))
+    drop-shadow(0 12px 18px rgba(0, 0, 0, 0.94));
+}
+.fs-wm-2::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding-left: 0.5em;
+  text-align: center;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-transform: uppercase;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 50%,
+    rgba(84, 76, 68, 0.3) 70%,
+    rgba(14, 16, 20, 0.9) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  clip-path: inset(48% 0 0 0);
+  transform: translateY(3px);
+  opacity: 1;
+  pointer-events: none;
 }
 .fs-wm-2::after {
   content: attr(data-text);
@@ -3666,30 +3725,36 @@ span.hero-domain-dot {
   text-transform: uppercase;
   background: linear-gradient(100deg,
     rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0) 42%,
-    rgba(255,255,255,0.95) 49%,
+    rgba(255,255,255,0) 24%,
+    rgba(255,255,255,0.12) 35%,
+    rgba(255,255,255,0.34) 43%,
+    rgba(255,255,255,0.82) 48.2%,
     rgba(255,255,255,1) 50%,
-    rgba(255,255,255,0.95) 51%,
-    rgba(255,255,255,0) 58%,
+    rgba(255,255,255,0.82) 51.8%,
+    rgba(255,255,255,0.34) 57%,
+    rgba(255,255,255,0.12) 65%,
+    rgba(255,255,255,0) 76%,
     rgba(255,255,255,0) 100%);
-  background-size: 250% 100%;
-  background-position: 0% 0;
+  background-size: 380% 100%;
+  background-position: 115% 0;
   background-repeat: no-repeat;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
   pointer-events: none;
-  animation: fsShine 14s cubic-bezier(0.42, 0, 0.58, 1) infinite;
-  animation-delay: 0.25s;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.22));
+  animation: fsShine 12s linear infinite;
+  animation-delay: 0.6s;
 }
 
-/* Matrix-style shine sweep: bright stripe traverses the wordmark once per
-   cycle then rests off-screen. 14s cycle = one sweep every ~14 seconds. */
+/* Continuous silver sweep: a bright pass enters from the right and keeps
+   cycling across the lettering without a long idle pause. */
 @keyframes fsShine {
-  0% { background-position: 0% 0; }
-  22% { background-position: 100% 0; }
-  100% { background-position: 100% 0; }
+  0% { background-position: 115% 0; opacity: 0.18; }
+  8% { opacity: 0.98; }
+  100% { background-position: -115% 0; opacity: 0.18; }
 }
 
 /* Respect user motion preference */
@@ -3797,6 +3862,9 @@ span.hero-domain-dot {
   background-clip: text;
   filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5)) drop-shadow(0 2px 10px rgba(28, 32, 40, 0.18));
 }
+[data-theme="light"] .fs-wm-1::before {
+  content: none;
+}
 [data-theme="light"] .fs-wm-1::after {
   background: linear-gradient(100deg,
     rgba(255,255,255,0) 0%,
@@ -3824,6 +3892,9 @@ span.hero-domain-dot {
   -webkit-background-clip: text;
   background-clip: text;
   filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.5));
+}
+[data-theme="light"] .fs-wm-2::before {
+  content: none;
 }
 [data-theme="light"] .fs-wm-2::after {
   background: linear-gradient(100deg,
@@ -3892,14 +3963,18 @@ span.hero-domain-dot {
    background-clip: text does NOT inherit to children, so the gradient must
    live on the element that contains the visible text — the inner span. */
 .hero-business-primary {
-  font-family: 'Cormorant SC', serif;
-  font-weight: 600;
+  font-family: 'Old Standard TT', 'Cormorant Garamond', Georgia, serif;
+  font-weight: 700;
   font-size: clamp(28px, 5.5vw, 64px);
-  letter-spacing: clamp(6px, 1.5vw, 18px);
-  text-transform: uppercase;
+  letter-spacing: clamp(8px, 1.6vw, 20px);
+  word-spacing: 0.08em;
   text-align: center;
+  position: relative;
   opacity: 0;
   animation: heroReveal 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+}
+.hero-business-primary::after {
+  content: none;
 }
 .hero-for-line {
   font-family: 'Cormorant SC', serif;
@@ -4023,63 +4098,337 @@ span.hero-domain-dot {
    ::before / ::after ghost layers override the parent's transparent fill via
    -webkit-text-fill-color: currentColor + background: none so the RGB-split
    glitch still renders on top of the silver base. Matches the gateway. */
-.sovereign-glitch {
+.fs-business-mark {
   position: relative;
   display: inline-block;
-  background: linear-gradient(100deg,
-    #d8d6d0 0%,
-    #ecebe6 25%,
-    #ffffff 48%,
-    #ffffff 52%,
-    #ecebe6 75%,
-    #d8d6d0 100%);
-  background-size: 220% 100%;
-  background-position: 0% 0;
-  background-repeat: no-repeat;
+  font-family: 'Old Standard TT', 'Cormorant Garamond', Georgia, serif;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  background: linear-gradient(180deg,
+    #ffffff 0%,
+    #fffdf8 14%,
+    #eee7db 36%,
+    #8f877b 47%,
+    #f4eee4 66%,
+    #fffdf8 82%,
+    #fffdf8 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.35)) drop-shadow(0 3px 22px rgba(0, 0, 0, 0.48));
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.98))
+    drop-shadow(0 2px 0 rgba(255, 255, 255, 0.30))
+    drop-shadow(0 7px 0 rgba(0, 0, 0, 0.97))
+    drop-shadow(0 20px 34px rgba(0, 0, 0, 0.98));
 }
-[data-theme="light"] .sovereign-glitch {
-  background: linear-gradient(100deg,
-    #4a4e58 0%,
-    #383c44 25%,
-    #1f2228 48%,
-    #1f2228 52%,
-    #383c44 75%,
-    #4a4e58 100%);
-  background-size: 220% 100%;
-  background-position: 0% 0;
-  background-repeat: no-repeat;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  filter: none;
-}
-.sovereign-glitch::before,
-.sovereign-glitch::after {
+.fs-business-mark::before {
   content: attr(data-text);
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0;
-  background: none;
-  -webkit-text-fill-color: currentColor;
+  text-align: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 52%,
+    rgba(118, 109, 96, 0.44) 67%,
+    rgba(14, 16, 20, 0.96) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  clip-path: inset(49% 0 0 0);
+  transform: translateY(4px);
+  opacity: 1;
+  pointer-events: none;
 }
-.sovereign-glitch::before {
-  color: #0ff;
-  text-shadow: 0 0 6px rgba(0, 255, 255, 0.35);
-  animation: sovereignFlash 8s ease-in-out infinite;
+
+[data-theme="light"] .fs-business-mark {
+  background: linear-gradient(180deg,
+    #ffffff 0%,
+    #fbfbf9 18%,
+    #d9dde4 52%,
+    #ffffff 78%,
+    #ffffff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.96))
+    drop-shadow(0 2px 0 rgba(255, 255, 255, 0.58))
+    drop-shadow(0 4px 0 rgba(150, 156, 168, 0.48))
+    drop-shadow(0 12px 20px rgba(90, 98, 112, 0.20));
 }
-.sovereign-glitch::after {
-  color: #f66;
-  text-shadow: -1px 0 rgba(255, 60, 60, 0.35), 1px 0 rgba(255, 255, 255, 0.2);
-  animation: sovereignGlitch 8s ease-in-out infinite;
+[data-theme="light"] .fs-business-mark::before {
+  content: none;
+}
+
+.fs-business-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.hero-business-primary .fs-business-stack,
+.gw-company .fs-business-stack {
+  width: min(98vw, 1720px);
+}
+
+.hero-business-primary .fs-business-line1,
+.gw-company .fs-business-line1 {
+  font-size: clamp(62px, 7.8vw, 136px);
+  letter-spacing: 0.46em;
+}
+
+.hero-business-primary .fs-business-line2,
+.gw-company .fs-business-line2 {
+  font-size: clamp(12px, 1.15vw, 16px);
+  letter-spacing: 1.02em;
+  padding-left: 1.02em;
+}
+
+.hero-business-primary .fs-business-line2::before,
+.gw-company .fs-business-line2::before {
+  padding-left: 1.02em;
+}
+
+.fs-business-line1,
+.fs-business-line2 {
+  position: relative;
+  display: block;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.fs-business-line1 {
+  font-family: 'Old Standard TT', 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(52px, 7vw, 96px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 0.98;
+  background: linear-gradient(180deg,
+    #ffffff 0%,
+    #fffdf8 14%,
+    #eee7db 36%,
+    #8f877b 47%,
+    #f4eee4 66%,
+    #fffdf8 82%,
+    #fffdf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.96))
+    drop-shadow(0 2px 0 rgba(255, 255, 255, 0.30))
+    drop-shadow(0 0 14px rgba(255, 255, 255, 0.18))
+    drop-shadow(0 0 30px rgba(255, 255, 255, 0.08))
+    drop-shadow(0 6px 0 rgba(0, 0, 0, 0.96))
+    drop-shadow(0 18px 32px rgba(0, 0, 0, 0.98));
+}
+
+.fs-business-line1::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 54%,
+    rgba(116, 108, 97, 0.36) 68%,
+    rgba(14, 16, 20, 0.96) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  clip-path: inset(51% 0 0 0);
+  transform: translateY(3px);
+  opacity: 1;
+  pointer-events: none;
+}
+
+.fs-business-line1::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  background: linear-gradient(100deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 34%,
+    rgba(255,255,255,0.14) 42%,
+    rgba(255,255,255,0.42) 47%,
+    rgba(255,255,255,0.88) 50%,
+    rgba(255,255,255,0.42) 53%,
+    rgba(255,255,255,0.14) 58%,
+    rgba(255,255,255,0) 66%,
+    rgba(255,255,255,0) 100%);
+  background-size: 320% 100%;
+  background-position: 110% 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  opacity: 0.78;
+  filter: drop-shadow(0 0 8px rgba(255,255,255,0.18));
+  pointer-events: none;
+  animation: fsBusinessLineShine 12s linear infinite;
+}
+
+.fs-business-line2 {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(12px, 1.3vw, 16px);
+  font-weight: 600;
+  letter-spacing: 0.48em;
+  text-transform: uppercase;
+  padding-left: 0.48em;
+  line-height: 1;
+  background: linear-gradient(180deg,
+    #ffffff 0%,
+    #f7f3ea 38%,
+    #978f83 48.5%,
+    #f4efe6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.9))
+    drop-shadow(0 0 8px rgba(255, 255, 255, 0.14))
+    drop-shadow(0 0 18px rgba(255, 255, 255, 0.06))
+    drop-shadow(0 5px 0 rgba(0, 0, 0, 0.9))
+    drop-shadow(0 12px 18px rgba(0, 0, 0, 0.94));
+}
+
+.fs-business-line2::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding-left: 0.48em;
+  text-align: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  line-height: inherit;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 50%,
+    rgba(84, 76, 68, 0.3) 70%,
+    rgba(14, 16, 20, 0.9) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  clip-path: inset(48% 0 0 0);
+  transform: translateY(3px);
+  opacity: 1;
+  pointer-events: none;
+}
+
+[data-theme="light"] .fs-business-line1 {
+  background: linear-gradient(180deg,
+    #ffffff 0%,
+    #fbfbf9 18%,
+    #d9dde4 52%,
+    #ffffff 78%,
+    #ffffff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.96))
+    drop-shadow(0 2px 0 rgba(255, 255, 255, 0.58))
+    drop-shadow(0 0 10px rgba(255, 255, 255, 0.18))
+    drop-shadow(0 4px 0 rgba(150, 156, 168, 0.48))
+    drop-shadow(0 12px 20px rgba(90, 98, 112, 0.20));
+}
+
+[data-theme="light"] .fs-business-line1::before {
+  content: none;
+}
+
+[data-theme="light"] .fs-business-line1::after {
+  background: linear-gradient(100deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0) 34%,
+    rgba(255,255,255,0.18) 42%,
+    rgba(255,255,255,0.48) 47%,
+    rgba(255,255,255,0.92) 50%,
+    rgba(255,255,255,0.48) 53%,
+    rgba(255,255,255,0.18) 58%,
+    rgba(255,255,255,0) 66%,
+    rgba(255,255,255,0) 100%);
+  background-size: 320% 100%;
+  background-position: 110% 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  opacity: 0.72;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.16));
+}
+
+[data-theme="light"] .fs-business-line2 {
+  background: linear-gradient(180deg,
+    #ffffff 0%,
+    #fbfbf9 18%,
+    #d9dde4 52%,
+    #ffffff 78%,
+    #ffffff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.96))
+    drop-shadow(0 2px 0 rgba(255, 255, 255, 0.58))
+    drop-shadow(0 0 6px rgba(255, 255, 255, 0.16))
+    drop-shadow(0 4px 0 rgba(150, 156, 168, 0.48))
+    drop-shadow(0 12px 20px rgba(90, 98, 112, 0.20));
+}
+
+[data-theme="light"] .fs-business-line2::before {
+  content: none;
+}
+
+@keyframes fsBusinessLineShine {
+  0% { background-position: 110% 0; opacity: 0.24; }
+  10% { opacity: 0.78; }
+  100% { background-position: -110% 0; opacity: 0.24; }
 }
 
 @keyframes sovereignFlash {
@@ -4178,13 +4527,11 @@ span.hero-domain-dot {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  /* Scaled-down emboss matching hero .fs-wm-1, nav-strip size. */
+  /* Match the current hero direction: a hard bright lower rim plus a deep
+     shadow. This reads cleaner on dark backgrounds than the softer halo. */
   filter:
-    drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.85))
-    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.28))
-    drop-shadow(0 0 1px rgba(0, 0, 0, 0.75))
-    drop-shadow(0 0 6px rgba(248, 246, 240, 0.2))
-    drop-shadow(0 3px 12px rgba(0, 0, 0, 0.7));
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.76))
+    drop-shadow(0 3px 12px rgba(0, 0, 0, 0.82));
 }
 .fssb-v3-top-rule {
   display: block;
@@ -4245,14 +4592,11 @@ span.hero-domain-dot {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  /* Footer wordmark: stronger halo than top strip; scaled from hero. */
+  /* Same hard-rim direction as the hero, with a little more depth because
+     the footer mark sits in a roomier field and can carry more shadow. */
   filter:
-    drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.9))
-    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.32))
-    drop-shadow(0 0 1.5px rgba(0, 0, 0, 0.8))
-    drop-shadow(0 0 12px rgba(248, 246, 240, 0.24))
-    drop-shadow(0 0 26px rgba(248, 246, 240, 0.14))
-    drop-shadow(0 6px 24px rgba(0, 0, 0, 0.75));
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.8))
+    drop-shadow(0 5px 18px rgba(0, 0, 0, 0.86));
   margin: 0;
 }
 .fssb-v3-foot-rule {
