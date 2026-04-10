@@ -59,6 +59,12 @@
     .hero { padding: 36px 24px 22px; max-width: 1280px; margin: 0 auto; }
     .hero h1 { font-family: var(--font-head); font-size: 2.1rem; font-weight: 600; color: var(--fg-strong); margin-bottom: 10px; letter-spacing: 0.01em; line-height: 1.1; }
     .hero p { font-size: 0.96rem; color: var(--fg); max-width: 760px; }
+    .entry-strip { max-width: 1280px; margin: 0 auto; padding: 0 24px 22px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .entry-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; min-height: 132px; }
+    .entry-card .entry-kicker { font-family: var(--font-mono); font-size: 0.64rem; color: var(--fg-faint); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+    .entry-card h3 { font-family: var(--font-head); font-size: 1.1rem; font-weight: 600; color: var(--fg-strong); margin-bottom: 7px; line-height: 1.15; }
+    .entry-card p { font-size: 0.82rem; color: var(--fg); line-height: 1.55; margin-bottom: 12px; }
+    .entry-card .entry-note { font-family: var(--font-mono); font-size: 0.68rem; color: var(--fg-dim); letter-spacing: 0.03em; }
 
     /* TAB BAR */
     .tabs-wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
@@ -247,6 +253,7 @@
     @media (max-width: 900px) {
       .session-grid { grid-template-columns: 1fr; }
       .heatmap { grid-template-columns: 40px repeat(24, 1fr); font-size: 0.52rem; }
+      .entry-strip { grid-template-columns: 1fr; }
     }
     @media (max-width: 700px) {
       .nav { padding: 12px 14px; }
@@ -263,7 +270,7 @@
     }
   </style>
 <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../_shared/brand.css?v=20260408v3">
+<link rel="stylesheet" href="../_shared/brand.css?v=20260410v6">
 </head>
 <body>
 
@@ -294,12 +301,33 @@
 
 <header class="hero">
   <h1>Command Surface for the Fisher Sovereign Ecosystem</h1>
-  <p>Interactive dashboard for 25+ projects. Live health checks, session tracking, and command surface for deployed systems. Click any project to launch a Claude session, open a terminal, or jump to its running port.</p>
+  <p>Interactive launch surface for the Fisher Sovereign ecosystem. Inspect real project states, open public-safe demos, and see which systems are live, protected, or still in active buildout.</p>
 </header>
 
 <div class="page-benefit">
-  See every project at a glance, and launch any of them with one click. No context switching, no lost state, no Jira, no Notion tax.
+  See what each system does, what kind of access is available, and where to go next without digging through internal workflow tools first.
 </div>
+
+<section class="entry-strip" aria-label="Sovereign Hub entry routes">
+  <article class="entry-card">
+    <div class="entry-kicker">Launch</div>
+    <h3>Open Public-Safe Demos</h3>
+    <p>Jump directly into browser-contained alphas like Harmony, Home Hub, Sovereign Signal, and Jump Quest.</p>
+    <div class="entry-note">Best for: exploring usable surfaces immediately</div>
+  </article>
+  <article class="entry-card">
+    <div class="entry-kicker">Inspect</div>
+    <h3>Review Protected Systems</h3>
+    <p>Read architecture summaries, states, and capabilities for systems that are intentionally not exposed in full.</p>
+    <div class="entry-note">Best for: understanding capability without exposing IP</div>
+  </article>
+  <article class="entry-card">
+    <div class="entry-kicker">Operate</div>
+    <h3>Understand Real Availability</h3>
+    <p>Use badges, port hints, and lifecycle states to tell the difference between a live app, an interactive preview, and a protected internal tool.</p>
+    <div class="entry-note">Best for: fast orientation across the full ecosystem</div>
+  </article>
+</section>
 
 <div class="tabs-wrap">
   <div class="tabs" role="tablist" id="tabBar">
@@ -318,7 +346,7 @@
   <!-- PROJECTS PANEL -->
   <section class="panel active" data-panel="projects">
     <h2>Projects</h2>
-    <p class="lede">Every entry below corresponds to a real local project tracked in the registry. Click a card to open the detail panel and launch actions.</p>
+    <p class="lede">Every entry below corresponds to a real project in the Fisher Sovereign ecosystem. Open a card to see what the system is for, what kind of access is available, and whether you can inspect, preview, or open a live local surface.</p>
 
     <div class="toolbar">
       <input type="text" class="search-box" id="searchBox" placeholder="Search by name, description, or tag..." autocomplete="off">
@@ -657,7 +685,7 @@
       lastActive: 'today'
     },
     {
-      name: 'NoCo App Studio',
+      name: 'FS App Studio',
       cat: 'App',
       status: 'active',
       signal: null,
@@ -1019,7 +1047,11 @@
     } else {
       foot.appendChild(el('span', 'card-port-empty', 'no bound port'));
     }
-    var actBtn = el('button', 'card-action', meta.launchable ? 'Open' : 'Details');
+    var cardActionText = 'Inspect';
+    if (p.signal === 'demo') cardActionText = 'Open Preview';
+    else if (p.signal === 'alpha') cardActionText = 'Open Alpha';
+    else if (p.signal === 'protected') cardActionText = 'Inspect System';
+    var actBtn = el('button', 'card-action', cardActionText);
     actBtn.type = 'button';
     if (!meta.launchable) actBtn.classList.add('muted');
     actBtn.addEventListener('click', function(e) {
@@ -1124,12 +1156,12 @@
     var actWrap = el('div', 'slidein-actions');
 
     var launchBtn = makeActionBtn(
-      'Launch Claude Session',
+      'Copy Local Launch Path',
       'Copy cd ' + p.path + ' to clipboard',
       !meta.launchable,
       function() {
         copyToClipboard('cd "' + p.path + '"');
-        showToast('Project path copied. Paste into terminal and run claude');
+        showToast('Project path copied. Paste into terminal to open the local project.');
       }
     );
     actWrap.appendChild(launchBtn);
@@ -1158,7 +1190,7 @@
     actSec.appendChild(actWrap);
 
     if (!meta.launchable) {
-      actSec.appendChild(el('div', 'action-note', 'Launch actions are disabled for ' + meta.label + ' projects. Switch to an Active or Public Alpha project to use them.'));
+      actSec.appendChild(el('div', 'action-note', 'Local open actions are disabled for ' + meta.label + ' projects. Protected, paused, and archived entries stay in inspect-only mode on this public showcase.'));
     }
 
     body.appendChild(actSec);
