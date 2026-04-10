@@ -77,23 +77,41 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* ─── NAV ─── */
 .nav {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 24px;
+  padding: 14px 22px 12px;
   background: rgba(10,10,11,0.92);
   border-bottom: 1px solid var(--border-hi);
   position: sticky; top: 0; z-index: 100;
   backdrop-filter: blur(16px);
 }
 .nav-left { display: flex; align-items: center; gap: 20px; }
+.nav-wm-link {
+  display: inline-flex; flex-direction: column; align-items: flex-start;
+  text-decoration: none; gap: 1px; min-width: 0;
+}
+.nav-wm-name {
+  font-family: 'Old Standard TT', 'Cormorant Garamond', Georgia, serif;
+  font-size: 28px; font-weight: 400; line-height: 0.95; letter-spacing: 0;
+  background: linear-gradient(180deg, #ffffff 0%, #f4f2ee 30%, #d8d5cf 70%, #b8b5af 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,0.76)) drop-shadow(0 3px 12px rgba(0,0,0,0.82));
+}
+.nav-wm-rule {
+  display: block; width: 120px; height: 1px; margin: 3px 0 2px;
+  background: linear-gradient(to right, transparent 0%, rgba(248,246,240,0.1) 15%, rgba(248,246,240,0.55) 50%, rgba(248,246,240,0.1) 85%, transparent 100%);
+}
+.nav-wm-sub {
+  font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 500;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: rgba(220,217,211,0.82); padding-left: 0.3em;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.35);
+}
 .nav-back {
-  font-family: var(--font-mono); font-size: 0.73rem;
-  color: var(--fg-dim); letter-spacing: 0.03em;
+  font-family: var(--font-mono); font-size: 0.72rem; font-weight: 500;
+  letter-spacing: 0.06em; color: rgba(180,180,186,0.72);
+  text-decoration: none; transition: color 0.2s ease; white-space: nowrap;
 }
-.nav-back:hover { color: var(--fg-strong); }
-.nav-back::before { content: '\2190\00a0'; }
-.nav-title {
-  font-family: var(--font-display); font-size: 0.82rem; font-weight: 600;
-  color: var(--fg-strong); letter-spacing: 0.16em; text-transform: uppercase;
-}
+.nav-back:hover { color: rgba(248,246,240,0.92); }
 .nav-right { display: flex; align-items: center; gap: 14px; }
 .status-pill {
   display: inline-flex; align-items: center; gap: 6px;
@@ -378,8 +396,26 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   align-items: center; gap: 16px;
 }
 .footer-brand {
-  font-family: var(--font-display); font-size: 0.72rem;
-  color: var(--fg-dim); letter-spacing: 0.12em; text-transform: uppercase;
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+}
+.footer-wm-name {
+  font-family: 'Old Standard TT', 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(28px, 3.5vw, 38px); font-weight: 400; line-height: 1.0; letter-spacing: 0;
+  background: linear-gradient(180deg, #ffffff 0%, #f4f2ee 30%, #d8d5cf 70%, #b8b5af 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,0.8)) drop-shadow(0 5px 18px rgba(0,0,0,0.86));
+  margin: 0;
+}
+.footer-wm-rule {
+  display: block; width: 160px; height: 1px; margin: 8px auto 6px;
+  background: linear-gradient(to right, transparent 0%, rgba(248,246,240,0.08) 10%, rgba(248,246,240,0.55) 50%, rgba(248,246,240,0.08) 90%, transparent 100%);
+}
+.footer-wm-sub {
+  font-family: 'Inter', sans-serif; font-size: clamp(9px, 0.9vw, 11px); font-weight: 500;
+  letter-spacing: 0.4em; text-transform: uppercase;
+  color: rgba(220,217,211,0.85); padding-left: 0.4em;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.35); margin: 0;
 }
 .footer-links {
   display: flex; gap: 18px;
@@ -391,7 +427,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 768px) {
   .nav { padding: 10px 16px; }
-  .nav-title { font-size: 0.7rem; letter-spacing: 0.1em; }
+  .nav-wm-name { font-size: 22px; }
+  .nav-wm-rule { width: 90px; }
+  .nav-wm-sub { font-size: 8px; letter-spacing: 0.25em; }
   .hero { padding: 28px 18px 8px; }
   .hero h1 { font-size: 1.5rem; }
   .stats-strip { padding: 16px 18px 4px; }
@@ -416,8 +454,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 <!-- ═══ NAV ═══ -->
 <nav class="nav">
   <div class="nav-left">
-    <a href="../home.html" class="nav-back">Portfolio</a>
-    <span class="nav-title">Sovereign Command Center</span>
+    <a href="../home.html" class="nav-wm-link" aria-label="Fisher Sovereign Systems">
+      <span class="nav-wm-name">Fisher</span>
+      <span class="nav-wm-rule"></span>
+      <span class="nav-wm-sub">Sovereign Systems</span>
+    </a>
+    <a href="../home.html" class="nav-back">&larr; Portfolio</a>
   </div>
   <div class="nav-right">
     <span class="status-pill live"><span class="pulse-dot"></span> All Systems Nominal</span>
@@ -930,7 +972,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 <!-- ═══ FOOTER ═══ -->
 <footer class="page-footer">
-  <span class="footer-brand">Fisher Sovereign Systems</span>
+  <span class="footer-brand">
+    <span class="footer-wm-name">Fisher</span>
+    <span class="footer-wm-rule"></span>
+    <span class="footer-wm-sub">Sovereign Systems</span>
+  </span>
   <div class="footer-links">
     <a href="../home.html">Portfolio</a>
     <a href="../sovereign-hub/index.html">Sovereign Hub</a>
