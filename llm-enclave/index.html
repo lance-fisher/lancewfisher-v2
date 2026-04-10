@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM Enclave | Fisher Sovereign Systems</title>
+<meta name="description" content="A hardened zero-trust security enclave for local LLM coding. Offline Ollama inference, policy-gated file access, hash-chain audit trail. Built by Fisher Sovereign Systems.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230a0a0b'/%3E%3Crect x='8' y='8' width='16' height='16' rx='2' fill='none' stroke='%23c9a84c' stroke-width='2'/%3E%3Crect x='13' y='13' width='6' height='6' rx='1' fill='%23c9a84c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Crimson+Pro:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0b;
+  --surface:#111113;
+  --surface2:#16161a;
+  --surface3:#1c1c21;
+  --border:#26262c;
+  --border-strong:#36363e;
+  --gold:#C9A84C;
+  --gold-bright:#e3c068;
+  --gold-dim:#8a7433;
+  --gold-soft:rgba(201,168,76,0.15);
+  --green:#4ade80;
+  --green-dim:#1e7a3a;
+  --red:#f87171;
+  --red-dim:#7a1e1e;
+  --amber:#f59e0b;
+  --amber-dim:#7a4f00;
+  --blue:#60a5fa;
+  --purple:#a78bfa;
+  --text:#e8e8ec;
+  --text-mid:#a1a1aa;
+  --text-dim:#6b6b75;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --sans:'Inter',-apple-system,sans-serif;
+  --display:'Cinzel',serif;
+  --serif:'Crimson Pro',Georgia,serif;
+}
+html{font-size:15px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;min-height:100vh;overflow-x:hidden}
+a{color:var(--gold);text-decoration:none;transition:color .15s}
+a:hover{color:var(--gold-bright)}
+
+/* ZERO-TRUST BANNER */
+.zt-banner{
+  position:sticky;top:0;z-index:101;
+  background:linear-gradient(90deg,#0d1a0d,#15280f,#0d1a0d);
+  border-bottom:1px solid var(--green-dim);
+  padding:9px 16px;
+  text-align:center;
+  font-family:var(--mono);
+  font-size:.74rem;
+  color:#9be3a8;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.zt-banner .dot{
+  display:inline-block;width:7px;height:7px;border-radius:50%;
+  background:var(--green);margin:0 14px 0 0;vertical-align:1px;
+  box-shadow:0 0 10px rgba(74,222,128,.6);
+  animation:pulse 2.6s infinite;
+}
+.zt-banner .sep{color:var(--green-dim);margin:0 14px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+
+/* FSS NAV */
+nav.fss-nav{
+  position:sticky;top:34px;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 26px;
+  background:rgba(10,10,11,0.94);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(201,168,76,0.22);
+}
+.fss-wordmark-link{display:flex;align-items:center;gap:11px;text-decoration:none}
+.fss-wordmark-svg{color:rgba(248,246,240,0.85);flex-shrink:0}
+.fss-wordmark-name{
+  font-family:'Old Standard TT', var(--serif), Georgia, serif;
+  font-size:1.15rem;font-weight:400;
+  letter-spacing:0;color:rgba(252,250,246,0.96);
+  text-shadow:0 1px 0 rgba(0,0,0,0.5),0 2px 10px rgba(0,0,0,0.45);
+}
+.fss-page-title{
+  font-family:var(--display);font-size:.85rem;font-weight:600;
+  color:var(--gold-bright);letter-spacing:.16em;text-transform:uppercase;
+}
+.fss-back{
+  font-family:var(--sans);font-size:.78rem;font-weight:500;
+  color:var(--text-dim);letter-spacing:.05em;
+}
+.fss-back:hover{color:var(--gold)}
+@media (max-width:720px){
+  .fss-page-title{display:none}
+  nav.fss-nav{padding:12px 18px}
+  .fss-wordmark-name{font-size:.95rem;letter-spacing:.02em}
+}
+
+/* HERO */
+.hero{
+  position:relative;
+  max-width:880px;
+  margin:0 auto;
+  padding:88px 32px 56px;
+  text-align:center;
+}
+.hero-eyebrow{
+  font-family:var(--sans);font-size:.7rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.28em;
+  color:rgba(201,168,76,0.82);
+  margin-bottom:24px;
+}
+.hero h1{
+  font-family:var(--display);
+  font-size:clamp(2.4rem,5.6vw,4.2rem);
+  font-weight:600;letter-spacing:.02em;line-height:1.05;
+  color:#f4f4f6;margin-bottom:22px;
+}
+.hero h1 .gold{color:var(--gold-bright)}
+.hero .deck{
+  font-family:var(--serif);
+  font-size:clamp(1.05rem,1.8vw,1.32rem);
+  font-style:italic;font-weight:500;
+  color:rgba(232,232,236,0.78);
+  max-width:680px;margin:0 auto 28px;line-height:1.55;
+}
+.hero-signature{
+  display:inline-flex;align-items:center;gap:10px;
+  margin-top:14px;padding:8px 18px;
+  border:1px solid rgba(201,168,76,0.28);
+  border-radius:999px;
+  font-family:var(--sans);font-size:.72rem;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(201,168,76,0.82);
+  background:rgba(201,168,76,0.04);
+}
+.hero-signature .sig-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 6px var(--gold);
+}
+
+/* META STRIP */
+.meta-strip{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:26px 38px;
+  max-width:880px;margin:0 auto;
+  padding:30px 32px 50px;
+  border-bottom:1px solid var(--border);
+}
+.meta-cell{text-align:center}
+.meta-label{
+  font-family:var(--mono);font-size:.62rem;font-weight:500;
+  color:var(--text-dim);text-transform:uppercase;letter-spacing:.14em;
+  margin-bottom:6px;
+}
+.meta-value{
+  font-family:var(--display);font-size:1.05rem;font-weight:600;
+  color:var(--gold-bright);letter-spacing:.05em;
+}
+
+/* CONTAINER + SECTIONS */
+.container{max-width:1180px;margin:0 auto;padding:0 32px}
+section.block{padding:72px 0;border-bottom:1px solid var(--border)}
+section.block:last-of-type{border-bottom:none}
+.section-head{
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:16px;margin-bottom:14px;flex-wrap:wrap;
+}
+.section-title{
+  font-family:var(--display);font-size:1.55rem;font-weight:600;
+  color:#f4f4f6;letter-spacing:.04em;
+}
+.section-source{
+  font-family:var(--mono);font-size:.7rem;color:var(--text-dim);
+  letter-spacing:.04em;
+}
+.section-source code{color:var(--gold-dim)}
+.section-desc{
+  font-family:var(--serif);font-size:1.07rem;font-style:italic;
+  color:rgba(232,232,236,0.7);max-width:760px;margin-bottom:36px;line-height:1.6;
+}
+
+/* STACK PILLS */
+.stack-grid{display:flex;flex-wrap:wrap;gap:14px}
+.stack-pill{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:11px 18px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  font-family:var(--mono);font-size:.82rem;
+  color:var(--text);
+}
+.stack-pill .pill-icon{
+  width:8px;height:8px;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 6px var(--gold-soft);
+}
+.stack-pill .pill-detail{color:var(--text-dim);font-size:.72rem;margin-left:6px}
+
+/* FLOW DIAGRAM */
+.flow-wrap{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:36px 28px;
+  overflow-x:auto;
+}
+.flow-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:14px;flex-wrap:nowrap;min-width:720px;
+}
+.flow-node{
+  flex:1;text-align:center;padding:16px 14px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:8px;min-width:120px;
+}
+.flow-node.policy{
+  border-color:var(--gold-dim);
+  background:linear-gradient(180deg,#1a1605,#16140a);
+}
+.flow-node .node-name{
+  font-family:var(--display);font-size:.86rem;font-weight:600;
+  color:var(--text);letter-spacing:.06em;margin-bottom:4px;
+}
+.flow-node .node-sub{
+  font-family:var(--mono);font-size:.66rem;color:var(--text-dim);
+  letter-spacing:.04em;
+}
+.flow-arrow{
+  font-family:var(--mono);font-size:1.4rem;color:var(--gold-dim);
+  flex:0 0 auto;
+}
+.flow-note{
+  margin-top:22px;padding:14px 18px;
+  background:rgba(74,222,128,0.05);
+  border-left:3px solid var(--green-dim);
+  border-radius:0 6px 6px 0;
+  font-family:var(--mono);font-size:.74rem;color:#9be3a8;line-height:1.6;
+}
+
+/* TWO-COL */
+.cols-2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:780px){.cols-2{grid-template-columns:1fr}}
+
+.policy-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:24px 26px;
+}
+.policy-card .card-title{
+  font-family:var(--display);font-size:1.05rem;font-weight:600;
+  color:var(--gold-bright);letter-spacing:.06em;
+  margin-bottom:6px;
+}
+.policy-card .card-sub{
+  font-family:var(--mono);font-size:.7rem;color:var(--text-dim);
+  margin-bottom:18px;letter-spacing:.04em;
+}
+.policy-card ul{list-style:none}
+.policy-card li{
+  font-family:var(--sans);font-size:.86rem;color:var(--text);
+  padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);
+  display:flex;align-items:flex-start;gap:10px;
+}
+.policy-card li:last-child{border-bottom:none}
+.policy-card .ok-mark{color:var(--green);font-family:var(--mono);font-size:.74rem;flex-shrink:0;margin-top:1px}
+.policy-card .no-mark{color:var(--red);font-family:var(--mono);font-size:.74rem;flex-shrink:0;margin-top:1px}
+
+/* EXTENSION CHIPS */
+.ext-grid{display:flex;flex-wrap:wrap;gap:8px}
+.ext-chip{
+  font-family:var(--mono);font-size:.74rem;
+  padding:6px 11px;background:var(--surface2);
+  border:1px solid var(--border);border-radius:5px;
+  color:var(--text-mid);transition:all .15s;
+}
+.ext-chip:hover{
+  background:var(--surface3);color:var(--gold-bright);
+  border-color:var(--gold-dim);
+}
+
+/* DENY GROUPS */
+.deny-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.deny-group{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-left:3px solid var(--red-dim);
+  border-radius:0 8px 8px 0;
+  padding:20px 22px;
+}
+.deny-group-title{
+  font-family:var(--display);font-size:.92rem;font-weight:600;
+  color:#f4f4f6;letter-spacing:.06em;margin-bottom:4px;
+}
+.deny-group-sub{
+  font-family:var(--mono);font-size:.65rem;color:var(--text-dim);
+  margin-bottom:14px;letter-spacing:.04em;
+}
+.deny-group ul{list-style:none}
+.deny-group li{
+  font-family:var(--mono);font-size:.74rem;color:#dcdce0;
+  padding:4px 0;
+}
+.deny-group li::before{
+  content:"\00d7";color:var(--red);margin-right:8px;font-weight:600;
+}
+
+/* REDACTION RULES */
+.redact-table{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+}
+.redact-row{
+  display:grid;grid-template-columns:200px 1fr 200px;gap:18px;
+  padding:16px 22px;
+  border-bottom:1px solid var(--border);
+  align-items:center;
+}
+.redact-row:last-child{border-bottom:none}
+.redact-row.head{
+  background:var(--surface2);
+  font-family:var(--mono);font-size:.65rem;
+  color:var(--text-dim);text-transform:uppercase;letter-spacing:.12em;
+}
+.redact-name{
+  font-family:var(--sans);font-size:.86rem;font-weight:600;
+  color:var(--text);
+}
+.redact-pattern{
+  font-family:var(--mono);font-size:.72rem;color:var(--amber);
+  word-break:break-all;line-height:1.5;
+}
+.redact-replace{
+  font-family:var(--mono);font-size:.72rem;color:var(--green);
+  word-break:break-all;
+}
+@media (max-width:880px){
+  .redact-row{grid-template-columns:1fr;gap:6px;padding:14px 18px}
+  .redact-row.head{display:none}
+  .redact-name{margin-bottom:4px}
+}
+
+/* TOOL CARDS */
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.tool-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:22px 24px;
+  position:relative;
+}
+.tool-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold-dim),var(--gold),var(--gold-dim));
+  border-radius:10px 10px 0 0;
+}
+.tool-name{
+  font-family:var(--mono);font-size:.95rem;font-weight:600;
+  color:var(--gold-bright);margin-bottom:4px;
+}
+.tool-sig{
+  font-family:var(--mono);font-size:.7rem;color:var(--text-dim);
+  margin-bottom:14px;
+}
+.tool-desc{
+  font-family:var(--sans);font-size:.86rem;color:var(--text-mid);
+  line-height:1.55;
+}
+
+/* AUDIT */
+.audit-flow{
+  display:flex;align-items:stretch;gap:0;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:30px 28px;
+  flex-wrap:wrap;
+}
+.audit-step{
+  flex:1;min-width:170px;text-align:center;padding:0 14px;
+  position:relative;
+}
+.audit-step:not(:last-child)::after{
+  content:"\2192";
+  position:absolute;right:-8px;top:24px;
+  color:var(--gold-dim);font-family:var(--mono);font-size:1.2rem;
+}
+.audit-step .step-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(201,168,76,0.1);
+  border:1px solid var(--gold-dim);
+  font-family:var(--mono);font-size:.8rem;color:var(--gold-bright);
+  margin-bottom:10px;
+}
+.audit-step .step-name{
+  font-family:var(--display);font-size:.8rem;font-weight:600;
+  color:var(--text);letter-spacing:.06em;margin-bottom:4px;
+}
+.audit-step .step-detail{
+  font-family:var(--mono);font-size:.62rem;color:var(--text-dim);
+  letter-spacing:.04em;line-height:1.5;
+}
+
+/* LIMITS TABLE */
+.limits-table{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+}
+.limits-row{
+  display:grid;grid-template-columns:1.5fr 1fr 1.5fr;gap:18px;
+  padding:16px 22px;border-bottom:1px solid var(--border);align-items:center;
+}
+.limits-row:last-child{border-bottom:none}
+.limits-row.head{
+  background:var(--surface2);
+  font-family:var(--mono);font-size:.65rem;
+  color:var(--text-dim);text-transform:uppercase;letter-spacing:.12em;
+}
+.limit-key{font-family:var(--sans);font-size:.88rem;color:var(--text);font-weight:500}
+.limit-val{font-family:var(--mono);font-size:.78rem;color:var(--gold-bright)}
+.limit-note{font-family:var(--sans);font-size:.78rem;color:var(--text-mid);font-style:italic}
+@media (max-width:780px){
+  .limits-row{grid-template-columns:1fr;gap:4px}
+  .limits-row.head{display:none}
+}
+
+/* TREE */
+.tree{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:24px 28px;
+  font-family:var(--mono);font-size:.78rem;
+  color:var(--text);line-height:1.85;
+  overflow-x:auto;
+}
+.tree .dir{color:var(--gold-bright);font-weight:600}
+.tree .file{color:var(--text-mid)}
+.tree .anno{color:var(--text-dim);font-style:italic;margin-left:14px}
+
+/* BRANDED FOOTER */
+.fss-footer{
+  margin-top:24px;padding:64px 32px 28px;
+  border-top:1px solid var(--border);
+  text-align:center;
+}
+.fss-footer-wordmark{
+  display:inline-flex;align-items:center;gap:14px;
+  margin-bottom:14px;
+}
+.fss-footer-name{
+  font-family:'Old Standard TT', var(--serif), Georgia, serif;
+  font-size:1.65rem;font-weight:400;
+  color:rgba(252,250,246,0.96);letter-spacing:0;
+  text-shadow:0 1px 0 rgba(0,0,0,0.5),0 2px 12px rgba(0,0,0,0.5);
+}
+.fss-footer-tagline{
+  font-family:var(--sans);font-size:.7rem;font-weight:500;
+  color:var(--text-dim);text-transform:uppercase;letter-spacing:.22em;
+  margin-bottom:18px;
+}
+.fss-footer-statement{
+  font-family:var(--serif);font-style:italic;font-size:1rem;
+  color:var(--text-mid);max-width:520px;margin:0 auto 30px;line-height:1.6;
+}
+.fss-footer-cta{
+  display:inline-block;padding:11px 26px;
+  border:1px solid var(--gold-dim);border-radius:6px;
+  font-family:var(--sans);font-size:.78rem;font-weight:500;
+  color:var(--gold-bright);letter-spacing:.08em;text-transform:uppercase;
+  transition:all .15s;
+}
+.fss-footer-cta:hover{
+  background:rgba(201,168,76,0.06);
+  border-color:var(--gold);color:var(--gold-bright);
+}
+.fss-footer-copy{
+  margin-top:36px;padding-top:22px;
+  border-top:1px solid rgba(255,255,255,0.04);
+  font-family:var(--sans);font-size:.7rem;color:var(--text-dim);
+  letter-spacing:.06em;
+}
+</style>
+</head>
+<body>
+
+<div class="zt-banner">
+  <span class="dot"></span>
+  ZERO TRUST<span class="sep">/</span>OFFLINE BY DESIGN<span class="sep">/</span>NO OUTBOUND NETWORK
+</div>
+
+<nav class="fss-nav">
+  <a href="../home.html" class="fss-wordmark-link" aria-label="Fisher Sovereign Systems">
+    <span class="fss-wordmark-name">Fisher Sovereign Systems</span>
+  </a>
+  <span class="fss-page-title">LLM Enclave</span>
+  <a href="../home.html" class="fss-back">&larr; Portfolio</a>
+</nav>
+
+<header class="hero">
+  <div class="hero-eyebrow">A Fisher Sovereign Publication</div>
+  <h1>The <span class="gold">LLM Enclave</span></h1>
+  <p class="deck">A hardened zero-trust environment for running a local coding LLM. Inference happens entirely offline through Ollama. Every file the model can touch is gated by policy, scanned for secrets, and recorded in a hash-chain audit trail.</p>
+  <div class="hero-signature">
+    <span class="sig-dot"></span>
+    Built by Fisher Sovereign Systems
+  </div>
+</header>
+
+<div class="meta-strip">
+  <div class="meta-cell">
+    <div class="meta-label">Codename</div>
+    <div class="meta-value">QWEN35</div>
+  </div>
+  <div class="meta-cell">
+    <div class="meta-label">Model</div>
+    <div class="meta-value">qwen2.5-coder</div>
+  </div>
+  <div class="meta-cell">
+    <div class="meta-label">Inference</div>
+    <div class="meta-value">Local Ollama</div>
+  </div>
+  <div class="meta-cell">
+    <div class="meta-label">Network</div>
+    <div class="meta-value">None</div>
+  </div>
+  <div class="meta-cell">
+    <div class="meta-label">Audit</div>
+    <div class="meta-value">Hash-Chain</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Stack</div>
+      <div class="section-source">source: <code>LLM_Enclave/CLAUDE.md</code></div>
+    </div>
+    <p class="section-desc">A small, intentional stack. Python for the chat loop, PowerShell for launch and teardown, and Ollama for completely local inference. No cloud APIs, no telemetry, no background uploaders.</p>
+    <div class="stack-grid" id="stackGrid"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Architecture and Trust Boundary</div>
+      <div class="section-source">source: <code>QWEN35/cli/qwen_chat.py</code>, <code>policies/bridge_policy.yaml</code></div>
+    </div>
+    <p class="section-desc">The model never touches the file system directly. All disk access flows through the workspace bridge, which checks the policy file on every operation. The chat loop, the model, and the policy enforcer are three separate trust zones inside one process.</p>
+    <div class="flow-wrap">
+      <div class="flow-row" id="flowRow"></div>
+      <div class="flow-note" id="flowNote"></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Allowed Roots</div>
+      <div class="section-source">source: <code>policies/bridge_policy.yaml</code>, allowed_target_roots</div>
+    </div>
+    <p class="section-desc">The enclave will only ever read or write under explicitly listed root paths. Any path outside this list is rejected before the request reaches the file system. The default configuration scopes the entire enclave to one directory.</p>
+    <div class="cols-2">
+      <div class="policy-card">
+        <div class="card-title">Permitted</div>
+        <div class="card-sub">Absolute paths under these roots are accepted.</div>
+        <ul id="allowedRoots"></ul>
+      </div>
+      <div class="policy-card">
+        <div class="card-title">Rejected</div>
+        <div class="card-sub">Anything outside the allowed roots fails the path check.</div>
+        <ul id="rejectedExamples"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Allowed Extensions</div>
+      <div class="section-source">source: <code>bridge_policy.yaml</code>, <span id="extCount"></span></div>
+    </div>
+    <p class="section-desc">An explicit allow list of file extensions. Anything without one of these extensions is refused, even if its path is allowed. Source code, configs, and documentation pass. Binaries, archives, and executables do not.</p>
+    <div class="ext-grid" id="extGrid"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Deny Patterns</div>
+      <div class="section-source">source: <code>bridge_policy.yaml</code>, deny_patterns, regex matched on filename</div>
+    </div>
+    <p class="section-desc">A second layer of defense. Even if a file passes the path and extension checks, it can still be blocked by regex patterns matched against its name. These patterns target categories of files that are sensitive by definition.</p>
+    <div class="deny-grid" id="denyGrid"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Secret Scanning</div>
+      <div class="section-source">source: <code>bridge_policy.yaml</code>, secret_scanning</div>
+    </div>
+    <p class="section-desc">File contents are scanned for embedded secrets before they ever reach the model. The default mode is <strong>block</strong>, meaning a file containing a detected secret is refused entirely rather than silently redacted. Redact mode is supported but opt-in.</p>
+    <div class="cols-2">
+      <div class="policy-card">
+        <div class="card-title">Configuration</div>
+        <div class="card-sub">Live values from the active policy file.</div>
+        <ul>
+          <li><span class="ok-mark">[on]</span><span><strong>enabled</strong>: true</span></li>
+          <li><span class="ok-mark">[on]</span><span><strong>mode</strong>: block</span></li>
+          <li><span class="ok-mark">[on]</span><span><strong>built-in patterns</strong>: 10 redaction rules</span></li>
+          <li><span class="no-mark">[off]</span><span><strong>custom_patterns</strong>: empty</span></li>
+          <li><span class="no-mark">[off]</span><span><strong>ignore_files</strong>: empty (no false-positive overrides)</span></li>
+        </ul>
+      </div>
+      <div class="policy-card">
+        <div class="card-title">Modes</div>
+        <div class="card-sub">How the scanner can respond to a hit.</div>
+        <ul>
+          <li><span class="ok-mark">block</span><span>Refuse the file entirely. The model never sees it. (default)</span></li>
+          <li><span class="ok-mark">redact</span><span>Replace each match with a labelled placeholder, then pass.</span></li>
+          <li><span class="ok-mark">warn</span><span>Allow the file through, log the violation for review.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Redaction Pipeline</div>
+      <div class="section-source">source: <code>bridge_policy.yaml</code>, redaction_rules, 10 rules</div>
+    </div>
+    <p class="section-desc">When the scanner runs in redact mode, these are the patterns it looks for. Each match is replaced in-place with a labelled token so the original secret never reaches the model context. The patterns are real values from the policy file.</p>
+    <div class="redact-table" id="redactTable"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Tool Surface</div>
+      <div class="section-source">source: <code>cli/qwen_chat.py</code>, exposed via Ollama tool calling</div>
+    </div>
+    <p class="section-desc">The model is given exactly four tools. No shell, no network, no process spawning, no environment access. Every tool routes through the workspace bridge and is subject to the full policy chain before it executes.</p>
+    <div class="tool-grid" id="toolGrid"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Logging Policy</div>
+      <div class="section-source">source: <code>bridge_policy.yaml</code>, logging.safe_to_log, logging.never_log</div>
+    </div>
+    <p class="section-desc">Logs are useful for debugging and audit, but they are also a leak surface. The policy explicitly enumerates what may be written to disk and what may not. Source code, model output, and prompt content are never logged. Metadata is.</p>
+    <div class="cols-2">
+      <div class="policy-card">
+        <div class="card-title">Safe To Log</div>
+        <div class="card-sub">Metadata only. No content ever appears in these.</div>
+        <ul id="safeLog"></ul>
+      </div>
+      <div class="policy-card">
+        <div class="card-title">Never Log</div>
+        <div class="card-sub">Categorically excluded by policy.</div>
+        <ul id="neverLog"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Hash-Chain Audit Trail</div>
+      <div class="section-source">source: <code>QWEN35/runtime/config/</code>, session logs</div>
+    </div>
+    <p class="section-desc">Every approved operation is appended to a session log whose entries form a hash chain. Each entry includes the SHA of the previous entry, so any tampering with historical events invalidates every entry that came after it. The chain is the source of truth for what the model actually did.</p>
+    <div class="audit-flow" id="auditFlow"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Operational Limits</div>
+      <div class="section-source">source: <code>bridge_policy.yaml</code>, size and batch limits</div>
+    </div>
+    <p class="section-desc">Hard caps that bound any single bridge operation. These exist to prevent the model from accidentally pulling a large binary into context, and to keep batch operations from exceeding the local memory budget.</p>
+    <div class="limits-table" id="limitsTable"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">Repository Layout</div>
+      <div class="section-source">source: <code>D:\ProjectsHome\LLM_Enclave\QWEN35\</code></div>
+    </div>
+    <p class="section-desc">A small, deliberate file tree. Three top-level PowerShell scripts handle launch, setup, and shutdown. The chat CLI lives under cli/, the policy file lives under policies/, and the workspace bridge owns inbox/outbox/scratch directories that the model can address.</p>
+    <div class="tree" id="treeBlock"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <div class="section-title">What This Is Not</div>
+      <div class="section-source">design intent</div>
+    </div>
+    <p class="section-desc">An honest list of things the LLM Enclave deliberately does not do. The constraints are the point. A coding assistant that can do anything is a coding assistant that can leak anything.</p>
+    <div class="cols-2">
+      <div class="policy-card">
+        <div class="card-title">No Cloud Inference</div>
+        <div class="card-sub">All model calls hit local Ollama at 127.0.0.1:11434. Pulling the model is the only network operation, and it happens during setup, not at runtime.</div>
+      </div>
+      <div class="policy-card">
+        <div class="card-title">No Shell Access</div>
+        <div class="card-sub">The model cannot execute commands, spawn processes, or shell out. The four bridge tools are the entire surface area.</div>
+      </div>
+      <div class="policy-card">
+        <div class="card-title">No Network Tools</div>
+        <div class="card-sub">No fetch, no curl, no socket primitives. The model has no concept of the internet at runtime.</div>
+      </div>
+      <div class="policy-card">
+        <div class="card-title">No Implicit Trust</div>
+        <div class="card-sub">Every file access is checked against the policy at request time. Approval is per-call, never cached, never inferred from prior context.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="fss-footer">
+  <div class="fss-footer-wordmark">
+    <span class="fss-footer-name">Fisher Sovereign Systems</span>
+  </div>
+  <div class="fss-footer-tagline">Building the Architecture for Independence</div>
+  <p class="fss-footer-statement">Fisher Sovereign Systems is being built to return control to the individual. The LLM Enclave is one of the load-bearing pieces.</p>
+  <a href="../home.html" class="fss-footer-cta">Visit lancewfisher.com &rarr;</a>
+  <div class="fss-footer-copy">&copy; 2026 Fisher Sovereign Systems, LLC. All rights reserved.</div>
+</footer>
+
+<script>
+(function(){
+  // ==== STACK ====
+  var stack = [
+    {name:'Python', detail:'3.12+ chat CLI'},
+    {name:'PowerShell', detail:'launch / setup / stop'},
+    {name:'Ollama', detail:'local inference :11434'},
+    {name:'qwen2.5-coder', detail:'7b default, 14b option'},
+    {name:'YAML', detail:'policy enforcement'},
+    {name:'SHA-256', detail:'audit chain hashing'}
+  ];
+  var stackGrid = document.getElementById('stackGrid');
+  stack.forEach(function(s){
+    var pill = document.createElement('div');
+    pill.className = 'stack-pill';
+    var dot = document.createElement('span'); dot.className='pill-icon'; pill.appendChild(dot);
+    var name = document.createElement('span'); name.textContent = s.name; pill.appendChild(name);
+    var det = document.createElement('span'); det.className='pill-detail'; det.textContent = s.detail; pill.appendChild(det);
+    stackGrid.appendChild(pill);
+  });
+
+  // ==== FLOW ====
+  var flow = [
+    {name:'Operator', sub:'terminal CLI'},
+    {name:'qwen_chat.py', sub:'1081 LOC chat loop'},
+    {name:'Ollama', sub:'127.0.0.1:11434'},
+    {name:'Bridge Policy', sub:'YAML enforcement', policy:true},
+    {name:'Workspace', sub:'inbox / outbox / scratch'}
+  ];
+  var flowRow = document.getElementById('flowRow');
+  flow.forEach(function(node, i){
+    var n = document.createElement('div');
+    n.className = 'flow-node' + (node.policy ? ' policy' : '');
+    var nm = document.createElement('div'); nm.className='node-name'; nm.textContent = node.name; n.appendChild(nm);
+    var sb = document.createElement('div'); sb.className='node-sub'; sb.textContent = node.sub; n.appendChild(sb);
+    flowRow.appendChild(n);
+    if (i < flow.length - 1) {
+      var arrow = document.createElement('div');
+      arrow.className = 'flow-arrow';
+      arrow.textContent = '\u2192';
+      flowRow.appendChild(arrow);
+    }
+  });
+  var note = document.getElementById('flowNote');
+  note.textContent = 'Every arrow that crosses the Bridge Policy boundary is checked against allowed_target_roots, allowed_extensions, deny_patterns, and the secret scanner before it is allowed to proceed.';
+
+  // ==== ALLOWED ROOTS ====
+  var roots = [
+    {ok:true, txt:'D:\\ProjectsHome'}
+  ];
+  var rejected = [
+    {ok:false, txt:'C:\\Users\\* (user profile)'},
+    {ok:false, txt:'C:\\Windows\\* (system)'},
+    {ok:false, txt:'%APPDATA%\\* (env-resolved paths)'},
+    {ok:false, txt:'\\\\network-share\\* (UNC)'},
+    {ok:false, txt:'D:\\PrivateVault (any path outside the allow list)'}
+  ];
+  var rootsUl = document.getElementById('allowedRoots');
+  roots.forEach(function(r){
+    var li = document.createElement('li');
+    var mark = document.createElement('span'); mark.className='ok-mark'; mark.textContent='[ok]'; li.appendChild(mark);
+    var t = document.createElement('span'); t.style.fontFamily='var(--mono)'; t.style.fontSize='.84rem'; t.textContent = r.txt; li.appendChild(t);
+    rootsUl.appendChild(li);
+  });
+  var rejUl = document.getElementById('rejectedExamples');
+  rejected.forEach(function(r){
+    var li = document.createElement('li');
+    var mark = document.createElement('span'); mark.className='no-mark'; mark.textContent='[no]'; li.appendChild(mark);
+    var t = document.createElement('span'); t.style.fontFamily='var(--mono)'; t.style.fontSize='.78rem'; t.textContent = r.txt; li.appendChild(t);
+    rejUl.appendChild(li);
+  });
+
+  // ==== EXTENSIONS ====
+  var exts = [
+    '.py','.js','.ts','.jsx','.tsx','.html','.css','.scss','.less','.json',
+    '.yaml','.yml','.md','.txt','.toml','.cfg','.ini','.sh','.ps1','.bat',
+    '.cmd','.rs','.go','.java','.xml','.sql','.r','.rmd','.vue','.svelte',
+    '.astro','.patch','.diff','.c','.cpp','.h','.hpp','.cs','.rb','.php',
+    '.swift','.kt','.dart','.ex','.exs','.erl','.hs','.lua','.pl','.pm',
+    '.tf','.hcl','.dockerfile','.dockerignore','.gitignore','.editorconfig'
+  ];
+  var extGrid = document.getElementById('extGrid');
+  exts.forEach(function(e){
+    var c = document.createElement('span');
+    c.className='ext-chip';
+    c.textContent = e;
+    extGrid.appendChild(c);
+  });
+  document.getElementById('extCount').textContent = exts.length + ' extensions';
+
+  // ==== DENY GROUPS ====
+  var denyGroups = [
+    {
+      title:'Cryptographic Keys and Certs',
+      sub:'Private keys, certs, keystores',
+      items:['*.key','*.pem','*.pfx','*.p12','*.cer','*.crt','*.jks','*.keystore']
+    },
+    {
+      title:'Environment and Secrets',
+      sub:'Project env files in any form',
+      items:['*.env','*.env.*','*.secret','*.secrets']
+    },
+    {
+      title:'Passwords and Credentials',
+      sub:'Anything named like a credential',
+      items:['*password*','*credential*','*.htpasswd','*.netrc','*.pgpass']
+    },
+    {
+      title:'Tokens and Auth',
+      sub:'Auth tokens and package registry creds',
+      items:['*token*.json','*token*.txt','*.npmrc','*.pypirc']
+    },
+    {
+      title:'SSH Material',
+      sub:'Private keys, authorized lists',
+      items:['*id_rsa*','*id_ed25519*','*id_ecdsa*','*id_dsa*','*authorized_keys','*known_hosts']
+    },
+    {
+      title:'Cloud Credentials',
+      sub:'AWS, Azure, GCP, service accounts',
+      items:['*aws*credentials*','*.azure*credentials*','*gcloud*credentials*','*service.account*.json']
+    },
+    {
+      title:'Database Files',
+      sub:'Local databases of any kind',
+      items:['*.sqlite','*.db','*.mdb']
+    },
+    {
+      title:'Binaries and Compiled',
+      sub:'Executable artifacts and bytecode',
+      items:['*.exe','*.dll','*.so','*.dylib','*.bin','*.obj','*.o','*.class','*.pyc','*.pyo','*.wasm']
+    }
+  ];
+  var denyGrid = document.getElementById('denyGrid');
+  denyGroups.forEach(function(g){
+    var card = document.createElement('div');
+    card.className = 'deny-group';
+    var t = document.createElement('div'); t.className='deny-group-title'; t.textContent = g.title; card.appendChild(t);
+    var s = document.createElement('div'); s.className='deny-group-sub'; s.textContent = g.sub; card.appendChild(s);
+    var ul = document.createElement('ul');
+    g.items.forEach(function(it){
+      var li = document.createElement('li'); li.textContent = it; ul.appendChild(li);
+    });
+    card.appendChild(ul);
+    denyGrid.appendChild(card);
+  });
+
+  // ==== REDACTION RULES ====
+  var redactRules = [
+    {name:'AWS Access Key',     pattern:'AKIA[0-9A-Z]{16}',                                                         replace:'[REDACTED:aws_access_key]'},
+    {name:'AWS Secret Key',     pattern:'(?i)(aws_secret_access_key|aws_secret)\\s*[=:]\\s*\\S+',                  replace:'[REDACTED:aws_secret_key]'},
+    {name:'GitHub Token',       pattern:'gh[pousr]_[A-Za-z0-9_]{36,}',                                              replace:'[REDACTED:github_token]'},
+    {name:'Generic API Key',    pattern:'(?i)(api[_-]?key|apikey)\\s*[=:]\\s*["\\\']?[A-Za-z0-9\\-._]{20,}',       replace:'[REDACTED:api_key]'},
+    {name:'Generic Password',   pattern:'(?i)(password|passwd|pwd)\\s*[=:]\\s*["\\\']?\\S{8,}',                    replace:'[REDACTED:password]'},
+    {name:'Generic Secret',     pattern:'(?i)(secret|token|auth)\\s*[=:]\\s*["\\\']?\\S{16,}',                     replace:'[REDACTED:secret]'},
+    {name:'Private Key Block',  pattern:'-----BEGIN (?:RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----[\\s\\S]*?-----END (?:RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----', replace:'[REDACTED:private_key_block]'},
+    {name:'Connection String',  pattern:'(?i)(server|host|data source)=[^;]+;.*(password|pwd)=[^;]+',              replace:'[REDACTED:connection_string]'},
+    {name:'Bearer Token',       pattern:'(?i)bearer\\s+[A-Za-z0-9\\-._~+/]{20,}=*',                                replace:'[REDACTED:bearer_token]'},
+    {name:'JWT Token',          pattern:'eyJ[A-Za-z0-9\\-_]+\\.eyJ[A-Za-z0-9\\-_]+\\.[A-Za-z0-9\\-_.+/=]+',        replace:'[REDACTED:jwt_token]'}
+  ];
+  var redactTable = document.getElementById('redactTable');
+  var head = document.createElement('div'); head.className='redact-row head';
+  ['Rule','Pattern','Replacement'].forEach(function(h){
+    var c = document.createElement('div'); c.textContent = h; head.appendChild(c);
+  });
+  redactTable.appendChild(head);
+  redactRules.forEach(function(r){
+    var row = document.createElement('div'); row.className='redact-row';
+    var n = document.createElement('div'); n.className='redact-name'; n.textContent = r.name; row.appendChild(n);
+    var p = document.createElement('div'); p.className='redact-pattern'; p.textContent = r.pattern; row.appendChild(p);
+    var rp = document.createElement('div'); rp.className='redact-replace'; rp.textContent = r.replace; row.appendChild(rp);
+    redactTable.appendChild(row);
+  });
+
+  // ==== TOOLS ====
+  var tools = [
+    {name:'read_file',      sig:'(path: str) -> str',                desc:'Returns the contents of a single file. Path is checked against allowed roots, extension allow-list, deny patterns, and the secret scanner before any bytes are returned.'},
+    {name:'write_file',     sig:'(path: str, content: str) -> ok',   desc:'Writes a file under an allowed root. The destination path passes the same gauntlet as a read. Operator confirmation is required for any path the model has not previously written.'},
+    {name:'list_directory', sig:'(path: str) -> list[str]',          desc:'Lists entries in a directory. Filters out anything that would itself be denied so the model never sees the names of secret files. Path must be under an allowed root.'},
+    {name:'find_files',     sig:'(root: str, pattern: str) -> list', desc:'Recursive glob bounded by allowed roots. Will not return matches whose paths or extensions fail the policy chain, even if the glob would otherwise include them.'}
+  ];
+  var toolGrid = document.getElementById('toolGrid');
+  tools.forEach(function(t){
+    var card = document.createElement('div'); card.className='tool-card';
+    var n = document.createElement('div'); n.className='tool-name'; n.textContent = t.name; card.appendChild(n);
+    var s = document.createElement('div'); s.className='tool-sig'; s.textContent = t.sig; card.appendChild(s);
+    var d = document.createElement('div'); d.className='tool-desc'; d.textContent = t.desc; card.appendChild(d);
+    toolGrid.appendChild(card);
+  });
+
+  // ==== LOGGING ====
+  var safeItems = ['file paths','file sizes','operation types','timestamps','user confirmations','hash values','policy violations','error messages'];
+  var neverItems = ['file contents','prompt text','model responses','source code','diff content in main log','secret values','credentials'];
+  var safeUl = document.getElementById('safeLog');
+  safeItems.forEach(function(it){
+    var li = document.createElement('li');
+    var mk = document.createElement('span'); mk.className='ok-mark'; mk.textContent='[ok]'; li.appendChild(mk);
+    var t = document.createElement('span'); t.textContent = it; li.appendChild(t);
+    safeUl.appendChild(li);
+  });
+  var neverUl = document.getElementById('neverLog');
+  neverItems.forEach(function(it){
+    var li = document.createElement('li');
+    var mk = document.createElement('span'); mk.className='no-mark'; mk.textContent='[no]'; li.appendChild(mk);
+    var t = document.createElement('span'); t.textContent = it; li.appendChild(t);
+    neverUl.appendChild(li);
+  });
+
+  // ==== AUDIT FLOW ====
+  var audit = [
+    {n:'1', name:'Operation Approved', detail:'tool call passes the policy chain'},
+    {n:'2', name:'Entry Composed',     detail:'op type, path, sizes, timestamp'},
+    {n:'3', name:'Prev Hash Pulled',   detail:'SHA of last entry in the chain'},
+    {n:'4', name:'New Hash Computed',  detail:'SHA(prev + entry payload)'},
+    {n:'5', name:'Append-Only Write',  detail:'session log under runtime/config'}
+  ];
+  var auditFlow = document.getElementById('auditFlow');
+  audit.forEach(function(a){
+    var step = document.createElement('div'); step.className='audit-step';
+    var num = document.createElement('div'); num.className='step-num'; num.textContent = a.n; step.appendChild(num);
+    var nm = document.createElement('div'); nm.className='step-name'; nm.textContent = a.name; step.appendChild(nm);
+    var dt = document.createElement('div'); dt.className='step-detail'; dt.textContent = a.detail; step.appendChild(dt);
+    auditFlow.appendChild(step);
+  });
+
+  // ==== LIMITS ====
+  var limits = [
+    {key:'policy_not_configured',  val:'false',         note:'Policy is configured. Apply operations are permitted.'},
+    {key:'max_file_size_bytes',    val:'1,048,576',     note:'1 MiB cap on any single file passing the bridge.'},
+    {key:'max_batch_size_bytes',   val:'10,485,760',    note:'10 MiB cap on a single apply batch.'},
+    {key:'logging.level',          val:'INFO',          note:'Verbose enough for audit, never includes content.'},
+    {key:'logging.max_log_file_size_mb', val:'50',      note:'Manual rotation. Logs grow to 50 MB before rotating.'},
+    {key:'allowed_extensions',     val:'56 entries',    note:'Source, configs, and docs only. No binaries.'},
+    {key:'deny_patterns',          val:'37 patterns',   note:'Hard block list across 8 sensitive categories.'},
+    {key:'redaction_rules',        val:'10 rules',      note:'Built-in patterns for cloud, VCS, and key material.'}
+  ];
+  var lt = document.getElementById('limitsTable');
+  var lh = document.createElement('div'); lh.className='limits-row head';
+  ['Setting','Value','Notes'].forEach(function(h){
+    var c = document.createElement('div'); c.textContent = h; lh.appendChild(c);
+  });
+  lt.appendChild(lh);
+  limits.forEach(function(l){
+    var row = document.createElement('div'); row.className='limits-row';
+    var k = document.createElement('div'); k.className='limit-key'; k.textContent = l.key; row.appendChild(k);
+    var v = document.createElement('div'); v.className='limit-val'; v.textContent = l.val; row.appendChild(v);
+    var nt = document.createElement('div'); nt.className='limit-note'; nt.textContent = l.note; row.appendChild(nt);
+    lt.appendChild(row);
+  });
+
+  // ==== TREE ====
+  var tree = document.getElementById('treeBlock');
+  var treeLines = [
+    {t:'dir',  txt:'QWEN35/'},
+    {t:'file', txt:'  LAUNCH.ps1',           anno:'security preflight, Ollama launcher, CLI entry'},
+    {t:'file', txt:'  SETUP.ps1',            anno:'first-time installation'},
+    {t:'file', txt:'  STOP.ps1',             anno:'cleanup and shutdown'},
+    {t:'dir',  txt:'  cli/'},
+    {t:'file', txt:'    qwen_chat.py',       anno:'1081 LOC chat CLI, tool calling'},
+    {t:'dir',  txt:'  policies/'},
+    {t:'file', txt:'    bridge_policy.yaml', anno:'access control, deny patterns, redaction'},
+    {t:'dir',  txt:'  runtime/'},
+    {t:'file', txt:'    config/',            anno:'model config, hash-chain session logs'},
+    {t:'dir',  txt:'  workspace_bridge/'},
+    {t:'file', txt:'    inbox/',             anno:'files staged for the model to read'},
+    {t:'file', txt:'    outbox/',            anno:'files written by the model awaiting review'},
+    {t:'file', txt:'    scratch/',           anno:'ephemeral, cleared between sessions'},
+    {t:'dir',  txt:'  scripts/',             anno:'numbered operational scripts'},
+    {t:'dir',  txt:'  deliverables/',        anno:'output artifacts'}
+  ];
+  treeLines.forEach(function(line){
+    var div = document.createElement('div');
+    var name = document.createElement('span');
+    name.className = (line.t === 'dir') ? 'dir' : 'file';
+    name.textContent = line.txt;
+    div.appendChild(name);
+    if (line.anno) {
+      var a = document.createElement('span');
+      a.className = 'anno';
+      a.textContent = '// ' + line.anno;
+      div.appendChild(a);
+    }
+    tree.appendChild(div);
+  });
+})();
+</script>
+
+</body>
+</html>

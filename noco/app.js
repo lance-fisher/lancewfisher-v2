@@ -151,6 +151,12 @@ function renderPhoneScreen() {
     content = renderHomeTab(b, c, textColor, textSecondary);
   } else if (currentTab === 'services') {
     content = renderServicesTab(b, c, textColor, textSecondary);
+  } else if (currentTab === 'appointments') {
+    content = renderAppointmentsTab(b, c, textColor, textSecondary);
+  } else if (currentTab === 'wallet') {
+    content = renderWalletTab(b, c, textColor, textSecondary);
+  } else if (currentTab === 'profile') {
+    content = renderProfileTab(b, c, textColor, textSecondary);
   }
 
   screen.innerHTML = `
@@ -280,6 +286,137 @@ function renderServicesTab(b, c, textColor, textSecondary) {
   `;
 }
 
+function renderAppointmentsTab(b, c, textColor, textSecondary) {
+  const svc1 = b.services[0];
+  const svc2 = b.services.length > 2 ? b.services[2] : b.services[0];
+  const staff1 = b.staff[0];
+  const staff2 = b.staff.length > 1 ? b.staff[1] : b.staff[0];
+
+  return `
+    <div style="padding: 48px 16px 8px;">
+      <div style="font-size:20px; font-weight:700; color:${textColor}">Appointments</div>
+    </div>
+    <div class="app-nav-tabs">
+      <div class="app-nav-tab" style="background:${c.primary}; color:#fff;">Upcoming</div>
+      <div class="app-nav-tab" style="background:${c.surface}; color:${textSecondary};">Past</div>
+    </div>
+    <div class="app-section" style="padding-top:12px;">
+      <div class="app-service-card" style="background:${c.surface};">
+        <div class="app-service-icon" style="background:${c.primary}20;">${getServiceIcon(svc1?.category)}</div>
+        <div class="app-service-info">
+          <div class="app-service-name" style="color:${textColor}">${svc1?.name || 'Service'}</div>
+          <div class="app-service-desc" style="color:${textSecondary}">with ${staff1?.name || 'Staff'}</div>
+          <div style="font-size:11px; color:${c.primary}; font-weight:600; margin-top:4px;">Tomorrow at 2:30 PM</div>
+          <div style="display:inline-block; margin-top:6px; font-size:10px; font-weight:600; padding:2px 8px; border-radius:10px; background:#22c55e20; color:#22c55e;">Confirmed</div>
+        </div>
+      </div>
+      <div style="margin-top:20px; font-size:12px; font-weight:600; color:${textSecondary}; text-transform:uppercase; letter-spacing:0.5px;">Past</div>
+      <div class="app-service-card" style="background:${c.surface}; opacity:0.7;">
+        <div class="app-service-icon" style="background:${c.primary}10;">${getServiceIcon(svc2?.category)}</div>
+        <div class="app-service-info">
+          <div class="app-service-name" style="color:${textColor}">${svc2?.name || 'Service'}</div>
+          <div class="app-service-desc" style="color:${textSecondary}">with ${staff2?.name || 'Staff'}</div>
+          <div style="font-size:11px; color:${textSecondary}; margin-top:4px;">Jan 28, 2026</div>
+          <div style="display:inline-block; margin-top:6px; font-size:10px; font-weight:600; padding:2px 8px; border-radius:10px; background:#3b82f620; color:#3b82f6;">Completed</div>
+        </div>
+      </div>
+    </div>
+    <div style="height: 16px;"></div>
+  `;
+}
+
+function renderWalletTab(b, c, textColor, textSecondary) {
+  const svc1 = b.services[0];
+  return `
+    <div style="padding: 48px 16px 8px;">
+      <div style="font-size:20px; font-weight:700; color:${textColor}">Wallet</div>
+    </div>
+    <div class="app-section">
+      <div style="background:linear-gradient(135deg, ${c.primary}, ${c.primaryDark || c.secondary}); border-radius:16px; padding:24px; color:#fff; margin-bottom:16px;">
+        <div style="font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:1px;">Available Balance</div>
+        <div style="font-size:36px; font-weight:700; margin:8px 0;">$125.00</div>
+        <div style="font-size:11px; opacity:0.7;">Loyalty points: 340 pts</div>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:20px;">
+        <div style="background:${c.surface}; border-radius:10px; padding:12px; text-align:center; cursor:pointer;">
+          <div style="font-size:14px; font-weight:600; color:${textColor}">$50</div>
+        </div>
+        <div style="background:${c.primary}15; border:1px solid ${c.primary}40; border-radius:10px; padding:12px; text-align:center; cursor:pointer;">
+          <div style="font-size:14px; font-weight:600; color:${c.primary}">$100</div>
+        </div>
+        <div style="background:${c.surface}; border-radius:10px; padding:12px; text-align:center; cursor:pointer;">
+          <div style="font-size:14px; font-weight:600; color:${textColor}">$200</div>
+        </div>
+      </div>
+      <div style="background:${c.primary}; color:#fff; border-radius:10px; padding:14px; text-align:center; font-weight:600; font-size:14px; cursor:pointer;">Add Funds</div>
+    </div>
+    <div class="app-section">
+      <div class="app-section-title" style="color:${textColor}">Recent Activity</div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div class="app-service-card" style="background:${c.surface};">
+          <div style="width:32px; height:32px; border-radius:50%; background:#22c55e15; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0;">&#8593;</div>
+          <div class="app-service-info">
+            <div class="app-service-name" style="color:${textColor}">Added Funds</div>
+            <div class="app-service-desc" style="color:${textSecondary}">Feb 1, 2026</div>
+          </div>
+          <div style="color:#22c55e; font-weight:600; font-size:14px;">+$100.00</div>
+        </div>
+        <div class="app-service-card" style="background:${c.surface};">
+          <div style="width:32px; height:32px; border-radius:50%; background:#ef444415; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0;">&#8595;</div>
+          <div class="app-service-info">
+            <div class="app-service-name" style="color:${textColor}">${svc1?.name || 'Service'}</div>
+            <div class="app-service-desc" style="color:${textSecondary}">Jan 28, 2026</div>
+          </div>
+          <div style="color:#ef4444; font-weight:600; font-size:14px;">-$${Math.floor((svc1?.price || 15000) / 100)}.00</div>
+        </div>
+        <div class="app-service-card" style="background:${c.surface};">
+          <div style="width:32px; height:32px; border-radius:50%; background:#f59e0b15; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0;">&#9733;</div>
+          <div class="app-service-info">
+            <div class="app-service-name" style="color:${textColor}">Loyalty Bonus</div>
+            <div class="app-service-desc" style="color:${textSecondary}">Jan 28, 2026</div>
+          </div>
+          <div style="color:#f59e0b; font-weight:600; font-size:14px;">+$25.00</div>
+        </div>
+      </div>
+    </div>
+    <div style="height: 16px;"></div>
+  `;
+}
+
+function renderProfileTab(b, c, textColor, textSecondary) {
+  return `
+    <div style="padding: 48px 16px 8px; text-align:center;">
+      <div style="width:64px; height:64px; border-radius:50%; background:${c.primary}; color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:600; margin:0 auto 12px;">S</div>
+      <div style="font-size:18px; font-weight:700; color:${textColor}">Sarah Miller</div>
+      <div style="font-size:13px; color:${textSecondary}">sarah.miller@email.com</div>
+      <div style="display:inline-block; margin-top:6px; font-size:10px; font-weight:600; padding:2px 10px; border-radius:10px; background:#22c55e20; color:#22c55e;">&#10003; Verified</div>
+    </div>
+    <div class="app-section" style="padding-top:8px;">
+      ${[
+        { icon: '&#9998;', label: 'Edit Profile' },
+        { icon: '&#128276;', label: 'Notifications' },
+        { icon: '&#128197;', label: 'Booking History' },
+        { icon: '&#128179;', label: 'Payment Methods' },
+        { icon: '&#11088;', label: 'Loyalty Program' },
+        { icon: '&#128222;', label: 'Contact ${b.name}' },
+        { icon: '&#128274;', label: 'Privacy & Security' },
+        { icon: '&#128221;', label: 'Terms of Service' },
+      ].map(item => `
+        <div class="app-service-card" style="background:${c.surface}; cursor:pointer;">
+          <div style="width:32px; height:32px; border-radius:8px; background:${c.primary}12; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0;">${item.icon}</div>
+          <div class="app-service-info">
+            <div class="app-service-name" style="color:${textColor}; font-size:14px;">${item.label}</div>
+          </div>
+          <div style="color:${textSecondary}; font-size:14px;">&#10095;</div>
+        </div>
+      `).join('')}
+      <div style="margin-top:16px; background:#ef444415; color:#ef4444; border-radius:10px; padding:14px; text-align:center; font-weight:600; font-size:14px; cursor:pointer;">Log Out</div>
+    </div>
+    <div style="text-align:center; padding:12px 0 4px; font-size:11px; color:${textSecondary};">v1.0.0 &middot; ${b.name}</div>
+    <div style="height: 16px;"></div>
+  `;
+}
+
 function renderTabBar(b, c, textColor, textSecondary) {
   const tabs = ['home', 'services', 'appointments', 'wallet', 'profile'];
   const labels = ['Home', 'Services', 'Appts', 'Wallet', 'Profile'];
@@ -301,10 +438,8 @@ function renderTabBar(b, c, textColor, textSecondary) {
 }
 
 function switchTab(tab) {
-  if (tab === 'home' || tab === 'services') {
-    currentTab = tab;
-    renderPhoneScreen();
-  }
+  currentTab = tab;
+  renderPhoneScreen();
 }
 
 // ─── RENDER INFO PANEL ───

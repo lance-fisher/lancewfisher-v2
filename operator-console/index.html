@@ -1,0 +1,2623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operator Console | Lance W. Fisher</title>
+<meta name="description" content="Sovereign Console: an interactive simulation of an operator-grade remote control plane. WebAuthn passkeys, hash-chained audit, mTLS, tiered approval, second-device approval flow.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#9881;</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0b;
+  --bg2: #0e0f12;
+  --bg3: #14161b;
+  --bg4: #1b1e25;
+  --bg5: #232733;
+  --silver: rgba(228, 234, 242, 0.94);
+  --silver-2: rgba(195, 205, 218, 0.72);
+  --silver-3: rgba(150, 160, 178, 0.55);
+  --silver-4: rgba(120, 130, 148, 0.38);
+  --border: rgba(228, 234, 242, 0.07);
+  --border-2: rgba(228, 234, 242, 0.13);
+  --border-strong: rgba(228, 234, 242, 0.22);
+  --green: #6ee7a0;
+  --green-dim: rgba(110, 231, 160, 0.14);
+  --green-line: rgba(110, 231, 160, 0.32);
+  --amber: #fbbf24;
+  --amber-dim: rgba(251, 191, 36, 0.14);
+  --amber-line: rgba(251, 191, 36, 0.32);
+  --red: #f87171;
+  --red-dim: rgba(248, 113, 113, 0.14);
+  --red-line: rgba(248, 113, 113, 0.32);
+  --blue: #7dd3fc;
+  --blue-dim: rgba(125, 211, 252, 0.14);
+  --blue-line: rgba(125, 211, 252, 0.32);
+  --font-head: 'Cinzel', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--silver);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.55;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+button { font-family: inherit; cursor: pointer; }
+a { color: var(--silver); text-decoration: none; }
+
+/* NAV */
+.console-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: #0a0a0c;
+  border-bottom: 1px solid var(--border-2);
+  position: sticky;
+  top: 0;
+  z-index: 80;
+}
+.cn-left { display: flex; align-items: center; gap: 22px; }
+.cn-back {
+  font-size: 12px;
+  color: var(--silver-2);
+  letter-spacing: 0.04em;
+  transition: color 0.18s;
+}
+.cn-back:hover { color: var(--silver); }
+.cn-title {
+  font-family: var(--font-head);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--silver);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.cn-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--silver-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.cn-version {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px;
+  border: 1px solid var(--border-2);
+  border-radius: 4px;
+  background: var(--bg3);
+  color: var(--silver-2);
+  font-size: 10px;
+  position: relative;
+  cursor: help;
+}
+.cn-version::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 6px var(--amber-line);
+}
+.cn-version .tip {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #06070a;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--silver-2);
+  letter-spacing: 0;
+  text-transform: none;
+  width: 240px;
+  line-height: 1.5;
+  display: none;
+  z-index: 200;
+  text-align: left;
+}
+.cn-version:hover .tip { display: block; }
+.cn-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.cn-status .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green-line);
+}
+
+/* TABS */
+.tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border-2);
+  padding: 0 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--silver-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 14px 20px;
+  position: relative;
+  transition: color 0.18s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--silver-2); }
+.tab-btn.active { color: var(--silver); }
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 2px;
+  background: var(--silver);
+  border-radius: 2px 2px 0 0;
+}
+
+/* MAIN PANEL */
+.main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 22px 24px 80px;
+  position: relative;
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* PANELS / CARDS */
+.panel {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 22px;
+  margin-bottom: 18px;
+}
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.panel-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--silver-3);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.panel-actions { display: flex; gap: 8px; }
+
+/* SESSION INFO GRID */
+.session-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px 22px;
+}
+.session-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.session-field .k {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--silver-3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.session-field .v {
+  font-size: 13px;
+  color: var(--silver);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.session-field .v .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green-line);
+}
+.session-field .v.mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.session-field .tier-pill {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  border: 1px solid var(--green-line);
+  background: var(--green-dim);
+  color: var(--green);
+  letter-spacing: 0.06em;
+}
+.session-field .tier-pill.t2 { color: var(--blue); border-color: var(--blue-line); background: var(--blue-dim); }
+.session-field .tier-pill.t3 { color: var(--amber); border-color: var(--amber-line); background: var(--amber-dim); }
+.session-field .tier-pill.t4 { color: var(--red); border-color: var(--red-line); background: var(--red-dim); }
+
+/* HEALTH CARDS */
+.health-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+.health-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--green);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.health-card.degraded { border-left-color: var(--amber); }
+.health-card.failed { border-left-color: var(--red); }
+.hc-name {
+  font-size: 12px;
+  color: var(--silver-2);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.hc-name .badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: var(--green-dim);
+  color: var(--green);
+  border: 1px solid var(--green-line);
+  letter-spacing: 0.08em;
+}
+.health-card.degraded .badge { background: var(--amber-dim); color: var(--amber); border-color: var(--amber-line); }
+.health-card.failed .badge { background: var(--red-dim); color: var(--red); border-color: var(--red-line); }
+.hc-metric {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--silver);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.hc-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--silver-3);
+  margin-top: 4px;
+  letter-spacing: 0.04em;
+}
+
+/* AGENT LIST */
+.agent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.agent-row {
+  display: grid;
+  grid-template-columns: 1.6fr 0.6fr 1fr 1.4fr;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 16px;
+}
+.agent-name {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--silver);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.agent-name .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green-line);
+}
+.agent-name.offline .dot {
+  background: var(--silver-4);
+  box-shadow: none;
+}
+.agent-version {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--silver-3);
+}
+.agent-status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.agent-status.online { color: var(--green); }
+.agent-status.offline { color: var(--silver-3); }
+.agent-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--silver-3);
+  text-align: right;
+}
+
+/* BUTTONS */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--bg4);
+  border: 1px solid var(--border-2);
+  color: var(--silver);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 7px 13px;
+  border-radius: 4px;
+  transition: all 0.18s;
+}
+.btn:hover {
+  background: var(--bg5);
+  border-color: var(--border-strong);
+}
+.btn.primary {
+  background: var(--green-dim);
+  border-color: var(--green-line);
+  color: var(--green);
+}
+.btn.primary:hover {
+  background: rgba(110, 231, 160, 0.22);
+}
+.btn.danger {
+  background: var(--red-dim);
+  border-color: var(--red-line);
+  color: var(--red);
+}
+.btn.danger:hover {
+  background: rgba(248, 113, 113, 0.22);
+}
+.btn.amber {
+  background: var(--amber-dim);
+  border-color: var(--amber-line);
+  color: var(--amber);
+}
+.btn.amber:hover {
+  background: rgba(251, 191, 36, 0.22);
+}
+.btn.ghost {
+  background: transparent;
+}
+.btn.sm {
+  font-size: 10px;
+  padding: 5px 10px;
+}
+
+/* SERVICES GRID */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 14px;
+}
+.service-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--green);
+  border-radius: 8px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.service-card.degraded { border-top-color: var(--amber); }
+.service-card.failed { border-top-color: var(--red); }
+.service-card.restarting { border-top-color: var(--amber); }
+.sc-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+.sc-name {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--silver);
+  font-weight: 500;
+}
+.sc-version {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--silver-3);
+  margin-top: 2px;
+}
+.sc-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--green-dim);
+  color: var(--green);
+  border: 1px solid var(--green-line);
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+.service-card.degraded .sc-status { background: var(--amber-dim); color: var(--amber); border-color: var(--amber-line); }
+.service-card.failed .sc-status { background: var(--red-dim); color: var(--red); border-color: var(--red-line); }
+.service-card.restarting .sc-status { background: var(--amber-dim); color: var(--amber); border-color: var(--amber-line); }
+.sc-status .spinner {
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.sc-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  font-family: var(--font-mono);
+}
+.sc-metric { display: flex; flex-direction: column; gap: 2px; }
+.sc-metric .k {
+  font-size: 9px;
+  color: var(--silver-3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.sc-metric .v {
+  font-size: 12px;
+  color: var(--silver);
+}
+.sc-restart {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--silver-3);
+}
+.sc-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+/* QUEUE */
+.queue-summary {
+  display: flex;
+  gap: 24px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--silver-2);
+  letter-spacing: 0.06em;
+}
+.queue-summary strong {
+  color: var(--silver);
+  font-weight: 500;
+  margin-left: 6px;
+}
+.queue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.queue-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--amber);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.queue-item.expired { border-left-color: var(--silver-4); opacity: 0.65; }
+.queue-item.executing { border-left-color: var(--green); }
+.qi-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.qi-id {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--silver-3);
+  letter-spacing: 0.06em;
+}
+.qi-status {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: var(--amber-dim);
+  color: var(--amber);
+  border: 1px solid var(--amber-line);
+  letter-spacing: 0.06em;
+}
+.queue-item.expired .qi-status { background: rgba(150,160,178,0.10); color: var(--silver-3); border-color: var(--border-2); }
+.qi-prompt {
+  font-size: 13px;
+  color: var(--silver);
+  margin-bottom: 8px;
+}
+.qi-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 6px 18px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--silver-3);
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+.qi-meta .v { color: var(--silver-2); }
+.qi-context {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--silver-2);
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+}
+.qi-actions { display: flex; gap: 6px; }
+.queue-empty {
+  text-align: center;
+  font-size: 12px;
+  color: var(--silver-3);
+  padding: 20px;
+}
+
+/* APPROVALS */
+.approval-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.approval-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--amber);
+  border-radius: 6px;
+  padding: 16px 18px;
+}
+.approval-card.tier4 { border-left-color: var(--red); }
+.approval-card.approved { border-left-color: var(--green); opacity: 0.85; }
+.approval-card.rejected { border-left-color: var(--silver-4); opacity: 0.6; }
+.ac-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.ac-id {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--silver-3);
+  letter-spacing: 0.06em;
+}
+.ac-action {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--silver);
+  margin-top: 3px;
+}
+.ac-tier {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: var(--amber-dim);
+  color: var(--amber);
+  border: 1px solid var(--amber-line);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.ac-tier.t4 { background: var(--red-dim); color: var(--red); border-color: var(--red-line); }
+.ac-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 6px 18px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--silver-3);
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+.ac-meta .v { color: var(--silver-2); }
+.ac-payload {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--silver-2);
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 120px;
+  overflow-y: auto;
+}
+.ac-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* AUDIT LOG */
+.audit-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.audit-summary {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--silver-2);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.audit-summary .ok {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--green);
+}
+.audit-summary .ok::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green-line);
+}
+.audit-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 18px;
+}
+.audit-filter {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  align-self: start;
+}
+.audit-filter h4 {
+  font-size: 10px;
+  color: var(--silver-3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.af-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 16px;
+}
+.af-opt {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--silver-2);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 3px 0;
+}
+.af-opt input { accent-color: var(--silver); }
+.af-opt:hover { color: var(--silver); }
+.af-opt input[type="checkbox"] {
+  width: 12px;
+  height: 12px;
+}
+
+.audit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 640px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.audit-entry {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 11px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  position: relative;
+}
+.audit-entry::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 50%;
+  bottom: -7px;
+  width: 1px;
+  background: var(--border-2);
+}
+.audit-entry:last-child::before { display: none; }
+.ae-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.ae-id {
+  color: var(--silver-3);
+  letter-spacing: 0.04em;
+  font-size: 10px;
+}
+.ae-type {
+  color: var(--silver);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+.ae-type.action { color: var(--blue); }
+.ae-type.approval { color: var(--green); }
+.ae-type.tier { color: var(--amber); }
+.ae-type.auth { color: var(--silver); }
+.ae-type.system { color: var(--silver-2); }
+.ae-type.refusal { color: var(--red); }
+.ae-time {
+  color: var(--silver-3);
+  font-size: 10px;
+}
+.ae-action {
+  color: var(--silver-2);
+  font-size: 11px;
+  margin-bottom: 6px;
+  font-family: var(--font-body);
+}
+.ae-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 3px 14px;
+  color: var(--silver-3);
+  font-size: 10px;
+}
+.ae-fields .k { color: var(--silver-3); }
+.ae-fields .v { color: var(--silver-2); word-break: break-all; }
+.ae-hashes {
+  display: flex;
+  gap: 14px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--border-2);
+  font-size: 9px;
+  color: var(--silver-3);
+  flex-wrap: wrap;
+}
+.ae-hashes .k {
+  color: var(--silver-4);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-right: 4px;
+}
+.ae-hashes .v {
+  color: var(--silver-2);
+}
+.ae-hashes .link {
+  color: var(--blue);
+}
+
+/* ALERT FEED */
+.alert-feed {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 90;
+  max-width: 360px;
+  pointer-events: none;
+}
+.alert {
+  background: var(--bg3);
+  border: 1px solid var(--border-2);
+  border-left: 3px solid var(--green);
+  border-radius: 6px;
+  padding: 11px 14px;
+  font-size: 12px;
+  color: var(--silver);
+  font-family: var(--font-body);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+  animation: slideIn 0.32s ease-out;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.alert.warning { border-left-color: var(--amber); }
+.alert.error { border-left-color: var(--red); }
+.alert.system { border-left-color: var(--blue); }
+.alert .icon {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+  margin-top: 5px;
+  box-shadow: 0 0 6px var(--green-line);
+}
+.alert.warning .icon { background: var(--amber); box-shadow: 0 0 6px var(--amber-line); }
+.alert.error .icon { background: var(--red); box-shadow: 0 0 6px var(--red-line); }
+.alert.system .icon { background: var(--blue); box-shadow: 0 0 6px var(--blue-line); }
+.alert .body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.alert .body .msg {
+  color: var(--silver);
+  line-height: 1.45;
+}
+.alert .body .meta {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--silver-3);
+  letter-spacing: 0.04em;
+}
+.alert.fading { animation: slideOut 0.4s ease-in forwards; }
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(40px); }
+}
+
+/* MODALS */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 5, 8, 0.78);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 24px;
+  backdrop-filter: blur(4px);
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 26px 28px;
+  max-width: 540px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal h3 {
+  font-family: var(--font-head);
+  font-size: 16px;
+  color: var(--silver);
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.modal .sub {
+  font-size: 12px;
+  color: var(--silver-2);
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+.modal-body { font-size: 13px; color: var(--silver-2); line-height: 1.6; }
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.totp-input {
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  color: var(--silver);
+  font-family: var(--font-mono);
+  font-size: 22px;
+  letter-spacing: 0.4em;
+  padding: 12px 16px;
+  border-radius: 6px;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.totp-input:focus {
+  outline: none;
+  border-color: var(--silver-2);
+}
+.totp-hint {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--silver-3);
+  text-align: center;
+  margin-bottom: 12px;
+}
+.flow-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--silver-3);
+  border-bottom: 1px dashed var(--border-2);
+}
+.flow-step:last-child { border-bottom: none; }
+.flow-step .marker {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--silver-3);
+}
+.flow-step.active { color: var(--silver); }
+.flow-step.active .marker {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+.flow-step.active .marker::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid var(--amber);
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.flow-step.active .marker { font-size: 0; }
+.flow-step.done { color: var(--silver); }
+.flow-step.done .marker {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--bg);
+}
+.flow-step.done .marker::after { content: '\2713'; font-size: 11px; color: var(--bg); font-weight: 700; }
+.flow-step.done .marker { font-size: 0; }
+.chain-walk {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--silver-2);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.chain-walk-line {
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.chain-walk-line.ok { color: var(--green); }
+.chain-walk-line.final { color: var(--silver); margin-top: 6px; padding-top: 8px; border-top: 1px solid var(--border); }
+
+/* HELP TOOLTIP */
+.help {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--silver-3);
+  margin-left: 6px;
+  cursor: help;
+  position: relative;
+}
+.help:hover { color: var(--silver); border-color: var(--silver-2); }
+.help-tip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #06070a;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--silver-2);
+  width: 260px;
+  line-height: 1.5;
+  display: none;
+  z-index: 100;
+  text-align: left;
+  white-space: normal;
+}
+.help-tip code {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--silver);
+  background: var(--bg3);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+.help:hover .help-tip { display: block; }
+
+/* LAYOUT 2-COLUMN HEALTH+AGENTS */
+.dash-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+@media (max-width: 1080px) {
+  .dash-row { grid-template-columns: 1fr; }
+  .audit-layout { grid-template-columns: 1fr; }
+  .audit-filter { order: 2; }
+  .agent-row { grid-template-columns: 1fr; gap: 6px; text-align: left; }
+  .agent-meta { text-align: left; }
+}
+@media (max-width: 720px) {
+  .console-nav { padding: 10px 14px; flex-wrap: wrap; gap: 10px; }
+  .cn-right { gap: 10px; }
+  .tabs-bar { padding: 0 14px; }
+  .tab-btn { padding: 12px 14px; font-size: 10px; }
+  .main { padding: 14px 14px 80px; }
+  .alert-feed { right: 8px; bottom: 8px; left: 8px; max-width: none; }
+}
+
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bg5); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+</style>
+</head>
+<body>
+
+<!-- FSS-BRAND-BLOCK-V3 (FF25 wordmark, no H icon) -->
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/brand.css?v=20260408v3">
+<div class="fssb-v3-top">
+  <a href="../home.html" class="fssb-v3-top-link" aria-label="Fisher Sovereign Systems">
+    <span class="fssb-v3-top-name">Fisher</span>
+    <span class="fssb-v3-top-rule"></span>
+    <span class="fssb-v3-top-sub">Sovereign Systems</span>
+  </a>
+  <a href="../home.html" class="fssb-v3-top-back">&larr; Portfolio</a>
+</div>
+
+<nav class="console-nav">
+  <div class="cn-left">
+    <a href="../home.html" class="cn-back">&larr; Back</a>
+    <span class="cn-title">Operator Console</span>
+  </div>
+  <div class="cn-right">
+    <span class="cn-version">[SIM v0.1]
+      <span class="tip">Interactive Console Simulation. Demo data running entirely in your browser. Not a live system. State persists in localStorage so you can refresh.</span>
+    </span>
+    <span class="cn-status"><span class="dot"></span><span id="ncStatus">READY</span></span>
+  </div>
+</nav>
+
+<div class="page-benefit">
+  Human-in-the-loop approval for every sensitive action your automation takes. Nothing ships without a second factor.
+</div>
+
+<div class="tabs-bar" id="tabsBar">
+  <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+  <button class="tab-btn" data-tab="services">Services</button>
+  <button class="tab-btn" data-tab="queue">Execution Queue</button>
+  <button class="tab-btn" data-tab="approvals">Approvals</button>
+  <button class="tab-btn" data-tab="audit">Audit Log</button>
+</div>
+
+<main class="main">
+
+  <!-- ============== DASHBOARD ============== -->
+  <section class="tab-panel active" data-panel="dashboard">
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Session
+          <span class="help">?<span class="help-tip">Real broker route: <code>GET /api/system/agent-status</code> returns operator and session metadata. mTLS certs are validated on every WebSocket connection.</span></span>
+        </div>
+        <div class="panel-actions">
+          <button class="btn sm" id="btnElevate">Tier Elevation</button>
+          <button class="btn danger sm" id="btnEmergency">Emergency Disable</button>
+        </div>
+      </div>
+      <div class="session-grid">
+        <div class="session-field">
+          <span class="k">Operator</span>
+          <span class="v">Lance W. Fisher</span>
+        </div>
+        <div class="session-field">
+          <span class="k">Tier</span>
+          <span class="v"><span class="tier-pill" id="sessTier">T1 — Read-Only</span></span>
+        </div>
+        <div class="session-field">
+          <span class="k">Device</span>
+          <span class="v"><span class="dot"></span>Windows Desktop &middot; mTLS</span>
+        </div>
+        <div class="session-field">
+          <span class="k">Session ID</span>
+          <span class="v mono" id="sessId">sess_a3f291e8</span>
+        </div>
+        <div class="session-field">
+          <span class="k">Session Age</span>
+          <span class="v mono" id="sessAge">00:00:00</span>
+        </div>
+        <div class="session-field">
+          <span class="k">Session Expires</span>
+          <span class="v mono" id="sessExpires">04:00:00</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-row">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Health
+            <span class="help">?<span class="help-tip">Real broker route: <code>GET /api/system/health</code> performs live PostgreSQL and Redis pings, returns 503 if any check fails.</span></span>
+          </div>
+        </div>
+        <div class="health-grid" id="healthGrid"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Agent Registrations
+            <span class="help">?<span class="help-tip">Real broker route: <code>GET /api/system/agent-status</code> returns rows from the <code>agent_registrations</code> table joined with live WebSocket connection state. Offline agents queue commands until reconnect.</span></span>
+          </div>
+        </div>
+        <div class="agent-list" id="agentList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== SERVICES ============== -->
+  <section class="tab-panel" data-panel="services">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Services
+          <span class="help">?<span class="help-tip">Restart triggers <code>POST /api/tasks</code> with an approval token bound to (device_id, session_id, payload_hash). Tier 2 minimum required.</span></span>
+        </div>
+      </div>
+      <div class="services-grid" id="servicesGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============== EXECUTION QUEUE ============== -->
+  <section class="tab-panel" data-panel="queue">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Execution Queue
+          <span class="help">?<span class="help-tip">Tasks land in a queue when the target agent is offline at submission time. Real broker behavior: queued commands require operator reconfirmation when the agent reconnects, then dispatch via the mTLS WebSocket.</span></span>
+        </div>
+        <div class="queue-summary" id="queueSummary"></div>
+      </div>
+      <div class="queue-list" id="queueList"></div>
+
+      <div class="panel-head" style="margin-top:24px;">
+        <div class="panel-title">Expired History</div>
+      </div>
+      <div class="queue-list" id="queueExpired"></div>
+    </div>
+  </section>
+
+  <!-- ============== APPROVALS ============== -->
+  <section class="tab-panel" data-panel="approvals">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Pending Approvals
+          <span class="help">?<span class="help-tip">Real broker routes: <code>POST /api/approval/request</code>, <code>POST /api/approval/{id}/approve</code>, <code>POST /api/approval/{id}/reject</code>. Tokens are single-use, scope-bound, and bound to a payload hash so they cannot be replayed against different content.</span></span>
+        </div>
+      </div>
+      <div class="approval-list" id="approvalList"></div>
+
+      <div class="panel-head" style="margin-top:24px;">
+        <div class="panel-title">Recently Resolved</div>
+      </div>
+      <div class="approval-list" id="approvalHistory"></div>
+    </div>
+  </section>
+
+  <!-- ============== AUDIT LOG ============== -->
+  <section class="tab-panel" data-panel="audit">
+    <div class="panel">
+      <div class="audit-head">
+        <div class="audit-summary">
+          <span class="ok" id="auditChainStatus">Chain Verified</span>
+          <span><strong id="auditCount">0</strong> entries</span>
+          <span>Last verified: <strong id="auditLastVerified">just now</strong></span>
+        </div>
+        <div class="panel-actions">
+          <button class="btn sm" id="btnVerifyChain">Verify Chain</button>
+          <button class="btn sm" id="btnExportLog">Export Log</button>
+        </div>
+      </div>
+
+      <div class="audit-layout">
+        <aside class="audit-filter">
+          <h4>Event Type</h4>
+          <div class="af-group" id="auditFilterTypes"></div>
+          <h4>Time Range</h4>
+          <div class="af-group">
+            <label class="af-opt"><input type="radio" name="af-time" value="all" checked>All</label>
+            <label class="af-opt"><input type="radio" name="af-time" value="1h">Last hour</label>
+            <label class="af-opt"><input type="radio" name="af-time" value="6h">Last 6 hours</label>
+            <label class="af-opt"><input type="radio" name="af-time" value="24h">Last 24 hours</label>
+          </div>
+        </aside>
+        <div class="audit-list" id="auditList"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ALERT FEED -->
+<div class="alert-feed" id="alertFeed"></div>
+
+<!-- MODALS -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<!-- FSS-BRAND-FOOTER-V3 (FF25 wordmark, no H icon) -->
+<footer class="fssb-v3-foot">
+  <h2 class="fssb-v3-foot-name">Fisher</h2>
+  <span class="fssb-v3-foot-rule"></span>
+  <div class="fssb-v3-foot-sub">Sovereign Systems</div>
+  <div class="fssb-v3-foot-motto">Building the Architecture for Independence</div>
+  <p style="font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:0.98rem;color:rgba(220,217,211,0.72);max-width:520px;margin:28px auto 0;line-height:1.6;">Fisher Sovereign Systems is being built to return control to the individual.</p>
+  <a href="../home.html" class="fssb-v3-foot-back">&larr; Visit lancewfisher.com</a>
+  <div style="margin-top:32px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.05);font-size:0.66rem;color:#6b6b75;letter-spacing:0.06em;">&copy; 2026 Fisher Sovereign Systems, LLC. All rights reserved.</div>
+</footer>
+
+<script>
+(function() {
+  'use strict';
+
+  /* =====================================================
+     OPERATOR CONSOLE — INTERACTIVE SIMULATION (v0.1)
+     localStorage-backed state machine. No network calls.
+     All values seeded; UI mutates state and re-renders.
+     ===================================================== */
+
+  /* ---------- helpers ---------- */
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined && text !== null) n.textContent = text;
+    return n;
+  }
+  function pad2(n) { return String(n).padStart(2, '0'); }
+  function fmtDuration(ms) {
+    if (ms < 0) ms = 0;
+    var s = Math.floor(ms / 1000);
+    var h = Math.floor(s / 3600);
+    var m = Math.floor((s % 3600) / 60);
+    var ss = s % 60;
+    return pad2(h) + ':' + pad2(m) + ':' + pad2(ss);
+  }
+  function fmtCountdown(ms) {
+    if (ms < 0) ms = 0;
+    var s = Math.floor(ms / 1000);
+    var m = Math.floor(s / 60);
+    var ss = s % 60;
+    return m + 'm ' + pad2(ss) + 's';
+  }
+  function fmtAgo(ts) {
+    var diff = Date.now() - ts;
+    if (diff < 60000) return Math.floor(diff / 1000) + 's ago';
+    if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+    if (diff < 86400000) {
+      var h = Math.floor(diff / 3600000);
+      var m = Math.floor((diff % 3600000) / 60000);
+      return h + 'h ' + m + 'm ago';
+    }
+    return Math.floor(diff / 86400000) + 'd ago';
+  }
+  function fmtClock(ts) {
+    var d = new Date(ts);
+    return pad2(d.getHours()) + ':' + pad2(d.getMinutes()) + ':' + pad2(d.getSeconds());
+  }
+  function shortHash() {
+    var hex = '0123456789abcdef';
+    var s = '';
+    for (var i = 0; i < 8; i++) s += hex[Math.floor(Math.random() * 16)];
+    return s;
+  }
+  function fullHash() {
+    return shortHash() + shortHash() + shortHash() + shortHash();
+  }
+  function uuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0;
+      var v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+  function flicker(base, pct) {
+    var delta = base * (pct / 100);
+    return base + (Math.random() * 2 - 1) * delta;
+  }
+
+  /* ---------- localStorage state ---------- */
+  var STATE_KEY = 'fss_operator_console_v0_1';
+  var state;
+
+  function defaultState() {
+    var now = Date.now();
+    var sessionStart = now;
+
+    /* Seed audit log with 127 entries spanning 24h */
+    var auditSeed = [];
+    var prev = '0000000000000000';
+    var seedTypes = [
+      { t: 'auth', a: 'WebAuthn passkey ceremony succeeded', op: 'webauthn.success' },
+      { t: 'system', a: 'Health check: PostgreSQL ok (2ms), Redis ok (1ms)', op: 'system.health' },
+      { t: 'tier', a: 'Session elevated T1 to T2 via TOTP', op: 'tier.stepup' },
+      { t: 'action', a: 'Service restart authorized: auton', op: 'service.restart' },
+      { t: 'approval', a: 'Approval token issued for file_write', op: 'approval.request' },
+      { t: 'approval', a: 'Approval granted by enrolled iPhone device', op: 'approval.approve' },
+      { t: 'action', a: 'File write completed: config/strategies.yml', op: 'file.write' },
+      { t: 'system', a: 'Agent connected: trading-profit-engine v0.1.0', op: 'agent.connect' },
+      { t: 'refusal', a: 'Action refused: tier insufficient for shell_exec', op: 'action.refused' },
+      { t: 'system', a: 'Hash chain verification passed (124 entries)', op: 'audit.verify' },
+      { t: 'action', a: 'Health check triggered manually', op: 'health.manual' },
+      { t: 'tier', a: 'Tier elevation expired, reverted T2 to T1', op: 'tier.expire' },
+      { t: 'system', a: 'Agent disconnected: profit-desk (idle timeout)', op: 'agent.disconnect' },
+      { t: 'approval', a: 'Approval rejected by operator', op: 'approval.reject' }
+    ];
+    for (var i = 1; i <= 127; i++) {
+      var seed = seedTypes[i % seedTypes.length];
+      var ts = now - (127 - i) * 11 * 60 * 1000 - Math.floor(Math.random() * 60000);
+      var thisHash = fullHash();
+      auditSeed.push({
+        id: i,
+        event_type: seed.op,
+        category: seed.t,
+        operator_id: 'op_lance_fisher',
+        device_id: 'dev_win_desktop',
+        session_id: 'sess_a3f291e8',
+        action: seed.a,
+        resource: i % 4 === 0 ? 'D:\\ProjectsHome\\profit-desk\\config\\strategies.yml' : null,
+        detail: { source: 'seed', index: i },
+        ip_address: '192.168.1.42',
+        timestamp: ts,
+        prev_hash: prev,
+        entry_hash: thisHash
+      });
+      prev = thisHash;
+    }
+
+    return {
+      session: {
+        operator_id: 'op_lance_fisher',
+        operator_name: 'Lance W. Fisher',
+        device_id: 'dev_win_desktop',
+        session_id: 'sess_a3f291e8',
+        current_tier: 1,
+        tier_elevated_at: null,
+        tier_expires_at: null,
+        created_at: sessionStart,
+        max_age_ms: 4 * 60 * 60 * 1000
+      },
+      health_checks: {
+        broker_postgres: { status: 'ok', latency_ms: 2, label: 'Broker PostgreSQL' },
+        broker_redis: { status: 'ok', latency_ms: 1, label: 'Broker Redis' },
+        local_agent: { status: 'ok', latency_ms: 30, label: 'Local Agent', sub: '30s ago' },
+        overall: { status: 'ok', label: 'Overall', sub: 'Healthy' }
+      },
+      agents: [
+        {
+          id: 'auton',
+          name: 'auton',
+          version: 'v1.2.3',
+          status: 'online',
+          last_connected: now - 2 * 60 * 60 * 1000,
+          connected_at: now - 2 * 60 * 60 * 1000
+        },
+        {
+          id: 'profit-desk',
+          name: 'profit-desk',
+          version: 'v1.0.0',
+          status: 'offline',
+          last_connected: now - (3 * 60 * 60 * 1000 + 15 * 60 * 1000),
+          connected_at: null,
+          queued: 2,
+          reconfirming: 1
+        },
+        {
+          id: 'trading-profit-engine',
+          name: 'trading-profit-engine',
+          version: 'v0.1.0',
+          status: 'online',
+          last_connected: now - 25 * 60 * 1000,
+          connected_at: now - 25 * 60 * 1000
+        }
+      ],
+      services: [
+        { id: 'auton', version: 'v1.2.3', status: 'running', cpu: 4.2, memory_mb: 142, uptime_s: 86420, last_restart: now - 86420000 },
+        { id: 'profit-desk', version: 'v1.0.0', status: 'failed', cpu: 0, memory_mb: 0, uptime_s: 0, last_restart: now - 11700000 },
+        { id: 'trading-profit-engine', version: 'v0.1.0', status: 'running', cpu: 2.8, memory_mb: 96, uptime_s: 1500, last_restart: now - 1500000 },
+        { id: 'master-trade-bot', version: 'v2.4.0', status: 'running', cpu: 8.1, memory_mb: 248, uptime_s: 432000, last_restart: now - 432000000 },
+        { id: 'polymarket-sniper', version: 'v1.1.2', status: 'degraded', cpu: 14.6, memory_mb: 312, uptime_s: 7200, last_restart: now - 7200000 },
+        { id: 'bookmark-bot', version: 'v0.9.4', status: 'running', cpu: 1.1, memory_mb: 64, uptime_s: 259200, last_restart: now - 259200000 },
+        { id: 'home-hub', version: 'v3.0.1', status: 'running', cpu: 3.4, memory_mb: 188, uptime_s: 604800, last_restart: now - 604800000 },
+        { id: 'localclaude', version: 'v0.5.0', status: 'running', cpu: 6.2, memory_mb: 410, uptime_s: 43200, last_restart: now - 43200000 },
+        { id: 'llm-enclave', version: 'v0.2.1', status: 'running', cpu: 22.7, memory_mb: 1840, uptime_s: 172800, last_restart: now - 172800000 }
+      ],
+      queue: {
+        tasks: [
+          {
+            id: 'task_001',
+            prompt: 'Audit all trading positions',
+            project: 'profit-desk',
+            agent_id: 'profit-desk',
+            status: 'queued',
+            submitted_at: now - 2 * 60 * 1000,
+            expires_at: now + 13 * 60 * 1000,
+            approval_status: 'approved',
+            reason: 'Agent offline when submitted'
+          },
+          {
+            id: 'task_002',
+            prompt: 'Deploy v1.2.0 to production',
+            project: 'trading-profit-engine',
+            agent_id: 'trading-profit-engine',
+            status: 'pending_reconfirm',
+            submitted_at: now - 5 * 60 * 1000,
+            expires_at: now + 10 * 60 * 1000,
+            approval_status: 'approved',
+            context: '8 files changed, 124 insertions(+), 56 deletions(-)'
+          }
+        ],
+        expired: []
+      },
+      approvals: {
+        pending: [
+          {
+            id: 'AP-0047',
+            action_type: 'file_write',
+            resource_path: 'D:\\ProjectsHome\\profit-desk\\config\\strategies.yml',
+            operation: 'write',
+            tier_required: 3,
+            payload_hash: 'a3f2' + '\u2026' + '91e8',
+            payload_preview: 'strategies:\n  momentum:\n    enabled: true\n    threshold: 0.62\n    max_position_usd: 5000\n  meanrev:\n    enabled: false',
+            created_at: now - 2 * 60 * 1000,
+            expires_at: now + 13 * 60 * 1000,
+            status: 'pending'
+          },
+          {
+            id: 'AP-0046',
+            action_type: 'shell_exec',
+            resource_path: './scripts/backup-audit-logs.sh',
+            operation: 'execute',
+            tier_required: 4,
+            payload_hash: 'c71d' + '\u2026' + '4a09',
+            payload_preview: '#!/bin/bash\nset -euo pipefail\nbash scripts/verify-chain.sh\npg_dump audit_log | gzip > /backups/audit-$(date +%F).sql.gz',
+            created_at: now - 5 * 60 * 1000,
+            expires_at: now + 10 * 60 * 1000,
+            status: 'requires_second_factor'
+          }
+        ],
+        history: [
+          { id: 'AP-0045', action_type: 'config_change', resource_path: 'D:\\ProjectsHome\\auton\\config\\rate-limits.yml', tier_required: 2, status: 'rejected', resolved_at: now - 32 * 60 * 1000, reason: 'Wrong project scope' },
+          { id: 'AP-0044', action_type: 'file_write', resource_path: 'D:\\ProjectsHome\\bookmark-bot\\src\\index.ts', tier_required: 2, status: 'approved', resolved_at: now - 58 * 60 * 1000 }
+        ]
+      },
+      audit_log: auditSeed,
+      audit_next_id: 128,
+      alerts: [],
+      ui: {
+        active_tab: 'dashboard',
+        last_chain_verified_at: now - 4 * 60 * 1000,
+        audit_filter: { types: { action: true, approval: true, tier: true, auth: true, system: true, refusal: true }, time: 'all' }
+      }
+    };
+  }
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(STATE_KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        /* schema version bump = reseed */
+        if (parsed && parsed.session && parsed.audit_log) return parsed;
+      }
+    } catch (e) {}
+    return defaultState();
+  }
+  function saveState() {
+    try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  function resetState() {
+    state = defaultState();
+    saveState();
+  }
+
+  state = loadState();
+
+  /* ---------- audit log mutator ---------- */
+  function appendAudit(entry) {
+    var prev = state.audit_log.length ? state.audit_log[state.audit_log.length - 1].entry_hash : '0000000000000000';
+    var newEntry = {
+      id: state.audit_next_id++,
+      event_type: entry.event_type,
+      category: entry.category || 'action',
+      operator_id: state.session.operator_id,
+      device_id: state.session.device_id,
+      session_id: state.session.session_id,
+      action: entry.action,
+      resource: entry.resource || null,
+      detail: entry.detail || {},
+      ip_address: '192.168.1.42',
+      timestamp: Date.now(),
+      prev_hash: prev,
+      entry_hash: fullHash()
+    };
+    state.audit_log.push(newEntry);
+    state.ui.last_chain_verified_at = Date.now();
+    saveState();
+    if (state.ui.active_tab === 'audit') renderAudit();
+    var auditCount = document.getElementById('auditCount');
+    if (auditCount) auditCount.textContent = state.audit_log.length;
+    return newEntry;
+  }
+
+  /* ---------- alert feed ---------- */
+  var ALERT_POOL = [
+    { level: 'info', op: 'agent.connected', msg: 'Agent connected: home-hub', meta: 'mTLS verified' },
+    { level: 'warning', op: 'system.degraded', msg: 'polymarket-sniper degraded (CPU > 12%)', meta: 'auto-monitor' },
+    { level: 'warning', op: 'approval.expired', msg: 'Approval AP-0042 expired without action', meta: 'TTL reached' },
+    { level: 'info', op: 'chain.verified', msg: 'Audit chain verification passed', meta: 'on-read check' },
+    { level: 'system', op: 'tier.elevated', msg: 'Background tier audit completed', meta: 'all sessions T1' },
+    { level: 'system', op: 'network.scan_completed', msg: 'mTLS certificate rotation check passed', meta: 'next rotation 14d' }
+  ];
+
+  function pushAlert(level, msg, meta) {
+    var feed = document.getElementById('alertFeed');
+    if (!feed) return;
+    var node = el('div', 'alert ' + (level === 'info' ? '' : level));
+    node.appendChild(el('span', 'icon'));
+    var body = el('div', 'body');
+    body.appendChild(el('div', 'msg', msg));
+    body.appendChild(el('div', 'meta', (meta || '') + ' \u00b7 ' + fmtClock(Date.now())));
+    node.appendChild(body);
+    feed.appendChild(node);
+    setTimeout(function() {
+      node.classList.add('fading');
+      setTimeout(function() { if (node.parentNode) node.parentNode.removeChild(node); }, 500);
+    }, 5000);
+    /* cap to 4 visible */
+    while (feed.children.length > 4) {
+      feed.removeChild(feed.firstChild);
+    }
+  }
+
+  function backgroundAlertCycle() {
+    var pick = ALERT_POOL[Math.floor(Math.random() * ALERT_POOL.length)];
+    pushAlert(pick.level, pick.msg, pick.meta);
+  }
+
+  /* ---------- TAB SWITCHING ---------- */
+  function switchTab(name) {
+    state.ui.active_tab = name;
+    saveState();
+    var btns = document.querySelectorAll('.tab-btn');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].classList.toggle('active', btns[i].dataset.tab === name);
+    }
+    var panels = document.querySelectorAll('.tab-panel');
+    for (var j = 0; j < panels.length; j++) {
+      panels[j].classList.toggle('active', panels[j].dataset.panel === name);
+    }
+    if (name === 'dashboard') { renderHealth(); renderAgents(); renderSession(); }
+    if (name === 'services') renderServices();
+    if (name === 'queue') renderQueue();
+    if (name === 'approvals') renderApprovals();
+    if (name === 'audit') renderAudit();
+  }
+
+  /* ---------- RENDER: SESSION ---------- */
+  function renderSession() {
+    var sess = state.session;
+    var ageEl = document.getElementById('sessAge');
+    var expEl = document.getElementById('sessExpires');
+    var idEl = document.getElementById('sessId');
+    var tierEl = document.getElementById('sessTier');
+    if (idEl) idEl.textContent = sess.session_id;
+    if (ageEl) ageEl.textContent = fmtDuration(Date.now() - sess.created_at);
+    if (expEl) expEl.textContent = fmtDuration(sess.created_at + sess.max_age_ms - Date.now());
+    if (tierEl) {
+      var tier = sess.current_tier;
+      var label = 'T' + tier + ' \u2014 ';
+      if (tier === 1) label += 'Read-Only';
+      else if (tier === 2) label += 'Operational';
+      else if (tier === 3) label += 'Elevated';
+      else label += 'Sovereign';
+      if (sess.tier_expires_at && tier > 1) {
+        label += ' \u00b7 ' + fmtCountdown(sess.tier_expires_at - Date.now());
+      }
+      tierEl.textContent = label;
+      tierEl.className = 'tier-pill' + (tier > 1 ? ' t' + tier : '');
+    }
+  }
+
+  /* ---------- RENDER: HEALTH ---------- */
+  function renderHealth() {
+    var grid = document.getElementById('healthGrid');
+    if (!grid) return;
+    grid.textContent = '';
+    var cards = [
+      { key: 'broker_postgres', metric: function() { return flicker(2, 2).toFixed(1) + ' ms'; }, sub: 'PostgreSQL ping' },
+      { key: 'broker_redis', metric: function() { return flicker(1, 3).toFixed(2) + ' ms'; }, sub: 'Redis PING' },
+      { key: 'local_agent', metric: function() { return Math.floor(flicker(30, 2)) + 's ago'; }, sub: 'last heartbeat' },
+      { key: 'overall', metric: function() { return 'Healthy'; }, sub: 'all checks passing' }
+    ];
+    cards.forEach(function(c) {
+      var hc = state.health_checks[c.key];
+      var card = el('div', 'health-card' + (hc.status !== 'ok' ? ' ' + hc.status : ''));
+      var name = el('div', 'hc-name');
+      name.appendChild(document.createTextNode(hc.label));
+      var badge = el('span', 'badge', (hc.status || 'ok').toUpperCase());
+      name.appendChild(badge);
+      card.appendChild(name);
+      card.appendChild(el('div', 'hc-metric', c.metric()));
+      card.appendChild(el('div', 'hc-sub', c.sub));
+      grid.appendChild(card);
+    });
+  }
+
+  /* ---------- RENDER: AGENTS ---------- */
+  function renderAgents() {
+    var list = document.getElementById('agentList');
+    if (!list) return;
+    list.textContent = '';
+    state.agents.forEach(function(a) {
+      var row = el('div', 'agent-row');
+      var name = el('div', 'agent-name' + (a.status === 'offline' ? ' offline' : ''));
+      name.appendChild(el('span', 'dot'));
+      name.appendChild(document.createTextNode(a.name));
+      row.appendChild(name);
+      row.appendChild(el('div', 'agent-version', a.version));
+      var status = el('div', 'agent-status ' + a.status, a.status.toUpperCase());
+      row.appendChild(status);
+      var meta;
+      if (a.status === 'online') {
+        meta = el('div', 'agent-meta', 'connected ' + fmtAgo(a.connected_at));
+      } else {
+        var queueParts = [];
+        if (a.queued) queueParts.push(a.queued + ' queued');
+        if (a.reconfirming) queueParts.push(a.reconfirming + ' reconfirming');
+        meta = el('div', 'agent-meta',
+          'last connected ' + fmtAgo(a.last_connected) +
+          (queueParts.length ? ' \u00b7 ' + queueParts.join(', ') : '')
+        );
+      }
+      row.appendChild(meta);
+      list.appendChild(row);
+    });
+  }
+
+  /* ---------- RENDER: SERVICES ---------- */
+  function renderServices() {
+    var grid = document.getElementById('servicesGrid');
+    if (!grid) return;
+    grid.textContent = '';
+    state.services.forEach(function(s) {
+      var card = el('div', 'service-card ' + s.status);
+      var head = el('div', 'sc-head');
+      var nameWrap = el('div');
+      nameWrap.appendChild(el('div', 'sc-name', s.id));
+      nameWrap.appendChild(el('div', 'sc-version', s.version));
+      head.appendChild(nameWrap);
+      var status = el('div', 'sc-status');
+      if (s.status === 'restarting') status.appendChild(el('span', 'spinner'));
+      status.appendChild(document.createTextNode(s.status.toUpperCase()));
+      head.appendChild(status);
+      card.appendChild(head);
+
+      var metrics = el('div', 'sc-metrics');
+      var cpuM = el('div', 'sc-metric');
+      cpuM.appendChild(el('span', 'k', 'CPU'));
+      cpuM.appendChild(el('span', 'v', s.status === 'failed' ? '0%' : flicker(s.cpu, 3).toFixed(1) + '%'));
+      var memM = el('div', 'sc-metric');
+      memM.appendChild(el('span', 'k', 'Mem'));
+      memM.appendChild(el('span', 'v', s.status === 'failed' ? '0 MB' : Math.round(flicker(s.memory_mb, 2)) + ' MB'));
+      var upM = el('div', 'sc-metric');
+      upM.appendChild(el('span', 'k', 'Uptime'));
+      upM.appendChild(el('span', 'v', s.status === 'failed' ? '\u2014' : fmtUptime(s.uptime_s)));
+      metrics.appendChild(cpuM);
+      metrics.appendChild(memM);
+      metrics.appendChild(upM);
+      card.appendChild(metrics);
+
+      card.appendChild(el('div', 'sc-restart', 'last restart: ' + fmtAgo(s.last_restart)));
+
+      var actions = el('div', 'sc-actions');
+      var btnRestart = el('button', 'btn sm', 'Restart');
+      btnRestart.addEventListener('click', function() { onServiceRestart(s.id); });
+      actions.appendChild(btnRestart);
+      var btnLogs = el('button', 'btn sm ghost', 'View Logs');
+      btnLogs.addEventListener('click', function() { onViewLogs(s.id); });
+      actions.appendChild(btnLogs);
+      if (s.status === 'degraded') {
+        var btnAck = el('button', 'btn sm amber', 'Acknowledge');
+        btnAck.addEventListener('click', function() { onAckAlert(s.id); });
+        actions.appendChild(btnAck);
+      }
+      card.appendChild(actions);
+
+      grid.appendChild(card);
+    });
+  }
+  function fmtUptime(s) {
+    if (s < 60) return s + 's';
+    if (s < 3600) return Math.floor(s / 60) + 'm';
+    if (s < 86400) return Math.floor(s / 3600) + 'h';
+    return Math.floor(s / 86400) + 'd';
+  }
+
+  /* ---------- RENDER: QUEUE ---------- */
+  function renderQueue() {
+    var summary = document.getElementById('queueSummary');
+    var list = document.getElementById('queueList');
+    var expired = document.getElementById('queueExpired');
+    if (!summary || !list) return;
+
+    var queued = 0, reconfirm = 0, executing = 0;
+    state.queue.tasks.forEach(function(t) {
+      if (t.status === 'queued') queued++;
+      else if (t.status === 'pending_reconfirm') reconfirm++;
+      else if (t.status === 'executing') executing++;
+    });
+    summary.textContent = '';
+    function pill(label, n) {
+      var span = el('span');
+      span.appendChild(document.createTextNode(label + ':'));
+      span.appendChild(el('strong', null, ' ' + n));
+      return span;
+    }
+    summary.appendChild(pill('Queued', queued));
+    summary.appendChild(pill('Pending Reconfirm', reconfirm));
+    summary.appendChild(pill('Executing', executing));
+
+    list.textContent = '';
+    if (state.queue.tasks.length === 0) {
+      list.appendChild(el('div', 'queue-empty', 'No tasks in queue'));
+    } else {
+      state.queue.tasks.forEach(function(t) { list.appendChild(buildQueueItem(t, false)); });
+    }
+
+    expired.textContent = '';
+    if (state.queue.expired.length === 0) {
+      expired.appendChild(el('div', 'queue-empty', 'No expired tasks'));
+    } else {
+      state.queue.expired.slice(-10).reverse().forEach(function(t) { expired.appendChild(buildQueueItem(t, true)); });
+    }
+  }
+  function buildQueueItem(t, isExpired) {
+    var item = el('div', 'queue-item' + (isExpired ? ' expired' : '') + (t.status === 'executing' ? ' executing' : ''));
+    var head = el('div', 'qi-head');
+    head.appendChild(el('div', 'qi-id', '#' + t.id));
+    var stat = el('div', 'qi-status', isExpired ? 'EXPIRED' : t.status.toUpperCase().replace('_', ' '));
+    head.appendChild(stat);
+    item.appendChild(head);
+
+    item.appendChild(el('div', 'qi-prompt', t.prompt));
+
+    var meta = el('div', 'qi-meta');
+    function field(k, v) {
+      var w = el('span');
+      w.appendChild(document.createTextNode(k + ': '));
+      w.appendChild(el('span', 'v', v));
+      return w;
+    }
+    meta.appendChild(field('agent', t.agent_id));
+    meta.appendChild(field('submitted', fmtAgo(t.submitted_at)));
+    if (!isExpired) {
+      meta.appendChild(field('expires', fmtCountdown(t.expires_at - Date.now())));
+    }
+    meta.appendChild(field('approval', (t.approval_status || 'n/a').toUpperCase()));
+    item.appendChild(meta);
+
+    if (t.reason) {
+      item.appendChild(el('div', 'qi-context', 'Reason: ' + t.reason));
+    }
+    if (t.context) {
+      item.appendChild(el('div', 'qi-context', 'Context: ' + t.context));
+    }
+
+    if (!isExpired) {
+      var actions = el('div', 'qi-actions');
+      var rec = el('button', 'btn sm primary', 'Re-confirm');
+      rec.addEventListener('click', function() { onTaskReconfirm(t.id); });
+      actions.appendChild(rec);
+      var dis = el('button', 'btn sm danger', 'Discard');
+      dis.addEventListener('click', function() { onTaskDiscard(t.id); });
+      actions.appendChild(dis);
+      item.appendChild(actions);
+    }
+    return item;
+  }
+
+  /* ---------- RENDER: APPROVALS ---------- */
+  function renderApprovals() {
+    var list = document.getElementById('approvalList');
+    var hist = document.getElementById('approvalHistory');
+    if (!list || !hist) return;
+    list.textContent = '';
+    if (state.approvals.pending.length === 0) {
+      list.appendChild(el('div', 'queue-empty', 'No pending approvals'));
+    } else {
+      state.approvals.pending.forEach(function(a) { list.appendChild(buildApproval(a, false)); });
+    }
+    hist.textContent = '';
+    if (state.approvals.history.length === 0) {
+      hist.appendChild(el('div', 'queue-empty', 'No resolved approvals'));
+    } else {
+      state.approvals.history.slice(-10).reverse().forEach(function(a) { hist.appendChild(buildApproval(a, true)); });
+    }
+  }
+  function buildApproval(a, isHistory) {
+    var card = el('div', 'approval-card' + (a.tier_required === 4 ? ' tier4' : '') + (a.status === 'approved' ? ' approved' : '') + (a.status === 'rejected' ? ' rejected' : ''));
+    var head = el('div', 'ac-head');
+    var leftBlock = el('div');
+    leftBlock.appendChild(el('div', 'ac-id', 'Request #' + a.id));
+    leftBlock.appendChild(el('div', 'ac-action', a.action_type + ' \u2192 ' + (a.resource_path || '')));
+    head.appendChild(leftBlock);
+    head.appendChild(el('div', 'ac-tier' + (a.tier_required === 4 ? ' t4' : ''), 'Tier ' + a.tier_required + ' Required'));
+    card.appendChild(head);
+
+    var meta = el('div', 'ac-meta');
+    function f(k, v) {
+      var w = el('span');
+      w.appendChild(document.createTextNode(k + ': '));
+      w.appendChild(el('span', 'v', v));
+      return w;
+    }
+    meta.appendChild(f('hash', a.payload_hash || '\u2014'));
+    if (!isHistory) {
+      meta.appendChild(f('expires', fmtCountdown(a.expires_at - Date.now())));
+    }
+    if (a.status) meta.appendChild(f('status', a.status.replace('_', ' ').toUpperCase()));
+    if (isHistory && a.resolved_at) meta.appendChild(f('resolved', fmtAgo(a.resolved_at)));
+    if (a.reason) meta.appendChild(f('note', a.reason));
+    card.appendChild(meta);
+
+    if (a.payload_preview) {
+      card.appendChild(el('div', 'ac-payload', a.payload_preview));
+    }
+
+    if (!isHistory) {
+      var actions = el('div', 'ac-actions');
+      var view = el('button', 'btn sm', 'View Full');
+      view.addEventListener('click', function() { onApprovalView(a.id); });
+      actions.appendChild(view);
+      var ok = el('button', 'btn sm primary', 'Approve');
+      ok.addEventListener('click', function() { onApprovalApprove(a.id); });
+      actions.appendChild(ok);
+      var no = el('button', 'btn sm danger', 'Reject');
+      no.addEventListener('click', function() { onApprovalReject(a.id); });
+      actions.appendChild(no);
+      card.appendChild(actions);
+    }
+    return card;
+  }
+
+  /* ---------- RENDER: AUDIT ---------- */
+  function renderAudit() {
+    var list = document.getElementById('auditList');
+    var count = document.getElementById('auditCount');
+    var lastV = document.getElementById('auditLastVerified');
+    if (!list) return;
+    if (count) count.textContent = state.audit_log.length;
+    if (lastV) lastV.textContent = fmtAgo(state.ui.last_chain_verified_at);
+
+    var filter = state.ui.audit_filter;
+    var nowMs = Date.now();
+    var rangeMs = filter.time === '1h' ? 3600000
+      : filter.time === '6h' ? 6 * 3600000
+      : filter.time === '24h' ? 86400000 : Infinity;
+
+    var visible = state.audit_log.filter(function(e) {
+      if (!filter.types[e.category]) return false;
+      if (rangeMs !== Infinity && nowMs - e.timestamp > rangeMs) return false;
+      return true;
+    });
+
+    list.textContent = '';
+    /* render newest first, cap to 80 to keep DOM light */
+    visible.slice().reverse().slice(0, 80).forEach(function(e) {
+      var node = el('div', 'audit-entry');
+      var head = el('div', 'ae-head');
+      var leftBlk = el('div');
+      leftBlk.appendChild(el('span', 'ae-id', '#' + String(e.id).padStart(4, '0') + ' \u00b7 '));
+      var typeSpan = el('span', 'ae-type ' + (e.category || 'system'), e.event_type);
+      leftBlk.appendChild(typeSpan);
+      head.appendChild(leftBlk);
+      head.appendChild(el('span', 'ae-time', fmtClock(e.timestamp)));
+      node.appendChild(head);
+
+      node.appendChild(el('div', 'ae-action', e.action));
+
+      var fields = el('div', 'ae-fields');
+      function f(k, v) {
+        var w = el('span');
+        w.appendChild(el('span', 'k', k + ': '));
+        w.appendChild(el('span', 'v', v));
+        return w;
+      }
+      fields.appendChild(f('operator', e.operator_id));
+      fields.appendChild(f('device', e.device_id));
+      fields.appendChild(f('session', e.session_id.substring(0, 12)));
+      fields.appendChild(f('ip', e.ip_address));
+      if (e.resource) fields.appendChild(f('resource', e.resource));
+      node.appendChild(fields);
+
+      var hashes = el('div', 'ae-hashes');
+      var prevSpan = el('span');
+      prevSpan.appendChild(el('span', 'k', 'prev_hash'));
+      prevSpan.appendChild(el('span', 'v link', e.prev_hash.substring(0, 12) + '\u2026'));
+      hashes.appendChild(prevSpan);
+      var hashSpan = el('span');
+      hashSpan.appendChild(el('span', 'k', 'this_hash'));
+      hashSpan.appendChild(el('span', 'v', e.entry_hash.substring(0, 12) + '\u2026'));
+      hashes.appendChild(hashSpan);
+      node.appendChild(hashes);
+
+      list.appendChild(node);
+    });
+  }
+
+  /* ---------- AUDIT FILTER UI ---------- */
+  function renderAuditFilters() {
+    var container = document.getElementById('auditFilterTypes');
+    if (!container) return;
+    container.textContent = '';
+    var types = ['action', 'approval', 'tier', 'auth', 'system', 'refusal'];
+    types.forEach(function(t) {
+      var label = el('label', 'af-opt');
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = !!state.ui.audit_filter.types[t];
+      cb.addEventListener('change', function() {
+        state.ui.audit_filter.types[t] = cb.checked;
+        saveState();
+        renderAudit();
+      });
+      label.appendChild(cb);
+      label.appendChild(document.createTextNode(t));
+      container.appendChild(label);
+    });
+    var radios = document.querySelectorAll('input[name="af-time"]');
+    radios.forEach(function(r) {
+      r.checked = (r.value === state.ui.audit_filter.time);
+      r.addEventListener('change', function() {
+        if (r.checked) {
+          state.ui.audit_filter.time = r.value;
+          saveState();
+          renderAudit();
+        }
+      });
+    });
+  }
+
+  /* ---------- MODAL HELPERS ---------- */
+  function openModal(builder) {
+    var bd = document.getElementById('modalBackdrop');
+    var content = document.getElementById('modalContent');
+    content.textContent = '';
+    builder(content);
+    bd.classList.add('open');
+  }
+  function closeModal() {
+    document.getElementById('modalBackdrop').classList.remove('open');
+  }
+  document.getElementById('modalBackdrop').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  /* ---------- ACTION HANDLERS ---------- */
+  function onServiceRestart(id) {
+    if (state.session.current_tier < 2) {
+      openTierStepUpModal(2, function() { doServiceRestart(id); });
+      return;
+    }
+    doServiceRestart(id);
+  }
+  function doServiceRestart(id) {
+    var svc = state.services.find(function(s) { return s.id === id; });
+    if (!svc) return;
+    svc.status = 'restarting';
+    saveState();
+    renderServices();
+    pushAlert('warning', 'Restart initiated: ' + id, 'tier ' + state.session.current_tier);
+    appendAudit({
+      event_type: 'service.restart',
+      category: 'action',
+      action: 'Service restart authorized: ' + id,
+      resource: id
+    });
+    setTimeout(function() {
+      svc.status = 'running';
+      svc.uptime_s = 0;
+      svc.last_restart = Date.now();
+      svc.cpu = 3.0 + Math.random() * 5;
+      svc.memory_mb = 80 + Math.random() * 200;
+      saveState();
+      renderServices();
+      pushAlert('info', 'Service restarted: ' + id, 'now running');
+      appendAudit({
+        event_type: 'service.running',
+        category: 'system',
+        action: 'Service ' + id + ' returned to running state',
+        resource: id
+      });
+    }, 3500 + Math.random() * 1500);
+  }
+  function onViewLogs(id) {
+    openModal(function(c) {
+      c.appendChild(el('h3', null, 'Service Logs'));
+      c.appendChild(el('div', 'sub', id + ' \u00b7 last 10 lines'));
+      var pre = el('div', 'ac-payload');
+      pre.style.maxHeight = '320px';
+      pre.textContent = [
+        '[' + fmtClock(Date.now() - 30000) + '] INFO  starting ' + id,
+        '[' + fmtClock(Date.now() - 28000) + '] INFO  loaded config from .env.production',
+        '[' + fmtClock(Date.now() - 26000) + '] INFO  connected to broker via mTLS',
+        '[' + fmtClock(Date.now() - 24000) + '] INFO  websocket handshake complete',
+        '[' + fmtClock(Date.now() - 22000) + '] INFO  agent registration accepted',
+        '[' + fmtClock(Date.now() - 20000) + '] INFO  health endpoint listening on :9090',
+        '[' + fmtClock(Date.now() - 18000) + '] INFO  ready to accept commands',
+        '[' + fmtClock(Date.now() - 14000) + '] DEBUG heartbeat ack',
+        '[' + fmtClock(Date.now() - 8000) + '] DEBUG heartbeat ack',
+        '[' + fmtClock(Date.now() - 2000) + '] DEBUG heartbeat ack'
+      ].join('\n');
+      c.appendChild(pre);
+      var actions = el('div', 'modal-actions');
+      var close = el('button', 'btn', 'Close');
+      close.addEventListener('click', closeModal);
+      actions.appendChild(close);
+      c.appendChild(actions);
+    });
+  }
+  function onAckAlert(id) {
+    pushAlert('info', 'Alert acknowledged: ' + id, 'operator action');
+    appendAudit({
+      event_type: 'alert.ack',
+      category: 'action',
+      action: 'Operator acknowledged degraded alert for ' + id,
+      resource: id
+    });
+  }
+
+  function onTaskReconfirm(taskId) {
+    var t = state.queue.tasks.find(function(x) { return x.id === taskId; });
+    if (!t) return;
+    t.status = 'executing';
+    saveState();
+    renderQueue();
+    pushAlert('info', 'Task ' + taskId + ' dispatched to agent', t.agent_id);
+    appendAudit({
+      event_type: 'task.dispatch',
+      category: 'action',
+      action: 'Task reconfirmed and dispatched: ' + t.prompt,
+      resource: t.agent_id
+    });
+    setTimeout(function() {
+      var idx = state.queue.tasks.indexOf(t);
+      if (idx >= 0) state.queue.tasks.splice(idx, 1);
+      saveState();
+      if (state.ui.active_tab === 'queue') renderQueue();
+    }, 4000);
+  }
+  function onTaskDiscard(taskId) {
+    var idx = state.queue.tasks.findIndex(function(x) { return x.id === taskId; });
+    if (idx < 0) return;
+    var t = state.queue.tasks[idx];
+    state.queue.tasks.splice(idx, 1);
+    state.queue.expired.push(Object.assign({}, t, { status: 'discarded' }));
+    saveState();
+    renderQueue();
+    pushAlert('warning', 'Task ' + taskId + ' discarded', 'operator action');
+    appendAudit({
+      event_type: 'task.discard',
+      category: 'refusal',
+      action: 'Task discarded by operator: ' + t.prompt,
+      resource: t.agent_id
+    });
+  }
+
+  function onApprovalView(id) {
+    var a = state.approvals.pending.find(function(x) { return x.id === id; });
+    if (!a) return;
+    openModal(function(c) {
+      c.appendChild(el('h3', null, 'Approval ' + a.id));
+      c.appendChild(el('div', 'sub', a.action_type + ' \u00b7 ' + a.resource_path));
+      var body = el('div', 'modal-body');
+      body.appendChild(el('div', 'ae-fields',
+        ''));
+      var fields = el('div', 'ac-meta');
+      function f(k, v) {
+        var w = el('span');
+        w.appendChild(document.createTextNode(k + ': '));
+        w.appendChild(el('span', 'v', v));
+        return w;
+      }
+      fields.appendChild(f('action_type', a.action_type));
+      fields.appendChild(f('operation', a.operation || 'write'));
+      fields.appendChild(f('payload_hash', a.payload_hash));
+      fields.appendChild(f('tier_required', 'T' + a.tier_required));
+      fields.appendChild(f('expires_in', fmtCountdown(a.expires_at - Date.now())));
+      fields.appendChild(f('status', (a.status || '').toUpperCase()));
+      body.appendChild(fields);
+      var pre = el('div', 'ac-payload');
+      pre.style.maxHeight = '240px';
+      pre.textContent = a.payload_preview || '(no preview)';
+      body.appendChild(pre);
+      c.appendChild(body);
+      var actions = el('div', 'modal-actions');
+      var close = el('button', 'btn', 'Close');
+      close.addEventListener('click', closeModal);
+      actions.appendChild(close);
+      c.appendChild(actions);
+    });
+  }
+
+  function onApprovalApprove(id) {
+    var a = state.approvals.pending.find(function(x) { return x.id === id; });
+    if (!a) return;
+    if (state.session.current_tier < a.tier_required) {
+      openTierStepUpModal(a.tier_required, function() { runApprovalFlow(a); });
+      return;
+    }
+    runApprovalFlow(a);
+  }
+
+  function runApprovalFlow(a) {
+    openModal(function(c) {
+      c.appendChild(el('h3', null, 'Complete Approval Flow'));
+      c.appendChild(el('div', 'sub', 'Second approval must come from enrolled iPhone device.'));
+      var steps = [
+        { txt: 'Push sent to iPhone: "Approve ' + a.action_type + ' to ' + (a.resource_path || '').split(/[\\\/]/).pop() + '?"' },
+        { txt: 'Waiting for iPhone' },
+        { txt: 'iPhone Approved' },
+        { txt: 'Validating signature' },
+        { txt: 'Approval Complete' }
+      ];
+      var nodes = [];
+      steps.forEach(function(s, i) {
+        var n = el('div', 'flow-step');
+        n.appendChild(el('span', 'marker', String(i + 1)));
+        n.appendChild(el('span', null, s.txt));
+        c.appendChild(n);
+        nodes.push(n);
+      });
+      var actions = el('div', 'modal-actions');
+      var cancel = el('button', 'btn ghost', 'Cancel');
+      cancel.addEventListener('click', closeModal);
+      actions.appendChild(cancel);
+      c.appendChild(actions);
+
+      function step(i) {
+        if (i >= nodes.length) {
+          /* finalize */
+          var idx = state.approvals.pending.indexOf(a);
+          if (idx >= 0) state.approvals.pending.splice(idx, 1);
+          a.status = 'approved';
+          a.resolved_at = Date.now();
+          state.approvals.history.push(a);
+          saveState();
+          appendAudit({
+            event_type: 'approval.approve',
+            category: 'approval',
+            action: 'Approval granted by enrolled iPhone device: ' + a.id,
+            resource: a.resource_path
+          });
+          pushAlert('info', 'Approval ' + a.id + ' granted', 'iPhone signature verified');
+          setTimeout(function() {
+            closeModal();
+            renderApprovals();
+          }, 700);
+          return;
+        }
+        if (i > 0) nodes[i - 1].classList.remove('active');
+        if (i > 0) nodes[i - 1].classList.add('done');
+        nodes[i].classList.add('active');
+        var delay = i === 1 ? (2000 + Math.random() * 1000) : 700;
+        setTimeout(function() { step(i + 1); }, delay);
+      }
+      step(0);
+    });
+  }
+
+  function onApprovalReject(id) {
+    var idx = state.approvals.pending.findIndex(function(x) { return x.id === id; });
+    if (idx < 0) return;
+    var a = state.approvals.pending[idx];
+    state.approvals.pending.splice(idx, 1);
+    a.status = 'rejected';
+    a.resolved_at = Date.now();
+    a.reason = 'Rejected by operator';
+    state.approvals.history.push(a);
+    saveState();
+    renderApprovals();
+    pushAlert('warning', 'Approval ' + id + ' rejected', 'operator action');
+    appendAudit({
+      event_type: 'approval.reject',
+      category: 'refusal',
+      action: 'Approval rejected by operator: ' + id,
+      resource: a.resource_path
+    });
+  }
+
+  /* ---------- TIER ELEVATION ---------- */
+  function openTierStepUpModal(targetTier, onSuccess) {
+    openModal(function(c) {
+      c.appendChild(el('h3', null, 'Tier Elevation Required'));
+      c.appendChild(el('div', 'sub', 'This action requires Tier ' + targetTier + '. Provide a fresh second factor to step up.'));
+      var input = document.createElement('input');
+      input.type = 'text';
+      input.maxLength = 6;
+      input.className = 'totp-input';
+      input.placeholder = '\u2022 \u2022 \u2022 \u2022 \u2022 \u2022';
+      input.inputMode = 'numeric';
+      c.appendChild(input);
+      c.appendChild(el('div', 'totp-hint', 'Enter 6-digit TOTP from authenticator'));
+
+      var actions = el('div', 'modal-actions');
+      var cancel = el('button', 'btn ghost', 'Cancel');
+      cancel.addEventListener('click', closeModal);
+      actions.appendChild(cancel);
+      var verify = el('button', 'btn primary', 'Verify');
+      verify.addEventListener('click', function() {
+        if (input.value.length < 6) {
+          input.style.borderColor = 'var(--red)';
+          return;
+        }
+        var prevTier = state.session.current_tier;
+        state.session.current_tier = targetTier;
+        state.session.tier_elevated_at = Date.now();
+        state.session.tier_expires_at = Date.now() + 30 * 60 * 1000;
+        saveState();
+        renderSession();
+        appendAudit({
+          event_type: 'tier.stepup',
+          category: 'tier',
+          action: 'Session elevated T' + prevTier + ' to T' + targetTier + ' via TOTP',
+          detail: { from: prevTier, to: targetTier }
+        });
+        pushAlert('info', 'Session elevated to T' + targetTier + ' via TOTP', '30 minute window');
+        closeModal();
+        if (onSuccess) onSuccess();
+      });
+      actions.appendChild(verify);
+      c.appendChild(actions);
+      setTimeout(function() { input.focus(); }, 100);
+    });
+  }
+
+  document.getElementById('btnElevate').addEventListener('click', function() {
+    var tgt = state.session.current_tier < 4 ? state.session.current_tier + 1 : 4;
+    openTierStepUpModal(tgt);
+  });
+
+  document.getElementById('btnEmergency').addEventListener('click', function() {
+    openModal(function(c) {
+      c.appendChild(el('h3', null, 'Emergency Disable'));
+      c.appendChild(el('div', 'sub', 'This will instantly revoke ALL active sessions, expire all pending approvals, reject all queued commands, and suspend all agent registrations. This is a real broker action: POST /api/system/emergency-disable.'));
+      var actions = el('div', 'modal-actions');
+      var cancel = el('button', 'btn ghost', 'Cancel');
+      cancel.addEventListener('click', closeModal);
+      actions.appendChild(cancel);
+      var go = el('button', 'btn danger', 'Confirm Emergency Disable');
+      go.addEventListener('click', function() {
+        appendAudit({
+          event_type: 'system.emergency_disable',
+          category: 'system',
+          action: 'EMERGENCY DISABLE triggered (simulated): all sessions, approvals, and commands terminated'
+        });
+        pushAlert('error', 'EMERGENCY DISABLE simulated', 'all operations halted');
+        closeModal();
+      });
+      actions.appendChild(go);
+      c.appendChild(actions);
+    });
+  });
+
+  /* ---------- AUDIT VERIFY MODAL ---------- */
+  document.getElementById('btnVerifyChain').addEventListener('click', function() {
+    openModal(function(c) {
+      c.appendChild(el('h3', null, 'Verify Hash Chain'));
+      c.appendChild(el('div', 'sub', 'Walking the audit log end-to-end. Each entry\u2019s prev_hash must match the previous entry\u2019s entry_hash.'));
+      var box = el('div', 'chain-walk');
+      c.appendChild(box);
+
+      var actions = el('div', 'modal-actions');
+      var close = el('button', 'btn', 'Close');
+      close.addEventListener('click', closeModal);
+      actions.appendChild(close);
+      c.appendChild(actions);
+
+      /* sample 10 evenly-spaced entries to walk visually */
+      var n = state.audit_log.length;
+      var step = Math.max(1, Math.floor(n / 10));
+      var i = 0;
+      function walk() {
+        if (i >= n) {
+          var done = el('div', 'chain-walk-line ok final');
+          done.textContent = '\u2713 Chain is valid and tamper-evident (' + n + ' entries verified).';
+          box.appendChild(done);
+          state.ui.last_chain_verified_at = Date.now();
+          saveState();
+          var lv = document.getElementById('auditLastVerified');
+          if (lv) lv.textContent = 'just now';
+          appendAudit({
+            event_type: 'audit.verify',
+            category: 'system',
+            action: 'Hash chain verification passed (' + n + ' entries)'
+          });
+          pushAlert('info', 'Audit chain verification passed', n + ' entries');
+          return;
+        }
+        var entry = state.audit_log[i];
+        var line = el('div', 'chain-walk-line ok');
+        line.textContent = '\u2713 Entry #' + String(entry.id).padStart(4, '0') + ': hash matches parent (' + entry.prev_hash.substring(0, 10) + '\u2026)';
+        box.appendChild(line);
+        box.scrollTop = box.scrollHeight;
+        i += step;
+        setTimeout(walk, 80);
+      }
+      setTimeout(walk, 200);
+    });
+  });
+
+  document.getElementById('btnExportLog').addEventListener('click', function() {
+    openModal(function(c) {
+      c.appendChild(el('h3', null, 'Export Audit Log'));
+      c.appendChild(el('div', 'sub', 'Real broker route: GET /api/audit/export. Exports the full chain (with prev_hash and entry_hash columns) as JSON or CSV. In simulation this is a no-op.'));
+      var actions = el('div', 'modal-actions');
+      var close = el('button', 'btn', 'Close');
+      close.addEventListener('click', closeModal);
+      actions.appendChild(close);
+      c.appendChild(actions);
+    });
+  });
+
+  /* ---------- TICKERS ---------- */
+  function tickSession() {
+    if (state.ui.active_tab === 'dashboard') renderSession();
+    /* tier expiry */
+    if (state.session.current_tier > 1 && state.session.tier_expires_at && Date.now() > state.session.tier_expires_at) {
+      var prev = state.session.current_tier;
+      state.session.current_tier = 1;
+      state.session.tier_elevated_at = null;
+      state.session.tier_expires_at = null;
+      saveState();
+      appendAudit({
+        event_type: 'tier.expire',
+        category: 'tier',
+        action: 'Tier elevation expired, reverted T' + prev + ' to T1'
+      });
+      pushAlert('warning', 'Tier elevation expired, reverted to T1', 'session');
+      if (state.ui.active_tab === 'dashboard') renderSession();
+    }
+  }
+
+  function tickHealth() {
+    if (state.ui.active_tab === 'dashboard') renderHealth();
+  }
+  function tickServices() {
+    if (state.ui.active_tab === 'services') renderServices();
+  }
+
+  function tickQueueExpiry() {
+    var changed = false;
+    var now = Date.now();
+    for (var i = state.queue.tasks.length - 1; i >= 0; i--) {
+      var t = state.queue.tasks[i];
+      if (t.expires_at && now > t.expires_at && t.status !== 'executing') {
+        state.queue.tasks.splice(i, 1);
+        state.queue.expired.push(Object.assign({}, t, { status: 'expired' }));
+        appendAudit({
+          event_type: 'task.expired',
+          category: 'system',
+          action: 'Queued task expired: ' + t.prompt,
+          resource: t.agent_id
+        });
+        pushAlert('warning', 'Task ' + t.id + ' expired', 'TTL reached');
+        changed = true;
+      }
+    }
+    if (changed) {
+      saveState();
+      if (state.ui.active_tab === 'queue') renderQueue();
+    }
+    if (state.ui.active_tab === 'queue') renderQueue();
+  }
+
+  function tickApprovalExpiry() {
+    var changed = false;
+    var now = Date.now();
+    for (var i = state.approvals.pending.length - 1; i >= 0; i--) {
+      var a = state.approvals.pending[i];
+      if (a.expires_at && now > a.expires_at) {
+        state.approvals.pending.splice(i, 1);
+        a.status = 'expired';
+        a.resolved_at = now;
+        state.approvals.history.push(a);
+        appendAudit({
+          event_type: 'approval.expire',
+          category: 'system',
+          action: 'Approval ' + a.id + ' expired without action'
+        });
+        pushAlert('warning', 'Approval ' + a.id + ' expired', 'TTL reached');
+        changed = true;
+      }
+    }
+    if (changed) {
+      saveState();
+      if (state.ui.active_tab === 'approvals') renderApprovals();
+    }
+    if (state.ui.active_tab === 'approvals') renderApprovals();
+  }
+
+  /* agent reconnect cycle: profit-desk goes online for 60s, offline for 30s */
+  var agentCycleTimer = null;
+  function startAgentCycle() {
+    /* every 90s flip profit-desk: 60s online + 30s offline */
+    var phase = 'offline';
+    function flip() {
+      var pd = state.agents.find(function(a) { return a.id === 'profit-desk'; });
+      if (!pd) return;
+      if (phase === 'offline') {
+        /* go online */
+        pd.status = 'online';
+        pd.connected_at = Date.now();
+        pd.last_connected = Date.now();
+        appendAudit({
+          event_type: 'agent.connect',
+          category: 'system',
+          action: 'Agent reconnected: profit-desk',
+          resource: 'profit-desk'
+        });
+        pushAlert('info', 'Agent reconnected: profit-desk', 'mTLS verified');
+        if (pd.queued || pd.reconfirming) {
+          /* surface a reconfirm modal once */
+          openModal(function(c) {
+            c.appendChild(el('h3', null, 'Queued Task Awaiting Reconfirmation'));
+            c.appendChild(el('div', 'sub', 'profit-desk reconnected. ' + (pd.queued || 0) + ' queued and ' + (pd.reconfirming || 0) + ' pending reconfirm. Confirm dispatch on the Execution Queue tab.'));
+            var actions = el('div', 'modal-actions');
+            var go = el('button', 'btn primary', 'Open Queue');
+            go.addEventListener('click', function() { closeModal(); switchTab('queue'); });
+            actions.appendChild(go);
+            var dis = el('button', 'btn', 'Later');
+            dis.addEventListener('click', closeModal);
+            actions.appendChild(dis);
+            c.appendChild(actions);
+          });
+        }
+        phase = 'online';
+        saveState();
+        if (state.ui.active_tab === 'dashboard') renderAgents();
+        agentCycleTimer = setTimeout(flip, 60000);
+      } else {
+        pd.status = 'offline';
+        pd.last_connected = Date.now();
+        pd.connected_at = null;
+        appendAudit({
+          event_type: 'agent.disconnect',
+          category: 'system',
+          action: 'Agent disconnected: profit-desk',
+          resource: 'profit-desk'
+        });
+        pushAlert('warning', 'Agent disconnected: profit-desk', 'idle timeout');
+        phase = 'offline';
+        saveState();
+        if (state.ui.active_tab === 'dashboard') renderAgents();
+        agentCycleTimer = setTimeout(flip, 30000);
+      }
+    }
+    /* first flip in 30s */
+    agentCycleTimer = setTimeout(flip, 30000);
+  }
+
+  /* ---------- BOOT ---------- */
+  function boot() {
+    /* Wire tab buttons */
+    var tabBtns = document.querySelectorAll('.tab-btn');
+    tabBtns.forEach(function(b) {
+      b.addEventListener('click', function() { switchTab(b.dataset.tab); });
+    });
+
+    renderAuditFilters();
+    renderSession();
+    renderHealth();
+    renderAgents();
+    /* warm-render hidden panels so localStorage state is consistent */
+    renderServices();
+    renderQueue();
+    renderApprovals();
+    renderAudit();
+
+    /* tickers */
+    setInterval(tickSession, 1000);            /* age + tier countdown */
+    setInterval(tickHealth, 2500);             /* health flicker */
+    setInterval(tickServices, 3000);           /* service metric flicker */
+    setInterval(tickQueueExpiry, 5000);        /* queue countdown + expiry */
+    setInterval(tickApprovalExpiry, 5000);     /* approval countdown + expiry */
+    setInterval(backgroundAlertCycle, 25000);  /* background alert pool */
+
+    /* first background alert after 6s so the page doesn't load empty */
+    setTimeout(backgroundAlertCycle, 6000);
+
+    startAgentCycle();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+
+</body>
+</html>

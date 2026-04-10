@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Jump Quest!</title>
+<title>Jump Quest &middot; Public Web Alpha</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #1a1a2e; overflow: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; touch-action: none; }
+body { background: #F5F9FF; overflow: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; touch-action: none; }
 canvas#game { display: block; width: 100vw; height: 100vh; }
 
 /* HUD Overlay */
@@ -29,21 +29,21 @@ canvas#game { display: block; width: 100vw; height: 100vh; }
 /* Menus */
 .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 20; }
 .menu-overlay.hidden { display: none; }
-#main-menu { background: linear-gradient(135deg, #1a1a3e, #2d2d5e); }
-#world-select { background: linear-gradient(135deg, #141428, #1e1e44); }
-#results-screen { background: linear-gradient(135deg, #0f1525, #1a2540); }
-#pause-menu { background: rgba(0,0,0,0.75); }
-#skill-tree-screen { background: linear-gradient(135deg, #0f1020, #1a1a3a); }
-#cosmetics-screen { background: linear-gradient(135deg, #1a0f20, #2a1a3a); }
-#wizard-screen { background: linear-gradient(135deg, #0a0f18, #152030); }
+#main-menu { background: linear-gradient(135deg, #4DB8FF, #FFFFFF); }
+#world-select { background: linear-gradient(135deg, #4DB8FF, #F5F9FF); }
+#results-screen { background: linear-gradient(135deg, #33CC55, #FFFFFF); }
+#pause-menu { background: rgba(0,0,0,0.55); }
+#skill-tree-screen { background: linear-gradient(135deg, #F5F9FF, #FFFFFF); }
+#cosmetics-screen { background: linear-gradient(135deg, #FFFFFF, #F5F9FF); }
+#wizard-screen { background: linear-gradient(135deg, #4DB8FF, #FFFFFF); }
 
-.menu-title { font-size: 56px; font-weight: bold; color: #FFD700; text-shadow: 3px 3px 6px rgba(0,0,0,0.5); margin-bottom: 10px; }
-.menu-subtitle { font-size: 22px; color: #ccc; margin-bottom: 30px; }
+.menu-title { font-size: 56px; font-weight: bold; color: #FFD700; text-shadow: 3px 3px 0 #FF9933, -2px -2px 0 #FFFFFF, 2px -2px 0 #FFFFFF, -2px 2px 0 #FFFFFF, 4px 4px 8px rgba(0,0,0,0.25); margin-bottom: 10px; }
+.menu-subtitle { font-size: 22px; color: #1a3a5e; font-weight: bold; margin-bottom: 30px; text-shadow: 1px 1px 0 rgba(255,255,255,0.5); }
 .menu-btn { padding: 16px 48px; margin: 8px; font-size: 22px; font-weight: bold; color: #fff; border: none; border-radius: 12px; cursor: pointer; min-width: 260px; transition: transform 0.1s, filter 0.1s; }
 .menu-btn:hover { transform: scale(1.05); filter: brightness(1.15); }
 .menu-btn:active { transform: scale(0.97); }
 .btn-play { background: linear-gradient(135deg, #2ecc71, #27ae60); }
-.btn-cosmetics { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+.btn-cosmetics { background: linear-gradient(135deg, #FF9933, #E67E22); }
 .btn-skills { background: linear-gradient(135deg, #3498db, #2980b9); }
 .btn-dev { background: linear-gradient(135deg, #555, #444); }
 .btn-orange { background: linear-gradient(135deg, #e67e22, #d35400); }
@@ -139,42 +139,43 @@ canvas#game { display: block; width: 100vw; height: 100vh; }
 </div>
 
 <!-- Welcome Splash (shows first, before main menu) -->
-<div id="welcome-splash" class="menu-overlay" style="background: linear-gradient(135deg, #0d0d2b, #1a1a4e, #2d1a5e); cursor:pointer;" onclick="dismissSplash()">
+<div id="welcome-splash" class="menu-overlay" style="background: linear-gradient(135deg, #4DB8FF, #FFFFFF, #FFD700); cursor:pointer;" onclick="dismissSplash()">
   <div style="text-align:center; max-width:700px; padding:20px;">
-    <div style="font-size:20px; color:#aaa; letter-spacing:4px; margin-bottom:4px;">WELCOME TO</div>
-    <div style="font-size:28px; color:#ff9933; font-weight:bold; margin-bottom:6px; letter-spacing:2px;">FISHER GAMING'S</div>
+    <div style="display:inline-block; padding:6px 14px; background:rgba(51,204,85,0.12); border:1px solid rgba(51,204,85,0.6); border-radius:20px; color:#1d7f40; font-size:11px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; margin-bottom:18px;">&#9679; Public Web Alpha</div>
+    <div style="font-size:20px; color:#1a3a5e; letter-spacing:4px; margin-bottom:4px; font-weight:600;">WELCOME TO</div>
+    <div style="font-size:28px; color:#E67E22; font-weight:bold; margin-bottom:6px; letter-spacing:2px;">FISHER GAMING'S</div>
     <div class="menu-title" style="font-size:64px; margin-bottom:20px; animation: titlePulse 2s ease-in-out infinite;">JUMP QUEST!</div>
 
-    <div style="background:rgba(255,255,255,0.08); border-radius:16px; padding:24px 30px; margin:16px 0; text-align:left;">
-      <div style="color:#FFD700; font-size:22px; font-weight:bold; text-align:center; margin-bottom:16px;">HOW TO PLAY</div>
+    <div style="background:rgba(26,58,94,0.08); border:1px solid rgba(26,58,94,0.18); border-radius:16px; padding:24px 30px; margin:16px 0; text-align:left;">
+      <div style="color:#1a3a5e; font-size:22px; font-weight:bold; text-align:center; margin-bottom:16px;">HOW TO PLAY</div>
 
       <div id="splash-controller-instructions" style="display:none;">
-        <div style="color:#fff; font-size:19px; line-height:1.9;">
-          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#80ccff;font-weight:bold;">Left Stick</span> Move around</div>
-          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#4dff4d;font-weight:bold;">A Button</span> Jump!</div>
-          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#ffaa44;font-weight:bold;">Right Trigger</span> Run fast!</div>
-          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#ff66aa;font-weight:bold;">X Button</span> Speed Boost</div>
-          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#66ddff;font-weight:bold;">Y Button</span> Shield</div>
-          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#ccc;font-weight:bold;">Start</span> Pause</div>
-          <div><span style="display:inline-block;width:160px;color:#ff6666;font-weight:bold;">B Button</span> Go Back</div>
+        <div style="color:#1a3a5e; font-size:19px; line-height:1.9;">
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#0369a1;font-weight:bold;">Left Stick</span> Move around</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#1d7f40;font-weight:bold;">A Button</span> Jump!</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#E67E22;font-weight:bold;">Right Trigger</span> Run fast!</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#b45309;font-weight:bold;">X Button</span> Speed Boost</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#0369a1;font-weight:bold;">Y Button</span> Shield</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#555;font-weight:bold;">Start</span> Pause</div>
+          <div><span style="display:inline-block;width:160px;color:#c0392b;font-weight:bold;">B Button</span> Go Back</div>
         </div>
       </div>
 
       <div id="splash-keyboard-instructions">
-        <div style="color:#fff; font-size:19px; line-height:1.9;">
-          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#80ccff;font-weight:bold;">W A S D</span> Move around</div>
-          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#4dff4d;font-weight:bold;">Space Bar</span> Jump!</div>
-          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#ffaa44;font-weight:bold;">Shift</span> Run fast!</div>
-          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#ccc;font-weight:bold;">Escape</span> Pause</div>
+        <div style="color:#1a3a5e; font-size:19px; line-height:1.9;">
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#0369a1;font-weight:bold;">W A S D</span> Move around</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#1d7f40;font-weight:bold;">Space Bar</span> Jump!</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#E67E22;font-weight:bold;">Shift</span> Run fast!</div>
+          <div style="margin-bottom:8px;"><span style="display:inline-block;width:160px;color:#555;font-weight:bold;">Escape</span> Pause</div>
         </div>
       </div>
     </div>
 
-    <div style="color:#FFD700; font-size:20px; margin-top:14px; font-weight:bold;">
+    <div style="color:#b8860b; font-size:20px; margin-top:14px; font-weight:bold; text-shadow:0 1px 0 rgba(255,255,255,0.6);">
       Collect coins! Jump across platforms!<br>Reach the finish to win!
     </div>
 
-    <div id="splash-start-prompt" style="margin-top:28px; font-size:26px; color:#fff; font-weight:bold; animation: blink 1.2s ease-in-out infinite;">
+    <div id="splash-start-prompt" style="margin-top:28px; font-size:26px; color:#1a3a5e; font-weight:bold; animation: blink 1.2s ease-in-out infinite; text-shadow:0 1px 0 rgba(255,255,255,0.7);">
       Press A or click anywhere to start!
     </div>
   </div>
@@ -291,10 +292,10 @@ const COSMETICS = [
   { id:'skin_red', name:'Red Hot', cat:'skin', cost:30, color:'#ff3333' },
   { id:'skin_green', name:'Forest', cat:'skin', cost:30, color:'#33cc55' },
   { id:'skin_gold', name:'Golden', cat:'skin', cost:100, color:'#ffd700' },
-  { id:'skin_purple', name:'Royal', cat:'skin', cost:60, color:'#9933ff' },
+  { id:'skin_turquoise', name:'Ocean', cat:'skin', cost:60, color:'#00CCDD' },
   { id:'skin_rainbow', name:'Rainbow', cat:'skin', cost:200, color:'#ff66cc' },
   { id:'hat_crown', name:'Crown', cat:'hat', cost:75, color:'#ffd700' },
-  { id:'hat_wizard', name:'Wizard Hat', cat:'hat', cost:50, color:'#6633cc' },
+  { id:'hat_wizard', name:'Wizard Hat', cat:'hat', cost:50, color:'#FF9933' },
   { id:'hat_pirate', name:'Pirate', cat:'hat', cost:60, color:'#993333' },
   { id:'trail_sparkle', name:'Sparkle', cat:'trail', cost:80, color:'#ffffff' },
   { id:'trail_fire', name:'Fire', cat:'trail', cost:120, color:'#ff6600' },
@@ -304,9 +305,9 @@ const COSMETICS = [
 const WORLDS = [
   { id:'mountains', name:'The Mountains', color:'#6699bb', levels:3, reqLevel:1 },
   { id:'jungle', name:'Jungle Ruins', color:'#339933', levels:3, reqLevel:5 },
-  { id:'space', name:'Space Station', color:'#2a1a4a', levels:3, reqLevel:10 },
-  { id:'candy', name:'Candy Castle', color:'#e66699', levels:3, reqLevel:15 },
-  { id:'pirate', name:'Pirate Cove', color:'#4d6699', levels:3, reqLevel:20 },
+  { id:'space', name:'Space Station', color:'#4DB8FF', levels:3, reqLevel:10 },
+  { id:'candy', name:'Candy Castle', color:'#FF3333', levels:3, reqLevel:15 },
+  { id:'pirate', name:'Pirate Cove', color:'#33CC55', levels:3, reqLevel:20 },
 ];
 
 // ===== SAMPLE LEVEL DATA (embedded) =====
@@ -841,7 +842,7 @@ function createPlayer() {
         hatMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.7 });
       } else if (hatItem.id === 'hat_wizard') {
         hatGeo = new THREE.ConeGeometry(0.3, 0.6, 8);
-        hatMat = new THREE.MeshStandardMaterial({ color: 0x6633cc });
+        hatMat = new THREE.MeshStandardMaterial({ color: 0xff9933 });
       } else {
         hatGeo = new THREE.BoxGeometry(0.6, 0.1, 0.6);
         hatMat = new THREE.MeshStandardMaterial({ color: parseInt(hatItem.color.replace('#',''),16) });
@@ -1443,7 +1444,7 @@ const Game = {
       const canBuy = !owned && prereqMet && levelMet && Save.data.currency >= s.cost;
       const cls = owned ? 'owned' : canBuy ? 'available' : 'locked';
 
-      html += `<div class="skill-node ${cls}" style="background:${owned ? s.color+'33' : '#1a1a2e'}" onclick="Game.buySkill('${s.id}',${s.cost})">`;
+      html += `<div class="skill-node ${cls}" style="background:${owned ? s.color+'33' : '#E8F1FF'}" onclick="Game.buySkill('${s.id}',${s.cost})">`;
       html += `<div class="skill-name">${s.name}</div>`;
       html += `<div class="skill-desc">${s.desc}</div>`;
       html += `<div class="skill-cost">${owned ? 'OWNED' : `${s.cost} coins | Lv ${s.reqLevel}`}</div>`;
@@ -1471,7 +1472,7 @@ const Game = {
       else if (item.cat === 'hat') equipped = Save.data.equippedHat === item.id;
       else if (item.cat === 'trail') equipped = Save.data.equippedTrail === item.id;
 
-      html += `<div class="cosmetic-card ${equipped ? 'equipped' : ''}" style="background:${owned ? item.color+'22' : '#1a1a2e'}" onclick="Game.buyCosmetic('${item.id}','${item.cat}',${item.cost})">`;
+      html += `<div class="cosmetic-card ${equipped ? 'equipped' : ''}" style="background:${owned ? item.color+'22' : '#E8F1FF'}" onclick="Game.buyCosmetic('${item.id}','${item.cat}',${item.cost})">`;
       html += `<div class="cosmetic-preview" style="background:${item.color}"></div>`;
       html += `<div class="cosmetic-name">${item.name}</div>`;
       html += `<div class="cosmetic-cost">${equipped ? 'EQUIPPED' : owned ? 'EQUIP' : `${item.cost} coins`}</div>`;

@@ -1,0 +1,2544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Private Intelligence Platform | Lance W. Fisher</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #d7dde8;
+    --gold-dim: rgba(215,221,232,0.24);
+    --gold-glow: rgba(215,221,232,0.08);
+    --bg: #0a0a0a;
+    --surface: #111;
+    --surface-2: #161616;
+    --surface-3: #1c1c1c;
+    --border: rgba(255,255,255,0.07);
+    --border-gold: rgba(215,221,232,0.2);
+    --text: rgba(240,235,224,0.9);
+    --text-dim: rgba(240,235,224,0.55);
+    --text-muted: rgba(240,235,224,0.35);
+    --orange: #f97316;
+    --orange-dim: rgba(249,115,22,0.15);
+    --orange-border: rgba(249,115,22,0.35);
+    --purple: #a855f7;
+    --purple-dim: rgba(168,85,247,0.15);
+    --purple-border: rgba(168,85,247,0.35);
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.15);
+    --green-border: rgba(34,197,94,0.35);
+    --blue: #3b82f6;
+    --blue-dim: rgba(59,130,246,0.15);
+    --blue-border: rgba(59,130,246,0.35);
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #111;
+    border-bottom: 1px solid var(--gold-dim);
+    padding: 0 32px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .nav-back {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .nav-back:hover { color: var(--gold); }
+  .nav-back::before { content: '←'; }
+
+  .nav-title {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    text-align: center;
+  }
+
+  .nav-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .nav-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+  }
+
+  /* LAYOUT */
+  .page-wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  .page-sim-banner {
+    max-width: 1120px;
+    margin: 18px auto 0;
+    padding: 10px 18px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(20, 24, 32, 0.92), rgba(12, 14, 18, 0.96));
+    color: var(--text-dim);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    text-align: center;
+  }
+
+  .page-benefit {
+    margin-top: 22px;
+    padding: 18px 22px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, rgba(18, 22, 28, 0.88), rgba(12, 14, 18, 0.96));
+    color: var(--text-dim);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 72px 0 48px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--gold-glow);
+    border: 1px solid var(--border-gold);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .hero-badge-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+  }
+
+  .hero h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    margin-bottom: 20px;
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--text-dim);
+    max-width: 640px;
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+
+  .hero-pillars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .pillar {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 13px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .pillar-icon {
+    font-size: 14px;
+  }
+
+  .workspace-panel {
+    background: linear-gradient(180deg, rgba(14, 17, 22, 0.98), rgba(10, 11, 14, 0.98));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .workspace-top {
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .workspace-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .workspace-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    max-width: 620px;
+  }
+
+  .workspace-state-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.22);
+    color: #8ce7aa;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .workspace-state-chip::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 10px rgba(34,197,94,0.55);
+  }
+
+  .workspace-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+    gap: 18px;
+    padding: 20px 22px 22px;
+  }
+
+  .workspace-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+  }
+
+  .workspace-card-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .workspace-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .workspace-metric {
+    padding: 12px 13px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+  }
+
+  .workspace-metric-name {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .workspace-metric-value {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .workspace-metric-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+
+  .workspace-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .workspace-btn {
+    border: 1px solid var(--border);
+    background: var(--surface-3);
+    color: var(--text-dim);
+    border-radius: 999px;
+    padding: 9px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.2s;
+  }
+
+  .workspace-btn:hover {
+    border-color: rgba(255,255,255,0.24);
+    background: rgba(255,255,255,0.06);
+    color: var(--text);
+  }
+
+  .workspace-btn.active {
+    border-color: rgba(96,165,250,0.35);
+    background: rgba(59,130,246,0.14);
+    color: #cfe1ff;
+  }
+
+  .workspace-log {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .workspace-log-row {
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+  }
+
+  .workspace-log-row strong {
+    display: block;
+    color: var(--text);
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  .workspace-log-row span {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 56px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+    letter-spacing: 0.02em;
+  }
+
+  .section-desc {
+    font-size: 15px;
+    color: var(--text-dim);
+    max-width: 680px;
+    margin-bottom: 36px;
+  }
+
+  /* ARCHITECTURE DIAGRAM */
+  .arch-diagram {
+    background: var(--surface);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-lg);
+    padding: 40px 32px;
+    overflow-x: auto;
+  }
+
+  .arch-layer-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .arch-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 4px;
+  }
+
+  .arch-box {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+  .arch-box.gold-accent {
+    border-color: var(--border-gold);
+    background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
+  }
+  .arch-box.server-accent {
+    border-color: var(--blue-border);
+    background: var(--blue-dim);
+  }
+  .arch-box.router-accent {
+    border-color: rgba(201,168,76,0.4);
+    background: var(--gold-glow);
+  }
+
+  .arch-box-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .arch-box-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .arch-arrow {
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    padding: 0 8px;
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  .arch-split {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .arch-provider-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .provider-box {
+    border-radius: var(--radius);
+    padding: 10px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 160px;
+  }
+  .provider-box.local {
+    background: var(--orange-dim);
+    border: 1px solid var(--orange-border);
+  }
+  .provider-box.claude {
+    background: var(--purple-dim);
+    border: 1px solid var(--purple-border);
+  }
+  .provider-box.openai {
+    background: var(--green-dim);
+    border: 1px solid var(--green-border);
+  }
+
+  .provider-box-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .provider-box.local .provider-box-title { color: var(--orange); }
+  .provider-box.claude .provider-box-title { color: var(--purple); }
+  .provider-box.openai .provider-box-title { color: var(--green); }
+
+  .provider-box-models {
+    font-size: 10px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .arch-connector-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 0;
+  }
+  .arch-connector-line {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .arch-routing-note {
+    margin-top: 28px;
+    background: var(--gold-glow);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .routing-note-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--gold);
+    white-space: nowrap;
+    padding-top: 1px;
+  }
+  .routing-note-text {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  /* PROVIDER DOTS */
+  .dots-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .dot.available { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .dot.offline { background: var(--text-muted); opacity: 0.4; }
+
+  /* MODEL SELECTOR */
+  .model-selector-demo {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .ms-header {
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .ms-header-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dim);
+  }
+
+  .ms-status-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ms-body {
+    padding: 20px;
+  }
+
+  .ms-auto-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--gold-glow);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    cursor: pointer;
+  }
+  .ms-auto-option-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .ms-auto-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .ms-provider-group {
+    margin-bottom: 20px;
+  }
+  .ms-provider-group:last-child { margin-bottom: 0; }
+
+  .ms-group-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0 4px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ms-group-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.08em;
+  }
+  .badge-local {
+    background: var(--orange-dim);
+    border: 1px solid var(--orange-border);
+    color: var(--orange);
+  }
+  .badge-claude {
+    background: var(--purple-dim);
+    border: 1px solid var(--purple-border);
+    color: var(--purple);
+  }
+  .badge-openai {
+    background: var(--green-dim);
+    border: 1px solid var(--green-border);
+    color: var(--green);
+  }
+
+  .ms-model-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .ms-model {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 12px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    gap: 12px;
+  }
+  .ms-model:hover {
+    background: var(--surface-2);
+    border-color: var(--border);
+  }
+  .ms-model.selected {
+    background: var(--surface-2);
+    border-color: var(--border-gold);
+  }
+
+  .ms-model-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .ms-model-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .ms-model-ctx {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .ms-model-tag {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+  .tag-code { background: rgba(96,165,250,0.15); color: #60a5fa; }
+  .tag-reason { background: rgba(168,85,247,0.15); color: #a855f7; }
+  .tag-fast { background: rgba(34,197,94,0.15); color: #22c55e; }
+  .tag-general { background: rgba(148,163,184,0.12); color: #94a3b8; }
+
+  /* CHAT PREVIEW */
+  .chat-demo {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 460px;
+  }
+
+  .chat-sidebar {
+    background: var(--surface-2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-top {
+    padding: 14px 14px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .new-chat-btn {
+    width: 100%;
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-dim);
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .sidebar-sessions {
+    flex: 1;
+    padding: 8px 6px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .session-item {
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text-dim);
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 1px solid transparent;
+    transition: background 0.15s;
+  }
+  .session-item:hover { background: var(--surface-3); }
+  .session-item.active {
+    background: var(--surface-3);
+    border-color: var(--border);
+    color: var(--text);
+  }
+
+  .chat-main {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-topbar {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface-2);
+    gap: 12px;
+  }
+
+  .chat-session-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .chat-model-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--orange-dim);
+    border: 1px solid var(--orange-border);
+    color: var(--orange);
+    white-space: nowrap;
+  }
+  .chat-model-badge.cloud {
+    background: var(--purple-dim);
+    border-color: var(--purple-border);
+    color: var(--purple);
+  }
+
+  .chat-messages {
+    flex: 1;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+  }
+
+  .msg-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .msg-row.user { align-items: flex-end; }
+  .msg-row.assistant { align-items: flex-start; }
+
+  .msg-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0 4px;
+  }
+
+  .msg-bubble {
+    max-width: 78%;
+    border-radius: var(--radius);
+    padding: 11px 14px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .msg-bubble.user {
+    background: var(--gold-glow);
+    border: 1px solid var(--border-gold);
+    color: var(--text);
+    border-bottom-right-radius: 2px;
+  }
+  .msg-bubble.assistant {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    border-bottom-left-radius: 2px;
+  }
+
+  .msg-code {
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #93c5fd;
+    line-height: 1.6;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  .msg-streaming {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 4px 4px;
+  }
+  .streaming-dots span {
+    display: inline-block;
+    animation: blink 1.2s infinite both;
+  }
+  .streaming-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .streaming-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink {
+    0%, 80%, 100% { opacity: 0; }
+    40% { opacity: 1; }
+  }
+
+  .chat-routing-bar {
+    padding: 8px 18px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-3);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .routing-tag {
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .chat-input-row {
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    background: var(--surface-2);
+  }
+
+  .chat-textarea {
+    flex: 1;
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: rgba(232, 236, 242, 0.92);
+    resize: none;
+    min-height: 40px;
+    max-height: 120px;
+    line-height: 1.45;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    overflow-y: auto;
+  }
+  .chat-textarea::placeholder { color: rgba(210, 218, 230, 0.4); }
+  .chat-textarea:focus { border-color: rgba(232, 236, 242, 0.45); background: #0b0c0f; }
+
+  .chat-send-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    background: rgba(232, 236, 242, 0.08);
+    border: 1px solid rgba(232, 236, 242, 0.35);
+    color: rgba(232, 236, 242, 0.94);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 16px;
+    font-family: inherit;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .chat-send-btn:hover { background: rgba(232, 236, 242, 0.16); border-color: rgba(255, 255, 255, 0.7); }
+  .chat-send-btn:active { transform: translateY(1px); }
+
+  /* TECH STACK */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+  }
+
+  .stack-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    transition: border-color 0.2s;
+  }
+  .stack-card:hover { border-color: var(--border-gold); }
+
+  .stack-card-layer {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .stack-card-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .stack-card-version {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .stack-card-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* DIFFERENTIATORS */
+  .diff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+
+  .diff-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .diff-card:hover { border-color: var(--border-gold); }
+
+  .diff-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--gold);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .diff-card:hover::before { opacity: 1; }
+
+  .diff-icon {
+    font-size: 22px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .diff-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .diff-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* CAPABILITY ROUTER */
+  .router-panel {
+    background: var(--surface);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .router-header {
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .router-header-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .router-header-tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--gold-glow);
+    border: 1px solid var(--border-gold);
+    color: var(--gold);
+    letter-spacing: 0.08em;
+  }
+
+  .router-body {
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .router-rule {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .rule-intent {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 160px;
+  }
+
+  .rule-intent-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .rule-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .rule-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+
+  .rule-arrow {
+    color: var(--text-muted);
+    padding-top: 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  .rule-target {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .rule-target-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .rule-model-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .rule-scores {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .score-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  .score-bar {
+    width: 36px;
+    height: 4px;
+    background: var(--surface-3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .score-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--gold);
+  }
+
+  /* API ROUTES */
+  .routes-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .routes-header {
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .route-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .route-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 20px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    transition: background 0.15s;
+  }
+  .route-item:last-child { border-bottom: none; }
+  .route-item:hover { background: var(--surface-2); }
+
+  .route-method {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 7px;
+    border-radius: 4px;
+    width: 40px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .method-get { background: rgba(34,197,94,0.15); color: #22c55e; }
+  .method-post { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .method-delete { background: rgba(239,68,68,0.15); color: #f87171; }
+  .method-patch { background: rgba(249,115,22,0.15); color: #fb923c; }
+
+  .route-path {
+    color: var(--text);
+    font-size: 12px;
+    flex: 1;
+  }
+
+  .route-desc {
+    color: var(--text-muted);
+    font-size: 11px;
+    text-align: right;
+  }
+
+  /* FOOTER */
+  .page-footer {
+    padding: 40px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 0;
+  }
+
+  .footer-left {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .footer-left strong {
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  .footer-right {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .footer-link {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-link:hover { color: var(--gold); }
+
+  /* RESPONSIVE */
+  @media (max-width: 740px) {
+    nav { padding: 0 16px; }
+    .nav-title { font-size: 12px; }
+    .nav-status { display: none; }
+    .page-wrap { padding: 0 16px 60px; }
+    .hero { padding: 48px 0 36px; }
+    .workspace-grid { grid-template-columns: 1fr; }
+    .chat-demo { grid-template-columns: 1fr; }
+    .chat-sidebar { display: none; }
+    .arch-diagram { padding: 24px 16px; }
+    .router-rule { flex-direction: column; gap: 10px; }
+    .rule-arrow { display: none; }
+    .route-desc { display: none; }
+    .diff-grid { grid-template-columns: 1fr; }
+    .stack-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 480px) {
+    .stack-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<!-- FSS-BRAND-BLOCK-V3 (FF25 wordmark, no H icon) -->
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/brand.css?v=20260410v6">
+<div class="fssb-v3-top">
+  <a href="../home.html" class="fssb-v3-top-link" aria-label="Fisher Sovereign Systems">
+    <span class="fssb-v3-top-name">Fisher</span>
+    <span class="fssb-v3-top-rule"></span>
+    <span class="fssb-v3-top-sub">Sovereign Systems</span>
+  </a>
+  <a href="../home.html" class="fssb-v3-top-back">&larr; Portfolio</a>
+</div>
+
+
+<div class="page-sim-banner">
+  Public Alpha &middot; Real local chat demo &middot; Provider routing is simulated honestly in-browser &middot; Session history persists in localStorage
+</div>
+
+<nav id="main-nav"></nav>
+
+<div class="page-wrap">
+  <div class="hero" id="hero-section"></div>
+  <div class="page-benefit">
+    Bring AI in-house without handing your workflow, prompts, or customer context to a third-party platform. This preview shows how a private workstation can route tasks, retain history, and keep the operator in control of when anything leaves the machine.
+  </div>
+  <section id="workspace-section"></section>
+  <section id="arch-section"></section>
+  <section id="router-section"></section>
+  <section id="model-section"></section>
+  <section id="chat-section"></section>
+  <section id="routes-section"></section>
+  <section id="stack-section"></section>
+  <section id="diff-section"></section>
+  <div class="page-footer" id="footer-section"></div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    if (attrs) {
+      Object.keys(attrs).forEach(function (k) {
+        if (k === 'class') { node.className = attrs[k]; }
+        else if (k === 'style') { node.style.cssText = attrs[k]; }
+        else { node.setAttribute(k, attrs[k]); }
+      });
+    }
+    if (children) {
+      if (typeof children === 'string') {
+        node.textContent = children;
+      } else if (Array.isArray(children)) {
+        children.forEach(function (c) { if (c) node.appendChild(c); });
+      } else {
+        node.appendChild(children);
+      }
+    }
+    return node;
+  }
+
+  // --- NAV ---
+  (function buildNav() {
+    var nav = document.getElementById('main-nav');
+
+    var back = el('a', { class: 'nav-back', href: '../home.html' }, 'Portfolio');
+    var title = el('div', { class: 'nav-title' }, 'Private Intelligence Platform');
+
+    var dot = el('div', { class: 'nav-status-dot' });
+    var statusText = document.createTextNode('Local runtime online');
+    var status = el('div', { class: 'nav-status' });
+    status.appendChild(dot);
+    status.appendChild(statusText);
+
+    nav.appendChild(back);
+    nav.appendChild(title);
+    nav.appendChild(status);
+  })();
+
+  // --- HERO ---
+  (function buildHero() {
+    var sec = document.getElementById('hero-section');
+
+    var badgeDot = el('div', { class: 'hero-badge-dot' });
+    var badge = el('div', { class: 'hero-badge' });
+    badge.appendChild(badgeDot);
+    badge.appendChild(document.createTextNode('Public Alpha'));
+
+    var h1 = el('h1', null, 'Private intelligence that stays under your control.');
+
+    var sub = el('p', { class: 'hero-sub' },
+      'This controlled workstation preview demonstrates what it looks like to run AI as your own infrastructure. ' +
+      'Local inference stays on the machine by default, cloud providers remain opt-in, and every routing decision is surfaced so the operator keeps control of privacy, cost, and model behavior.'
+    );
+
+    var pillarsData = [
+      { icon: '⬡', text: 'Keep prompts on your hardware' },
+      { icon: '⟳', text: 'Route work by task, not vendor lock-in' },
+      { icon: '▣', text: 'Retain history in local storage' },
+      { icon: '◈', text: 'See why each model was selected' },
+      { icon: '⚡', text: 'Switch between local-only and hybrid use' },
+      { icon: '📡', text: 'Extend to desktop and remote access' },
+    ];
+
+    var pillars = el('div', { class: 'hero-pillars' });
+    pillarsData.forEach(function (p) {
+      var icon = el('span', { class: 'pillar-icon' }, p.icon);
+      var pillar = el('div', { class: 'pillar' });
+      pillar.appendChild(icon);
+      pillar.appendChild(document.createTextNode(p.text));
+      pillars.appendChild(pillar);
+    });
+
+    sec.appendChild(badge);
+    sec.appendChild(h1);
+    sec.appendChild(sub);
+    sec.appendChild(pillars);
+  })();
+
+  // --- WORKSPACE SNAPSHOT ---
+  (function buildWorkspace() {
+    var sec = document.getElementById('workspace-section');
+
+    var label = el('div', { class: 'section-label' }, 'Why This Matters');
+    var title = el('div', { class: 'section-title' }, 'Operate AI like infrastructure you own');
+    var desc = el('p', { class: 'section-desc' },
+      'Instead of renting a black-box chatbot, this alpha preview frames AI as an operator-controlled workstation. ' +
+      'You can keep the system local, selectively enable cloud capacity, and maintain a visible boundary around what data is allowed to leave the machine.'
+    );
+
+    var panel = el('div', { class: 'workspace-panel' });
+
+    var top = el('div', { class: 'workspace-top' });
+    var topCopy = el('div');
+    topCopy.appendChild(el('div', { class: 'workspace-title' }, 'Workstation boundary controls'));
+    topCopy.appendChild(el('div', { class: 'workspace-sub' }, 'Demo controls below update the local state of this preview so visitors can see the operating model change in real time.'));
+    var chip = el('div', { class: 'workspace-state-chip', id: 'workspace-live-state' }, 'Local only');
+    top.appendChild(topCopy);
+    top.appendChild(chip);
+    panel.appendChild(top);
+
+    var grid = el('div', { class: 'workspace-grid' });
+
+    var left = el('div', { class: 'workspace-card' });
+    left.appendChild(el('div', { class: 'workspace-card-label' }, 'Operator Snapshot'));
+    var metrics = el('div', { class: 'workspace-metrics' });
+
+    function metric(name, value, sub, id) {
+      var card = el('div', { class: 'workspace-metric' });
+      card.appendChild(el('div', { class: 'workspace-metric-name' }, name));
+      card.appendChild(el('div', { class: 'workspace-metric-value', id: id }, value));
+      card.appendChild(el('div', { class: 'workspace-metric-sub' }, sub));
+      return card;
+    }
+
+    metrics.appendChild(metric('Data boundary', 'Machine only', 'Prompts and history stay on the device unless a cloud mode is intentionally enabled.', 'metric-boundary'));
+    metrics.appendChild(metric('Routing mode', 'Local priority', 'Auto-routing favors Ollama first and only exposes cloud providers when the operator allows it.', 'metric-mode'));
+    metrics.appendChild(metric('History store', 'Local SQLite', 'Session history can be retained under operator control instead of in a hosted SaaS account.', 'metric-history'));
+    metrics.appendChild(metric('Fallback policy', 'No silent relay', 'Cloud is never treated as a hidden fallback path.', 'metric-fallback'));
+    left.appendChild(metrics);
+
+    var actions = el('div', { class: 'workspace-actions' });
+    var btnLocal = el('button', { class: 'workspace-btn active', type: 'button' }, 'Local only');
+    var btnHybrid = el('button', { class: 'workspace-btn', type: 'button' }, 'Hybrid ready');
+    var btnClear = el('button', { class: 'workspace-btn', type: 'button' }, 'Clear audit snapshot');
+    actions.appendChild(btnLocal);
+    actions.appendChild(btnHybrid);
+    actions.appendChild(btnClear);
+    left.appendChild(actions);
+
+    var right = el('div', { class: 'workspace-card' });
+    right.appendChild(el('div', { class: 'workspace-card-label' }, 'Visible State Changes'));
+    var log = el('div', { class: 'workspace-log', id: 'workspace-log' });
+    right.appendChild(log);
+
+    grid.appendChild(left);
+    grid.appendChild(right);
+    panel.appendChild(grid);
+
+    sec.appendChild(label);
+    sec.appendChild(title);
+    sec.appendChild(desc);
+    sec.appendChild(panel);
+
+    var liveState = document.getElementById('workspace-live-state');
+    var metricBoundary = document.getElementById('metric-boundary');
+    var metricMode = document.getElementById('metric-mode');
+    var metricHistory = document.getElementById('metric-history');
+    var metricFallback = document.getElementById('metric-fallback');
+
+    function renderLog(items) {
+      while (log.firstChild) log.removeChild(log.firstChild);
+      items.forEach(function (item) {
+        var row = el('div', { class: 'workspace-log-row' });
+        row.appendChild(el('strong', null, item.title));
+        row.appendChild(el('span', null, item.body));
+        log.appendChild(row);
+      });
+    }
+
+    function setMode(mode) {
+      var isHybrid = mode === 'hybrid';
+      btnLocal.classList.toggle('active', !isHybrid);
+      btnHybrid.classList.toggle('active', isHybrid);
+      liveState.textContent = isHybrid ? 'Hybrid allowed' : 'Local only';
+      metricBoundary.textContent = isHybrid ? 'Operator approved relay' : 'Machine only';
+      metricMode.textContent = isHybrid ? 'Selective cloud assist' : 'Local priority';
+      metricHistory.textContent = isHybrid ? 'Local SQLite + cloud opt-in' : 'Local SQLite';
+      metricFallback.textContent = isHybrid ? 'Explicit cloud escalation' : 'No silent relay';
+      renderLog(
+        isHybrid
+          ? [
+              { title: 'Cloud relay gate opened', body: 'Hybrid mode permits a cloud provider only when the operator or routing policy explicitly asks for it.' },
+              { title: 'Local models remain primary', body: 'Ollama still handles default traffic. Cloud capacity is exposed as a controlled overflow path, not a hidden dependency.' },
+              { title: 'Audit boundary still visible', body: 'The workstation keeps a visible distinction between local history and outbound requests so trust decisions are legible.' }
+            ]
+          : [
+              { title: 'Local-only boundary enforced', body: 'The workstation keeps inference on-device and refuses to silently route work to a hosted provider.' },
+              { title: 'History stays under operator control', body: 'Sessions are retained locally, which supports private recall without a vendor dashboard owning the conversation history.' },
+              { title: 'Routing remains transparent', body: 'Model selection is still visible, but every available option is constrained to the local runtime boundary.' }
+            ]
+      );
+    }
+
+    btnLocal.addEventListener('click', function () { setMode('local'); });
+    btnHybrid.addEventListener('click', function () { setMode('hybrid'); });
+    btnClear.addEventListener('click', function () {
+      btnLocal.classList.add('active');
+      btnHybrid.classList.remove('active');
+      liveState.textContent = 'Audit cleared';
+      metricBoundary.textContent = 'Machine only';
+      metricMode.textContent = 'Local priority';
+      metricHistory.textContent = 'Local SQLite';
+      metricFallback.textContent = 'No silent relay';
+      renderLog([
+        { title: 'Snapshot cleared', body: 'The preview reset the visible audit state and returned the workstation to a local-only baseline.' },
+        { title: 'Boundary restored', body: 'This shows how an operator can reset the visible working mode without losing control of the local runtime.' }
+      ]);
+    });
+
+    setMode('local');
+  })();
+
+  // --- ARCHITECTURE DIAGRAM ---
+  (function buildArch() {
+    var sec = document.getElementById('arch-section');
+
+    var label = el('div', { class: 'section-label' }, 'System Architecture');
+    var title = el('div', { class: 'section-title' }, 'Provider-Agnostic Unified API');
+    var desc = el('p', { class: 'section-desc' },
+      'The Fastify server is the single point of contact for all AI inference. ' +
+      'The client never talks directly to a model backend. ' +
+      'The ProviderRegistry selects and wraps each provider behind the same LLMProvider interface, ' +
+      'so the chat runtime is completely decoupled from which model is serving the response.'
+    );
+
+    var diag = el('div', { class: 'arch-diagram' });
+
+    // Layer labels
+    var rows = [
+      ['DESKTOP SHELL', 'Electron (planned Phase 6)'],
+      ['BROWSER UI', 'React 19 + Vite · :5174'],
+      ['API SERVER', 'Fastify · :3500'],
+      ['PROVIDER REGISTRY', 'ProviderRegistry + CapabilityRouter'],
+    ];
+
+    var colW = ['160px', '170px', '160px', '200px'];
+
+    // Simple linear diagram
+    var flow = el('div', {
+      style: 'display:flex;align-items:flex-start;gap:0;flex-wrap:wrap;gap:0 0;'
+    });
+
+    // Left side: stacked layers
+    var leftStack = el('div', { style: 'display:flex;flex-direction:column;gap:8px;' });
+
+    rows.forEach(function (r, i) {
+      var box = el('div', {
+        class: 'arch-box' + (i === 2 ? ' server-accent' : i === 3 ? ' router-accent' : ' gold-accent')
+      });
+      var t = el('div', { class: 'arch-box-title' }, r[0]);
+      var s = el('div', { class: 'arch-box-sub' }, r[1]);
+      box.appendChild(t);
+      box.appendChild(s);
+      leftStack.appendChild(box);
+    });
+
+    // Arrow between left and right
+    var midArrow = el('div', {
+      style: 'display:flex;flex-direction:column;justify-content:flex-end;padding:0 10px 12px;'
+    }, '→');
+    midArrow.style.fontFamily = "'JetBrains Mono', monospace";
+    midArrow.style.fontSize = '18px';
+    midArrow.style.color = 'var(--gold)';
+
+    // Right side: providers
+    var providers = [
+      { cls: 'local', title: 'Ollama (local)', models: 'qwen2.5-coder:14b\nqwen2.5-coder:7b-instruct\nqwen2.5:14b-instruct\nllama3.1:latest\nthe-boss:latest' },
+      { cls: 'claude', title: 'Anthropic (cloud)', models: 'claude-sonnet-4-6\nclaude-opus-4-6\nclaude-haiku-4-5' },
+      { cls: 'openai', title: 'OpenAI-compat', models: 'qwen2.5:14b-instruct\nqwen2.5-coder:7b-instruct\n(any OpenAI endpoint)' },
+    ];
+
+    var rightStack = el('div', { style: 'display:flex;flex-direction:column;gap:8px;align-self:flex-end;' });
+
+    providers.forEach(function (p) {
+      var box = el('div', { class: 'provider-box ' + p.cls });
+      var t = el('div', { class: 'provider-box-title' }, p.title);
+      var m = el('div', { class: 'provider-box-models' }, p.models);
+      box.appendChild(t);
+      box.appendChild(m);
+      rightStack.appendChild(box);
+    });
+
+    flow.appendChild(leftStack);
+    flow.appendChild(midArrow);
+    flow.appendChild(rightStack);
+    diag.appendChild(flow);
+
+    // Routing note
+    var note = el('div', { class: 'arch-routing-note' });
+    var noteLabel = el('div', { class: 'routing-note-label' }, 'Key rule:');
+    var noteText = el('div', { class: 'routing-note-text' },
+      'The ProviderRegistry never silently falls back to cloud. ' +
+      'Cloud providers are registered only when an API key is present, ' +
+      'and are only used when the client explicitly requests them or when model="auto" ' +
+      'and the CapabilityRouter scores a cloud model higher for the given prompt. ' +
+      'Local-first is the enforced default.'
+    );
+    note.appendChild(noteLabel);
+    note.appendChild(noteText);
+    diag.appendChild(note);
+
+    sec.appendChild(label);
+    sec.appendChild(title);
+    sec.appendChild(desc);
+    sec.appendChild(diag);
+  })();
+
+  // --- CAPABILITY ROUTER ---
+  (function buildRouter() {
+    var sec = document.getElementById('router-section');
+
+    var label = el('div', { class: 'section-label' }, 'Intelligent Routing');
+    var title = el('div', { class: 'section-title' }, 'CapabilityRouter: Auto Model Selection');
+    var desc = el('p', { class: 'section-desc' },
+      'When the client sends model="auto", the server analyzes the prompt across four dimensions: ' +
+      'code intent, reasoning depth, response speed, and context length. ' +
+      'Each model in the registry has a static capability profile scored 0-10 per dimension. ' +
+      'The router computes a weighted dot product, checks provider availability at runtime, ' +
+      'and returns a routing decision including the reason string shown in the chat UI.'
+    );
+
+    var rules = [
+      {
+        tags: ['code', 'debug', 'refactor', 'script'],
+        model: 'qwen2.5-coder:14b (Ollama)',
+        provider: 'local',
+        scores: { code: 10, reasoning: 7, speed: 4, context: 8 }
+      },
+      {
+        tags: ['reasoning', 'analysis', 'long', 'complex'],
+        model: 'qwen2.5:14b-instruct (Ollama)',
+        provider: 'local',
+        scores: { code: 6, reasoning: 9, speed: 4, context: 8 }
+      },
+      {
+        tags: ['quick', 'simple', 'conversation'],
+        model: 'qwen2.5-coder:7b-instruct (Ollama)',
+        provider: 'local',
+        scores: { code: 9, reasoning: 5, speed: 9, context: 6 }
+      },
+      {
+        tags: ['code', 'reasoning', 'complex', 'architecture'],
+        model: 'claude-sonnet-4-6 (Anthropic)',
+        provider: 'claude',
+        scores: { code: 9, reasoning: 10, speed: 7, context: 10 }
+      },
+    ];
+
+    var panel = el('div', { class: 'router-panel' });
+    var panelHeader = el('div', { class: 'router-header' });
+    var headerTitle = el('div', { class: 'router-header-title' }, 'CapabilityRouter.route(prompt, availableProviders)');
+    var headerTag = el('div', { class: 'router-header-tag' }, 'model="auto"');
+    panelHeader.appendChild(headerTitle);
+    panelHeader.appendChild(headerTag);
+    panel.appendChild(panelHeader);
+
+    var body = el('div', { class: 'router-body' });
+
+    rules.forEach(function (rule) {
+      var row = el('div', { class: 'router-rule' });
+
+      var intentCol = el('div', { class: 'rule-intent' });
+      var intentLabel = el('div', { class: 'rule-intent-label' }, 'Detected intent');
+      var tagsWrap = el('div', { class: 'rule-tags' });
+      rule.tags.forEach(function (t) {
+        tagsWrap.appendChild(el('span', { class: 'rule-tag' }, t));
+      });
+      intentCol.appendChild(intentLabel);
+      intentCol.appendChild(tagsWrap);
+
+      var arrow = el('div', { class: 'rule-arrow' }, '→');
+
+      var targetCol = el('div', { class: 'rule-target' });
+      var targetLabel = el('div', { class: 'rule-target-label' }, 'Selected model');
+      var modelName = el('div', { class: 'rule-model-name' }, rule.model);
+
+      var scoreDims = ['code', 'reasoning', 'speed', 'context'];
+      var scoreRow = el('div', { class: 'rule-scores' });
+      scoreDims.forEach(function (dim) {
+        var val = rule.scores[dim];
+        var item = el('div', { class: 'score-item' });
+        var bar = el('div', { class: 'score-bar' });
+        var fill = el('div', { class: 'score-fill', style: 'width:' + (val * 10) + '%' });
+        bar.appendChild(fill);
+        item.appendChild(bar);
+        item.appendChild(document.createTextNode(dim + ' ' + val));
+        scoreRow.appendChild(item);
+      });
+
+      targetCol.appendChild(targetLabel);
+      targetCol.appendChild(modelName);
+      targetCol.appendChild(scoreRow);
+
+      row.appendChild(intentCol);
+      row.appendChild(arrow);
+      row.appendChild(targetCol);
+      body.appendChild(row);
+    });
+
+    panel.appendChild(body);
+
+    sec.appendChild(label);
+    sec.appendChild(title);
+    sec.appendChild(desc);
+    sec.appendChild(panel);
+  })();
+
+  // --- MODEL SELECTOR ---
+  (function buildModelSelector() {
+    var sec = document.getElementById('model-section');
+
+    var label = el('div', { class: 'section-label' }, 'Model Selection');
+    var title = el('div', { class: 'section-title' }, 'Provider-Grouped Model Picker');
+    var desc = el('p', { class: 'section-desc' },
+      'The ModelSelector component calls /api/providers on mount and populates ' +
+      'option groups by provider. Provider availability dots update in real time ' +
+      'against the live ProviderRegistry health check. ' +
+      'Selecting "Auto" hands control to the CapabilityRouter.'
+    );
+
+    var demo = el('div', { class: 'model-selector-demo' });
+
+    // Header
+    var header = el('div', { class: 'ms-header' });
+    var headerTitle = el('div', { class: 'ms-header-title' }, 'Active Model');
+
+    var dotRow = el('div', { class: 'ms-status-row' });
+    var dotLabel = el('div', { style: 'font-size:11px;color:var(--text-muted);margin-right:4px;' }, 'Providers:');
+
+    var provDots = [
+      { id: 'ollama', available: true, label: 'Ollama: 5 models' },
+      { id: 'anthropic', available: true, label: 'Anthropic: 3 models' },
+      { id: 'openai-compat', available: false, label: 'OpenAI-compat: unavailable' },
+    ];
+    dotRow.appendChild(dotLabel);
+    provDots.forEach(function (pd) {
+      var d = el('span', {
+        class: 'dot ' + (pd.available ? 'available' : 'offline'),
+        title: pd.label
+      });
+      dotRow.appendChild(d);
+    });
+
+    header.appendChild(headerTitle);
+    header.appendChild(dotRow);
+    demo.appendChild(header);
+
+    var body = el('div', { class: 'ms-body' });
+
+    // Auto option
+    var autoOpt = el('div', { class: 'ms-auto-option' });
+    var autoText = el('div', { class: 'ms-model-name' });
+    autoText.style.fontFamily = "'JetBrains Mono', monospace";
+    autoText.style.fontSize = '13px';
+    autoText.style.color = 'var(--gold)';
+    autoText.textContent = '\u26a1 Auto  (intelligent routing)';
+    var autoSub = el('div', { class: 'ms-auto-sub' }, 'CapabilityRouter selects best model per prompt');
+    var autoInner = el('div', { style: 'display:flex;flex-direction:column;gap:2px;' });
+    autoInner.appendChild(autoText);
+    autoInner.appendChild(autoSub);
+    autoOpt.appendChild(autoInner);
+    body.appendChild(autoOpt);
+
+    var ollamaModels = [
+      { name: 'qwen2.5-coder:14b', ctx: '128k', tags: ['code'] },
+      { name: 'qwen2.5:14b-instruct', ctx: '128k', tags: ['reason'] },
+      { name: 'qwen2.5-coder:7b-instruct', ctx: '128k', tags: ['code', 'fast'] },
+      { name: 'llama3.1:latest', ctx: '128k', tags: ['general'] },
+      { name: 'the-boss:latest', ctx: '32k', tags: ['reason', 'general'] },
+    ];
+
+    var claudeModels = [
+      { name: 'claude-sonnet-4-6', ctx: '200k', tags: ['code', 'reason'] },
+      { name: 'claude-opus-4-6', ctx: '200k', tags: ['code', 'reason'] },
+      { name: 'claude-haiku-4-5', ctx: '200k', tags: ['fast'] },
+    ];
+
+    var tagMap = {
+      code: { text: 'code', cls: 'tag-code' },
+      reason: { text: 'reason', cls: 'tag-reason' },
+      fast: { text: 'fast', cls: 'tag-fast' },
+      general: { text: 'general', cls: 'tag-general' },
+    };
+
+    function buildModelGroup(groupLabel, badgeCls, badgeText, models, selected) {
+      var grp = el('div', { class: 'ms-provider-group' });
+      var lbl = el('div', { class: 'ms-group-label' });
+      lbl.appendChild(document.createTextNode(groupLabel));
+      var badge = el('span', { class: 'ms-group-badge ' + badgeCls }, badgeText);
+      lbl.appendChild(badge);
+      grp.appendChild(lbl);
+
+      var list = el('div', { class: 'ms-model-list' });
+      models.forEach(function (m, i) {
+        var row = el('div', { class: 'ms-model' + (i === selected ? ' selected' : '') });
+
+        var name = el('div', { class: 'ms-model-name' }, m.name);
+
+        var meta = el('div', { class: 'ms-model-meta' });
+        var ctx = el('div', { class: 'ms-model-ctx' }, m.ctx);
+        meta.appendChild(ctx);
+        m.tags.forEach(function (t) {
+          var td = tagMap[t];
+          if (td) {
+            meta.appendChild(el('span', { class: 'ms-model-tag ' + td.cls }, td.text));
+          }
+        });
+
+        row.appendChild(name);
+        row.appendChild(meta);
+        list.appendChild(row);
+      });
+      grp.appendChild(list);
+      return grp;
+    }
+
+    body.appendChild(buildModelGroup('Ollama (local)', 'badge-local', 'LOCAL', ollamaModels, 0));
+    body.appendChild(buildModelGroup('Anthropic (cloud)', 'badge-claude', 'CLOUD', claudeModels, -1));
+
+    demo.appendChild(body);
+
+    sec.appendChild(label);
+    sec.appendChild(title);
+    sec.appendChild(desc);
+    sec.appendChild(demo);
+  })();
+
+  // --- CHAT PREVIEW ---
+  (function buildChat() {
+    var sec = document.getElementById('chat-section');
+
+    var label = el('div', { class: 'section-label' }, 'Chat Interface');
+    var title = el('div', { class: 'section-title' }, 'Streaming Chat with Session History');
+    var desc = el('p', { class: 'section-desc' },
+      'ChatView renders markdown (ReactMarkdown + remark-gfm + rehype-highlight) with GitHub-dark syntax highlighting. ' +
+      'Responses stream token-by-token over SSE. ' +
+      'When model="auto", the routing decision is surfaced inline: ' +
+      'the UI shows which model was actually used and the reason it was selected. ' +
+      'All sessions are persisted in local SQLite via sql.js.'
+    );
+
+    var demo = el('div', { class: 'chat-demo' });
+
+    // Sidebar
+    var sidebar = el('div', { class: 'chat-sidebar' });
+    var sideTop = el('div', { class: 'sidebar-top' });
+    var newBtn = el('div', { class: 'new-chat-btn' }, '+ New conversation');
+    sideTop.appendChild(newBtn);
+    sidebar.appendChild(sideTop);
+
+    var sessionList = el('div', { class: 'sidebar-sessions' });
+    var sessions = [
+      { name: 'Fastify route design', active: true },
+      { name: 'TypeScript ESM config' },
+      { name: 'Ollama model comparison' },
+      { name: 'SQL schema review' },
+      { name: 'Electron packaging' },
+    ];
+    sessions.forEach(function (s) {
+      var item = el('div', { class: 'session-item' + (s.active ? ' active' : '') }, s.name);
+      item.style.cursor = 'pointer';
+      item.addEventListener('click', function () {
+        sessionList.querySelectorAll('.session-item').forEach(function (si) { si.classList.remove('active'); });
+        item.classList.add('active');
+        sessionName.textContent = s.name;
+        while (messages.firstChild) messages.removeChild(messages.firstChild);
+        var hintRow = el('div', { class: 'msg-row assistant' });
+        var hintLabel = el('div', { class: 'msg-label' }, 'system');
+        var hintBubble = el('div', { class: 'msg-bubble assistant' }, 'Switched to session: ' + s.name + '. Type a message to continue.');
+        hintRow.appendChild(hintLabel);
+        hintRow.appendChild(hintBubble);
+        messages.appendChild(hintRow);
+        messages.scrollTop = messages.scrollHeight;
+      });
+      sessionList.appendChild(item);
+    });
+    sidebar.appendChild(sessionList);
+    demo.appendChild(sidebar);
+
+    // Chat main
+    var main = el('div', { class: 'chat-main' });
+
+    var topbar = el('div', { class: 'chat-topbar' });
+    var sessionName = el('div', { class: 'chat-session-name' }, 'Fastify route design');
+    var modelBadge = el('div', { class: 'chat-model-badge' }, 'qwen2.5-coder:14b');
+    topbar.appendChild(sessionName);
+    topbar.appendChild(modelBadge);
+    main.appendChild(topbar);
+
+    var routingBar = el('div', { class: 'chat-routing-bar' });
+    routingBar.appendChild(document.createTextNode('Auto routed to '));
+    var routingTag = el('span', { class: 'routing-tag' }, 'ollama:qwen2.5-coder:14b');
+    routingBar.appendChild(routingTag);
+    routingBar.appendChild(document.createTextNode('  \u2014  reason: code score 10, code patterns detected'));
+    main.appendChild(routingBar);
+
+    var messages = el('div', { class: 'chat-messages' });
+
+    // User message
+    var userRow = el('div', { class: 'msg-row user' });
+    var userLabel = el('div', { class: 'msg-label' }, 'you');
+    var userBubble = el('div', { class: 'msg-bubble user' },
+      'How should I structure the chat streaming route in Fastify? ' +
+      'I want SSE with proper abort signal handling.'
+    );
+    userRow.appendChild(userLabel);
+    userRow.appendChild(userBubble);
+    messages.appendChild(userRow);
+
+    // Assistant message with code block
+    var asstRow = el('div', { class: 'msg-row assistant' });
+    var asstLabel = el('div', { class: 'msg-label' }, 'qwen2.5-coder:14b');
+    var asstBubble = el('div', { class: 'msg-bubble assistant' });
+    var asstText = document.createTextNode(
+      'Use writeHead to start the SSE stream before entering the async generator loop. ' +
+      'Attach an abort listener to the raw socket so you can break early:'
+    );
+    asstBubble.appendChild(asstText);
+
+    var codeBlock = el('div', { class: 'msg-code' });
+    codeBlock.textContent =
+      "app.post('/api/chat', async (req, reply) => {\n" +
+      "  reply.raw.writeHead(200, {\n" +
+      "    'Content-Type': 'text/event-stream',\n" +
+      "    'Cache-Control': 'no-cache',\n" +
+      "  });\n" +
+      "  const abort = new AbortController();\n" +
+      "  reply.raw.on('close', () => abort.abort());\n" +
+      "\n" +
+      "  for await (const chunk of chatService.streamChat(\n" +
+      "    sessionId, message, abort.signal, model\n" +
+      "  )) {\n" +
+      "    if (abort.signal.aborted) break;\n" +
+      "    reply.raw.write(`data: ${JSON.stringify(chunk)}\\n\\n`);\n" +
+      "  }\n" +
+      "  reply.raw.end();\n" +
+      "});";
+    asstBubble.appendChild(codeBlock);
+    asstRow.appendChild(asstLabel);
+    asstRow.appendChild(asstBubble);
+    messages.appendChild(asstRow);
+
+    // Streaming indicator
+    var streamRow = el('div', { class: 'msg-row assistant' });
+    var streamLabel = el('div', { class: 'msg-label' }, 'qwen2.5-coder:14b');
+    var streamMsg = el('div', { class: 'msg-streaming' });
+    streamMsg.appendChild(document.createTextNode('Streaming'));
+    var dots = el('span', { class: 'streaming-dots' });
+    dots.appendChild(el('span', null, '.'));
+    dots.appendChild(el('span', null, '.'));
+    dots.appendChild(el('span', null, '.'));
+    streamMsg.appendChild(dots);
+    streamRow.appendChild(streamLabel);
+    streamRow.appendChild(streamMsg);
+    messages.appendChild(streamRow);
+
+    main.appendChild(messages);
+
+    // Input row — REAL textarea + real send handler
+    var inputRow = el('div', { class: 'chat-input-row' });
+    var textarea = document.createElement('textarea');
+    textarea.className = 'chat-textarea';
+    textarea.placeholder = 'Ask anything (try: "fastify streaming route", "compare qwen models", "what port does ollama use")';
+    textarea.rows = 1;
+    var sendBtn = document.createElement('button');
+    sendBtn.className = 'chat-send-btn';
+    sendBtn.type = 'button';
+    sendBtn.setAttribute('aria-label', 'Send message');
+    sendBtn.textContent = '\u2191';
+    inputRow.appendChild(textarea);
+    inputRow.appendChild(sendBtn);
+    main.appendChild(inputRow);
+
+    demo.appendChild(main);
+
+    sec.appendChild(label);
+    sec.appendChild(title);
+    sec.appendChild(desc);
+    sec.appendChild(demo);
+
+    // =====================================================
+    // INTERACTIVE CHAT ENGINE
+    // Free-form input, keyword-routed to real LocalClaude
+    // models, scripted streaming responses, persistent session
+    // state via localStorage, honest "Public Alpha — routing
+    // demo" framing.
+    // =====================================================
+
+    var STORAGE_KEY = 'pip-demo-sessions-v1';
+    var currentSessionId = 'session-fastify';
+    var hasCloudKey = (function () {
+      try { return !!localStorage.getItem('pip-demo-anthropic-key'); }
+      catch (e) { return false; }
+    })();
+
+    // Remove the pre-seeded streaming indicator row — we'll add
+    // fresh ones dynamically when the user sends a message.
+    if (streamRow && streamRow.parentNode) {
+      streamRow.parentNode.removeChild(streamRow);
+    }
+
+    // Model registry — keyed off real LocalClaude CLAUDE.md
+    var MODELS = {
+      'ollama:qwen2.5-coder:14b': { label: 'qwen2.5-coder:14b', provider: 'ollama', cloud: false },
+      'ollama:qwen2.5:14b-instruct': { label: 'qwen2.5:14b-instruct', provider: 'ollama', cloud: false },
+      'ollama:qwen2.5-coder:7b-instruct': { label: 'qwen2.5-coder:7b-instruct', provider: 'ollama', cloud: false },
+      'ollama:llama3.1': { label: 'llama3.1', provider: 'ollama', cloud: false },
+      'anthropic:claude-sonnet-4-6': { label: 'claude-sonnet-4-6', provider: 'anthropic', cloud: true },
+      'anthropic:claude-opus-4-6': { label: 'claude-opus-4-6', provider: 'anthropic', cloud: true },
+      'anthropic:claude-haiku-4-5': { label: 'claude-haiku-4-5', provider: 'anthropic', cloud: true }
+    };
+
+    // Router: matches input against keyword buckets, returns
+    // {model, reason, response}. Responses reference real
+    // Fastify / LocalClaude patterns from the source at
+    // D:\ProjectsHome\LocalClaude\server\
+    function routePrompt(text) {
+      var t = text.toLowerCase();
+
+      // Architecture / multi-agent / safety FIRST — these often
+      // contain the word "code" but are reasoning-depth tasks,
+      // not coder-model tasks. Order matters.
+      if (/\b(architecture|multi[\s-]?agent|safety gate|approval gate|audit trail|sandbox|design a|how would you design)\b/.test(t)) {
+        if (hasCloudKey) {
+          return {
+            modelKey: 'anthropic:claude-sonnet-4-6',
+            reason: 'reasoning 10, architecture depth 10 \u2014 cloud provider selected for capability',
+            body: "A safe multi-agent architecture needs five things:\n\n1. **Agent isolation.** Every agent runs in its own sandbox. No agent mutates the repository directly.\n2. **Approval gates.** Every proposed change passes through a human-in-the-loop gate before execution.\n3. **DRY_RUN by default.** Agents propose changes in dry-run mode. Real execution requires explicit opt-in.\n4. **Audit trail.** Every proposal, approval, execution, and rollback is logged with agent ID and timestamp.\n5. **Kill switch.** One top-level toggle halts all agents instantly.\n\nAuton implements this pattern against a local Qwen 2.5 14B running on an RTX 4070. The Scanner, Planner, Executor, Tester, Reviewer, and Monitor agents all gate through the same approval surface.",
+            followUp: null
+          };
+        } else {
+          return {
+            modelKey: 'ollama:qwen2.5:14b-instruct',
+            reason: 'reasoning 10 \u2014 cloud requested but ANTHROPIC_API_KEY not set, falling back to local',
+            body: "Claude Opus / Sonnet would normally be selected here for architecture-depth work, but no ANTHROPIC_API_KEY is registered in this demo environment. Falling back to local Qwen 2.5 14B Instruct.\n\nLocal Qwen handles architectural reasoning well enough for most design work. If you want to unlock cloud models in this demo, open the Model Inventory panel and click \u201cSet API key\u201d.\n\nFor a safe multi-agent architecture, start with: agent isolation, approval gates, DRY_RUN by default, full audit trail, and a top-level kill switch. Auton implements exactly this pattern.",
+            followUp: null
+          };
+        }
+      }
+
+      // Code / Fastify / route patterns -> coder:14b
+      if (/\b(route|fastify|sse|stream|function|code|endpoint|handler|express|api)\b/.test(t)) {
+        return {
+          modelKey: 'ollama:qwen2.5-coder:14b',
+          reason: 'code intent 10, Fastify/API patterns detected',
+          body: "Use `writeHead` to open the SSE stream, then attach an abort listener to the raw socket so you can break early on client disconnect:",
+          code:
+            "app.post('/api/chat', async (req, reply) => {\n" +
+            "  reply.raw.writeHead(200, {\n" +
+            "    'Content-Type': 'text/event-stream',\n" +
+            "    'Cache-Control': 'no-cache',\n" +
+            "  });\n" +
+            "  const abort = new AbortController();\n" +
+            "  reply.raw.on('close', () => abort.abort());\n" +
+            "\n" +
+            "  for await (const chunk of chatService.streamChat(\n" +
+            "    sessionId, message, abort.signal, model\n" +
+            "  )) {\n" +
+            "    if (abort.signal.aborted) break;\n" +
+            "    reply.raw.write(`data: ${JSON.stringify(chunk)}\\n\\n`);\n" +
+            "  }\n" +
+            "  reply.raw.end();\n" +
+            "});",
+          followUp: "The abort listener is the key — without it, clients that navigate away leave the generator hanging."
+        };
+      }
+
+      // Model comparison / reasoning
+      if (/\b(compare|versus|vs\.?|difference|which\s+(should|model)|explain|why)\b/.test(t)) {
+        return {
+          modelKey: 'ollama:qwen2.5:14b-instruct',
+          reason: 'reasoning depth 9, comparison/explanation requested',
+          body: "Qwen 2.5 14B Instruct is the generalist: conversational reasoning, multi-turn dialogue, explanation, synthesis. Use it when the task is prose-first or mixed-domain.\n\nQwen 2.5-Coder 14B is the specialist: code generation, debugging, structured output, technical explanation. Use it when the prompt contains code, API names, or syntax.\n\nFor a chatbot with mixed workloads, start with model=auto. The CapabilityRouter scores each prompt across code intent, reasoning depth, response speed, and context length, then dispatches to the specialist whose profile matches best.",
+          followUp: null
+        };
+      }
+
+      // Fast / quick / simple lookup
+      if (/\b(fast|quick|short|simple|what\s+port|what\s+is|status)\b/.test(t)) {
+        return {
+          modelKey: 'ollama:qwen2.5-coder:7b-instruct',
+          reason: 'speed 9, factual lookup — smallest coder model selected',
+          body: "Ollama listens on `localhost:11434` by default.\n\nHit `http://localhost:11434/api/chat` for streaming inference, or `/api/tags` for the installed model list. LocalClaude\u2019s Fastify server proxies these under `/api/*` on port 3500.",
+          followUp: null
+        };
+      }
+
+      // Default: coder:14b generic response
+      return {
+        modelKey: 'ollama:qwen2.5-coder:14b',
+        reason: 'no specific signals \u2014 defaulting to coder:14b (general-purpose default)',
+        body: "I can help with that. Try asking about Fastify routes, Qwen model comparisons, Ollama configuration, or multi-agent architecture \u2014 the router will pick the best local model for the task and show you why it chose.",
+        followUp: null
+      };
+    }
+
+    // Append a user message to the DOM
+    function appendUserMessage(text) {
+      var row = document.createElement('div');
+      row.className = 'msg-row user';
+      var lab = document.createElement('div');
+      lab.className = 'msg-label';
+      lab.textContent = 'you';
+      var bub = document.createElement('div');
+      bub.className = 'msg-bubble user';
+      bub.textContent = text;
+      row.appendChild(lab);
+      row.appendChild(bub);
+      messages.appendChild(row);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    // Append a streaming-indicator row, return its node so we
+    // can replace it with the final response
+    function appendStreamingIndicator(modelLabel) {
+      var row = document.createElement('div');
+      row.className = 'msg-row assistant';
+      var lab = document.createElement('div');
+      lab.className = 'msg-label';
+      lab.textContent = modelLabel;
+      var stream = document.createElement('div');
+      stream.className = 'msg-streaming';
+      stream.appendChild(document.createTextNode('Streaming'));
+      var d = document.createElement('span');
+      d.className = 'streaming-dots';
+      var d1 = document.createElement('span'); d1.textContent = '.';
+      var d2 = document.createElement('span'); d2.textContent = '.';
+      var d3 = document.createElement('span'); d3.textContent = '.';
+      d.appendChild(d1); d.appendChild(d2); d.appendChild(d3);
+      stream.appendChild(d);
+      row.appendChild(lab);
+      row.appendChild(stream);
+      messages.appendChild(row);
+      messages.scrollTop = messages.scrollHeight;
+      return row;
+    }
+
+    // Replace the streaming indicator with the final assistant
+    // response (label + body + optional code block + follow-up)
+    function materializeResponse(streamingRow, route) {
+      var finalRow = document.createElement('div');
+      finalRow.className = 'msg-row assistant';
+      var lab = document.createElement('div');
+      lab.className = 'msg-label';
+      lab.textContent = MODELS[route.modelKey].label;
+      var bub = document.createElement('div');
+      bub.className = 'msg-bubble assistant';
+      bub.appendChild(document.createTextNode(route.body));
+      if (route.code) {
+        var codeBlock = document.createElement('div');
+        codeBlock.className = 'msg-code';
+        codeBlock.textContent = route.code;
+        bub.appendChild(codeBlock);
+      }
+      if (route.followUp) {
+        var tail = document.createElement('div');
+        tail.style.marginTop = '10px';
+        tail.textContent = route.followUp;
+        bub.appendChild(tail);
+      }
+      finalRow.appendChild(lab);
+      finalRow.appendChild(bub);
+      streamingRow.parentNode.replaceChild(finalRow, streamingRow);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    // Update the top-of-chat model badge + routing bar to
+    // reflect the most recently routed model
+    function updateRoutingUI(route) {
+      modelBadge.textContent = MODELS[route.modelKey].label;
+      modelBadge.classList.toggle('cloud', MODELS[route.modelKey].cloud);
+      while (routingBar.firstChild) routingBar.removeChild(routingBar.firstChild);
+      routingBar.appendChild(document.createTextNode('Auto routed to '));
+      var tag = document.createElement('span');
+      tag.className = 'routing-tag';
+      tag.textContent = route.modelKey;
+      routingBar.appendChild(tag);
+      routingBar.appendChild(document.createTextNode('  \u2014  reason: ' + route.reason));
+    }
+
+    // Send a user message end-to-end
+    function sendMessage() {
+      var text = textarea.value.trim();
+      if (!text) return;
+      appendUserMessage(text);
+      textarea.value = '';
+      textarea.style.height = '';
+
+      var route = routePrompt(text);
+      updateRoutingUI(route);
+
+      var streamingRow = appendStreamingIndicator(MODELS[route.modelKey].label);
+      persistSession(text, route);
+
+      // Scripted streaming delay: dots then materialize
+      setTimeout(function () {
+        materializeResponse(streamingRow, route);
+      }, 1400);
+    }
+
+    // localStorage session persistence
+    function persistSession(userText, route) {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        var data = raw ? JSON.parse(raw) : { sessions: {} };
+        if (!data.sessions[currentSessionId]) {
+          data.sessions[currentSessionId] = { messages: [] };
+        }
+        data.sessions[currentSessionId].messages.push({
+          role: 'user', text: userText, ts: Date.now()
+        });
+        data.sessions[currentSessionId].messages.push({
+          role: 'assistant',
+          modelKey: route.modelKey,
+          reason: route.reason,
+          body: route.body,
+          code: route.code || null,
+          followUp: route.followUp || null,
+          ts: Date.now()
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) { /* localStorage may be disabled — silent no-op */ }
+    }
+
+    // Restore any previously persisted messages for the default
+    // session so the demo survives page reloads
+    function restoreSession() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        var data = JSON.parse(raw);
+        var sess = data && data.sessions && data.sessions[currentSessionId];
+        if (!sess || !sess.messages || !sess.messages.length) return;
+        // Clear seeded messages — user's own history takes precedence
+        while (messages.firstChild) messages.removeChild(messages.firstChild);
+        sess.messages.forEach(function (m) {
+          if (m.role === 'user') {
+            appendUserMessage(m.text);
+          } else {
+            var route = {
+              modelKey: m.modelKey,
+              reason: m.reason,
+              body: m.body,
+              code: m.code,
+              followUp: m.followUp
+            };
+            // Insert as already-materialized (no streaming delay)
+            var ghost = appendStreamingIndicator(MODELS[route.modelKey].label);
+            materializeResponse(ghost, route);
+            updateRoutingUI(route);
+          }
+        });
+      } catch (e) { /* ignore */ }
+    }
+
+    // Wire up real event handlers
+    sendBtn.addEventListener('click', sendMessage);
+    textarea.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+    // Auto-grow textarea up to 5 lines
+    textarea.addEventListener('input', function () {
+      textarea.style.height = 'auto';
+      textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+    });
+
+    // "New conversation" button — real click handler (clears
+    // persisted messages for current session + reseeds the view)
+    newBtn.addEventListener('click', function () {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        var data = raw ? JSON.parse(raw) : { sessions: {} };
+        delete data.sessions[currentSessionId];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) { /* ignore */ }
+      while (messages.firstChild) messages.removeChild(messages.firstChild);
+      // Restore the default seeded user message + assistant reply
+      appendUserMessage('How should I structure the chat streaming route in Fastify? I want SSE with proper abort signal handling.');
+      var ghost = appendStreamingIndicator('qwen2.5-coder:14b');
+      setTimeout(function () {
+        materializeResponse(ghost, routePrompt('fastify sse streaming route'));
+      }, 900);
+    });
+
+    // Restore any persisted history on load
+    restoreSession();
+  })();
+
+  // --- API ROUTES ---
+  (function buildRoutes() {
+    var sec = document.getElementById('routes-section');
+
+    var label = el('div', { class: 'section-label' }, 'API Surface');
+    var title = el('div', { class: 'section-title' }, 'Fastify Route Map');
+    var desc = el('p', { class: 'section-desc' },
+      'All routes registered by registerChatRoutes() and registerModelRoutes(). ' +
+      'The server listens on :3500. The client proxies /api through Vite in dev mode. ' +
+      'Auth token-based remote access for phone (planned Phase 7) will add ' +
+      'a separate authenticated route group.'
+    );
+
+    var routes = [
+      { method: 'GET',    path: '/api/health',                   desc: 'Server health + version' },
+      { method: 'GET',    path: '/api/providers',                desc: 'All provider statuses + model lists' },
+      { method: 'GET',    path: '/api/models',                   desc: 'Primary provider model list (Ollama)' },
+      { method: 'GET',    path: '/api/ollama/health',            desc: 'Primary provider availability' },
+      { method: 'GET',    path: '/api/conversations',            desc: 'List all sessions' },
+      { method: 'POST',   path: '/api/conversations',            desc: 'Create session (model, title, systemPrompt)' },
+      { method: 'GET',    path: '/api/conversations/:id/messages', desc: 'Fetch message history' },
+      { method: 'PATCH',  path: '/api/conversations/:id',        desc: 'Rename session title' },
+      { method: 'DELETE', path: '/api/conversations/:id',        desc: 'Delete session + messages' },
+      { method: 'POST',   path: '/api/chat',                     desc: 'Stream chat (SSE) ,  model="auto" triggers router' },
+    ];
+
+    var methodCls = {
+      GET: 'method-get', POST: 'method-post',
+      DELETE: 'method-delete', PATCH: 'method-patch'
+    };
+
+    var panel = el('div', { class: 'routes-panel' });
+    var routeHeader = el('div', { class: 'routes-header' }, 'Fastify · http://localhost:3500');
+    panel.appendChild(routeHeader);
+
+    var list = el('div', { class: 'route-list' });
+    routes.forEach(function (r) {
+      var row = el('div', { class: 'route-item' });
+      var method = el('div', { class: 'route-method ' + methodCls[r.method] }, r.method);
+      var path = el('div', { class: 'route-path' }, r.path);
+      var desc = el('div', { class: 'route-desc' }, r.desc);
+      row.appendChild(method);
+      row.appendChild(path);
+      row.appendChild(desc);
+      list.appendChild(row);
+    });
+
+    panel.appendChild(list);
+
+    sec.appendChild(label);
+    sec.appendChild(title);
+    sec.appendChild(desc);
+    sec.appendChild(panel);
+  })();
+
+  // --- TECH STACK ---
+  (function buildStack() {
+    var sec = document.getElementById('stack-section');
+
+    var label = el('div', { class: 'section-label' }, 'Tech Stack');
+    var title = el('div', { class: 'section-title' }, 'Full Dependency Map');
+    var desc = el('p', { class: 'section-desc' },
+      'Monorepo structure: root workspace, independent server and client packages. ' +
+      'TypeScript strict ESM throughout. No CommonJS. No runtime type-stripping hacks.'
+    );
+
+    var cards = [
+      { layer: 'Desktop Shell', name: 'Electron', version: '34+', desc: 'Desktop packaging (Phase 6). Fastify server runs in main process. Client served via BrowserWindow.' },
+      { layer: 'Frontend', name: 'React', version: '19', desc: 'Client runtime. useState + localStorage + custom hooks. No Redux or heavy state libraries.' },
+      { layer: 'Bundler', name: 'Vite', version: '6+', desc: 'Dev server on :5174 with /api proxy to :3500. Tailwind CSS 4 plugin integration.' },
+      { layer: 'CSS', name: 'Tailwind CSS', version: '4', desc: '--lc-* CSS custom properties. Dark mode default. lc-surface, lc-border, lc-accent color tokens.' },
+      { layer: 'API Server', name: 'Fastify', version: '5+', desc: 'CORS, SSE, Winston logging, YAML config. Embedded in Electron main. Independent from React.' },
+      { layer: 'Persistence', name: 'sql.js', version: 'SQLite', desc: 'In-memory SQLite compiled to WASM. Persisted to data/localclaude.db. Schema: chat_sessions, chat_messages.' },
+      { layer: 'Local AI', name: 'Ollama', version: 'REST API', desc: 'Primary inference backend. localhost:11434. listModels, streamChat via HTTP. No SDK dependency.' },
+      { layer: 'Cloud AI', name: 'Anthropic SDK', version: 'claude-*', desc: 'Opt-in. Registered only when ANTHROPIC_API_KEY is set. Never used without explicit selection.' },
+      { layer: 'Language', name: 'TypeScript', version: 'strict ESM', desc: 'tsconfig.base.json shared across packages. Strict mode. All imports use .js extensions for ESM compat.' },
+      { layer: 'Markdown', name: 'ReactMarkdown', version: 'remark-gfm', desc: 'Chat message rendering with GitHub-Flavored Markdown and rehype-highlight code syntax.' },
+    ];
+
+    var grid = el('div', { class: 'stack-grid' });
+    cards.forEach(function (c) {
+      var card = el('div', { class: 'stack-card' });
+      card.appendChild(el('div', { class: 'stack-card-layer' }, c.layer));
+      card.appendChild(el('div', { class: 'stack-card-name' }, c.name));
+      card.appendChild(el('div', { class: 'stack-card-version' }, c.version));
+      card.appendChild(el('div', { class: 'stack-card-desc' }, c.desc));
+      grid.appendChild(card);
+    });
+
+    sec.appendChild(label);
+    sec.appendChild(title);
+    sec.appendChild(desc);
+    sec.appendChild(grid);
+  })();
+
+  // --- DIFFERENTIATORS ---
+  (function buildDiff() {
+    var sec = document.getElementById('diff-section');
+
+    var label = el('div', { class: 'section-label' }, 'Design Decisions');
+    var title = el('div', { class: 'section-title' }, 'What Makes This Different');
+
+    var diffs = [
+      {
+        icon: '\uD83D\uDD12',
+        title: 'Zero cloud dependency for local models',
+        desc: 'Ollama is the primary provider and works fully offline. Cloud providers are registered only when API keys are present and are never used unless the user or the auto-router explicitly selects them. There is no silent fallback.'
+      },
+      {
+        icon: '\uD83D\uDDC4\uFE0F',
+        title: 'All history in local SQLite',
+        desc: 'sql.js runs SQLite compiled to WASM, no native binaries. Chat sessions and messages persist in data/localclaude.db. The database file is yours, on your machine, not in any vendor cloud.'
+      },
+      {
+        icon: '\u26A1',
+        title: 'Provider-agnostic unified API',
+        desc: 'Every provider implements the same LLMProvider interface: isAvailable(), listModels(), streamChat(). Adding a new backend requires only one new class. The chat runtime, router, and client are completely insulated from provider specifics.'
+      },
+      {
+        icon: '\uD83E\uDDE0',
+        title: 'Scored capability routing',
+        desc: 'Auto-routing is not random or round-robin. The CapabilityRouter scores each model across four dimensions per prompt and picks the highest weighted match from currently available providers. The reason is always returned and displayed.'
+      },
+      {
+        icon: '\uD83D\uDCF1',
+        title: 'Remote phone access (planned)',
+        desc: 'Phase 7 adds token-based auth so the same Fastify server can be reached from a phone on the local network. The full chat history and model selection are available remotely with no cloud relay.'
+      },
+      {
+        icon: '\uD83D\uDCE6',
+        title: 'Full Electron packaging',
+        desc: 'Phase 6 moves the server into the Electron main process so the entire workstation ships as a single desktop binary. No external Node.js, no separate terminal window, no manual Fastify startup.'
+      },
+    ];
+
+    var grid = el('div', { class: 'diff-grid' });
+    diffs.forEach(function (d) {
+      var card = el('div', { class: 'diff-card' });
+      card.appendChild(el('span', { class: 'diff-icon' }, d.icon));
+      card.appendChild(el('div', { class: 'diff-title' }, d.title));
+      card.appendChild(el('div', { class: 'diff-desc' }, d.desc));
+      grid.appendChild(card);
+    });
+
+    sec.appendChild(label);
+    sec.appendChild(title);
+    sec.appendChild(grid);
+  })();
+
+  // --- FOOTER ---
+  (function buildFooter() {
+    var footer = document.getElementById('footer-section');
+
+    var left = el('div', { class: 'footer-left' });
+    var strong = el('strong', null, 'LocalClaude');
+    left.appendChild(strong);
+    left.appendChild(document.createTextNode(' \u2014 Hybrid local+cloud AI workstation. MVP (Phases 0\u20133) complete.'));
+
+    var right = el('div', { class: 'footer-right' });
+    var backLink = el('a', { class: 'footer-link', href: '../home.html' }, '\u2190 Back to Portfolio');
+    right.appendChild(backLink);
+
+    footer.appendChild(left);
+    footer.appendChild(right);
+  })();
+
+})();
+</script>
+<!-- FSS-BRAND-FOOTER-V3 (FF25 wordmark, no H icon) -->
+<footer class="fssb-v3-foot">
+  <h2 class="fssb-v3-foot-name">Fisher</h2>
+  <span class="fssb-v3-foot-rule"></span>
+  <div class="fssb-v3-foot-sub">Sovereign Systems</div>
+  <div class="fssb-v3-foot-motto">Building the Architecture for Independence</div>
+  <p style="font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:0.98rem;color:rgba(220,217,211,0.72);max-width:520px;margin:28px auto 0;line-height:1.6;">Fisher Sovereign Systems is being built to return control to the individual.</p>
+  <a href="../home.html" class="fssb-v3-foot-back">&larr; Visit lancewfisher.com</a>
+  <div style="margin-top:32px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.05);font-size:0.66rem;color:#6b6b75;letter-spacing:0.06em;">&copy; 2026 Fisher Sovereign Systems, LLC. All rights reserved.</div>
+</footer>
+
+</body>
+</html>

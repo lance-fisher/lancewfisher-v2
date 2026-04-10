@@ -7,10 +7,59 @@
 <meta name="description" content="Custom mobile apps for med spas, salons, fitness studios, and service businesses across Northern Colorado. See live demos built for real local businesses.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=20260408v3">
+<link rel="stylesheet" href="../_shared/brand.css?v=20260408v3">
+<style>
+/* NoCo locked-spec additions: business case block + contact form */
+.branded-ownership{max-width:1100px;margin:60px auto 30px;padding:0 24px}
+.bo-label{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:rgba(26,26,28,0.55);text-align:center;margin-bottom:10px}
+[data-theme="dark"] .bo-label{color:rgba(220,220,216,0.55)}
+.bo-title{font-family:'Cormorant Garamond','Georgia',serif;font-size:clamp(28px,3.5vw,42px);font-weight:500;text-align:center;line-height:1.15;margin:0 auto 14px;max-width:680px;color:#1a1a1c}
+.bo-sub{text-align:center;max-width:640px;margin:0 auto 36px;font-size:15px;line-height:1.6;color:rgba(26,26,28,0.72)}
+.bo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:20px}
+.bo-card{background:#fff;border:1px solid rgba(26,26,28,0.12);border-radius:10px;padding:26px 24px;transition:transform .25s ease,box-shadow .25s ease}
+.bo-card:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(26,26,28,0.08)}
+.bo-card-icon{width:46px;height:46px;display:flex;align-items:center;justify-content:center;font-size:22px;background:rgba(184,150,92,0.12);border:1px solid rgba(184,150,92,0.25);border-radius:10px;color:#8a6e33;margin-bottom:16px}
+.bo-card-title{font-family:'Cormorant Garamond','Georgia',serif;font-size:22px;font-weight:600;color:#1a1a1c;margin-bottom:10px;line-height:1.25}
+.bo-card-desc{font-size:14px;line-height:1.62;color:rgba(26,26,28,0.72)}
+.bo-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px;padding:26px 24px;background:rgba(184,150,92,0.05);border:1px solid rgba(184,150,92,0.2);border-radius:10px}
+.bo-stat{text-align:center}
+.bo-stat-value{font-family:'Cormorant Garamond','Georgia',serif;font-size:36px;font-weight:600;color:#8a6e33;line-height:1;margin-bottom:6px}
+.bo-stat-label{font-size:12px;color:rgba(26,26,28,0.7);line-height:1.35;padding:0 6px}
+.bo-stat-cite{font-size:10px;color:rgba(26,26,28,0.5);margin-top:6px;font-style:italic}
+@media (max-width:768px){
+  .bo-grid{grid-template-columns:1fr;gap:14px}
+  .bo-stats{grid-template-columns:repeat(2,1fr);gap:20px 14px}
+}
+
+/* Contact form */
+.noco-form{max-width:640px;margin:32px auto 0;background:#fff;border:1px solid rgba(26,26,28,0.12);border-radius:12px;padding:28px 26px;box-shadow:0 8px 32px rgba(26,26,28,0.05)}
+.noco-form-title{font-family:'Cormorant Garamond','Georgia',serif;font-size:24px;font-weight:600;color:#1a1a1c;margin-bottom:6px}
+.noco-form-sub{font-size:13px;color:rgba(26,26,28,0.7);margin-bottom:22px;line-height:1.55}
+.noco-field{margin-bottom:14px}
+.noco-field-label{display:block;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(26,26,28,0.65);margin-bottom:6px}
+.noco-input,.noco-select,.noco-textarea{width:100%;padding:10px 14px;font-family:'Inter',sans-serif;font-size:14px;color:#1a1a1c;background:rgba(26,26,28,0.02);border:1px solid rgba(26,26,28,0.18);border-radius:6px;outline:none;transition:border-color .2s}
+.noco-input:focus,.noco-select:focus,.noco-textarea:focus{border-color:#8a6e33}
+.noco-textarea{resize:vertical;min-height:100px;font-family:'Inter',sans-serif}
+.noco-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.noco-submit{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:#1a1a1c;border:none;border-radius:6px;cursor:pointer;transition:background .2s,transform .15s;margin-top:8px}
+.noco-submit:hover{background:#000;transform:translateY(-1px)}
+.noco-form-note{margin-top:14px;font-size:11px;color:rgba(26,26,28,0.55);text-align:center;font-style:italic}
+@media (max-width:560px){.noco-row{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
+
+<!-- FSS-BRAND-BLOCK-V3 (FF25 wordmark, no H icon) -->
+<div class="fssb-v3-top">
+  <a href="../home.html" class="fssb-v3-top-link" aria-label="Fisher Sovereign Systems">
+    <span class="fssb-v3-top-name">Fisher</span>
+    <span class="fssb-v3-top-rule"></span>
+    <span class="fssb-v3-top-sub">Sovereign Systems</span>
+  </a>
+  <a href="../home.html" class="fssb-v3-top-back">&larr; Portfolio</a>
+</div>
 
 <!-- ===== NAV ===== -->
 <nav id="nav">
@@ -39,6 +88,56 @@
     <div class="hero-actions">
       <a href="#demos" class="btn btn-primary">See Live Demos</a>
       <a href="#pricing" class="btn btn-ghost">View Pricing</a>
+    </div>
+  </div>
+</section>
+
+<div class="page-benefit" style="max-width:900px;margin:30px auto 0">
+  Own the relationship with your customers instead of renting it from Booksy, Vagaro, or Yelp. Your name on their home screen, your colors, your app.
+</div>
+
+<!-- ===== WHY BRANDED OWNERSHIP MATTERS ===== -->
+<section class="branded-ownership">
+  <div class="bo-label">Why Branded Ownership Matters</div>
+  <h2 class="bo-title">Stop paying rent on your own customer relationships.</h2>
+  <p class="bo-sub">Third-party marketplaces capture your customers, hide their data, and compete with you for the next booking. A branded app puts you back in control.</p>
+  <div class="bo-grid">
+    <div class="bo-card">
+      <div class="bo-card-icon">&#128273;</div>
+      <div class="bo-card-title">Own the Relationship</div>
+      <div class="bo-card-desc">Booksy and Vagaro own the client list, the booking funnel, and the review channel. Your own app keeps every booking, every touchpoint, and every piece of customer data under your control.</div>
+    </div>
+    <div class="bo-card">
+      <div class="bo-card-icon">&#9201;</div>
+      <div class="bo-card-title">24/7 Availability</div>
+      <div class="bo-card-desc">Clients book when they think of you, not when your front desk is open. Push notifications bring them back for follow-ups, refills, and new service launches without paying per click.</div>
+    </div>
+    <div class="bo-card">
+      <div class="bo-card-icon">&#128200;</div>
+      <div class="bo-card-title">Real Revenue Impact</div>
+      <div class="bo-card-desc">Mobile booking drives repeat visits, wallet balances reduce no-shows, and in-app gift cards convert walk-through traffic into loyal customers. The business case is not hypothetical.</div>
+    </div>
+  </div>
+  <div class="bo-stats">
+    <div class="bo-stat">
+      <div class="bo-stat-value">97%</div>
+      <div class="bo-stat-label">of clients want mobile booking from service providers</div>
+      <div class="bo-stat-cite">Zenoti Medspa Benchmark 2025</div>
+    </div>
+    <div class="bo-stat">
+      <div class="bo-stat-value">26%+</div>
+      <div class="bo-stat-label">YoY revenue growth for top-performing branded mobile businesses</div>
+      <div class="bo-stat-cite">Zenoti Medspa Benchmark 2025</div>
+    </div>
+    <div class="bo-stat">
+      <div class="bo-stat-value">54%</div>
+      <div class="bo-stat-label">YoY growth in gift card sales via app wallets</div>
+      <div class="bo-stat-cite">Zenoti Medspa Benchmark 2025</div>
+    </div>
+    <div class="bo-stat">
+      <div class="bo-stat-value">42%</div>
+      <div class="bo-stat-label">repeat-client share when app retention features are active</div>
+      <div class="bo-stat-cite">Zenoti Medspa Benchmark 2025</div>
     </div>
   </div>
 </section>
@@ -275,6 +374,79 @@
     <h2 class="sec-title reveal">Ready to see your business in an app?</h2>
     <div class="contact-body">
       <p class="contact-note reveal">Schedule a free 30-minute demo where we will show you exactly how your custom app would look and work, built around your real services, staff, and brand. No obligation.</p>
+
+      <form class="noco-form reveal" id="nocoForm" onsubmit="return nocoSubmit(event)">
+        <div class="noco-form-title">Start your demo</div>
+        <div class="noco-form-sub">Fill this out and we'll reply within 48 hours with a live walkthrough built around your business.</div>
+        <div class="noco-row">
+          <div class="noco-field">
+            <label class="noco-field-label" for="nocoName">Your name</label>
+            <input class="noco-input" id="nocoName" type="text" required autocomplete="name">
+          </div>
+          <div class="noco-field">
+            <label class="noco-field-label" for="nocoBiz">Business name</label>
+            <input class="noco-input" id="nocoBiz" type="text" required autocomplete="organization">
+          </div>
+        </div>
+        <div class="noco-row">
+          <div class="noco-field">
+            <label class="noco-field-label" for="nocoEmail">Email</label>
+            <input class="noco-input" id="nocoEmail" type="email" required autocomplete="email">
+          </div>
+          <div class="noco-field">
+            <label class="noco-field-label" for="nocoType">Business type</label>
+            <select class="noco-select" id="nocoType" required>
+              <option value="">Choose&hellip;</option>
+              <option value="Med Spa">Med Spa</option>
+              <option value="Salon">Hair / Nail Salon</option>
+              <option value="Fitness">Fitness / Pilates</option>
+              <option value="Barbershop">Barbershop</option>
+              <option value="Pet Grooming">Pet Grooming</option>
+              <option value="Chiropractic">Chiropractic</option>
+              <option value="Other">Other service business</option>
+            </select>
+          </div>
+        </div>
+        <div class="noco-field">
+          <label class="noco-field-label" for="nocoLocation">City / Location</label>
+          <input class="noco-input" id="nocoLocation" type="text" placeholder="Example City, Example City, Example City&hellip;" autocomplete="address-level2">
+        </div>
+        <div class="noco-field">
+          <label class="noco-field-label" for="nocoMsg">What would you want your app to do first?</label>
+          <textarea class="noco-textarea" id="nocoMsg" placeholder="e.g. online booking, push notifications for promos, client wallet, loyalty points&hellip;"></textarea>
+        </div>
+        <button class="noco-submit" type="submit">Start my demo &rarr;</button>
+        <div class="noco-form-note">Submitting opens your email client with the message pre-filled. Nothing is sent automatically. Your data stays on your device until you hit Send.</div>
+      </form>
+      <script>
+      function nocoSubmit(e){
+        e.preventDefault();
+        var get = function(id){ var el = document.getElementById(id); return el && el.value ? el.value.trim() : ''; };
+        var name = get('nocoName');
+        var biz = get('nocoBiz');
+        var email = get('nocoEmail');
+        var type = get('nocoType');
+        var loc = get('nocoLocation');
+        var msg = get('nocoMsg');
+        var subject = 'NoCo App Studio \u2013 Demo request from ' + (biz || name);
+        var body = [
+          'Name: ' + name,
+          'Business: ' + biz,
+          'Business type: ' + type,
+          'Location: ' + loc,
+          'Email: ' + email,
+          '',
+          'What they want the app to do first:',
+          msg,
+          '',
+          '\u2014 submitted from lancewfisher.com/noco/'
+        ].join('\r\n');
+        var href = 'mailto:lance@lancewfisher.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+        window.location.href = href;
+        return false;
+      }
+      </script>
+
       <div class="contact-channels reveal">
         <a href="mailto:lance@lancewfisher.com" class="channel">
           <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>

@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@300;400;600&family=Jost:wght@200;300;400&display=swap">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=20260408ff25">
 <meta name="theme-color" content="#0a0a0b">
 <!-- Prevent FOUC: apply saved theme before paint -->
 <script>
@@ -127,19 +127,24 @@ body {
 [data-theme="light"] .gw-bg-ghost-left { mix-blend-mode: multiply; }
 [data-theme="light"] .gw-bg-faces { mix-blend-mode: multiply; }
 
-/* ===== COMPANY NAME ===== */
+/* ===== COMPANY NAME =====
+   The visible text is in the nested .gw-company-glitch span.
+   The H1 (.gw-company) handles layout/fade-in, the SPAN handles
+   the metallic gradient + RGB-split glitch effects. */
 .gw-company {
   font-family: 'Cormorant SC', serif;
   font-weight: 600;
   font-size: clamp(28px, 6vw, 64px);
   letter-spacing: clamp(6px, 1.5vw, 18px);
   text-transform: uppercase;
-  color: var(--warm-white);
   text-align: center;
   position: relative;
   opacity: 0;
   animation: gwFadeUp 1.2s ease forwards 0.5s;
 }
+
+/* Ambient glow behind company name */
+
 /* Ambient glow behind company name */
 .gw-company::before {
   content: '';
@@ -149,13 +154,13 @@ body {
   transform: translate(-50%, -50%);
   width: 120%;
   height: 200%;
-  background: radial-gradient(ellipse, rgba(201, 168, 76, 0.06) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
   pointer-events: none;
   animation: gwGlowBreathe 6s ease-in-out infinite;
   z-index: -1;
 }
 [data-theme="light"] .gw-company::before {
-  background: radial-gradient(ellipse, rgba(201, 168, 76, 0.08) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.04) 0%, transparent 70%);
 }
 
 /* RGB-split glitch on company name */
@@ -169,7 +174,57 @@ body {
 .gw-company-glitch {
   display: inline-block;
   position: relative;
+  /* Bright white/silver metallic via single-layer linear gradient.
+     Single background = maximum browser compatibility. The animation
+     sweeps the bright crest across the text periodically. */
+  background: linear-gradient(100deg,
+    #d8d6d0 0%,
+    #ecebe6 25%,
+    #ffffff 48%,
+    #ffffff 52%,
+    #ecebe6 75%,
+    #d8d6d0 100%);
+  background-size: 220% 100%;
+  background-position: 0% 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.45)) drop-shadow(0 3px 18px rgba(0, 0, 0, 0.5));
+  animation: gwGlitchShine 14s linear infinite;
 }
+/* Light mode: dark graphite metallic gradient */
+[data-theme="light"] .gw-company-glitch {
+  background: linear-gradient(100deg,
+    #4a4e58 0%,
+    #383c44 25%,
+    #1f2228 48%,
+    #1f2228 52%,
+    #383c44 75%,
+    #4a4e58 100%);
+  background-size: 220% 100%;
+  background-position: 0% 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.55)) drop-shadow(0 2px 10px rgba(28, 32, 40, 0.18));
+}
+
+/* Matrix-style shine sweep: bright crest traverses the wordmark.
+   Symmetric gradient means the cycle-end position jump is invisible. */
+@keyframes gwGlitchShine {
+  0% { background-position: 0% 0; }
+  100% { background-position: 100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gw-company-glitch { animation: none; }
+}
+
+/* RGB-split glitch ghost layers */
 .gw-company-glitch::before,
 .gw-company-glitch::after {
   content: attr(data-text);
@@ -179,6 +234,8 @@ body {
   width: 100%;
   height: 100%;
   opacity: 0;
+  -webkit-text-fill-color: currentColor;
+  background: none;
 }
 .gw-company-glitch::before {
   color: #0ff;
@@ -201,21 +258,29 @@ body {
   font-size: clamp(10px, 1.4vw, 14px);
   letter-spacing: clamp(4px, 0.8vw, 10px);
   text-transform: uppercase;
-  color: var(--gold-1776);
+  color: rgba(248, 246, 240, 0.85);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45), 0 2px 10px rgba(0, 0, 0, 0.4);
   text-align: center;
   margin-top: 16px;
   opacity: 0;
   animation: gwFadeUp 1.2s ease forwards 0.8s;
+}
+[data-theme="light"] .gw-tagline {
+  color: rgba(38, 42, 50, 0.78);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
 /* ===== RULE ===== */
 .gw-rule {
   width: 60px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-1776), transparent);
+  background: linear-gradient(90deg, transparent, rgba(248, 246, 240, 0.55), transparent);
   margin: 32px auto 28px;
   opacity: 0;
   animation: gwFadeUp 1.2s ease forwards 1.0s;
+}
+[data-theme="light"] .gw-rule {
+  background: linear-gradient(90deg, transparent, rgba(38, 42, 50, 0.45), transparent);
 }
 
 /* ===== CLOSING BLOCK ===== */
@@ -266,8 +331,8 @@ body {
   cursor: pointer;
 }
 .gw-closing-brief:hover {
-  color: var(--gold-1776);
-  border-bottom-color: var(--gold-1776);
+  color: rgba(248, 246, 240, 0.85);
+  border-bottom-color: rgba(248, 246, 240, 0.55);
 }
 .gw-closing-motto {
   font-family: 'Cormorant Garamond', serif;
@@ -275,14 +340,43 @@ body {
   font-style: italic;
   font-size: clamp(18px, 2.8vw, 28px);
   letter-spacing: 5px;
-  color: var(--gold-1776);
   margin-top: 14px;
-  text-shadow: 0 0 40px rgba(201, 168, 76, 0.25), 0 0 80px rgba(201, 168, 76, 0.08);
   position: relative;
   display: inline-block;
+  /* Bright white/silver metallic gradient with sweeping shine */
+  background: linear-gradient(100deg,
+    #d8d6d0 0%,
+    #ecebe6 25%,
+    #ffffff 48%,
+    #ffffff 52%,
+    #ecebe6 75%,
+    #d8d6d0 100%);
+  background-size: 220% 100%;
+  background-position: 0% 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.45)) drop-shadow(0 2px 14px rgba(0, 0, 0, 0.4));
+  animation: gwGlitchShine 16s linear infinite;
+  animation-delay: 2s;
 }
 [data-theme="light"] .gw-closing-motto {
-  text-shadow: none;
+  background: linear-gradient(100deg,
+    #4a4e58 0%,
+    #383c44 25%,
+    #1f2228 48%,
+    #1f2228 52%,
+    #383c44 75%,
+    #4a4e58 100%);
+  background-size: 220% 100%;
+  background-position: 0% 0;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.55));
+}
+@media (prefers-reduced-motion: reduce) {
+  .gw-closing-motto { animation: none; }
 }
 .gw-motto-text {
   display: inline;

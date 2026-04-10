@@ -7,7 +7,8 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../_shared/brand.css?v=20260410v2">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%94%92</text></svg>">
 <style>
 :root {
@@ -15,11 +16,12 @@
   --border: #2a2d38; --border-dim: #1e2028;
   --accent: #4a90e2; --accent-bg: rgba(74,144,226,.1); --accent-glow: rgba(74,144,226,.2);
   --green: #2ecc71; --green-bg: rgba(46,204,113,.1);
-  --gold: #c9a227; --gold-bg: rgba(201,162,39,.1);
+  --amber: #fbbf24; --amber-bg: rgba(251,191,36,.12);
+  --silver: rgba(248,246,240,.92); --silver-bg: rgba(248,246,240,.06);
   --text: #e2e6f0; --text2: #8892a4; --text3: #4a5068;
   --mono: 'JetBrains Mono', monospace;
   --sans: 'Inter', system-ui, sans-serif;
-  --disp: 'Cinzel', serif;
+  --disp: 'Old Standard TT', 'Cormorant Garamond', Georgia, serif;
   --sent-bg: rgba(74,144,226,.12); --recv-bg: #1a1c24;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -27,7 +29,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);font-si
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
 /* ── Nav ── */
-.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(8px)}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:var(--bg2);border-bottom:1px solid var(--border);z-index:100}
 .nav-left{display:flex;align-items:center;gap:12px}
 .nav-icon{width:28px;height:28px;background:var(--accent-bg);border:1px solid rgba(74,144,226,.3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .nav-name{font-family:var(--disp);font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--text)}
@@ -46,7 +48,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);font-si
 .htag{font-family:var(--mono);font-size:10px;padding:3px 10px;border-radius:3px;letter-spacing:.05em}
 .htag-e2ee{background:var(--accent-bg);color:var(--accent);border:1px solid rgba(74,144,226,.3)}
 .htag-zk{background:var(--green-bg);color:var(--green);border:1px solid rgba(46,204,113,.25)}
-.htag-pw{background:var(--gold-bg);color:var(--gold);border:1px solid rgba(201,162,39,.25)}
+.htag-pw{background:var(--silver-bg);color:var(--silver);border:1px solid rgba(248,246,240,.22)}
 
 /* ── Stats ── */
 .stats{display:flex;gap:0;border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-top:24px}
@@ -74,11 +76,19 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);font-si
 .contact-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
 .ca-blue{background:rgba(74,144,226,.2);color:var(--accent)}
 .ca-green{background:rgba(46,204,113,.2);color:var(--green)}
-.ca-gold{background:rgba(201,162,39,.2);color:var(--gold)}
-.contact-info{overflow:hidden}
+.ca-silver{background:rgba(248,246,240,.14);color:var(--silver)}
+.ca-amber{background:rgba(251,191,36,.15);color:var(--amber)}
+.ca-group{background:rgba(74,144,226,.14);color:var(--accent);font-size:11px}
+.ca-system{background:rgba(140,140,160,.18);color:#c0c4d0;font-size:13px}
+.contact-info{overflow:hidden;flex:1;min-width:0}
+.contact-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
 .contact-name{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.contact-time{font-size:9px;color:var(--text3);font-family:var(--mono);flex-shrink:0}
 .contact-preview{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
-.contact-enc{font-size:9px;color:var(--green);margin-top:2px}
+.contact-enc{font-size:9px;color:var(--green);margin-top:2px;display:flex;align-items:center;gap:3px}
+.contact-enc.unverified{color:var(--amber)}
+.contact-enc.system{color:#9ba0b0}
+.contact-unread{display:inline-flex;align-items:center;justify-content:center;min-width:14px;height:14px;padding:0 4px;border-radius:7px;background:var(--accent);color:#fff;font-size:9px;font-weight:700;margin-left:4px}
 
 .chat-area{display:flex;flex-direction:column}
 .chat-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--bg3)}
@@ -110,7 +120,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);font-si
 .arch-card-desc{font-size:12px;color:var(--text2);line-height:1.65}
 .arch-card.accent-blue{border-color:rgba(74,144,226,.3)}
 .arch-card.accent-green{border-color:rgba(46,204,113,.25)}
-.arch-card.accent-gold{border-color:rgba(201,162,39,.25)}
+.arch-card.accent-silver{border-color:rgba(248,246,240,.2)}
 
 /* ── Key exchange diagram ── */
 .kex{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:40px}
@@ -142,9 +152,119 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);font-si
   .kex-arrow{flex-direction:row;padding:4px 0}
   .kex-arrow-line{width:24px}
 }
+
+/* ========================================================================
+   LOCKED-SPEC V2 ADDITIONS: benefit strip, sim banner, settings modal,
+   wider 720px messenger, unverified / system / group conversation types.
+   ======================================================================== */
+
+.sim-banner{display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 16px;background:rgba(125,211,252,.08);border-bottom:1px solid rgba(125,211,252,.2);font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#7dd3fc}
+.sim-banner::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:#7dd3fc;box-shadow:0 0 0 0 rgba(125,211,252,.6);animation:sim-pulse 2.4s ease-in-out infinite}
+@keyframes sim-pulse{0%,100%{box-shadow:0 0 0 0 rgba(125,211,252,.5)}50%{box-shadow:0 0 0 4px rgba(125,211,252,0)}}
+
+.ss-benefit{max-width:720px;margin:32px auto 0;padding:14px 18px 14px 20px;background:linear-gradient(90deg,rgba(248,246,240,.05),rgba(248,246,240,.02));border-left:2px solid rgba(248,246,240,.55);border-radius:0 4px 4px 0;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:16px;line-height:1.45;color:rgba(240,244,252,.92)}
+.ss-benefit::before{content:'For you:';display:inline-block;margin-right:8px;font-family:var(--sans);font-style:normal;font-weight:600;font-size:.72em;letter-spacing:.12em;text-transform:uppercase;color:rgba(220,226,240,.62);vertical-align:.1em}
+
+.ss-hero-pills{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.ss-state-chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:2px;font-family:var(--sans);font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;border:1px solid currentColor;color:#7dd3fc}
+.ss-state-chip::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor}
+
+/* Wider desktop messenger (locked spec: 720px) */
+.ss-messenger-wrap{max-width:720px;margin:28px auto 0;padding:0 16px}
+.ss-messenger{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.5)}
+.ss-titlebar{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;background:var(--bg3);border-bottom:1px solid var(--border)}
+.ss-title-left{display:flex;align-items:center;gap:10px}
+.ss-title-dots{display:flex;gap:6px}
+.ss-title-dot{width:10px;height:10px;border-radius:50%}
+.ss-title-dot-r{background:#ff5f57}.ss-title-dot-y{background:#ffbd2e}.ss-title-dot-g{background:#28c840}
+.ss-title-name{font-family:var(--disp);font-size:11px;letter-spacing:.14em;color:var(--text2)}
+.ss-title-actions{display:flex;align-items:center;gap:10px}
+.ss-icon-btn{background:transparent;border:1px solid var(--border);color:var(--text2);padding:4px 9px;border-radius:4px;font-family:var(--sans);font-size:10px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.ss-icon-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--text3)}
+.ss-enc-led{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;color:var(--green)}
+.ss-enc-led::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green)}
+
+.ss-body{display:grid;grid-template-columns:216px 1fr;height:440px}
+.ss-contacts{border-right:1px solid var(--border);overflow-y:auto;background:var(--bg2)}
+.ss-contact{display:flex;align-items:center;gap:10px;padding:11px 13px;cursor:pointer;transition:background .15s;border-bottom:1px solid var(--border-dim);position:relative}
+.ss-contact:hover{background:var(--bg3)}
+.ss-contact.active{background:var(--bg4)}
+.ss-contact.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.ss-contact.system{cursor:default}
+.ss-chat{display:flex;flex-direction:column;background:var(--bg)}
+.ss-chat-header{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.ss-chat-peer-wrap{display:flex;align-items:center;gap:10px;min-width:0}
+.ss-chat-peer-name{font-size:13px;font-weight:600;color:var(--text)}
+.ss-chat-peer-sub{font-size:10px;color:var(--text3);font-family:var(--mono)}
+.ss-chat-peer-sub.unverified{color:var(--amber)}
+.ss-chat-actions{display:flex;align-items:center;gap:6px}
+.ss-chat-messages{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;background:var(--bg)}
+.ss-unverified-banner{display:flex;align-items:center;gap:10px;padding:10px 14px;margin:0 0 8px;background:var(--amber-bg);border:1px solid rgba(251,191,36,.3);border-radius:6px;font-size:11px;color:#fcd34d;line-height:1.5}
+.ss-unverified-banner strong{color:var(--amber)}
+.ss-system-msg{align-self:center;max-width:90%;padding:8px 14px;background:rgba(140,140,160,.08);border:1px solid rgba(140,140,160,.2);border-radius:4px;font-size:11px;color:#b8bcca;text-align:center;line-height:1.45;font-family:var(--mono)}
+.ss-group-author{font-size:10px;color:var(--text2);margin-bottom:3px;font-weight:500}
+.ss-chat-composer{display:flex;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid var(--border);background:var(--bg3)}
+.ss-composer-input{flex:1;background:var(--bg4);border:1px solid var(--border);border-radius:20px;padding:8px 16px;font-size:13px;color:var(--text);font-family:var(--sans);outline:none;transition:border-color .2s}
+.ss-composer-input:focus{border-color:rgba(74,144,226,.5)}
+.ss-composer-input:disabled{background:var(--bg2);color:var(--text3);cursor:not-allowed}
+.ss-composer-send{width:32px;height:32px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;flex-shrink:0;transition:background .15s}
+.ss-composer-send:hover{background:#3a7fd4}
+.ss-composer-send:disabled{background:var(--bg4);cursor:not-allowed}
+.ss-composer-note{font-size:9.5px;color:var(--text3);font-family:var(--mono);letter-spacing:.04em;padding:0 16px 10px;background:var(--bg3);border-top:1px solid var(--border-dim)}
+
+.ss-typing{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;background:var(--bg3);border:1px solid var(--border-dim);border-radius:12px;font-size:10px;color:var(--text3);align-self:flex-start;font-family:var(--mono)}
+.ss-typing span{display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--text3);animation:ss-bounce 1.4s ease-in-out infinite}
+.ss-typing span:nth-child(2){animation-delay:.2s}
+.ss-typing span:nth-child(3){animation-delay:.4s}
+@keyframes ss-bounce{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+
+/* Settings + Key Management modal */
+.ss-modal-backdrop{position:fixed;inset:0;background:rgba(5,6,10,.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:200;padding:24px}
+.ss-modal-backdrop.open{display:flex}
+.ss-modal{background:var(--bg2);border:1px solid var(--border);border-radius:10px;max-width:540px;width:100%;max-height:calc(100vh - 48px);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.7)}
+.ss-modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.ss-modal-title{font-family:var(--disp);font-size:17px;font-weight:400;color:var(--text);letter-spacing:0}
+.ss-modal-sub{font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:3px}
+.ss-modal-close{background:transparent;border:1px solid var(--border);color:var(--text2);padding:4px 10px;border-radius:4px;font-family:var(--sans);font-size:11px;cursor:pointer;transition:all .2s}
+.ss-modal-close:hover{background:var(--bg4);color:var(--text)}
+.ss-modal-body{padding:16px 20px;overflow-y:auto;flex:1}
+.ss-modal-section{margin-bottom:22px}
+.ss-modal-section:last-child{margin-bottom:4px}
+.ss-section-title{font-family:var(--sans);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;font-weight:600}
+.ss-field{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg3);border:1px solid var(--border-dim);border-radius:6px;margin-bottom:6px;gap:12px}
+.ss-field-label{font-size:11px;color:var(--text2);flex-shrink:0}
+.ss-field-value{font-family:var(--mono);font-size:11px;color:var(--text);text-align:right;word-break:break-all}
+.ss-toggle{width:34px;height:18px;border-radius:9px;background:var(--bg4);border:1px solid var(--border);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.ss-toggle::after{content:'';position:absolute;top:1px;left:1px;width:14px;height:14px;border-radius:50%;background:var(--text3);transition:transform .2s,background .2s}
+.ss-toggle.on{background:rgba(46,204,113,.2);border-color:rgba(46,204,113,.5)}
+.ss-toggle.on::after{transform:translateX(16px);background:var(--green)}
+.ss-device{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg3);border:1px solid var(--border-dim);border-radius:6px;margin-bottom:6px}
+.ss-device-icon{width:26px;height:26px;border-radius:50%;background:var(--accent-bg);border:1px solid rgba(74,144,226,.3);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--accent);flex-shrink:0}
+.ss-device-body{flex:1;min-width:0}
+.ss-device-name{font-size:11.5px;color:var(--text);font-weight:500}
+.ss-device-sub{font-size:9.5px;color:var(--text3);font-family:var(--mono);margin-top:2px}
+.ss-device-status{font-size:9px;padding:2px 7px;border-radius:2px;background:var(--green-bg);color:var(--green);font-family:var(--sans);letter-spacing:.08em;text-transform:uppercase;flex-shrink:0}
+.ss-safety-num{font-family:var(--mono);font-size:11px;line-height:1.85;color:var(--text);background:var(--bg3);border:1px solid var(--border-dim);border-radius:6px;padding:14px;letter-spacing:.04em;word-break:break-all}
+.ss-safety-note{font-size:10px;color:var(--text3);margin-top:8px;line-height:1.5;font-style:italic}
+
+@media(max-width:768px){
+  .ss-messenger-wrap{padding:0 10px}
+  .ss-body{grid-template-columns:176px 1fr;height:460px}
+  .ss-benefit{margin-left:16px;margin-right:16px}
+}
 </style>
 </head>
 <body>
+
+<!-- FSS-BRAND-BLOCK-V3 (FF25 wordmark, no H icon) -->
+<div class="fssb-v3-top">
+  <a href="../home.html" class="fssb-v3-top-link" aria-label="Fisher Sovereign Systems">
+    <span class="fssb-v3-top-name">Fisher</span>
+    <span class="fssb-v3-top-rule"></span>
+    <span class="fssb-v3-top-sub">Sovereign Systems</span>
+  </a>
+  <a href="../home.html" class="fssb-v3-top-back">&larr; Portfolio</a>
+</div>
 
 <nav class="nav">
   <div class="nav-left">
@@ -157,15 +277,22 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);font-si
   <a class="nav-back" href="../home.html">&larr; Portfolio</a>
 </nav>
 
+<div class="sim-banner">
+  Interactive Preview &middot; Local browser simulation &middot; No real relay server &middot; Cryptography is demonstrated, not executed
+</div>
+
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-text">
-      <div class="hero-label">Project 11 | In Development</div>
+      <div class="ss-hero-pills">
+        <div class="hero-label" style="margin:0">Project 11 &middot; In Development</div>
+        <span class="ss-state-chip">Interactive Preview</span>
+      </div>
       <div class="hero-title">Sovereign Signal</div>
-      <div class="hero-desc">A peer-to-peer encrypted messaging platform built on Signal-grade cryptography. Messages are encrypted on the sender's device and can only be decrypted by the intended recipient. The server functions as a pure relay with zero ability to read message content.</div>
+      <div class="hero-desc">Messages nobody else can read. Not the app, not the relay, not the ISP, not the government, not tomorrow. Signal-grade cryptography (X3DH + Double Ratchet) with libsodium, passkey-locked local vault, and a pure relay server that stores only opaque encrypted blobs.</div>
       <div class="hero-tags">
         <span class="htag htag-e2ee">E2E Encrypted</span>
-        <span class="htag htag-zk">Zero-Knowledge Server</span>
+        <span class="htag htag-zk">Zero-Knowledge Relay</span>
         <span class="htag htag-pw">Passwordless Auth</span>
       </div>
       <div class="stats">
@@ -183,68 +310,165 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);font-si
           <div class="demo-dot demo-dot-y"></div>
           <div class="demo-dot demo-dot-g"></div>
         </div>
-        <div class="demo-appname">Sovereign Signal</div>
+        <div class="demo-appname">Signal &middot; Preview</div>
         <div class="demo-enc-badge">Encrypted</div>
       </div>
-      <div class="demo-layout">
-        <div class="contact-list">
-          <div class="contact active" onclick="switchContact(this,'Sarah K.','Ratchet key #47')">
-            <div class="contact-avatar ca-blue">S</div>
-            <div class="contact-info">
-              <div class="contact-name">Sarah K.</div>
-              <div class="contact-preview">Sounds good</div>
-              <div class="contact-enc">&#128274; Verified</div>
-            </div>
-          </div>
-          <div class="contact" onclick="switchContact(this,'James R.','Ratchet key #12')">
-            <div class="contact-avatar ca-green">J</div>
-            <div class="contact-info">
-              <div class="contact-name">James R.</div>
-              <div class="contact-preview">Let me check</div>
-              <div class="contact-enc">&#128274; Verified</div>
-            </div>
-          </div>
-          <div class="contact" onclick="switchContact(this,'Mia T.','Ratchet key #8')">
-            <div class="contact-avatar ca-gold">M</div>
-            <div class="contact-info">
-              <div class="contact-name">Mia T.</div>
-              <div class="contact-preview">On my way</div>
-              <div class="contact-enc">&#128274; Verified</div>
-            </div>
-          </div>
-        </div>
-        <div class="chat-area">
-          <div class="chat-header">
-            <div class="chat-peer" id="chatPeer">Sarah K.</div>
-            <div class="chat-enc-status" id="chatEncStatus">Ratchet key #47</div>
-          </div>
-          <div class="chat-messages" id="chatMessages">
-            <div class="msg recv">
-              <div class="msg-bubble">Hey, did you review the proposal?</div>
-              <div class="msg-meta"><span class="msg-enc">&#128274;</span> 2:14 PM</div>
-            </div>
-            <div class="msg sent">
-              <div class="msg-bubble">Yes, looks solid. Sending my notes now.</div>
-              <div class="msg-meta">2:15 PM <span class="msg-enc">&#128274;</span></div>
-            </div>
-            <div class="msg recv">
-              <div class="msg-bubble">Perfect. Let's connect at 4.</div>
-              <div class="msg-meta"><span class="msg-enc">&#128274;</span> 2:16 PM</div>
-            </div>
-            <div class="msg sent">
-              <div class="msg-bubble">Sounds good.</div>
-              <div class="msg-meta">2:16 PM <span class="msg-enc">&#128274;</span></div>
-            </div>
-          </div>
-          <div class="chat-input">
-            <input class="chat-input-box" id="chatBox" type="text" placeholder="Message (encrypted on send)" autocomplete="off">
-            <button class="chat-send" onclick="sendDemoMessage()">&#9654;</button>
-          </div>
-        </div>
+      <div style="padding:24px 20px;color:var(--text2);font-size:12px;line-height:1.7">
+        <strong style="color:var(--text);font-family:var(--disp);font-size:13px;letter-spacing:.08em">What you'll try below</strong>
+        <ol style="margin:10px 0 0 18px;padding:0">
+          <li style="margin-bottom:6px">Click between six conversations in the thread list.</li>
+          <li style="margin-bottom:6px">Type a message and press Return. The thread updates instantly.</li>
+          <li style="margin-bottom:6px">Watch the deterministic canned response come back for verified threads.</li>
+          <li style="margin-bottom:6px">Notice the unverified thread (Jamie Reeves) flags an amber banner.</li>
+          <li>Open the Vault &amp; Keys button to see safety numbers, device list, and ratchet state.</li>
+        </ol>
       </div>
     </div>
   </div>
 </section>
+
+<div class="ss-benefit">Your words leave your device encrypted. Nobody between here and the other end can read them. Not the app, not the relay, not the ISP, not the government, not tomorrow.</div>
+
+<div class="ss-messenger-wrap">
+  <div class="ss-messenger">
+    <div class="ss-titlebar">
+      <div class="ss-title-left">
+        <div class="ss-title-dots">
+          <div class="ss-title-dot ss-title-dot-r"></div>
+          <div class="ss-title-dot ss-title-dot-y"></div>
+          <div class="ss-title-dot ss-title-dot-g"></div>
+        </div>
+        <div class="ss-title-name">Signal &middot; Desktop</div>
+      </div>
+      <div class="ss-title-actions">
+        <button class="ss-icon-btn" id="ssOpenSettings">&#9881; Vault &amp; Keys</button>
+        <div class="ss-enc-led">Session active</div>
+      </div>
+    </div>
+    <div class="ss-body">
+      <div class="ss-contacts" id="ssContacts"><!-- built by JS --></div>
+      <div class="ss-chat">
+        <div class="ss-chat-header">
+          <div class="ss-chat-peer-wrap">
+            <div>
+              <div class="ss-chat-peer-name" id="ssPeerName">&nbsp;</div>
+              <div class="ss-chat-peer-sub" id="ssPeerSub">&nbsp;</div>
+            </div>
+          </div>
+          <div class="ss-chat-actions">
+            <button class="ss-icon-btn" id="ssShowSafety">Safety #</button>
+          </div>
+        </div>
+        <div class="ss-chat-messages" id="ssMessages"></div>
+        <div class="ss-chat-composer">
+          <input class="ss-composer-input" id="ssComposer" type="text" placeholder="Encrypted message (press Return to send)" autocomplete="off">
+          <button class="ss-composer-send" id="ssSend" aria-label="Send">&#9654;</button>
+        </div>
+        <div class="ss-composer-note" id="ssComposerNote">&#128274; Ratchet key advances on each send &middot; Forward secrecy preserved</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Vault &amp; Keys modal -->
+<div class="ss-modal-backdrop" id="ssModal">
+  <div class="ss-modal">
+    <div class="ss-modal-head">
+      <div>
+        <div class="ss-modal-title">Vault &amp; Keys</div>
+        <div class="ss-modal-sub">local simulation &middot; no real keys displayed</div>
+      </div>
+      <button class="ss-modal-close" id="ssModalClose">Close</button>
+    </div>
+    <div class="ss-modal-body">
+      <div class="ss-modal-section">
+        <div class="ss-section-title">Local Vault</div>
+        <div class="ss-field">
+          <div class="ss-field-label">Vault status</div>
+          <div class="ss-field-value" style="color:var(--green)">&#128275; Unlocked &middot; 14m ago</div>
+        </div>
+        <div class="ss-field">
+          <div class="ss-field-label">Last authenticated</div>
+          <div class="ss-field-value">Touch ID &middot; MacBook Pro</div>
+        </div>
+        <div class="ss-field">
+          <div class="ss-field-label">Recovery code</div>
+          <div class="ss-field-value" id="ssRecoveryCode" style="color:var(--text3);cursor:pointer" onclick="ssToggleRecovery()">&bull;&bull;&bull;&bull;-&bull;&bull;&bull;&bull;-&bull;&bull;&bull;&bull;-&bull;&bull;&bull;&bull; (click to show)</div>
+        </div>
+      </div>
+
+      <div class="ss-modal-section">
+        <div class="ss-section-title">Identity</div>
+        <div class="ss-field">
+          <div class="ss-field-label">PGP fingerprint</div>
+          <div class="ss-field-value">7F3A 9B2E C4D5 1F8A &hellip;</div>
+        </div>
+        <div class="ss-field">
+          <div class="ss-field-label">Device name</div>
+          <div class="ss-field-value">Lance's MacBook Pro</div>
+        </div>
+        <div class="ss-field">
+          <div class="ss-field-label">Device ID</div>
+          <div class="ss-field-value">d:mac:7b1f&hellip;a93e</div>
+        </div>
+      </div>
+
+      <div class="ss-modal-section">
+        <div class="ss-section-title">Devices</div>
+        <div class="ss-device">
+          <div class="ss-device-icon">&#128187;</div>
+          <div class="ss-device-body">
+            <div class="ss-device-name">Lance's MacBook Pro</div>
+            <div class="ss-device-sub">Registered 2 months ago &middot; this device</div>
+          </div>
+          <div class="ss-device-status">Active</div>
+        </div>
+        <div class="ss-device">
+          <div class="ss-device-icon">&#128241;</div>
+          <div class="ss-device-body">
+            <div class="ss-device-name">Lance's iPhone</div>
+            <div class="ss-device-sub">Registered 6 weeks ago &middot; last seen 2m ago</div>
+          </div>
+          <div class="ss-device-status">Active</div>
+        </div>
+        <div class="ss-device">
+          <div class="ss-device-icon">&#128421;</div>
+          <div class="ss-device-body">
+            <div class="ss-device-name">Workstation</div>
+            <div class="ss-device-sub">Registered 3 weeks ago &middot; last seen 14m ago</div>
+          </div>
+          <div class="ss-device-status">Active</div>
+        </div>
+      </div>
+
+      <div class="ss-modal-section">
+        <div class="ss-section-title">Session</div>
+        <div class="ss-field">
+          <div class="ss-field-label">Ratchet key</div>
+          <div class="ss-field-value" id="ssRatchetKey">#42</div>
+        </div>
+        <div class="ss-field">
+          <div class="ss-field-label">DH rotation</div>
+          <div class="ss-field-value">47 since start</div>
+        </div>
+        <div class="ss-field">
+          <div class="ss-field-label">Pre-key bundle</div>
+          <div class="ss-field-value">89 remaining</div>
+        </div>
+        <div class="ss-field">
+          <div class="ss-field-label">Session started</div>
+          <div class="ss-field-value">2h 14m ago</div>
+        </div>
+      </div>
+
+      <div class="ss-modal-section" id="ssSafetySection">
+        <div class="ss-section-title">Safety number (current thread)</div>
+        <div class="ss-safety-num" id="ssSafetyNumber">&mdash;</div>
+        <div class="ss-safety-note">Verify this 60-digit number out-of-band (in person or over a trusted channel) before trusting the conversation. Match = both sides share the same root key.</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="arch">
   <div class="arch-title">Architecture</div>
@@ -259,7 +483,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);font-si
       <div class="arch-card-title">Double Ratchet</div>
       <div class="arch-card-desc">Every message uses a new encryption key derived from the previous one. Forward secrecy means past messages stay safe even if current keys are compromised. Break-in recovery means future messages are safe even after a breach.</div>
     </div>
-    <div class="arch-card accent-gold">
+    <div class="arch-card accent-silver">
       <div class="arch-card-icon">&#128065;</div>
       <div class="arch-card-title">Zero-Knowledge Server</div>
       <div class="arch-card-desc">The relay server stores only opaque encrypted blobs. It routes packets, stores nothing readable, and has no access to message content, sender identity, or recipient identity. No metadata collection.</div>
@@ -337,70 +561,261 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--sans);font-si
 </div>
 
 <script>
-/* Static demo interaction - no external data, no user input processed server-side */
+/* ============================================================
+   SOVEREIGN SIGNAL INTERACTIVE PREVIEW
+   ------------------------------------------------------------
+   All state is local to this browser tab. No network requests,
+   no keys generated, no cryptography actually executed. The
+   "replies" are deterministic per-conversation. The unverified
+   thread (Jamie Reeves) is an intentional demonstration of the
+   trust model: an amber warning banner and no canned reply
+   because we haven't verified the peer.
+   ============================================================ */
 (function(){
 'use strict';
 
-var CONVOS = {
-  'Sarah K.': {
-    key: 'Ratchet key #47',
+/* Util: safe element builder (no innerHTML anywhere). */
+function el(tag, cls, text) {
+  var n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text !== undefined && text !== null) n.textContent = text;
+  return n;
+}
+function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+function timestamp() {
+  var d = new Date();
+  var h = d.getHours(), m = d.getMinutes();
+  var ap = h >= 12 ? 'PM' : 'AM';
+  var hh = ((h + 11) % 12) + 1;
+  return hh + ':' + (m < 10 ? '0' + m : m) + ' ' + ap;
+}
+
+/* Deterministic hex-ish safety number from a seed string (BLAKE2b would
+   be used in real impl; this is a hash-to-digits pretty-printer for the
+   demo so the safety number is stable per thread). */
+function safetyNumber(seed) {
+  var s = seed || '';
+  var h = 5381;
+  for (var i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0;
+  var digits = '';
+  for (var j = 0; j < 60; j++) {
+    h = ((h * 1103515245 + 12345) >>> 0) % 2147483647;
+    digits += (h % 10).toString();
+  }
+  var out = '';
+  for (var k = 0; k < 60; k += 5) {
+    out += digits.substr(k, 5);
+    if (k + 5 < 60) out += ' ';
+  }
+  return out;
+}
+
+/* Conversation data — locked spec, 6 threads. */
+var THREADS = [
+  {
+    id: 'alex', name: 'Alex Chen', handle: '@lextech',
+    type: 'direct', verified: true, unread: 0, time: '2:14 PM',
+    avatar: 'A', avatarCls: 'ca-blue',
+    ratchet: 42,
+    replies: [
+      "Sounds right, let's move on that.",
+      "Pushed the fix. Let me know if the stream clears.",
+      "Meeting in 10, ping me after.",
+      "Received. Thanks for the detail.",
+      "Shipping tomorrow, confirmed."
+    ],
     msgs: [
-      {dir:'recv', text:'Hey, did you review the proposal?', time:'2:14 PM'},
-      {dir:'sent', text:'Yes, looks solid. Sending my notes now.', time:'2:15 PM'},
-      {dir:'recv', text:'Perfect. Let\u2019s connect at 4.', time:'2:16 PM'},
-      {dir:'sent', text:'Sounds good.', time:'2:16 PM'},
+      {dir:'recv', text:"Did the deploy clear on the master-trade-bot stream?", time:'2:02 PM'},
+      {dir:'sent', text:"Yes, SSE is clean. Rolled with the Fastify 5 patch.", time:'2:04 PM'},
+      {dir:'recv', text:"Looks good, shipping tomorrow.", time:'2:14 PM'}
     ]
   },
-  'James R.': {
-    key: 'Ratchet key #12',
+  {
+    id: 'morgan', name: 'Morgan D.', handle: '@morgan.design',
+    type: 'direct', verified: true, unread: 1, time: '1:38 PM',
+    avatar: 'M', avatarCls: 'ca-silver',
+    ratchet: 28,
+    replies: [
+      "Looking at it now. Back to you in a bit.",
+      "Opened it. The hero is cleaner than the old version, good call.",
+      "Can we try the motto at 0.92 alpha instead of 0.85?",
+      "Same note applies to the footer. Otherwise shipping."
+    ],
     msgs: [
-      {dir:'recv', text:'Can you share the updated specs?', time:'1:02 PM'},
-      {dir:'sent', text:'Sending now.', time:'1:04 PM'},
-      {dir:'recv', text:'Let me check and get back to you.', time:'1:05 PM'},
+      {dir:'sent', text:"Draft of the new hero is up in Figma.", time:'1:30 PM'},
+      {dir:'recv', text:"Can you review the prototype? The silver gradient on the main name.", time:'1:38 PM'}
     ]
   },
-  'Mia T.': {
-    key: 'Ratchet key #8',
+  {
+    id: 'jamie', name: 'Jamie Reeves', handle: '@jreeves',
+    type: 'direct', verified: false, unread: 0, time: '11:52 AM',
+    avatar: 'J', avatarCls: 'ca-amber',
+    ratchet: 3,
+    replies: [], // NO AUTO-REPLY — unverified, trust model edge
     msgs: [
-      {dir:'sent', text:'Are you close?', time:'3:48 PM'},
-      {dir:'recv', text:'On my way, 10 min.', time:'3:49 PM'},
+      {dir:'recv', text:"Got the files, thanks.", time:'11:52 AM'}
+    ]
+  },
+  {
+    id: 'system', name: 'Systems Alert', handle: 'local-vault',
+    type: 'system', verified: true, unread: 0, time: '11:14 AM',
+    avatar: '\u2699', avatarCls: 'ca-system',
+    ratchet: null,
+    replies: null,
+    msgs: [
+      {dir:'system', text:'New device registered: Lance\u2019s MacBook Pro', time:'11:14 AM'},
+      {dir:'system', text:'PGP identity rotation completed successfully', time:'10:52 AM'},
+      {dir:'system', text:'Vault unlocked via Touch ID', time:'9:03 AM'}
+    ]
+  },
+  {
+    id: 'qa', name: 'Q&A Work Group', handle: '4 members',
+    type: 'group', verified: true, unread: 0, time: '10:48 AM',
+    avatar: 'Q', avatarCls: 'ca-group',
+    ratchet: 17,
+    members: ['Alex Chen', 'Morgan D.', 'Blake Peterson'],
+    replies: [
+      {author:'Alex Chen',       text:"Running the last batch now."},
+      {author:'Morgan D.',       text:"Results in the shared doc when it's done."},
+      {author:'Blake Peterson',  text:"Passing here, good to go."}
+    ],
+    msgs: [
+      {dir:'recv', author:'Alex Chen',      text:"Started the new test run.", time:'10:42 AM'},
+      {dir:'recv', author:'Morgan D.',      text:"Test run completed 8/12 \u2713", time:'10:48 AM'}
+    ]
+  },
+  {
+    id: 'blake', name: 'Blake Peterson', handle: '@bpeterson',
+    type: 'direct', verified: true, unread: 0, time: 'Yesterday',
+    avatar: 'B', avatarCls: 'ca-green',
+    ratchet: 9,
+    replies: [
+      "ok see you then",
+      "bringing the old router too, just in case",
+      "cool, parking is at the back"
+    ],
+    msgs: [
+      {dir:'recv', text:"dinner at 5 tomorrow still good?", time:'Yesterday'},
+      {dir:'sent', text:"yes, same spot", time:'Yesterday'},
+      {dir:'recv', text:"see you at 5?", time:'Yesterday'}
     ]
   }
-};
+];
 
-var activeName = 'Sarah K.';
+var byId = {};
+THREADS.forEach(function(t){ byId[t.id] = t; });
+var activeId = 'alex';
 
-window.switchContact = function(el, name, key) {
-  document.querySelectorAll('.contact').forEach(function(c){ c.classList.remove('active'); });
-  el.classList.add('active');
-  activeName = name;
-  document.getElementById('chatPeer').textContent = name;
-  document.getElementById('chatEncStatus').textContent = key;
-  renderMessages(name);
-};
+/* ── RENDER CONTACT LIST ── */
+function buildContacts() {
+  var container = document.getElementById('ssContacts');
+  clear(container);
+  THREADS.forEach(function(t){
+    var row = el('div', 'ss-contact' + (t.id === activeId ? ' active' : '') + (t.type === 'system' ? ' system' : ''));
+    row.setAttribute('data-id', t.id);
+    row.addEventListener('click', function(){ selectThread(t.id); });
 
-function renderMessages(name) {
-  var container = document.getElementById('chatMessages');
-  container.textContent = '';
-  var convo = CONVOS[name];
-  if (!convo) return;
+    var av = el('div', 'contact-avatar ' + t.avatarCls, t.avatar);
+    var info = el('div', 'contact-info');
+    var top = el('div', 'contact-top');
+    var name = el('div', 'contact-name', t.name);
+    var tm = el('div', 'contact-time', t.time);
+    top.appendChild(name);
+    top.appendChild(tm);
+    info.appendChild(top);
+
+    var previewText = '';
+    if (t.msgs && t.msgs.length) {
+      var last = t.msgs[t.msgs.length - 1];
+      previewText = (last.author ? last.author.split(' ')[0] + ': ' : '') + last.text;
+    }
+    var preview = el('div', 'contact-preview', previewText);
+    info.appendChild(preview);
+
+    var encRow = el('div', 'contact-enc' + (t.type === 'system' ? ' system' : (t.verified ? '' : ' unverified')));
+    if (t.type === 'system') {
+      encRow.textContent = '\u2699 System message';
+    } else if (t.verified) {
+      encRow.textContent = '\u2713 Verified';
+    } else {
+      encRow.textContent = '\u26a0 Unverified peer';
+    }
+    if (t.unread > 0) {
+      var badge = el('span', 'contact-unread', String(t.unread));
+      encRow.appendChild(badge);
+    }
+    info.appendChild(encRow);
+
+    row.appendChild(av);
+    row.appendChild(info);
+    container.appendChild(row);
+  });
+}
+
+/* ── SELECT THREAD ── */
+function selectThread(id) {
+  var t = byId[id];
+  if (!t) return;
+  activeId = id;
+  // Clear unread on click
+  t.unread = 0;
+  document.querySelectorAll('.ss-contact').forEach(function(n){
+    n.classList.toggle('active', n.getAttribute('data-id') === id);
+  });
+  // Refresh unread badges in contact list
+  buildContacts();
+  renderThread();
+}
+
+/* ── RENDER ACTIVE THREAD ── */
+function renderThread() {
+  var t = byId[activeId];
+  if (!t) return;
+
+  document.getElementById('ssPeerName').textContent = t.name;
+  var sub = document.getElementById('ssPeerSub');
+  sub.classList.toggle('unverified', !t.verified && t.type !== 'system');
+  if (t.type === 'system') {
+    sub.textContent = 'local-vault events \u00b7 not a peer';
+  } else if (!t.verified) {
+    sub.textContent = '\u26a0 unverified \u00b7 safety number not yet confirmed';
+  } else if (t.type === 'group') {
+    sub.textContent = t.handle + ' \u00b7 ratchet #' + t.ratchet;
+  } else {
+    sub.textContent = t.handle + ' \u00b7 ratchet #' + t.ratchet;
+  }
+
+  var container = document.getElementById('ssMessages');
+  clear(container);
+
+  // Unverified warning banner
+  if (!t.verified && t.type !== 'system') {
+    var warn = el('div', 'ss-unverified-banner');
+    var warnTxt = el('strong', null, '\u26a0 Unverified peer. ');
+    warn.appendChild(warnTxt);
+    warn.appendChild(document.createTextNode("You haven't compared safety numbers with Jamie yet. Messages will still be end-to-end encrypted, but the trust model says you can't confirm who you're actually talking to until you verify out-of-band."));
+    container.appendChild(warn);
+  }
+
   var frag = document.createDocumentFragment();
-  convo.msgs.forEach(function(m) {
-    var row = document.createElement('div');
-    row.className = 'msg ' + m.dir;
-    var bubble = document.createElement('div');
-    bubble.className = 'msg-bubble';
-    bubble.textContent = m.text;
-    var meta = document.createElement('div');
-    meta.className = 'msg-meta';
-    var enc = document.createElement('span');
-    enc.className = 'msg-enc';
-    enc.textContent = '\uD83D\uDD12';
+  (t.msgs || []).forEach(function(m){
+    if (m.dir === 'system' || t.type === 'system') {
+      var sys = el('div', 'ss-system-msg', m.text + '  \u00b7  ' + m.time);
+      frag.appendChild(sys);
+      return;
+    }
+    var row = el('div', 'msg ' + m.dir);
+    if (t.type === 'group' && m.dir === 'recv' && m.author) {
+      row.appendChild(el('div', 'ss-group-author', m.author));
+    }
+    var bubble = el('div', 'msg-bubble', m.text);
+    var meta = el('div', 'msg-meta');
+    var lock = el('span', 'msg-enc', '\uD83D\uDD12');
     if (m.dir === 'sent') {
       meta.appendChild(document.createTextNode(m.time + ' '));
-      meta.appendChild(enc);
+      meta.appendChild(lock);
     } else {
-      meta.appendChild(enc);
+      meta.appendChild(lock);
       meta.appendChild(document.createTextNode(' ' + m.time));
     }
     row.appendChild(bubble);
@@ -408,34 +823,140 @@ function renderMessages(name) {
     frag.appendChild(row);
   });
   container.appendChild(frag);
+
+  // Composer state
+  var composer = document.getElementById('ssComposer');
+  var sendBtn = document.getElementById('ssSend');
+  var note = document.getElementById('ssComposerNote');
+  if (t.type === 'system') {
+    composer.value = '';
+    composer.disabled = true;
+    sendBtn.disabled = true;
+    composer.placeholder = 'System channel \u00b7 read-only';
+    note.textContent = 'This channel is for local vault events and cannot accept outbound messages.';
+  } else if (!t.verified) {
+    composer.disabled = false;
+    sendBtn.disabled = false;
+    composer.placeholder = 'Send anyway (message encrypted, peer unverified)';
+    note.textContent = '\u26a0 Peer not verified \u00b7 Message will still be E2E encrypted, but no canned response until verification';
+  } else {
+    composer.disabled = false;
+    sendBtn.disabled = false;
+    composer.placeholder = 'Encrypted message (press Return to send)';
+    note.textContent = '\uD83D\uDD12 Ratchet key advances on each send \u00b7 Forward secrecy preserved';
+  }
+
   container.scrollTop = container.scrollHeight;
 }
 
-window.sendDemoMessage = function() {
-  var box = document.getElementById('chatBox');
-  var text = box.value.trim();
+/* ── SEND MESSAGE ── */
+function sendMessage() {
+  var t = byId[activeId];
+  if (!t || t.type === 'system') return;
+  var composer = document.getElementById('ssComposer');
+  var text = composer.value.trim();
   if (!text) return;
-  box.value = '';
+  composer.value = '';
 
-  var convo = CONVOS[activeName];
-  var now = new Date();
-  var h = now.getHours(), m = now.getMinutes();
-  var time = h + ':' + (m < 10 ? '0' + m : m) + (h >= 12 ? ' PM' : ' AM');
-  convo.msgs.push({dir:'sent', text: text, time: time});
-  renderMessages(activeName);
+  var time = timestamp();
+  t.msgs.push({dir:'sent', text: text, time: time});
+  // Advance ratchet visually
+  if (typeof t.ratchet === 'number') t.ratchet += 1;
+  renderThread();
 
-  /* Simulate a reply after a short delay */
-  var replies = ['Got it.','Understood.','Thanks.','On it.','Will do.','Acknowledged.'];
+  // Unverified peer = no auto reply
+  if (!t.verified) return;
+
+  // Deterministic reply queue per thread: rotate through the list
+  if (!t.replies || !t.replies.length) return;
+  t._replyIdx = (t._replyIdx || 0);
+  var reply = t.replies[t._replyIdx % t.replies.length];
+  t._replyIdx += 1;
+
+  // Show typing indicator
+  var msgsBox = document.getElementById('ssMessages');
+  var typing = el('div', 'ss-typing');
+  typing.appendChild(el('span'));
+  typing.appendChild(el('span'));
+  typing.appendChild(el('span'));
+  typing.appendChild(document.createTextNode(' ' + (t.type === 'group' ? t.members[0].split(' ')[0] : t.name.split(' ')[0]) + ' typing'));
+  msgsBox.appendChild(typing);
+  msgsBox.scrollTop = msgsBox.scrollHeight;
+
   setTimeout(function(){
-    var reply = replies[Math.floor(Math.random() * replies.length)];
-    convo.msgs.push({dir:'recv', text: reply, time: time});
-    renderMessages(activeName);
-  }, 900);
+    if (typing.parentNode) typing.parentNode.removeChild(typing);
+    if (t.type === 'group' && typeof reply === 'object') {
+      t.msgs.push({dir:'recv', author: reply.author, text: reply.text, time: timestamp()});
+    } else {
+      t.msgs.push({dir:'recv', text: (typeof reply === 'string' ? reply : reply.text), time: timestamp()});
+    }
+    if (typeof t.ratchet === 'number') t.ratchet += 1;
+    if (activeId === t.id) renderThread();
+  }, 1600 + Math.random() * 900);
+}
+
+/* ── SETTINGS MODAL ── */
+function openModal() {
+  document.getElementById('ssModal').classList.add('open');
+  updateSafetyNumber();
+  updateRatchetDisplay();
+}
+function closeModal() {
+  document.getElementById('ssModal').classList.remove('open');
+}
+function updateSafetyNumber() {
+  var t = byId[activeId];
+  if (!t) return;
+  var target = document.getElementById('ssSafetyNumber');
+  if (t.type === 'system') {
+    target.textContent = '\u2014';
+    return;
+  }
+  target.textContent = safetyNumber('fss-signal-v0.1-' + t.id + '-' + (t.name || ''));
+}
+function updateRatchetDisplay() {
+  var t = byId[activeId];
+  if (!t) return;
+  var rk = document.getElementById('ssRatchetKey');
+  if (rk) rk.textContent = t.ratchet === null ? '\u2014' : '#' + t.ratchet;
+}
+
+window.ssToggleRecovery = function() {
+  var el = document.getElementById('ssRecoveryCode');
+  if (el.textContent.indexOf('click to show') !== -1) {
+    el.textContent = 'A9K2-F7RT-B8HW-Q3EX';
+    el.style.color = '';
+  } else {
+    el.textContent = '\u2022\u2022\u2022\u2022-\u2022\u2022\u2022\u2022-\u2022\u2022\u2022\u2022-\u2022\u2022\u2022\u2022 (click to show)';
+    el.style.color = 'var(--text3)';
+  }
 };
 
-document.getElementById('chatBox').addEventListener('keydown', function(e){
-  if (e.key === 'Enter') window.sendDemoMessage();
+/* ── WIRING ── */
+document.getElementById('ssSend').addEventListener('click', sendMessage);
+document.getElementById('ssComposer').addEventListener('keydown', function(e){
+  if (e.key === 'Enter') { e.preventDefault(); sendMessage(); }
 });
+document.getElementById('ssOpenSettings').addEventListener('click', openModal);
+document.getElementById('ssShowSafety').addEventListener('click', function(){
+  openModal();
+  // Scroll to safety section
+  setTimeout(function(){
+    var s = document.getElementById('ssSafetySection');
+    if (s && s.scrollIntoView) s.scrollIntoView({block:'start', behavior:'smooth'});
+  }, 80);
+});
+document.getElementById('ssModalClose').addEventListener('click', closeModal);
+document.getElementById('ssModal').addEventListener('click', function(e){
+  if (e.target === this) closeModal();
+});
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') closeModal();
+});
+
+// Initial render
+buildContacts();
+renderThread();
 
 })();
 </script>

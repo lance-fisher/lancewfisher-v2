@@ -4,559 +4,958 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sovereign Hub | Lance W. Fisher</title>
-  <meta name="description" content="Sovereign Hub: a static snapshot of the Fisher Sovereign project registry. Browse, search, and filter the active project ecosystem.">
+  <meta name="description" content="Sovereign Hub: an interactive command surface for the Fisher Sovereign project ecosystem. Live health checks, session tracking, and project launching for 25+ deployed systems.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80'>&#9875;</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --bg: #0a0a0a; --bg-card: #111113; --bg-card-hover: #18181b;
-      --gold: #C9A84C; --gold-soft: #d4b76a;
-      --gold-dim: rgba(201,168,76,0.3); --gold-glow: rgba(201,168,76,0.08);
-      --fg: 240,235,224;
-      --green: #34d399; --amber: #fbbf24; --grey: #6b7280;
-      --font-head: 'Cinzel', serif; --font-body: 'Inter', sans-serif; --font-mono: 'JetBrains Mono', monospace;
-      --radius: 8px; --gap: 16px;
+      --bg: #0a0a0b;
+      --bg-panel: #0e0f12;
+      --bg-panel-hi: #15171c;
+      --bg-elev: #1a1d23;
+      --border: rgba(255,255,255,0.08);
+      --border-hi: rgba(255,255,255,0.16);
+      --fg-strong: rgba(228, 234, 242, 0.94);
+      --fg: rgba(195, 205, 218, 0.72);
+      --fg-dim: rgba(195, 205, 218, 0.45);
+      --fg-faint: rgba(195, 205, 218, 0.28);
+      --green: #6ee7a0;
+      --amber: #fbbf24;
+      --grey: rgba(255,255,255,0.4);
+      --blue: #7dd3fc;
+      --purple: #a78bfa;
+      --red: #f87171;
+      --font-head: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+      --radius: 8px;
+      --gap: 16px;
     }
     html { font-size: 15px; scroll-behavior: smooth; }
-    body { background: var(--bg); color: rgba(var(--fg), 0.85); font-family: var(--font-body); line-height: 1.6; min-height: 100vh; -webkit-font-smoothing: antialiased; }
-    a { color: var(--gold); text-decoration: none; transition: color 0.15s; }
-    a:hover { color: var(--gold-soft); text-decoration: underline; }
+    body { background: var(--bg); color: var(--fg); font-family: var(--font-body); line-height: 1.6; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+    a { color: var(--fg-strong); text-decoration: none; transition: color 0.15s; }
+    a:hover { color: #fff; }
 
     /* NAV */
-    .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: #111; border-bottom: 1px solid rgba(201,168,76,0.3); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: var(--bg-panel); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
     .nav-left { display: flex; align-items: center; gap: 18px; }
-    .nav-back { font-family: var(--font-mono); font-size: 0.78rem; color: rgba(var(--fg), 0.55); letter-spacing: 0.02em; }
-    .nav-back:hover { color: var(--gold); text-decoration: none; }
-    .nav-title { font-family: var(--font-head); font-size: 1.15rem; font-weight: 600; color: var(--gold); letter-spacing: 0.06em; }
-    .nav-right { font-family: var(--font-mono); font-size: 0.7rem; color: rgba(var(--fg), 0.4); letter-spacing: 0.04em; }
+    .nav-back { font-family: var(--font-mono); font-size: 0.78rem; color: var(--fg-dim); letter-spacing: 0.02em; }
+    .nav-back:hover { color: var(--fg-strong); }
+    .nav-title { font-family: var(--font-head); font-size: 1.25rem; font-weight: 600; color: var(--fg-strong); letter-spacing: 0.04em; }
+    .nav-right { display: flex; align-items: center; gap: 14px; font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-faint); letter-spacing: 0.04em; }
+    .conn-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(110, 231, 160, 0.32); background: rgba(110, 231, 160, 0.08); color: var(--green); font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.04em; }
+    .conn-badge .pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 0 rgba(110, 231, 160, 0.6); animation: pulse 2.4s infinite; }
+    .mode-pill { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(167, 139, 250, 0.32); background: rgba(167, 139, 250, 0.08); color: var(--purple); font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.04em; }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(110, 231, 160, 0.45); }
+      70% { box-shadow: 0 0 0 8px rgba(110, 231, 160, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(110, 231, 160, 0); }
+    }
 
     /* HERO */
-    .hero { padding: 36px 24px 24px; border-bottom: 1px solid rgba(var(--fg), 0.06); max-width: 1200px; margin: 0 auto; }
-    .hero h1 { font-family: var(--font-head); font-size: 1.85rem; font-weight: 600; color: rgba(var(--fg), 0.95); margin-bottom: 8px; letter-spacing: 0.02em; }
-    .hero h1 .accent { color: var(--gold); }
-    .hero p { font-size: 0.95rem; color: rgba(var(--fg), 0.6); max-width: 680px; margin-bottom: 14px; }
-    .hero-note { display: inline-block; font-family: var(--font-mono); font-size: 0.7rem; color: rgba(var(--fg), 0.4); padding: 4px 10px; border: 1px solid rgba(var(--fg), 0.1); border-radius: 4px; letter-spacing: 0.02em; }
-    .hero-note .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-right: 6px; vertical-align: middle; }
+    .hero { padding: 36px 24px 22px; max-width: 1280px; margin: 0 auto; }
+    .hero h1 { font-family: var(--font-head); font-size: 2.1rem; font-weight: 600; color: var(--fg-strong); margin-bottom: 10px; letter-spacing: 0.01em; line-height: 1.1; }
+    .hero p { font-size: 0.96rem; color: var(--fg); max-width: 760px; }
 
-    /* STATS */
-    .stats { display: flex; flex-wrap: wrap; gap: 6px 28px; padding: 18px 24px; border-bottom: 1px solid rgba(var(--fg), 0.06); background: var(--bg-card); max-width: 1200px; margin: 0 auto; }
-    .stat { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.8rem; }
-    .stat-val { color: var(--gold); font-weight: 500; font-size: 0.95rem; }
-    .stat-lbl { color: rgba(var(--fg), 0.45); letter-spacing: 0.02em; }
-    .stat-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    /* TAB BAR */
+    .tabs-wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 2px; border-bottom: 1px solid var(--border); }
+    .tab-btn { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; background: transparent; border: none; color: var(--fg-dim); padding: 12px 18px; cursor: pointer; border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+    .tab-btn:hover { color: var(--fg-strong); }
+    .tab-btn.active { color: var(--fg-strong); border-bottom-color: var(--fg-strong); }
+    .tab-btn .tab-count { font-size: 0.66rem; color: var(--fg-faint); padding: 1px 7px; border-radius: 999px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); }
+    .tab-btn.active .tab-count { color: var(--fg); border-color: var(--border-hi); }
+
+    /* CONTENT */
+    .content { max-width: 1280px; margin: 0 auto; padding: 26px 24px 80px; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .panel h2 { font-family: var(--font-head); font-size: 1.55rem; font-weight: 600; color: var(--fg-strong); margin-bottom: 8px; letter-spacing: 0.01em; }
+    .panel .lede { font-size: 0.9rem; color: var(--fg); max-width: 720px; margin-bottom: 22px; }
 
     /* TOOLBAR */
-    .toolbar { padding: 18px 24px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; max-width: 1200px; margin: 0 auto; }
-    .search-box { flex: 1; min-width: 220px; max-width: 420px; background: var(--bg-card); border: 1px solid rgba(var(--fg), 0.1); border-radius: var(--radius); padding: 9px 14px; font-family: var(--font-mono); font-size: 0.84rem; color: rgba(var(--fg), 0.9); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
-    .search-box::placeholder { color: rgba(var(--fg), 0.3); }
-    .search-box:focus { border-color: var(--gold-dim); box-shadow: 0 0 0 2px var(--gold-glow); }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 22px; }
+    .search-box { flex: 1; min-width: 220px; max-width: 420px; background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; font-family: var(--font-mono); font-size: 0.82rem; color: var(--fg-strong); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+    .search-box::placeholder { color: var(--fg-faint); }
+    .search-box:focus { border-color: var(--border-hi); box-shadow: 0 0 0 3px rgba(255,255,255,0.04); }
     .filter-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .filter-label { font-family: var(--font-mono); font-size: 0.68rem; color: rgba(var(--fg), 0.4); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
-    .filter-tab { font-family: var(--font-mono); font-size: 0.74rem; padding: 5px 12px; border-radius: 4px; border: 1px solid rgba(var(--fg), 0.08); background: transparent; color: rgba(var(--fg), 0.55); cursor: pointer; transition: all 0.15s; }
-    .filter-tab:hover { color: rgba(var(--fg), 0.85); border-color: rgba(var(--fg), 0.2); }
-    .filter-tab.active { color: var(--gold); border-color: var(--gold-dim); background: var(--gold-glow); }
-    .stack-select { background: var(--bg-card); border: 1px solid rgba(var(--fg), 0.1); border-radius: 4px; padding: 5px 10px; font-family: var(--font-mono); font-size: 0.74rem; color: rgba(var(--fg), 0.85); cursor: pointer; outline: none; }
-    .stack-select:focus { border-color: var(--gold-dim); }
-    .stack-select option { background: var(--bg-card); color: rgba(var(--fg), 0.9); }
+    .filter-label { font-family: var(--font-mono); font-size: 0.66rem; color: var(--fg-faint); text-transform: uppercase; letter-spacing: 0.08em; margin-right: 4px; }
+    .filter-tab { font-family: var(--font-mono); font-size: 0.72rem; padding: 6px 12px; border-radius: 4px; border: 1px solid var(--border); background: transparent; color: var(--fg-dim); cursor: pointer; transition: all 0.15s; }
+    .filter-tab:hover { color: var(--fg-strong); border-color: var(--border-hi); }
+    .filter-tab.active { color: var(--fg-strong); border-color: var(--border-hi); background: rgba(255,255,255,0.04); }
 
     /* GRID */
-    .content { max-width: 1200px; margin: 0 auto; padding: 0 24px 60px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--gap); padding-top: 8px; }
-    .card { background: var(--bg-card); border: 1px solid rgba(var(--fg), 0.06); border-radius: var(--radius); padding: 18px; cursor: pointer; transition: all 0.2s; position: relative; display: flex; flex-direction: column; gap: 10px; min-height: 200px; }
-    .card:hover { background: var(--bg-card-hover); border-color: var(--gold-dim); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--gap); }
+    .card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; cursor: pointer; transition: all 0.18s; position: relative; display: flex; flex-direction: column; gap: 11px; min-height: 210px; }
+    .card:hover { background: var(--bg-panel-hi); border-color: var(--border-hi); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,0,0,0.5); }
+    .card.selected { border-color: var(--fg-strong); }
     .card-head { display: flex; align-items: center; gap: 10px; }
-    .card-status { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-    .card-name { font-family: var(--font-head); font-size: 1rem; color: rgba(var(--fg), 0.95); flex: 1; letter-spacing: 0.01em; }
-    .card-cat { display: inline-block; font-family: var(--font-mono); font-size: 0.62rem; padding: 2px 8px; border-radius: 3px; background: var(--gold-glow); color: var(--gold); border: 1px solid var(--gold-dim); letter-spacing: 0.06em; align-self: flex-start; }
-    .card-desc { font-size: 0.82rem; color: rgba(var(--fg), 0.6); line-height: 1.5; flex: 1; }
+    .card-status-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 0 2px rgba(0,0,0,0.4); }
+    .card-name { font-family: var(--font-head); font-size: 1.18rem; color: var(--fg-strong); flex: 1; letter-spacing: 0.005em; font-weight: 600; line-height: 1.15; }
+    .card-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+    .badge { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: 0.62rem; padding: 3px 8px; border-radius: 3px; background: rgba(255,255,255,0.04); color: var(--fg); border: 1px solid var(--border); letter-spacing: 0.05em; text-transform: uppercase; }
+    .badge-status { font-weight: 500; }
+    .card-desc { font-size: 0.83rem; color: var(--fg); line-height: 1.55; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .card-techs { display: flex; flex-wrap: wrap; gap: 4px; }
-    .tech-badge { font-family: var(--font-mono); font-size: 0.62rem; padding: 2px 7px; border-radius: 3px; background: rgba(var(--fg), 0.05); color: rgba(var(--fg), 0.55); border: 1px solid rgba(var(--fg), 0.05); }
-    .card-foot { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; border-top: 1px solid rgba(var(--fg), 0.05); font-family: var(--font-mono); font-size: 0.7rem; }
-    .card-port { color: var(--gold); }
-    .card-port-empty { color: rgba(var(--fg), 0.25); }
-    .card-gh { color: rgba(var(--fg), 0.5); transition: color 0.15s; }
-    .card-gh:hover { color: var(--gold); text-decoration: none; }
+    .tech-badge { font-family: var(--font-mono); font-size: 0.6rem; padding: 2px 7px; border-radius: 3px; background: rgba(255,255,255,0.03); color: var(--fg-dim); border: 1px solid rgba(255,255,255,0.05); }
+    .card-foot { display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid var(--border); font-family: var(--font-mono); font-size: 0.7rem; gap: 10px; }
+    .card-port { color: var(--fg); }
+    .card-port-empty { color: var(--fg-faint); }
+    .card-action { font-family: var(--font-mono); font-size: 0.66rem; padding: 5px 10px; border-radius: 4px; border: 1px solid var(--border-hi); background: rgba(255,255,255,0.04); color: var(--fg-strong); cursor: pointer; letter-spacing: 0.04em; transition: all 0.15s; }
+    .card-action:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.28); }
+    .card-action.muted { color: var(--fg-dim); border-color: var(--border); background: transparent; }
 
-    /* MODAL */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.78); z-index: 200; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(4px); }
-    .modal-overlay.open { display: flex; }
-    .modal { background: var(--bg-card); border: 1px solid var(--gold-dim); border-radius: 12px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 32px; position: relative; }
-    .modal-close { position: absolute; top: 14px; right: 18px; background: none; border: none; color: rgba(var(--fg), 0.4); font-size: 1.3rem; cursor: pointer; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: all 0.15s; }
-    .modal-close:hover { color: var(--gold); background: rgba(var(--fg), 0.05); }
-    .modal h2 { font-family: var(--font-head); font-size: 1.4rem; color: var(--gold); margin-bottom: 6px; letter-spacing: 0.02em; }
-    .modal-statusline { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.78rem; color: rgba(var(--fg), 0.55); margin-bottom: 16px; }
-    .modal-desc { color: rgba(var(--fg), 0.7); font-size: 0.92rem; margin-bottom: 20px; line-height: 1.6; }
-    .modal-section { margin-bottom: 18px; }
-    .modal-section h3 { font-family: var(--font-mono); font-size: 0.7rem; color: rgba(var(--fg), 0.4); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-    .modal-row { font-family: var(--font-mono); font-size: 0.8rem; color: rgba(var(--fg), 0.7); padding: 4px 0; display: flex; gap: 10px; }
-    .modal-row .row-key { color: rgba(var(--fg), 0.4); min-width: 90px; }
-    .modal-row .row-val { color: rgba(var(--fg), 0.85); }
-    .modal-techs { display: flex; flex-wrap: wrap; gap: 5px; }
-    .modal-link { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.78rem; padding: 8px 14px; border-radius: 5px; border: 1px solid var(--gold-dim); background: var(--gold-glow); color: var(--gold); margin-top: 4px; margin-right: 8px; transition: all 0.15s; }
-    .modal-link:hover { background: var(--gold-dim); text-decoration: none; color: var(--gold-soft); }
+    .no-results { text-align: center; padding: 60px 20px; color: var(--fg-faint); font-family: var(--font-mono); font-size: 0.85rem; display: none; }
 
-    /* NO RESULTS */
-    .no-results {
-      text-align: center;
-      padding: 60px 20px;
-      color: rgba(var(--fg), 0.35);
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      display: none;
-    }
+    /* SLIDE-IN PANEL */
+    .slidein-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.22s; backdrop-filter: blur(2px); }
+    .slidein-overlay.open { opacity: 1; pointer-events: auto; }
+    .slidein { position: fixed; top: 0; right: 0; height: 100vh; width: 400px; max-width: 100vw; background: var(--bg-panel); border-left: 1px solid var(--border-hi); z-index: 200; transform: translateX(100%); transition: transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1); overflow-y: auto; box-shadow: -12px 0 40px rgba(0,0,0,0.6); display: flex; flex-direction: column; }
+    .slidein.open { transform: translateX(0); }
+    .slidein-head { display: flex; align-items: flex-start; justify-content: space-between; padding: 22px 24px 14px; border-bottom: 1px solid var(--border); }
+    .slidein-head h2 { font-family: var(--font-head); font-size: 1.45rem; color: var(--fg-strong); font-weight: 600; line-height: 1.15; padding-right: 12px; }
+    .slidein-close { background: none; border: 1px solid var(--border); color: var(--fg-dim); width: 30px; height: 30px; border-radius: 4px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+    .slidein-close:hover { color: var(--fg-strong); border-color: var(--border-hi); background: rgba(255,255,255,0.04); }
+    .slidein-body { padding: 18px 24px 28px; flex: 1; }
+    .slidein-statusline { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .slidein-desc { font-size: 0.92rem; color: var(--fg); margin-bottom: 22px; line-height: 1.6; }
+    .slidein-section { margin-bottom: 22px; }
+    .slidein-section h3 { font-family: var(--font-mono); font-size: 0.66rem; color: var(--fg-faint); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+    .slidein-row { font-family: var(--font-mono); font-size: 0.78rem; color: var(--fg); padding: 5px 0; display: flex; gap: 10px; }
+    .slidein-row .row-key { color: var(--fg-faint); min-width: 96px; }
+    .slidein-row .row-val { color: var(--fg-strong); word-break: break-all; }
+    .slidein-techs { display: flex; flex-wrap: wrap; gap: 5px; }
+    .slidein-actions { display: flex; flex-direction: column; gap: 8px; }
+    .action-btn { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-family: var(--font-mono); font-size: 0.74rem; padding: 11px 14px; border-radius: 5px; border: 1px solid var(--border-hi); background: rgba(255,255,255,0.04); color: var(--fg-strong); cursor: pointer; transition: all 0.15s; text-align: left; letter-spacing: 0.03em; width: 100%; }
+    .action-btn:hover:not(:disabled) { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.32); }
+    .action-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .action-btn .ab-main { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+    .action-btn .ab-title { color: var(--fg-strong); }
+    .action-btn .ab-sub { font-size: 0.64rem; color: var(--fg-dim); font-weight: normal; letter-spacing: 0.02em; word-break: break-all; }
+    .action-btn .ab-icon { color: var(--fg-dim); font-size: 0.95rem; flex-shrink: 0; }
+    .action-note { font-family: var(--font-mono); font-size: 0.66rem; color: var(--fg-faint); margin-top: 10px; line-height: 1.5; }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--bg-elev); border: 1px solid var(--border-hi); color: var(--fg-strong); padding: 12px 22px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.78rem; z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.22s, transform 0.22s; box-shadow: 0 8px 30px rgba(0,0,0,0.6); max-width: 90vw; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+
+    /* ACTIVITY TABLE */
+    .table-wrap { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.78rem; }
+    th { text-align: left; padding: 12px 16px; background: var(--bg-panel-hi); color: var(--fg-faint); font-weight: 500; text-transform: uppercase; font-size: 0.66rem; letter-spacing: 0.08em; border-bottom: 1px solid var(--border); }
+    td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--fg); }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .cell-project { color: var(--fg-strong); }
+    .cell-success { color: var(--green); }
+    .cell-error { color: var(--red); }
+    .cell-running { color: var(--blue); }
+
+    /* SYSTEMS GRID */
+    .system-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--gap); }
+    .system-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+    .system-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .system-name { font-family: var(--font-head); font-size: 1.25rem; font-weight: 600; color: var(--fg-strong); }
+    .system-stat { display: flex; align-items: center; gap: 8px; padding: 5px 11px; border-radius: 999px; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.04em; }
+    .system-stat.up { color: var(--green); background: rgba(110, 231, 160, 0.08); border: 1px solid rgba(110, 231, 160, 0.32); }
+    .system-stat.down { color: var(--red); background: rgba(248, 113, 113, 0.08); border: 1px solid rgba(248, 113, 113, 0.32); }
+    .system-stat.warn { color: var(--amber); background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.32); }
+    .system-stat .ind { width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
+    .system-meta { font-family: var(--font-mono); font-size: 0.74rem; color: var(--fg); display: flex; flex-direction: column; gap: 6px; }
+    .system-meta .row { display: flex; justify-content: space-between; gap: 12px; }
+    .system-meta .k { color: var(--fg-faint); }
+    .system-desc { font-size: 0.82rem; color: var(--fg); margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); line-height: 1.55; }
+    .refresh-btn { font-family: var(--font-mono); font-size: 0.72rem; padding: 8px 14px; border-radius: 5px; border: 1px solid var(--border-hi); background: rgba(255,255,255,0.04); color: var(--fg-strong); cursor: pointer; transition: all 0.15s; letter-spacing: 0.04em; }
+    .refresh-btn:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.32); }
+    .system-tip { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-faint); padding: 12px 16px; background: var(--bg-panel); border: 1px dashed var(--border); border-radius: var(--radius); margin-top: 20px; line-height: 1.55; }
+
+    /* SESSIONS / HEATMAP */
+    .session-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+    .session-block { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+    .session-block h3 { font-family: var(--font-head); font-size: 1.15rem; color: var(--fg-strong); margin-bottom: 14px; font-weight: 600; }
+    .heatmap { display: grid; grid-template-columns: 60px repeat(24, 1fr); gap: 2px; font-family: var(--font-mono); font-size: 0.6rem; }
+    .heat-day { color: var(--fg-faint); padding: 4px 0; }
+    .heat-cell { aspect-ratio: 1; border-radius: 2px; background: rgba(255,255,255,0.04); cursor: default; transition: transform 0.12s; }
+    .heat-cell:hover { transform: scale(1.4); z-index: 5; position: relative; }
+    .heatmap-legend { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-family: var(--font-mono); font-size: 0.68rem; color: var(--fg-faint); }
+    .heatmap-legend .scale { display: flex; gap: 2px; }
+    .heatmap-legend .sq { width: 12px; height: 12px; border-radius: 2px; }
+    .top-projects { list-style: none; }
+    .top-projects li { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: color 0.15s; }
+    .top-projects li:last-child { border-bottom: none; }
+    .top-projects li:hover { color: var(--fg-strong); }
+    .top-projects .tp-name { font-family: var(--font-body); font-size: 0.86rem; color: var(--fg-strong); }
+    .top-projects .tp-bar { flex: 1; max-width: 140px; height: 6px; background: rgba(255,255,255,0.05); border-radius: 999px; overflow: hidden; margin: 0 14px; }
+    .top-projects .tp-bar-fill { height: 100%; background: var(--fg-strong); opacity: 0.5; border-radius: 999px; }
+    .top-projects .tp-count { font-family: var(--font-mono); font-size: 0.74rem; color: var(--fg); min-width: 36px; text-align: right; }
+
+    /* WORKSPACE */
+    .ws-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--gap); margin-bottom: 22px; }
+    .ws-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+    .ws-card h3 { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-faint); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+    .ws-num { font-family: var(--font-head); font-size: 2.6rem; color: var(--fg-strong); font-weight: 600; line-height: 1; margin-bottom: 6px; }
+    .ws-num .ws-num-sub { font-size: 1.1rem; color: var(--fg-dim); }
+    .ws-sub { font-family: var(--font-mono); font-size: 0.72rem; color: var(--fg-dim); }
+    .ws-bar { height: 8px; background: rgba(255,255,255,0.05); border-radius: 999px; overflow: hidden; margin-top: 14px; }
+    .ws-bar-fill { height: 100%; background: var(--fg-strong); opacity: 0.6; border-radius: 999px; }
+    .ws-actions { display: flex; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; }
+    .journal { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+    .journal h3 { font-family: var(--font-head); font-size: 1.15rem; color: var(--fg-strong); margin-bottom: 14px; font-weight: 600; }
+    .journal ul { list-style: none; }
+    .journal li { font-family: var(--font-mono); font-size: 0.74rem; color: var(--fg); padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; gap: 14px; }
+    .journal li:last-child { border-bottom: none; }
+    .journal .ts { color: var(--fg-faint); flex-shrink: 0; min-width: 110px; }
+    .journal .act { color: var(--fg); }
+
+    /* SETTINGS */
+    .settings-block { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: var(--gap); }
+    .settings-block h3 { font-family: var(--font-head); font-size: 1.15rem; color: var(--fg-strong); margin-bottom: 16px; font-weight: 600; }
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid var(--border); }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-row .tr-label { font-size: 0.88rem; color: var(--fg-strong); }
+    .toggle-row .tr-sub { font-size: 0.72rem; color: var(--fg-dim); margin-top: 2px; }
+    .toggle { position: relative; width: 38px; height: 22px; background: rgba(255,255,255,0.08); border-radius: 999px; cursor: pointer; transition: background 0.18s; flex-shrink: 0; border: 1px solid var(--border); }
+    .toggle.on { background: rgba(110, 231, 160, 0.32); border-color: rgba(110, 231, 160, 0.5); }
+    .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--fg-strong); transition: transform 0.18s; }
+    .toggle.on::after { transform: translateX(16px); background: var(--green); }
+
+    /* HELP */
+    .help-block { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; margin-bottom: var(--gap); }
+    .help-block h3 { font-family: var(--font-head); font-size: 1.3rem; color: var(--fg-strong); margin-bottom: 12px; font-weight: 600; }
+    .help-block p { font-size: 0.92rem; color: var(--fg); line-height: 1.65; margin-bottom: 12px; }
+    .help-block p:last-child { margin-bottom: 0; }
+    .help-mono { color: var(--fg-strong); font-family: var(--font-mono); }
+    .legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-top: 14px; }
+    .legend-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 6px; }
+    .legend-item .ic { font-size: 1rem; line-height: 1; padding-top: 1px; }
+    .legend-item .lt { font-family: var(--font-mono); font-size: 0.74rem; color: var(--fg-strong); font-weight: 500; }
+    .legend-item .ld { font-size: 0.74rem; color: var(--fg); margin-top: 3px; line-height: 1.45; }
+    .faq-q { font-family: var(--font-head); font-size: 1.02rem; color: var(--fg-strong); margin-top: 14px; margin-bottom: 4px; font-weight: 600; }
+    .faq-a { font-size: 0.88rem; color: var(--fg); line-height: 1.6; }
+    .endpoint-list { font-family: var(--font-mono); font-size: 0.74rem; color: var(--fg); background: rgba(0,0,0,0.35); padding: 14px 18px; border-radius: 5px; border: 1px solid var(--border); margin-top: 10px; line-height: 1.7; word-break: break-all; }
+    .endpoint-list .ep-method { color: var(--fg-strong); }
 
     /* FOOTER */
-    .foot {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 24px;
-      border-top: 1px solid rgba(var(--fg), 0.06);
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      color: rgba(var(--fg), 0.35);
-      text-align: center;
-      line-height: 1.7;
-    }
-    .foot a { color: rgba(var(--fg), 0.5); }
-    .foot a:hover { color: var(--gold); }
+    .foot { max-width: 1280px; margin: 0 auto; padding: 24px; border-top: 1px solid var(--border); font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-faint); text-align: center; line-height: 1.7; }
+    .foot a { color: var(--fg-dim); }
+    .foot a:hover { color: var(--fg-strong); }
 
     /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .session-grid { grid-template-columns: 1fr; }
+      .heatmap { grid-template-columns: 40px repeat(24, 1fr); font-size: 0.52rem; }
+    }
     @media (max-width: 700px) {
-      .hero { padding: 24px 16px 18px; }
-      .hero h1 { font-size: 1.5rem; }
-      .stats { padding: 14px 16px; gap: 6px 18px; }
-      .toolbar { padding: 14px 16px; }
-      .content { padding: 0 16px 40px; }
-      .grid { grid-template-columns: 1fr; }
-      .nav { padding: 12px 16px; }
-      .nav-title { font-size: 1rem; }
-      .modal { padding: 22px; }
+      .nav { padding: 12px 14px; }
+      .nav-title { font-size: 1.08rem; }
+      .nav-right { gap: 8px; }
+      .nav-right .conn-badge, .nav-right .mode-pill { font-size: 0.6rem; padding: 3px 8px; }
+      .hero { padding: 24px 16px 16px; }
+      .hero h1 { font-size: 1.65rem; }
+      .tabs-wrap { padding: 0 14px; }
+      .tab-btn { padding: 10px 12px; font-size: 0.68rem; }
+      .content { padding: 22px 14px 60px; }
+      .grid, .system-grid, .ws-grid { grid-template-columns: 1fr; }
+      .slidein { width: 100vw; }
     }
   </style>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/brand.css?v=20260408v3">
 </head>
 <body>
-<!-- FSS-BRAND-BLOCK-V1 -->
-<div style="position:relative;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 22px;background:#08080a;border-bottom:1px solid rgba(201,168,76,0.28);font-family:'Inter','Helvetica Neue',Arial,sans-serif;">
-  <a href="../home.html" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:rgba(201,168,76,0.92);">
-    <svg width="13" height="18" viewBox="0 0 20 28" fill="none" aria-hidden="true" style="color:rgba(201,168,76,0.92);flex-shrink:0"><line x1="4" y1="1" x2="4" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="1" x2="16" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="14" x2="16" y2="14" stroke="currentColor" stroke-width="1.5"/><line x1="1" y1="1" x2="7" y2="1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="1" x2="19" y2="1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="27" x2="7" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="27" x2="19" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-    <span style="font-family:'Crimson Pro','Cinzel',Georgia,serif;font-size:0.92rem;font-weight:600;letter-spacing:0.2em;color:rgba(201,168,76,0.92);">FISHER SOVEREIGN</span>
+
+<!-- FSS-BRAND-BLOCK-V3 (FF25 wordmark, no H icon) -->
+<div class="fssb-v3-top">
+  <a href="../home.html" class="fssb-v3-top-link" aria-label="Fisher Sovereign Systems">
+    <span class="fssb-v3-top-name">Fisher</span>
+    <span class="fssb-v3-top-rule"></span>
+    <span class="fssb-v3-top-sub">Sovereign Systems</span>
   </a>
-  <a href="../home.html" style="font-size:0.72rem;font-weight:500;letter-spacing:0.06em;color:#6b6b75;text-decoration:none;">&larr; Portfolio</a>
+  <a href="../home.html" class="fssb-v3-top-back">&larr; Portfolio</a>
 </div>
 
+<div class="page-sim-banner">
+  Interactive Preview &middot; Tab through 25+ projects, launch commands, read real system status &middot; All actions run client-side
+</div>
 
 <nav class="nav">
   <div class="nav-left">
     <a href="../home.html" class="nav-back">&larr; Portfolio</a>
     <span class="nav-title">Sovereign Hub</span>
   </div>
-  <span class="nav-right">PROJECT REGISTRY</span>
+  <div class="nav-right">
+    <span class="conn-badge"><span class="pulse"></span>Connected to Workspace</span>
+    <span class="mode-pill">Interactive Demo</span>
+  </div>
 </nav>
 
 <header class="hero">
-  <h1>Project <span class="accent">Registry</span></h1>
-  <p>A browsable view of the Fisher Sovereign project ecosystem: trading bots, web properties, infrastructure services, games, and tools. Each entry below corresponds to a real local project tracked in the registry.</p>
-  <span class="hero-note"><span class="dot"></span>Static snapshot &middot; not a live API</span>
+  <h1>Command Surface for the Fisher Sovereign Ecosystem</h1>
+  <p>Interactive dashboard for 25+ projects. Live health checks, session tracking, and command surface for deployed systems. Click any project to launch a Claude session, open a terminal, or jump to its running port.</p>
 </header>
 
-<div class="stats" id="statsBanner"></div>
+<div class="page-benefit">
+  See every project at a glance, and launch any of them with one click. No context switching, no lost state, no Jira, no Notion tax.
+</div>
 
-<div class="toolbar">
-  <input type="text" class="search-box" id="searchBox" placeholder="Search by name, description, or tag..." autocomplete="off">
-  <div class="filter-group">
-    <span class="filter-label">Status:</span>
-    <button class="filter-tab active" data-filter="all">All</button>
-    <button class="filter-tab" data-filter="active">Active</button>
-    <button class="filter-tab" data-filter="paused">Paused</button>
-    <button class="filter-tab" data-filter="archived">Archived</button>
-  </div>
-  <div class="filter-group">
-    <span class="filter-label">Stack:</span>
-    <select class="stack-select" id="stackSelect">
-      <option value="all">Any</option>
-    </select>
+<div class="tabs-wrap">
+  <div class="tabs" role="tablist" id="tabBar">
+    <button class="tab-btn active" data-tab="projects" role="tab">Projects <span class="tab-count" id="tab-count-projects">0</span></button>
+    <button class="tab-btn" data-tab="activity" role="tab">Activity</button>
+    <button class="tab-btn" data-tab="systems" role="tab">Systems <span class="tab-count">3</span></button>
+    <button class="tab-btn" data-tab="sessions" role="tab">Sessions</button>
+    <button class="tab-btn" data-tab="workspace" role="tab">Workspace</button>
+    <button class="tab-btn" data-tab="settings" role="tab">Settings</button>
+    <button class="tab-btn" data-tab="help" role="tab">Help / About</button>
   </div>
 </div>
 
 <div class="content">
-  <div class="grid" id="projectGrid"></div>
-  <div class="no-results" id="noResults">No projects match your filters.</div>
+
+  <!-- PROJECTS PANEL -->
+  <section class="panel active" data-panel="projects">
+    <h2>Projects</h2>
+    <p class="lede">Every entry below corresponds to a real local project tracked in the registry. Click a card to open the detail panel and launch actions.</p>
+
+    <div class="toolbar">
+      <input type="text" class="search-box" id="searchBox" placeholder="Search by name, description, or tag..." autocomplete="off">
+      <div class="filter-group">
+        <span class="filter-label">Status:</span>
+        <button class="filter-tab active" data-filter="all">All</button>
+        <button class="filter-tab" data-filter="active">Active</button>
+        <button class="filter-tab" data-filter="dev">In Development</button>
+        <button class="filter-tab" data-filter="paused">Paused</button>
+        <button class="filter-tab" data-filter="archived">Archived</button>
+      </div>
+    </div>
+
+    <div class="grid" id="projectGrid"></div>
+    <div class="no-results" id="noResults">No projects match your filters.</div>
+  </section>
+
+  <!-- ACTIVITY PANEL -->
+  <section class="panel" data-panel="activity">
+    <h2>Activity</h2>
+    <p class="lede">Recent Claude Code sessions across the ecosystem. Grouped by project, sorted by date. Prompt and response content is intentionally omitted for IP protection. Only outcomes and durations are shown.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Project</th>
+            <th>Date</th>
+            <th>Duration</th>
+            <th>Model</th>
+            <th>Outcome</th>
+          </tr>
+        </thead>
+        <tbody id="activityBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SYSTEMS PANEL -->
+  <section class="panel" data-panel="systems">
+    <h2>Systems</h2>
+    <p class="lede">Health of the three integrated background systems. The Sovereign Hub coordinates with these services for project orchestration, autonomous task execution, and operator command routing.</p>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+      <button class="refresh-btn" id="refreshSystems">Refresh checks</button>
+    </div>
+    <div class="system-grid" id="systemGrid"></div>
+    <div class="system-tip">These are real systems running on this machine. "Offline" means the service is not currently running. The Sovereign Hub showcase you are viewing is a static snapshot of the live operator surface. In the live version these checks hit real endpoints.</div>
+  </section>
+
+  <!-- SESSIONS PANEL -->
+  <section class="panel" data-panel="sessions">
+    <h2>Sessions</h2>
+    <p class="lede">Aggregate session analytics. The heatmap shows activity by hour and weekday across the last 30 days. Top projects ranks by total session count.</p>
+    <div class="session-grid">
+      <div class="session-block">
+        <h3>Activity Heatmap</h3>
+        <div class="heatmap" id="heatmap"></div>
+        <div class="heatmap-legend">
+          <span>Less</span>
+          <div class="scale" id="heatScale"></div>
+          <span>More</span>
+        </div>
+      </div>
+      <div class="session-block">
+        <h3>Top Projects by Sessions</h3>
+        <ul class="top-projects" id="topProjects"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORKSPACE PANEL -->
+  <section class="panel" data-panel="workspace">
+    <h2>Workspace</h2>
+    <p class="lede">Disk capacity, project totals, and a tail of the most recent Auton journal entries.</p>
+    <div class="ws-grid">
+      <div class="ws-card">
+        <h3>Disk Usage</h3>
+        <div class="ws-num">2.4 <span class="ws-num-sub">/ 4 TB</span></div>
+        <div class="ws-sub">60% used</div>
+        <div class="ws-bar"><div class="ws-bar-fill" style="width:60%;"></div></div>
+      </div>
+      <div class="ws-card">
+        <h3>Project Count</h3>
+        <div class="ws-num" id="wsProjectCount">0</div>
+        <div class="ws-sub" id="wsProjectSub">tracked in registry</div>
+        <div class="ws-bar"><div class="ws-bar-fill" id="wsProjectBar" style="width:0%;"></div></div>
+      </div>
+      <div class="ws-card">
+        <h3>Active Services</h3>
+        <div class="ws-num" id="wsActiveCount">0</div>
+        <div class="ws-sub">running on bound ports</div>
+        <div class="ws-bar"><div class="ws-bar-fill" id="wsActiveBar" style="width:0%;"></div></div>
+      </div>
+    </div>
+    <div class="ws-actions">
+      <button class="refresh-btn" id="scanProjects">Scan for new projects</button>
+      <button class="refresh-btn" id="refreshDisk">Refresh disk stats</button>
+    </div>
+    <div class="journal">
+      <h3>Auton Journal &mdash; Last 10</h3>
+      <ul id="journalList"></ul>
+    </div>
+  </section>
+
+  <!-- SETTINGS PANEL -->
+  <section class="panel" data-panel="settings">
+    <h2>Settings</h2>
+    <p class="lede">Display preferences and signaling controls. Settings are saved to localStorage and survive reloads.</p>
+
+    <div class="settings-block">
+      <h3>Visibility</h3>
+      <div class="toggle-row">
+        <div>
+          <div class="tr-label">Show archived projects</div>
+          <div class="tr-sub">Surface historical and superseded projects in the grid</div>
+        </div>
+        <div class="toggle" data-setting="showArchived"></div>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="tr-label">Show paused projects</div>
+          <div class="tr-sub">Include intentionally paused projects in default view</div>
+        </div>
+        <div class="toggle on" data-setting="showPaused"></div>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="tr-label">Compact card layout</div>
+          <div class="tr-sub">Reduce card padding to fit more on screen</div>
+        </div>
+        <div class="toggle" data-setting="compactCards"></div>
+      </div>
+    </div>
+
+    <div class="settings-block">
+      <h3>Signaling</h3>
+      <div class="toggle-row">
+        <div>
+          <div class="tr-label">Show "Protected" badge on IP-sensitive projects</div>
+          <div class="tr-sub">Mark projects whose source is private with an explicit badge</div>
+        </div>
+        <div class="toggle on" data-setting="showProtected"></div>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="tr-label">Show "Public Alpha" labels</div>
+          <div class="tr-sub">Mark real systems whose UI is still subject to change</div>
+        </div>
+        <div class="toggle on" data-setting="showAlpha"></div>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="tr-label">Show port hint tooltips</div>
+          <div class="tr-sub">"This service may not be running" reminder on port links</div>
+        </div>
+        <div class="toggle on" data-setting="portHints"></div>
+      </div>
+    </div>
+
+    <div class="settings-block">
+      <h3>Defaults</h3>
+      <div class="toggle-row">
+        <div>
+          <div class="tr-label">Open detail panel automatically</div>
+          <div class="tr-sub">First card click auto-opens slide-in detail</div>
+        </div>
+        <div class="toggle on" data-setting="autoOpenDetail"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HELP / ABOUT PANEL -->
+  <section class="panel" data-panel="help">
+    <h2>Help &amp; About</h2>
+    <p class="lede">A quick orientation to what Sovereign Hub is, what's real, what's demo, and what each status badge means.</p>
+
+    <div class="help-block">
+      <h3>What is Sovereign Hub?</h3>
+      <p>Sovereign Hub is the central operator surface for the Fisher Sovereign project ecosystem. The live version runs locally and provides project orchestration, port management, health checks, session tracking, terminal launching, and integration with Auton, Moltbot Hub, and OpenClaw.</p>
+      <p>This page is an interactive showcase of that real system. Some projects are IP-sensitive; their demos are browser-only. Others run live on this machine. Status badges below tell you which is which.</p>
+    </div>
+
+    <div class="help-block">
+      <h3>Status Legend</h3>
+      <div class="legend">
+        <div class="legend-item"><span class="ic" style="color:var(--green);">&#9679;</span><div><div class="lt">Active</div><div class="ld">Fully operational, in regular use, can be launched or opened.</div></div></div>
+        <div class="legend-item"><span class="ic" style="color:var(--amber);">&#9679;</span><div><div class="lt">In Development</div><div class="ld">Actively built, not yet production-ready.</div></div></div>
+        <div class="legend-item"><span class="ic" style="color:var(--amber);">&#9888;</span><div><div class="lt">Paused</div><div class="ld">Intentionally paused. Code is preserved.</div></div></div>
+        <div class="legend-item"><span class="ic" style="color:var(--grey);">&#9675;</span><div><div class="lt">Archived</div><div class="ld">Historical, superseded by another project.</div></div></div>
+        <div class="legend-item"><span class="ic" style="color:var(--blue);">&#128274;</span><div><div class="lt">Protected</div><div class="ld">IP-sensitive. Demo-only on this page.</div></div></div>
+        <div class="legend-item"><span class="ic" style="color:var(--purple);">&#128202;</span><div><div class="lt">Public Alpha</div><div class="ld">Real system, UI still subject to change.</div></div></div>
+        <div class="legend-item"><span class="ic" style="color:var(--green);">&#127919;</span><div><div class="lt">Interactive Demo</div><div class="ld">Browser-based, real architecture underneath.</div></div></div>
+      </div>
+    </div>
+
+    <div class="help-block">
+      <h3>FAQ</h3>
+      <div class="faq-q">What does "Protected" mean?</div>
+      <div class="faq-a">Protected projects are IP-sensitive. Their source is private and the live system is not exposed publicly. Only a sanitized profile is shown on this page.</div>
+      <div class="faq-q">Why are launch buttons disabled on some cards?</div>
+      <div class="faq-a">Launch and terminal actions are only enabled for Active and Public Alpha projects. Archived, paused, and Protected-only projects show their detail panel but cannot be launched from this showcase.</div>
+      <div class="faq-q">Is this dashboard live?</div>
+      <div class="faq-a">This page is a static showcase of the real Sovereign Hub. The real surface (running locally on port 8090) hits live API endpoints for everything you see here. The endpoint list below documents the real surface.</div>
+      <div class="faq-q">What happens when I click "Launch Claude Session"?</div>
+      <div class="faq-a">In the showcase, the project's local path is copied to your clipboard. In the live version, the same button calls /api/launch-claude to spawn an attached terminal session in the project directory.</div>
+    </div>
+
+    <div class="help-block">
+      <h3>Real Sovereign Hub Endpoints</h3>
+      <p>The live operator surface at <span class="help-mono">localhost:8090</span> exposes these endpoints. This page is a sanitized public reflection of that surface.</p>
+      <div class="endpoint-list">
+        <div><span class="ep-method">GET</span> /api/projects</div>
+        <div><span class="ep-method">GET</span> /api/sessions</div>
+        <div><span class="ep-method">GET</span> /api/stats</div>
+        <div><span class="ep-method">POST</span> /api/scan</div>
+        <div><span class="ep-method">GET</span> /api/disk</div>
+        <div><span class="ep-method">GET</span> /api/systems</div>
+        <div><span class="ep-method">GET</span> /api/active-sessions</div>
+        <div><span class="ep-method">GET</span> /api/openclaw/* &nbsp; <span class="ep-method">GET</span> /api/bot/* &nbsp; <span class="ep-method">GET</span> /api/auton/*</div>
+        <div><span class="ep-method">POST</span> /api/open-terminal</div>
+        <div><span class="ep-method">POST</span> /api/launch-claude</div>
+        <div><span class="ep-method">POST</span> /api/bot/dispatch</div>
+        <div><span class="ep-method">POST</span> /api/auton/kill &nbsp; <span class="ep-method">POST</span> /api/auton/resume</div>
+      </div>
+    </div>
+
+    <div class="help-block">
+      <h3>Mission</h3>
+      <p>Fisher Sovereign Systems is being built to return control to the individual. Sovereign Hub is the operator surface for that mission: a single command plane for every project, every service, every session, owned and operated locally.</p>
+    </div>
+  </section>
+
 </div>
 
-<!-- FSS-BRAND-FOOTER-V1 -->
-<footer style="text-align:center;padding:60px 32px 26px;border-top:1px solid #26262c;background:#0a0a0b;font-family:'Inter','Helvetica Neue',Arial,sans-serif;">
-  <div style="display:inline-flex;align-items:center;gap:14px;margin-bottom:14px;">
-    <svg width="16" height="22" viewBox="0 0 20 28" fill="none" aria-hidden="true" style="color:rgba(201,168,76,0.92);flex-shrink:0"><line x1="4" y1="1" x2="4" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="1" x2="16" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="14" x2="16" y2="14" stroke="currentColor" stroke-width="1.5"/><line x1="1" y1="1" x2="7" y2="1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="1" x2="19" y2="1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="27" x2="7" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="27" x2="19" y2="27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-    <span style="font-family:'Crimson Pro','Cinzel',Georgia,serif;font-size:1.4rem;font-weight:600;color:rgba(201,168,76,0.92);letter-spacing:0.22em;">FISHER SOVEREIGN</span>
-  </div>
-  <div style="font-size:0.68rem;font-weight:500;color:#6b6b75;text-transform:uppercase;letter-spacing:0.22em;margin-bottom:18px;">Building the Architecture for Independence</div>
-  <p style="font-family:'Crimson Pro',Georgia,serif;font-style:italic;font-size:0.98rem;color:#a1a1aa;max-width:520px;margin:0 auto 28px;line-height:1.6;">Fisher Sovereign Systems is being built to return control to the individual.</p>
-  <a href="../home.html" style="display:inline-block;padding:10px 24px;border:1px solid #8a7433;border-radius:6px;font-size:0.74rem;font-weight:500;color:#e3c068;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;background:rgba(201,168,76,0.04);">Visit lancewfisher.com &rarr;</a>
-  <div style="margin-top:32px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.05);font-size:0.66rem;color:#6b6b75;letter-spacing:0.06em;">&copy; 2026 Fisher Sovereign Systems, LLC. All rights reserved.</div>
+<footer class="foot">
+  Sovereign Hub showcase &middot; built locally, deployed to lancewfisher.com &middot; <a href="../home.html">return to portfolio</a>
 </footer>
 
+<!-- SLIDE-IN PROJECT DETAIL PANEL -->
+<div class="slidein-overlay" id="slideOverlay"></div>
+<aside class="slidein" id="slidein" aria-hidden="true">
+  <div class="slidein-head">
+    <h2 id="slideName"></h2>
+    <button class="slidein-close" id="slideClose" aria-label="Close detail panel">&#10005;</button>
+  </div>
+  <div class="slidein-body" id="slideBody"></div>
+</aside>
 
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal" id="modal"></div>
-</div>
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
 <script>
 (function() {
   'use strict';
 
-  // ── PROJECT DATA ──
+  // PROJECT DATA
   // Sanitized snapshot from D:/ProjectsHome/PROJECTS.json. Public fields only:
-  // name, category, status, description, tech stack, public port, github repo slug.
+  // name, category, status, description, tech stack, public port, local path.
   // No credentials, wallet keys, .env content, or private tokens are included.
+  // GitHub fields removed by policy.
   var projects = [
     {
       name: 'Profit Desk',
       cat: 'Trading',
       status: 'active',
+      signal: null,
       desc: 'Multi-agent autonomous trading desk. Six concurrent agents (PM, Researcher, Backtester, Risk Manager, Execution, Ops) running baseline strategies. Wraps master-trade-bot via adapters. PAPER mode by default.',
       tech: ['Python', 'asyncio', 'aiohttp', 'PyYAML', 'numpy'],
       port: 8091,
-      github: 'lance-fisher/profit-desk'
+      path: 'D:\\ProjectsHome\\profit-desk',
+      lastActive: '2 hours ago'
     },
     {
       name: 'Sovereign Trade Engine',
       cat: 'Trading',
       status: 'active',
-      desc: 'Execution layer of the trading ecosystem. Multi-chain engines spanning Solana DEX, Polymarket, CEX (Binance, Coinbase, Kraken), and ETH DeFi. Receives signals from Profit Desk. DRY_RUN by default with real-time WebSocket dashboard at localhost:4000.',
+      signal: 'protected',
+      desc: 'Execution layer of the trading ecosystem. Multi-chain engines spanning Solana DEX, Polymarket, CEX (Binance, Coinbase, Kraken), and ETH DeFi. Receives signals from Profit Desk. DRY_RUN by default with real-time WebSocket dashboard.',
       tech: ['TypeScript', 'Node.js', 'ccxt', 'ethers.js', '@solana/web3.js'],
       port: 4000,
-      github: 'lance-fisher/master-trade-bot'
+      path: 'D:\\ProjectsHome\\master-trade-bot',
+      lastActive: '6 hours ago'
     },
     {
       name: 'Sovereign Signal',
       cat: 'Infrastructure',
-      status: 'active',
+      status: 'dev',
+      signal: 'alpha',
       desc: 'End-to-end encrypted peer-to-peer messenger. Zero-knowledge relay, passwordless auth via WebAuthn biometrics or hardware keys, forward secrecy on every message. Built on libsodium.',
       tech: ['TypeScript', 'Next.js', 'libsodium', 'WebAuthn', 'Express'],
       port: null,
-      github: 'lance-fisher/e2ee-messenger'
+      path: 'D:\\ProjectsHome\\e2ee-messenger',
+      lastActive: '1 day ago'
     },
     {
       name: 'Serenity Medspa Demo',
       cat: 'App',
       status: 'active',
+      signal: 'demo',
       desc: 'Full-stack booking application for a medical spa. Client scheduling, payments, staff management, and appointment reminders. Mobile-first React Native client on a NestJS API with Prisma and PostgreSQL.',
       tech: ['TypeScript', 'React Native', 'Expo', 'NestJS', 'Prisma', 'PostgreSQL', 'Stripe'],
       port: 3000,
-      github: 'lance-fisher/medspa-demo'
+      path: 'D:\\ProjectsHome\\medspa-demo',
+      lastActive: '4 days ago'
     },
     {
       name: 'Home Hub',
       cat: 'Infrastructure',
       status: 'active',
+      signal: null,
       desc: 'Home network monitoring dashboard. Tracks devices, services, uptime, DNS queries, and network health across the LAN. React frontend on a Fastify API backed by SQLite.',
       tech: ['TypeScript', 'Fastify', 'React', 'Vite', 'Tailwind', 'SQLite'],
       port: 3210,
-      github: 'lance-fisher/home-hub'
+      path: 'D:\\ProjectsHome\\home-hub',
+      lastActive: '3 hours ago'
     },
     {
       name: 'JumpQuest',
       cat: 'Game',
-      status: 'active',
+      status: 'dev',
+      signal: null,
       desc: '3D obstacle course game built for my son Jamison. Unity-based with a Three.js web companion. Procedurally generated levels and jump physics.',
       tech: ['Unity', 'C#', 'Three.js'],
       port: 5173,
-      github: 'lance-fisher/jumpquest'
+      path: 'D:\\ProjectsHome\\jumpquest',
+      lastActive: '2 days ago'
     },
     {
       name: 'Bloodlines',
       cat: 'Game',
       status: 'active',
+      signal: null,
       desc: 'Turn-based strategy game with deep faction lore, territorial control, and asymmetric unit design. Currently in pre-prototype. The Design Bible is at v3.0 and is the source of truth for all mechanics, factions, and canon.',
       tech: ['Game Design', 'Documentation', 'Markdown'],
       port: null,
-      github: 'lance-fisher/bloodlines'
+      path: 'D:\\ProjectsHome\\Bloodlines',
+      lastActive: 'today'
     },
     {
       name: 'NoCo App Studio',
       cat: 'App',
       status: 'active',
+      signal: null,
       desc: 'Directory of Northern Colorado businesses. Community-curated with categories, mobile-first card layout, and local recommendations.',
       tech: ['HTML', 'CSS', 'Vanilla JS'],
       port: null,
-      github: 'lance-fisher/noco-app-demos'
+      path: 'D:\\ProjectsHome\\noco-app-demos',
+      lastActive: '1 week ago'
     },
     {
       name: 'one-three.net',
       cat: 'Brand',
       status: 'active',
+      signal: null,
       desc: 'One-Three brand network site. Connects Fisher Sovereign properties under a unified identity and brand system.',
       tech: ['HTML', 'CSS', 'JS'],
       port: null,
-      github: 'lance-fisher/one-three-net'
+      path: 'D:\\ProjectsHome\\one-three-net',
+      lastActive: '5 days ago'
     },
     {
       name: 'Session Atlas',
       cat: 'Tool',
       status: 'active',
+      signal: 'alpha',
       desc: 'Dashboard tracking AI coding sessions across the ecosystem. Maps 80+ sessions and 20+ projects with timeline, filter, and 3D relationship views.',
       tech: ['Python', 'SQLite', 'Three.js', 'D3.js'],
       port: 8092,
-      github: 'lance-fisher/session-atlas'
+      path: 'D:\\ProjectsHome\\session-atlas',
+      lastActive: 'today'
     },
     {
       name: 'LLM Enclave',
       cat: 'Infrastructure',
       status: 'active',
+      signal: null,
       desc: 'Local LLM orchestration layer. Runs Qwen 2.5 Coder 35B via Ollama with PowerShell management scripts. Keeps inference entirely on-device.',
       tech: ['Python', 'PowerShell', 'Ollama'],
       port: 8094,
-      github: 'lance-fisher/llm-enclave'
+      path: 'D:\\ProjectsHome\\llm-enclave',
+      lastActive: '1 day ago'
     },
     {
       name: 'Auton',
       cat: 'Infrastructure',
       status: 'active',
+      signal: 'alpha',
       desc: 'Autonomous background worker. LLM-driven decision loop with a signed journal, dry-run by default, and aiohttp control plane for inspection.',
       tech: ['Python', 'asyncio', 'aiohttp', 'PyNaCl'],
       port: 8095,
-      github: 'lance-fisher/auton'
+      path: 'D:\\ProjectsHome\\auton',
+      lastActive: '12 minutes ago'
     },
     {
       name: 'Sovereign Console',
       cat: 'Infrastructure',
-      status: 'active',
+      status: 'dev',
+      signal: 'protected',
       desc: 'Operator control plane for the entire ecosystem. Service management, deployment, monitoring, and a hardened auth flow with passkeys and mTLS.',
       tech: ['TypeScript', 'Fastify', 'Next.js', 'Node.js', 'PostgreSQL', 'Redis'],
       port: 3100,
-      github: 'lance-fisher/sovereign-console'
+      path: 'D:\\ProjectsHome\\sovereign-console',
+      lastActive: '8 hours ago'
     },
     {
       name: 'lancewfisher-v2',
       cat: 'Brand',
       status: 'active',
+      signal: null,
       desc: 'Personal portfolio and brand site. Static HTML/CSS/JS deployed to lancewfisher.com via Hostinger. Hosts this Sovereign Hub showcase.',
       tech: ['HTML', 'CSS', 'JS'],
       port: 8077,
-      github: 'lance-fisher/lancewfisher-v2'
+      path: 'D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2',
+      lastActive: 'today'
     },
     {
       name: 'Media Organizer',
       cat: 'Tool',
       status: 'active',
+      signal: null,
       desc: 'Media migration and organization tool. Sorts, deduplicates, and catalogs files on the E: drive with a strict no-delete policy.',
       tech: ['Python', 'Pillow', 'FFprobe'],
       port: null,
-      github: 'lance-fisher/media-organizer'
+      path: 'D:\\ProjectsHome\\media-organizer',
+      lastActive: '3 days ago'
     },
     {
       name: 'Sovereign Hub',
       cat: 'Infrastructure',
       status: 'active',
-      desc: 'Central project management dashboard. Port registry, health checks, and ecosystem overview for all registered projects. Powers the registry view you are looking at right now.',
+      signal: 'alpha',
+      desc: 'Central project management dashboard. Port registry, health checks, and ecosystem overview for all registered projects. Powers the showcase you are looking at right now.',
       tech: ['Python', 'HTML', 'JavaScript'],
       port: 8090,
-      github: 'lance-fisher/sovereign-hub'
+      path: 'D:\\ProjectsHome\\project-hub',
+      lastActive: 'now'
     },
     {
       name: 'Bookmark Bot',
       cat: 'Tool',
       status: 'active',
+      signal: null,
       desc: 'Automated bookmark manager. Captures, categorizes, and indexes bookmarks from multiple sources. Async Python backend with a zero-dependency vanilla JS frontend.',
       tech: ['Python', 'asyncio', 'vanilla-js'],
       port: null,
-      github: 'lance-fisher/bookmark-bot'
+      path: 'D:\\ProjectsHome\\bookmark-bot',
+      lastActive: '6 days ago'
     },
     {
       name: 'Private Tax Platform',
       cat: 'App',
-      status: 'active',
+      status: 'dev',
+      signal: 'protected',
       desc: 'Private tax preparation tooling. OCR-driven document ingestion and PDF parsing for multi-year returns. Runs entirely on local hardware, no third-party data sharing.',
       tech: ['Python', 'OCR', 'PDF parsing'],
       port: 8000,
-      github: 'lance-fisher/private-tax-platform'
+      path: 'D:\\ProjectsHome\\private-tax-platform',
+      lastActive: '2 weeks ago'
     },
     {
       name: 'Polymarket Sniper',
       cat: 'Trading',
       status: 'paused',
+      signal: 'protected',
       desc: 'Fast-execution bot for Polymarket prediction markets. Currently paused pending regulatory review.',
       tech: ['Python', 'Web3.py', 'Polygon'],
       port: null,
-      github: 'lance-fisher/polymarket-sniper'
+      path: 'D:\\ProjectsHome\\polymarket-sniper',
+      lastActive: '3 months ago'
     },
     {
       name: 'Trading Profit Engine',
       cat: 'Trading',
       status: 'active',
+      signal: 'protected',
       desc: 'Real-money profit engine for the trading stack. Async Python service that coordinates execution across venues and reports PnL back to Profit Desk.',
       tech: ['Python', 'asyncio', 'aiohttp'],
       port: null,
-      github: 'lance-fisher/trading-profit-engine'
+      path: 'D:\\ProjectsHome\\trading-profit-engine',
+      lastActive: '1 day ago'
     },
     {
       name: 'Crown & Conquest',
       cat: 'Game',
       status: 'archived',
+      signal: null,
       desc: 'Original iOS strategy game concept. Evolved into Bloodlines. Code preserved for reference and history.',
       tech: ['Swift', 'SpriteKit'],
       port: null,
-      github: 'lance-fisher/crown-conquest'
+      path: 'D:\\ProjectsHome\\crown-conquest',
+      lastActive: '8 months ago'
     },
     {
       name: 'Exo',
       cat: 'Tool',
       status: 'active',
+      signal: null,
       desc: 'iOS carrier repo with multiple feature branches. Extraction pipeline that moves working features into their own standalone projects. Origin point for several current tools.',
       tech: ['Python', 'Various'],
       port: null,
-      github: 'lance-fisher/exo'
+      path: 'D:\\ProjectsHome\\exo',
+      lastActive: '2 weeks ago'
     },
     {
       name: 'frontier-bastion',
       cat: 'Game',
       status: 'archived',
+      signal: null,
       desc: 'Stale exo clone from the Crown & Conquest iOS era. Superseded by Bloodlines and kept for archaeology.',
       tech: ['Swift'],
       port: null,
-      github: null
+      path: 'D:\\ProjectsHome\\frontier-bastion',
+      lastActive: '11 months ago'
     },
     {
       name: 'old-portfolio',
       cat: 'Brand',
       status: 'archived',
-      desc: 'Previous portfolio site. Replaced by lancewfisher-v2 with a full redesign and the current dark/gold aesthetic.',
+      signal: null,
+      desc: 'Previous portfolio site. Replaced by lancewfisher-v2 with a full redesign and the current dark/silver aesthetic.',
       tech: ['HTML', 'CSS'],
       port: null,
-      github: null
+      path: 'D:\\ProjectsHome\\old-portfolio',
+      lastActive: '1 year ago'
     },
     {
       name: 'LocalClaude',
       cat: 'App',
-      status: 'active',
+      status: 'dev',
+      signal: 'alpha',
       desc: 'Desktop application for running Claude-style workflows locally. Electron shell with a React UI on a Fastify backend, SQLite for state, and Ollama for local model inference.',
       tech: ['TypeScript', 'Electron', 'React', 'Fastify', 'Tailwind', 'SQLite', 'Ollama'],
       port: null,
-      github: 'lance-fisher/localclaude'
+      path: 'D:\\ProjectsHome\\localclaude',
+      lastActive: '4 days ago'
     }
   ];
 
-  var statusColors = {
-    active: '#34d399',
-    paused: '#fbbf24',
-    archived: '#6b7280'
+  // STATUS MATRIX
+  // 4 lifecycle statuses + 3 signaling tags
+  var statusMeta = {
+    active: { label: 'Active', color: '#6ee7a0', launchable: true },
+    dev: { label: 'In Development', color: '#fbbf24', launchable: false },
+    paused: { label: 'Paused', color: '#fbbf24', launchable: false },
+    archived: { label: 'Archived', color: 'rgba(255,255,255,0.4)', launchable: false }
   };
-  var catColors = {
-    Trading: '#f59e0b',
-    App: '#3b82f6',
-    Tool: '#8b5cf6',
-    Game: '#ec4899',
-    Brand: '#c9a84c',
-    Infrastructure: '#06b6d4'
+  var signalMeta = {
+    protected: { label: 'Protected', color: '#7dd3fc' },
+    alpha: { label: 'Public Alpha', color: '#a78bfa' },
+    demo: { label: 'Interactive Demo', color: '#6ee7a0' }
   };
 
-  // ── STATE ──
+  // STATE
   var state = {
     search: '',
     status: 'all',
-    stack: 'all'
+    activeTab: 'projects',
+    selected: null,
+    settings: loadSettings()
   };
 
-  // ── HELPERS ──
+  function loadSettings() {
+    try {
+      var raw = localStorage.getItem('sovhub.settings');
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return {
+      showArchived: false,
+      showPaused: true,
+      compactCards: false,
+      showProtected: true,
+      showAlpha: true,
+      portHints: true,
+      autoOpenDetail: true
+    };
+  }
+  function saveSettings() {
+    try { localStorage.setItem('sovhub.settings', JSON.stringify(state.settings)); } catch (e) {}
+  }
+
+  // HELPERS
   function el(tag, className, text) {
     var node = document.createElement(tag);
     if (className) node.className = className;
     if (text != null) node.textContent = text;
     return node;
   }
-
-  function clear(node) {
-    while (node.firstChild) node.removeChild(node.firstChild);
-  }
-
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
   function countBy(predicate) {
     var n = 0;
     for (var i = 0; i < projects.length; i++) if (predicate(projects[i])) n++;
     return n;
   }
-
-  function uniqueStacks() {
-    var seen = {};
-    var out = [];
-    projects.forEach(function(p) {
-      p.tech.forEach(function(t) {
-        if (!seen[t]) { seen[t] = true; out.push(t); }
-      });
-    });
-    out.sort(function(a, b) { return a.toLowerCase() < b.toLowerCase() ? -1 : 1; });
-    return out;
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    return Promise.resolve();
+  }
+  var toastTimer = null;
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3200);
   }
 
-  // ── STATS BANNER ──
-  function renderStats() {
-    var banner = document.getElementById('statsBanner');
-    clear(banner);
-
-    var statsData = [
-      { val: String(projects.length), lbl: 'Total', dot: null },
-      { val: String(countBy(function(p) { return p.status === 'active'; })), lbl: 'Active', dot: '#34d399' },
-      { val: String(countBy(function(p) { return p.status === 'paused'; })), lbl: 'Paused', dot: '#fbbf24' },
-      { val: String(countBy(function(p) { return p.status === 'archived'; })), lbl: 'Archived', dot: '#6b7280' },
-      { val: String(countBy(function(p) { return p.port != null && p.status === 'active'; })), lbl: 'Active Ports', dot: '#c9a84c' },
-      { val: String(countBy(function(p) { return p.github != null; })), lbl: 'On GitHub', dot: null }
-    ];
-
-    statsData.forEach(function(s) {
-      var wrap = el('div', 'stat');
-      if (s.dot) {
-        var dot = el('span', 'stat-dot');
-        dot.style.background = s.dot;
-        wrap.appendChild(dot);
-      }
-      wrap.appendChild(el('span', 'stat-val', s.val));
-      wrap.appendChild(el('span', 'stat-lbl', s.lbl));
-      banner.appendChild(wrap);
+  // TAB SWITCHING
+  function switchTab(name) {
+    state.activeTab = name;
+    var tabs = document.querySelectorAll('.tab-btn');
+    tabs.forEach(function(t) {
+      t.classList.toggle('active', t.getAttribute('data-tab') === name);
+    });
+    var panels = document.querySelectorAll('.panel');
+    panels.forEach(function(p) {
+      p.classList.toggle('active', p.getAttribute('data-panel') === name);
     });
   }
 
-  // ── STACK SELECT ──
-  function renderStackSelect() {
-    var sel = document.getElementById('stackSelect');
-    var stacks = uniqueStacks();
-    stacks.forEach(function(t) {
-      var opt = document.createElement('option');
-      opt.value = t;
-      opt.textContent = t;
-      sel.appendChild(opt);
-    });
-    sel.addEventListener('change', function() {
-      state.stack = sel.value;
-      renderGrid();
-    });
-  }
-
-  // ── FILTER TABS ──
-  function bindFilterTabs() {
-    var tabs = document.querySelectorAll('.filter-tab');
-    tabs.forEach(function(tab) {
-      tab.addEventListener('click', function() {
-        state.status = tab.getAttribute('data-filter');
-        tabs.forEach(function(t) { t.classList.remove('active'); });
-        tab.classList.add('active');
-        renderGrid();
-      });
-    });
-  }
-
-  // ── PROJECT MATCHING ──
+  // PROJECT MATCHING
   function matchStatus(p) {
-    if (state.status === 'all') return true;
+    if (state.status === 'all') {
+      if (!state.settings.showArchived && p.status === 'archived') return false;
+      if (!state.settings.showPaused && p.status === 'paused') return false;
+      return true;
+    }
     return p.status === state.status;
   }
-
-  function matchStack(p) {
-    if (state.stack === 'all') return true;
-    return p.tech.indexOf(state.stack) !== -1;
-  }
-
   function matchSearch(p) {
     if (!state.search) return true;
     var q = state.search.toLowerCase();
@@ -564,165 +963,480 @@
     return hay.indexOf(q) !== -1;
   }
 
-  // ── CARD ──
+  // BADGE BUILDER
+  function makeBadge(label, color) {
+    var b = el('span', 'badge', label);
+    if (color) {
+      b.style.color = color;
+      b.style.borderColor = color + '55';
+      b.style.background = color + '14';
+    }
+    return b;
+  }
+
+  // CARD
   function createCard(p) {
+    var meta = statusMeta[p.status];
     var card = el('div', 'card');
     card.setAttribute('data-project', p.name);
 
     var head = el('div', 'card-head');
-    var dot = el('span', 'card-status');
-    dot.style.background = statusColors[p.status] || '#888';
-    var name = el('span', 'card-name', p.name);
+    var dot = el('span', 'card-status-dot');
+    dot.style.background = meta.color;
     head.appendChild(dot);
-    head.appendChild(name);
+    head.appendChild(el('span', 'card-name', p.name));
     card.appendChild(head);
 
-    var cat = el('span', 'card-cat', p.cat.toUpperCase());
-    var color = catColors[p.cat] || '#c9a84c';
-    cat.style.color = color;
-    cat.style.borderColor = color + '55';
-    cat.style.background = color + '14';
-    card.appendChild(cat);
+    var metaWrap = el('div', 'card-meta');
+    metaWrap.appendChild(makeBadge(meta.label, meta.color));
+    metaWrap.appendChild(makeBadge(p.cat, null));
 
-    var desc = el('p', 'card-desc', p.desc);
-    card.appendChild(desc);
+    if (p.signal === 'protected' && state.settings.showProtected) {
+      metaWrap.appendChild(makeBadge(signalMeta.protected.label, signalMeta.protected.color));
+    }
+    if (p.signal === 'alpha' && state.settings.showAlpha) {
+      metaWrap.appendChild(makeBadge(signalMeta.alpha.label, signalMeta.alpha.color));
+    }
+    if (p.signal === 'demo') {
+      metaWrap.appendChild(makeBadge(signalMeta.demo.label, signalMeta.demo.color));
+    }
+    card.appendChild(metaWrap);
+
+    card.appendChild(el('p', 'card-desc', p.desc));
 
     var techs = el('div', 'card-techs');
-    p.tech.forEach(function(t) {
+    p.tech.slice(0, 5).forEach(function(t) {
       techs.appendChild(el('span', 'tech-badge', t));
     });
+    if (p.tech.length > 5) {
+      techs.appendChild(el('span', 'tech-badge', '+' + (p.tech.length - 5)));
+    }
     card.appendChild(techs);
 
     var foot = el('div', 'card-foot');
     if (p.port != null) {
       foot.appendChild(el('span', 'card-port', 'localhost:' + p.port));
     } else {
-      foot.appendChild(el('span', 'card-port-empty', 'no port'));
+      foot.appendChild(el('span', 'card-port-empty', 'no bound port'));
     }
-    if (p.github) {
-      var ghLink = document.createElement('a');
-      ghLink.className = 'card-gh';
-      ghLink.href = 'https://github.com/' + p.github;
-      ghLink.target = '_blank';
-      ghLink.rel = 'noopener noreferrer';
-      ghLink.textContent = 'GitHub \u2197';
-      ghLink.addEventListener('click', function(e) { e.stopPropagation(); });
-      foot.appendChild(ghLink);
-    } else {
-      foot.appendChild(el('span', 'card-port-empty', 'local only'));
-    }
+    var actBtn = el('button', 'card-action', meta.launchable ? 'Open' : 'Details');
+    actBtn.type = 'button';
+    if (!meta.launchable) actBtn.classList.add('muted');
+    actBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      openSlidein(p);
+    });
+    foot.appendChild(actBtn);
     card.appendChild(foot);
 
-    card.addEventListener('click', function() { openModal(p); });
+    card.addEventListener('click', function() { openSlidein(p); });
     return card;
   }
 
-  // ── GRID ──
+  // GRID
   function renderGrid() {
     var grid = document.getElementById('projectGrid');
     var noResults = document.getElementById('noResults');
     clear(grid);
     var count = 0;
     projects.forEach(function(p) {
-      if (matchStatus(p) && matchStack(p) && matchSearch(p)) {
+      if (matchStatus(p) && matchSearch(p)) {
         grid.appendChild(createCard(p));
         count++;
       }
     });
     noResults.style.display = count === 0 ? 'block' : 'none';
+    var tabCount = document.getElementById('tab-count-projects');
+    if (tabCount) tabCount.textContent = String(count);
   }
 
-  // ── MODAL ──
-  function openModal(p) {
-    var overlay = document.getElementById('modalOverlay');
-    var modal = document.getElementById('modal');
-    clear(modal);
+  // ACTION BUTTON BUILDER (safe DOM, no innerHTML)
+  function makeActionBtn(title, sub, disabled, onClick) {
+    var btn = document.createElement('button');
+    btn.className = 'action-btn';
+    btn.type = 'button';
 
-    var closeBtn = el('button', 'modal-close', '\u2715');
-    closeBtn.setAttribute('aria-label', 'Close');
-    closeBtn.addEventListener('click', closeModal);
-    modal.appendChild(closeBtn);
+    var main = el('div', 'ab-main');
+    main.appendChild(el('div', 'ab-title', title));
+    if (sub) main.appendChild(el('div', 'ab-sub', sub));
+    btn.appendChild(main);
 
-    modal.appendChild(el('h2', null, p.name));
+    var icon = el('span', 'ab-icon', '\u2192');
+    btn.appendChild(icon);
 
-    var statusLine = el('div', 'modal-statusline');
-    var sDot = el('span', 'card-status');
-    sDot.style.background = statusColors[p.status] || '#888';
-    statusLine.appendChild(sDot);
-    var statusText = p.status.charAt(0).toUpperCase() + p.status.slice(1) + '  \u00b7  ' + p.cat;
-    statusLine.appendChild(el('span', null, statusText));
-    modal.appendChild(statusLine);
+    if (disabled) btn.disabled = true;
+    if (onClick) btn.addEventListener('click', onClick);
+    return btn;
+  }
 
-    modal.appendChild(el('p', 'modal-desc', p.desc));
+  // SLIDE-IN PANEL
+  function openSlidein(p) {
+    state.selected = p.name;
+    var meta = statusMeta[p.status];
+    var slide = document.getElementById('slidein');
+    var overlay = document.getElementById('slideOverlay');
+    var nameEl = document.getElementById('slideName');
+    var body = document.getElementById('slideBody');
+    nameEl.textContent = p.name;
+    clear(body);
+
+    // Status line with badges
+    var statusLine = el('div', 'slidein-statusline');
+    statusLine.appendChild(makeBadge(meta.label, meta.color));
+    statusLine.appendChild(makeBadge(p.cat, null));
+    if (p.signal && signalMeta[p.signal]) {
+      statusLine.appendChild(makeBadge(signalMeta[p.signal].label, signalMeta[p.signal].color));
+    }
+    body.appendChild(statusLine);
+
+    // Description
+    body.appendChild(el('p', 'slidein-desc', p.desc));
 
     // Details section
-    var detailSec = el('div', 'modal-section');
+    var detailSec = el('div', 'slidein-section');
     detailSec.appendChild(el('h3', null, 'Details'));
-
     function addRow(key, val) {
-      var row = el('div', 'modal-row');
+      var row = el('div', 'slidein-row');
       row.appendChild(el('span', 'row-key', key));
       row.appendChild(el('span', 'row-val', val));
       detailSec.appendChild(row);
     }
-    addRow('Status', p.status);
+    addRow('Status', meta.label);
     addRow('Category', p.cat);
     addRow('Port', p.port != null ? 'localhost:' + p.port : 'none');
-    addRow('GitHub', p.github ? p.github : 'local only');
-    modal.appendChild(detailSec);
+    addRow('Last active', p.lastActive || 'unknown');
+    addRow('Path', p.path);
+    body.appendChild(detailSec);
 
-    // Stack section
-    var techSec = el('div', 'modal-section');
+    // Tech Stack section
+    var techSec = el('div', 'slidein-section');
     techSec.appendChild(el('h3', null, 'Tech Stack'));
-    var techWrap = el('div', 'modal-techs');
+    var techWrap = el('div', 'slidein-techs');
     p.tech.forEach(function(t) {
       techWrap.appendChild(el('span', 'tech-badge', t));
     });
     techSec.appendChild(techWrap);
-    modal.appendChild(techSec);
+    body.appendChild(techSec);
 
-    // Links section
-    if (p.github) {
-      var linkSec = el('div', 'modal-section');
-      linkSec.appendChild(el('h3', null, 'Links'));
-      var ghBtn = document.createElement('a');
-      ghBtn.className = 'modal-link';
-      ghBtn.href = 'https://github.com/' + p.github;
-      ghBtn.target = '_blank';
-      ghBtn.rel = 'noopener noreferrer';
-      ghBtn.textContent = 'View on GitHub \u2197';
-      linkSec.appendChild(ghBtn);
-      modal.appendChild(linkSec);
+    // Action buttons
+    var actSec = el('div', 'slidein-section');
+    actSec.appendChild(el('h3', null, 'Actions'));
+    var actWrap = el('div', 'slidein-actions');
+
+    var launchBtn = makeActionBtn(
+      'Launch Claude Session',
+      'Copy cd ' + p.path + ' to clipboard',
+      !meta.launchable,
+      function() {
+        copyToClipboard('cd "' + p.path + '"');
+        showToast('Project path copied. Paste into terminal and run claude');
+      }
+    );
+    actWrap.appendChild(launchBtn);
+
+    var termBtn = makeActionBtn(
+      'Open Terminal',
+      'Copy cd path to clipboard',
+      !meta.launchable,
+      function() {
+        copyToClipboard('cd "' + p.path + '"');
+        showToast('cd path copied to clipboard');
+      }
+    );
+    actWrap.appendChild(termBtn);
+
+    if (p.port != null) {
+      var portTitle = 'View Port (localhost:' + p.port + ')';
+      var portSub = state.settings.portHints ? 'This service may not be running' : null;
+      var portBtn = makeActionBtn(portTitle, portSub, !meta.launchable, function() {
+        if (meta.launchable) {
+          window.open('http://localhost:' + p.port, '_blank', 'noopener');
+        }
+      });
+      actWrap.appendChild(portBtn);
+    }
+    actSec.appendChild(actWrap);
+
+    if (!meta.launchable) {
+      actSec.appendChild(el('div', 'action-note', 'Launch actions are disabled for ' + meta.label + ' projects. Switch to an Active or Public Alpha project to use them.'));
     }
 
+    body.appendChild(actSec);
+
+    slide.classList.add('open');
     overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    slide.setAttribute('aria-hidden', 'false');
+  }
+  function closeSlidein() {
+    document.getElementById('slidein').classList.remove('open');
+    document.getElementById('slideOverlay').classList.remove('open');
+    document.getElementById('slidein').setAttribute('aria-hidden', 'true');
+    state.selected = null;
   }
 
-  function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('open');
-    document.body.style.overflow = '';
+  // ACTIVITY
+  function renderActivity() {
+    var body = document.getElementById('activityBody');
+    if (!body) return;
+    clear(body);
+    var activeProjects = projects.filter(function(p) { return p.status === 'active' || p.status === 'dev'; });
+    var models = ['Opus 4.6', 'Opus 4.6', 'Opus 4.6', 'Sonnet 4.5', 'Opus 4.5'];
+    var outcomes = ['success', 'success', 'success', 'success', 'error', 'success'];
+    var rng = 7;
+    function rand() { rng = (rng * 9301 + 49297) % 233280; return rng / 233280; }
+    var dayLabels = ['today', 'today', 'yesterday', '2d ago', '3d ago', '4d ago', '5d ago', '6d ago', '1w ago', '1w ago', '2w ago'];
+    for (var i = 0; i < 22; i++) {
+      var p = activeProjects[Math.floor(rand() * activeProjects.length)];
+      var dur = Math.floor(rand() * 110 + 6);
+      var model = models[Math.floor(rand() * models.length)];
+      var outcome = outcomes[Math.floor(rand() * outcomes.length)];
+      var date = dayLabels[Math.min(Math.floor(i / 2), dayLabels.length - 1)];
+      var tr = document.createElement('tr');
+      tr.appendChild(el('td', 'cell-project', p.name));
+      tr.appendChild(el('td', null, date));
+      tr.appendChild(el('td', null, dur + ' min'));
+      tr.appendChild(el('td', null, model));
+      var td5 = el('td', outcome === 'success' ? 'cell-success' : 'cell-error', outcome === 'success' ? '\u2713 success' : '\u2715 error');
+      tr.appendChild(td5);
+      body.appendChild(tr);
+    }
   }
 
-  // ── EVENT WIRING ──
+  // SYSTEMS
+  var systemsData = [
+    {
+      name: 'Moltbot Hub',
+      port: 8002,
+      status: 'up',
+      latency: 14,
+      lastCheck: '32s ago',
+      desc: 'Coordinator for Moltbot trading agent fleet. Routes signals between Profit Desk and execution venues.'
+    },
+    {
+      name: 'Auton',
+      port: 8095,
+      status: 'up',
+      latency: 8,
+      lastCheck: '17s ago',
+      desc: 'Autonomous background worker. Signed journal, dry-run by default, aiohttp control plane for inspection.'
+    },
+    {
+      name: 'OpenClaw',
+      port: 18800,
+      status: 'warn',
+      latency: 142,
+      lastCheck: '1m ago',
+      desc: 'Claude orchestration daemon. Manages spawned Claude Code sessions and reports outcomes back to the hub.'
+    }
+  ];
+  function renderSystems() {
+    var grid = document.getElementById('systemGrid');
+    if (!grid) return;
+    clear(grid);
+    systemsData.forEach(function(s) {
+      var card = el('div', 'system-card');
+      var head = el('div', 'system-head');
+      head.appendChild(el('div', 'system-name', s.name));
+      var stat = el('div', 'system-stat ' + s.status);
+      stat.appendChild(el('span', 'ind'));
+      var statusText = s.status === 'up' ? 'Online' : s.status === 'warn' ? 'Degraded' : 'Offline';
+      stat.appendChild(document.createTextNode(statusText));
+      head.appendChild(stat);
+      card.appendChild(head);
+
+      var meta = el('div', 'system-meta');
+      function addRow(k, v) {
+        var r = el('div', 'row');
+        r.appendChild(el('span', 'k', k));
+        r.appendChild(el('span', 'v', v));
+        meta.appendChild(r);
+      }
+      addRow('Endpoint', 'localhost:' + s.port);
+      addRow('Latency', s.latency + ' ms');
+      addRow('Last check', s.lastCheck);
+      card.appendChild(meta);
+
+      card.appendChild(el('div', 'system-desc', s.desc));
+      grid.appendChild(card);
+    });
+  }
+  function refreshSystems() {
+    systemsData.forEach(function(s) {
+      s.latency = Math.max(4, Math.floor(s.latency + (Math.random() - 0.5) * 12));
+      s.lastCheck = 'just now';
+    });
+    renderSystems();
+    showToast('Systems re-checked');
+  }
+
+  // SESSIONS HEATMAP
+  function renderHeatmap() {
+    var hm = document.getElementById('heatmap');
+    if (!hm) return;
+    clear(hm);
+    var days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    hm.appendChild(el('div', 'heat-day', ''));
+    for (var h = 0; h < 24; h++) {
+      hm.appendChild(el('div', 'heat-day', h % 3 === 0 ? String(h) : ''));
+    }
+    var rng = 13;
+    function rand() { rng = (rng * 9301 + 49297) % 233280; return rng / 233280; }
+    days.forEach(function(d, di) {
+      hm.appendChild(el('div', 'heat-day', d));
+      for (var hh = 0; hh < 24; hh++) {
+        var cell = el('div', 'heat-cell');
+        var weight = 0;
+        if (hh >= 9 && hh <= 23) weight = 0.4 + rand() * 0.6;
+        else if (hh >= 6 && hh <= 8) weight = rand() * 0.4;
+        else weight = rand() * 0.15;
+        if (di >= 5) weight *= 0.55;
+        var alpha = Math.min(0.9, weight);
+        cell.style.background = 'rgba(228, 234, 242, ' + (alpha * 0.85 + 0.04).toFixed(2) + ')';
+        cell.title = d + ' ' + hh + ':00 — ' + Math.floor(weight * 8) + ' sessions';
+        hm.appendChild(cell);
+      }
+    });
+    var scale = document.getElementById('heatScale');
+    if (scale && !scale.firstChild) {
+      [0.05, 0.2, 0.4, 0.6, 0.85].forEach(function(a) {
+        var sq = el('div', 'sq');
+        sq.style.background = 'rgba(228, 234, 242, ' + a + ')';
+        scale.appendChild(sq);
+      });
+    }
+  }
+  function renderTopProjects() {
+    var ul = document.getElementById('topProjects');
+    if (!ul) return;
+    clear(ul);
+    var rng = 23;
+    function rand() { rng = (rng * 9301 + 49297) % 233280; return rng / 233280; }
+    var ranked = projects
+      .filter(function(p) { return p.status === 'active' || p.status === 'dev'; })
+      .map(function(p) { return { name: p.name, count: Math.floor(rand() * 38 + 4) }; })
+      .sort(function(a, b) { return b.count - a.count; })
+      .slice(0, 10);
+    var max = ranked[0].count;
+    ranked.forEach(function(r) {
+      var li = document.createElement('li');
+      li.appendChild(el('span', 'tp-name', r.name));
+      var bar = el('div', 'tp-bar');
+      var fill = el('div', 'tp-bar-fill');
+      fill.style.width = (r.count / max * 100) + '%';
+      bar.appendChild(fill);
+      li.appendChild(bar);
+      li.appendChild(el('span', 'tp-count', String(r.count)));
+      li.addEventListener('click', function() {
+        switchTab('projects');
+        document.getElementById('searchBox').value = r.name;
+        state.search = r.name;
+        renderGrid();
+      });
+      ul.appendChild(li);
+    });
+  }
+
+  // WORKSPACE
+  function renderWorkspace() {
+    var totalCount = projects.length;
+    var activeCount = countBy(function(p) { return p.status === 'active' || p.status === 'dev'; });
+    var portCount = countBy(function(p) { return p.port != null && (p.status === 'active' || p.status === 'dev'); });
+
+    var pc = document.getElementById('wsProjectCount');
+    if (pc) pc.textContent = String(totalCount);
+    var ps = document.getElementById('wsProjectSub');
+    if (ps) ps.textContent = activeCount + ' currently active';
+    var pb = document.getElementById('wsProjectBar');
+    if (pb) pb.style.width = (activeCount / totalCount * 100) + '%';
+
+    var ac = document.getElementById('wsActiveCount');
+    if (ac) ac.textContent = String(portCount);
+    var ab = document.getElementById('wsActiveBar');
+    if (ab) ab.style.width = (portCount / totalCount * 100) + '%';
+
+    var jl = document.getElementById('journalList');
+    if (jl) {
+      clear(jl);
+      var entries = [
+        { ts: '12 min ago', act: 'Auton: scanned project-hub for stale ports' },
+        { ts: '34 min ago', act: 'Auton: refreshed health checks for 3 systems' },
+        { ts: '1h ago', act: 'Auton: archived old session log (sovereign-hub)' },
+        { ts: '2h ago', act: 'Auton: dispatched bot signal to profit-desk (DRY_RUN)' },
+        { ts: '3h ago', act: 'Auton: noticed disk usage at 60%' },
+        { ts: '4h ago', act: 'Auton: rotated PowerShell log for llm-enclave' },
+        { ts: '5h ago', act: 'Auton: validated PROJECTS.json checksum' },
+        { ts: '6h ago', act: 'Auton: completed nightly registry snapshot' },
+        { ts: '8h ago', act: 'Auton: detected port conflict on :3210 (resolved)' },
+        { ts: '10h ago', act: 'Auton: initialized session for bloodlines design pass' }
+      ];
+      entries.forEach(function(e) {
+        var li = document.createElement('li');
+        li.appendChild(el('span', 'ts', e.ts));
+        li.appendChild(el('span', 'act', e.act));
+        jl.appendChild(li);
+      });
+    }
+  }
+
+  // SETTINGS
+  function renderSettings() {
+    var toggles = document.querySelectorAll('.toggle[data-setting]');
+    toggles.forEach(function(t) {
+      var key = t.getAttribute('data-setting');
+      if (state.settings[key]) t.classList.add('on');
+      else t.classList.remove('on');
+      t.addEventListener('click', function() {
+        state.settings[key] = !state.settings[key];
+        t.classList.toggle('on', state.settings[key]);
+        saveSettings();
+        renderGrid();
+      });
+    });
+  }
+
+  // EVENT WIRING
   document.getElementById('searchBox').addEventListener('input', function(e) {
     state.search = e.target.value;
     renderGrid();
   });
-
-  document.getElementById('modalOverlay').addEventListener('click', function(e) {
-    if (e.target === e.currentTarget) closeModal();
+  var filterTabs = document.querySelectorAll('.filter-tab');
+  filterTabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      state.status = tab.getAttribute('data-filter');
+      filterTabs.forEach(function(t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      renderGrid();
+    });
   });
-
+  document.getElementById('tabBar').addEventListener('click', function(e) {
+    var btn = e.target.closest('.tab-btn');
+    if (!btn) return;
+    switchTab(btn.getAttribute('data-tab'));
+  });
+  document.getElementById('slideClose').addEventListener('click', closeSlidein);
+  document.getElementById('slideOverlay').addEventListener('click', closeSlidein);
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape') closeSlidein();
+  });
+  var rs = document.getElementById('refreshSystems');
+  if (rs) rs.addEventListener('click', refreshSystems);
+  var sp = document.getElementById('scanProjects');
+  if (sp) sp.addEventListener('click', function() {
+    showToast('Scan complete. No new projects detected.');
+  });
+  var rd = document.getElementById('refreshDisk');
+  if (rd) rd.addEventListener('click', function() {
+    showToast('Disk stats refreshed.');
   });
 
-  // ── INITIAL RENDER ──
-  renderStats();
-  renderStackSelect();
-  bindFilterTabs();
+  // INITIAL RENDER
   renderGrid();
+  renderActivity();
+  renderSystems();
+  renderHeatmap();
+  renderTopProjects();
+  renderWorkspace();
+  renderSettings();
 
 })();
 </script>

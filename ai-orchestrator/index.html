@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign AI Orchestrator | Fisher Sovereign Systems</title>
+<meta name="description" content="Sovereign AI Orchestrator: governed multi-model AI command layer with 5-tier policy enforcement, local-first inference, task routing, and hash-chain audit trails.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80'>&#9881;</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0b;--bg-panel:#0e0f12;--bg-panel-hi:#14161b;--bg-elev:#1a1d23;
+  --border:rgba(228,234,242,0.07);--border-hi:rgba(228,234,242,0.14);--border-strong:rgba(228,234,242,0.22);
+  --fg-strong:rgba(228,234,242,0.94);--fg:rgba(195,205,218,0.72);--fg-dim:rgba(195,205,218,0.45);--fg-faint:rgba(195,205,218,0.28);
+  --green:#6ee7a0;--green-dim:rgba(110,231,160,0.10);--green-line:rgba(110,231,160,0.32);
+  --amber:#fbbf24;--amber-dim:rgba(251,191,36,0.10);--amber-line:rgba(251,191,36,0.32);
+  --red:#f87171;--red-dim:rgba(248,113,113,0.10);--red-line:rgba(248,113,113,0.32);
+  --blue:#7dd3fc;--blue-dim:rgba(125,211,252,0.10);--blue-line:rgba(125,211,252,0.32);
+  --purple:#a78bfa;--purple-dim:rgba(167,139,250,0.10);--purple-line:rgba(167,139,250,0.32);
+  --cyan:#67e8f9;--cyan-dim:rgba(103,232,249,0.10);--cyan-line:rgba(103,232,249,0.32);
+  --font-display:'Cinzel',serif;--font-serif:'Cormorant Garamond',Georgia,serif;
+  --font-body:'Inter',system-ui,sans-serif;--font-mono:'JetBrains Mono',ui-monospace,monospace;
+  --radius:8px;--radius-sm:5px;--gap:14px;--max-w:1200px;
+}
+html{scroll-behavior:smooth;font-size:15px}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);line-height:1.55;min-height:100vh;-webkit-font-smoothing:antialiased}
+a{color:var(--fg-strong);text-decoration:none;transition:color .15s}a:hover{color:#fff}
+
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(10,10,11,0.92);border-bottom:1px solid var(--border-hi);position:sticky;top:0;z-index:100;backdrop-filter:blur(16px)}
+.nav-left{display:flex;align-items:center;gap:20px}
+.nav-back{font-family:var(--font-mono);font-size:.73rem;color:var(--fg-dim);letter-spacing:.03em}
+.nav-back:hover{color:var(--fg-strong)}
+.nav-back::before{content:'\2190\00a0'}
+.nav-title{font-family:var(--font-display);font-size:.82rem;font-weight:600;color:var(--fg-strong);letter-spacing:.16em;text-transform:uppercase}
+.nav-right{display:flex;align-items:center;gap:14px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-family:var(--font-mono);font-size:.64rem;letter-spacing:.05em;text-transform:uppercase}
+.pill-green{border:1px solid var(--green-line);background:var(--green-dim);color:var(--green)}
+.pill-purple{border:1px solid var(--purple-line);background:var(--purple-dim);color:var(--purple)}
+.pill-amber{border:1px solid var(--amber-line);background:var(--amber-dim);color:var(--amber)}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(110,231,160,.45)}70%{box-shadow:0 0 0 8px rgba(110,231,160,0)}100%{box-shadow:0 0 0 0 rgba(110,231,160,0)}}
+
+/* LAYOUT */
+.wrap{max-width:var(--max-w);margin:0 auto;padding:0 28px}
+.hero{padding:40px 0 12px}
+.hero-eyebrow{font-family:var(--font-mono);font-size:.66rem;color:var(--fg-faint);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+.hero h1{font-family:var(--font-display);font-size:2rem;font-weight:600;color:var(--fg-strong);letter-spacing:.02em;line-height:1.15;margin-bottom:12px}
+.hero-sub{font-family:var(--font-serif);font-size:1.1rem;font-style:italic;color:var(--fg);max-width:680px;line-height:1.55}
+
+/* SECTIONS */
+section{padding:28px 0}
+section+section{border-top:1px solid var(--border)}
+.sec-title{font-family:var(--font-display);font-size:1.2rem;font-weight:600;color:var(--fg-strong);letter-spacing:.01em;margin-bottom:6px}
+.sec-lede{font-size:.88rem;color:var(--fg);max-width:680px;margin-bottom:20px}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--gap)}
+.grid-2{grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+
+/* CARD */
+.card{background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:10px;transition:all .18s}
+.card:hover{background:var(--bg-panel-hi);border-color:var(--border-hi);transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,0,0,.5)}
+.card-kicker{font-family:var(--font-mono);font-size:.62rem;color:var(--fg-faint);letter-spacing:.1em;text-transform:uppercase}
+.card h3{font-family:var(--font-display);font-size:1.02rem;font-weight:600;color:var(--fg-strong);line-height:1.2}
+.card p{font-size:.82rem;color:var(--fg);line-height:1.55}
+.card-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
+.tag{font-family:var(--font-mono);font-size:.62rem;padding:3px 8px;border-radius:3px;letter-spacing:.04em}
+.tag-green{background:var(--green-dim);border:1px solid var(--green-line);color:var(--green)}
+.tag-amber{background:var(--amber-dim);border:1px solid var(--amber-line);color:var(--amber)}
+.tag-purple{background:var(--purple-dim);border:1px solid var(--purple-line);color:var(--purple)}
+.tag-blue{background:var(--blue-dim);border:1px solid var(--blue-line);color:var(--blue)}
+.tag-ghost{background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--fg-dim)}
+
+/* STATUS */
+.status-bar{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:.68rem}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dot-green{background:var(--green);box-shadow:0 0 6px rgba(110,231,160,.4)}
+.dot-amber{background:var(--amber);box-shadow:0 0 6px rgba(251,191,36,.4)}
+.dot-purple{background:var(--purple);box-shadow:0 0 6px rgba(167,139,250,.4)}
+
+/* FLOW DIAGRAM */
+.flow{background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:24px;overflow-x:auto;margin-bottom:20px}
+.flow-row{display:flex;align-items:center;gap:12px;min-width:680px;flex-wrap:nowrap;justify-content:center}
+.flow-box{background:var(--bg-elev);border:1px solid var(--border-hi);border-radius:var(--radius-sm);padding:12px 16px;text-align:center;font-family:var(--font-mono);font-size:.72rem;color:var(--fg);line-height:1.4;min-width:110px}
+.flow-box strong{display:block;color:var(--fg-strong);font-size:.76rem;margin-bottom:2px}
+.flow-arrow{color:var(--fg-faint);font-size:1.1rem;flex-shrink:0}
+
+/* POSTURE */
+.posture-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:var(--gap);margin-bottom:20px}
+.posture-card{background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center}
+.posture-label{font-family:var(--font-mono);font-size:.62rem;color:var(--fg-faint);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.posture-value{font-family:var(--font-mono);font-size:1.5rem;font-weight:500;margin-bottom:4px}
+.posture-note{font-family:var(--font-mono);font-size:.64rem;color:var(--fg-dim)}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-bottom:16px}
+.data-table th{font-family:var(--font-mono);font-size:.66rem;color:var(--fg-faint);letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:10px 14px;border-bottom:1px solid var(--border-hi)}
+.data-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--fg);vertical-align:top}
+.data-table tr:hover td{background:rgba(255,255,255,.015)}
+
+/* LINKS */
+.product-link{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:.72rem;color:var(--fg-dim);padding:6px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);transition:all .15s;margin-top:10px}
+.product-link:hover{color:var(--fg-strong);border-color:var(--border-hi);background:rgba(255,255,255,.03)}
+
+/* FOOTER */
+.page-footer{max-width:var(--max-w);margin:0 auto;padding:24px 28px 48px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px}
+.footer-brand{font-family:var(--font-display);font-size:.72rem;color:var(--fg-dim);letter-spacing:.12em;text-transform:uppercase}
+.footer-links{display:flex;gap:18px;font-family:var(--font-mono);font-size:.68rem}
+.footer-links a{color:var(--fg-faint)}
+.footer-links a:hover{color:var(--fg-strong)}
+
+@media(max-width:768px){
+  .nav{padding:10px 16px}.nav-title{font-size:.7rem}
+  .wrap{padding:0 18px}.hero h1{font-size:1.5rem}
+  .grid,.grid-2{grid-template-columns:1fr}
+  .posture-grid{grid-template-columns:repeat(2,1fr)}
+  .page-footer{padding:16px 18px 36px}
+}
+@media(max-width:480px){.posture-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-left">
+    <a href="../home.html" class="nav-back">Portfolio</a>
+    <span class="nav-title">Sovereign AI Orchestrator</span>
+  </div>
+  <div class="nav-right">
+    <span class="pill pill-green"><span class="pulse-dot"></span> Policy Active</span>
+    <span class="pill pill-purple">Local Inference</span>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="hero-eyebrow">Fisher Sovereign Systems / AI Command</div>
+    <h1>Governed AI That Answers to You</h1>
+    <p class="hero-sub">A multi-model orchestration layer where every AI action is classified by risk, routed by policy, and logged with cryptographic integrity. Local inference by default. Cloud access only with explicit approval.</p>
+  </div>
+
+  <!-- ═══ POSTURE ═══ -->
+  <div class="posture-grid">
+    <div class="posture-card">
+      <div class="posture-label">Inference Mode</div>
+      <div class="posture-value" style="color:var(--purple)">Local</div>
+      <div class="posture-note">Ollama on RTX 4070</div>
+    </div>
+    <div class="posture-card">
+      <div class="posture-label">Active Models</div>
+      <div class="posture-value" style="color:var(--fg-strong)">3</div>
+      <div class="posture-note">Qwen, Llama, Claude</div>
+    </div>
+    <div class="posture-card">
+      <div class="posture-label">Policy Engine</div>
+      <div class="posture-value" style="color:var(--green)">Enforced</div>
+      <div class="posture-note">5-tier system active</div>
+    </div>
+    <div class="posture-card">
+      <div class="posture-label">Autonomous Mode</div>
+      <div class="posture-value" style="color:var(--amber)">DRY_RUN</div>
+      <div class="posture-note">Safe by default</div>
+    </div>
+    <div class="posture-card">
+      <div class="posture-label">Cloud Calls</div>
+      <div class="posture-value" style="color:var(--green)">Gated</div>
+      <div class="posture-note">Opt-in, policy-checked</div>
+    </div>
+    <div class="posture-card">
+      <div class="posture-label">Audit Chain</div>
+      <div class="posture-value" style="color:var(--green)">Intact</div>
+      <div class="posture-note">SHA-256 hash-chain</div>
+    </div>
+  </div>
+
+  <!-- ═══ HOW IT WORKS ═══ -->
+  <section>
+    <h2 class="sec-title">How It Works</h2>
+    <p class="sec-lede">Every AI request flows through a governed pipeline. The orchestrator classifies the task, checks policy, selects the appropriate model, enforces data boundaries, and logs the entire decision chain.</p>
+
+    <div class="flow">
+      <div class="flow-row">
+        <div class="flow-box" style="border-color:var(--fg-dim)"><strong>Request</strong>User or agent task</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box" style="border-color:var(--amber-line)"><strong>Classify</strong>Tier 0-4 risk</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box" style="border-color:var(--purple-line)"><strong>Route</strong>Local or cloud model</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box" style="border-color:var(--cyan-line)"><strong>Enforce</strong>Data sensitivity gates</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box" style="border-color:var(--green-line)"><strong>Execute</strong>Within policy bounds</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-box" style="border-color:var(--blue-line)"><strong>Audit</strong>Hash-chain logged</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ COMPONENTS ═══ -->
+  <section>
+    <h2 class="sec-title">Components</h2>
+    <p class="sec-lede">Five production systems consolidated under a unified orchestration architecture. Each component addresses a distinct layer of the AI governance stack.</p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-kicker">Routing &amp; Governance</div>
+        <h3>System Router</h3>
+        <p>Project resolution, zone-based permissions (8 zone types), command safety classification, session continuity tracking, and fuzzy matching for project lookup. Python CLI with programmatic API.</p>
+        <div class="status-bar"><span class="dot dot-green"></span><span style="color:var(--green)">Operational</span></div>
+        <div class="card-meta">
+          <span class="tag tag-green">4,143 LOC</span>
+          <span class="tag tag-ghost">Python</span>
+          <span class="tag tag-ghost">CLI + API</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-kicker">Secure Inference</div>
+        <h3>LLM Enclave</h3>
+        <p>Zero-trust security enclave for local LLM inference via Ollama. Policy-gated file access through YAML config, workspace bridge isolation (inbox/outbox/scratch), and hash-chain session audit trail. No outbound network.</p>
+        <div class="status-bar"><span class="dot dot-green"></span><span style="color:var(--green)">Functional</span></div>
+        <div class="card-meta">
+          <span class="tag tag-green">1,416 LOC</span>
+          <span class="tag tag-ghost">Python</span>
+          <span class="tag tag-ghost">Qwen 2.5 14B</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-kicker">Multi-Provider Hub</div>
+        <h3>LocalClaude</h3>
+        <p>Hybrid local+cloud AI workstation with multi-provider abstraction layer. Routes requests to Ollama (local), Anthropic Claude (cloud), or OpenAI-compatible endpoints. Streaming chat, SQLite persistence, conversation history.</p>
+        <div class="status-bar"><span class="dot dot-green"></span><span style="color:var(--green)">Active MVP (75%)</span></div>
+        <div class="card-meta">
+          <span class="tag tag-green">2,506 LOC</span>
+          <span class="tag tag-ghost">TypeScript</span>
+          <span class="tag tag-ghost">16 tests</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-kicker">Autonomous Execution</div>
+        <h3>Auton</h3>
+        <p>Autonomous background worker with 6 specialized agents: Scanner, Planner, Executor, Tester, Reviewer, Monitor. SafetyGuard enforces path sandboxing, rate limits (5/hr), file size caps, kill switch at >50% failure rate.</p>
+        <div class="status-bar"><span class="dot dot-amber"></span><span style="color:var(--amber)">DRY_RUN (safe default)</span></div>
+        <div class="card-meta">
+          <span class="tag tag-amber">6 agents</span>
+          <span class="tag tag-ghost">Python</span>
+          <span class="tag tag-ghost">asyncio</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-kicker">Specification Layer</div>
+        <h3>Governance Framework</h3>
+        <p>37,500+ lines across 30 documents defining the complete operational model: 5-tier approval system, 8 session authority states, intent-based routing rules, agent boundary enforcement, and formal approval artifact format.</p>
+        <div class="status-bar"><span class="dot dot-green"></span><span style="color:var(--green)">Production-grade</span></div>
+        <div class="card-meta">
+          <span class="tag tag-green">37K+ lines</span>
+          <span class="tag tag-ghost">12+ docs</span>
+          <span class="tag tag-ghost">YAML + MD</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-kicker">Intelligence Layer</div>
+        <h3>Session Atlas</h3>
+        <p>Session intelligence dashboard analyzing 80+ Claude Code sessions. Three.js 3D terrain visualization of activity patterns, D3 heatmaps, hour-of-day analysis. Zero external dependencies on backend.</p>
+        <div class="status-bar"><span class="dot dot-green"></span><span style="color:var(--green)">Operational</span></div>
+        <div class="card-meta">
+          <span class="tag tag-green">80+ sessions</span>
+          <span class="tag tag-ghost">Python + Three.js</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ MODEL ROUTING ═══ -->
+  <section>
+    <h2 class="sec-title">Model Routing</h2>
+    <p class="sec-lede">The orchestrator selects the appropriate model based on task classification, data sensitivity, and operator policy. Local inference handles the majority of requests. Cloud access requires explicit policy allowance.</p>
+
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>Model</th><th>Provider</th><th>Location</th><th>Use Cases</th><th>Data Policy</th></tr></thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--fg-strong)">Qwen 2.5 Coder 14B</td>
+            <td>Ollama</td>
+            <td style="color:var(--green)">Local (RTX 4070)</td>
+            <td>Code generation, file operations, planning, review</td>
+            <td style="color:var(--green)">No data leaves machine</td>
+          </tr>
+          <tr>
+            <td style="color:var(--fg-strong)">Llama 3 8B</td>
+            <td>Ollama</td>
+            <td style="color:var(--green)">Local (RTX 4070)</td>
+            <td>Fast classification, summarization, routing decisions</td>
+            <td style="color:var(--green)">No data leaves machine</td>
+          </tr>
+          <tr>
+            <td style="color:var(--fg-strong)">Claude (Opus/Sonnet)</td>
+            <td>Anthropic API</td>
+            <td style="color:var(--amber)">Cloud (opt-in)</td>
+            <td>Complex reasoning, large context, architecture review</td>
+            <td style="color:var(--amber)">Policy-gated, audited</td>
+          </tr>
+          <tr>
+            <td style="color:var(--fg-strong)">OpenAI-Compatible</td>
+            <td>Configurable</td>
+            <td style="color:var(--amber)">Cloud (opt-in)</td>
+            <td>Provider flexibility, evaluation benchmarks</td>
+            <td style="color:var(--amber)">Policy-gated, audited</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ SAFETY ═══ -->
+  <section>
+    <h2 class="sec-title">Safety Architecture</h2>
+    <p class="sec-lede">Multiple independent safety layers ensure that autonomous AI actions remain bounded, auditable, and reversible.</p>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card-kicker">Execution Safety</div>
+        <h3>SafetyGuard</h3>
+        <p>Runtime enforcement layer in Auton that prevents dangerous operations. Path sandboxing (only D:\ProjectsHome), banned operations (rm -rf, --force, DROP TABLE), rate limiting (5 tasks/hr, 1 concurrent), file size caps (100KB/file, 10 files/task), disk free minimum (1GB), and automatic kill switch on >50% failure rate or 3 consecutive blocks.</p>
+        <div class="card-meta">
+          <span class="tag tag-green">Enforced</span>
+          <span class="tag tag-ghost">7 safety checks</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-kicker">Promotion Gates</div>
+        <h3>Mode Escalation</h3>
+        <p>Auton operates in DRY_RUN by default. Escalation to SUPERVISED requires: 10 successful reviews, 3 days of operation, &lt;10% failure rate. Escalation to AUTONOMOUS requires: 50 successful tasks, 14 days, &lt;5% failure rate, plus explicit human approval.</p>
+        <div class="card-meta">
+          <span class="tag tag-amber">DRY_RUN default</span>
+          <span class="tag tag-ghost">3 modes</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-kicker">Access Control</div>
+        <h3>Zero-Trust File Boundaries</h3>
+        <p>LLM Enclave enforces strict file access via bridge_policy.yaml. Allowed roots: D:\ProjectsHome only. Deny patterns: .env, credentials, private keys, node_modules, .git directories. All file operations route through workspace bridge (inbox/outbox/scratch).</p>
+        <div class="card-meta">
+          <span class="tag tag-green">Enforced</span>
+          <span class="tag tag-ghost">YAML policy</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-kicker">Audit Integrity</div>
+        <h3>Hash-Chain Verification</h3>
+        <p>Every state transition, permission grant, and AI decision is logged in append-only NDJSON format. Each entry includes a SHA-256 hash of the previous entry, creating a tamper-evident chain. Integrity is verified on every read. Chain breaks are flagged immediately.</p>
+        <div class="card-meta">
+          <span class="tag tag-green">Operational</span>
+          <span class="tag tag-ghost">SHA-256</span>
+          <span class="tag tag-ghost">NDJSON</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TECH STACK ═══ -->
+  <section>
+    <h2 class="sec-title">Technology</h2>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>Layer</th><th>Technology</th><th>Purpose</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--fg-strong)">Inference</td><td>Ollama + RTX 4070</td><td>Local LLM execution, GPU-accelerated</td><td style="color:var(--green)">Operational</td></tr>
+          <tr><td style="color:var(--fg-strong)">Server</td><td>Fastify (TypeScript)</td><td>API, WebSocket streaming, model proxy</td><td style="color:var(--green)">Active</td></tr>
+          <tr><td style="color:var(--fg-strong)">Frontend</td><td>React + Vite + Tailwind</td><td>Chat UI, model selector, dashboard</td><td style="color:var(--green)">Active</td></tr>
+          <tr><td style="color:var(--fg-strong)">Database</td><td>SQLite (sql.js WASM)</td><td>Conversations, sessions, audit trail</td><td style="color:var(--green)">Active</td></tr>
+          <tr><td style="color:var(--fg-strong)">Governance</td><td>Python + YAML</td><td>Router, enforcement, zone model</td><td style="color:var(--green)">Operational</td></tr>
+          <tr><td style="color:var(--fg-strong)">Agents</td><td>Python + asyncio</td><td>6 autonomous agents, event bus</td><td style="color:var(--amber)">DRY_RUN</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══ ARCHITECTURE ═══ -->
+  <section>
+    <h2 class="sec-title">Architecture</h2>
+    <p class="sec-lede">The orchestrator sits between users/agents and all AI resources. Nothing reaches a model without passing through the policy engine first.</p>
+
+    <div class="flow">
+      <div style="display:flex;flex-direction:column;gap:16px;min-width:680px">
+        <div class="flow-row">
+          <div class="flow-box" style="border-color:var(--fg-dim);flex:2"><strong>Operators &amp; Agents</strong>Human requests, Auton tasks, automated workflows</div>
+        </div>
+        <div style="text-align:center;color:var(--fg-faint);font-family:var(--font-mono);font-size:.72rem">&darr;</div>
+        <div class="flow-row">
+          <div class="flow-box" style="border-color:var(--amber-line);flex:1"><strong>System Router</strong>Classify, resolve, enforce zones</div>
+          <div class="flow-box" style="border-color:var(--purple-line);flex:1"><strong>Policy Engine</strong>Tier gates, approval artifacts, TTL</div>
+          <div class="flow-box" style="border-color:var(--blue-line);flex:1"><strong>Audit Logger</strong>Hash-chain, NDJSON, tamper check</div>
+        </div>
+        <div style="text-align:center;color:var(--fg-faint);font-family:var(--font-mono);font-size:.72rem">&darr;</div>
+        <div class="flow-row">
+          <div class="flow-box" style="border-color:var(--green-line);flex:1"><strong>Ollama (Local)</strong>Qwen 2.5, Llama 3<br>RTX 4070 GPU</div>
+          <div class="flow-box" style="border-color:var(--cyan-line);flex:1"><strong>LLM Enclave</strong>Zero-trust boundary<br>Bridge isolation</div>
+          <div class="flow-box" style="border-color:var(--amber-line);flex:1"><strong>Cloud API (Gated)</strong>Claude, OpenAI-compat<br>Policy-checked</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="page-footer">
+  <span class="footer-brand">Fisher Sovereign Systems</span>
+  <div class="footer-links">
+    <a href="../command-center/index.html">Command Center</a>
+    <a href="../home.html">Portfolio</a>
+    <a href="../llm-enclave/index.html">LLM Enclave</a>
+    <a href="../sovereign-hub/index.html">Sovereign Hub</a>
+  </div>
+</footer>
+
+</body>
+</html>
