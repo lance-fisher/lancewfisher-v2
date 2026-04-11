@@ -300,32 +300,32 @@
 </nav>
 
 <header class="hero">
-  <h1>Command Surface for the Fisher Sovereign Ecosystem</h1>
-  <p>Interactive launch surface for the Fisher Sovereign ecosystem. Inspect real project states, open public-safe demos, and see which systems are live, protected, or still in active buildout.</p>
+  <h1>The Fisher Sovereign Product Family</h1>
+  <p>Every system shown here is a real, working product built by Lance Fisher. Browse the portfolio, explore live demos, and see which of these could be customized, branded, and deployed for your business, home, or team.</p>
 </header>
 
 <div class="page-benefit">
-  See what each system does, what kind of access is available, and where to go next without digging through internal workflow tools first.
+  Click any project card to learn what it does, who it is for, and how a custom version could be built for you.
 </div>
 
 <section class="entry-strip" aria-label="Sovereign Hub entry routes">
   <article class="entry-card">
-    <div class="entry-kicker">Launch</div>
-    <h3>Open Public-Safe Demos</h3>
-    <p>Jump directly into browser-contained alphas like Harmony, Home Hub, Sovereign Signal, and Jump Quest.</p>
-    <div class="entry-note">Best for: exploring usable surfaces immediately</div>
+    <div class="entry-kicker">Explore</div>
+    <h3>Try Live Product Demos</h3>
+    <p>Interactive demos for booking apps, network dashboards, AI platforms, encrypted messaging, and more. See real products in action.</p>
+    <div class="entry-note">Best for: seeing what a custom build would look like</div>
   </article>
   <article class="entry-card">
-    <div class="entry-kicker">Inspect</div>
-    <h3>Review Protected Systems</h3>
-    <p>Read architecture summaries, states, and capabilities for systems that are intentionally not exposed in full.</p>
-    <div class="entry-note">Best for: understanding capability without exposing IP</div>
+    <div class="entry-kicker">Understand</div>
+    <h3>See What Each System Does</h3>
+    <p>Every project card explains who it is for, what problem it solves, and how it could be tailored, branded, and deployed for your needs.</p>
+    <div class="entry-note">Best for: evaluating which systems fit your use case</div>
   </article>
   <article class="entry-card">
-    <div class="entry-kicker">Operate</div>
-    <h3>Understand Real Availability</h3>
-    <p>Use badges, port hints, and lifecycle states to tell the difference between a live app, an interactive preview, and a protected internal tool.</p>
-    <div class="entry-note">Best for: fast orientation across the full ecosystem</div>
+    <div class="entry-kicker">Build</div>
+    <h3>Request a Custom Version</h3>
+    <p>Every system here can be built for you: local-first, self-hosted, fully branded, with the security posture and deployment model you need.</p>
+    <div class="entry-note">Best for: businesses, teams, and privacy-focused users</div>
   </article>
 </section>
 
@@ -545,12 +545,12 @@
       <h3>FAQ</h3>
       <div class="faq-q">What does "Protected" mean?</div>
       <div class="faq-a">Protected projects are IP-sensitive. Their source is private and the live system is not exposed publicly. Only a sanitized profile is shown on this page.</div>
-      <div class="faq-q">Why are launch buttons disabled on some cards?</div>
-      <div class="faq-a">Launch and terminal actions are only enabled for Active and Public Alpha projects. Archived, paused, and Protected-only projects show their detail panel but cannot be launched from this showcase.</div>
+      <div class="faq-q">Can these systems be built for me?</div>
+      <div class="faq-a">Yes. Every system shown here can be customized, branded, and deployed for your business, home network, or personal infrastructure. Click any project card and use "Request a Custom Build" to start a conversation.</div>
+      <div class="faq-q">What does "local-first" mean?</div>
+      <div class="faq-a">Local-first means the system runs on hardware you own. Your data stays on your network. No cloud subscription, no third-party data access, no vendor lock-in. You control the infrastructure.</div>
       <div class="faq-q">Is this dashboard live?</div>
-      <div class="faq-a">This page is a static showcase of the real Sovereign Hub. The real surface (running locally on port 8090) hits live API endpoints for everything you see here. The endpoint list below documents the real surface.</div>
-      <div class="faq-q">What happens when I click "Launch Claude Session"?</div>
-      <div class="faq-a">In the showcase, the project's local path is copied to your clipboard. In the live version, the same button calls /api/launch-claude to spawn an attached terminal session in the project directory.</div>
+      <div class="faq-a">This page is a curated showcase of the real Sovereign Hub. The live operator surface runs locally on Lance's hardware. This public version lets you explore the full product family and access interactive demos.</div>
     </div>
 
     <div class="help-block">
@@ -574,7 +574,7 @@
 
     <div class="help-block">
       <h3>Mission</h3>
-      <p>Fisher Sovereign Systems is being built to return control to the individual. Sovereign Hub is the operator surface for that mission: a single command plane for every project, every service, every session, owned and operated locally.</p>
+      <p>Fisher Sovereign Systems builds technology that returns control to the people who use it. Every system here runs on hardware you own, processes data you control, and eliminates dependency on platforms that profit from your information. This page is the product catalog for that mission.</p>
     </div>
   </section>
 
@@ -616,6 +616,8 @@
       tech: ['Python', 'asyncio', 'aiohttp', 'PyYAML', 'numpy'],
       port: 8091,
       path: 'D:\\ProjectsHome\\profit-desk',
+      demoUrl: '../trading-desk/',
+      bestFor: 'Active traders, crypto funds, and quantitative teams who want multi-strategy execution without vendor lock-in.',
       lastActive: '2 hours ago'
     },
     {
@@ -627,6 +629,8 @@
       tech: ['TypeScript', 'Node.js', 'ccxt', 'ethers.js', '@solana/web3.js'],
       port: 4000,
       path: 'D:\\ProjectsHome\\master-trade-bot',
+      demoUrl: '../sovereign-trade-engine/',
+      bestFor: 'Multi-chain traders and DeFi operators who need unified execution across exchanges and protocols.',
       lastActive: '6 hours ago'
     },
     {
@@ -638,6 +642,8 @@
       tech: ['TypeScript', 'Next.js', 'libsodium', 'WebAuthn', 'Express'],
       port: null,
       path: 'D:\\ProjectsHome\\e2ee-messenger',
+      demoUrl: '../sovereign-signal/',
+      bestFor: 'Privacy-focused teams, family offices, and anyone who needs conversations that no server can read.',
       lastActive: '1 day ago'
     },
     {
@@ -649,6 +655,8 @@
       tech: ['TypeScript', 'React Native', 'Expo', 'NestJS', 'Prisma', 'PostgreSQL', 'Stripe'],
       port: 3000,
       path: 'D:\\ProjectsHome\\harmony-medspa',
+      demoUrl: '../harmony/',
+      bestFor: 'Med spas, wellness clinics, and service businesses that want a branded booking app instead of renting from Vagaro or Booksy.',
       lastActive: '4 days ago'
     },
     {
@@ -656,10 +664,12 @@
       cat: 'Infrastructure',
       status: 'active',
       signal: null,
-      desc: 'Home network monitoring dashboard. Tracks devices, services, uptime, DNS queries, and network health across the LAN. React frontend on a Fastify API backed by SQLite.',
+      desc: 'Local network security and home automation dashboard. Device discovery, camera feeds, trust scoring, and real-time alerts. All data stays local in SQLite.',
       tech: ['TypeScript', 'Fastify', 'React', 'Vite', 'Tailwind', 'SQLite'],
       port: 3210,
       path: 'D:\\ProjectsHome\\home-hub',
+      demoUrl: '../home-hub/',
+      bestFor: 'Homeowners, small offices, and privacy-conscious users who want full visibility into their local network without cloud monitoring.',
       lastActive: '3 hours ago'
     },
     {
@@ -667,10 +677,12 @@
       cat: 'Game',
       status: 'dev',
       signal: null,
-      desc: '3D obstacle course game built for my son Jamison. Unity-based with a Three.js web companion. Procedurally generated levels and jump physics.',
+      desc: '3D platformer playable in any browser. Built for a real child with no ads, no microtransactions, no data collection. Three.js web version with skill tree and cosmetics.',
       tech: ['Unity', 'C#', 'Three.js'],
       port: 5173,
       path: 'D:\\ProjectsHome\\jumpquest',
+      demoUrl: '../jumpquest/',
+      bestFor: 'Parents who want a browser game their kids can play without ads or data harvesting.',
       lastActive: '2 days ago'
     },
     {
@@ -678,10 +690,12 @@
       cat: 'Game',
       status: 'active',
       signal: null,
-      desc: 'Turn-based strategy game with deep faction lore, territorial control, and asymmetric unit design. Currently in pre-prototype. The Design Bible is at v3.0 and is the source of truth for all mechanics, factions, and canon.',
+      desc: 'Dynasty-driven medieval strategy game where faith, sacrifice, and bloodline shape the fate of civilizations. Nine founding houses, seven interconnected systems, four ancient faith covenants.',
       tech: ['Game Design', 'Documentation', 'Markdown'],
       port: null,
       path: 'D:\\ProjectsHome\\Bloodlines',
+      demoUrl: '../bloodlines/',
+      bestFor: 'Strategy game enthusiasts who want deep, consequence-driven gameplay over quick skirmishes.',
       lastActive: 'today'
     },
     {
@@ -689,10 +703,12 @@
       cat: 'App',
       status: 'active',
       signal: null,
-      desc: 'Directory of Northern Colorado businesses. Community-curated with categories, mobile-first card layout, and local recommendations.',
+      desc: 'Fully integrated, independent mobile applications for service businesses. 10 interactive demos built for real businesses across 6 verticals. Zero third-party data retention.',
       tech: ['HTML', 'CSS', 'Vanilla JS'],
       port: null,
       path: 'D:\\ProjectsHome\\noco-app-demos',
+      demoUrl: '../noco/',
+      bestFor: 'Service businesses that want a branded mobile app they fully own instead of renting from third-party platforms.',
       lastActive: '1 week ago'
     },
     {
@@ -700,10 +716,12 @@
       cat: 'Brand',
       status: 'active',
       signal: null,
-      desc: 'One-Three brand network site. Connects Fisher Sovereign properties under a unified identity and brand system.',
+      desc: 'Nautical-inspired apparel and lifestyle brand. 24 original designs, direct storefront, full brand identity system.',
       tech: ['HTML', 'CSS', 'JS'],
       port: null,
       path: 'D:\\ProjectsHome\\one-three-net',
+      demoUrl: '../one-three/brand.html',
+      bestFor: 'Anyone who resonates with maritime culture and wants wearable art built from original designs.',
       lastActive: '5 days ago'
     },
     {
@@ -711,10 +729,12 @@
       cat: 'Tool',
       status: 'active',
       signal: 'alpha',
-      desc: 'Dashboard tracking AI coding sessions across the ecosystem. Maps 80+ sessions and 20+ projects with timeline, filter, and 3D relationship views.',
+      desc: 'Dashboard mapping every AI-assisted development session across all projects. Searchable, indexed, persistent record of what was changed, why, and which models were involved.',
       tech: ['Python', 'SQLite', 'Three.js', 'D3.js'],
       port: 8092,
       path: 'D:\\ProjectsHome\\session-atlas',
+      demoUrl: '../session-atlas/',
+      bestFor: 'Development teams and AI operators who want full audit trails of AI-assisted work.',
       lastActive: 'today'
     },
     {
@@ -722,10 +742,12 @@
       cat: 'Infrastructure',
       status: 'active',
       signal: null,
-      desc: 'Local LLM orchestration layer. Runs Qwen 2.5 Coder 35B via Ollama with PowerShell management scripts. Keeps inference entirely on-device.',
+      desc: 'Governed zero-trust security enclave for local LLM inference. The model starts with zero filesystem permissions. All access is policy-gated with hash-chain audit trails.',
       tech: ['Python', 'PowerShell', 'Ollama'],
       port: 8094,
       path: 'D:\\ProjectsHome\\llm-enclave',
+      demoUrl: '../llm-enclave/',
+      bestFor: 'Organizations that need AI capabilities without sending data to external providers. Full local inference with audit trails.',
       lastActive: '1 day ago'
     },
     {
@@ -737,6 +759,8 @@
       tech: ['Python', 'asyncio', 'aiohttp', 'PyNaCl'],
       port: 8095,
       path: 'D:\\ProjectsHome\\auton',
+      demoUrl: '../auton/',
+      bestFor: 'Teams managing complex multi-project ecosystems who need AI-driven maintenance and documentation.',
       lastActive: '12 minutes ago'
     },
     {
@@ -744,10 +768,12 @@
       cat: 'Infrastructure',
       status: 'dev',
       signal: 'protected',
-      desc: 'Operator control plane for the entire ecosystem. Service management, deployment, monitoring, and a hardened auth flow with passkeys and mTLS.',
+      desc: 'Unified control plane for managing every service, bot, and automation in the ecosystem. Human-in-the-loop approval gates and 2FA verification.',
       tech: ['TypeScript', 'Fastify', 'Next.js', 'Node.js', 'PostgreSQL', 'Redis'],
       port: 3100,
       path: 'D:\\ProjectsHome\\sovereign-console',
+      demoUrl: '../operator-console/',
+      bestFor: 'Operators running multiple services who need centralized management with approval gates and audit trails.',
       lastActive: '8 hours ago'
     },
     {
@@ -1042,15 +1068,17 @@
     card.appendChild(techs);
 
     var foot = el('div', 'card-foot');
-    if (p.port != null) {
-      foot.appendChild(el('span', 'card-port', 'localhost:' + p.port));
+    if (p.demoUrl) {
+      foot.appendChild(el('span', 'card-port', 'Live demo available'));
+    } else if (p.port != null) {
+      foot.appendChild(el('span', 'card-port', 'Local-first service'));
     } else {
-      foot.appendChild(el('span', 'card-port-empty', 'no bound port'));
+      foot.appendChild(el('span', 'card-port-empty', 'Standalone system'));
     }
-    var cardActionText = 'Inspect';
-    if (p.signal === 'demo') cardActionText = 'Open Preview';
-    else if (p.signal === 'alpha') cardActionText = 'Open Alpha';
-    else if (p.signal === 'protected') cardActionText = 'Inspect System';
+    var cardActionText = 'Learn More';
+    if (p.signal === 'demo') cardActionText = 'See Demo';
+    else if (p.signal === 'alpha') cardActionText = 'Explore';
+    else if (p.signal === 'protected') cardActionText = 'View Details';
     var actBtn = el('button', 'card-action', cardActionText);
     actBtn.type = 'button';
     if (!meta.launchable) actBtn.classList.add('muted');
@@ -1135,14 +1163,21 @@
     }
     addRow('Status', meta.label);
     addRow('Category', p.cat);
-    addRow('Port', p.port != null ? 'localhost:' + p.port : 'none');
     addRow('Last active', p.lastActive || 'unknown');
-    addRow('Path', p.path);
+    addRow('Deployment', p.port != null ? 'Local-first, self-hosted' : 'Static / standalone');
     body.appendChild(detailSec);
+
+    // Who this is for
+    if (p.bestFor) {
+      var forSec = el('div', 'slidein-section');
+      forSec.appendChild(el('h3', null, 'Who This Is For'));
+      forSec.appendChild(el('p', 'slidein-desc', p.bestFor));
+      body.appendChild(forSec);
+    }
 
     // Tech Stack section
     var techSec = el('div', 'slidein-section');
-    techSec.appendChild(el('h3', null, 'Tech Stack'));
+    techSec.appendChild(el('h3', null, 'Built With'));
     var techWrap = el('div', 'slidein-techs');
     p.tech.forEach(function(t) {
       techWrap.appendChild(el('span', 'tech-badge', t));
@@ -1150,48 +1185,35 @@
     techSec.appendChild(techWrap);
     body.appendChild(techSec);
 
-    // Action buttons
+    // Customer-facing action buttons
     var actSec = el('div', 'slidein-section');
-    actSec.appendChild(el('h3', null, 'Actions'));
+    actSec.appendChild(el('h3', null, 'Explore'));
     var actWrap = el('div', 'slidein-actions');
 
-    var launchBtn = makeActionBtn(
-      'Copy Local Launch Path',
-      'Copy cd ' + p.path + ' to clipboard',
-      !meta.launchable,
-      function() {
-        copyToClipboard('cd "' + p.path + '"');
-        showToast('Project path copied. Paste into terminal to open the local project.');
-      }
-    );
-    actWrap.appendChild(launchBtn);
-
-    var termBtn = makeActionBtn(
-      'Open Terminal',
-      'Copy cd path to clipboard',
-      !meta.launchable,
-      function() {
-        copyToClipboard('cd "' + p.path + '"');
-        showToast('cd path copied to clipboard');
-      }
-    );
-    actWrap.appendChild(termBtn);
-
-    if (p.port != null) {
-      var portTitle = 'View Port (localhost:' + p.port + ')';
-      var portSub = state.settings.portHints ? 'This service may not be running' : null;
-      var portBtn = makeActionBtn(portTitle, portSub, !meta.launchable, function() {
-        if (meta.launchable) {
-          window.open('http://localhost:' + p.port, '_blank', 'noopener');
+    if (p.demoUrl) {
+      var demoBtn = makeActionBtn(
+        'View Product Demo',
+        'See this system in action',
+        false,
+        function() {
+          window.open(p.demoUrl, '_blank', 'noopener');
         }
-      });
-      actWrap.appendChild(portBtn);
+      );
+      actWrap.appendChild(demoBtn);
     }
-    actSec.appendChild(actWrap);
 
-    if (!meta.launchable) {
-      actSec.appendChild(el('div', 'action-note', 'Local open actions are disabled for ' + meta.label + ' projects. Protected, paused, and archived entries stay in inspect-only mode on this public showcase.'));
-    }
+    var contactBtn = makeActionBtn(
+      'Request a Custom Build',
+      'Discuss how this could be tailored for your needs',
+      false,
+      function() {
+        window.open('../home.html#sec-contact', '_blank', 'noopener');
+      }
+    );
+    actWrap.appendChild(contactBtn);
+
+    actSec.appendChild(actWrap);
+    actSec.appendChild(el('div', 'action-note', 'Every system shown here can be customized, branded, and deployed for your business, team, or personal infrastructure. Local-first. No cloud dependency required.'));
 
     body.appendChild(actSec);
 

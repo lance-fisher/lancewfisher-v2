@@ -1135,6 +1135,41 @@ a:hover{color:#ffffff}
 .yn{color:var(--violet)}
 
 /* ===========================================
+   SETTINGS UI
+   =========================================== */
+.settings-header{margin-bottom:22px}
+.settings-title{font-family:var(--display);font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px}
+.settings-subtitle{font-size:12px;color:var(--text-mid);line-height:1.5}
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(340px, 1fr));gap:16px}
+.setting-group{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:18px 20px}
+.sg-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.sg-icon{font-size:16px;opacity:0.7}
+.sg-title{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text)}
+.sg-desc{font-size:11px;color:var(--text-faint);margin-left:auto}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.setting-row:last-child{border-bottom:none}
+.sr-info{flex:1;min-width:0}
+.sr-label{font-size:12px;color:var(--text);margin-bottom:2px}
+.sr-hint{font-size:10px;color:var(--text-faint);line-height:1.4}
+.sr-control{flex-shrink:0}
+/* Toggle switch */
+.toggle{position:relative;width:38px;height:20px;cursor:pointer}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle .slider{position:absolute;inset:0;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:10px;transition:background 0.2s,border-color 0.2s}
+.toggle .slider::before{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--text-mid);transition:transform 0.2s,background 0.2s}
+.toggle input:checked + .slider{background:rgba(110,231,160,0.15);border-color:rgba(110,231,160,0.4)}
+.toggle input:checked + .slider::before{transform:translateX(18px);background:var(--green)}
+/* Select */
+.sr-select{font-family:var(--mono);font-size:11px;padding:5px 10px;border-radius:4px;border:1px solid var(--border);background:var(--panel);color:var(--text);outline:none;cursor:pointer}
+.sr-select:focus{border-color:var(--blue)}
+/* Number input */
+.sr-number{font-family:var(--mono);font-size:11px;width:70px;padding:5px 8px;border-radius:4px;border:1px solid var(--border);background:var(--panel);color:var(--text);outline:none;text-align:right}
+.sr-number:focus{border-color:var(--blue)}
+/* Settings save indicator */
+.settings-saved{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:var(--green);opacity:0;transition:opacity 0.3s;margin-left:12px}
+.settings-saved.show{opacity:1}
+
+/* ===========================================
    RULES TAB
    =========================================== */
 .rules-grid{
@@ -1449,7 +1484,7 @@ a:hover{color:#ffffff}
 
 <!-- FSS-BRAND-BLOCK-V3 (FF25 wordmark, no H icon) -->
 <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../_shared/brand.css?v=20260408v3">
+<link rel="stylesheet" href="../_shared/brand.css?v=20260410v6">
 <div class="fssb-v3-top">
   <a href="../home.html" class="fssb-v3-top-link" aria-label="Fisher Sovereign Systems">
     <span class="fssb-v3-top-name">Fisher</span>
@@ -1726,13 +1761,11 @@ a:hover{color:#ffffff}
      SETTINGS PANE
      ===================================================== -->
 <section class="tab-pane" id="pane-settings">
-  <div class="yaml-wrap">
-    <div class="yaml-head">
-      <span class="yh-path">config/config.yaml</span>
-      <span class="yh-status"><span class="dot"></span> validation passed</span>
-    </div>
-    <div class="yaml-body" id="yaml-body"></div>
+  <div class="settings-header">
+    <h3 class="settings-title">System Configuration</h3>
+    <div class="settings-subtitle">Manage how Home Hub discovers, monitors, and protects your network. Changes apply to demo state only.</div>
   </div>
+  <div class="settings-grid" id="settings-grid"></div>
 </section>
 
 <!-- =====================================================
@@ -2622,24 +2655,135 @@ a:hover{color:#ffffff}
   /* =========================================================
      SETTINGS YAML
      ========================================================= */
-  function renderYaml(){
-    var body = $('yaml-body');
-    clearChildren(body);
-    yamlLines.forEach(function(line, idx){
-      line.tokens.forEach(function(tok){
-        if (tok.c) {
-          var span = el('span', tok.c, tok.t);
-          body.appendChild(span);
-        } else {
-          body.appendChild(document.createTextNode(tok.t));
+  function renderSettings(){
+    var grid = $('settings-grid');
+    clearChildren(grid);
+
+    var groups = [
+      { icon: '\uD83D\uDD0D', title: 'Network Discovery', desc: 'How devices are found', settings: [
+        { label: 'Scan interval', hint: 'How often the network is scanned for new devices', type: 'select', options: ['60s','120s','300s','600s'], value: '300s' },
+        { label: 'ARP scanning', hint: 'Use ARP protocol to discover devices on local subnet', type: 'toggle', value: true },
+        { label: 'Ping sweep', hint: 'Ping all addresses in subnet range', type: 'toggle', value: true },
+        { label: 'Deep scan (nmap)', hint: 'Full port scan on discovered devices. Slower but more detailed.', type: 'toggle', value: false },
+        { label: 'Auto-tag new devices', hint: 'Automatically classify devices by vendor OUI lookup', type: 'toggle', value: true }
+      ]},
+      { icon: '\uD83D\uDEE1', title: 'Trust & Security', desc: 'Device trust scoring', settings: [
+        { label: 'Trust recompute on event', hint: 'Recalculate trust scores when a security event occurs', type: 'toggle', value: true },
+        { label: 'Significant change threshold', hint: 'Score delta that triggers an alert', type: 'number', value: 10, min: 1, max: 50 },
+        { label: 'Quarantine unknown devices', hint: 'Flag unrecognized devices for manual review', type: 'toggle', value: false },
+        { label: 'Alert on MAC change', hint: 'Notify when a known IP appears with a different MAC address', type: 'toggle', value: true }
+      ]},
+      { icon: '\uD83D\uDD14', title: 'Alerts & Notifications', desc: 'When and how you are notified', settings: [
+        { label: 'Quiet hours', hint: 'Suppress non-critical alerts during these hours', type: 'select', options: ['Disabled','22:00-07:00','23:00-06:00','00:00-08:00'], value: '22:00-07:00' },
+        { label: 'New device alerts', hint: 'Notify when a previously unseen device joins the network', type: 'toggle', value: true },
+        { label: 'Camera offline alerts', hint: 'Notify when a camera feed stops responding', type: 'toggle', value: true },
+        { label: 'Bandwidth threshold (MB/s)', hint: 'Alert when any device exceeds this bandwidth', type: 'number', value: 50, min: 5, max: 500 }
+      ]},
+      { icon: '\uD83C\uDFA5', title: 'Camera Configuration', desc: 'Local feed management', settings: [
+        { label: 'Auto-refresh interval', hint: 'How often snapshot cameras are polled', type: 'select', options: ['5s','15s','30s','60s'], value: '15s' },
+        { label: 'Record on motion', hint: 'Save clips when motion is detected (local storage only)', type: 'toggle', value: false },
+        { label: 'Retention window (days)', hint: 'How long recorded clips are kept before auto-deletion', type: 'number', value: 14, min: 1, max: 90 }
+      ]},
+      { icon: '\uD83D\uDCBE', title: 'Data & Storage', desc: 'Local retention policies', settings: [
+        { label: 'Event log retention (days)', hint: 'How long device events are kept in local SQLite', type: 'number', value: 30, min: 7, max: 365 },
+        { label: 'Export format', hint: 'Default format for data exports', type: 'select', options: ['CSV','JSON','SQLite dump'], value: 'CSV' },
+        { label: 'Auto-backup', hint: 'Daily backup of configuration and event database', type: 'toggle', value: true },
+        { label: 'Cloud sync', hint: 'Send data to external cloud services', type: 'toggle', value: false, note: 'Disabled by design. Your data stays local.' }
+      ]},
+      { icon: '\uD83D\uDC64', title: 'Access & Roles', desc: 'Who can see and manage', settings: [
+        { label: 'Require authentication', hint: 'Require login to access the dashboard', type: 'toggle', value: true },
+        { label: 'Admin PIN', hint: 'Additional PIN required for destructive actions', type: 'toggle', value: false },
+        { label: 'Mobile alerts', hint: 'Push critical alerts to phone via local relay', type: 'toggle', value: true },
+        { label: 'Guest read-only mode', hint: 'Allow unauthenticated users to view (not manage) the dashboard', type: 'toggle', value: false }
+      ]}
+    ];
+
+    function showSaved(){
+      var saved = document.querySelector('.settings-saved');
+      if (!saved) return;
+      saved.classList.add('show');
+      setTimeout(function(){ saved.classList.remove('show'); }, 1500);
+    }
+
+    groups.forEach(function(g){
+      var card = el('div', 'setting-group');
+      var head = el('div', 'sg-head');
+      head.appendChild(el('span', 'sg-icon', g.icon));
+      head.appendChild(el('span', 'sg-title', g.title));
+      head.appendChild(el('span', 'sg-desc', g.desc));
+      card.appendChild(head);
+
+      g.settings.forEach(function(s){
+        var row = el('div', 'setting-row');
+        var info = el('div', 'sr-info');
+        info.appendChild(el('div', 'sr-label', s.label));
+        if (s.hint) info.appendChild(el('div', 'sr-hint', s.hint));
+        if (s.note) {
+          var noteEl = el('div', 'sr-hint', s.note);
+          noteEl.style.color = 'var(--green)';
+          noteEl.style.marginTop = '2px';
+          info.appendChild(noteEl);
         }
+        row.appendChild(info);
+
+        var ctrl = el('div', 'sr-control');
+        if (s.type === 'toggle') {
+          var lbl = document.createElement('label');
+          lbl.className = 'toggle';
+          var inp = document.createElement('input');
+          inp.type = 'checkbox';
+          inp.checked = s.value;
+          inp.addEventListener('change', function(){
+            showSaved();
+            toast(s.label + ' ' + (this.checked ? 'enabled' : 'disabled'));
+          });
+          lbl.appendChild(inp);
+          var slider = el('span', 'slider');
+          lbl.appendChild(slider);
+          ctrl.appendChild(lbl);
+        } else if (s.type === 'select') {
+          var sel = document.createElement('select');
+          sel.className = 'sr-select';
+          s.options.forEach(function(opt){
+            var o = document.createElement('option');
+            o.value = opt;
+            o.textContent = opt;
+            if (opt === s.value) o.selected = true;
+            sel.appendChild(o);
+          });
+          sel.addEventListener('change', function(){
+            showSaved();
+            toast(s.label + ' set to ' + this.value);
+          });
+          ctrl.appendChild(sel);
+        } else if (s.type === 'number') {
+          var num = document.createElement('input');
+          num.type = 'number';
+          num.className = 'sr-number';
+          num.value = s.value;
+          if (s.min != null) num.min = s.min;
+          if (s.max != null) num.max = s.max;
+          num.addEventListener('change', function(){
+            showSaved();
+            toast(s.label + ' updated to ' + this.value);
+          });
+          ctrl.appendChild(num);
+        }
+        row.appendChild(ctrl);
+        card.appendChild(row);
       });
-      if (idx < yamlLines.length - 1) {
-        body.appendChild(document.createTextNode('\n'));
-      }
+
+      grid.appendChild(card);
     });
+
+    // Add saved indicator to settings header
+    var header = document.querySelector('.settings-header .settings-title');
+    if (header && !header.querySelector('.settings-saved')) {
+      var saved = el('span', 'settings-saved', '\u2713 Saved');
+      header.appendChild(saved);
+    }
   }
-  renderYaml();
+  renderSettings();
 
   /* =========================================================
      SLIDE-IN SIDEBAR

@@ -1,4 +1,4 @@
-// Northern Colorado Business Demo Data
+// FS App Studio Business Demo Data
 // Each business gets a fully customized app demo
 
 const BUSINESSES = [

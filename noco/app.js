@@ -1,5 +1,5 @@
 // =============================================
-// NoCo App Studio — Interactive Demo Engine
+// FS App Studio — Interactive Demo Engine
 // =============================================
 
 let selectedBusiness = null;

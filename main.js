@@ -2118,7 +2118,7 @@
     drawCorners(ctx, w, h, 14*s, aClr(p,0.12));
   }
 
-  // ---- NOCO APP STUDIO: Phone mockup demos ----
+  // ---- FS APP STUDIO: Phone mockup demos ----
   function drawNoCo(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
     var p = pal(201, 168, 76);
@@ -2129,7 +2129,7 @@
     else { bg.addColorStop(0, '#0c0a08'); bg.addColorStop(0.5, '#0e0b09'); bg.addColorStop(1, '#0a0907'); }
     ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
 
-    // Subtle mountain silhouette (Northern Colorado)
+    // Subtle mountain silhouette (background aesthetic)
     ctx.beginPath();
     ctx.moveTo(0, h*0.52);
     ctx.lineTo(w*0.12, h*0.38); ctx.lineTo(w*0.22, h*0.42);
@@ -2156,7 +2156,7 @@
     ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
     ctx.fillStyle = aClr(p,0.5); ctx.fillRect(0, 0, 3*s, 24*s);
     ctx.fillStyle = tClr(p,0.65); ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
-    ctx.fillText('NoCo App Studio', 14*s, 16*s);
+    ctx.fillText('FS App Studio', 14*s, 16*s);
     ctx.fillStyle = aClr(p,0.4); ctx.font = '200 '+(6*s)+'px Inter, sans-serif';
     ctx.textAlign = 'right'; ctx.fillText('10 CLIENTS', w-14*s, 16*s); ctx.textAlign = 'left';
 

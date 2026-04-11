@@ -449,12 +449,12 @@ var PROJECT_DATA = {
   "harmony-medspa": {
     title: "Harmony Medspa",
     number: "21",
-    tagline: "Full-stack medspa booking platform built for a real NoCo business",
+    tagline: "Full-stack medspa booking platform built for a real business",
     disclosure: "public-safe",
     status: "Active",
     statusClass: "active",
     tech: ["React Native", "Expo", "NestJS", "PostgreSQL", "Stripe"],
-    overview: "A production-ready medspa booking platform built for a real Northern Colorado med spa. Includes a full-featured mobile app prototype with appointment booking, service catalog, staff profiles, treatment consultation flows, and Stripe payment integration. Part of the NoCo App Studio portfolio — the live embedded demo shows the complete client experience from discovery through checkout.",
+    overview: "A production-ready medspa booking platform built for a real med spa. Includes a full-featured mobile app prototype with appointment booking, service catalog, staff profiles, treatment consultation flows, and Stripe payment integration. Part of the FS App Studio portfolio, the live embedded demo shows the complete client experience from discovery through checkout.",
     philosophy: "Every local business deserves a branded app on their clients' home screens. Not a Vagaro listing. Not a generic booking widget. Their app, their brand, their client relationship. Harmony Medspa is the proof of that conviction, live and interactive. The pitch is simple: your clients will book from your app, not a third-party marketplace.",
     capabilities: [
       "Full appointment booking flow with service selection, staff choice, and time slot management",
@@ -474,7 +474,7 @@ var PROJECT_DATA = {
       { value: "Live", label: "Demo" },
       { value: "Stripe", label: "Payments" },
       { value: "Full", label: "Booking Flow" },
-      { value: "NoCo", label: "Market" }
+      { value: "Live", label: "Market" }
     ]
   },
 
