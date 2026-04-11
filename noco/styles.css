@@ -1,5 +1,5 @@
 /* =============================================
-   NoCo App Studio — Dark Gold Aesthetic
+   FS App Studio — Dark Gold Aesthetic
    Matching lancewfisher.com design language
    ============================================= */
 
@@ -46,7 +46,7 @@ body {
 /* ===== NAV =====
    Was position:fixed. Now sticky so it sits below the FSS V3 brand block
    at the top of the page, then sticks to the viewport top as the user
-   scrolls past the brand block. Keeps NoCo's warm gold identity while
+   scrolls past the brand block. Keeps the warm gold identity while
    making room for the parent FSS wordmark. */
 nav {
   position: sticky;
