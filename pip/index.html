@@ -1372,6 +1372,98 @@
   <section id="routes-section"></section>
   <section id="stack-section"></section>
   <section id="diff-section"></section>
+
+  <!-- DEPLOYMENT TIERS -->
+  <section style="max-width:960px;margin:0 auto;padding:56px 32px;border-top:1px solid var(--border);">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.25em;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;">Deployment Options</div>
+    <div style="font-family:'Cinzel',serif;font-size:clamp(18px,3vw,24px);font-weight:600;color:var(--gold);margin-bottom:10px;">Three Tiers of Private Intelligence</div>
+    <p style="font-size:14px;color:var(--text-dim);max-width:680px;margin-bottom:32px;line-height:1.65;">Choose the deployment that matches your workflow. Every tier runs locally. Cloud providers are always opt-in, never required.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;position:relative;">
+        <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:var(--text);letter-spacing:.04em;margin-bottom:4px;">Personal Assistant</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:.06em;margin-bottom:14px;">ONE MODEL, BASIC CHAT</div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:1.65;margin-bottom:16px;">A single local model for everyday coding questions, text generation, and quick lookups. Runs on modest hardware with no GPU required for smaller models.</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);">
+          <div><span style="color:var(--green);">&#9679;</span> 8GB RAM minimum</div>
+          <div><span style="color:var(--green);">&#9679;</span> Integrated GPU (or CPU-only)</div>
+          <div><span style="color:var(--green);">&#9679;</span> ~5GB disk for one 7B model</div>
+          <div><span style="color:var(--green);">&#9679;</span> qwen2.5-coder:7b recommended</div>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border-gold);border-radius:var(--radius-lg);padding:24px;position:relative;">
+        <div style="position:absolute;top:-8px;right:16px;font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 10px;background:var(--gold-dim);border:1px solid var(--border-gold);border-radius:3px;color:var(--gold);letter-spacing:.08em;">RECOMMENDED</div>
+        <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:var(--gold);letter-spacing:.04em;margin-bottom:4px;">Prosumer Workstation</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:.06em;margin-bottom:14px;">MULTIPLE MODELS, CODE ASSISTANT</div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:1.65;margin-bottom:16px;">Multiple local models with intelligent routing. The system selects the best model per task: code models for programming, general models for reasoning, fast models for simple queries.</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);">
+          <div><span style="color:var(--gold);">&#9679;</span> 16GB RAM recommended</div>
+          <div><span style="color:var(--gold);">&#9679;</span> RTX 3060+ or equivalent</div>
+          <div><span style="color:var(--gold);">&#9679;</span> ~25GB disk for 3-5 models</div>
+          <div><span style="color:var(--gold);">&#9679;</span> Auto-routing between models</div>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;position:relative;">
+        <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:var(--text);letter-spacing:.04em;margin-bottom:4px;">Full Private Intelligence</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:.06em;margin-bottom:14px;">ALL MODELS, SERVICE HEALTH, REMOTE ACCESS</div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:1.65;margin-bottom:16px;">Complete local AI infrastructure: multiple models, service health monitoring, session history, phone access, and optional hybrid cloud routing for tasks that benefit from larger models.</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);">
+          <div><span style="color:var(--purple);">&#9679;</span> 32GB+ RAM</div>
+          <div><span style="color:var(--purple);">&#9679;</span> RTX 4070+ or equivalent</div>
+          <div><span style="color:var(--purple);">&#9679;</span> ~80GB disk for full model suite</div>
+          <div><span style="color:var(--purple);">&#9679;</span> Remote access via HTTPS + DDNS</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROUTING DECISION EXAMPLES -->
+  <section style="max-width:960px;margin:0 auto;padding:56px 32px;border-top:1px solid var(--border);">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.25em;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;">Intelligent Routing</div>
+    <div style="font-family:'Cinzel',serif;font-size:clamp(18px,3vw,24px);font-weight:600;color:var(--gold);margin-bottom:10px;">Why That Model Was Selected</div>
+    <p style="font-size:14px;color:var(--text-dim);max-width:680px;margin-bottom:28px;line-height:1.65;">Every routing decision is visible. The system analyzes your prompt, scores it against model capabilities, and shows you exactly why a particular model was chosen.</p>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="font-size:13px;color:var(--text);flex:1;min-width:200px;">"Fix the TypeScript error in my auth middleware"</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 10px;border-radius:4px;background:var(--green-dim);border:1px solid var(--green-border);color:var(--green);">LOCAL</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);">qwen2.5-coder:14b</span>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);width:100%;padding-top:4px;">Reason: Code patterns detected, TypeScript context, local model has code specialization</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="font-size:13px;color:var(--text);flex:1;min-width:200px;">"Analyze this 50-page contract for liability clauses"</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 10px;border-radius:4px;background:var(--purple-dim);border:1px solid var(--purple-border);color:var(--purple);">CLOUD</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);">claude-opus-4-6</span>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);width:100%;padding-top:4px;">Reason: Long context required (200k tokens), reasoning task, cloud relay gate open</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="font-size:13px;color:var(--text);flex:1;min-width:200px;">"Summarize this meeting transcript with action items"</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 10px;border-radius:4px;background:var(--green-dim);border:1px solid var(--green-border);color:var(--green);">LOCAL</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);">qwen2.5:14b-instruct</span>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);width:100%;padding-top:4px;">Reason: General reasoning task, sensitive content (default local), no cloud required</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="font-size:13px;color:var(--text);flex:1;min-width:200px;">"Quick: what's the syntax for a Python list comprehension?"</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 10px;border-radius:4px;background:var(--blue-dim);border:1px solid var(--blue-border);color:var(--blue);">FAST</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);">qwen2.5-coder:7b</span>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);width:100%;padding-top:4px;">Reason: Simple query, fast model sufficient, lower latency preferred</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="max-width:960px;margin:0 auto;padding:48px 32px;border-top:1px solid var(--border);text-align:center;">
+    <div style="font-family:'Cinzel',serif;font-size:18px;font-weight:600;color:var(--gold);margin-bottom:10px;">What a Custom Build Includes</div>
+    <p style="font-size:14px;color:var(--text-dim);max-width:580px;margin:0 auto 24px;line-height:1.65;">Every PIP deployment is configured for your hardware, your models, and your privacy requirements. Choose which providers to enable, how routing works, and whether any data ever leaves your machine.</p>
+    <a href="../home.html#sec-contact" style="display:inline-block;padding:13px 30px;background:var(--gold-dim);border:1px solid var(--border-gold);border-radius:6px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:all .15s;">Discuss Your Requirements</a>
+  </section>
+
   <div class="page-footer" id="footer-section"></div>
 </div>
 

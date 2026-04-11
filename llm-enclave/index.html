@@ -506,9 +506,13 @@ section.block:last-of-type{border-bottom:none}
 </nav>
 
 <header class="hero">
-  <div class="hero-eyebrow">A Fisher Sovereign Publication</div>
+  <div class="hero-eyebrow">Private AI Infrastructure</div>
   <h1>The <span class="gold">LLM Enclave</span></h1>
-  <p class="deck">A hardened zero-trust environment for running a local coding LLM. Inference happens entirely offline through Ollama. Every file the model can touch is gated by policy, scanned for secrets, and recorded in a hash-chain audit trail.</p>
+  <p class="deck">Run AI on hardware you own. No API keys, no cloud dependency, no data leaving your network. Every file the model touches is gated by policy, scanned for secrets, and recorded in a tamper-evident audit trail.</p>
+  <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:24px;">
+    <a href="#sec-architecture" style="display:inline-block;padding:12px 28px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.4);border-radius:6px;font-family:var(--sans);font-size:.82rem;font-weight:500;color:var(--gold-bright);letter-spacing:.08em;text-transform:uppercase;transition:all .15s;">View Architecture</a>
+    <a href="../home.html#sec-contact" style="display:inline-block;padding:12px 28px;border:1px solid var(--border);border-radius:6px;font-family:var(--sans);font-size:.82rem;font-weight:500;color:var(--text-mid);letter-spacing:.08em;text-transform:uppercase;transition:all .15s;">Request a Custom Build</a>
+  </div>
   <div class="hero-signature">
     <span class="sig-dot"></span>
     Built by Fisher Sovereign Systems
@@ -540,7 +544,112 @@ section.block:last-of-type{border-bottom:none}
 
 <div class="container">
 
+  <!-- CUSTOMER VALUE SECTIONS -->
   <section class="block">
+    <div class="section-title" style="text-align:center;margin-bottom:8px;">Who This Is For</div>
+    <p class="section-desc" style="text-align:center;margin:0 auto 32px;">The LLM Enclave is built for teams and individuals who need AI-assisted coding but cannot afford to send their source code, proprietary data, or internal documentation to a third-party cloud.</p>
+    <div class="cols-2" style="gap:18px;">
+      <div class="policy-card">
+        <div class="card-title">Regulated Industries</div>
+        <div class="card-sub">Finance, healthcare, legal, defense, government</div>
+        <ul>
+          <li><span class="ok-mark">[+]</span><span>Compliance requirements forbid sending code to external APIs</span></li>
+          <li><span class="ok-mark">[+]</span><span>Audit trails required for every AI interaction</span></li>
+          <li><span class="ok-mark">[+]</span><span>Data sovereignty obligations that cloud AI cannot satisfy</span></li>
+        </ul>
+      </div>
+      <div class="policy-card">
+        <div class="card-title">Privacy-Conscious Teams</div>
+        <div class="card-sub">Startups, independent developers, security researchers</div>
+        <ul>
+          <li><span class="ok-mark">[+]</span><span>Trade secrets and proprietary algorithms stay on your machine</span></li>
+          <li><span class="ok-mark">[+]</span><span>No per-token billing, no usage caps, no vendor lock-in</span></li>
+          <li><span class="ok-mark">[+]</span><span>Full control over which files the AI can read or modify</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-title" style="text-align:center;margin-bottom:8px;">What You Control</div>
+    <p class="section-desc" style="text-align:center;margin:0 auto 32px;">Every layer of the system is yours. No vendor decides what the model can access, what gets logged, or when your access expires.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
+      <div class="policy-card">
+        <div class="card-title">Which Models Run</div>
+        <div class="card-sub">Swap models without changing infrastructure</div>
+      </div>
+      <div class="policy-card">
+        <div class="card-title">What Files It Reads</div>
+        <div class="card-sub">Policy-gated access, per-directory, per-extension</div>
+      </div>
+      <div class="policy-card">
+        <div class="card-title">What Gets Logged</div>
+        <div class="card-sub">Metadata only. Source code never hits the log.</div>
+      </div>
+      <div class="policy-card">
+        <div class="card-title">What Never Leaves</div>
+        <div class="card-sub">Zero outbound network at runtime. Period.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-title" style="text-align:center;margin-bottom:8px;">LLM Enclave vs. Cloud AI Subscriptions</div>
+    <p class="section-desc" style="text-align:center;margin:0 auto 32px;">Cloud AI coding tools are convenient. But convenience comes with tradeoffs your security team may not accept.</p>
+    <div class="cols-2" style="gap:18px;">
+      <div class="policy-card" style="border-left:3px solid var(--green-dim);">
+        <div class="card-title" style="color:var(--green);">LLM Enclave</div>
+        <ul>
+          <li><span class="ok-mark">[+]</span><span>Data stays on your hardware, always</span></li>
+          <li><span class="ok-mark">[+]</span><span>No per-token billing. Run as much as your GPU allows.</span></li>
+          <li><span class="ok-mark">[+]</span><span>Full audit trail with cryptographic integrity</span></li>
+          <li><span class="ok-mark">[+]</span><span>Policy-gated file access, enforced per request</span></li>
+          <li><span class="ok-mark">[+]</span><span>Secret scanning blocks credentials before they reach the model</span></li>
+          <li><span class="ok-mark">[+]</span><span>No vendor can revoke your access or change terms</span></li>
+        </ul>
+      </div>
+      <div class="policy-card" style="border-left:3px solid var(--red-dim);">
+        <div class="card-title" style="color:var(--red);">Cloud AI (ChatGPT, Claude API, Copilot)</div>
+        <ul>
+          <li><span class="no-mark">[x]</span><span>Your code is sent to third-party servers for inference</span></li>
+          <li><span class="no-mark">[x]</span><span>Per-token pricing scales with usage</span></li>
+          <li><span class="no-mark">[x]</span><span>Audit trails controlled by the vendor, not you</span></li>
+          <li><span class="no-mark">[x]</span><span>No granular control over which files the model sees</span></li>
+          <li><span class="no-mark">[x]</span><span>Credentials in context are a leak risk</span></li>
+          <li><span class="no-mark">[x]</span><span>Terms of service can change, access can be revoked</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="section-title" style="text-align:center;margin-bottom:8px;">What a Custom Build Includes</div>
+    <p class="section-desc" style="text-align:center;margin:0 auto 32px;">Every LLM Enclave deployment is configured for your environment, your policies, and your hardware.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;">
+      <div class="policy-card">
+        <div class="card-title">Model Selection</div>
+        <div class="card-sub">Choose the right model for your workload: code completion, review, documentation, or general assistance. Models are pulled once and run entirely offline.</div>
+      </div>
+      <div class="policy-card">
+        <div class="card-title">Policy Configuration</div>
+        <div class="card-sub">Define exactly which directories, extensions, and file types the model can access. Set deny patterns, secret scanning rules, and logging preferences.</div>
+      </div>
+      <div class="policy-card">
+        <div class="card-title">Hardware Requirements</div>
+        <div class="card-sub">Minimum: 16GB RAM, integrated GPU. Recommended: 32GB RAM, RTX 3060+. The enclave runs on standard workstation hardware, no cloud infrastructure needed.</div>
+      </div>
+      <div class="policy-card">
+        <div class="card-title">Deployment Options</div>
+        <div class="card-sub">Single workstation, shared team server, or air-gapped secure facility. The same policy system works at every scale.</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px;">
+      <a href="../home.html#sec-contact" style="display:inline-block;padding:14px 32px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.4);border-radius:6px;font-family:var(--sans);font-size:.85rem;font-weight:500;color:var(--gold-bright);letter-spacing:.08em;text-transform:uppercase;transition:all .15s;">Discuss Your Requirements</a>
+    </div>
+  </section>
+
+  <!-- TECHNICAL ARCHITECTURE -->
+  <section class="block" id="sec-architecture">
     <div class="section-head">
       <div class="section-title">Stack</div>
       <div class="section-source">source: <code>LLM_Enclave/CLAUDE.md</code></div>
@@ -727,8 +836,8 @@ section.block:last-of-type{border-bottom:none}
     <span class="fss-footer-name">Fisher Sovereign Systems</span>
   </div>
   <div class="fss-footer-tagline">Building the Architecture for Independence</div>
-  <p class="fss-footer-statement">Fisher Sovereign Systems is being built to return control to the individual. The LLM Enclave is one of the load-bearing pieces.</p>
-  <a href="../home.html" class="fss-footer-cta">Visit lancewfisher.com &rarr;</a>
+  <p class="fss-footer-statement">Your data, your hardware, your rules. The LLM Enclave puts AI coding assistance under your complete control.</p>
+  <a href="../home.html#sec-contact" class="fss-footer-cta">Request a Custom Build &rarr;</a>
   <div class="fss-footer-copy">&copy; 2026 Fisher Sovereign Systems, LLC. All rights reserved.</div>
 </footer>
 

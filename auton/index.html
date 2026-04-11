@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auton | Lance W. Fisher</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Auton: an autonomous background worker that scans every project in the workspace, proposes safe improvements through a local LLM, and gates every change behind explicit human approval.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230a0e17'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23c9a84c' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%234ade80'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0e17;
+  --surface:#111520;
+  --surface2:#171d2e;
+  --surface3:#1e2640;
+  --border:rgba(255,255,255,0.08);
+  --border-gold:rgba(201,168,76,0.3);
+  --gold:#c9a84c;
+  --gold-dim:rgba(201,168,76,0.15);
+  --gold-glow:rgba(201,168,76,0.35);
+  --green:#4ade80;
+  --green-dim:rgba(74,222,128,0.12);
+  --red:#f87171;
+  --red-dim:rgba(248,113,113,0.12);
+  --blue:#60a5fa;
+  --blue-dim:rgba(96,165,250,0.12);
+  --purple:#a78bfa;
+  --purple-dim:rgba(167,139,250,0.12);
+  --amber:#eab308;
+  --amber-dim:rgba(234,179,8,0.15);
+  --text:#e2e8f0;
+  --text2:#94a3b8;
+  --text3:#64748b;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Inter',sans-serif;
+  --disp:'Cinzel',serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;min-height:100vh;overflow-x:hidden}
+a{color:var(--gold);text-decoration:none}
+a:hover{text-decoration:underline}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--gold-dim)}
+
+/* Nav */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:#111;border-bottom:1px solid rgba(201,168,76,0.3);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.nav-left{display:flex;align-items:center;gap:16px}
+.back-link{font-family:var(--sans);font-size:13px;color:var(--text3);transition:color .2s;display:flex;align-items:center;gap:6px}
+.back-link:hover{color:var(--gold);text-decoration:none}
+.nav-sep{width:1px;height:16px;background:var(--border)}
+.nav-title{font-family:var(--disp);font-size:14px;font-weight:700;color:var(--gold);letter-spacing:.08em}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-badge{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:3px;letter-spacing:.12em;font-weight:600}
+.badge-dry{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(234,179,8,0.3)}
+.badge-port{background:var(--surface2);color:var(--text3);border:1px solid var(--border)}
+
+/* Snapshot banner */
+.snap-banner{background:var(--surface);border-bottom:1px solid var(--border);padding:11px 24px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.snap-banner-dot{width:7px;height:7px;border-radius:50%;background:var(--text3)}
+.snap-banner-text{font-family:var(--mono);font-size:11px;color:var(--text2);letter-spacing:.1em}
+.snap-banner-text strong{color:var(--text);font-weight:600}
+
+/* Layout */
+.container{max-width:1240px;margin:0 auto;padding:32px 20px}
+.section{margin-bottom:48px}
+.section-label{font-family:var(--mono);font-size:10px;letter-spacing:.25em;color:var(--text3);text-transform:uppercase;margin-bottom:8px}
+.section-title{font-family:var(--disp);font-size:20px;color:var(--gold);margin-bottom:6px}
+.section-desc{font-size:14px;color:var(--text2);max-width:760px;line-height:1.7}
+.divider{height:1px;background:var(--border);margin:0 0 48px}
+
+/* Hero */
+.hero{text-align:center;padding:48px 20px 40px;border-bottom:1px solid var(--border)}
+.hero-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:16px}
+.hero-title{font-family:var(--disp);font-size:clamp(28px,5vw,46px);font-weight:700;color:var(--text);line-height:1.15;margin-bottom:14px}
+.hero-title-accent{color:var(--gold)}
+.hero-desc{font-size:15px;color:var(--text2);max-width:680px;margin:0 auto 28px;line-height:1.75}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:8px}
+.htag{font-family:var(--mono);font-size:10px;padding:4px 12px;border-radius:3px;letter-spacing:.08em}
+.htag-py{background:rgba(96,165,250,0.15);color:var(--blue);border:1px solid rgba(96,165,250,0.3)}
+.htag-fast{background:rgba(74,222,128,0.15);color:var(--green);border:1px solid rgba(74,222,128,0.3)}
+.htag-llm{background:rgba(167,139,250,0.15);color:var(--purple);border:1px solid rgba(167,139,250,0.3)}
+.htag-evt{background:var(--gold-dim);color:var(--gold);border:1px solid var(--border-gold)}
+
+/* Metrics strip */
+.metrics-strip{display:flex;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:48px}
+.metric-cell{flex:1;background:var(--surface);padding:18px 20px;text-align:center;min-width:120px}
+.metric-label{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--text3);text-transform:uppercase;margin-bottom:6px}
+.metric-value{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--text)}
+.metric-value.gold{color:var(--gold)}
+.metric-value.green{color:var(--green)}
+.metric-value.amber{color:var(--amber)}
+.metric-value.muted{color:var(--text3)}
+.metric-sub{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:4px;letter-spacing:.05em}
+
+/* Pipeline */
+.pipeline-block{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:28px 24px}
+.pipeline{display:flex;align-items:stretch;gap:0;width:100%;overflow-x:auto;padding-bottom:6px}
+.pipe-step{display:flex;flex-direction:column;align-items:center;flex-shrink:0;min-width:108px;padding:14px 12px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);position:relative}
+.pipe-step.is-gate{background:var(--gold-dim);border:1px solid var(--gold-glow);box-shadow:0 0 0 1px var(--gold-dim) inset}
+.pipe-icon{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.05em;margin-bottom:6px}
+.pipe-step.is-gate .pipe-icon{color:var(--gold)}
+.pipe-label{font-family:var(--disp);font-size:11px;color:var(--text);letter-spacing:.05em;text-align:center;line-height:1.35}
+.pipe-step.is-gate .pipe-label{color:var(--gold)}
+.pipe-sub{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:4px;text-align:center;letter-spacing:.03em}
+.pipe-arrow{display:flex;align-items:center;padding:0 4px;flex-shrink:0;color:var(--text3);font-family:var(--mono);font-size:14px}
+
+/* Agent grid */
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.agent-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;transition:border-color .25s,box-shadow .25s}
+.agent-card:hover{border-color:var(--border-gold);box-shadow:0 0 0 1px var(--gold-dim) inset}
+.agent-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:10px}
+.agent-name{font-family:var(--disp);font-size:14px;color:var(--text);font-weight:700;letter-spacing:.04em}
+.agent-module{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:2px}
+.agent-pill{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:3px;letter-spacing:.08em;text-transform:uppercase;background:var(--surface3);color:var(--text3);border:1px solid var(--border);white-space:nowrap}
+.agent-pill.role-scan{color:var(--blue);background:var(--blue-dim);border-color:rgba(96,165,250,0.3)}
+.agent-pill.role-plan{color:var(--purple);background:var(--purple-dim);border-color:rgba(167,139,250,0.3)}
+.agent-pill.role-exec{color:var(--gold);background:var(--gold-dim);border-color:var(--border-gold)}
+.agent-pill.role-test{color:var(--green);background:var(--green-dim);border-color:rgba(74,222,128,0.3)}
+.agent-pill.role-review{color:var(--amber);background:var(--amber-dim);border-color:rgba(234,179,8,0.3)}
+.agent-pill.role-monitor{color:var(--text2);background:var(--surface3);border-color:var(--border)}
+.agent-role{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:12px}
+.agent-meta{display:flex;flex-direction:column;gap:6px;padding-top:10px;border-top:1px solid var(--border)}
+.agent-meta-row{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px}
+.agent-meta-key{color:var(--text3)}
+.agent-meta-val{color:var(--text2)}
+.agent-meta-val.muted{color:var(--text3)}
+
+/* Two col grid for core modules and integrations */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:840px){.two-col{grid-template-columns:1fr}}
+.module-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px}
+.module-card-title{font-family:var(--disp);font-size:13px;color:var(--gold);letter-spacing:.06em;margin-bottom:14px}
+.module-list{display:flex;flex-direction:column;gap:10px}
+.module-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.module-row:last-child{border-bottom:none}
+.module-icon{width:28px;height:28px;border-radius:6px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--gold);flex-shrink:0;border:1px solid var(--border)}
+.module-body{flex:1;min-width:0}
+.module-name{font-family:var(--mono);font-size:12px;color:var(--text);font-weight:500;margin-bottom:3px}
+.module-desc{font-size:12px;color:var(--text2);line-height:1.55}
+
+/* Safety grid */
+.safety-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.safety-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px}
+.safety-card-title{font-family:var(--disp);font-size:13px;color:var(--text);letter-spacing:.04em;margin-bottom:6px}
+.safety-card-body{font-size:12px;color:var(--text2);line-height:1.65}
+.inline-code{font-family:var(--mono);font-size:11px;color:var(--amber);background:var(--amber-dim);padding:1px 6px;border-radius:3px}
+.inline-code.green{color:var(--green);background:var(--green-dim)}
+.inline-code.red{color:var(--red);background:var(--red-dim)}
+
+/* Mode pills */
+.mode-row{display:flex;gap:12px;margin-bottom:18px}
+@media(max-width:520px){.mode-row{flex-direction:column}}
+.mode-pill{flex:1;padding:16px;border-radius:8px;text-align:center}
+.mode-pill-default{background:var(--amber-dim);border:1px solid rgba(234,179,8,0.35)}
+.mode-pill-explicit{background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.22);opacity:.65}
+.mode-pill-label{font-family:var(--disp);font-size:12px;letter-spacing:.08em;margin-bottom:5px}
+.mode-label-amber{color:var(--amber)}
+.mode-label-red{color:var(--red)}
+.mode-pill-desc{font-family:var(--mono);font-size:10px;color:var(--text3);line-height:1.55}
+
+/* Approval gates */
+.gates-list{display:flex;flex-direction:column;gap:10px}
+.gate-row{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 18px;display:flex;gap:14px;align-items:flex-start}
+.gate-num{font-family:var(--disp);font-size:18px;font-weight:700;color:var(--gold);min-width:24px;text-align:center}
+.gate-body{flex:1;min-width:0}
+.gate-title{font-family:var(--disp);font-size:13px;color:var(--text);letter-spacing:.04em;margin-bottom:4px}
+.gate-desc{font-size:12px;color:var(--text2);line-height:1.6}
+
+/* Static state board */
+.state-block{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0;overflow:hidden}
+.state-row{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);gap:14px;flex-wrap:wrap}
+.state-row:last-child{border-bottom:none}
+.state-key{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.05em}
+.state-val{font-family:var(--mono);font-size:13px;color:var(--text2);text-align:right}
+.state-val.gold{color:var(--gold)}
+.state-val.muted{color:var(--text3)}
+
+/* Event journal preview */
+.journal-block{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px}
+.journal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.journal-title{font-family:var(--disp);font-size:12px;color:var(--gold);letter-spacing:.08em}
+.journal-tag{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase}
+.journal-list{display:flex;flex-direction:column;gap:0;max-height:340px;overflow-y:auto}
+.journal-item{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:11px}
+.journal-item:last-child{border-bottom:none}
+.journal-time{color:var(--text3);min-width:54px;flex-shrink:0}
+.journal-type{color:var(--blue);min-width:96px;flex-shrink:0}
+.journal-msg{color:var(--text2);flex:1;min-width:0;word-break:break-word}
+
+/* Stack list */
+.stack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.stack-item{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 14px;font-family:var(--mono);font-size:11px}
+.stack-item-key{color:var(--text3);font-size:9px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px}
+.stack-item-val{color:var(--text)}
+
+/* Footer */
+.footer{padding:32px 24px 48px;text-align:center;border-top:1px solid var(--border);font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.05em}
+
+/* Responsive */
+@media(max-width:600px){
+  .nav{padding:10px 14px;flex-wrap:wrap;gap:8px}
+  .container{padding:24px 14px}
+  .hero{padding:36px 14px 32px}
+  .metric-cell{padding:14px 12px}
+  .metric-value{font-size:18px}
+  .pipeline-block{padding:20px 14px}
+  .agent-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<!-- FSS-BRAND-BLOCK-V3 (FF25 wordmark, no H icon) -->
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/brand.css?v=20260410v6">
+<div class="fssb-v3-top">
+  <a href="../home.html" class="fssb-v3-top-link" aria-label="Fisher Sovereign Systems">
+    <span class="fssb-v3-top-name">Fisher</span>
+    <span class="fssb-v3-top-rule"></span>
+    <span class="fssb-v3-top-sub">Sovereign Systems</span>
+  </a>
+  <a href="../home.html" class="fssb-v3-top-back">&larr; Portfolio</a>
+</div>
+
+
+<nav class="nav">
+  <div class="nav-left">
+    <a href="../home.html" class="back-link">&#8592; Portfolio</a>
+    <div class="nav-sep"></div>
+    <span class="nav-title">Auton</span>
+  </div>
+  <div class="nav-right">
+    <span class="nav-badge badge-dry">DRY_RUN=true</span>
+    <span class="nav-badge badge-port">:8095</span>
+  </div>
+</nav>
+
+<div class="snap-banner">
+  <span class="snap-banner-dot"></span>
+  <span class="snap-banner-text"><strong>Static architecture snapshot.</strong> This page shows the real worker layout. Live counters and runtime state are not wired up here.</span>
+</div>
+
+<div class="container">
+
+  <div class="hero section">
+    <div class="hero-eyebrow">Autonomous Maintenance</div>
+    <h1 class="hero-title">Auton<span class="hero-title-accent">.</span></h1>
+    <p class="hero-desc">Autonomous maintenance that watches your systems, proposes improvements, and never acts without your approval. Auton scans your projects, identifies what can be improved, and queues every change for your explicit sign-off.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:20px 0 28px;">
+      <a href="#sec-pipeline" style="display:inline-block;padding:11px 26px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.35);border-radius:6px;font-family:var(--sans);font-size:12px;font-weight:500;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:all .15s;">See How It Works</a>
+      <a href="../home.html#sec-contact" style="display:inline-block;padding:11px 26px;border:1px solid var(--border);border-radius:6px;font-family:var(--sans);font-size:12px;font-weight:500;color:var(--text2);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:all .15s;">Request a Custom Build</a>
+    </div>
+    <div class="hero-tags">
+      <span class="htag htag-py">Python 3.11+</span>
+      <span class="htag htag-fast">aiohttp.web</span>
+      <span class="htag htag-llm">Ollama qwen2.5-coder:14b</span>
+      <span class="htag htag-evt">EventBus + JSONL Journal</span>
+    </div>
+  </div>
+
+  <!-- CUSTOMER VALUE SECTIONS -->
+  <div class="section">
+    <div class="section-label">What Auton Does</div>
+    <h2 class="section-title">Concrete Improvements, Zero Surprises</h2>
+    <p class="section-desc" style="margin-bottom:20px">Auton finds the small, safe improvements that accumulate into significant maintenance debt when ignored. Every proposal is scoped to a single file or concern, reviewed against project rules, and held for your approval.</p>
+    <div class="agent-grid">
+      <div class="agent-card">
+        <div class="agent-top"><div><div class="agent-name">Documentation Updates</div></div><span class="agent-pill role-plan">COMMON</span></div>
+        <div class="agent-role">Finds outdated README sections, stale comments, and documentation that no longer matches the code. Proposes line-level corrections.</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-top"><div><div class="agent-name">Dependency Checks</div></div><span class="agent-pill role-review">COMMON</span></div>
+        <div class="agent-role">Identifies outdated dependencies, deprecated APIs, and version mismatches. Proposes targeted upgrades with test verification.</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-top"><div><div class="agent-name">Config Consistency</div></div><span class="agent-pill role-scan">COMMON</span></div>
+        <div class="agent-role">Detects mismatches between environment files, build configs, and deployment settings. Proposes alignment without breaking changes.</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-top"><div><div class="agent-name">Stale Reference Cleanup</div></div><span class="agent-pill role-exec">COMMON</span></div>
+        <div class="agent-role">Finds dead imports, unused variables, broken internal links, and references to files or functions that no longer exist.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">A Typical Cycle</div>
+    <h2 class="section-title">How a Proposal Reaches You</h2>
+    <p class="section-desc" style="margin-bottom:20px">Auton scans your workspace, finds outdated documentation in a project, proposes a fix, waits for your approval, applies it in a sandbox, runs tests, and only then writes to the real project tree. If anything fails, the change is rolled back automatically.</p>
+    <div class="gates-list">
+      <div class="gate-row"><div class="gate-num">1</div><div class="gate-body"><div class="gate-title">Scan</div><div class="gate-desc">Auton walks every registered project, hashes file trees, and detects what has changed since its last pass.</div></div></div>
+      <div class="gate-row"><div class="gate-num">2</div><div class="gate-body"><div class="gate-title">Plan</div><div class="gate-desc">A local LLM (running on your hardware, not a cloud API) reviews the changes and proposes small, bounded improvements.</div></div></div>
+      <div class="gate-row"><div class="gate-num">3</div><div class="gate-body"><div class="gate-title">Review</div><div class="gate-desc">Each proposal is checked against project rules and the protected-path list. Anything out of scope is rejected automatically.</div></div></div>
+      <div class="gate-row"><div class="gate-num">4</div><div class="gate-body"><div class="gate-title">Your Approval</div><div class="gate-desc">The proposal lands in your queue. You see exactly what will change, in which file, and why. You approve or reject it. No batch mode, no auto-apply.</div></div></div>
+      <div class="gate-row"><div class="gate-num">5</div><div class="gate-body"><div class="gate-title">Test and Apply</div><div class="gate-desc">Approved changes run in a sandbox first. Tests must pass before the real project tree is touched. A failed test is an automatic rollback.</div></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">Built For</div>
+    <h2 class="section-title">Who This Is For</h2>
+    <div class="two-col">
+      <div class="module-card">
+        <div class="module-card-title">TEAMS MANAGING 5+ PROJECTS</div>
+        <div class="module-list">
+          <div class="module-row"><div class="module-icon">01</div><div class="module-body"><div class="module-desc">Maintenance tasks pile up across projects. Auton systematically finds and proposes fixes so nothing falls through the cracks.</div></div></div>
+          <div class="module-row"><div class="module-icon">02</div><div class="module-body"><div class="module-desc">Every proposal includes context: what changed, which file, and why. Review takes seconds, not hours of context-switching.</div></div></div>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-title">OPERATORS WHO WANT AI WITHOUT RISK</div>
+        <div class="module-list">
+          <div class="module-row"><div class="module-icon">01</div><div class="module-body"><div class="module-desc">DRY_RUN is the default. Auton runs safely in observation mode indefinitely, logging every intended change without applying anything.</div></div></div>
+          <div class="module-row"><div class="module-icon">02</div><div class="module-body"><div class="module-desc">Local LLM only. No code leaves your machine. No cloud API calls. No vendor dependencies.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">Custom Deployment</div>
+    <h2 class="section-title">What a Custom Build Includes</h2>
+    <p class="section-desc" style="margin-bottom:20px">Every Auton deployment is configured for your workspace structure, your project rules, and your approval preferences.</p>
+    <div class="safety-grid">
+      <div class="safety-card"><div class="safety-card-title">Project Registry</div><div class="safety-card-body">Configure which projects Auton monitors, how often it scans, and what types of improvements it proposes for each.</div></div>
+      <div class="safety-card"><div class="safety-card-title">Rule Configuration</div><div class="safety-card-body">Define protected paths, scope boundaries, and project-specific constraints. Auton respects every rule in your CLAUDE.md files.</div></div>
+      <div class="safety-card"><div class="safety-card-title">Model Selection</div><div class="safety-card-body">Choose the local LLM that powers planning. Smaller models for fast scans, larger models for deeper analysis. All run on your hardware.</div></div>
+      <div class="safety-card"><div class="safety-card-title">Notification Bridge</div><div class="safety-card-body">Get alerts when proposals are ready for review. Integrates with your existing notification workflow.</div></div>
+    </div>
+    <div style="text-align:center;margin-top:28px;">
+      <a href="../home.html#sec-contact" style="display:inline-block;padding:13px 30px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.35);border-radius:6px;font-family:var(--sans);font-size:12px;font-weight:500;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:all .15s;">Discuss Your Requirements</a>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- TECHNICAL ARCHITECTURE -->
+  <div class="metrics-strip" id="metricsStrip"></div>
+
+  <div class="section" id="sec-pipeline">
+    <div class="section-label">Worker Lifecycle</div>
+    <h2 class="section-title">Pipeline</h2>
+    <p class="section-desc" style="margin-bottom:20px">Every cycle moves through the same fixed stages. The Approval Gate is hard-coded between proposal and execution. There is no path that bypasses it. There is no "auto-apply" mode.</p>
+    <div class="pipeline-block">
+      <div class="pipeline" id="pipeline"></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">agents/</div>
+    <h2 class="section-title">Agent Roles</h2>
+    <p class="section-desc" style="margin-bottom:20px">Six specialized agents, each backed by a single Python module. Every agent inherits a common base, runs cooperatively on the EventBus, and writes its activity to the JSONL journal.</p>
+    <div class="agent-grid" id="agentGrid"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">core/ &middot; integrations/</div>
+    <h2 class="section-title">Subsystems</h2>
+    <p class="section-desc" style="margin-bottom:20px">Auton is organized into a small set of cooperating subsystems. The core is intentionally minimal: an event bus, persistent state, an append-only journal, a credential vault, and a safety layer that all writes flow through.</p>
+    <div class="two-col">
+      <div class="module-card">
+        <div class="module-card-title">CORE MODULES</div>
+        <div class="module-list" id="coreModules"></div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-title">INTEGRATIONS</div>
+        <div class="module-list" id="integrationModules"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">By Design</div>
+    <h2 class="section-title">Safety Model</h2>
+    <p class="section-desc" style="margin-bottom:20px">DRY_RUN is not a debugging convenience. It is the default running mode. Live execution is the explicit, deliberate exception, and even in live mode every individual change still passes through an approval gate.</p>
+    <div class="mode-row">
+      <div class="mode-pill mode-pill-default">
+        <div class="mode-pill-label mode-label-amber">DRY_RUN (default)</div>
+        <div class="mode-pill-desc">All proposals queued. Nothing applied. Journal records every intended change. Safe to leave running indefinitely.</div>
+      </div>
+      <div class="mode-pill mode-pill-explicit">
+        <div class="mode-pill-label mode-label-red">EXECUTE (explicit)</div>
+        <div class="mode-pill-desc">Operator-flipped per session. Each individual proposal still requires an approval gate. No batch auto-apply.</div>
+      </div>
+    </div>
+    <div class="safety-grid" id="safetyGrid"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">core/safety.py</div>
+    <h2 class="section-title">Approval Gates</h2>
+    <p class="section-desc" style="margin-bottom:20px">Every change crosses these gates in order. A failure at any gate sends the proposal back to the journal as rejected and the cycle continues without applying anything.</p>
+    <div class="gates-list" id="gatesList"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">api/server.py</div>
+    <h2 class="section-title">Live Runtime State</h2>
+    <p class="section-desc" style="margin-bottom:20px">The actual dashboard at <span class="inline-code green">http://localhost:8095</span> binds to these fields and streams updates. This static page intentionally does not. Values below show the schema, not the values.</p>
+    <div class="state-block" id="stateBlock"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">core/journal.py</div>
+    <h2 class="section-title">Event Journal Schema</h2>
+    <p class="section-desc" style="margin-bottom:20px">Every agent action, every proposal, every gate decision is appended to <span class="inline-code">journal/journal.jsonl</span>. Daily event logs are also rotated under <span class="inline-code">logs/events_YYYY-MM-DD.jsonl</span>. Both are append-only and together form the source of truth for what the worker has done.</p>
+    <div class="journal-block">
+      <div class="journal-header">
+        <span class="journal-title">EVENT TYPES</span>
+        <span class="journal-tag">SCHEMA &middot; NOT LIVE</span>
+      </div>
+      <div class="journal-list" id="journalList"></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">pyproject.toml &middot; launch.bat</div>
+    <h2 class="section-title">Stack</h2>
+    <div class="stack-grid" id="stackGrid"></div>
+  </div>
+
+</div>
+
+<div class="footer" style="padding:48px 24px;">
+  <div style="max-width:560px;margin:0 auto 24px;text-align:center;">
+    <div style="font-family:var(--disp);font-size:16px;color:var(--gold);letter-spacing:.06em;margin-bottom:8px;">Maintenance that never sleeps, changes that never surprise.</div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.6;">Auton watches your projects, proposes safe improvements, and waits for your approval before touching a single file.</div>
+  </div>
+  <a href="../home.html#sec-contact" style="display:inline-block;padding:12px 28px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.35);border-radius:6px;font-family:var(--sans);font-size:12px;font-weight:500;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:all .15s;">Request a Custom Build &rarr;</a>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ==============================================================
+     Helpers
+  ============================================================== */
+  function el(tag, cls, txt) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (txt !== undefined && txt !== null) e.textContent = txt;
+    return e;
+  }
+  function mount(parentId, node) {
+    var p = document.getElementById(parentId);
+    if (p) p.appendChild(node);
+  }
+  function clear(id) {
+    var p = document.getElementById(id);
+    if (p) p.textContent = '';
+  }
+
+  /* ==============================================================
+     DATA
+     Grounded in the real codebase at D:\\ProjectsHome\\auton\\
+     Module names below are real Python files in the project.
+     Live runtime values are intentionally rendered as "--".
+  ============================================================== */
+
+  var metrics = [
+    { label: 'Worker Port', value: '8095', cls: 'gold', sub: 'localhost only' },
+    { label: 'Default Mode', value: 'DRY_RUN', cls: 'amber', sub: 'enforced' },
+    { label: 'Active Agents', value: '6', cls: 'gold', sub: 'agents/*.py' },
+    { label: 'Cycle State', value: '--', cls: 'muted', sub: 'static snapshot' },
+    { label: 'Pending Proposals', value: '--', cls: 'muted', sub: 'static snapshot' }
+  ];
+
+  var pipeline = [
+    { code: 'SCAN',     label: 'Scan',           sub: 'workspace pass' },
+    { code: 'PLAN',     label: 'Plan',           sub: 'local LLM' },
+    { code: 'PROPOSE',  label: 'Propose',        sub: 'structured diff' },
+    { code: 'REVIEW',   label: 'Review',         sub: 'rule check' },
+    { code: 'GATE',     label: 'Approval Gate',  sub: 'human required', isGate: true },
+    { code: 'EXEC',     label: 'Execute',        sub: 'sandboxed' },
+    { code: 'TEST',     label: 'Test',           sub: 'verify' },
+    { code: 'JOURNAL',  label: 'Journal',        sub: 'append-only' }
+  ];
+
+  // Real files: D:\ProjectsHome\auton\agents\{scanner,planner,reviewer,executor,tester,monitor}.py
+  var agents = [
+    {
+      name: 'Scanner',
+      module: 'agents/scanner.py',
+      role: 'scan',
+      roleLabel: 'SCAN',
+      desc: 'Walks every registered project in the workspace, hashes file trees, detects what has actually changed since the last cycle, and emits scan-result events onto the bus.',
+      reads: 'PROJECTS.json',
+      writes: 'scan_result events'
+    },
+    {
+      name: 'Planner',
+      module: 'agents/planner.py',
+      role: 'plan',
+      roleLabel: 'PLAN',
+      desc: 'Receives scan results, asks the local Ollama model what small, safe improvements are appropriate, and produces structured plans scoped to a single file or a single concern.',
+      reads: 'scan_result events',
+      writes: 'plan events'
+    },
+    {
+      name: 'Reviewer',
+      module: 'agents/reviewer.py',
+      role: 'review',
+      roleLabel: 'REVIEW',
+      desc: 'Validates each plan against the project rules, the safety layer, and the protected-path list. Anything ambiguous or out-of-scope is rejected before it ever becomes a proposal.',
+      reads: 'plan events',
+      writes: 'proposal or rejection'
+    },
+    {
+      name: 'Executor',
+      module: 'agents/executor.py',
+      role: 'exec',
+      roleLabel: 'EXECUTE',
+      desc: 'Applies an approved proposal in a sandboxed working copy. Never touches the real project tree until the post-test gate has confirmed the change does what the plan said.',
+      reads: 'approved proposal',
+      writes: 'execution result'
+    },
+    {
+      name: 'Tester',
+      module: 'agents/tester.py',
+      role: 'test',
+      roleLabel: 'TEST',
+      desc: 'Runs the project verification step (tests, type checks, build) on the sandboxed copy and reports back. A failed test is a hard veto: the change is rolled back automatically.',
+      reads: 'execution result',
+      writes: 'test verdict'
+    },
+    {
+      name: 'Monitor',
+      module: 'agents/monitor.py',
+      role: 'monitor',
+      roleLabel: 'MONITOR',
+      desc: 'Observes the worker itself: agent health, cycle latency, journal growth, and stuck states. If anything looks wrong it pauses the next cycle and waits for the operator.',
+      reads: 'all bus events',
+      writes: 'health snapshot'
+    }
+  ];
+
+  // Real files: D:\ProjectsHome\auton\core\{event_bus,journal,state,safety,vault}.py
+  var coreModules = [
+    {
+      icon: 'EB',
+      name: 'core/event_bus.py',
+      desc: 'In-process pub/sub bus that connects every agent. No agent calls another agent directly.'
+    },
+    {
+      icon: 'JR',
+      name: 'core/journal.py',
+      desc: 'Append-only JSONL writer. Writes the worker history to journal/journal.jsonl as the source of truth.'
+    },
+    {
+      icon: 'ST',
+      name: 'core/state.py',
+      desc: 'Persistent worker state: cycle count, pending proposals, last scan per project.'
+    },
+    {
+      icon: 'SF',
+      name: 'core/safety.py',
+      desc: 'The single chokepoint every write passes through. Owns DRY_RUN, protected paths, gates.'
+    },
+    {
+      icon: 'VL',
+      name: 'core/vault.py',
+      desc: 'Credential isolation. Keys live here, never in agent code, never in the journal.'
+    }
+  ];
+
+  // Real files: D:\ProjectsHome\auton\integrations\{ollama,project_hub,moltbot}.py
+  var integrationModules = [
+    {
+      icon: 'OL',
+      name: 'integrations/ollama.py',
+      desc: 'Local LLM client. All planning runs against an Ollama model. Nothing goes to a remote API.'
+    },
+    {
+      icon: 'PH',
+      name: 'integrations/project_hub.py',
+      desc: 'Reads the workspace project registry. The Scanner uses this to know what projects exist.'
+    },
+    {
+      icon: 'MB',
+      name: 'integrations/moltbot.py',
+      desc: 'Optional notification bridge. Out-of-band alerts when the worker needs operator attention.'
+    },
+    {
+      icon: 'KN',
+      name: 'knowledge/memory.py',
+      desc: 'Long-running memory of past proposals. Lets the Planner avoid suggesting the same fix twice.'
+    },
+    {
+      icon: 'PT',
+      name: 'knowledge/patterns.py',
+      desc: 'Stored patterns of safe, recurring improvement shapes. Used by the Planner as a prior.'
+    },
+    {
+      icon: 'AP',
+      name: 'api/server.py',
+      desc: 'aiohttp.web service on :8095 that serves the live dashboard and exposes worker state read-only.'
+    }
+  ];
+
+  var safetyCards = [
+    {
+      title: 'DRY_RUN by default',
+      body: 'The worker boots in dry-run mode. It scans, plans, proposes, and journals every intended change, but applies nothing. Switching to execute mode is an explicit operator action.'
+    },
+    {
+      title: 'Protected paths',
+      body: 'Governance files, credential stores, and the project registry are hard-blocked from any agent write. The safety layer rejects matching paths before they reach the executor.'
+    },
+    {
+      title: 'Single-file scope',
+      body: 'Plans are bounded to a single file or a single concern. The Reviewer rejects multi-file refactors and anything that crosses project boundaries.'
+    },
+    {
+      title: 'Sandboxed execution',
+      body: 'Approved changes are first applied to a sandboxed working copy. The real project tree is only touched after the Tester confirms the change verifies clean.'
+    },
+    {
+      title: 'Append-only journal',
+      body: 'Every event, every gate decision, every rollback is written to the JSONL journal. The journal is never overwritten, so the worker history is forensically reconstructable.'
+    },
+    {
+      title: 'Local-only surface',
+      body: 'The aiohttp server binds to localhost only. The worker has no externally exposed endpoints and no remote callbacks. Local LLM only, no third-party AI calls.'
+    }
+  ];
+
+  var gates = [
+    {
+      title: 'Rule gate',
+      desc: 'Plan must comply with the target project\'s CLAUDE.md and any project-level rules files. Otherwise rejected before review.'
+    },
+    {
+      title: 'Path gate',
+      desc: 'Target path must not match the protected-path list. Governance, secrets, and registries are unwritable from any agent.'
+    },
+    {
+      title: 'Scope gate',
+      desc: 'Change must touch a single file or a single bounded concern. Multi-file refactors and cross-project changes are rejected.'
+    },
+    {
+      title: 'Operator gate',
+      desc: 'Operator must explicitly approve. There is no batch approval, no auto-apply window, no carry-forward approval from a previous proposal.'
+    },
+    {
+      title: 'Verification gate',
+      desc: 'After sandboxed execution, the Tester must report a clean run. A test failure is a hard rollback, journaled as a failed proposal.'
+    }
+  ];
+
+  var stateRows = [
+    { key: 'mode',                val: 'DRY_RUN',         cls: 'gold' },
+    { key: 'cycle_count',         val: '--',              cls: 'muted' },
+    { key: 'last_cycle_at',       val: '--',              cls: 'muted' },
+    { key: 'projects_registered', val: '--',              cls: 'muted' },
+    { key: 'projects_scanned',    val: '--',              cls: 'muted' },
+    { key: 'pending_proposals',   val: '--',              cls: 'muted' },
+    { key: 'approved_today',      val: '--',              cls: 'muted' },
+    { key: 'rejected_today',      val: '--',              cls: 'muted' },
+    { key: 'rolled_back_today',   val: '--',              cls: 'muted' },
+    { key: 'journal_file',        val: 'journal/journal.jsonl' },
+    { key: 'api_bind',            val: '127.0.0.1:8095' }
+  ];
+
+  var journalEvents = [
+    { time: 'tt:tt:tt', type: 'cycle.start',     msg: 'New worker cycle, mode=DRY_RUN' },
+    { time: 'tt:tt:tt', type: 'scan.complete',   msg: 'project=<name> changed_files=<n>' },
+    { time: 'tt:tt:tt', type: 'plan.created',    msg: 'project=<name> plan_id=<uuid> scope=single-file' },
+    { time: 'tt:tt:tt', type: 'review.passed',   msg: 'plan_id=<uuid>' },
+    { time: 'tt:tt:tt', type: 'review.rejected', msg: 'plan_id=<uuid> reason=protected_path' },
+    { time: 'tt:tt:tt', type: 'gate.awaiting',   msg: 'proposal_id=<uuid> queued for operator' },
+    { time: 'tt:tt:tt', type: 'gate.approved',   msg: 'proposal_id=<uuid> by=operator' },
+    { time: 'tt:tt:tt', type: 'gate.rejected',   msg: 'proposal_id=<uuid> by=operator' },
+    { time: 'tt:tt:tt', type: 'exec.sandboxed',  msg: 'proposal_id=<uuid> sandbox_path=<path>' },
+    { time: 'tt:tt:tt', type: 'test.passed',     msg: 'proposal_id=<uuid>' },
+    { time: 'tt:tt:tt', type: 'test.failed',     msg: 'proposal_id=<uuid> rolled_back=true' },
+    { time: 'tt:tt:tt', type: 'apply.complete',  msg: 'proposal_id=<uuid> applied=true' },
+    { time: 'tt:tt:tt', type: 'monitor.health',  msg: 'agents_alive=6 cycle_latency_ms=--' },
+    { time: 'tt:tt:tt', type: 'cycle.end',       msg: 'duration_ms=-- proposals_emitted=--' }
+  ];
+
+  var stack = [
+    { key: 'language',     val: 'Python 3.11+' },
+    { key: 'http',         val: 'aiohttp.web' },
+    { key: 'llm',          val: 'Ollama qwen2.5-coder:14b' },
+    { key: 'crypto',       val: 'PyNaCl (vault)' },
+    { key: 'storage',      val: 'JSONL append-only' },
+    { key: 'pubsub',       val: 'in-process EventBus' },
+    { key: 'launcher',     val: 'launch.bat / start-with-ui.pyw' },
+    { key: 'shutdown',     val: 'stop.bat' },
+    { key: 'config',       val: 'config.yaml + .env' },
+    { key: 'bind',         val: '127.0.0.1:8095' },
+    { key: 'journal',      val: 'journal/journal.jsonl' },
+    { key: 'event logs',   val: 'logs/events_YYYY-MM-DD.jsonl' }
+  ];
+
+  /* ==============================================================
+     RENDER
+  ============================================================== */
+
+  function renderMetrics() {
+    clear('metricsStrip');
+    metrics.forEach(function (m) {
+      var cell = el('div', 'metric-cell');
+      cell.appendChild(el('div', 'metric-label', m.label));
+      cell.appendChild(el('div', 'metric-value ' + (m.cls || ''), m.value));
+      if (m.sub) cell.appendChild(el('div', 'metric-sub', m.sub));
+      mount('metricsStrip', cell);
+    });
+  }
+
+  function renderPipeline() {
+    clear('pipeline');
+    pipeline.forEach(function (step, i) {
+      if (i > 0) {
+        var arr = el('span', 'pipe-arrow');
+        arr.textContent = '\u25B6';
+        mount('pipeline', arr);
+      }
+      var box = el('div', 'pipe-step' + (step.isGate ? ' is-gate' : ''));
+      box.appendChild(el('div', 'pipe-icon', step.code));
+      box.appendChild(el('div', 'pipe-label', step.label));
+      box.appendChild(el('div', 'pipe-sub', step.sub));
+      mount('pipeline', box);
+    });
+  }
+
+  function renderAgents() {
+    clear('agentGrid');
+    agents.forEach(function (a) {
+      var card = el('div', 'agent-card');
+
+      var top = el('div', 'agent-top');
+      var meta = el('div');
+      meta.appendChild(el('div', 'agent-name', a.name));
+      meta.appendChild(el('div', 'agent-module', a.module));
+      var pill = el('span', 'agent-pill role-' + a.role, a.roleLabel);
+      top.appendChild(meta);
+      top.appendChild(pill);
+
+      var role = el('div', 'agent-role', a.desc);
+
+      var metaBox = el('div', 'agent-meta');
+      var r1 = el('div', 'agent-meta-row');
+      r1.appendChild(el('span', 'agent-meta-key', 'reads'));
+      r1.appendChild(el('span', 'agent-meta-val', a.reads));
+      var r2 = el('div', 'agent-meta-row');
+      r2.appendChild(el('span', 'agent-meta-key', 'writes'));
+      r2.appendChild(el('span', 'agent-meta-val', a.writes));
+      var r3 = el('div', 'agent-meta-row');
+      r3.appendChild(el('span', 'agent-meta-key', 'last_run'));
+      r3.appendChild(el('span', 'agent-meta-val muted', '--'));
+      metaBox.appendChild(r1);
+      metaBox.appendChild(r2);
+      metaBox.appendChild(r3);
+
+      card.appendChild(top);
+      card.appendChild(role);
+      card.appendChild(metaBox);
+      mount('agentGrid', card);
+    });
+  }
+
+  function renderModuleList(parentId, list) {
+    clear(parentId);
+    list.forEach(function (m) {
+      var row = el('div', 'module-row');
+      row.appendChild(el('div', 'module-icon', m.icon));
+      var body = el('div', 'module-body');
+      body.appendChild(el('div', 'module-name', m.name));
+      body.appendChild(el('div', 'module-desc', m.desc));
+      row.appendChild(body);
+      mount(parentId, row);
+    });
+  }
+
+  function renderSafety() {
+    clear('safetyGrid');
+    safetyCards.forEach(function (s) {
+      var card = el('div', 'safety-card');
+      card.appendChild(el('div', 'safety-card-title', s.title));
+      card.appendChild(el('div', 'safety-card-body', s.body));
+      mount('safetyGrid', card);
+    });
+  }
+
+  function renderGates() {
+    clear('gatesList');
+    gates.forEach(function (g, i) {
+      var row = el('div', 'gate-row');
+      row.appendChild(el('div', 'gate-num', String(i + 1)));
+      var body = el('div', 'gate-body');
+      body.appendChild(el('div', 'gate-title', g.title));
+      body.appendChild(el('div', 'gate-desc', g.desc));
+      row.appendChild(body);
+      mount('gatesList', row);
+    });
+  }
+
+  function renderState() {
+    clear('stateBlock');
+    stateRows.forEach(function (r) {
+      var row = el('div', 'state-row');
+      row.appendChild(el('span', 'state-key', r.key));
+      row.appendChild(el('span', 'state-val ' + (r.cls || ''), r.val));
+      mount('stateBlock', row);
+    });
+  }
+
+  function renderJournal() {
+    clear('journalList');
+    journalEvents.forEach(function (e) {
+      var row = el('div', 'journal-item');
+      row.appendChild(el('span', 'journal-time', e.time));
+      row.appendChild(el('span', 'journal-type', e.type));
+      row.appendChild(el('span', 'journal-msg', e.msg));
+      mount('journalList', row);
+    });
+  }
+
+  function renderStack() {
+    clear('stackGrid');
+    stack.forEach(function (s) {
+      var item = el('div', 'stack-item');
+      item.appendChild(el('div', 'stack-item-key', s.key));
+      item.appendChild(el('div', 'stack-item-val', s.val));
+      mount('stackGrid', item);
+    });
+  }
+
+  /* ==============================================================
+     INIT
+  ============================================================== */
+  renderMetrics();
+  renderPipeline();
+  renderAgents();
+  renderModuleList('coreModules', coreModules);
+  renderModuleList('integrationModules', integrationModules);
+  renderSafety();
+  renderGates();
+  renderState();
+  renderJournal();
+  renderStack();
+
+})();
+</script>
+<!-- FSS-BRAND-FOOTER-V3 (FF25 wordmark, no H icon) -->
+<footer class="fssb-v3-foot">
+  <h2 class="fssb-v3-foot-name">Fisher</h2>
+  <span class="fssb-v3-foot-rule"></span>
+  <div class="fssb-v3-foot-sub">Sovereign Systems</div>
+  <div class="fssb-v3-foot-motto">Building the Architecture for Independence</div>
+  <p style="font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:0.98rem;color:rgba(220,217,211,0.72);max-width:520px;margin:28px auto 0;line-height:1.6;">Fisher Sovereign Systems is being built to return control to the individual.</p>
+  <a href="../home.html" class="fssb-v3-foot-back">&larr; Visit lancewfisher.com</a>
+  <div style="margin-top:32px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.05);font-size:0.66rem;color:#6b6b75;letter-spacing:0.06em;">&copy; 2026 Fisher Sovereign Systems, LLC. All rights reserved.</div>
+</footer>
+
+</body>
+</html>
