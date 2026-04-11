@@ -144,7 +144,34 @@ canvas#game { display: block; width: 100vw; height: 100vh; }
     <div style="display:inline-block; padding:6px 14px; background:rgba(51,204,85,0.12); border:1px solid rgba(51,204,85,0.6); border-radius:20px; color:#1d7f40; font-size:11px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; margin-bottom:18px;">&#9679; Public Web Alpha</div>
     <div style="font-size:20px; color:#1a3a5e; letter-spacing:4px; margin-bottom:4px; font-weight:600;">WELCOME TO</div>
     <div style="font-size:28px; color:#E67E22; font-weight:bold; margin-bottom:6px; letter-spacing:2px;">FISHER GAMING'S</div>
-    <div class="menu-title" style="font-size:64px; margin-bottom:20px; animation: titlePulse 2s ease-in-out infinite;">JUMP QUEST!</div>
+    <div class="menu-title" style="font-size:64px; margin-bottom:12px; animation: titlePulse 2s ease-in-out infinite;">JUMP QUEST!</div>
+
+    <!-- NARRATIVE HOOK -->
+    <div style="background:rgba(255,215,0,0.12); border:1px solid rgba(255,215,0,0.35); border-radius:12px; padding:16px 24px; margin:0 0 16px; max-width:520px; display:inline-block;">
+      <div style="color:#8B6914; font-size:14px; line-height:1.6; font-style:italic;">
+        Scale four mountain worlds, master the terrain, and collect every coin to prove you conquered the peaks. Unlock skills, earn cosmetics, and build your own levels with the Dev Wizard.
+      </div>
+    </div>
+
+    <!-- WHAT YOU GET -->
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:16px;">
+      <div style="background:rgba(46,204,113,0.12); border:1px solid rgba(46,204,113,0.4); border-radius:8px; padding:8px 14px; text-align:center;">
+        <div style="color:#27ae60; font-size:18px; font-weight:bold;">4</div>
+        <div style="color:#1a3a5e; font-size:10px; font-weight:600; letter-spacing:0.06em;">WORLDS</div>
+      </div>
+      <div style="background:rgba(52,152,219,0.12); border:1px solid rgba(52,152,219,0.4); border-radius:8px; padding:8px 14px; text-align:center;">
+        <div style="color:#2980b9; font-size:18px; font-weight:bold;">6</div>
+        <div style="color:#1a3a5e; font-size:10px; font-weight:600; letter-spacing:0.06em;">SKILLS</div>
+      </div>
+      <div style="background:rgba(230,126,34,0.12); border:1px solid rgba(230,126,34,0.4); border-radius:8px; padding:8px 14px; text-align:center;">
+        <div style="color:#d35400; font-size:18px; font-weight:bold;">12</div>
+        <div style="color:#1a3a5e; font-size:10px; font-weight:600; letter-spacing:0.06em;">COSMETICS</div>
+      </div>
+      <div style="background:rgba(155,89,182,0.12); border:1px solid rgba(155,89,182,0.4); border-radius:8px; padding:8px 14px; text-align:center;">
+        <div style="color:#8e44ad; font-size:18px; font-weight:bold;">&infin;</div>
+        <div style="color:#1a3a5e; font-size:10px; font-weight:600; letter-spacing:0.06em;">CUSTOM LEVELS</div>
+      </div>
+    </div>
 
     <div style="background:rgba(26,58,94,0.08); border:1px solid rgba(26,58,94,0.18); border-radius:16px; padding:24px 30px; margin:16px 0; text-align:left;">
       <div style="color:#1a3a5e; font-size:22px; font-weight:bold; text-align:center; margin-bottom:16px;">HOW TO PLAY</div>
@@ -172,7 +199,7 @@ canvas#game { display: block; width: 100vw; height: 100vh; }
     </div>
 
     <div style="color:#b8860b; font-size:20px; margin-top:14px; font-weight:bold; text-shadow:0 1px 0 rgba(255,255,255,0.6);">
-      Collect coins! Jump across platforms!<br>Reach the finish to win!
+      Collect coins, unlock skills, conquer the summit.<br>Your progress saves automatically.
     </div>
 
     <div id="splash-start-prompt" style="margin-top:28px; font-size:26px; color:#1a3a5e; font-weight:bold; animation: blink 1.2s ease-in-out infinite; text-shadow:0 1px 0 rgba(255,255,255,0.7);">
@@ -185,11 +212,11 @@ canvas#game { display: block; width: 100vw; height: 100vh; }
 <div id="main-menu" class="menu-overlay hidden">
   <div style="font-size:18px; color:#aaa; letter-spacing:3px; margin-bottom:2px;">FISHER GAMING'S</div>
   <div class="menu-title">JUMP QUEST!</div>
-  <div class="menu-subtitle">A Mountain Adventure</div>
+  <div class="menu-subtitle">Scale the peaks. Master the skills. Build your own levels.</div>
   <button class="menu-btn btn-play" onclick="Game.showScreen('world-select')">PLAY</button>
-  <button class="menu-btn btn-skills" onclick="Game.showScreen('skill-tree-screen')">SKILLS</button>
+  <button class="menu-btn btn-skills" onclick="Game.showScreen('skill-tree-screen')">SKILL TREE</button>
   <button class="menu-btn btn-cosmetics" onclick="Game.showScreen('cosmetics-screen')">COSMETICS</button>
-  <button class="menu-btn btn-dev" onclick="Game.showScreen('wizard-screen')">DEV: LEVEL WIZARD</button>
+  <button class="menu-btn btn-dev" onclick="Game.showScreen('wizard-screen')">LEVEL WIZARD</button>
   <div class="player-info" id="main-player-info"></div>
 </div>
 
