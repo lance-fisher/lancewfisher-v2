@@ -1,0 +1,30 @@
+[
+  {
+    "id": "old_light",
+    "name": "The Old Light",
+    "covenantName": "Covenant of the First Flame",
+    "prototypeEnabled": false,
+    "alignmentPaths": ["light", "dark"]
+  },
+  {
+    "id": "blood_dominion",
+    "name": "The Blood Dominion",
+    "covenantName": "The Red Covenant",
+    "prototypeEnabled": false,
+    "alignmentPaths": ["light", "dark"]
+  },
+  {
+    "id": "the_order",
+    "name": "The Order",
+    "covenantName": "Covenant of the Sacred Mandate",
+    "prototypeEnabled": false,
+    "alignmentPaths": ["light", "dark"]
+  },
+  {
+    "id": "the_wild",
+    "name": "The Wild",
+    "covenantName": "Covenant of the Thorned Elder Roots",
+    "prototypeEnabled": false,
+    "alignmentPaths": ["light", "dark"]
+  }
+]

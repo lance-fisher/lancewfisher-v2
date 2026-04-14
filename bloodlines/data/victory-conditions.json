@@ -1,0 +1,38 @@
+[
+  {
+    "id": "military_conquest",
+    "name": "Military Conquest",
+    "status": "active-canon",
+    "prototypeEnabled": true
+  },
+  {
+    "id": "economic_dominance",
+    "name": "Economic Dominance",
+    "status": "active-canon",
+    "prototypeEnabled": false
+  },
+  {
+    "id": "faith_divine_right",
+    "name": "Faith Divine Right",
+    "status": "active-canon",
+    "prototypeEnabled": false
+  },
+  {
+    "id": "territorial_governance",
+    "name": "Territorial Governance",
+    "status": "active-canon",
+    "prototypeEnabled": false
+  },
+  {
+    "id": "alliance_victory",
+    "name": "Alliance Victory",
+    "status": "active-canon",
+    "prototypeEnabled": false
+  },
+  {
+    "id": "dynastic_prestige_modifier",
+    "name": "Dynastic Prestige Modifier",
+    "status": "preserved-historical-non-victory",
+    "prototypeEnabled": false
+  }
+]

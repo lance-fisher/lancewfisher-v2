@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bookmark Bot | Fisher Sovereign Systems</title>
-<meta name="description" content="A 7-agent asyncio pipeline that turns X/Twitter bookmarks into scored, routed, and buildable ideas. Real ideas, real scoring, real routing. Built by Fisher Sovereign Systems.">
+<meta name="description" content="A private Fisher Sovereign system that turns saved links into scored, routed, build-ready ideas instead of an unread backlog.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230a0a0b'/%3E%3Cpath d='M10 6 L10 26 L16 22 L22 26 L22 6 Z' fill='none' stroke='%23c9a84c' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -159,7 +159,16 @@ nav.fss-nav{
 }
 
 /* CONTAINER + SECTIONS */
-.container{max-width:1200px;margin:0 auto;padding:0 32px}
+.container{max-width:1200px;margin:0 auto;padding:0 32px;display:flex;flex-direction:column}
+.container > section:nth-of-type(1){order:6}
+.container > section:nth-of-type(2){order:3}
+.container > section:nth-of-type(3){order:7}
+.container > section:nth-of-type(4){order:5}
+.container > section:nth-of-type(5){order:4}
+.container > section:nth-of-type(6){order:1}
+.container > section:nth-of-type(7){order:2}
+.container > section:nth-of-type(8){order:8}
+.container > section:nth-of-type(9){order:9}
 section.block{padding:72px 0;border-bottom:1px solid var(--border)}
 section.block:last-of-type{border-bottom:none}
 .section-head{
@@ -522,7 +531,7 @@ section.block:last-of-type{border-bottom:none}
 
 <div class="top-banner">
   <span class="dot"></span>
-  7 ASYNCIO AGENTS<span class="sep">/</span>EVENT-BUS PIPELINE<span class="sep">/</span>STDLIB ONLY
+  PRIVATE IDEA ROUTING<span class="sep">/</span>CLIENT-OWNED<span class="sep">/</span>BUILT FOR OPERATORS
 </div>
 
 <nav class="fss-nav">
@@ -534,9 +543,9 @@ section.block:last-of-type{border-bottom:none}
 </nav>
 
 <header class="hero">
-  <div class="hero-eyebrow">A Fisher Sovereign Publication</div>
+  <div class="hero-eyebrow">Fisher Sovereign Systems</div>
   <h1>The <span class="gold">Bookmark Bot</span></h1>
-  <p class="deck">A multi-agent system that turns the noise of an X bookmarks feed into something useful. Seven asyncio agents read, enrich, score, route, and (for the worthwhile ones) scaffold the bookmark into a real project under governance.</p>
+  <p class="deck">Turn bookmarked articles, threads, and references into scored, routed, and buildable improvements instead of losing them in browser clutter. Bookmark Bot helps operators convert interesting finds into a governed private backlog and, when appropriate, real project starts.</p>
   <div class="hero-signature">
     <span class="sig-dot"></span>
     Built by Fisher Sovereign Systems
@@ -545,24 +554,24 @@ section.block:last-of-type{border-bottom:none}
 
 <div class="meta-strip">
   <div class="meta-cell">
-    <div class="meta-label">Agents</div>
-    <div class="meta-value">7</div>
+    <div class="meta-label">Problem</div>
+    <div class="meta-value">Browser Clutter</div>
   </div>
   <div class="meta-cell">
-    <div class="meta-label">Tests</div>
-    <div class="meta-value">254</div>
+    <div class="meta-label">Outcome</div>
+    <div class="meta-value">Build-Ready Ideas</div>
   </div>
   <div class="meta-cell">
-    <div class="meta-label">Port</div>
-    <div class="meta-value">8099</div>
+    <div class="meta-label">Ownership</div>
+    <div class="meta-value">Client-Owned</div>
   </div>
   <div class="meta-cell">
-    <div class="meta-label">Stdlib</div>
-    <div class="meta-value">Zero Deps</div>
+    <div class="meta-label">Interface</div>
+    <div class="meta-value">Private Dashboard</div>
   </div>
   <div class="meta-cell">
-    <div class="meta-label">Builder LLM</div>
-    <div class="meta-value">qwen2.5-coder:14b</div>
+    <div class="meta-label">Deployment</div>
+    <div class="meta-value">Local Or Private</div>
   </div>
 </div>
 
@@ -570,7 +579,7 @@ section.block:last-of-type{border-bottom:none}
 
   <section class="block">
     <div class="section-head">
-      <div class="section-title">Stack</div>
+      <div class="section-title">Private Operating Surface</div>
       <div class="section-source">source: <code>bookmark-bot/CLAUDE.md</code></div>
     </div>
     <p class="section-desc">Python and Ollama. Nothing else for the core pipeline. The web UI is plain HTML, CSS, and JavaScript with no build step. The HTTP server is asyncio.start_server on raw TCP. The Builder agent calls Ollama through urllib. Fewer dependencies, fewer ways to break.</p>
@@ -579,7 +588,7 @@ section.block:last-of-type{border-bottom:none}
 
   <section class="block">
     <div class="section-head">
-      <div class="section-title">Pipeline</div>
+      <div class="section-title">How Ideas Move</div>
       <div class="section-source">source: <code>src/agents/</code>, EventBus fan-out</div>
     </div>
     <p class="section-desc">The Ingester normalizes incoming bookmarks. The Analyzer and Researcher run in parallel: one extracts ideas, one fetches the underlying URL. The Scorer waits for both to land before merging them, then assigns a route. The Matcher checks the result against the existing ProjectsHome registry. The Reporter persists everything. The Builder is a separate downstream consumer.</p>
@@ -591,7 +600,7 @@ section.block:last-of-type{border-bottom:none}
 
   <section class="block">
     <div class="section-head">
-      <div class="section-title">The 7 Agents</div>
+      <div class="section-title">Orchestration Layer</div>
       <div class="section-source">source: <code>src/agents/*.py</code>, all async, all listening on the bus</div>
     </div>
     <p class="section-desc">Each agent is a single-file, single-purpose actor that subscribes to event types and publishes results. No agent reaches into another agent's state. Coordination happens through typed events on a shared async bus.</p>
@@ -600,7 +609,7 @@ section.block:last-of-type{border-bottom:none}
 
   <section class="block">
     <div class="section-head">
-      <div class="section-title">4-Dimensional Scoring</div>
+      <div class="section-title">Decision Model</div>
       <div class="section-source">source: <code>src/scoring/ranker.py</code>, weights from <code>config.py</code></div>
     </div>
     <p class="section-desc">Every idea is scored on four independent dimensions, then weighted into a single composite score. The weights live in config and are tunable. The final score is what the Router uses to assign a route.</p>
@@ -610,7 +619,7 @@ section.block:last-of-type{border-bottom:none}
 
   <section class="block">
     <div class="section-head">
-      <div class="section-title">Routes</div>
+      <div class="section-title">Action Lanes</div>
       <div class="section-source">source: <code>src/routing/router.py</code>, hard-coded thresholds</div>
     </div>
     <p class="section-desc">Composite score lands the idea in one of four lanes. Only BUILD_NOW ideas are eligible to be picked up by the Builder agent. Everything else is preserved for later review. Nothing is deleted.</p>
@@ -629,7 +638,7 @@ section.block:last-of-type{border-bottom:none}
 
   <section class="block">
     <div class="section-head">
-      <div class="section-title">Builder Agent</div>
+      <div class="section-title">Build Escalation</div>
       <div class="section-source">source: <code>src/agents/builder.py</code>, <code>src/building/</code></div>
     </div>
     <p class="section-desc">When a BUILD_NOW idea passes review, the Builder picks it up and turns it into a real, registered project. It scaffolds the directory, writes the standard files, registers the project in PROJECTS.json, claims a port from the registry, and creates the GitHub repo. Code generation happens through a local Ollama model.</p>
@@ -638,7 +647,7 @@ section.block:last-of-type{border-bottom:none}
 
   <section class="block">
     <div class="section-head">
-      <div class="section-title">Governance Hooks</div>
+      <div class="section-title">Governance Boundary</div>
       <div class="section-source">source: <code>src/building/governance.py</code></div>
     </div>
     <p class="section-desc">A new project is not just a folder. It is an entry in PROJECTS.json, a port reservation, a GitHub repository, a CLAUDE.md file at the root, an .env.example, and a .gitignore. The Builder is responsible for all of these in one transaction so a half-built project can never enter the registry.</p>
@@ -671,7 +680,7 @@ section.block:last-of-type{border-bottom:none}
 
   <section class="block">
     <div class="section-head">
-      <div class="section-title">Web UI &amp; Auth</div>
+      <div class="section-title">Operator Surface</div>
       <div class="section-source">source: <code>src/web/</code>, asyncio HTTP server, SSE, OAuth 2.0 PKCE</div>
     </div>
     <p class="section-desc">A vanilla single-page app served by an asyncio HTTP/1.1 server. State updates stream over Server-Sent Events so the dashboard reflects the bus in real time. Authentication is OAuth 2.0 PKCE against X with an optional bypass mode for development.</p>
@@ -702,13 +711,23 @@ section.block:last-of-type{border-bottom:none}
 
 </div>
 
+<!-- ── Customer Value Sections ── -->
+<div style="max-width:720px;margin:48px auto 0;padding:0 28px;">
+  <div style="margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:22px;">
+    <div style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--text-dim);text-transform:uppercase;margin-bottom:12px;">Why It Matters</div>
+    <div style="font-size:13px;color:var(--text-mid);line-height:1.8;">Bookmark Bot is for operators and teams who already collect too many promising references and need a private system that turns saved ideas into an organized build queue. It keeps the value high on the page: capture, score, route, and only escalate the ideas worth acting on.</div>
+  </div>
+  <div style="text-align:center;margin-bottom:40px;">
+    <a href="../home.html#sec-contact" style="display:inline-block;font-size:11px;letter-spacing:.14em;padding:12px 28px;border:1px solid rgba(228,234,242,0.25);color:var(--text-mid);text-decoration:none;border-radius:3px;transition:all .2s;text-transform:uppercase;font-family:var(--sans);">Discuss Your Requirements</a>
+  </div>
+</div>
+
 <footer class="fss-footer">
   <div class="fss-footer-wordmark">
     <span class="fss-footer-name">Fisher Sovereign Systems</span>
   </div>
   <div class="fss-footer-tagline">Building the Architecture for Independence</div>
-  <p class="fss-footer-statement">Fisher Sovereign Systems is being built to return control to the individual. Bookmark Bot is one of the load-bearing pieces.</p>
-  <a href="../home.html" class="fss-footer-cta">Visit lancewfisher.com &rarr;</a>
+  <p class="fss-footer-statement">Built by <a href="../home.html" style="color:var(--text-mid);text-decoration:none;">Fisher Sovereign Systems</a> &middot; <a href="../home.html#sec-contact" style="color:var(--text-mid);text-decoration:none;">Request a Custom Build</a></p>
   <div class="fss-footer-copy">&copy; 2026 Fisher Sovereign Systems, LLC. All rights reserved.</div>
 </footer>
 

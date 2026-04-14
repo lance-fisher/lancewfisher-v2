@@ -10,11 +10,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    SOVEREIGN COMMAND CENTER
    Fisher Sovereign Systems: Building the Architecture for Independence
    Self-contained page. No external CSS dependencies.
-   ═══════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -53,6 +53,11 @@
   --font-serif: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --border-light: rgba(228,234,242,0.10);
+  --border-dim: rgba(228,234,242,0.07);
+  --surface: #0e0f12;
+  --display: 'Cinzel', serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
   --radius: 8px;
   --radius-sm: 5px;
   --gap: 14px;
@@ -74,7 +79,7 @@ a { color: var(--fg-strong); text-decoration: none; transition: color 0.15s; }
 a:hover { color: #fff; }
 button { font-family: inherit; cursor: pointer; border: none; background: none; }
 
-/* ─── NAV ─── */
+/* â”€â”€â”€ NAV â”€â”€â”€ */
 .nav {
   display: flex; align-items: center; justify-content: space-between;
   padding: 14px 22px 12px;
@@ -136,7 +141,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   100% { box-shadow: 0 0 0 0 rgba(110,231,160,0); }
 }
 
-/* ─── HERO ─── */
+/* â”€â”€â”€ HERO â”€â”€â”€ */
 .hero {
   max-width: var(--max-w); margin: 0 auto;
   padding: 40px 28px 8px;
@@ -156,7 +161,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   color: var(--fg); max-width: 680px; line-height: 1.55;
 }
 
-/* ─── STATS STRIP ─── */
+/* â”€â”€â”€ STATS STRIP â”€â”€â”€ */
 .stats-strip {
   max-width: var(--max-w); margin: 0 auto;
   padding: 20px 28px 6px;
@@ -173,7 +178,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .stat-chip .stat-label { color: var(--fg-dim); letter-spacing: 0.04em; }
 
-/* ─── SECTION TABS ─── */
+/* â”€â”€â”€ SECTION TABS â”€â”€â”€ */
 .section-tabs-wrap {
   max-width: var(--max-w); margin: 0 auto;
   padding: 20px 28px 0;
@@ -194,7 +199,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .section-tab.active { color: var(--fg-strong); border-bottom-color: var(--fg-strong); }
 .tab-dot { width: 6px; height: 6px; border-radius: 50%; }
 
-/* ─── PANELS ─── */
+/* â”€â”€â”€ PANELS â”€â”€â”€ */
 .panels-wrap {
   max-width: var(--max-w); margin: 0 auto;
   padding: 24px 28px 80px;
@@ -214,7 +219,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-size: 0.88rem; color: var(--fg); max-width: 680px;
 }
 
-/* ─── CARD GRID ─── */
+/* â”€â”€â”€ CARD GRID â”€â”€â”€ */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -222,7 +227,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .card-grid-3 { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
 
-/* ─── CARD ─── */
+/* â”€â”€â”€ CARD â”€â”€â”€ */
 .card {
   background: var(--bg-panel); border: 1px solid var(--border);
   border-radius: var(--radius); padding: 18px;
@@ -258,7 +263,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .tag-cyan   { background: var(--cyan-dim);   border: 1px solid var(--cyan-line);   color: var(--cyan); }
 .tag-ghost  { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--fg-dim); }
 
-/* ─── STATUS BAR ─── */
+/* â”€â”€â”€ STATUS BAR â”€â”€â”€ */
 .status-bar {
   display: flex; align-items: center; gap: 8px;
   font-family: var(--font-mono); font-size: 0.68rem;
@@ -270,7 +275,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .status-dot.blue   { background: var(--blue);  box-shadow: 0 0 6px rgba(125,211,252,0.4); }
 .status-dot.purple { background: var(--purple); box-shadow: 0 0 6px rgba(167,139,250,0.4); }
 
-/* ─── ARCHITECTURE DIAGRAM ─── */
+/* â”€â”€â”€ ARCHITECTURE DIAGRAM â”€â”€â”€ */
 .arch-diagram {
   background: var(--bg-panel); border: 1px solid var(--border);
   border-radius: var(--radius); padding: 28px;
@@ -300,7 +305,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-family: var(--font-mono); font-size: 0.72rem; padding: 2px 0;
 }
 
-/* ─── EVENT FEED ─── */
+/* â”€â”€â”€ EVENT FEED â”€â”€â”€ */
 .event-feed {
   background: var(--bg-panel); border: 1px solid var(--border);
   border-radius: var(--radius); padding: 16px; margin-top: 20px;
@@ -328,7 +333,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .event-text { color: var(--fg); flex: 1; }
 .event-source { color: var(--fg-strong); font-weight: 500; }
 
-/* ─── POSTURE METERS ─── */
+/* â”€â”€â”€ POSTURE METERS â”€â”€â”€ */
 .posture-grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: var(--gap); margin-bottom: 20px;
@@ -355,7 +360,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .meter-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
 
-/* ─── GOVERNANCE TABLE ─── */
+/* â”€â”€â”€ GOVERNANCE TABLE â”€â”€â”€ */
 .tier-table {
   width: 100%; border-collapse: collapse; font-size: 0.8rem;
 }
@@ -372,7 +377,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .tier-table tr:hover td { background: rgba(255,255,255,0.015); }
 .tier-num { font-family: var(--font-mono); font-weight: 600; font-size: 0.88rem; }
 
-/* ─── PRODUCT LINKS ─── */
+/* â”€â”€â”€ PRODUCT LINKS â”€â”€â”€ */
 .product-link {
   display: inline-flex; align-items: center; gap: 6px;
   font-family: var(--font-mono); font-size: 0.72rem;
@@ -386,7 +391,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: rgba(255,255,255,0.03);
 }
 
-/* ─── FOOTER ─── */
+/* â”€â”€â”€ FOOTER â”€â”€â”€ */
 .page-footer {
   max-width: var(--max-w); margin: 0 auto;
   padding: 0 28px 48px;
@@ -424,7 +429,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .footer-links a { color: var(--fg-faint); }
 .footer-links a:hover { color: var(--fg-strong); }
 
-/* ─── RESPONSIVE ─── */
+/* â”€â”€â”€ RESPONSIVE â”€â”€â”€ */
 @media (max-width: 768px) {
   .nav { padding: 10px 16px; }
   .nav-wm-name { font-size: 22px; }
@@ -451,7 +456,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 </head>
 <body>
 
-<!-- ═══ NAV ═══ -->
+<!-- â•â•â• NAV â•â•â• -->
 <nav class="nav">
   <div class="nav-left">
     <a href="../home.html" class="nav-wm-link" aria-label="Fisher Sovereign Systems">
@@ -467,18 +472,18 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   </div>
 </nav>
 
-<!-- ═══ HERO ═══ -->
+<!-- â•â•â• HERO â•â•â• -->
 <section class="hero">
-  <div class="hero-eyebrow">Complete Infrastructure Visibility</div>
-  <h1>See the full scope of what Fisher Sovereign builds.</h1>
-  <p class="hero-sub">Five product families, their health, and how they connect. One dashboard that shows AI governance, identity verification, network control, encrypted communications, and infrastructure status across an entire sovereign technology stack.</p>
+  <div class="hero-eyebrow">Your Operations. Your Control. Your Hardware.</div>
+  <h1>One dashboard for your entire sovereign infrastructure.</h1>
+  <p class="hero-sub">The Sovereignty Command Center is the private operational surface for a Fisher Sovereign estate. Governance, identity, network visibility, communications, and system health live in one place so the operator can see and act without relying on outside platforms.</p>
   <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:24px;">
     <a href="#panel-overview" style="display:inline-block;padding:11px 26px;background:rgba(255,255,255,0.04);border:1px solid var(--border-light);border-radius:6px;font-family:var(--mono);font-size:11px;font-weight:500;color:var(--fg-strong);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:all .15s;">Explore the Dashboard</a>
     <a href="../home.html#sec-contact" style="display:inline-block;padding:11px 26px;border:1px solid var(--border-dim);border-radius:6px;font-family:var(--mono);font-size:11px;font-weight:500;color:var(--fg-dim);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:all .15s;">Request a Custom Build</a>
   </div>
 </section>
 
-<!-- ═══ WHAT EACH TAB MEANS ═══ -->
+<!-- â•â•â• WHAT EACH TAB MEANS â•â•â• -->
 <div style="max-width:960px;margin:0 auto;padding:28px 28px 32px;">
   <div style="font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--fg-dim);text-transform:uppercase;margin-bottom:16px;">What You Control</div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;">
@@ -501,39 +506,131 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   </div>
 </div>
 
-<!-- ═══ WHO + CUSTOM BUILD ═══ -->
-<div style="max-width:960px;margin:0 auto;padding:0 28px 32px;">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
-    <div style="background:var(--surface);border:1px solid var(--border-dim);border-radius:8px;padding:18px;">
-      <div style="font-family:var(--display);font-size:12px;color:var(--fg-strong);letter-spacing:.06em;margin-bottom:10px;">Who This Is For</div>
-      <div style="font-size:12px;color:var(--fg-dim);line-height:1.7;">
-        <div style="margin-bottom:6px;"><span style="color:var(--green);">+</span> Operators running multiple services who need one place to see everything</div>
-        <div style="margin-bottom:6px;"><span style="color:var(--green);">+</span> Teams that need verifiable proof of who authorized each action</div>
-        <div><span style="color:var(--green);">+</span> Organizations building their own sovereign infrastructure stack</div>
+
+<!-- â•â•â• OPERATIONAL SCENARIOS â•â•â• -->
+<div style="max-width:960px;margin:0 auto;padding:36px 28px 28px;">
+  <button onclick="var el=document.getElementById('scenarioCards');var a=document.getElementById('scenarioArrow');if(el.style.maxHeight==='0px'){el.style.maxHeight='800px';el.style.opacity='1';a.textContent='\u25B2'}else{el.style.maxHeight='0px';el.style.opacity='0';a.textContent='\u25BC'}" style="display:flex;align-items:center;gap:10px;background:none;border:none;cursor:pointer;padding:0;margin-bottom:18px;">
+    <span style="font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--fg-dim);text-transform:uppercase;">Operational Rhythm</span>
+    <span id="scenarioArrow" style="font-size:9px;color:var(--fg-dim);">&#9660;</span>
+  </button>
+
+  <!-- Scenario cards (collapsed by default) -->
+  <div id="scenarioCards" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;max-height:0px;opacity:0;overflow:hidden;transition:max-height 0.5s ease,opacity 0.3s ease;">
+
+    <!-- Incident Response -->
+    <div style="background:var(--surface);border:1px solid rgba(248,113,113,0.2);border-radius:8px;padding:20px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,rgba(248,113,113,0.6),transparent);"></div>
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:rgba(248,113,113,0.7);text-transform:uppercase;margin-bottom:10px;">Scenario: Incident Response</div>
+      <div style="font-family:var(--display);font-size:14px;color:var(--fg-strong);margin-bottom:8px;letter-spacing:.02em;">Unknown device joins the network</div>
+      <div style="font-size:11px;color:var(--fg-dim);line-height:1.7;margin-bottom:14px;">Home Hub flags a new MAC address at 2:17 AM. Trust score: 12/100. The Command Center surfaces the alert, shows the device vendor, traffic pattern, and connection history. You decide: quarantine, allow, or investigate.</div>
+      <div style="display:flex;gap:6px;">
+        <span style="font-family:var(--mono);font-size:9px;padding:4px 10px;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:3px;color:rgba(248,113,113,0.8);">ALERT</span>
+        <span style="font-family:var(--mono);font-size:9px;padding:4px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--border-dim);border-radius:3px;color:var(--fg-dim);">REVIEW</span>
+        <span style="font-family:var(--mono);font-size:9px;padding:4px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--border-dim);border-radius:3px;color:var(--fg-dim);">RESOLVE</span>
       </div>
     </div>
-    <div style="background:var(--surface);border:1px solid var(--border-dim);border-radius:8px;padding:18px;">
-      <div style="font-family:var(--display);font-size:12px;color:var(--fg-strong);letter-spacing:.06em;margin-bottom:10px;">A Custom Command Center</div>
-      <div style="font-size:12px;color:var(--fg-dim);line-height:1.7;">
-        <div style="margin-bottom:6px;"><span style="color:var(--amber);">+</span> Configured for your services, your team, your approval policies</div>
-        <div style="margin-bottom:6px;"><span style="color:var(--amber);">+</span> Your product families, your health endpoints, your governance tiers</div>
-        <div><span style="color:var(--amber);">+</span> <a href="../home.html#sec-contact" style="color:var(--amber);text-decoration:underline;">Discuss your requirements</a></div>
+
+    <!-- Service Health -->
+    <div style="background:var(--surface);border:1px solid rgba(110,231,160,0.2);border-radius:8px;padding:20px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,rgba(110,231,160,0.6),transparent);"></div>
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:rgba(110,231,160,0.7);text-transform:uppercase;margin-bottom:10px;">Scenario: Health Inspection</div>
+      <div style="font-family:var(--display);font-size:14px;color:var(--fg-strong);margin-bottom:8px;letter-spacing:.02em;">Morning system check</div>
+      <div style="font-size:11px;color:var(--fg-dim);line-height:1.7;margin-bottom:14px;">Open the Command Center with coffee. All five product families show green. Ollama inference running on local GPU at 34% utilization. 3 camera feeds online. Trading bots in DRY_RUN. Sovereign Signal relay healthy. 12 seconds to confirm the entire stack is nominal.</div>
+      <div style="display:flex;gap:6px;">
+        <span style="font-family:var(--mono);font-size:9px;padding:4px 10px;background:rgba(110,231,160,0.08);border:1px solid rgba(110,231,160,0.2);border-radius:3px;color:rgba(110,231,160,0.8);">ALL GREEN</span>
+        <span style="font-family:var(--mono);font-size:9px;padding:4px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--border-dim);border-radius:3px;color:var(--fg-dim);">5 FAMILIES</span>
+        <span style="font-family:var(--mono);font-size:9px;padding:4px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--border-dim);border-radius:3px;color:var(--fg-dim);">12 SEC</span>
       </div>
+    </div>
+
+    <!-- Alert Resolution -->
+    <div style="background:var(--surface);border:1px solid rgba(251,191,36,0.2);border-radius:8px;padding:20px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,rgba(251,191,36,0.6),transparent);"></div>
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:rgba(251,191,36,0.7);text-transform:uppercase;margin-bottom:10px;">Scenario: Alert Resolution</div>
+      <div style="font-family:var(--display);font-size:14px;color:var(--fg-strong);margin-bottom:8px;letter-spacing:.02em;">Auton proposes a dependency update</div>
+      <div style="font-size:11px;color:var(--fg-dim);line-height:1.7;margin-bottom:14px;">The autonomous maintenance agent found a CVE in a transitive dependency across 3 projects. It generated a patch, ran tests in DRY_RUN, and is waiting for your approval. Review the diff, approve or reject, and the audit trail records your decision with a timestamp and hash.</div>
+      <div style="display:flex;gap:6px;">
+        <span style="font-family:var(--mono);font-size:9px;padding:4px 10px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:3px;color:rgba(251,191,36,0.8);">PENDING</span>
+        <span style="font-family:var(--mono);font-size:9px;padding:4px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--border-dim);border-radius:3px;color:var(--fg-dim);">APPROVE</span>
+        <span style="font-family:var(--mono);font-size:9px;padding:4px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--border-dim);border-radius:3px;color:var(--fg-dim);">AUDIT</span>
+      </div>
+    </div>
+
+    <!-- Trust Policy Review -->
+    <div style="background:var(--surface);border:1px solid rgba(168,139,250,0.2);border-radius:8px;padding:20px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,rgba(168,139,250,0.6),transparent);"></div>
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:rgba(168,139,250,0.7);text-transform:uppercase;margin-bottom:10px;">Scenario: Trust Policy Review</div>
+      <div style="font-family:var(--display);font-size:14px;color:var(--fg-strong);margin-bottom:8px;letter-spacing:.02em;">Quarterly governance audit</div>
+      <div style="font-size:11px;color:var(--fg-dim);line-height:1.7;margin-bottom:14px;">Navigate to the Governance tab. Review the 5-tier approval matrix. Verify that Tier 3 and 4 actions still require TOTP confirmation. Check the hash-chain integrity of the last 90 days of audit records. Export a compliance report. Total time: under 10 minutes.</div>
+      <div style="display:flex;gap:6px;">
+        <span style="font-family:var(--mono);font-size:9px;padding:4px 10px;background:rgba(168,139,250,0.08);border:1px solid rgba(168,139,250,0.2);border-radius:3px;color:rgba(168,139,250,0.8);">REVIEW</span>
+        <span style="font-family:var(--mono);font-size:9px;padding:4px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--border-dim);border-radius:3px;color:var(--fg-dim);">VERIFY</span>
+        <span style="font-family:var(--mono);font-size:9px;padding:4px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--border-dim);border-radius:3px;color:var(--fg-dim);">EXPORT</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desktop device frame showing the command center -->
+  <div style="display:flex;justify-content:center;margin-bottom:12px;">
+    <div style="max-width:680px;width:100%;">
+      <div style="background:#1a1a1e;border-radius:8px 8px 0 0;border:2px solid rgba(255,255,255,0.08);border-bottom:none;padding:8px 8px 0;position:relative;">
+        <div style="position:absolute;top:7px;left:50%;transform:translateX(-50%);width:6px;height:6px;background:rgba(255,255,255,0.06);border-radius:50%;"></div>
+        <div style="width:100%;aspect-ratio:16/9;background:linear-gradient(180deg,#0c0d12,#080910);border-radius:4px 4px 0 0;overflow:hidden;display:flex;flex-direction:column;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:rgba(255,255,255,0.02);border-bottom:1px solid rgba(255,255,255,0.05);">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-family:'Cinzel',serif;font-size:7px;color:rgba(255,255,255,0.6);letter-spacing:1px;">COMMAND CENTER</span>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <span style="font-size:6px;color:rgba(110,231,160,0.7);">&#9679; 25 systems</span>
+              <span style="font-size:6px;color:rgba(255,255,255,0.3);">Local Only</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:4px;padding:5px 10px;border-bottom:1px solid rgba(255,255,255,0.03);">
+            <span style="font-size:5px;padding:2px 6px;background:rgba(255,255,255,0.06);border-radius:2px;color:rgba(255,255,255,0.6);">Overview</span>
+            <span style="font-size:5px;padding:2px 6px;color:rgba(255,255,255,0.3);">AI Command</span>
+            <span style="font-size:5px;padding:2px 6px;color:rgba(255,255,255,0.3);">Identity</span>
+            <span style="font-size:5px;padding:2px 6px;color:rgba(255,255,255,0.3);">Home</span>
+            <span style="font-size:5px;padding:2px 6px;color:rgba(255,255,255,0.3);">Comms</span>
+            <span style="font-size:5px;padding:2px 6px;color:rgba(255,255,255,0.3);">Governance</span>
+          </div>
+          <div style="flex:1;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:8px 10px;">
+            <div style="background:rgba(110,231,160,0.04);border:1px solid rgba(110,231,160,0.12);border-radius:3px;padding:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+              <div style="font-size:8px;color:rgba(110,231,160,0.9);font-weight:700;">92%</div>
+              <div style="font-size:4px;color:rgba(255,255,255,0.3);margin-top:2px;">AI INFRA</div>
+            </div>
+            <div style="background:rgba(74,144,226,0.04);border:1px solid rgba(74,144,226,0.12);border-radius:3px;padding:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+              <div style="font-size:8px;color:rgba(74,144,226,0.9);font-weight:700;">100%</div>
+              <div style="font-size:4px;color:rgba(255,255,255,0.3);margin-top:2px;">IDENTITY</div>
+            </div>
+            <div style="background:rgba(110,231,160,0.04);border:1px solid rgba(110,231,160,0.12);border-radius:3px;padding:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+              <div style="font-size:8px;color:rgba(110,231,160,0.9);font-weight:700;">87%</div>
+              <div style="font-size:4px;color:rgba(255,255,255,0.3);margin-top:2px;">NETWORK</div>
+            </div>
+            <div style="background:rgba(110,231,160,0.04);border:1px solid rgba(110,231,160,0.12);border-radius:3px;padding:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+              <div style="font-size:8px;color:rgba(110,231,160,0.9);font-weight:700;">100%</div>
+              <div style="font-size:4px;color:rgba(255,255,255,0.3);margin-top:2px;">COMMS</div>
+            </div>
+            <div style="background:rgba(251,191,36,0.04);border:1px solid rgba(251,191,36,0.12);border-radius:3px;padding:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+              <div style="font-size:8px;color:rgba(251,191,36,0.9);font-weight:700;">1</div>
+              <div style="font-size:4px;color:rgba(255,255,255,0.3);margin-top:2px;">PENDING</div>
+            </div>
+          </div>
+          <div style="padding:4px 10px 6px;border-top:1px solid rgba(255,255,255,0.03);">
+            <div style="display:flex;gap:4px;align-items:center;">
+              <span style="width:4px;height:4px;border-radius:50%;background:rgba(110,231,160,0.6);"></span>
+              <span style="font-size:5px;color:rgba(255,255,255,0.3);">Ollama active &middot; 3 cameras online &middot; 6 bots DRY_RUN &middot; Signal relay healthy</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="height:14px;background:linear-gradient(180deg,#2a2a2e,#1a1a1e);border-radius:0 0 4px 4px;border:2px solid rgba(255,255,255,0.06);border-top:1px solid rgba(255,255,255,0.04);"></div>
+      <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.2);margin-top:12px;">Your Private Command Center</div>
     </div>
   </div>
 </div>
 
-<!-- ═══ STATS STRIP ═══ -->
-<div class="stats-strip">
-  <div class="stat-chip"><span class="stat-val">25+</span><span class="stat-label">Active Systems</span></div>
-  <div class="stat-chip"><span class="stat-val">80K+</span><span class="stat-label">Lines of Code</span></div>
-  <div class="stat-chip"><span class="stat-val">5</span><span class="stat-label">Product Families</span></div>
-  <div class="stat-chip"><span class="stat-val">130</span><span class="stat-label">Security Tests</span></div>
-  <div class="stat-chip"><span class="stat-val">0</span><span class="stat-label">Cloud Dependencies</span></div>
-  <div class="stat-chip"><span class="stat-val">Tier 0</span><span class="stat-label">Current Authority</span></div>
-</div>
 
-<!-- ═══ SECTION TABS ═══ -->
+<!-- â•â•â• SECTION TABS â•â•â• -->
 <div class="section-tabs-wrap">
   <div class="section-tabs" id="sectionTabs">
     <button class="section-tab active" data-panel="overview"><span class="tab-dot" style="background:var(--fg-strong)"></span> Overview</button>
@@ -545,10 +642,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   </div>
 </div>
 
-<!-- ═══ PANELS ═══ -->
+<!-- â•â•â• PANELS â•â•â• -->
 <div class="panels-wrap">
 
-  <!-- ──── OVERVIEW ──── -->
+  <!-- â”€â”€â”€â”€ OVERVIEW â”€â”€â”€â”€ -->
   <div class="panel active" id="panel-overview">
     <div class="panel-header">
       <h2>Ecosystem Overview</h2>
@@ -729,7 +826,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     </div>
   </div>
 
-  <!-- ──── AI COMMAND ──── -->
+  <!-- â”€â”€â”€â”€ AI COMMAND â”€â”€â”€â”€ -->
   <div class="panel" id="panel-ai-command">
     <div class="panel-header">
       <h2>AI Command</h2>
@@ -802,7 +899,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     <a href="../sovereign-hub/index.html" class="product-link" style="margin-left:8px">View Sovereign Hub &rarr;</a>
   </div>
 
-  <!-- ──── IDENTITY & TRUST ──── -->
+  <!-- â”€â”€â”€â”€ IDENTITY & TRUST â”€â”€â”€â”€ -->
   <div class="panel" id="panel-identity">
     <div class="panel-header">
       <h2>Identity &amp; Trust</h2>
@@ -870,7 +967,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     <a href="../operator-console/index.html" class="product-link">View Operator Console &rarr;</a>
   </div>
 
-  <!-- ──── HOME CONTROL ──── -->
+  <!-- â”€â”€â”€â”€ HOME CONTROL â”€â”€â”€â”€ -->
   <div class="panel" id="panel-home-control">
     <div class="panel-header">
       <h2>Home Control</h2>
@@ -911,7 +1008,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     <a href="../home-hub/index.html" class="product-link">View HomeHub &rarr;</a>
   </div>
 
-  <!-- ──── COMMUNICATIONS ──── -->
+  <!-- â”€â”€â”€â”€ COMMUNICATIONS â”€â”€â”€â”€ -->
   <div class="panel" id="panel-comms">
     <div class="panel-header">
       <h2>Secure Communications</h2>
@@ -964,7 +1061,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     <a href="../sovereign-signal/index.html" class="product-link">View Sovereign Signal &rarr;</a>
   </div>
 
-  <!-- ──── GOVERNANCE ──── -->
+  <!-- â”€â”€â”€â”€ GOVERNANCE â”€â”€â”€â”€ -->
   <div class="panel" id="panel-governance">
     <div class="panel-header">
       <h2>Governance &amp; Standards</h2>
@@ -1019,7 +1116,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 </div><!-- /panels-wrap -->
 
-<!-- ═══ FOOTER ═══ -->
+<!-- â•â•â• FOOTER â•â•â• -->
 <footer class="page-footer">
   <span class="footer-brand">
     <span class="footer-wm-name">Fisher</span>
@@ -1034,12 +1131,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   </div>
 </footer>
 
-<!-- ═══ SCRIPT ═══ -->
+<!-- â•â•â• SCRIPT â•â•â• -->
 <script>
 (function() {
   'use strict';
 
-  /* ── Tab switching ── */
+  /* â”€â”€ Tab switching â”€â”€ */
   var tabs = document.querySelectorAll('.section-tab');
   var panels = document.querySelectorAll('.panel');
 
@@ -1058,7 +1155,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     tab.addEventListener('click', function() { switchTab(tab.dataset.panel); });
   });
 
-  /* ── Event feed (DOM-safe, no innerHTML) ── */
+  /* â”€â”€ Event feed (DOM-safe, no innerHTML) â”€â”€ */
   var events = [
     { time: '00:03', icon: '\u2713', source: 'Governance', text: 'Policy engine heartbeat: 5-tier system nominal' },
     { time: '00:02', icon: '\u26a1', source: 'AI Command', text: 'Ollama inference request routed locally (qwen2.5-coder:14b)' },
@@ -1103,7 +1200,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     });
   }
 
-  /* ── Animate posture meters on scroll ── */
+  /* â”€â”€ Animate posture meters on scroll â”€â”€ */
   var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {

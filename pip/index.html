@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Private Intelligence Platform | Lance W. Fisher</title>
+<title>Private Intelligence Platform | Fisher Sovereign Systems</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -80,7 +80,7 @@
     white-space: nowrap;
   }
   .nav-back:hover { color: var(--gold); }
-  .nav-back::before { content: '←'; }
+  .nav-back::before { content: '\2190'; }
 
   .nav-title {
     font-family: 'Cinzel', serif;
@@ -1354,7 +1354,7 @@
 
 
 <div class="page-sim-banner">
-  Public Alpha &middot; Real local chat demo &middot; Provider routing is simulated honestly in-browser &middot; Session history persists in localStorage
+  Public Alpha &middot; Interactive workstation preview &middot; Provider routing is shown honestly without exposing a live backend
 </div>
 
 <nav id="main-nav"></nav>
@@ -1362,7 +1362,7 @@
 <div class="page-wrap">
   <div class="hero" id="hero-section"></div>
   <div class="page-benefit">
-    Bring AI in-house without handing your workflow, prompts, or customer context to a third-party platform. This preview shows how a private workstation can route tasks, retain history, and keep the operator in control of when anything leaves the machine.
+    Bring AI in-house without handing your workflow, prompts, or customer context to a third-party platform. This preview shows how a private workstation can route tasks, preserve operator control, and make every boundary legible before anything leaves the machine.
   </div>
   <section id="workspace-section"></section>
   <section id="arch-section"></section>
@@ -1373,48 +1373,56 @@
   <section id="stack-section"></section>
   <section id="diff-section"></section>
 
-  <!-- DEPLOYMENT TIERS -->
+  <!-- DEVICE CONTEXT: Multi-Surface AI Workstation -->
   <section style="max-width:960px;margin:0 auto;padding:56px 32px;border-top:1px solid var(--border);">
-    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.25em;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;">Deployment Options</div>
-    <div style="font-family:'Cinzel',serif;font-size:clamp(18px,3vw,24px);font-weight:600;color:var(--gold);margin-bottom:10px;">Three Tiers of Private Intelligence</div>
-    <p style="font-size:14px;color:var(--text-dim);max-width:680px;margin-bottom:32px;line-height:1.65;">Choose the deployment that matches your workflow. Every tier runs locally. Cloud providers are always opt-in, never required.</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;">
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;position:relative;">
-        <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:var(--text);letter-spacing:.04em;margin-bottom:4px;">Personal Assistant</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:.06em;margin-bottom:14px;">ONE MODEL, BASIC CHAT</div>
-        <div style="font-size:13px;color:var(--text-dim);line-height:1.65;margin-bottom:16px;">A single local model for everyday coding questions, text generation, and quick lookups. Runs on modest hardware with no GPU required for smaller models.</div>
-        <div style="display:flex;flex-direction:column;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);">
-          <div><span style="color:var(--green);">&#9679;</span> 8GB RAM minimum</div>
-          <div><span style="color:var(--green);">&#9679;</span> Integrated GPU (or CPU-only)</div>
-          <div><span style="color:var(--green);">&#9679;</span> ~5GB disk for one 7B model</div>
-          <div><span style="color:var(--green);">&#9679;</span> qwen2.5-coder:7b recommended</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.25em;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;">Your AI, Every Surface</div>
+    <div style="font-family:'Cinzel',serif;font-size:clamp(18px,3vw,22px);font-weight:600;color:var(--gold);margin-bottom:20px;">One private workstation. Desktop, laptop, and mobile access.</div>
+    <div style="display:flex;gap:24px;align-items:flex-end;justify-content:center;flex-wrap:wrap;margin-bottom:24px;">
+      <!-- Desktop mockup -->
+      <div style="text-align:center;">
+        <div style="width:280px;background:#1a1a1e;border:2px solid rgba(255,255,255,0.08);border-radius:8px 8px 0 0;padding:6px 6px 0;">
+          <div style="background:#08090c;border-radius:4px 4px 0 0;aspect-ratio:16/9;display:flex;flex-direction:column;overflow:hidden;">
+            <div style="display:flex;align-items:center;padding:4px 8px;border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);">
+              <span style="font-family:'Cinzel',serif;font-size:6px;color:rgba(255,255,255,0.5);letter-spacing:1px;">PIP WORKSTATION</span>
+              <span style="margin-left:auto;font-size:5px;color:rgba(110,231,160,0.7);">&#9679; Local GPU</span>
+            </div>
+            <div style="display:flex;flex:1;">
+              <div style="width:30%;border-right:1px solid rgba(255,255,255,0.04);padding:4px;">
+                <div style="font-size:5px;color:rgba(255,255,255,0.25);letter-spacing:1px;margin-bottom:3px;">MODELS</div>
+                <div style="background:rgba(74,144,226,0.1);border-radius:2px;padding:2px 4px;font-size:5px;color:rgba(74,144,226,0.8);margin-bottom:2px;">qwen2.5:14b</div>
+                <div style="padding:2px 4px;font-size:5px;color:rgba(255,255,255,0.3);">llama3.1:8b</div>
+                <div style="padding:2px 4px;font-size:5px;color:rgba(255,255,255,0.3);">codestral:22b</div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;padding:4px;">
+                <div style="align-self:flex-start;background:rgba(255,255,255,0.03);border-radius:3px;padding:2px 5px;font-size:5px;color:rgba(255,255,255,0.4);">Summarize Q3 financials.</div>
+                <div style="align-self:flex-end;background:rgba(74,144,226,0.1);border-radius:3px;padding:2px 5px;font-size:5px;color:rgba(200,220,255,0.6);">Revenue up 12%. Key driver: new client segment...</div>
+              </div>
+            </div>
+          </div>
         </div>
+        <div style="height:8px;background:linear-gradient(180deg,#2a2a2e,#1a1a1e);border-radius:0 0 3px 3px;border:2px solid rgba(255,255,255,0.05);border-top:none;"></div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text-muted);margin-top:8px;letter-spacing:1px;">DESKTOP WORKSTATION</div>
       </div>
-      <div style="background:var(--surface);border:1px solid var(--border-gold);border-radius:var(--radius-lg);padding:24px;position:relative;">
-        <div style="position:absolute;top:-8px;right:16px;font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 10px;background:var(--gold-dim);border:1px solid var(--border-gold);border-radius:3px;color:var(--gold);letter-spacing:.08em;">RECOMMENDED</div>
-        <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:var(--gold);letter-spacing:.04em;margin-bottom:4px;">Prosumer Workstation</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:.06em;margin-bottom:14px;">MULTIPLE MODELS, CODE ASSISTANT</div>
-        <div style="font-size:13px;color:var(--text-dim);line-height:1.65;margin-bottom:16px;">Multiple local models with intelligent routing. The system selects the best model per task: code models for programming, general models for reasoning, fast models for simple queries.</div>
-        <div style="display:flex;flex-direction:column;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);">
-          <div><span style="color:var(--gold);">&#9679;</span> 16GB RAM recommended</div>
-          <div><span style="color:var(--gold);">&#9679;</span> RTX 3060+ or equivalent</div>
-          <div><span style="color:var(--gold);">&#9679;</span> ~25GB disk for 3-5 models</div>
-          <div><span style="color:var(--gold);">&#9679;</span> Auto-routing between models</div>
+      <!-- Phone mockup -->
+      <div style="text-align:center;">
+        <div style="width:90px;background:#1a1a1e;border:2px solid rgba(255,255,255,0.08);border-radius:14px;padding:4px;box-shadow:0 8px 30px rgba(0,0,0,0.3);">
+          <div style="background:#08090c;border-radius:10px;aspect-ratio:9/16;display:flex;flex-direction:column;padding:4px;overflow:hidden;">
+            <div style="display:flex;align-items:center;padding:2px 4px;border-bottom:1px solid rgba(255,255,255,0.04);">
+              <span style="font-size:5px;color:rgba(255,255,255,0.4);">PIP Mobile</span>
+              <span style="margin-left:auto;font-size:4px;color:rgba(110,231,160,0.6);">&#9679;</span>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;padding:4px 2px;">
+              <div style="background:rgba(255,255,255,0.03);border-radius:3px;padding:2px 3px;font-size:4px;color:rgba(255,255,255,0.35);">Quick question...</div>
+              <div style="background:rgba(74,144,226,0.08);border-radius:3px;padding:2px 3px;font-size:4px;color:rgba(200,220,255,0.5);">Answer here.</div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;position:relative;">
-        <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:var(--text);letter-spacing:.04em;margin-bottom:4px;">Full Private Intelligence</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:.06em;margin-bottom:14px;">ALL MODELS, SERVICE HEALTH, REMOTE ACCESS</div>
-        <div style="font-size:13px;color:var(--text-dim);line-height:1.65;margin-bottom:16px;">Complete local AI infrastructure: multiple models, service health monitoring, session history, phone access, and optional hybrid cloud routing for tasks that benefit from larger models.</div>
-        <div style="display:flex;flex-direction:column;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);">
-          <div><span style="color:var(--purple);">&#9679;</span> 32GB+ RAM</div>
-          <div><span style="color:var(--purple);">&#9679;</span> RTX 4070+ or equivalent</div>
-          <div><span style="color:var(--purple);">&#9679;</span> ~80GB disk for full model suite</div>
-          <div><span style="color:var(--purple);">&#9679;</span> Remote access via HTTPS + DDNS</div>
-        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text-muted);margin-top:8px;letter-spacing:1px;">MOBILE</div>
       </div>
     </div>
+    <div style="text-align:center;font-size:12px;color:var(--text-dim);line-height:1.6;">Same models, same conversations, same privacy guarantees. Every prompt stays on your network regardless of which device you use.</div>
   </section>
+
 
   <!-- ROUTING DECISION EXAMPLES -->
   <section style="max-width:960px;margin:0 auto;padding:56px 32px;border-top:1px solid var(--border);">
@@ -1459,8 +1467,8 @@
 
   <!-- CTA -->
   <section style="max-width:960px;margin:0 auto;padding:48px 32px;border-top:1px solid var(--border);text-align:center;">
-    <div style="font-family:'Cinzel',serif;font-size:18px;font-weight:600;color:var(--gold);margin-bottom:10px;">What a Custom Build Includes</div>
-    <p style="font-size:14px;color:var(--text-dim);max-width:580px;margin:0 auto 24px;line-height:1.65;">Every PIP deployment is configured for your hardware, your models, and your privacy requirements. Choose which providers to enable, how routing works, and whether any data ever leaves your machine.</p>
+    <div style="font-family:'Cinzel',serif;font-size:18px;font-weight:600;color:var(--gold);margin-bottom:10px;">Build This Workstation For Your Environment</div>
+    <p style="font-size:14px;color:var(--text-dim);max-width:580px;margin:0 auto 24px;line-height:1.65;">Fisher Sovereign configures the workstation around your hardware, model mix, and privacy requirements, then hands it off as your own operating surface. You decide which providers exist, what can route outward, and what stays entirely local.</p>
     <a href="../home.html#sec-contact" style="display:inline-block;padding:13px 30px;background:var(--gold-dim);border:1px solid var(--border-gold);border-radius:6px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:all .15s;">Discuss Your Requirements</a>
   </section>
 
@@ -1500,7 +1508,7 @@
     var title = el('div', { class: 'nav-title' }, 'Private Intelligence Platform');
 
     var dot = el('div', { class: 'nav-status-dot' });
-    var statusText = document.createTextNode('Local runtime online');
+    var statusText = document.createTextNode('Private runtime ready');
     var status = el('div', { class: 'nav-status' });
     status.appendChild(dot);
     status.appendChild(statusText);
@@ -1519,7 +1527,7 @@
     badge.appendChild(badgeDot);
     badge.appendChild(document.createTextNode('Public Alpha'));
 
-    var h1 = el('h1', null, 'Private intelligence that stays under your control.');
+    var h1 = el('h1', null, 'Private intelligence you own and operate.');
 
     var sub = el('p', { class: 'hero-sub' },
       'This controlled workstation preview demonstrates what it looks like to run AI as your own infrastructure. ' +
@@ -1527,13 +1535,13 @@
     );
 
     var pillarsData = [
-      { icon: '⬡', text: 'Keep prompts on your hardware' },
-      { icon: '⟳', text: 'Route work by task, not vendor lock-in' },
-      { icon: '▣', text: 'Retain history in local storage' },
-      { icon: '◈', text: 'See why each model was selected' },
-      { icon: '⚡', text: 'Switch between local-only and hybrid use' },
-      { icon: '📡', text: 'Extend to desktop and remote access' },
+      { icon: '\u25A1', text: 'Keep prompts on your hardware' },
+      { icon: '\u25C7', text: 'Route work by task, not vendor lock-in' },
+      { icon: '\u25A3', text: 'See why each model was selected' },
+      { icon: '\u26A1', text: 'Switch between local-only and hybrid use' },
     ];
+
+
 
     var pillars = el('div', { class: 'hero-pillars' });
     pillarsData.forEach(function (p) {
@@ -1566,7 +1574,7 @@
     var top = el('div', { class: 'workspace-top' });
     var topCopy = el('div');
     topCopy.appendChild(el('div', { class: 'workspace-title' }, 'Workstation boundary controls'));
-    topCopy.appendChild(el('div', { class: 'workspace-sub' }, 'Demo controls below update the local state of this preview so visitors can see the operating model change in real time.'));
+    topCopy.appendChild(el('div', { class: 'workspace-sub' }, 'These controls show how the workstation boundary shifts between local-only and provider-assisted operation.'));
     var chip = el('div', { class: 'workspace-state-chip', id: 'workspace-live-state' }, 'Local only');
     top.appendChild(topCopy);
     top.appendChild(chip);
@@ -1692,8 +1700,8 @@
     // Layer labels
     var rows = [
       ['DESKTOP SHELL', 'Electron (planned Phase 6)'],
-      ['BROWSER UI', 'React 19 + Vite · :5174'],
-      ['API SERVER', 'Fastify · :3500'],
+      ['BROWSER UI', 'React 19 + Vite / :5174'],
+      ['API SERVER', 'Fastify / :3500'],
       ['PROVIDER REGISTRY', 'ProviderRegistry + CapabilityRouter'],
     ];
 
@@ -1721,7 +1729,7 @@
     // Arrow between left and right
     var midArrow = el('div', {
       style: 'display:flex;flex-direction:column;justify-content:flex-end;padding:0 10px 12px;'
-    }, '→');
+    }, '\u2192');
     midArrow.style.fontFamily = "'JetBrains Mono', monospace";
     midArrow.style.fontSize = '18px';
     midArrow.style.color = 'var(--gold)';
@@ -1832,7 +1840,7 @@
       intentCol.appendChild(intentLabel);
       intentCol.appendChild(tagsWrap);
 
-      var arrow = el('div', { class: 'rule-arrow' }, '→');
+      var arrow = el('div', { class: 'rule-arrow' }, '\u2192');
 
       var targetCol = el('div', { class: 'rule-target' });
       var targetLabel = el('div', { class: 'rule-target-label' }, 'Selected model');
@@ -2120,7 +2128,7 @@
 
     main.appendChild(messages);
 
-    // Input row — REAL textarea + real send handler
+    // Input row: real textarea + real send handler
     var inputRow = el('div', { class: 'chat-input-row' });
     var textarea = document.createElement('textarea');
     textarea.className = 'chat-textarea';
@@ -2146,8 +2154,8 @@
     // INTERACTIVE CHAT ENGINE
     // Free-form input, keyword-routed to real LocalClaude
     // models, scripted streaming responses, persistent session
-    // state via localStorage, honest "Public Alpha — routing
-    // demo" framing.
+    // state via localStorage, honest "Public Alpha" routing
+    // demo framing.
     // =====================================================
 
     var STORAGE_KEY = 'pip-demo-sessions-v1';
@@ -2157,13 +2165,13 @@
       catch (e) { return false; }
     })();
 
-    // Remove the pre-seeded streaming indicator row — we'll add
+    // Remove the pre-seeded streaming indicator row, then add
     // fresh ones dynamically when the user sends a message.
     if (streamRow && streamRow.parentNode) {
       streamRow.parentNode.removeChild(streamRow);
     }
 
-    // Model registry — keyed off real LocalClaude CLAUDE.md
+    // Model registry keyed off real LocalClaude CLAUDE.md
     var MODELS = {
       'ollama:qwen2.5-coder:14b': { label: 'qwen2.5-coder:14b', provider: 'ollama', cloud: false },
       'ollama:qwen2.5:14b-instruct': { label: 'qwen2.5:14b-instruct', provider: 'ollama', cloud: false },
@@ -2181,7 +2189,7 @@
     function routePrompt(text) {
       var t = text.toLowerCase();
 
-      // Architecture / multi-agent / safety FIRST — these often
+      // Architecture / multi-agent / safety first. These often
       // contain the word "code" but are reasoning-depth tasks,
       // not coder-model tasks. Order matters.
       if (/\b(architecture|multi[\s-]?agent|safety gate|approval gate|audit trail|sandbox|design a|how would you design)\b/.test(t)) {
@@ -2225,7 +2233,7 @@
             "  }\n" +
             "  reply.raw.end();\n" +
             "});",
-          followUp: "The abort listener is the key — without it, clients that navigate away leave the generator hanging."
+          followUp: "The abort listener is the key. Without it, clients that navigate away leave the generator hanging."
         };
       }
 
@@ -2243,7 +2251,7 @@
       if (/\b(fast|quick|short|simple|what\s+port|what\s+is|status)\b/.test(t)) {
         return {
           modelKey: 'ollama:qwen2.5-coder:7b-instruct',
-          reason: 'speed 9, factual lookup — smallest coder model selected',
+          reason: 'speed 9, factual lookup, smallest coder model selected',
           body: "Ollama listens on `localhost:11434` by default.\n\nHit `http://localhost:11434/api/chat` for streaming inference, or `/api/tags` for the installed model list. LocalClaude\u2019s Fastify server proxies these under `/api/*` on port 3500.",
           followUp: null
         };
@@ -2383,7 +2391,7 @@
           ts: Date.now()
         });
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      } catch (e) { /* localStorage may be disabled — silent no-op */ }
+      } catch (e) { /* localStorage may be disabled, silent no-op */ }
     }
 
     // Restore any previously persisted messages for the default
@@ -2395,7 +2403,7 @@
         var data = JSON.parse(raw);
         var sess = data && data.sessions && data.sessions[currentSessionId];
         if (!sess || !sess.messages || !sess.messages.length) return;
-        // Clear seeded messages — user's own history takes precedence
+        // Clear seeded messages because user history takes precedence
         while (messages.firstChild) messages.removeChild(messages.firstChild);
         sess.messages.forEach(function (m) {
           if (m.role === 'user') {
@@ -2431,8 +2439,8 @@
       textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
     });
 
-    // "New conversation" button — real click handler (clears
-    // persisted messages for current session + reseeds the view)
+    // "New conversation" button with a real click handler
+    // that clears persisted messages for the current session
     newBtn.addEventListener('click', function () {
       try {
         var raw = localStorage.getItem(STORAGE_KEY);
@@ -2485,7 +2493,7 @@
     };
 
     var panel = el('div', { class: 'routes-panel' });
-    var routeHeader = el('div', { class: 'routes-header' }, 'Fastify · http://localhost:3500');
+    var routeHeader = el('div', { class: 'routes-header' }, 'Fastify / http://localhost:3500');
     panel.appendChild(routeHeader);
 
     var list = el('div', { class: 'route-list' });
@@ -2607,9 +2615,9 @@
     var footer = document.getElementById('footer-section');
 
     var left = el('div', { class: 'footer-left' });
-    var strong = el('strong', null, 'LocalClaude');
+    var strong = el('strong', null, 'Private Intelligence Platform');
     left.appendChild(strong);
-    left.appendChild(document.createTextNode(' \u2014 Hybrid local+cloud AI workstation. MVP (Phases 0\u20133) complete.'));
+    left.appendChild(document.createTextNode('. Client-owned hybrid local+cloud AI workstation. Built by Fisher Sovereign Systems.'));
 
     var right = el('div', { class: 'footer-right' });
     var backLink = el('a', { class: 'footer-link', href: '../home.html' }, '\u2190 Back to Portfolio');

@@ -1,0 +1,124 @@
+[
+  {
+    "id": "trueborn",
+    "name": "Trueborn",
+    "status": "settled-visual-only",
+    "hairColor": "Silver",
+    "primaryColor": "#b7c4d1",
+    "accentColor": "#f0d38c",
+    "notes": [
+      "Oldest lineage",
+      "Linked to the neutral trade hub",
+      "Late-game rise arc remains a future gameplay system"
+    ],
+    "prototypePlayable": false
+  },
+  {
+    "id": "highborne",
+    "name": "Highborne",
+    "status": "settled-visual-only",
+    "hairColor": "Dark gold with highlights",
+    "primaryColor": "#8a6b2b",
+    "accentColor": "#e2bf62",
+    "notes": [
+      "Founding house retained in canon",
+      "Strategic profile pending future rework after CB004 voiding"
+    ],
+    "prototypePlayable": false
+  },
+  {
+    "id": "ironmark",
+    "name": "Ironmark",
+    "status": "fully-locked",
+    "hairColor": "Black",
+    "primaryColor": "#2c3137",
+    "accentColor": "#b6441f",
+    "symbol": "Axe",
+    "societalAdvantage": "Early iron access",
+    "requiredDisadvantage": "Blood Production",
+    "notes": [
+      "Ironmark is the bloodline that reaches power first and pays for it in blood",
+      "Opening power window through early iron and military infrastructure",
+      "Population strain rises under sustained attritional warfare"
+    ],
+    "prototypePlayable": true
+  },
+  {
+    "id": "goldgrave",
+    "name": "Goldgrave",
+    "status": "settled-visual-only",
+    "hairColor": "Bright gold",
+    "primaryColor": "#b78819",
+    "accentColor": "#f3d55b",
+    "notes": [
+      "Currency-dominance identity remains in the design reservoir",
+      "Full post-void strategic rewrite pending"
+    ],
+    "prototypePlayable": false
+  },
+  {
+    "id": "stonehelm",
+    "name": "Stonehelm",
+    "status": "settled-visual-only",
+    "hairColor": "Brown",
+    "primaryColor": "#6a543d",
+    "accentColor": "#c0a37a",
+    "notes": [
+      "Canonically linked to defense and fortification tendencies",
+      "Used as the placeholder enemy house in the first skirmish"
+    ],
+    "prototypePlayable": false
+  },
+  {
+    "id": "westland",
+    "name": "Westland",
+    "status": "settled-visual-only",
+    "hairColor": "Vivid red",
+    "primaryColor": "#922a22",
+    "accentColor": "#df7143",
+    "notes": [
+      "Frontier identity preserved in historical material",
+      "Strategic gameplay rework pending"
+    ],
+    "prototypePlayable": false
+  },
+  {
+    "id": "hartvale",
+    "name": "Hartvale",
+    "status": "partially-locked",
+    "hairColor": "Orange",
+    "primaryColor": "#9d5a23",
+    "accentColor": "#eb9a42",
+    "notes": [
+      "Verdant Warden is the settled unique unit",
+      "Broader strategic profile remains pending after 2026-04-07 canon reset"
+    ],
+    "prototypePlayable": false
+  },
+  {
+    "id": "whitehall",
+    "name": "Whitehall",
+    "status": "settled-visual-only",
+    "hairColor": "Neutral brown",
+    "primaryColor": "#80705c",
+    "accentColor": "#d4c3aa",
+    "notes": [
+      "Universal diplomatic access remains a settled relationship tendency",
+      "Strategic gameplay rework pending"
+    ],
+    "prototypePlayable": false
+  },
+  {
+    "id": "oldcrest",
+    "name": "Oldcrest",
+    "status": "settled-visual-only",
+    "hairColor": "Black/gray/pepper",
+    "primaryColor": "#51565d",
+    "accentColor": "#c7c5c0",
+    "notes": [
+      "Historical memory and old-faith ties remain preserved in canon",
+      "Strategic gameplay rework pending"
+    ],
+    "prototypePlayable": false
+  }
+]
