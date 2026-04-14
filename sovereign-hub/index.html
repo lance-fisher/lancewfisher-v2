@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sovereign Hub | Lance W. Fisher</title>
-  <meta name="description" content="Sovereign Hub: an interactive command surface for the Fisher Sovereign project ecosystem. Live health checks, session tracking, and project launching for 25+ deployed systems.">
+  <title>Sovereign Hub | Fisher Sovereign Systems</title>
+  <meta name="description" content="Sovereign Hub: the central product atlas for the Fisher Sovereign ecosystem. Explore 25+ sovereign systems, understand what each one does, who it serves, and how Fisher Sovereign can build a version for you.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80'>&#9875;</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -65,6 +65,15 @@
     .entry-card h3 { font-family: var(--font-head); font-size: 1.1rem; font-weight: 600; color: var(--fg-strong); margin-bottom: 7px; line-height: 1.15; }
     .entry-card p { font-size: 0.82rem; color: var(--fg); line-height: 1.55; margin-bottom: 12px; }
     .entry-card .entry-note { font-family: var(--font-mono); font-size: 0.68rem; color: var(--fg-dim); letter-spacing: 0.03em; }
+    .atlas-shell { display: flex; flex-direction: column; gap: 20px; }
+    .atlas-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 22px; }
+    .atlas-summary { min-width: 250px; padding: 16px 18px; border: 1px solid var(--border); border-radius: var(--radius); background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); }
+    .atlas-summary-count { font-family: var(--font-head); font-size: 1.35rem; color: var(--fg-strong); line-height: 1.05; }
+    .atlas-summary-note { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.04em; color: var(--fg-dim); margin-top: 10px; line-height: 1.6; }
+    .atlas-toolbar { margin-bottom: 0; }
+    .atlas-note { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: rgba(255,255,255,0.02); font-family: var(--font-mono); font-size: 0.72rem; color: var(--fg-dim); letter-spacing: 0.03em; }
+    .atlas-note a { color: var(--fg-strong); }
+    .atlas-note a:hover { color: #fff; }
 
     /* TAB BAR */
     .tabs-wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
@@ -254,6 +263,7 @@
       .session-grid { grid-template-columns: 1fr; }
       .heatmap { grid-template-columns: 40px repeat(24, 1fr); font-size: 0.52rem; }
       .entry-strip { grid-template-columns: 1fr; }
+      .atlas-head { flex-direction: column; align-items: stretch; }
     }
     @media (max-width: 700px) {
       .nav { padding: 12px 14px; }
@@ -266,6 +276,7 @@
       .tab-btn { padding: 10px 12px; font-size: 0.68rem; }
       .content { padding: 22px 14px 60px; }
       .grid, .system-grid, .ws-grid { grid-template-columns: 1fr; }
+      .atlas-note { flex-direction: column; align-items: flex-start; }
       .slidein { width: 100vw; }
     }
   </style>
@@ -285,303 +296,88 @@
 </div>
 
 <div class="page-sim-banner">
-  Interactive Preview &middot; Tab through 25+ projects, launch commands, read real system status &middot; All actions run client-side
+  Product Atlas &middot; Explore 25+ sovereign systems, see live demos, and discover what Fisher Sovereign can build for you
 </div>
 
 <nav class="nav">
   <div class="nav-left">
-    <a href="../home.html" class="nav-back">&larr; Portfolio</a>
     <span class="nav-title">Sovereign Hub</span>
   </div>
   <div class="nav-right">
-    <span class="conn-badge"><span class="pulse"></span>Connected to Workspace</span>
-    <span class="mode-pill">Interactive Demo</span>
+    <span class="conn-badge"><span class="pulse"></span>Product Explorer</span>
+    <span class="mode-pill">Fisher Sovereign</span>
   </div>
 </nav>
 
 <header class="hero">
-  <h1>The Fisher Sovereign Product Family</h1>
-  <p>Every system shown here is a real, working product built by Lance Fisher. Browse the portfolio, explore live demos, and see which of these could be customized, branded, and deployed for your business, home, or team.</p>
+  <h1>Product Atlas for the Fisher Sovereign Estate</h1>
+  <p>Every system below is a real Fisher Sovereign product surface. Explore the strongest flagship builds first, open live previews, and see which systems could be adapted and deployed for your business, home, or team with full ownership transferred at delivery.</p>
 </header>
 
 <div class="page-benefit">
-  Click any project card to learn what it does, who it is for, and how a custom version could be built for you.
+  Open the estate like a product atlas, not an internal dashboard. Start with a lane below, then open any system to see the live surface, ideal fit, and delivery model.
 </div>
 
-<section class="entry-strip" aria-label="Sovereign Hub entry routes">
+<section class="entry-strip" aria-label="Atlas starting points">
   <article class="entry-card">
-    <div class="entry-kicker">Explore</div>
-    <h3>Try Live Product Demos</h3>
-    <p>Interactive demos for booking apps, network dashboards, AI platforms, encrypted messaging, and more. See real products in action.</p>
-    <div class="entry-note">Best for: seeing what a custom build would look like</div>
+    <div class="entry-kicker">Business Apps</div>
+    <h3>Branded products for services, finance, and client operations</h3>
+    <p>Booking apps, private tax systems, mobile-first business tools, and branded estates built to replace rented software with owned infrastructure.</p>
+    <button class="card-action atlas-jump" type="button" data-category="App">Show business systems</button>
   </article>
   <article class="entry-card">
-    <div class="entry-kicker">Understand</div>
-    <h3>See What Each System Does</h3>
-    <p>Every project card explains who it is for, what problem it solves, and how it could be tailored, branded, and deployed for your needs.</p>
-    <div class="entry-note">Best for: evaluating which systems fit your use case</div>
+    <div class="entry-kicker">Private Operations</div>
+    <h3>Command surfaces, signal systems, and local intelligence</h3>
+    <p>Command centers, secure communications, local AI environments, and operator tooling that keep control inside your own environment.</p>
+    <button class="card-action atlas-jump" type="button" data-category="Infrastructure">Show operational systems</button>
   </article>
   <article class="entry-card">
-    <div class="entry-kicker">Build</div>
-    <h3>Request a Custom Version</h3>
-    <p>Every system here can be built for you: local-first, self-hosted, fully branded, with the security posture and deployment model you need.</p>
-    <div class="entry-note">Best for: businesses, teams, and privacy-focused users</div>
+    <div class="entry-kicker">Brands And Worlds</div>
+    <h3>Consumer surfaces, games, and identity-led experiences</h3>
+    <p>Branded worlds, browser games, and productized storytelling built with the same estate-level design discipline as the operational tools.</p>
+    <button class="card-action atlas-jump" type="button" data-category="Brand">Show brand-led work</button>
   </article>
 </section>
 
-<div class="tabs-wrap">
-  <div class="tabs" role="tablist" id="tabBar">
-    <button class="tab-btn active" data-tab="projects" role="tab">Projects <span class="tab-count" id="tab-count-projects">0</span></button>
-    <button class="tab-btn" data-tab="activity" role="tab">Activity</button>
-    <button class="tab-btn" data-tab="systems" role="tab">Systems <span class="tab-count">3</span></button>
-    <button class="tab-btn" data-tab="sessions" role="tab">Sessions</button>
-    <button class="tab-btn" data-tab="workspace" role="tab">Workspace</button>
-    <button class="tab-btn" data-tab="settings" role="tab">Settings</button>
-    <button class="tab-btn" data-tab="help" role="tab">Help / About</button>
-  </div>
-</div>
-
 <div class="content">
-
-  <!-- PROJECTS PANEL -->
-  <section class="panel active" data-panel="projects">
-    <h2>Projects</h2>
-    <p class="lede">Every entry below corresponds to a real project in the Fisher Sovereign ecosystem. Open a card to see what the system is for, what kind of access is available, and whether you can inspect, preview, or open a live local surface.</p>
-
-    <div class="toolbar">
-      <input type="text" class="search-box" id="searchBox" placeholder="Search by name, description, or tag..." autocomplete="off">
-      <div class="filter-group">
-        <span class="filter-label">Status:</span>
-        <button class="filter-tab active" data-filter="all">All</button>
-        <button class="filter-tab" data-filter="active">Active</button>
-        <button class="filter-tab" data-filter="dev">In Development</button>
-        <button class="filter-tab" data-filter="paused">Paused</button>
-        <button class="filter-tab" data-filter="archived">Archived</button>
+  <section class="atlas-shell">
+    <div class="atlas-head">
+      <div>
+        <h2>Product Atlas</h2>
+        <p class="lede">This is a curated map of the Fisher Sovereign estate. The strongest flagship systems surface first. Filters help you navigate, but the detail panel is the real product story.</p>
       </div>
+      <div class="atlas-summary">
+        <div class="atlas-summary-count"><span id="tab-count-projects">0</span> systems in view</div>
+        <div class="atlas-summary-note">Every selection opens with preview, fit, and delivery context.</div>
+      </div>
+    </div>
+
+    <div class="toolbar atlas-toolbar">
+      <input type="text" class="search-box" id="searchBox" placeholder="Search by product, business, or capability..." autocomplete="off">
+      <div class="filter-group">
+        <span class="filter-label">Lane:</span>
+        <button class="filter-tab active" data-filter="all">All</button>
+        <button class="filter-tab" data-filter="App">Business Apps</button>
+        <button class="filter-tab" data-filter="Infrastructure">Operations</button>
+        <button class="filter-tab" data-filter="Tool">Private Tools</button>
+        <button class="filter-tab" data-filter="Trading">Trading</button>
+        <button class="filter-tab" data-filter="Game">Games</button>
+        <button class="filter-tab" data-filter="Brand">Brands</button>
+      </div>
+    </div>
+
+    <div class="atlas-note">
+      <span>Local-first builds, client-owned deployment, branded delivery.</span>
+      <a href="../home.html#sec-commission">Discuss a custom build</a>
     </div>
 
     <div class="grid" id="projectGrid"></div>
-    <div class="no-results" id="noResults">No projects match your filters.</div>
+    <div class="no-results" id="noResults">No exact match. Showing the flagship systems instead so you can keep exploring.</div>
   </section>
-
-  <!-- ACTIVITY PANEL -->
-  <section class="panel" data-panel="activity">
-    <h2>Activity</h2>
-    <p class="lede">Recent Claude Code sessions across the ecosystem. Grouped by project, sorted by date. Prompt and response content is intentionally omitted for IP protection. Only outcomes and durations are shown.</p>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Project</th>
-            <th>Date</th>
-            <th>Duration</th>
-            <th>Model</th>
-            <th>Outcome</th>
-          </tr>
-        </thead>
-        <tbody id="activityBody"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- SYSTEMS PANEL -->
-  <section class="panel" data-panel="systems">
-    <h2>Systems</h2>
-    <p class="lede">Health of the three integrated background systems. The Sovereign Hub coordinates with these services for project orchestration, autonomous task execution, and operator command routing.</p>
-    <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
-      <button class="refresh-btn" id="refreshSystems">Refresh checks</button>
-    </div>
-    <div class="system-grid" id="systemGrid"></div>
-    <div class="system-tip">These are real systems running on this machine. "Offline" means the service is not currently running. The Sovereign Hub showcase you are viewing is a static snapshot of the live operator surface. In the live version these checks hit real endpoints.</div>
-  </section>
-
-  <!-- SESSIONS PANEL -->
-  <section class="panel" data-panel="sessions">
-    <h2>Sessions</h2>
-    <p class="lede">Aggregate session analytics. The heatmap shows activity by hour and weekday across the last 30 days. Top projects ranks by total session count.</p>
-    <div class="session-grid">
-      <div class="session-block">
-        <h3>Activity Heatmap</h3>
-        <div class="heatmap" id="heatmap"></div>
-        <div class="heatmap-legend">
-          <span>Less</span>
-          <div class="scale" id="heatScale"></div>
-          <span>More</span>
-        </div>
-      </div>
-      <div class="session-block">
-        <h3>Top Projects by Sessions</h3>
-        <ul class="top-projects" id="topProjects"></ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- WORKSPACE PANEL -->
-  <section class="panel" data-panel="workspace">
-    <h2>Workspace</h2>
-    <p class="lede">Disk capacity, project totals, and a tail of the most recent Auton journal entries.</p>
-    <div class="ws-grid">
-      <div class="ws-card">
-        <h3>Disk Usage</h3>
-        <div class="ws-num">2.4 <span class="ws-num-sub">/ 4 TB</span></div>
-        <div class="ws-sub">60% used</div>
-        <div class="ws-bar"><div class="ws-bar-fill" style="width:60%;"></div></div>
-      </div>
-      <div class="ws-card">
-        <h3>Project Count</h3>
-        <div class="ws-num" id="wsProjectCount">0</div>
-        <div class="ws-sub" id="wsProjectSub">tracked in registry</div>
-        <div class="ws-bar"><div class="ws-bar-fill" id="wsProjectBar" style="width:0%;"></div></div>
-      </div>
-      <div class="ws-card">
-        <h3>Active Services</h3>
-        <div class="ws-num" id="wsActiveCount">0</div>
-        <div class="ws-sub">running on bound ports</div>
-        <div class="ws-bar"><div class="ws-bar-fill" id="wsActiveBar" style="width:0%;"></div></div>
-      </div>
-    </div>
-    <div class="ws-actions">
-      <button class="refresh-btn" id="scanProjects">Scan for new projects</button>
-      <button class="refresh-btn" id="refreshDisk">Refresh disk stats</button>
-    </div>
-    <div class="journal">
-      <h3>Auton Journal &mdash; Last 10</h3>
-      <ul id="journalList"></ul>
-    </div>
-  </section>
-
-  <!-- SETTINGS PANEL -->
-  <section class="panel" data-panel="settings">
-    <h2>Settings</h2>
-    <p class="lede">Display preferences and signaling controls. Settings are saved to localStorage and survive reloads.</p>
-
-    <div class="settings-block">
-      <h3>Visibility</h3>
-      <div class="toggle-row">
-        <div>
-          <div class="tr-label">Show archived projects</div>
-          <div class="tr-sub">Surface historical and superseded projects in the grid</div>
-        </div>
-        <div class="toggle" data-setting="showArchived"></div>
-      </div>
-      <div class="toggle-row">
-        <div>
-          <div class="tr-label">Show paused projects</div>
-          <div class="tr-sub">Include intentionally paused projects in default view</div>
-        </div>
-        <div class="toggle on" data-setting="showPaused"></div>
-      </div>
-      <div class="toggle-row">
-        <div>
-          <div class="tr-label">Compact card layout</div>
-          <div class="tr-sub">Reduce card padding to fit more on screen</div>
-        </div>
-        <div class="toggle" data-setting="compactCards"></div>
-      </div>
-    </div>
-
-    <div class="settings-block">
-      <h3>Signaling</h3>
-      <div class="toggle-row">
-        <div>
-          <div class="tr-label">Show "Protected" badge on IP-sensitive projects</div>
-          <div class="tr-sub">Mark projects whose source is private with an explicit badge</div>
-        </div>
-        <div class="toggle on" data-setting="showProtected"></div>
-      </div>
-      <div class="toggle-row">
-        <div>
-          <div class="tr-label">Show "Public Alpha" labels</div>
-          <div class="tr-sub">Mark real systems whose UI is still subject to change</div>
-        </div>
-        <div class="toggle on" data-setting="showAlpha"></div>
-      </div>
-      <div class="toggle-row">
-        <div>
-          <div class="tr-label">Show port hint tooltips</div>
-          <div class="tr-sub">"This service may not be running" reminder on port links</div>
-        </div>
-        <div class="toggle on" data-setting="portHints"></div>
-      </div>
-    </div>
-
-    <div class="settings-block">
-      <h3>Defaults</h3>
-      <div class="toggle-row">
-        <div>
-          <div class="tr-label">Open detail panel automatically</div>
-          <div class="tr-sub">First card click auto-opens slide-in detail</div>
-        </div>
-        <div class="toggle on" data-setting="autoOpenDetail"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- HELP / ABOUT PANEL -->
-  <section class="panel" data-panel="help">
-    <h2>Help &amp; About</h2>
-    <p class="lede">A quick orientation to what Sovereign Hub is, what's real, what's demo, and what each status badge means.</p>
-
-    <div class="help-block">
-      <h3>What is Sovereign Hub?</h3>
-      <p>Sovereign Hub is the central operator surface for the Fisher Sovereign project ecosystem. The live version runs locally and provides project orchestration, port management, health checks, session tracking, terminal launching, and integration with Auton, Moltbot Hub, and OpenClaw.</p>
-      <p>This page is an interactive showcase of that real system. Some projects are IP-sensitive; their demos are browser-only. Others run live on this machine. Status badges below tell you which is which.</p>
-    </div>
-
-    <div class="help-block">
-      <h3>Status Legend</h3>
-      <div class="legend">
-        <div class="legend-item"><span class="ic" style="color:var(--green);">&#9679;</span><div><div class="lt">Active</div><div class="ld">Fully operational, in regular use, can be launched or opened.</div></div></div>
-        <div class="legend-item"><span class="ic" style="color:var(--amber);">&#9679;</span><div><div class="lt">In Development</div><div class="ld">Actively built, not yet production-ready.</div></div></div>
-        <div class="legend-item"><span class="ic" style="color:var(--amber);">&#9888;</span><div><div class="lt">Paused</div><div class="ld">Intentionally paused. Code is preserved.</div></div></div>
-        <div class="legend-item"><span class="ic" style="color:var(--grey);">&#9675;</span><div><div class="lt">Archived</div><div class="ld">Historical, superseded by another project.</div></div></div>
-        <div class="legend-item"><span class="ic" style="color:var(--blue);">&#128274;</span><div><div class="lt">Protected</div><div class="ld">IP-sensitive. Demo-only on this page.</div></div></div>
-        <div class="legend-item"><span class="ic" style="color:var(--purple);">&#128202;</span><div><div class="lt">Public Alpha</div><div class="ld">Real system, UI still subject to change.</div></div></div>
-        <div class="legend-item"><span class="ic" style="color:var(--green);">&#127919;</span><div><div class="lt">Interactive Demo</div><div class="ld">Browser-based, real architecture underneath.</div></div></div>
-      </div>
-    </div>
-
-    <div class="help-block">
-      <h3>FAQ</h3>
-      <div class="faq-q">What does "Protected" mean?</div>
-      <div class="faq-a">Protected projects are IP-sensitive. Their source is private and the live system is not exposed publicly. Only a sanitized profile is shown on this page.</div>
-      <div class="faq-q">Can these systems be built for me?</div>
-      <div class="faq-a">Yes. Every system shown here can be customized, branded, and deployed for your business, home network, or personal infrastructure. Click any project card and use "Request a Custom Build" to start a conversation.</div>
-      <div class="faq-q">What does "local-first" mean?</div>
-      <div class="faq-a">Local-first means the system runs on hardware you own. Your data stays on your network. No cloud subscription, no third-party data access, no vendor lock-in. You control the infrastructure.</div>
-      <div class="faq-q">Is this dashboard live?</div>
-      <div class="faq-a">This page is a curated showcase of the real Sovereign Hub. The live operator surface runs locally on Lance's hardware. This public version lets you explore the full product family and access interactive demos.</div>
-    </div>
-
-    <div class="help-block">
-      <h3>Real Sovereign Hub Endpoints</h3>
-      <p>The live operator surface at <span class="help-mono">localhost:8090</span> exposes these endpoints. This page is a sanitized public reflection of that surface.</p>
-      <div class="endpoint-list">
-        <div><span class="ep-method">GET</span> /api/projects</div>
-        <div><span class="ep-method">GET</span> /api/sessions</div>
-        <div><span class="ep-method">GET</span> /api/stats</div>
-        <div><span class="ep-method">POST</span> /api/scan</div>
-        <div><span class="ep-method">GET</span> /api/disk</div>
-        <div><span class="ep-method">GET</span> /api/systems</div>
-        <div><span class="ep-method">GET</span> /api/active-sessions</div>
-        <div><span class="ep-method">GET</span> /api/openclaw/* &nbsp; <span class="ep-method">GET</span> /api/bot/* &nbsp; <span class="ep-method">GET</span> /api/auton/*</div>
-        <div><span class="ep-method">POST</span> /api/open-terminal</div>
-        <div><span class="ep-method">POST</span> /api/launch-claude</div>
-        <div><span class="ep-method">POST</span> /api/bot/dispatch</div>
-        <div><span class="ep-method">POST</span> /api/auton/kill &nbsp; <span class="ep-method">POST</span> /api/auton/resume</div>
-      </div>
-    </div>
-
-    <div class="help-block">
-      <h3>Mission</h3>
-      <p>Fisher Sovereign Systems builds technology that returns control to the people who use it. Every system here runs on hardware you own, processes data you control, and eliminates dependency on platforms that profit from your information. This page is the product catalog for that mission.</p>
-    </div>
-  </section>
-
 </div>
 
 <footer class="foot">
-  Sovereign Hub showcase &middot; built locally, deployed to lancewfisher.com &middot; <a href="../home.html">return to portfolio</a>
+  Sovereign Hub &middot; Fisher Sovereign Systems &middot; <a href="../home.html">return to portfolio</a> &middot; <a href="../home.html#sec-commission">discuss a custom build</a>
 </footer>
 
 <!-- SLIDE-IN PROJECT DETAIL PANEL -->
@@ -615,7 +411,7 @@
       desc: 'Multi-agent autonomous trading desk. Six concurrent agents (PM, Researcher, Backtester, Risk Manager, Execution, Ops) running baseline strategies. Wraps master-trade-bot via adapters. PAPER mode by default.',
       tech: ['Python', 'asyncio', 'aiohttp', 'PyYAML', 'numpy'],
       port: 8091,
-      path: 'D:\\ProjectsHome\\profit-desk',
+      path: 'sovereign://profit-desk',
       demoUrl: '../trading-desk/',
       bestFor: 'Active traders, crypto funds, and quantitative teams who want multi-strategy execution without vendor lock-in.',
       lastActive: '2 hours ago'
@@ -628,7 +424,7 @@
       desc: 'Execution layer of the trading ecosystem. Multi-chain engines spanning Solana DEX, Polymarket, CEX (Binance, Coinbase, Kraken), and ETH DeFi. Receives signals from Profit Desk. DRY_RUN by default with real-time WebSocket dashboard.',
       tech: ['TypeScript', 'Node.js', 'ccxt', 'ethers.js', '@solana/web3.js'],
       port: 4000,
-      path: 'D:\\ProjectsHome\\master-trade-bot',
+      path: 'sovereign://master-trade-bot',
       demoUrl: '../sovereign-trade-engine/',
       bestFor: 'Multi-chain traders and DeFi operators who need unified execution across exchanges and protocols.',
       lastActive: '6 hours ago'
@@ -641,7 +437,7 @@
       desc: 'End-to-end encrypted peer-to-peer messenger. Zero-knowledge relay, passwordless auth via WebAuthn biometrics or hardware keys, forward secrecy on every message. Built on libsodium.',
       tech: ['TypeScript', 'Next.js', 'libsodium', 'WebAuthn', 'Express'],
       port: null,
-      path: 'D:\\ProjectsHome\\e2ee-messenger',
+      path: 'sovereign://e2ee-messenger',
       demoUrl: '../sovereign-signal/',
       bestFor: 'Privacy-focused teams, family offices, and anyone who needs conversations that no server can read.',
       lastActive: '1 day ago'
@@ -654,7 +450,7 @@
       desc: 'Full-stack booking application for a medical spa. Client scheduling, payments, staff management, and appointment reminders. Mobile-first React Native client on a NestJS API with Prisma and PostgreSQL.',
       tech: ['TypeScript', 'React Native', 'Expo', 'NestJS', 'Prisma', 'PostgreSQL', 'Stripe'],
       port: 3000,
-      path: 'D:\\ProjectsHome\\medspa-demo',
+      path: 'sovereign://medspa-demo',
       demoUrl: '../harmony/',
       bestFor: 'Med spas, wellness clinics, and service businesses that want a branded booking app instead of renting from Vagaro or Booksy.',
       lastActive: '4 days ago'
@@ -667,7 +463,7 @@
       desc: 'Local network security and home automation dashboard. Device discovery, camera feeds, trust scoring, and real-time alerts. All data stays local in SQLite.',
       tech: ['TypeScript', 'Fastify', 'React', 'Vite', 'Tailwind', 'SQLite'],
       port: 3210,
-      path: 'D:\\ProjectsHome\\home-hub',
+      path: 'sovereign://home-hub',
       demoUrl: '../home-hub/',
       bestFor: 'Homeowners, small offices, and privacy-conscious users who want full visibility into their local network without cloud monitoring.',
       lastActive: '3 hours ago'
@@ -680,7 +476,7 @@
       desc: '3D platformer playable in any browser. Built for a real child with no ads, no microtransactions, no data collection. Three.js web version with skill tree and cosmetics.',
       tech: ['Unity', 'C#', 'Three.js'],
       port: 5173,
-      path: 'D:\\ProjectsHome\\jumpquest',
+      path: 'sovereign://jumpquest',
       demoUrl: '../jumpquest/',
       bestFor: 'Parents who want a browser game their kids can play without ads or data harvesting.',
       lastActive: '2 days ago'
@@ -693,7 +489,7 @@
       desc: 'Dynasty-driven medieval strategy game where faith, sacrifice, and bloodline shape the fate of civilizations. Nine founding houses, seven interconnected systems, four ancient faith covenants.',
       tech: ['Game Design', 'Documentation', 'Markdown'],
       port: null,
-      path: 'D:\\ProjectsHome\\Bloodlines',
+      path: 'sovereign://Bloodlines',
       demoUrl: '../bloodlines/',
       bestFor: 'Strategy game enthusiasts who want deep, consequence-driven gameplay over quick skirmishes.',
       lastActive: 'today'
@@ -706,7 +502,7 @@
       desc: 'Fully integrated, independent mobile applications for service businesses. 10 interactive demos built for real businesses across 6 verticals. Zero third-party data retention.',
       tech: ['HTML', 'CSS', 'Vanilla JS'],
       port: null,
-      path: 'D:\\ProjectsHome\\noco-app-demos',
+      path: 'sovereign://noco-app-demos',
       demoUrl: '../noco/',
       bestFor: 'Service businesses that want a branded mobile app they fully own instead of renting from third-party platforms.',
       lastActive: '1 week ago'
@@ -719,7 +515,7 @@
       desc: 'Nautical-inspired apparel and lifestyle brand. 24 original designs, direct storefront, full brand identity system.',
       tech: ['HTML', 'CSS', 'JS'],
       port: null,
-      path: 'D:\\ProjectsHome\\one-three-net',
+      path: 'sovereign://one-three-net',
       demoUrl: '../one-three/brand.html',
       bestFor: 'Anyone who resonates with maritime culture and wants wearable art built from original designs.',
       lastActive: '5 days ago'
@@ -732,7 +528,7 @@
       desc: 'Dashboard mapping every AI-assisted development session across all projects. Searchable, indexed, persistent record of what was changed, why, and which models were involved.',
       tech: ['Python', 'SQLite', 'Three.js', 'D3.js'],
       port: 8092,
-      path: 'D:\\ProjectsHome\\session-atlas',
+      path: 'sovereign://session-atlas',
       demoUrl: '../session-atlas/',
       bestFor: 'Development teams and AI operators who want full audit trails of AI-assisted work.',
       lastActive: 'today'
@@ -745,7 +541,7 @@
       desc: 'Governed zero-trust security enclave for local LLM inference. The model starts with zero filesystem permissions. All access is policy-gated with hash-chain audit trails.',
       tech: ['Python', 'PowerShell', 'Ollama'],
       port: 8094,
-      path: 'D:\\ProjectsHome\\llm-enclave',
+      path: 'sovereign://llm-enclave',
       demoUrl: '../llm-enclave/',
       bestFor: 'Organizations that need AI capabilities without sending data to external providers. Full local inference with audit trails.',
       lastActive: '1 day ago'
@@ -758,7 +554,7 @@
       desc: 'Autonomous background worker. LLM-driven decision loop with a signed journal, dry-run by default, and aiohttp control plane for inspection.',
       tech: ['Python', 'asyncio', 'aiohttp', 'PyNaCl'],
       port: 8095,
-      path: 'D:\\ProjectsHome\\auton',
+      path: 'sovereign://auton',
       demoUrl: '../auton/',
       bestFor: 'Teams managing complex multi-project ecosystems who need AI-driven maintenance and documentation.',
       lastActive: '12 minutes ago'
@@ -771,7 +567,7 @@
       desc: 'Unified control plane for managing every service, bot, and automation in the ecosystem. Human-in-the-loop approval gates and 2FA verification.',
       tech: ['TypeScript', 'Fastify', 'Next.js', 'Node.js', 'PostgreSQL', 'Redis'],
       port: 3100,
-      path: 'D:\\ProjectsHome\\sovereign-console',
+      path: 'sovereign://sovereign-console',
       demoUrl: '../operator-console/',
       bestFor: 'Operators running multiple services who need centralized management with approval gates and audit trails.',
       lastActive: '8 hours ago'
@@ -784,7 +580,7 @@
       desc: 'Personal portfolio and brand site. Static HTML/CSS/JS deployed to lancewfisher.com via Hostinger. Hosts this Sovereign Hub showcase.',
       tech: ['HTML', 'CSS', 'JS'],
       port: 8077,
-      path: 'D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2',
+      path: 'sovereign://FisherSovereign\\lancewfisher-v2',
       lastActive: 'today'
     },
     {
@@ -795,7 +591,7 @@
       desc: 'Media migration and organization tool. Sorts, deduplicates, and catalogs files on the E: drive with a strict no-delete policy.',
       tech: ['Python', 'Pillow', 'FFprobe'],
       port: null,
-      path: 'D:\\ProjectsHome\\media-organizer',
+      path: 'sovereign://media-organizer',
       lastActive: '3 days ago'
     },
     {
@@ -806,7 +602,7 @@
       desc: 'Central project management dashboard. Port registry, health checks, and ecosystem overview for all registered projects. Powers the showcase you are looking at right now.',
       tech: ['Python', 'HTML', 'JavaScript'],
       port: 8090,
-      path: 'D:\\ProjectsHome\\project-hub',
+      path: 'sovereign://project-hub',
       lastActive: 'now'
     },
     {
@@ -817,7 +613,7 @@
       desc: 'Automated bookmark manager. Captures, categorizes, and indexes bookmarks from multiple sources. Async Python backend with a zero-dependency vanilla JS frontend.',
       tech: ['Python', 'asyncio', 'vanilla-js'],
       port: null,
-      path: 'D:\\ProjectsHome\\bookmark-bot',
+      path: 'sovereign://bookmark-bot',
       lastActive: '6 days ago'
     },
     {
@@ -828,7 +624,7 @@
       desc: 'Private tax preparation tooling. OCR-driven document ingestion and PDF parsing for multi-year returns. Runs entirely on local hardware, no third-party data sharing.',
       tech: ['Python', 'OCR', 'PDF parsing'],
       port: 8000,
-      path: 'D:\\ProjectsHome\\private-tax-platform',
+      path: 'sovereign://private-tax-platform',
       lastActive: '2 weeks ago'
     },
     {
@@ -839,7 +635,7 @@
       desc: 'Fast-execution bot for Polymarket prediction markets. Currently paused pending regulatory review.',
       tech: ['Python', 'Web3.py', 'Polygon'],
       port: null,
-      path: 'D:\\ProjectsHome\\polymarket-sniper',
+      path: 'sovereign://polymarket-sniper',
       lastActive: '3 months ago'
     },
     {
@@ -850,7 +646,7 @@
       desc: 'Real-money profit engine for the trading stack. Async Python service that coordinates execution across venues and reports PnL back to Profit Desk.',
       tech: ['Python', 'asyncio', 'aiohttp'],
       port: null,
-      path: 'D:\\ProjectsHome\\trading-profit-engine',
+      path: 'sovereign://trading-profit-engine',
       lastActive: '1 day ago'
     },
     {
@@ -861,7 +657,7 @@
       desc: 'Original iOS strategy game concept. Evolved into Bloodlines. Code preserved for reference and history.',
       tech: ['Swift', 'SpriteKit'],
       port: null,
-      path: 'D:\\ProjectsHome\\crown-conquest',
+      path: 'sovereign://crown-conquest',
       lastActive: '8 months ago'
     },
     {
@@ -872,7 +668,7 @@
       desc: 'iOS carrier repo with multiple feature branches. Extraction pipeline that moves working features into their own standalone projects. Origin point for several current tools.',
       tech: ['Python', 'Various'],
       port: null,
-      path: 'D:\\ProjectsHome\\exo',
+      path: 'sovereign://exo',
       lastActive: '2 weeks ago'
     },
     {
@@ -883,7 +679,7 @@
       desc: 'Stale exo clone from the Crown & Conquest iOS era. Superseded by Bloodlines and kept for archaeology.',
       tech: ['Swift'],
       port: null,
-      path: 'D:\\ProjectsHome\\frontier-bastion',
+      path: 'sovereign://frontier-bastion',
       lastActive: '11 months ago'
     },
     {
@@ -894,7 +690,7 @@
       desc: 'Previous portfolio site. Replaced by lancewfisher-v2 with a full redesign and the current dark/silver aesthetic.',
       tech: ['HTML', 'CSS'],
       port: null,
-      path: 'D:\\ProjectsHome\\old-portfolio',
+      path: 'sovereign://old-portfolio',
       lastActive: '1 year ago'
     },
     {
@@ -905,7 +701,7 @@
       desc: 'Desktop application for running Claude-style workflows locally. Electron shell with a React UI on a Fastify backend, SQLite for state, and Ollama for local model inference.',
       tech: ['TypeScript', 'Electron', 'React', 'Fastify', 'Tailwind', 'SQLite', 'Ollama'],
       port: null,
-      path: 'D:\\ProjectsHome\\localclaude',
+      path: 'sovereign://localclaude',
       lastActive: '4 days ago'
     }
   ];
@@ -927,30 +723,24 @@
   // STATE
   var state = {
     search: '',
-    status: 'all',
-    activeTab: 'projects',
-    selected: null,
-    settings: loadSettings()
+    category: 'all',
+    selected: null
   };
-
-  function loadSettings() {
-    try {
-      var raw = localStorage.getItem('sovhub.settings');
-      if (raw) return JSON.parse(raw);
-    } catch (e) {}
-    return {
-      showArchived: false,
-      showPaused: true,
-      compactCards: false,
-      showProtected: true,
-      showAlpha: true,
-      portHints: true,
-      autoOpenDetail: true
-    };
-  }
-  function saveSettings() {
-    try { localStorage.setItem('sovhub.settings', JSON.stringify(state.settings)); } catch (e) {}
-  }
+  var featuredOrder = [
+    'Sovereign Signal',
+    'Serenity Medspa Demo',
+    'FS App Studio',
+    'Home Hub',
+    'Bookmark Bot',
+    'Private Tax Platform',
+    'Profit Desk',
+    'Sovereign Trade Engine',
+    'Sovereign Hub',
+    'one-three.net',
+    'JumpQuest'
+  ];
+  var statusRank = { active: 0, dev: 1, paused: 2, archived: 3 };
+  var categoryRank = { App: 0, Infrastructure: 1, Tool: 2, Trading: 3, Brand: 4, Game: 5 };
 
   // HELPERS
   function el(tag, className, text) {
@@ -988,33 +778,30 @@
     toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3200);
   }
 
-  // TAB SWITCHING
-  function switchTab(name) {
-    state.activeTab = name;
-    var tabs = document.querySelectorAll('.tab-btn');
-    tabs.forEach(function(t) {
-      t.classList.toggle('active', t.getAttribute('data-tab') === name);
-    });
-    var panels = document.querySelectorAll('.panel');
-    panels.forEach(function(p) {
-      p.classList.toggle('active', p.getAttribute('data-panel') === name);
-    });
-  }
-
   // PROJECT MATCHING
-  function matchStatus(p) {
-    if (state.status === 'all') {
-      if (!state.settings.showArchived && p.status === 'archived') return false;
-      if (!state.settings.showPaused && p.status === 'paused') return false;
-      return true;
-    }
-    return p.status === state.status;
+  function matchCategory(p) {
+    return state.category === 'all' || p.cat === state.category;
   }
   function matchSearch(p) {
     if (!state.search) return true;
     var q = state.search.toLowerCase();
     var hay = (p.name + ' ' + p.cat + ' ' + p.desc + ' ' + p.tech.join(' ')).toLowerCase();
     return hay.indexOf(q) !== -1;
+  }
+  function projectPriority(p) {
+    var idx = featuredOrder.indexOf(p.name);
+    if (idx !== -1) return idx;
+    var cat = Object.prototype.hasOwnProperty.call(categoryRank, p.cat) ? categoryRank[p.cat] : 99;
+    var status = Object.prototype.hasOwnProperty.call(statusRank, p.status) ? statusRank[p.status] : 99;
+    return 100 + cat * 10 + status;
+  }
+  function sortProjects(list) {
+    return list.slice().sort(function(a, b) {
+      var pa = projectPriority(a);
+      var pb = projectPriority(b);
+      if (pa !== pb) return pa - pb;
+      return a.name.localeCompare(b.name);
+    });
   }
 
   // BADGE BUILDER
@@ -1045,10 +832,10 @@
     metaWrap.appendChild(makeBadge(meta.label, meta.color));
     metaWrap.appendChild(makeBadge(p.cat, null));
 
-    if (p.signal === 'protected' && state.settings.showProtected) {
+    if (p.signal === 'protected') {
       metaWrap.appendChild(makeBadge(signalMeta.protected.label, signalMeta.protected.color));
     }
-    if (p.signal === 'alpha' && state.settings.showAlpha) {
+    if (p.signal === 'alpha') {
       metaWrap.appendChild(makeBadge(signalMeta.alpha.label, signalMeta.alpha.color));
     }
     if (p.signal === 'demo') {
@@ -1069,19 +856,18 @@
 
     var foot = el('div', 'card-foot');
     if (p.demoUrl) {
-      foot.appendChild(el('span', 'card-port', 'Live demo available'));
+      foot.appendChild(el('span', 'card-port', 'Live surface available'));
     } else if (p.port != null) {
-      foot.appendChild(el('span', 'card-port', 'Local-first service'));
+      foot.appendChild(el('span', 'card-port', 'Private deployment system'));
     } else {
-      foot.appendChild(el('span', 'card-port-empty', 'Standalone system'));
+      foot.appendChild(el('span', 'card-port-empty', 'Curated estate profile'));
     }
-    var cardActionText = 'Learn More';
-    if (p.signal === 'demo') cardActionText = 'See Demo';
-    else if (p.signal === 'alpha') cardActionText = 'Explore';
-    else if (p.signal === 'protected') cardActionText = 'View Details';
+    var cardActionText = 'Open Detail';
+    if (p.signal === 'demo') cardActionText = 'View Live Surface';
+    else if (p.signal === 'alpha') cardActionText = 'Explore Build';
+    else if (p.signal === 'protected') cardActionText = 'View Profile';
     var actBtn = el('button', 'card-action', cardActionText);
     actBtn.type = 'button';
-    if (!meta.launchable) actBtn.classList.add('muted');
     actBtn.addEventListener('click', function(e) {
       e.stopPropagation();
       openSlidein(p);
@@ -1098,16 +884,20 @@
     var grid = document.getElementById('projectGrid');
     var noResults = document.getElementById('noResults');
     clear(grid);
-    var count = 0;
-    projects.forEach(function(p) {
-      if (matchStatus(p) && matchSearch(p)) {
-        grid.appendChild(createCard(p));
-        count++;
-      }
+    var matches = sortProjects(projects.filter(function(p) {
+      return matchCategory(p) && matchSearch(p);
+    }));
+    if (matches.length === 0) {
+      matches = sortProjects(projects).slice(0, 8);
+      noResults.style.display = 'block';
+    } else {
+      noResults.style.display = 'none';
+    }
+    matches.forEach(function(p) {
+      grid.appendChild(createCard(p));
     });
-    noResults.style.display = count === 0 ? 'block' : 'none';
     var tabCount = document.getElementById('tab-count-projects');
-    if (tabCount) tabCount.textContent = String(count);
+    if (tabCount) tabCount.textContent = String(matches.length);
   }
 
   // ACTION BUTTON BUILDER (safe DOM, no innerHTML)
@@ -1140,7 +930,6 @@
     nameEl.textContent = p.name;
     clear(body);
 
-    // Status line with badges
     var statusLine = el('div', 'slidein-statusline');
     statusLine.appendChild(makeBadge(meta.label, meta.color));
     statusLine.appendChild(makeBadge(p.cat, null));
@@ -1149,12 +938,46 @@
     }
     body.appendChild(statusLine);
 
-    // Description
+    if (p.demoUrl) {
+      var previewSec = el('div', 'slidein-section');
+      previewSec.appendChild(el('h3', null, 'Live Surface'));
+      var previewFrame = el('div');
+      previewFrame.style.cssText = 'background:#0a0a0b;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:6px;margin-top:8px;';
+      var titleBar = el('div');
+      titleBar.style.cssText = 'display:flex;align-items:center;gap:5px;padding:4px 8px 6px;';
+      ['#ff5f57','#ffbd2e','#28c840'].forEach(function(c) {
+        var d = el('div');
+        d.style.cssText = 'width:7px;height:7px;border-radius:50%;background:' + c + ';';
+        titleBar.appendChild(d);
+      });
+      var tName = el('span', null, p.name);
+      tName.style.cssText = 'margin-left:8px;font-size:9px;color:rgba(255,255,255,0.35);letter-spacing:0.05em;';
+      titleBar.appendChild(tName);
+      previewFrame.appendChild(titleBar);
+      var iframe = document.createElement('iframe');
+      iframe.src = p.demoUrl;
+      iframe.style.cssText = 'width:100%;height:200px;border:none;border-radius:4px;background:#08090c;pointer-events:none;';
+      iframe.loading = 'lazy';
+      iframe.title = p.name + ' preview';
+      iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+      previewFrame.appendChild(iframe);
+      previewFrame.appendChild(el('div', null, 'Preview only. Open the full experience below to explore the live surface.'));
+      previewFrame.lastChild.style.cssText = 'font-size:9px;color:rgba(255,255,255,0.3);padding:6px 8px 2px;text-align:center;';
+      previewSec.appendChild(previewFrame);
+      body.appendChild(previewSec);
+    }
+
     body.appendChild(el('p', 'slidein-desc', p.desc));
 
-    // Details section
+    if (p.bestFor) {
+      var forSec = el('div', 'slidein-section');
+      forSec.appendChild(el('h3', null, 'Who This Fits'));
+      forSec.appendChild(el('p', 'slidein-desc', p.bestFor));
+      body.appendChild(forSec);
+    }
+
     var detailSec = el('div', 'slidein-section');
-    detailSec.appendChild(el('h3', null, 'Details'));
+    detailSec.appendChild(el('h3', null, 'Delivery'));
     function addRow(key, val) {
       var row = el('div', 'slidein-row');
       row.appendChild(el('span', 'row-key', key));
@@ -1162,20 +985,11 @@
       detailSec.appendChild(row);
     }
     addRow('Status', meta.label);
-    addRow('Category', p.cat);
-    addRow('Last active', p.lastActive || 'unknown');
-    addRow('Deployment', p.port != null ? 'Local-first, self-hosted' : 'Static / standalone');
+    addRow('Deployment', p.port != null ? 'Private local or server deployment' : 'Static or branded hosted delivery');
+    addRow('Ownership', 'Source, credentials, and documentation handed off at delivery');
+    addRow('Last active', p.lastActive || 'Current');
     body.appendChild(detailSec);
 
-    // Who this is for
-    if (p.bestFor) {
-      var forSec = el('div', 'slidein-section');
-      forSec.appendChild(el('h3', null, 'Who This Is For'));
-      forSec.appendChild(el('p', 'slidein-desc', p.bestFor));
-      body.appendChild(forSec);
-    }
-
-    // Tech Stack section
     var techSec = el('div', 'slidein-section');
     techSec.appendChild(el('h3', null, 'Built With'));
     var techWrap = el('div', 'slidein-techs');
@@ -1185,7 +999,6 @@
     techSec.appendChild(techWrap);
     body.appendChild(techSec);
 
-    // Customer-facing action buttons
     var actSec = el('div', 'slidein-section');
     actSec.appendChild(el('h3', null, 'Explore'));
     var actWrap = el('div', 'slidein-actions');
@@ -1213,7 +1026,7 @@
     actWrap.appendChild(contactBtn);
 
     actSec.appendChild(actWrap);
-    actSec.appendChild(el('div', 'action-note', 'Every system shown here can be customized, branded, and deployed for your business, team, or personal infrastructure. Local-first. No cloud dependency required.'));
+    actSec.appendChild(el('div', 'action-note', 'Every system in this atlas can be adapted, branded, and deployed as a client-owned build.'));
 
     body.appendChild(actSec);
 
@@ -1346,7 +1159,7 @@
         if (di >= 5) weight *= 0.55;
         var alpha = Math.min(0.9, weight);
         cell.style.background = 'rgba(228, 234, 242, ' + (alpha * 0.85 + 0.04).toFixed(2) + ')';
-        cell.title = d + ' ' + hh + ':00 — ' + Math.floor(weight * 8) + ' sessions';
+        cell.title = d + ' ' + hh + ':00 - ' + Math.floor(weight * 8) + ' sessions';
         hm.appendChild(cell);
       }
     });
@@ -1381,7 +1194,6 @@
       li.appendChild(bar);
       li.appendChild(el('span', 'tp-count', String(r.count)));
       li.addEventListener('click', function() {
-        switchTab('projects');
         document.getElementById('searchBox').value = r.name;
         state.search = r.name;
         renderGrid();
@@ -1432,22 +1244,6 @@
     }
   }
 
-  // SETTINGS
-  function renderSettings() {
-    var toggles = document.querySelectorAll('.toggle[data-setting]');
-    toggles.forEach(function(t) {
-      var key = t.getAttribute('data-setting');
-      if (state.settings[key]) t.classList.add('on');
-      else t.classList.remove('on');
-      t.addEventListener('click', function() {
-        state.settings[key] = !state.settings[key];
-        t.classList.toggle('on', state.settings[key]);
-        saveSettings();
-        renderGrid();
-      });
-    });
-  }
-
   // EVENT WIRING
   document.getElementById('searchBox').addEventListener('input', function(e) {
     state.search = e.target.value;
@@ -1456,41 +1252,36 @@
   var filterTabs = document.querySelectorAll('.filter-tab');
   filterTabs.forEach(function(tab) {
     tab.addEventListener('click', function() {
-      state.status = tab.getAttribute('data-filter');
+      state.category = tab.getAttribute('data-filter');
       filterTabs.forEach(function(t) { t.classList.remove('active'); });
       tab.classList.add('active');
       renderGrid();
     });
   });
-  document.getElementById('tabBar').addEventListener('click', function(e) {
-    var btn = e.target.closest('.tab-btn');
-    if (!btn) return;
-    switchTab(btn.getAttribute('data-tab'));
+  document.querySelectorAll('.atlas-jump').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var targetCategory = btn.getAttribute('data-category');
+      state.category = targetCategory;
+      state.search = '';
+      document.getElementById('searchBox').value = '';
+      filterTabs.forEach(function(tab) {
+        tab.classList.toggle('active', tab.getAttribute('data-filter') === targetCategory);
+      });
+      renderGrid();
+      var atlasShell = document.querySelector('.atlas-shell');
+      if (atlasShell && atlasShell.scrollIntoView) {
+        atlasShell.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
   });
   document.getElementById('slideClose').addEventListener('click', closeSlidein);
   document.getElementById('slideOverlay').addEventListener('click', closeSlidein);
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeSlidein();
   });
-  var rs = document.getElementById('refreshSystems');
-  if (rs) rs.addEventListener('click', refreshSystems);
-  var sp = document.getElementById('scanProjects');
-  if (sp) sp.addEventListener('click', function() {
-    showToast('Scan complete. No new projects detected.');
-  });
-  var rd = document.getElementById('refreshDisk');
-  if (rd) rd.addEventListener('click', function() {
-    showToast('Disk stats refreshed.');
-  });
 
   // INITIAL RENDER
   renderGrid();
-  renderActivity();
-  renderSystems();
-  renderHeatmap();
-  renderTopProjects();
-  renderWorkspace();
-  renderSettings();
 
 })();
 </script>

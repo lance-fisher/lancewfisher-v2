@@ -1,0 +1,11 @@
+[
+  { "id": "head_of_bloodline", "name": "Head Of Bloodline", "prototypeEnabled": true, "pathAffinity": "governance" },
+  { "id": "heir_designate", "name": "Heir Designate", "prototypeEnabled": true, "pathAffinity": "governance" },
+  { "id": "commander", "name": "Commander", "prototypeEnabled": true, "pathAffinity": "military_command" },
+  { "id": "governor", "name": "Governor", "prototypeEnabled": true, "pathAffinity": "governance" },
+  { "id": "diplomat", "name": "Diplomat", "prototypeEnabled": true, "pathAffinity": "diplomacy" },
+  { "id": "ideological_leader", "name": "Ideological Leader", "prototypeEnabled": true, "pathAffinity": "religious_leadership" },
+  { "id": "merchant", "name": "Merchant", "prototypeEnabled": true, "pathAffinity": "economic_stewardship_trade" },
+  { "id": "sorcerer", "name": "Sorcerer", "prototypeEnabled": true, "pathAffinity": "mysticism" },
+  { "id": "spymaster", "name": "Spymaster", "prototypeEnabled": true, "pathAffinity": "covert_operations" }
+]

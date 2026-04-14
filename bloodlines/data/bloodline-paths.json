@@ -1,0 +1,37 @@
+[
+  {
+    "id": "military_command",
+    "name": "Military Command",
+    "summary": "Army command, battlefield tactics, and martial leadership."
+  },
+  {
+    "id": "governance",
+    "name": "Governance",
+    "summary": "Territory administration, population management, and law."
+  },
+  {
+    "id": "religious_leadership",
+    "name": "Religious Leadership",
+    "summary": "Faith expansion, covenant authority, and spiritual influence."
+  },
+  {
+    "id": "diplomacy",
+    "name": "Diplomacy",
+    "summary": "Alliance building, negotiation, and cross-dynasty relations."
+  },
+  {
+    "id": "covert_operations",
+    "name": "Covert Operations",
+    "summary": "Espionage, sabotage, assassination, and intelligence work."
+  },
+  {
+    "id": "economic_stewardship_trade",
+    "name": "Economic Stewardship / Trade",
+    "summary": "Commerce, trade routes, and resource management."
+  },
+  {
+    "id": "mysticism",
+    "name": "Mysticism",
+    "summary": "Offensive and defensive covenant power expressed in war."
+  }
+]

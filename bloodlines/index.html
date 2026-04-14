@@ -70,6 +70,9 @@
     .overview-title{font-family:'Cinzel Decorative',serif;font-size:42px;font-weight:700;letter-spacing:.06em;color:var(--text-ivory);margin-bottom:10px}
     .overview-tagline{font-family:'Crimson Pro',serif;font-style:italic;font-size:20px;color:var(--text-muted);margin-bottom:6px}
     .overview-phase{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.25em;color:var(--ember);text-transform:uppercase}
+    .overview-version{margin-top:14px;display:flex;align-items:center;justify-content:center;gap:16px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em}
+    .overview-version-badge{background:rgba(201,162,39,.12);border:1px solid rgba(201,162,39,.3);color:#c9a227;padding:4px 12px;border-radius:3px}
+    .overview-version-date{color:var(--text-dim);font-size:10px;letter-spacing:.12em}
     .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:32px 0}
     .stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:20px;text-align:center;position:relative;overflow:hidden;transition:border-color .2s;cursor:default}
     .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ember);opacity:0;transition:opacity .2s}
@@ -205,21 +208,22 @@
       <div><div id="header-title">Bloodlines</div><div id="header-subtitle">Design Archive</div></div>
     </div>
     <div id="header-stats">
-      <div class="stat-pill"><span class="stat-value">2,942</span><span class="stat-label">Bible Lines</span></div>
+      <div class="stat-pill"><span class="stat-value">3,418</span><span class="stat-label">Bible Lines</span></div>
       <div class="stat-divider"></div>
-      <div class="stat-pill"><span class="stat-value">16,000+</span><span class="stat-label">Total Lines</span></div>
+      <div class="stat-pill"><span class="stat-value">15,447</span><span class="stat-label">Total Lines</span></div>
       <div class="stat-divider"></div>
       <div class="stat-pill"><span class="stat-value">9</span><span class="stat-label">Houses</span></div>
       <div class="stat-divider"></div>
-      <div class="stat-pill"><span class="stat-value">8</span><span class="stat-label">Systems</span></div>
+      <div class="stat-pill"><span class="stat-value">7</span><span class="stat-label">Systems</span></div>
       <div class="stat-divider"></div>
-      <div class="stat-pill"><span class="stat-value">69</span><span class="stat-label">Bible Sections</span></div>
+      <div class="stat-pill"><span class="stat-value">81</span><span class="stat-label">Bible Sections</span></div>
       <div class="stat-divider"></div>
-      <div class="stat-pill"><span class="stat-value">6</span><span class="stat-label">Victory Paths</span></div>
+      <div class="stat-pill"><span class="stat-value">5</span><span class="stat-label">Victory Paths</span></div>
     </div>
     <div id="header-session">
+      <button class="download-btn" onclick="window.location.href='play.html'" title="Open playable prototype">&#9654; Prototype</button>
       <button class="download-btn" onclick="downloadBible()" title="Download Design Bible as printable HTML">&#8681; Bible</button>
-      <span class="session-badge">Phase 1 Complete</span>
+      <span class="session-badge">Playable Prototype</span>
     </div>
     <button id="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
   </header>
@@ -236,7 +240,7 @@
     <div class="nav-section">
       <div class="nav-section-header" onclick="toggleSection(this)"><span>Design Bible</span><span class="nav-section-arrow">&#9662;</span></div>
       <div class="nav-items">
-        <div class="nav-item" onclick="loadDoc('18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md','Complete Design Bible v3.1','Exports','COMPLETE')" data-id="bible"><span class="nav-icon">&#128214;</span> Complete Bible v3.1 <span class="nav-badge">2,942</span></div>
+        <div class="nav-item" onclick="loadDoc('18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md','Complete Design Bible v3.2','Exports','COMPLETE')" data-id="bible"><span class="nav-icon"><div class="nav-item" onclick="loadDoc('18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md','Complete Design Bible v3.2','Exports','COMPLETE')" data-id="bible"><span class="nav-icon">&#128214;</span> Complete Bible v3.2 <span class="nav-badge">3,103</span></div>#128214;</span> Complete Bible v3.2 <span class="nav-badge">3,418</span></div>
         <div class="nav-item" onclick="loadDoc('01_CANON/BLOODLINES_MASTER_MEMORY.md','Master Memory','Canon','COMPLETE')" data-id="mm"><span class="nav-icon">&#129504;</span> Master Memory <span class="nav-badge">2,769</span></div>
       </div>
     </div>
@@ -258,7 +262,7 @@
     <div class="nav-section">
       <div class="nav-section-header" onclick="toggleSection(this)"><span>Houses and Faiths</span><span class="nav-section-arrow">&#9662;</span></div>
       <div class="nav-items">
-        <div class="nav-item" onclick="loadDoc('06_FACTIONS/FOUNDING_HOUSES.md','Founding Houses','Factions','CB004 PENDING')" data-id="fh"><span class="nav-icon">&#9873;</span> Founding Houses</div>
+        <div class="nav-item" onclick="loadDoc('06_FACTIONS/FOUNDING_HOUSES.md','Founding Houses','Factions','CB004 VOIDED')" data-id="fh"><span class="nav-icon">&#9873;</span> Founding Houses</div>
         <div class="nav-item" onclick="loadDoc('07_FAITHS/FOUR_ANCIENT_FAITHS.md','Four Ancient Faiths','Faiths','COMPLETE')" data-id="faf"><span class="nav-icon">&#10022;</span> Four Ancient Faiths <span class="nav-badge">1,778</span></div>
       </div>
     </div>
@@ -321,20 +325,25 @@
           <div class="overview-title">Bloodlines</div>
           <div class="overview-tagline">Dynasty-driven strategy where faith, sacrifice, and bloodline shape civilizations.</div>
           <div class="overview-phase">Phase 1: Design Foundation Complete</div>
+          <div class="overview-version">
+            <span class="overview-version-badge">Design Bible v3.2</span>
+            <span class="overview-version-date">Last updated: 2026-04-07</span>
+          </div>
         </div>
         <div class="stat-grid">
-          <div class="stat-card"><div class="stat-card-value">2,942</div><div class="stat-card-label">Design Bible Lines</div></div>
-          <div class="stat-card"><div class="stat-card-value">69</div><div class="stat-card-label">Bible Sections</div></div>
-          <div class="stat-card"><div class="stat-card-value">16,000+</div><div class="stat-card-label">Total Corpus Lines</div></div>
-          <div class="stat-card"><div class="stat-card-value">10</div><div class="stat-card-label">Sessions Complete</div></div>
+          <div class="stat-card"><div class="stat-card-value">3,418</div><div class="stat-card-label">Design Bible Lines</div></div>
+          <div class="stat-card"><div class="stat-card-value">81</div><div class="stat-card-label">Bible Sections</div></div>
+          <div class="stat-card"><div class="stat-card-value">15,447</div><div class="stat-card-label">Total Corpus Lines</div></div>
+          <div class="stat-card"><div class="stat-card-value">13</div><div class="stat-card-label">Sessions Complete</div></div>
           <div class="stat-card"><div class="stat-card-value">9</div><div class="stat-card-label">Founding Houses</div></div>
-          <div class="stat-card"><div class="stat-card-value">8</div><div class="stat-card-label">Core Systems</div></div>
+          <div class="stat-card"><div class="stat-card-value">7</div><div class="stat-card-label">Core Systems</div></div>
           <div class="stat-card"><div class="stat-card-value">4</div><div class="stat-card-label">Ancient Faiths</div></div>
-          <div class="stat-card"><div class="stat-card-value">6</div><div class="stat-card-label">Victory Paths</div></div>
+          <div class="stat-card"><div class="stat-card-value">5</div><div class="stat-card-label">Victory Paths</div></div>
         </div>
         <div class="overview-heading">Quick Access</div>
         <div class="section-grid">
-          <div class="section-card" onclick="loadDoc('18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md','Complete Design Bible v3.1','Exports','COMPLETE')"><span class="section-card-icon">&#128214;</span><div><div class="section-card-title">Design Bible v3.1</div><div class="section-card-desc">All 69 sections complete. The full civilizational design reference.</div><div class="section-card-meta">2,942 lines -- All 9 Houses -- Operations System -- Closing Manifesto</div></div></div>
+          <div class="section-card" onclick="window.location.href='play.html'"><span class="section-card-icon">&#9654;</span><div><div class="section-card-title">Playable Prototype</div><div class="section-card-desc">Ironmark frontier skirmish with workers, housing, resource gathering, base building, infantry training, combat, enemy waves, and debug HUD.</div><div class="section-card-meta">Play now -- RTS vertical slice -- Data-driven foundation</div></div></div>
+          <div class="section-card" onclick="loadDoc('18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md','Complete Design Bible v3.2','Exports','COMPLETE')"><span class="section-card-icon">&#128214;</span><div><div class="section-card-title">Design Bible v3.2</div><div class="section-card-desc">81 sections. Declared Time Model. Commander System. Five victory paths. Phase Entry. Part XIV+XV.</div><div class="section-card-meta">3,418 lines -- Dual-clock architecture -- Commander system -- 13 sessions</div></div></div>
           <div class="section-card" onclick="loadDoc('08_MECHANICS/OPERATIONS_SYSTEM.md','Operations System','Mechanics','PROPOSED')"><span class="section-card-icon">&#9878;</span><div><div class="section-card-title">Operations System</div><div class="section-card-desc">Covert, faith, and military operations. 56 total operations across all categories.</div><div class="section-card-meta">389 lines -- Timing system -- Rogue and Mystic units</div></div></div>
           <div class="section-card" onclick="loadDoc('07_FAITHS/FOUR_ANCIENT_FAITHS.md','Four Ancient Faiths','Faiths','COMPLETE')"><span class="section-card-icon">&#10022;</span><div><div class="section-card-title">Four Ancient Faiths</div><div class="section-card-desc">Old Light, Blood Dominion, The Order, The Wild at full depth.</div><div class="section-card-meta">1,778 lines -- 3 layers -- CB003 complete</div></div></div>
           <div class="section-card" onclick="loadDoc('11_MATCHFLOW/POLITICAL_EVENTS.md','Political Events','Match Flow','COMPLETE')"><span class="section-card-icon">&#9876;</span><div><div class="section-card-title">Political Events</div><div class="section-card-desc">34+ named events with triggers, effects, resolution paths, and counter-play.</div><div class="section-card-meta">980 lines -- 6 categories -- Fully designed</div></div></div>
@@ -416,7 +425,7 @@
   function loadDoc(path,title,section,status){document.getElementById('overview').classList.remove('visible');document.getElementById('md-view').classList.remove('visible');document.getElementById('loading').classList.add('visible');setActive(inferNavId(path));fetch(path).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text()}).then(function(text){var lines=text.split('\n').length;document.getElementById('md-breadcrumb').textContent=section.toUpperCase();document.getElementById('md-doc-title').textContent=title;document.getElementById('md-line-count').textContent=lines.toLocaleString()+' lines';var badge=document.getElementById('md-status-badge');badge.textContent=status;badge.setAttribute('style',badgeStyle(status));renderMarkdown(text);document.getElementById('loading').classList.remove('visible');document.getElementById('md-view').classList.add('visible');document.getElementById('content').scrollTop=0;fetchIdeasForDoc(path)}).catch(function(err){var body=document.getElementById('md-body');var p=document.createElement('p');p.style.cssText='color:var(--ember);font-family:Cinzel,serif;';p.textContent='Could not load: '+path+' -- '+err.message;body.replaceChildren(p);document.getElementById('loading').classList.remove('visible');document.getElementById('md-view').classList.add('visible')})}
   function fetchIdeasForDoc(path){fetch('api/submit.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({auth:PASSHASHES[0],action:'ideas_for_file',file:path})}).then(function(r){return r.ok?r.json():null}).then(function(data){if(!data||!data.ideas||!data.ideas.length)return;var body=document.getElementById('md-body');var sec=document.createElement('div');sec.className='web-ideas-section';var h=document.createElement('h3');h.textContent='Submitted Ideas ('+data.ideas.length+')';sec.appendChild(h);data.ideas.forEach(function(idea){var block=document.createElement('div');block.className='web-idea-block';var meta=document.createElement('div');meta.className='web-idea-meta';meta.textContent=idea.sectionTitle+' \u2014 '+idea.timestamp;block.appendChild(meta);var txt=document.createElement('div');txt.className='web-idea-text';txt.textContent=idea.text;block.appendChild(txt);sec.appendChild(block)});body.appendChild(sec)}).catch(function(){})}
   window.loadDoc=loadDoc;
-  function downloadBible(){fetch('18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text()}).then(function(text){var html=marked.parse(text);var doc='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Bloodlines Design Bible v3.1</title><style>body{font-family:Georgia,serif;max-width:800px;margin:40px auto;padding:0 20px;color:#1a1a1a;font-size:11pt;line-height:1.7}h1{font-size:22pt;border-bottom:2px solid #333;padding-bottom:8px;margin-top:48px;page-break-before:always}h1:first-child{page-break-before:avoid}h2{font-size:16pt;border-bottom:1px solid #999;padding-bottom:4px;margin-top:32px}h3{font-size:12pt;margin-top:24px;color:#444}h4{font-size:11pt;font-style:italic;margin-top:18px}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:10pt;page-break-inside:avoid}th{background:#f0f0f0;text-align:left;padding:8px 10px;border:1px solid #ccc;font-weight:600}td{padding:6px 10px;border:1px solid #ddd;vertical-align:top}blockquote{border-left:3px solid #888;padding:8px 16px;margin:16px 0;background:#f8f8f8}code{font-family:Consolas,monospace;font-size:9pt;background:#f4f4f4;padding:1px 4px;border-radius:2px}pre{background:#f4f4f4;border:1px solid #ddd;padding:12px;border-radius:4px;overflow-x:auto}pre code{background:none;padding:0}hr{border:none;border-top:1px solid #ccc;margin:32px 0}ul,ol{padding-left:24px}li{margin-bottom:4px}@media print{body{margin:0;padding:0 10px}h1{page-break-before:always}h1:first-child{page-break-before:avoid}table{page-break-inside:avoid}}@page{margin:.75in}</style></head><body><div style="text-align:center;padding:60px 0;border-bottom:2px solid #333;margin-bottom:40px"><h1 style="font-size:32pt;border:none;margin:0;page-break-before:avoid">BLOODLINES</h1><p style="font-size:14pt;color:#666;margin:8px 0 0">Complete Design Bible v3.1</p><p style="font-size:10pt;color:#999;margin:4px 0 0">Dynasty-driven strategy where faith, sacrifice, and bloodline shape civilizations</p></div>'+html+'</body></html>';var blob=new Blob([doc],{type:'text/html'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Bloodlines_Design_Bible_v3.1.html';a.click();URL.revokeObjectURL(a.href)}).catch(function(err){alert('Could not generate download: '+err.message)})}
+  function downloadBible(){fetch('18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text()}).then(function(text){var html=marked.parse(text);var doc='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Bloodlines Design Bible v3.2</title><style>body{font-family:Georgia,serif;max-width:800px;margin:40px auto;padding:0 20px;color:#1a1a1a;font-size:11pt;line-height:1.7}h1{font-size:22pt;border-bottom:2px solid #333;padding-bottom:8px;margin-top:48px;page-break-before:always}h1:first-child{page-break-before:avoid}h2{font-size:16pt;border-bottom:1px solid #999;padding-bottom:4px;margin-top:32px}h3{font-size:12pt;margin-top:24px;color:#444}h4{font-size:11pt;font-style:italic;margin-top:18px}table{width:100%;border-collapse:collapse;margin:16px 0;font-size:10pt;page-break-inside:avoid}th{background:#f0f0f0;text-align:left;padding:8px 10px;border:1px solid #ccc;font-weight:600}td{padding:6px 10px;border:1px solid #ddd;vertical-align:top}blockquote{border-left:3px solid #888;padding:8px 16px;margin:16px 0;background:#f8f8f8}code{font-family:Consolas,monospace;font-size:9pt;background:#f4f4f4;padding:1px 4px;border-radius:2px}pre{background:#f4f4f4;border:1px solid #ddd;padding:12px;border-radius:4px;overflow-x:auto}pre code{background:none;padding:0}hr{border:none;border-top:1px solid #ccc;margin:32px 0}ul,ol{padding-left:24px}li{margin-bottom:4px}@media print{body{margin:0;padding:0 10px}h1{page-break-before:always}h1:first-child{page-break-before:avoid}table{page-break-inside:avoid}}@page{margin:.75in}</style></head><body><div style="text-align:center;padding:60px 0;border-bottom:2px solid #333;margin-bottom:40px"><h1 style="font-size:32pt;border:none;margin:0;page-break-before:avoid">BLOODLINES</h1><p style="font-size:14pt;color:#666;margin:8px 0 0">Complete Design Bible v3.2</p><p style="font-size:10pt;color:#999;margin:4px 0 0">Dynasty-driven strategy where faith, sacrifice, and bloodline shape civilizations</p></div>'+html+'</body></html>';var blob=new Blob([doc],{type:'text/html'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Bloodlines_Design_Bible_v3.2.html';a.click();URL.revokeObjectURL(a.href)}).catch(function(err){alert('Could not generate download: '+err.message)})}
   window.downloadBible=downloadBible;
 
   // ── Content Editor ─────────────────────────────────────────────────────

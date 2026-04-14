@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tax Platform | Fisher Sovereign Systems</title>
+<meta name="description" content="A working 2025 federal income tax calculator built on official IRS brackets. Built by Fisher Sovereign Systems.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%A7%AE</text></svg>">
+<style>
+:root {
+  --bg: #0a0a0b;
+  --bg2: #111114;
+  --bg3: #18181c;
+  --bg4: #1f1f25;
+  --border: #2a2a32;
+  --border-dim: #1e1e24;
+  --gold: #C9A84C;
+  --gold-bright: #e0bf63;
+  --gold-bg: rgba(201, 168, 76, 0.10);
+  --gold-glow: rgba(201, 168, 76, 0.30);
+  --text: rgba(245, 240, 230, 0.94);
+  --text2: rgba(245, 240, 230, 0.62);
+  --text3: rgba(245, 240, 230, 0.36);
+  --green: #5dd39e;
+  --red: #f08a7a;
+  --mono: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+  --sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --disp: 'Cinzel', 'Times New Roman', serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.55;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ---------- NAV ---------- */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 28px;
+  background: #111;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+}
+.nav-back {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text2);
+  text-decoration: none;
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-back:hover { color: var(--gold); }
+.nav-title {
+  font-family: var(--disp);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--text);
+  text-transform: uppercase;
+}
+.nav-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+
+/* ---------- LAYOUT ---------- */
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+.hero {
+  text-align: center;
+  margin-bottom: 44px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border-dim);
+}
+.hero h1 {
+  font-family: var(--disp);
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.hero p {
+  font-size: 15px;
+  color: var(--text2);
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+.section-label {
+  font-family: var(--disp);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: var(--gold);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+/* ---------- CALCULATOR GRID ---------- */
+.calc-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 28px;
+  margin-bottom: 36px;
+}
+@media (max-width: 880px) {
+  .calc-grid { grid-template-columns: 1fr; }
+}
+
+.input-panel {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px 22px;
+}
+.field { margin-bottom: 20px; }
+.field:last-child { margin-bottom: 0; }
+.field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.10em;
+  color: var(--text2);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-prefix {
+  position: absolute;
+  left: 14px;
+  color: var(--text3);
+  font-family: var(--mono);
+  font-size: 14px;
+  pointer-events: none;
+}
+input[type="number"], select {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 500;
+  transition: border-color 0.15s, background 0.15s;
+}
+input[type="number"].with-prefix { padding-left: 28px; }
+input[type="number"]:focus, select:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: var(--bg4);
+}
+select {
+  font-family: var(--sans);
+  font-size: 14px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path fill='%23C9A84C' d='M2 4l4 4 4-4z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+.field-hint {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+/* ---------- RESULTS ---------- */
+.results-panel {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px 26px;
+}
+.result-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.rcard {
+  background: var(--bg3);
+  border: 1px solid var(--border-dim);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.rcard.highlight {
+  background: var(--gold-bg);
+  border-color: var(--gold-glow);
+}
+.rcard-label {
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.rcard-value {
+  font-family: var(--mono);
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.rcard.highlight .rcard-value { color: var(--gold-bright); }
+.rcard.green .rcard-value { color: var(--green); }
+.rcard.red .rcard-value { color: var(--red); }
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 11px 0;
+  border-top: 1px solid var(--border-dim);
+  font-size: 13px;
+}
+.summary-row:first-of-type { border-top: none; padding-top: 4px; }
+.summary-row .label { color: var(--text2); }
+.summary-row .value {
+  font-family: var(--mono);
+  color: var(--text);
+  font-weight: 500;
+}
+.summary-row.total {
+  border-top: 1px solid var(--gold-glow);
+  padding-top: 14px;
+  margin-top: 6px;
+}
+.summary-row.total .label {
+  font-family: var(--disp);
+  color: var(--gold);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.summary-row.total .value {
+  font-size: 17px;
+  color: var(--gold-bright);
+  font-weight: 600;
+}
+
+/* ---------- BRACKET TABLE ---------- */
+.brackets-section {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px 26px;
+  margin-bottom: 28px;
+}
+.brackets-section h2 {
+  font-family: var(--disp);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--text);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.brackets-section .sub {
+  font-size: 12px;
+  color: var(--text3);
+  margin-bottom: 18px;
+}
+table.brackets {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+table.brackets thead th {
+  text-align: left;
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  color: var(--text3);
+  text-transform: uppercase;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+table.brackets thead th.num { text-align: right; }
+table.brackets tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-dim);
+  color: var(--text2);
+}
+table.brackets tbody td.num { text-align: right; color: var(--text); }
+table.brackets tbody tr.active {
+  background: var(--gold-bg);
+}
+table.brackets tbody tr.active td { color: var(--gold-bright); font-weight: 500; }
+table.brackets tbody tr.unused td { color: var(--text3); opacity: 0.55; }
+
+/* ---------- DISCLAIMER ---------- */
+.disclaimer {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: 6px;
+  padding: 16px 20px;
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.65;
+}
+.disclaimer strong {
+  color: var(--gold);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* ---------- FOOTER ---------- */
+.footer {
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-dim);
+  text-align: center;
+  font-size: 11px;
+  color: var(--text3);
+  font-family: var(--mono);
+  letter-spacing: 0.08em;
+}
+</style>
+</head>
+<body>
+<!-- FSS-BRAND-BLOCK-V3 (FF25 wordmark, no H icon) -->
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../_shared/brand.css?v=20260410v6">
+<div class="fssb-v3-top">
+  <a href="../home.html" class="fssb-v3-top-link" aria-label="Fisher Sovereign Systems">
+    <span class="fssb-v3-top-name">Fisher</span>
+    <span class="fssb-v3-top-rule"></span>
+    <span class="fssb-v3-top-sub">Sovereign Systems</span>
+  </a>
+  <a href="../home.html" class="fssb-v3-top-back">&larr; Portfolio</a>
+</div>
+
+
+<nav class="nav">
+  <div class="nav-title">Tax Platform</div>
+  <div class="nav-meta">2025 IRS</div>
+</nav>
+
+<main class="main">
+
+  <section class="hero">
+    <h1>Private Tax Platform</h1>
+    <p>A private financial computation surface built on the official 2025 IRS federal income tax brackets and standard deductions. This live calculator is the clearest visible layer of a broader client-owned tax toolset: local-first, controlled by you, and designed to keep sensitive financial work off third-party platforms.</p>
+  </section>
+
+  <div class="calc-grid">
+
+    <div class="input-panel">
+      <div class="section-label">Inputs</div>
+
+      <div class="field">
+        <label for="filing-status">Filing Status</label>
+        <select id="filing-status">
+          <option value="single">Single</option>
+          <option value="mfj">Married Filing Jointly</option>
+          <option value="mfs">Married Filing Separately</option>
+          <option value="hoh">Head of Household</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="gross-income">Gross Annual Income</label>
+        <div class="input-wrap">
+          <span class="input-prefix">$</span>
+          <input type="number" id="gross-income" class="with-prefix" min="0" step="1000" value="120000">
+        </div>
+        <div class="field-hint">Wages, salary, self-employment, and other ordinary income. Capital gains not included.</div>
+      </div>
+
+      <div class="field">
+        <label for="itemized">Itemized Deductions (optional)</label>
+        <div class="input-wrap">
+          <span class="input-prefix">$</span>
+          <input type="number" id="itemized" class="with-prefix" min="0" step="500" value="0">
+        </div>
+        <div class="field-hint">Leave at zero to use the standard deduction. The calculator will pick whichever is larger.</div>
+      </div>
+    </div>
+
+    <div class="results-panel">
+      <div class="section-label">Results</div>
+
+      <div class="result-cards">
+        <div class="rcard">
+          <div class="rcard-label">AGI</div>
+          <div class="rcard-value" id="r-agi"></div>
+        </div>
+        <div class="rcard">
+          <div class="rcard-label">Deduction Used</div>
+          <div class="rcard-value" id="r-deduction"></div>
+        </div>
+        <div class="rcard">
+          <div class="rcard-label">Taxable Income</div>
+          <div class="rcard-value" id="r-taxable"></div>
+        </div>
+        <div class="rcard highlight">
+          <div class="rcard-label">Marginal Bracket</div>
+          <div class="rcard-value" id="r-marginal"></div>
+        </div>
+      </div>
+
+      <div class="summary-row">
+        <span class="label">Effective tax rate</span>
+        <span class="value" id="r-effective"></span>
+      </div>
+      <div class="summary-row">
+        <span class="label">Federal tax owed</span>
+        <span class="value" id="r-tax"></span>
+      </div>
+      <div class="summary-row total">
+        <span class="label">After-tax income</span>
+        <span class="value" id="r-aftertax"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <section class="brackets-section">
+    <h2>Bracket-by-Bracket Breakdown</h2>
+    <div class="sub" id="brackets-sub"></div>
+    <table class="brackets">
+      <thead>
+        <tr>
+          <th>Bracket</th>
+          <th>Range</th>
+          <th class="num">Income in Bracket</th>
+          <th class="num">Tax in Bracket</th>
+        </tr>
+      </thead>
+      <tbody id="brackets-tbody"></tbody>
+    </table>
+  </section>
+
+  <div class="disclaimer">
+    <strong>DISCLAIMER:</strong> This calculator computes federal ordinary income tax only, using the official 2025 IRS brackets and standard deductions (Rev. Proc. 2024-40). It does not include FICA, state or local tax, capital gains, AMT, credits, phase-outs, the QBI deduction, NIIT, the additional Medicare tax, or any other adjustments. Results are simplified and for illustration only. This is not tax advice.
+  </div>
+
+  <div class="footer">
+    BUILT BY FISHER SOVEREIGN SYSTEMS &nbsp;&middot;&nbsp; PRIVATE FEDERAL TAX ENGINE &nbsp;&middot;&nbsp; 2025 TAX YEAR
+  </div>
+
+</main>
+
+<script>
+// ---------- 2025 FEDERAL TAX DATA ----------
+// Source: IRS Rev. Proc. 2024-40 (official 2025 inflation adjustments).
+// Brackets are [lower_bound, marginal_rate]. Each bracket extends until the next lower_bound.
+const BRACKETS_2025 = {
+  single: [
+    [0,        0.10],
+    [11925,    0.12],
+    [48475,    0.22],
+    [103350,   0.24],
+    [197300,   0.32],
+    [250525,   0.35],
+    [626350,   0.37]
+  ],
+  mfj: [
+    [0,        0.10],
+    [23850,    0.12],
+    [96950,    0.22],
+    [206700,   0.24],
+    [394600,   0.32],
+    [501050,   0.35],
+    [751600,   0.37]
+  ],
+  mfs: [
+    [0,        0.10],
+    [11925,    0.12],
+    [48475,    0.22],
+    [103350,   0.24],
+    [197300,   0.32],
+    [250525,   0.35],
+    [375800,   0.37]
+  ],
+  hoh: [
+    [0,        0.10],
+    [17000,    0.12],
+    [64850,    0.22],
+    [103350,   0.24],
+    [197300,   0.32],
+    [250525,   0.35],
+    [626350,   0.37]
+  ]
+};
+
+const STANDARD_DEDUCTION_2025 = {
+  single: 15000,
+  mfj:    30000,
+  mfs:    15000,
+  hoh:    22500
+};
+
+const STATUS_LABEL = {
+  single: 'Single',
+  mfj:    'Married Filing Jointly',
+  mfs:    'Married Filing Separately',
+  hoh:    'Head of Household'
+};
+
+// ---------- FORMATTERS ----------
+const fmtUSD0 = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+const fmtUSD2 = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtPct  = (n) => (n * 100).toFixed(2) + '%';
+
+function bracketRangeText(brackets, i) {
+  const lower = brackets[i][0];
+  const upper = (i + 1 < brackets.length) ? brackets[i + 1][0] : null;
+  if (upper === null) return fmtUSD0.format(lower) + ' and up';
+  return fmtUSD0.format(lower) + ' \u2013 ' + fmtUSD0.format(upper);
+}
+
+// ---------- CORE CALCULATION ----------
+// Returns { tax, perBracket: [{rate, lower, upper, incomeInBracket, taxInBracket}], marginalRate }
+function computeTax(taxableIncome, brackets) {
+  let totalTax = 0;
+  let marginalRate = brackets[0][1];
+  const perBracket = [];
+
+  for (let i = 0; i < brackets.length; i++) {
+    const lower = brackets[i][0];
+    const rate  = brackets[i][1];
+    const upper = (i + 1 < brackets.length) ? brackets[i + 1][0] : Infinity;
+
+    let incomeInBracket = 0;
+    let taxInBracket = 0;
+
+    if (taxableIncome > lower) {
+      incomeInBracket = Math.min(taxableIncome, upper) - lower;
+      taxInBracket = incomeInBracket * rate;
+      totalTax += taxInBracket;
+      marginalRate = rate;
+    }
+
+    perBracket.push({
+      rate: rate,
+      lower: lower,
+      upper: upper,
+      incomeInBracket: incomeInBracket,
+      taxInBracket: taxInBracket
+    });
+  }
+
+  return { tax: totalTax, perBracket: perBracket, marginalRate: marginalRate };
+}
+
+// ---------- DOM HELPERS ----------
+function setText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
+function makeCell(text, className) {
+  const td = document.createElement('td');
+  td.textContent = text;
+  if (className) td.className = className;
+  return td;
+}
+
+// ---------- RENDER ----------
+function render() {
+  const status = document.getElementById('filing-status').value;
+  const grossInput = parseFloat(document.getElementById('gross-income').value);
+  const itemizedInput = parseFloat(document.getElementById('itemized').value);
+
+  const gross = (isFinite(grossInput) && grossInput > 0) ? grossInput : 0;
+  const itemized = (isFinite(itemizedInput) && itemizedInput > 0) ? itemizedInput : 0;
+
+  const stdDed = STANDARD_DEDUCTION_2025[status];
+  const deductionUsed = Math.max(stdDed, itemized);
+  const usingItemized = itemized > stdDed;
+
+  // For this simplified calculator, AGI === gross income (no above-the-line adjustments).
+  const agi = gross;
+  const taxable = Math.max(0, agi - deductionUsed);
+
+  const brackets = BRACKETS_2025[status];
+  const result = computeTax(taxable, brackets);
+
+  const tax = result.tax;
+  const afterTax = agi - tax;
+  const effective = agi > 0 ? (tax / agi) : 0;
+
+  // Top result cards
+  setText('r-agi', fmtUSD0.format(agi));
+  setText('r-deduction', fmtUSD0.format(deductionUsed) + (usingItemized ? '  (itemized)' : '  (standard)'));
+  setText('r-taxable', fmtUSD0.format(taxable));
+  setText('r-marginal', (result.marginalRate * 100).toFixed(0) + '%');
+
+  // Summary rows
+  setText('r-effective', fmtPct(effective));
+  setText('r-tax', fmtUSD2.format(tax));
+  setText('r-aftertax', fmtUSD0.format(afterTax));
+
+  // Bracket table subtitle
+  setText(
+    'brackets-sub',
+    'Filing as ' + STATUS_LABEL[status] + ' \u00b7 2025 tax year \u00b7 highlighted rows show income that fell into each bracket.'
+  );
+
+  // Bracket table body
+  const tbody = document.getElementById('brackets-tbody');
+  while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
+
+  result.perBracket.forEach((b, i) => {
+    const tr = document.createElement('tr');
+
+    if (b.incomeInBracket > 0) {
+      // Active bracket if this is where the marginal income lives
+      const isMarginal = (taxable > b.lower) && (taxable <= b.upper || b.upper === Infinity) &&
+                         (i === result.perBracket.length - 1 || taxable <= result.perBracket[i + 1].lower);
+      tr.className = isMarginal ? 'active' : '';
+    } else {
+      tr.className = 'unused';
+    }
+
+    tr.appendChild(makeCell((b.rate * 100).toFixed(0) + '%'));
+    tr.appendChild(makeCell(bracketRangeText(brackets, i)));
+    tr.appendChild(makeCell(b.incomeInBracket > 0 ? fmtUSD0.format(b.incomeInBracket) : '\u2014', 'num'));
+    tr.appendChild(makeCell(b.taxInBracket > 0 ? fmtUSD2.format(b.taxInBracket) : '\u2014', 'num'));
+
+    tbody.appendChild(tr);
+  });
+}
+
+// ---------- WIRE UP ----------
+document.getElementById('filing-status').addEventListener('change', render);
+document.getElementById('gross-income').addEventListener('input', render);
+document.getElementById('itemized').addEventListener('input', render);
+
+// Initial render
+render();
+</script>
+
+<!-- ── Customer Value Sections ── -->
+<div style="max-width:720px;margin:48px auto 0;padding:0 28px;">
+  <div style="margin-bottom:24px;background:var(--bg2);border:1px solid var(--border-dim);border-radius:8px;padding:20px;">
+    <div style="font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;">Private System Framing</div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.75;">This calculator is the visible front edge of a more complete private tax workflow for people who want sensitive financial computation, document handling, and filing logic inside their own environment. The value is not just the math. The value is keeping the math, the documents, and the process under your control.</div>
+  </div>
+  <div style="text-align:center;margin-bottom:40px;">
+    <a href="../home.html#sec-contact" style="display:inline-block;font-size:11px;letter-spacing:.14em;padding:12px 28px;border:1px solid var(--gold);color:var(--gold);text-decoration:none;border-radius:3px;transition:all .2s;text-transform:uppercase;">Discuss Your Requirements</a>
+  </div>
+</div>
+
+<!-- FSS-BRAND-FOOTER-V3 (FF25 wordmark, no H icon) -->
+<footer class="fssb-v3-foot">
+  <h2 class="fssb-v3-foot-name">Fisher</h2>
+  <span class="fssb-v3-foot-rule"></span>
+  <div class="fssb-v3-foot-sub">Sovereign Systems</div>
+  <div class="fssb-v3-foot-motto">Building the Architecture for Independence</div>
+  <p style="font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:0.98rem;color:rgba(220,217,211,0.72);max-width:520px;margin:28px auto 0;line-height:1.6;">Built by <a href="../home.html" style="color:rgba(220,217,211,0.72);text-decoration:none;">Fisher Sovereign Systems</a> &middot; <a href="../home.html#sec-contact" style="color:var(--gold);text-decoration:none;">Request a Custom Build</a></p>
+  <a href="../home.html" class="fssb-v3-foot-back">&larr; Visit lancewfisher.com</a>
+  <div style="margin-top:32px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.05);font-size:0.66rem;color:#6b6b75;letter-spacing:0.06em;">&copy; 2026 Fisher Sovereign Systems, LLC. All rights reserved.</div>
+</footer>
+
+</body>
+</html>

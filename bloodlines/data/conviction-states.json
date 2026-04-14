@@ -1,0 +1,27 @@
+[
+  {
+    "id": "apex_moral",
+    "label": "Apex Moral",
+    "minScore": 75
+  },
+  {
+    "id": "moral",
+    "label": "Moral",
+    "minScore": 25
+  },
+  {
+    "id": "neutral",
+    "label": "Neutral",
+    "minScore": -24
+  },
+  {
+    "id": "cruel",
+    "label": "Cruel",
+    "minScore": -74
+  },
+  {
+    "id": "apex_cruel",
+    "label": "Apex Cruel",
+    "minScore": -999
+  }
+]

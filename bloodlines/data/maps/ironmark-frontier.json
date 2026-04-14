@@ -1,0 +1,205 @@
+{
+  "id": "ironmark_frontier",
+  "name": "Ironmark Frontier",
+  "tileSize": 32,
+  "width": 72,
+  "height": 48,
+  "cameraStart": { "x": 0, "y": 0 },
+  "terrainPatches": [
+    { "type": "forest", "x": 3, "y": 4, "w": 10, "h": 10 },
+    { "type": "forest", "x": 55, "y": 31, "w": 10, "h": 10 },
+    { "type": "highland", "x": 20, "y": 8, "w": 10, "h": 6 },
+    { "type": "highland", "x": 42, "y": 26, "w": 10, "h": 8 },
+    { "type": "river", "x": 31, "y": 0, "w": 4, "h": 48 }
+  ],
+  "resourceNodes": [
+    { "id": "player-gold-1", "type": "gold", "x": 15.5, "y": 12.5, "amount": 3000 },
+    { "id": "player-wood-1", "type": "wood", "x": 9.5, "y": 16.5, "amount": 2600 },
+    { "id": "enemy-gold-1", "type": "gold", "x": 56.5, "y": 34.5, "amount": 3000 },
+    { "id": "enemy-wood-1", "type": "wood", "x": 60.5, "y": 29.5, "amount": 2600 },
+    { "id": "center-gold-1", "type": "gold", "x": 35.5, "y": 22.5, "amount": 4500 },
+    { "id": "center-wood-1", "type": "wood", "x": 27.5, "y": 22.5, "amount": 3200 },
+    { "id": "center-wood-2", "type": "wood", "x": 43.5, "y": 22.5, "amount": 3200 }
+  ],
+  "controlPoints": [
+    {
+      "id": "oakwatch_march",
+      "name": "Oakwatch March",
+      "x": 26.5,
+      "y": 19.5,
+      "radiusTiles": 3.1,
+      "captureTime": 9,
+      "resourceTrickle": {
+        "gold": 0.18,
+        "influence": 0.08
+      }
+    },
+    {
+      "id": "rivergate_ford",
+      "name": "Rivergate Ford",
+      "x": 35.5,
+      "y": 22.5,
+      "radiusTiles": 3.3,
+      "captureTime": 11,
+      "resourceTrickle": {
+        "gold": 0.22,
+        "influence": 0.12
+      }
+    },
+    {
+      "id": "stonefield_watch",
+      "name": "Stonefield Watch",
+      "x": 45.5,
+      "y": 27.5,
+      "radiusTiles": 3.1,
+      "captureTime": 9,
+      "resourceTrickle": {
+        "wood": 0.2,
+        "influence": 0.08
+      }
+    }
+  ],
+  "sacredSites": [
+    {
+      "id": "first_flame_ruin",
+      "name": "Ruin Of The First Flame",
+      "faithId": "old_light",
+      "x": 18.5,
+      "y": 8.5,
+      "radiusTiles": 2.2,
+      "exposureRate": 16
+    },
+    {
+      "id": "red_covenant_stone",
+      "name": "Red Covenant Stone",
+      "faithId": "blood_dominion",
+      "x": 41.5,
+      "y": 17.5,
+      "radiusTiles": 2.1,
+      "exposureRate": 16
+    },
+    {
+      "id": "pillar_of_mandate",
+      "name": "Pillar Of Sacred Mandate",
+      "faithId": "the_order",
+      "x": 50.5,
+      "y": 14.5,
+      "radiusTiles": 2.2,
+      "exposureRate": 16
+    },
+    {
+      "id": "elder_root_grove",
+      "name": "Elder Root Grove",
+      "faithId": "the_wild",
+      "x": 27.5,
+      "y": 30.5,
+      "radiusTiles": 2.4,
+      "exposureRate": 16
+    }
+  ],
+  "factions": [
+    {
+      "id": "player",
+      "houseId": "ironmark",
+      "kind": "kingdom",
+      "hostileTo": ["enemy", "tribes"],
+      "startingResources": {
+        "gold": 260,
+        "wood": 220,
+        "food": 16,
+        "water": 16,
+        "stone": 0,
+        "iron": 0,
+        "influence": 0
+      },
+      "population": {
+        "total": 12,
+        "cap": 18,
+        "reserved": 0
+      },
+      "buildings": [
+        { "id": "player-hall", "typeId": "command_hall", "x": 8, "y": 8, "completed": true },
+        { "id": "player-house-1", "typeId": "dwelling", "x": 12, "y": 8, "completed": true },
+        { "id": "player-farm-1", "typeId": "farm", "x": 6, "y": 12, "completed": true },
+        { "id": "player-well-1", "typeId": "well", "x": 11, "y": 12, "completed": true }
+      ],
+      "units": [
+        { "id": "player-worker-1", "typeId": "villager", "x": 10.2, "y": 12.8 },
+        { "id": "player-worker-2", "typeId": "villager", "x": 11.1, "y": 13.2 },
+        { "id": "player-worker-3", "typeId": "villager", "x": 9.4, "y": 13.5 },
+        { "id": "player-worker-4", "typeId": "villager", "x": 8.7, "y": 12.2 },
+        { "id": "player-militia-1", "typeId": "militia", "x": 13.6, "y": 10.8 },
+        { "id": "player-militia-2", "typeId": "militia", "x": 14.6, "y": 11.4 }
+      ]
+    },
+    {
+      "id": "enemy",
+      "houseId": "stonehelm",
+      "kind": "kingdom",
+      "hostileTo": ["player", "tribes"],
+      "aiProfile": "enemy-kingdom",
+      "startingResources": {
+        "gold": 220,
+        "wood": 210,
+        "food": 14,
+        "water": 14,
+        "stone": 0,
+        "iron": 0,
+        "influence": 0
+      },
+      "population": {
+        "total": 12,
+        "cap": 18,
+        "reserved": 0
+      },
+      "buildings": [
+        { "id": "enemy-hall", "typeId": "command_hall", "x": 57, "y": 33, "completed": true },
+        { "id": "enemy-house-1", "typeId": "dwelling", "x": 53, "y": 33, "completed": true },
+        { "id": "enemy-farm-1", "typeId": "farm", "x": 60, "y": 37, "completed": true },
+        { "id": "enemy-well-1", "typeId": "well", "x": 55, "y": 37, "completed": true }
+      ],
+      "units": [
+        { "id": "enemy-worker-1", "typeId": "villager", "x": 57.8, "y": 37.2 },
+        { "id": "enemy-worker-2", "typeId": "villager", "x": 58.7, "y": 36.8 },
+        { "id": "enemy-worker-3", "typeId": "villager", "x": 56.9, "y": 36.3 },
+        { "id": "enemy-worker-4", "typeId": "villager", "x": 55.8, "y": 36.7 },
+        { "id": "enemy-militia-1", "typeId": "militia", "x": 54.8, "y": 35.2 },
+        { "id": "enemy-militia-2", "typeId": "militia", "x": 53.9, "y": 35.7 }
+      ]
+    },
+    {
+      "id": "tribes",
+      "displayName": "Frontier Tribes",
+      "kind": "tribe",
+      "hostileTo": ["player", "enemy"],
+      "aiProfile": "neutral-tribes",
+      "presentation": {
+        "primaryColor": "#314b2f",
+        "accentColor": "#d3bb79"
+      },
+      "startingResources": {
+        "gold": 0,
+        "wood": 0,
+        "food": 0,
+        "water": 0,
+        "stone": 0,
+        "iron": 0,
+        "influence": 0
+      },
+      "population": {
+        "total": 4,
+        "cap": 6,
+        "reserved": 0
+      },
+      "buildings": [
+        { "id": "tribes-camp-1", "typeId": "tribal_camp", "x": 24, "y": 23, "completed": true }
+      ],
+      "units": [
+        { "id": "tribes-raider-1", "typeId": "tribal_raider", "x": 25.2, "y": 25.2 },
+        { "id": "tribes-raider-2", "typeId": "tribal_raider", "x": 26.1, "y": 24.1 },
+        { "id": "tribes-raider-3", "typeId": "tribal_raider", "x": 23.8, "y": 26.0 },
+        { "id": "tribes-raider-4", "typeId": "tribal_raider", "x": 24.6, "y": 23.7 }
+      ]
+    }
+  ]
+}

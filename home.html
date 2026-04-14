@@ -37,7 +37,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="ftda/ftda.css?v=20260321">
-<link rel="stylesheet" href="styles.css?v=20260410v33">
+<link rel="stylesheet" href="styles.css?v=20260412v13">
 <!-- Prevent FOUC: apply saved theme before paint -->
 <script>
 (function(){
@@ -78,11 +78,10 @@
   <img class="glitch-layer glitch-c glitch-dark" src="img/statue-ghost-right.png" alt="" role="presentation">
 </div>
 
-<!-- Glitch statue right (dark: ghost-left faces inward; light: hidden) -->
+<!-- Glitch statue right (dark: portrait, brightened; light: hidden) -->
 <div class="glitch-statue-right" aria-hidden="true">
-  <!-- ghost-left, faces point LEFT, inward toward center; no scaleX flip needed -->
   <img class="glitch-layer glitch-a" src="img/statue-ghost-left.png" alt="" role="presentation">
-  <img class="glitch-layer glitch-b" src="img/statue.webp" alt="" role="presentation">
+  <img class="glitch-layer glitch-b" src="img/statue-ghost-left.png" alt="" role="presentation">
   <img class="glitch-layer glitch-c" src="img/statue-ghost-left.png" alt="" role="presentation">
 </div>
 
@@ -253,15 +252,88 @@
   </section>
 
   <div class="spacer-lg"></div>
+
+  <!-- Device Experience Showcase -->
+  <section class="section ecosystem-stage" id="sec-showcase" data-reveal style="max-width:1100px;">
+    <div class="section-label">The Ecosystem</div>
+    <div class="section-title" style="margin-bottom:12px;">One sovereign system.<br>Every surface you need.</div>
+    <p class="projects-intro" style="margin-bottom:32px;">Three product surfaces, one operating estate. Branded business apps, private AI, and encrypted communications all live inside the same controlled world.</p>
+
+    <!-- Ecosystem composition: center laptop is the command hub, flanking devices are client surfaces -->
+    <div class="device-cluster" style="position:relative;">
+      <!-- Left: Home Hub (phone) -->
+      <div>
+        <div style="text-align:center;margin-bottom:6px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:1.5px;color:rgba(110,231,160,0.5);text-transform:uppercase;">Home Layer</span>
+        </div>
+        <div class="device-phone">
+          <div class="device-screen">
+            <img src="thumbs/screen-homehub.jpg" alt="Home Hub network dashboard" loading="lazy">
+          </div>
+        </div>
+        <div class="device-label">Network Control</div>
+        <div style="text-align:center;margin-top:4px;font-size:7px;color:rgba(var(--fg),0.25);">Home Hub &middot; <a href="home-hub/" style="color:rgba(var(--fg),0.35);text-decoration:none;">View Dashboard</a></div>
+      </div>
+
+      <!-- Center: PIP (laptop) - the AI workstation -->
+      <div>
+        <div style="text-align:center;margin-bottom:6px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:1.5px;color:rgba(74,144,226,0.6);text-transform:uppercase;">AI Layer</span>
+        </div>
+        <div class="device-laptop">
+          <div class="device-laptop-screen">
+            <div class="device-screen">
+              <img src="thumbs/screen-pip.jpg" alt="Private Intelligence Platform architecture" loading="lazy">
+            </div>
+          </div>
+          <div class="device-laptop-base"></div>
+        </div>
+        <div class="device-label">AI Workstation</div>
+        <div style="text-align:center;margin-top:4px;font-size:7px;color:rgba(var(--fg),0.25);">Private Intelligence Platform &middot; <a href="pip/" style="color:rgba(var(--fg),0.35);text-decoration:none;">Explore AI Platform</a></div>
+      </div>
+
+      <!-- Right: Sovereign Signal (phone) -->
+      <div>
+        <div style="text-align:center;margin-bottom:6px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:1.5px;color:rgba(74,144,226,0.6);text-transform:uppercase;">Secure Layer</span>
+        </div>
+        <div class="device-phone">
+          <div class="device-screen">
+            <img src="thumbs/screen-signal.jpg" alt="Sovereign Signal encrypted messenger" loading="lazy">
+          </div>
+        </div>
+        <div class="device-label">Encrypted Comms</div>
+        <div style="text-align:center;margin-top:4px;font-size:7px;color:rgba(var(--fg),0.25);">Sovereign Signal &middot; <a href="sovereign-signal/" style="color:rgba(var(--fg),0.35);text-decoration:none;">Try Messenger</a></div>
+      </div>
+    </div>
+
+    <div class="eco-connector" style="margin-top:24px;">
+      <a class="eco-pill" href="home-hub/" style="text-decoration:none;">
+        <span class="eco-pill-dot" style="background:rgba(110,231,160,0.75);"></span>
+        <span class="eco-pill-text">Home Hub</span>
+      </a>
+      <a class="eco-pill" href="pip/" style="text-decoration:none;">
+        <span class="eco-pill-dot" style="background:rgba(74,144,226,0.75);"></span>
+        <span class="eco-pill-text">Private Intelligence</span>
+      </a>
+      <a class="eco-pill" href="sovereign-signal/" style="text-decoration:none;">
+        <span class="eco-pill-dot" style="background:rgba(74,144,226,0.75);"></span>
+        <span class="eco-pill-text">Sovereign Signal</span>
+      </a>
+    </div>
+    <div class="ecosystem-note">The point is not three separate demos. It is one controlled estate that can be branded, operated, and delivered as your own.</div>
+  </section>
+
+  <div class="spacer-lg"></div>
   <div class="thin-line" style="height:100px;"></div>
   <div class="spacer-lg"></div>
 
   <!-- Projects -the main showcase -->
   <section class="section" id="sec-projects" data-reveal style="max-width:1100px;">
     <div class="section-label">Projects</div>
-    <div class="section-title">Systems &amp; Leadership</div>
+    <div class="section-title">Flagship Systems</div>
 
-    <p class="projects-intro">Every system here exists because a real problem demanded a real solution. Not portfolio pieces. Not tutorials. Working infrastructure for trading, privacy, communication, entertainment, and daily operations. Each one designed to run indefinitely and owned end-to-end.</p>
+    <p class="projects-intro">A curated estate of real systems built for privacy, operations, business, and family life. Each one solves a real problem, runs as a working surface, and reflects the same standard: ownership, durability, and control.</p>
 
     <div class="project-filters">
       <button class="pf-btn active" data-filter="all">All</button>
@@ -321,8 +393,8 @@
         <div class="project-info">
           <div class="p-number">01</div>
           <div class="p-title">Fisher Sovereign Hub</div>
-          <div class="p-benefit">The nerve center of Fisher Sovereign. Every project, its status, and a direct launch button in one searchable grid. Filter by category, drill into architecture details, check build status. No hunting through folders or browser tabs. One page, full situational awareness.</div>
-          <div class="p-desc">Single pane of glass for every project in the portfolio. Live git status, sync tracking, manifest-driven indexing, and automatic GitHub sync every five minutes. The operational backbone that keeps 25+ projects organized and current.</div>
+          <div class="p-benefit">A curated atlas of the Fisher Sovereign estate. Open one page, understand the product families, and move directly into the systems that matter.</div>
+          <div class="p-desc">Product atlas with guided paths, searchable entries, and slide-in details that make the ecosystem legible without feeling like an internal dashboard.</div>
           <div class="p-tech">Python / PowerShell / Git / JSON Manifest</div>
           <div class="p-status active">Active</div>
           <span class="p-state p-state-interactive">Interactive Preview</span>
@@ -368,8 +440,8 @@
         <div class="project-info">
           <div class="p-number">23</div>
           <div class="p-title">Sovereign Command Center</div>
-          <div class="p-benefit">One page that shows the full scope of what Fisher Sovereign has built: five product families, their health, their architecture, and how they connect. If you only visit one page on this site, make it this one.</div>
-          <div class="p-desc">Unified sovereignty dashboard. Five product families, posture meters, architecture diagram, live event feed. Six tabbed panels covering AI Command, Identity and Trust, Home Control, Communications, and Governance. Cross-links to every existing product page in the ecosystem.</div>
+          <div class="p-benefit">The operating surface that makes the whole estate legible. AI posture, identity, network control, communications, and governance sit in one command view.</div>
+          <div class="p-desc">Unified command surface with visual posture, product-family panels, and direct paths into the flagship systems behind the estate.</div>
           <div class="p-tech">HTML / CSS / JavaScript / IntersectionObserver / DOM-Safe Rendering</div>
           <div class="p-status active">Active</div>
           <span class="p-state p-state-interactive">Interactive Preview</span>
@@ -421,8 +493,8 @@
         <div class="project-info">
           <div class="p-number">02</div>
           <div class="p-title">FS App Studio</div>
-          <div class="p-benefit">Fully custom mobile applications for local businesses, built from scratch with no third-party platform dependencies. Today, most small businesses rent their customer relationship from Booksy, Vagaro, Yelp, or Square. Those platforms own the data, control the experience, and charge ongoing fees for access to your own clients. FS App Studio builds the alternative: a branded app with your name, your colors, on your clients' home screens. Online booking, wallets, loyalty, and push notifications, all running on infrastructure you control with zero data retention by third parties.</div>
-          <div class="p-desc">Fully integrated, personalized, and independent end-to-end mobile applications for businesses. No third-party platform intervention, optional managed upkeep, and zero data retention by external services. 10 fully interactive live demos built for real businesses across 6 verticals: med spas, salons, fitness studios, pet groomers, chiropractors, and more. Online booking, wallets, loyalty, push notifications, and branded mobile apps that the business owns completely.</div>
+          <div class="p-benefit">Custom mobile apps for service businesses that want their own customer relationship back. Booking, wallets, loyalty, and push live inside a brand the business actually owns.</div>
+          <div class="p-desc">Business app studio with live demos across multiple verticals, polished client surfaces, and the operator tooling behind them.</div>
           <div class="p-tech">HTML / CSS / JavaScript / React Native / NestJS / Stripe</div>
           <div class="p-status active">Active</div>
           <span class="p-state p-state-interactive">Interactive Preview</span>
@@ -468,8 +540,8 @@
         <div class="project-info">
           <div class="p-number">03</div>
           <div class="p-title">Medical Spa Booking Platform</div>
-          <div class="p-benefit">A complete booking, payment, and client management platform built specifically for Serenity Medspa Demo and Wellness. Instead of paying Vagaro or Booksy $50-200/month for a generic interface that looks the same as every other spa, this is a fully branded mobile experience with Harmony's real services, staff, and pricing. Clients book directly, manage their wallet, and receive push notifications, all without a third-party marketplace sitting between the business and its customers.</div>
-          <div class="p-desc">Full-stack mobile booking app built for a medical spa practice. Client-facing app with provider scheduling, Stripe payments, and admin analytics. Live demo running.</div>
+          <div class="p-benefit">A live medspa deployment with real services, staff, wallet flows, and the operator side behind the client app. This is not a mockup for a pitch deck.</div>
+          <div class="p-desc">Branded booking platform for a medical spa practice, with client experience, payment flows, and admin tooling already mapped into one system.</div>
           <div class="p-tech">React Native / Expo / NestJS / PostgreSQL / Stripe</div>
           <div class="p-status active">In Development</div>
           <span class="p-state p-state-interactive">Interactive Preview</span>
@@ -521,8 +593,8 @@
         <div class="project-info">
           <div class="p-number">08</div>
           <div class="p-title">Jump Quest!</div>
-          <div class="p-benefit">A 3D platformer playable instantly in any browser, built for a real child and designed by a parent who was tired of handing his son a screen full of ads and microtransactions. No download, no account creation, no in-app purchases, no data collection. Three levels, keyboard and gamepad support, a skill tree, and cosmetics, all running on Three.js with localStorage persistence. What games used to be before every children's app became a monetization funnel.</div>
-          <div class="p-desc">Fully realized 3D platformer built for his son. Xbox controller support, XP leveling, skill trees, cosmetics shop, and a procedural Level Draft Wizard. Designed for children ages 4&ndash;10.</div>
+          <div class="p-benefit">A playable browser platformer built for a real child, free of ads, accounts, and monetization traps. Pure play, saved locally.</div>
+          <div class="p-desc">Family-built 3D platformer with controller support, progression, cosmetics, and a live browser experience that starts immediately.</div>
           <div class="p-tech">Unity / C# / Three.js / Xbox Controller</div>
           <div class="p-status shipped">Playable</div>
           <span class="p-state p-state-public-alpha">Public Alpha</span>
@@ -723,8 +795,8 @@
         <div class="project-info">
           <div class="p-number">10</div>
           <div class="p-title">Fisher One-Three</div>
-          <div class="p-benefit">A nautical-inspired apparel brand built from scratch, not licensed from a print-on-demand template. Original design language, original brand identity, original supply chain. In a market where most independent clothing brands are just someone else's blank with a logo on it, One-Three is designed, sourced, and positioned independently. The name encodes a ratio: one part land, three parts sea. The clothing says what you believe before you open your mouth.</div>
-          <div class="p-desc">Nautical-themed apparel and lifestyle brand. 24 original limited-run designs celebrating the spirit of coastal living and maritime adventure. One part land, three parts sea. Full brand website with integrated storefront.</div>
+          <div class="p-benefit">An original apparel brand with its own atmosphere, storefront, and supply chain. Not a template label with borrowed visuals.</div>
+          <div class="p-desc">Nautical lifestyle brand with original designs, limited runs, and a full brand world built to sit beside the rest of the estate.</div>
           <div class="p-tech">Brand Design / Apparel / E-Commerce / HTML / CSS / JavaScript</div>
           <div class="p-status active">Active</div>
           <span class="p-state p-state-public-alpha">Live Brand</span>
@@ -783,8 +855,8 @@
         <div class="project-info">
           <div class="p-number">11</div>
           <div class="p-title">Sovereign Signal</div>
-          <div class="p-benefit">An end-to-end encrypted messaging platform where the server never sees plaintext. Today, most messaging apps claim encryption but retain metadata, store keys server-side, or comply with government data requests. Signal (the app) is the closest alternative, but it still requires a phone number and runs on centralized infrastructure. Sovereign Signal implements the same cryptographic primitives (X3DH key exchange, Double Ratchet protocol) on self-hosted infrastructure with passkey authentication and zero-knowledge relay. Messages are plaintext only on sender and receiver devices. The relay sees encrypted blobs and nothing else.</div>
-          <div class="p-desc">E2EE peer-to-peer messaging platform with Signal-grade cryptography. X3DH key exchange, Double Ratchet forward secrecy, and passwordless WebAuthn vault.</div>
+          <div class="p-benefit">Private messaging with self-hosted relay control, passkey login, and Signal-grade encryption. Messages stay with the people talking.</div>
+          <div class="p-desc">Encrypted communications platform built around passkeys, forward secrecy, and a relay that never becomes the owner of the conversation.</div>
           <div class="p-tech">TypeScript / Next.js / libsodium / WebAuthn / Vitest</div>
           <div class="p-status active">In Development</div>
           <span class="p-state p-state-interactive">Interactive Preview</span>
@@ -836,8 +908,8 @@
         <div class="project-info">
           <div class="p-number">12</div>
           <div class="p-title">Home Hub</div>
-          <div class="p-benefit">A local network security and home automation dashboard that discovers every device on your network, scores its trust, monitors camera feeds, and alerts on anomalies. Most people have no idea what devices are connected to their home network, what data those devices are sending, or where it goes. Your router's admin panel shows MAC addresses and IP numbers. Home Hub shows you a real-time D3 topology map with 13-factor trust scoring, traffic analysis, and camera feeds, all processed locally. No cloud service sees your network layout. No subscription required. You own the monitoring infrastructure.</div>
-          <div class="p-desc">Local-first home automation and network security dashboard with device discovery, camera feeds, network traffic monitoring, and real-time alerts. Full-stack with force-directed network visualization and WebSocket streaming.</div>
+          <div class="p-benefit">A private network and camera dashboard that shows what is on your home or office network, what changed, and what deserves attention.</div>
+          <div class="p-desc">Local-first monitoring surface for device discovery, camera health, traffic patterns, and alerting without turning your house into someone else's cloud product.</div>
           <div class="p-tech">TypeScript / React 19 / Fastify / SQLite / WebSocket</div>
           <div class="p-status active">Active</div>
           <span class="p-state p-state-interactive">Interactive Preview</span>
@@ -884,8 +956,8 @@
         <div class="project-info">
           <div class="p-number">13</div>
           <div class="p-title">Private Intelligence Platform</div>
-          <div class="p-benefit">A full desktop AI workstation running entirely on local hardware. Today, using AI means sending your data to OpenAI, Google, or Anthropic's servers, paying per token, accepting their terms, and trusting they do not train on your inputs. PIP eliminates that dependency. Multiple models (Qwen, Llama, Claude) running on a local RTX 4070 through Ollama, accessed via a native Electron app with chat UI, code assistant, model management, and service health monitoring. Every prompt stays on your machine. No API billing, no usage caps, no data leaving the network. What ChatGPT would be if you owned it.</div>
-          <div class="p-desc">Fully local AI workstation built as a full Electron desktop app. Chat UI, code assistant, model management, service health dashboard, and remote phone access. Every model runs on your hardware. No data leaves the machine.</div>
+          <div class="p-benefit">A private AI workstation with local models, visible routing, and operator-controlled boundaries. It feels like AI brought in-house.</div>
+          <div class="p-desc">Owner-operated AI surface for local models, selective cloud use, device access, and visible model routing without surrendering the workflow to SaaS.</div>
           <div class="p-tech">TypeScript / Electron / Ollama / React / RTX 4070</div>
           <div class="p-status active">Active</div>
           <span class="p-state p-state-interactive">Interactive Preview</span>
@@ -1234,8 +1306,8 @@
         <div class="project-info">
           <div class="p-number">19</div>
           <div class="p-title">X Bookmark Bot</div>
-          <div class="p-benefit">Automated X/Twitter bookmark ingestion that converts saved posts into categorized, actionable project entries. Runs on a schedule, deduplicates against prior imports, and feeds directly into the project tracking system. The bridge between "I should look into this" and actually doing it.</div>
-          <div class="p-desc">Local-first automation tool that transforms saved X/Twitter bookmarks into actionable improvements for existing projects. Intelligent codebase scanning, idea extraction, and approval-gated implementation with zero external dependencies.</div>
+          <div class="p-benefit">Saved research becomes a ranked build queue instead of a graveyard of open tabs. Good ideas get matched, prioritized, and moved toward real work.</div>
+          <div class="p-desc">Research-capture automation that turns bookmarked references into scored, project-aware proposals under approval gates.</div>
           <div class="p-tech">Python / Zero Dependencies / File-Based Agents / CLI</div>
           <div class="p-status active">Active</div>
           <span class="p-state p-state-architecture">Architecture View</span>
@@ -1281,8 +1353,8 @@
         <div class="project-info">
           <div class="p-number">20</div>
           <div class="p-title">Private Tax &amp; Finance Platform</div>
-          <div class="p-benefit">Self-hosted tax preparation and financial document processing pipeline. Ingests PDFs, extracts structured data against IRS schemas, maintains a private ledger, and generates filing-ready outputs. Your financial data never touches a third-party cloud. Replaces the spreadsheet-and-TurboTax workflow with something you actually control.</div>
-          <div class="p-desc">Automated tax preparation pipeline for multi-entity filers with trading income, business revenue, and complex 1099 situations. Ingests brokerage statements, W-2s, and K-1s programmatically. Tax prep treated as a data transformation problem, not a wizard workflow.</div>
+          <div class="p-benefit">A private finance platform for tax calculation, document intake, and filing logic that stays on machines you control.</div>
+          <div class="p-desc">Private tax and finance tooling for complex filers who want the computation and the data pipeline without handing everything to a consumer SaaS workflow.</div>
           <div class="p-tech">Python / TypeScript / PDF Processing / IRS Schemas / Automation</div>
           <div class="p-status active">Active</div>
           <span class="p-state p-state-protected">Protected System</span>
@@ -1372,15 +1444,11 @@
         </div>
       </div>
 
+      <button class="portfolio-expand-btn" id="tradingExpandBtn" onclick="toggleTradingArchitecture()">
+        Click Here to Expand on Trading Architecture <span class="expand-arrow">&#9660;</span>
+      </button>
 
-      </div><!-- /portfolio-remaining -->
-    </div>
-  </section>
-
-  <div class="spacer-lg"></div>
-  <div class="thin-line" style="height:100px;"></div>
-  <div class="spacer-lg"></div>
-
+      <div class="portfolio-remaining trading-architecture" id="tradingArchitecture">
   <!-- Trading Ecosystem (architecture diagram + project cards in one flow) -->
   <section class="section" id="sec-trading" data-reveal style="max-width:1100px;">
     <div class="section-label">Trading</div>
@@ -1758,9 +1826,14 @@
     </div>
   </section>
 
-  <div class="spacer-lg"></div>
-  <div class="thin-line" style="height:100px;"></div>
-  <div class="spacer-lg"></div>
+  <div class="spacer-lg" style="height:120px;"></div>
+  <div class="thin-line" style="height:56px;"></div>
+  <div class="spacer-lg" style="height:80px;"></div>
+      </div><!-- /trading-architecture -->
+
+      </div><!-- /portfolio-remaining -->
+    </div>
+  </section>
 
   <!-- Ventures -->
   <section class="section" id="sec-ventures" data-reveal style="max-width:1000px;">
@@ -1984,6 +2057,47 @@
   <div class="thin-line" style="height:100px;"></div>
   <div class="spacer-lg"></div>
 
+  <div class="spacer-lg commission-spacer"></div>
+  <div class="thin-line commission-spacer" style="height:140px;"></div>
+  <div class="spacer-lg commission-spacer"></div>
+
+  <!-- Commission / Build With Fisher Sovereign -->
+  <section class="section" id="sec-commission" data-reveal style="max-width:1000px;">
+    <div class="section-label">Custom Builds</div>
+    <div class="section-title">What Fisher Sovereign<br>builds for you</div>
+    <div class="body-text" style="margin-bottom:36px; max-width:720px;">
+      Every system on this page exists because a real problem needed a better answer. Fisher Sovereign builds private business software, AI infrastructure, and operational tooling around your environment, your standards, and your ownership boundary.
+    </div>
+
+    <div class="commission-grid" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:18px; margin-bottom:48px;">
+      <div style="background:var(--warm-white-breath); border:1px solid var(--warm-white-ghost); border-radius:8px; padding:24px 20px;">
+        <div style="font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:500; color:rgba(var(--fg),0.9); margin-bottom:10px; letter-spacing:2px;">Business Applications</div>
+        <div style="font-size:12px; color:rgba(var(--fg),0.55); line-height:1.7;">Branded mobile apps for service businesses. Booking, payments, loyalty, push notifications. Your app on your clients' home screens, running on infrastructure you control.</div>
+        <div style="margin-top:14px; font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(var(--fg),0.35); letter-spacing:1px;">FS APP STUDIO &middot; HARMONY</div>
+      </div>
+      <div style="background:var(--warm-white-breath); border:1px solid var(--warm-white-ghost); border-radius:8px; padding:24px 20px;">
+        <div style="font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:500; color:rgba(var(--fg),0.9); margin-bottom:10px; letter-spacing:2px;">Private AI Infrastructure</div>
+        <div style="font-size:12px; color:rgba(var(--fg),0.55); line-height:1.7;">Local AI workstations, governed inference layers, and autonomous maintenance systems. Run models on your hardware. Every prompt stays on your network. No API billing.</div>
+        <div style="margin-top:14px; font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(var(--fg),0.35); letter-spacing:1px;">PIP &middot; LLM ENCLAVE &middot; AUTON</div>
+      </div>
+      <div style="background:var(--warm-white-breath); border:1px solid var(--warm-white-ghost); border-radius:8px; padding:24px 20px;">
+        <div style="font-family:'Cormorant Garamond',serif; font-size:15px; font-weight:500; color:rgba(var(--fg),0.9); margin-bottom:10px; letter-spacing:2px;">Sovereign Operations</div>
+        <div style="font-size:12px; color:rgba(var(--fg),0.55); line-height:1.7;">Command centers, encrypted communications, home security dashboards, and governance frameworks. Systems that answer to you, run on your hardware, and never phone home.</div>
+        <div style="margin-top:14px; font-family:'JetBrains Mono',monospace; font-size:9px; color:rgba(var(--fg),0.35); letter-spacing:1px;">COMMAND CENTER &middot; SIGNAL &middot; HOME HUB</div>
+      </div>
+    </div>
+
+    <div class="commission-note">Each build is scoped to your environment, delivered to infrastructure you control, and handed off with full operational ownership.</div>
+
+    <div style="text-align:center; padding:8px 0;">
+      <a href="#sec-contact" class="hero-cta hero-cta-primary" style="font-size:13px; letter-spacing:4px; padding:16px 40px;">Discuss a Custom Build</a>
+    </div>
+  </section>
+
+  <div class="spacer-lg"></div>
+  <div class="thin-line" style="height:100px;"></div>
+  <div class="spacer-lg"></div>
+
   <!-- Contact -->
   <section class="section" id="sec-contact" data-reveal>
     <div class="section-label">Contact</div>
@@ -2089,17 +2203,13 @@
   <div class="nav-dot active" data-target="sec-hero"></div>
   <div class="nav-dot" data-target="sec-about"></div>
   <div class="nav-dot" data-target="sec-fisher-sovereign"></div>
+  <div class="nav-dot" data-target="sec-showcase"></div>
   <div class="nav-dot" data-target="sec-projects"></div>
-  <div class="nav-dot" data-target="sec-trading"></div>
-  <div class="nav-dot" data-target="sec-ventures"></div>
-  <div class="nav-dot" data-target="sec-noco"></div>
-  <div class="nav-dot" data-target="sec-brand"></div>
-  <div class="nav-dot" data-target="sec-now"></div>
-  <div class="nav-dot" data-target="sec-principles"></div>
+  <div class="nav-dot" data-target="sec-commission"></div>
   <div class="nav-dot" data-target="sec-contact"></div>
 </nav>
 
-<script src="main.js?v=20260410c1"></script>
+<script src="main.js?v=20260412c3"></script>
 
 <!-- FTDA: Passkey Modal -->
 <div class="ftda-passkey-overlay" id="ftda-passkey-overlay" aria-hidden="true" role="dialog" aria-label="Passkey required">

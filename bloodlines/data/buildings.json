@@ -1,0 +1,105 @@
+[
+  {
+    "id": "command_hall",
+    "name": "Command Hall",
+    "prototypeEnabled": true,
+    "footprint": { "w": 3, "h": 3 },
+    "health": 1400,
+    "buildTime": 0,
+    "populationCapBonus": 12,
+    "dropoffResources": ["gold", "wood"],
+    "trainableUnits": ["villager"],
+    "cost": {}
+  },
+  {
+    "id": "dwelling",
+    "name": "Dwelling",
+    "prototypeEnabled": true,
+    "footprint": { "w": 2, "h": 2 },
+    "health": 320,
+    "buildTime": 12,
+    "populationCapBonus": 6,
+    "cost": {
+      "gold": 30,
+      "wood": 50
+    }
+  },
+  {
+    "id": "farm",
+    "name": "Farm",
+    "prototypeEnabled": true,
+    "footprint": { "w": 2, "h": 2 },
+    "health": 300,
+    "buildTime": 11,
+    "resourceTrickle": {
+      "food": 0.5
+    },
+    "cost": {
+      "gold": 30,
+      "wood": 45
+    }
+  },
+  {
+    "id": "well",
+    "name": "Well",
+    "prototypeEnabled": true,
+    "footprint": { "w": 2, "h": 2 },
+    "health": 260,
+    "buildTime": 10,
+    "resourceTrickle": {
+      "water": 0.45
+    },
+    "cost": {
+      "gold": 20,
+      "wood": 35
+    }
+  },
+  {
+    "id": "lumber_camp",
+    "name": "Lumber Camp",
+    "prototypeEnabled": true,
+    "footprint": { "w": 2, "h": 2 },
+    "health": 340,
+    "buildTime": 10,
+    "dropoffResources": ["wood"],
+    "cost": {
+      "gold": 35,
+      "wood": 45
+    }
+  },
+  {
+    "id": "mine_works",
+    "name": "Mine Works",
+    "prototypeEnabled": true,
+    "footprint": { "w": 2, "h": 2 },
+    "health": 340,
+    "buildTime": 10,
+    "dropoffResources": ["gold"],
+    "cost": {
+      "gold": 45,
+      "wood": 35
+    }
+  },
+  {
+    "id": "barracks",
+    "name": "Barracks",
+    "prototypeEnabled": true,
+    "footprint": { "w": 3, "h": 2 },
+    "health": 850,
+    "buildTime": 16,
+    "trainableUnits": ["militia", "swordsman", "bowman"],
+    "cost": {
+      "gold": 85,
+      "wood": 95
+    }
+  },
+  {
+    "id": "tribal_camp",
+    "name": "Tribal Camp",
+    "prototypeEnabled": true,
+    "footprint": { "w": 2, "h": 2 },
+    "health": 620,
+    "buildTime": 0,
+    "cost": {}
+  }
+]

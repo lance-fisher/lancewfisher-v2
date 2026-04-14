@@ -1,0 +1,51 @@
+[
+  {
+    "id": "gold",
+    "name": "Gold",
+    "category": "primary",
+    "enabledInPrototype": true,
+    "description": "Currency, taxation, recruitment, trade, and diplomacy."
+  },
+  {
+    "id": "food",
+    "name": "Food",
+    "category": "primary",
+    "enabledInPrototype": true,
+    "description": "Population growth and sustainment support."
+  },
+  {
+    "id": "water",
+    "name": "Water",
+    "category": "primary",
+    "enabledInPrototype": true,
+    "description": "Population health and growth support."
+  },
+  {
+    "id": "wood",
+    "name": "Wood",
+    "category": "primary",
+    "enabledInPrototype": true,
+    "description": "Early construction, fuel, and military infrastructure material."
+  },
+  {
+    "id": "stone",
+    "name": "Stone",
+    "category": "primary",
+    "enabledInPrototype": false,
+    "description": "Fortification and major structure material."
+  },
+  {
+    "id": "iron",
+    "name": "Iron",
+    "category": "primary",
+    "enabledInPrototype": false,
+    "description": "Mid-to-late game military modernization material."
+  },
+  {
+    "id": "influence",
+    "name": "Influence",
+    "category": "advanced",
+    "enabledInPrototype": false,
+    "description": "Political leverage, strategic pressure, and systemic soft power."
+  }
+]

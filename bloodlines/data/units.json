@@ -1,0 +1,140 @@
+[
+  {
+    "id": "villager",
+    "name": "Villager",
+    "stage": 1,
+    "role": "worker",
+    "prototypeEnabled": true,
+    "populationCost": 1,
+    "health": 55,
+    "speed": 78,
+    "attackDamage": 4,
+    "attackRange": 16,
+    "attackCooldown": 0.95,
+    "sight": 110,
+    "carryCapacity": 10,
+    "gatherRate": 1,
+    "buildRate": 1,
+    "cost": {
+      "gold": 45
+    }
+  },
+  {
+    "id": "militia",
+    "name": "Militia",
+    "stage": 1,
+    "role": "melee",
+    "prototypeEnabled": true,
+    "populationCost": 1,
+    "health": 80,
+    "speed": 64,
+    "attackDamage": 9,
+    "attackRange": 18,
+    "attackCooldown": 0.95,
+    "sight": 118,
+    "cost": {
+      "gold": 55,
+      "wood": 15
+    }
+  },
+  {
+    "id": "swordsman",
+    "name": "Swordsman",
+    "stage": 1,
+    "role": "melee-recon",
+    "prototypeEnabled": true,
+    "populationCost": 1,
+    "health": 100,
+    "speed": 70,
+    "attackDamage": 12,
+    "attackRange": 18,
+    "attackCooldown": 0.9,
+    "sight": 145,
+    "cost": {
+      "gold": 70,
+      "wood": 20
+    },
+    "notes": [
+      "Carries the early reconnaissance role in active canon",
+      "Separate Scout unit was removed from early roster canon"
+    ]
+  },
+  {
+    "id": "bowman",
+    "name": "Bowman",
+    "stage": 1,
+    "role": "ranged",
+    "prototypeEnabled": true,
+    "populationCost": 1,
+    "health": 70,
+    "speed": 62,
+    "attackDamage": 10,
+    "attackRange": 122,
+    "attackCooldown": 1.15,
+    "sight": 150,
+    "projectileSpeed": 280,
+    "cost": {
+      "gold": 65,
+      "wood": 30
+    }
+  },
+  {
+    "id": "axeman",
+    "name": "Axeman",
+    "stage": 1,
+    "role": "unique-melee",
+    "prototypeEnabled": false,
+    "populationCost": 1,
+    "health": 110,
+    "speed": 58,
+    "attackDamage": 16,
+    "attackRange": 18,
+    "attackCooldown": 1.05,
+    "sight": 118,
+    "cost": {
+      "gold": 95,
+      "wood": 30
+    },
+    "house": "ironmark"
+  },
+  {
+    "id": "scout_rider",
+    "name": "Scout Rider",
+    "stage": 2,
+    "role": "light-cavalry",
+    "prototypeEnabled": false,
+    "populationCost": 1,
+    "health": 90,
+    "speed": 108,
+    "attackDamage": 8,
+    "attackRange": 18,
+    "attackCooldown": 0.8,
+    "sight": 180,
+    "cost": {
+      "gold": 90,
+      "wood": 25,
+      "iron": 15
+    }
+  },
+  {
+    "id": "tribal_raider",
+    "name": "Tribal Raider",
+    "stage": 0,
+    "role": "melee",
+    "prototypeEnabled": true,
+    "populationCost": 1,
+    "health": 92,
+    "speed": 74,
+    "attackDamage": 11,
+    "attackRange": 18,
+    "attackCooldown": 0.9,
+    "sight": 132,
+    "cost": {
+      "gold": 0
+    },
+    "notes": [
+      "Neutral tribe pressure unit for frontier camp control",
+      "Not trainable by dynasty factions in the first playable slice"
+    ]
+  }
+]

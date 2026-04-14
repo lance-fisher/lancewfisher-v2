@@ -5,12 +5,18 @@
   function togglePortfolio() {
     var btn = document.getElementById('portfolioExpandBtn');
     var remaining = document.getElementById('portfolioRemaining');
-    var arrow = btn.querySelector('.expand-arrow');
+    var tradingBtn = document.getElementById('tradingExpandBtn');
+    var trading = document.getElementById('tradingArchitecture');
     var isExpanded = remaining.classList.contains('expanded');
     if (isExpanded) {
       remaining.classList.remove('expanded');
       btn.classList.remove('expanded');
       btn.firstChild.textContent = 'View Full Portfolio (9 more projects) ';
+      if (trading) trading.classList.remove('expanded');
+      if (tradingBtn) {
+        tradingBtn.classList.remove('expanded');
+        tradingBtn.firstChild.textContent = 'Click Here to Expand on Trading Architecture ';
+      }
       btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else {
       remaining.classList.add('expanded');
@@ -20,12 +26,44 @@
   }
   window.togglePortfolio = togglePortfolio;
 
+  function revealTradingArchitectureContent() {
+    var tradingSection = document.getElementById('sec-trading');
+    if (tradingSection) tradingSection.classList.add('visible');
+  }
+
+  function toggleTradingArchitecture() {
+    var btn = document.getElementById('tradingExpandBtn');
+    var trading = document.getElementById('tradingArchitecture');
+    if (!btn || !trading) return;
+    var isExpanded = trading.classList.contains('expanded');
+    if (isExpanded) {
+      trading.classList.remove('expanded');
+      btn.classList.remove('expanded');
+      btn.firstChild.textContent = 'Click Here to Expand on Trading Architecture ';
+      btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      trading.classList.add('expanded');
+      btn.classList.add('expanded');
+      btn.firstChild.textContent = 'Collapse Trading Architecture ';
+      revealTradingArchitectureContent();
+      setTimeout(function() {
+        var tradingSection = document.getElementById('sec-trading');
+        if (tradingSection) {
+          tradingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 80);
+    }
+  }
+  window.toggleTradingArchitecture = toggleTradingArchitecture;
+
   // ===== PROJECT CATEGORY FILTERS =====
   (function() {
     var filterBtns = document.querySelectorAll('.pf-btn');
     var allProjectCards = document.querySelectorAll('.project-card[data-tags]');
     var expandBtn = document.getElementById('portfolioExpandBtn');
     var remaining = document.getElementById('portfolioRemaining');
+    var tradingBtn = document.getElementById('tradingExpandBtn');
+    var trading = document.getElementById('tradingArchitecture');
 
     filterBtns.forEach(function(btn) {
       btn.addEventListener('click', function() {
@@ -40,6 +78,14 @@
             expandBtn.classList.add('expanded');
             expandBtn.firstChild.textContent = 'Collapse Portfolio ';
           }
+        }
+        if (filter === 'trading' && trading && !trading.classList.contains('expanded')) {
+          trading.classList.add('expanded');
+          if (tradingBtn) {
+            tradingBtn.classList.add('expanded');
+            tradingBtn.firstChild.textContent = 'Collapse Trading Architecture ';
+          }
+          revealTradingArchitectureContent();
         }
 
         allProjectCards.forEach(function(card) {
@@ -179,7 +225,7 @@
     if (ship) ship.style.transform = 'translate(-50%, calc(-50% + ' + (y * 0.05) + 'px))';
     var isLight = document.documentElement.getAttribute('data-theme') === 'light';
     if (statue && !isLight) {
-      // Dark mode only — light mode statue stays perfectly fixed via CSS
+      // Dark mode only, light mode statue stays perfectly fixed via CSS
       statue.style.transform = 'translate(-50%, calc(-50% + ' + (y * 0.03) + 'px))';
     }
     // Scroll progress line (light mode only)
@@ -212,24 +258,18 @@
   window.addEventListener('scroll', updateDots, { passive: true });
   updateDots();
 
-  // ===== MOBILE TAP-TO-EXPAND PROJECT CARDS =====
-  if (isMobile) {
-    var projectCards = document.querySelectorAll('.project-card');
-    projectCards.forEach(function(card) {
-      // Skip cards with onclick (they navigate somewhere)
-      if (card.getAttribute('onclick')) return;
-      card.style.cursor = 'pointer';
-      card.addEventListener('click', function(e) {
-        // Don't interfere with links inside
-        if (e.target.tagName === 'A') return;
-        // Close other cards
-        projectCards.forEach(function(c) {
-          if (c !== card) c.classList.remove('expanded');
-        });
-        card.classList.toggle('expanded');
+  // ===== CLICK-TO-EXPAND PROJECT CARDS =====
+  var projectCards = document.querySelectorAll('.project-card');
+  projectCards.forEach(function(card) {
+    if (card.getAttribute('onclick')) return;
+    card.addEventListener('click', function(e) {
+      if (e.target.closest('a, button')) return;
+      projectCards.forEach(function(c) {
+        if (c !== card) c.classList.remove('expanded');
       });
+      card.classList.toggle('expanded');
     });
-  }
+  });
 
   // ===== FISHER MORPH -MATRIX DECODE EFFECT =====
   var morphI = document.getElementById('morph-i');
@@ -2748,7 +2788,7 @@
       {role:'user', text:'Analyze trading patterns from the last 30 days', y:30*s},
       {role:'ai', text:'Reviewing profit-desk logs... Found 3 high-confidence signals on BTC/ETH correlation. Recommendation: increase position size on next SOL breakout above $185.', y:46*s},
       {role:'user', text:'What is the risk exposure on current open positions?', y:80*s},
-      {role:'ai', text:'Total exposure: $12,400. DRY_RUN mode active — no live capital at risk. All signals are paper-traded.', y:96*s}
+{role:'ai', text:'Total exposure: $12,400. DRY_RUN mode active, no live capital at risk. All signals are paper-traded.', y:96*s}
     ];
     for (var ci2 = 0; ci2 < msgs.length; ci2++) {
       var msg = msgs[ci2];
@@ -2954,7 +2994,7 @@
     ctx.strokeStyle = aClr(p, 0.05); ctx.lineWidth = 0.5*s;
     ctx.strokeRect(chartX, chartY, chartW, chartH);
     ctx.fillStyle = aClr(p, 0.2); ctx.font = '200 '+(3.5*s)+'px Inter, sans-serif';
-    ctx.fillText('BTC/USDT — 4H', chartX+5*s, chartY+8*s);
+ctx.fillText('BTC/USDT - 4H', chartX+5*s, chartY+8*s);
     var candles = [
       {o:0.55,h:0.85,l:0.4,c:0.75,bull:true},
       {o:0.75,h:0.88,l:0.65,c:0.82,bull:true},
@@ -3099,7 +3139,7 @@
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
     var p = pal(140, 100, 200);
 
-    // Dark purple bg — desaturated for paused state
+// Dark purple bg, desaturated for paused state
     var bg = ctx.createLinearGradient(0, 0, 0, h);
     if (p.light) { bg.addColorStop(0, '#e9e7ef'); bg.addColorStop(1, '#e4e2ea'); }
     else { bg.addColorStop(0, '#0b090f'); bg.addColorStop(1, '#08070d'); }
@@ -3117,14 +3157,14 @@
     ctx.fillStyle = 'rgba(180,160,160,0.35)'; ctx.font = '600 '+(5.5*s)+'px monospace';
     ctx.textAlign = 'right'; ctx.fillText('PAUSED', w-14*s, 16*s); ctx.textAlign = 'left';
 
-    // CLOB order book — left half
+// CLOB order book, left half
     var bookX = 10*s, bookY = 30*s;
     var bookW = (w - 20*s) * 0.48, bookH = h - bookY - 30*s;
     ctx.fillStyle = aClr(p, 0.02); ctx.fillRect(bookX, bookY, bookW, bookH);
     ctx.strokeStyle = aClr(p, 0.05); ctx.lineWidth = 0.5*s;
     ctx.strokeRect(bookX, bookY, bookW, bookH);
     ctx.fillStyle = aClr(p, 0.2); ctx.font = '200 '+(3.5*s)+'px Inter, sans-serif';
-    ctx.fillText('ORDER BOOK — YES', bookX+4*s, bookY+8*s);
+ctx.fillText('ORDER BOOK - YES', bookX+4*s, bookY+8*s);
     // Bids (YES orders)
     var bids = [0.72,0.71,0.70,0.69,0.68,0.67];
     var rowH = (bookH-16*s)/12;
@@ -3534,7 +3574,7 @@
         });
       }
     }
-    // First cycle after 8s, then every 14-20s — subtle, not distracting
+// First cycle after 8s, then every 14-20s, subtle, not distracting
     setTimeout(function() {
       cycle();
       setInterval(cycle, 14000 + Math.random() * 6000);
