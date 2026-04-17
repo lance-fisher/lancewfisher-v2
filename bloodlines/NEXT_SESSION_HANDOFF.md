@@ -1249,3 +1249,43 @@ node --check src/game/core/utils.js
 - `04_SYSTEMS/FORTIFICATION_SYSTEM.md`
 - `04_SYSTEMS/SIEGE_SYSTEM.md`
 - `03_PROMPTS/CONTINUATION_PROMPT_2026-04-14_SESSION_9.md`
+
+## Session 126 Unity Attack Orders And Attack-Move
+
+- Status: green on `codex/unity-attack-move` at `7759f84e1c00eeb8a1baf329ac33b38d0e074cbc`, rebased onto `master` head `548d7804ce55766420d75184385b3bedb739a3ee`.
+- Delivered:
+  - contract-shaped `AttackOrderComponent`
+  - new `AttackOrderResolutionSystem` before `AutoAcquireTargetSystem`
+  - minimal explicit-target preservation inside `AutoAcquireTargetSystem`
+  - explicit-order cleanup inside `DeathResolutionSystem`
+  - new governed debug API partial `BloodlinesDebugCommandSurface.Combat.cs`
+  - four-phase combat smoke proof including explicit attack and attack-move
+- Important integration note: current `master` already contains the older `AttackOrderSystem` and `BloodlinesDebugCommandSurface.AttackOrders.cs` from the previous merged attack-order lane. This slice composes with that state additively by:
+  - keeping `AttackOrders.cs` as the input owner
+  - adding only the governed API surface in `Combat.cs`
+  - marking `AttackOrderSystem` as `[DisableAutoCreation]` so it does not compete with `AttackOrderResolutionSystem`
+- Validation status:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo` green
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo` green
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1` green with:
+    - `explicitAttackPhase=True`
+    - `attackMovePhase=True`
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1` green with:
+    - `aiActivityObserved=True`
+    - `aiConstructionObserved=True`
+    - `stabilitySurplusObserved=True`
+    - `capPressureObserved=True`
+    - `loyaltyDeclineObserved=True`
+    - `starvationObserved=True`
+    - `trickleGainObserved=True`
+    - `gatherDepositObserved=True`
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1` green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+- Handoff doc: `docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md`
+
+## Next Session Instruction
+
+- Stop at merge coordination for `codex/unity-attack-move`.
+- Do not extend this branch into stance systems, patrol, guard, follow, AoE combat, HUD cursor polish, or AI consumption of attack orders.
+- If the branch merges cleanly, the next combat continuation should start from updated `master`, not from this branch tip.

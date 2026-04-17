@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-17T03:09:06-06:00",
+  "updated_at": "2026-04-17T04:22:45.7233862-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -1036,36 +1036,46 @@
   },
   "unity_attack_orders_and_attack_move": {
     "status": "complete_on_branch_pending_merge_coordination",
-    "branch": "codex/unity-attack-orders-attack-move",
-    "base_master_head": "aed6969b9152c630a67eacbd9f1759361ec28cdb",
+    "branch": "codex/unity-attack-move",
+    "base_master_head": "548d7804ce55766420d75184385b3bedb739a3ee",
+    "original_prompt_master_head": "aed6969b9152c630a67eacbd9f1759361ec28cdb",
+    "head_commit": "7759f84e1c00eeb8a1baf329ac33b38d0e074cbc",
     "components": [
       "unity/Assets/_Bloodlines/Code/Combat/AttackOrderComponent.cs"
     ],
     "systems": [
-      "unity/Assets/_Bloodlines/Code/Combat/AttackOrderSystem.cs"
+      "unity/Assets/_Bloodlines/Code/Combat/AttackOrderResolutionSystem.cs"
+    ],
+    "master_compatibility_integration": [
+      "unity/Assets/_Bloodlines/Code/Combat/AttackOrderSystem.cs disabled via DisableAutoCreation on current master",
+      "unity/Assets/_Bloodlines/Code/Combat/AutoAcquireTargetSystem.cs explicit-target preservation",
+      "unity/Assets/_Bloodlines/Code/Combat/DeathResolutionSystem.cs explicit-order cleanup on target death"
     ],
     "order_semantics": {
       "explicit_target_preferred_over_auto_acquire": true,
-      "explicit_orders_stop_on_sight_loss": true,
-      "attack_move_resumes_destination_after_local_engagement": true
+      "explicit_orders_chase_out_of_range": true,
+      "explicit_orders_clear_on_target_death": true,
+      "attack_move_resumes_destination_after_local_engagement": true,
+      "attack_move_ignores_non_hostile_decoys": true
     },
     "debug_bindings": {
       "explicit_attack_order": "right_click_hostile_unit_for_selected_combat_units",
       "attack_move_mode": "A_then_right_click_ground",
       "cancel_attack_move_mode": "Escape"
     },
-    "debug_command_surface_partial": "unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AttackOrders.cs",
+    "debug_command_surface_partial": "unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Combat.cs",
+    "debug_command_surface_existing_input_partial": "unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AttackOrders.cs",
     "combat_smoke_validator": "unity/Assets/_Bloodlines/Code/Editor/BloodlinesCombatSmokeValidation.cs",
     "combat_smoke_wrapper": "scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1",
     "combat_smoke_log": "artifacts/unity-combat-smoke.log",
-    "combat_smoke_pass_line": "Combat smoke validation passed: meleePhase=True, projectilePhase=True, attackOrderPhase=True.",
+    "combat_smoke_pass_line": "Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True.",
     "bootstrap_runtime_smoke_preserved_green": true,
     "bootstrap_runtime_smoke_log": "artifacts/unity-bootstrap-runtime-smoke.log",
     "scene_shell_validation_preserved_green": true,
     "bootstrap_scene_log": "artifacts/unity-bootstrap-scene-validate.log",
     "gameplay_scene_log": "artifacts/unity-gameplay-scene-validate.log",
     "wrapper_lock_required": true,
-    "validator_path_note": "Checked-in bootstrap runtime smoke and canonical scene-shell wrappers remain pinned to D:\\ProjectsHome\\Bloodlines, so the same batch execute methods were rerun through clone-local temporary wrapper scripts in the clean D:\\ao\\bloodlines worktree to avoid colliding with the dirty canonical checkout during the concurrent Claude lane.",
+    "validator_path_note": "All governed Unity validations were rerun through the canonical D:\\ProjectsHome\\Bloodlines wrapper scripts under the required serial wrapper lock session 'codex-attack-move' after rebasing onto current master.",
     "session_handoff": "docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md"
   },
   "preservation_guarantees": [
