@@ -33,6 +33,18 @@ Next recommended action applies to whichever agent (Claude or Codex) runs next.
 - Graphics is still at concept and staging level pending formal review calls and later runtime-ready asset production.
 - Wwise audio integration, Netcode for Entities multiplayer realization, broader UX polish, full QA or balance passes, and stronger end-to-end shipping readiness are still unfinished.
 
+## 2026-04-17 Governance: Concurrent Session Contract Source of Truth
+
+- Branch: `claude/unity-graphics-infrastructure` (governance-only slice; no gameplay code committed)
+- Dedicated slice handoff: `docs/unity/session-handoffs/2026-04-17-governance-contract-source-of-truth.md`
+- What changed:
+  - `docs/unity/CONCURRENT_SESSION_CONTRACT.md` rewritten to revision 1 with full schema: Contract Metadata, Purpose, Active Lanes (economy-and-ai retired, combat-and-projectile retired, graphics-infrastructure active, combat-attack-move paused), Shared Files with explicit per-file narrow-modification rules, Forbidden Paths, State Documents, Branch Discipline, Wrapper Lock, Validation Gate (canonical 8-step), Staleness Rule, Reconciliation Notes.
+  - `scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1` created: reads the contract date, scans handoff filename prefixes, exits 0 if current, exits 1 with diagnostic if stale or malformed.
+  - `CLAUDE.md` extended with "Unity Slice Completion Protocol" and "Unity Validation Gate" sections (additive; no existing content changed).
+- Staleness check gate: `powershell -ExecutionPolicy Bypass -File scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1`
+- No gameplay validation gates were run because no Unity code changed.
+- Any session starting Unity work should run the staleness check as step 8 of the canonical validation gate.
+
 ## 2026-04-17 Session 120 Unity Projectile Combat
 
 - Branch lane: `codex/unity-projectile-combat`
