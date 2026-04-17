@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-17T01:30:00-06:00",
+  "updated_at": "2026-04-17T00:07:05.4035053-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -447,7 +447,7 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-16-unity-worker-gather-deposit-primary-loop.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-17-unity-combat-foundation.md",
   "latest_continuation_prompt": "03_PROMPTS/CONTINUATION_PROMPT_2026-04-16_SESSION_111.md",
   "latest_finalization_checklist": "docs/plans/2026-04-16-bloodlines-finalization-execution-checklist.md",
   "latest_state_of_game_report": "docs/BLOODLINES_STATE_OF_GAME_REPORT_2026-04-15_SESSION_87.md",
@@ -787,7 +787,7 @@
     "unit_production_system": "unity/Assets/_Bloodlines/Code/Systems/UnitProductionSystem.cs",
     "construction_system": "unity/Assets/_Bloodlines/Code/Systems/ConstructionSystem.cs",
     "control_point_capture_system": "unity/Assets/_Bloodlines/Code/Systems/ControlPointCaptureSystem.cs",
-    "status": "scene_shells_created_definition_bindings_repaired_bootstrap_scene_canonical_map_assigned_both_canonical_scene_shells_batch_validated_bootstrap_runtime_smoke_green_first_production_slice_green_queue_cancel_and_refund_green_two_deep_queue_tail_cancel_green_first_construction_slice_green_and_ready_for_manual_in_editor_feel_verification"
+    "status": "scene_shells_created_definition_bindings_repaired_bootstrap_scene_canonical_map_assigned_both_canonical_scene_shells_batch_validated_bootstrap_runtime_smoke_green_first_production_slice_green_queue_cancel_and_refund_green_two_deep_queue_tail_cancel_green_first_construction_slice_green_worker_gather_loop_green_and_first_combat_foundation_green"
   },
   "unity_definition_binding_repair": {
     "status": "complete",
@@ -934,6 +934,36 @@
     "runtime_smoke_log": "artifacts/unity-bootstrap-runtime-smoke.log",
     "session_handoff": "docs/unity/session-handoffs/2026-04-16-unity-constructed-barracks-production-continuity.md"
   },
+  "unity_combat_foundation": {
+    "status": "complete_on_branch_pending_merge_coordination",
+    "branch": "codex/unity-combat-foundation",
+    "components": [
+      "unity/Assets/_Bloodlines/Code/Combat/CombatStatsComponent.cs",
+      "unity/Assets/_Bloodlines/Code/Combat/AttackTargetComponent.cs",
+      "unity/Assets/_Bloodlines/Code/Combat/HostilityComponent.cs"
+    ],
+    "systems": [
+      "unity/Assets/_Bloodlines/Code/Combat/AutoAcquireTargetSystem.cs",
+      "unity/Assets/_Bloodlines/Code/Combat/AttackResolutionSystem.cs",
+      "unity/Assets/_Bloodlines/Code/Combat/DeathResolutionSystem.cs"
+    ],
+    "combat_smoke_validator": "unity/Assets/_Bloodlines/Code/Editor/BloodlinesCombatSmokeValidation.cs",
+    "combat_smoke_wrapper": "scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1",
+    "combat_smoke_log": "artifacts/unity-combat-smoke.log",
+    "combat_distance_normalization": {
+      "source_fields": [
+        "attackRange",
+        "sight"
+      ],
+      "normalization_basis": "map.tileSize",
+      "reason": "browser_spec_uses_pixel_scale_while_unity_runtime_uses_tile_world_coordinates"
+    },
+    "bootstrap_runtime_smoke_preserved_green": true,
+    "bootstrap_runtime_smoke_validated_in_worktree": true,
+    "bootstrap_runtime_smoke_canonical_wrapper_green": true,
+    "combat_smoke_pass_line": "Combat smoke validation passed: dead='enemy', survivorHealth=6/12, elapsedSeconds=1.2.",
+    "session_handoff": "docs/unity/session-handoffs/2026-04-17-unity-combat-foundation.md"
+  },
   "preservation_guarantees": [
     "nothing_deleted_without_explicit_authorization",
     "all_existing_canon_preserved_in_numbered_folders",
@@ -954,6 +984,8 @@
     "bootstrap_scene_canonical_map_assignment_repaired_additively",
     "unity_first_construction_slice_added_additively",
     "unity_constructed_production_continuity_validator_extended_additively",
+    "unity_combat_foundation_added_additively",
+    "unity_combat_distances_normalized_additively_at_authoring_and_baker_seam",
     "tests_remain_green"
   ]
 }
