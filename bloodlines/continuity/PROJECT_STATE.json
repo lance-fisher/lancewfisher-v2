@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-17T04:59:36.9687980-06:00",
+  "updated_at": "2026-04-17T06:40:59.7555739-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -457,20 +457,41 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-17-unity-graphics-infrastructure-foundation.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-17-unity-faith-commitment-and-intensity.md",
   "latest_unity_graphics_handoff": "docs/unity/session-handoffs/2026-04-17-unity-graphics-infrastructure-foundation.md",
-  "latest_unity_combat_handoff": "docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md",
+  "latest_unity_combat_handoff": "docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md",
   "latest_unity_attack_move_handoff": "docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md",
+  "latest_unity_target_acquisition_handoff": "docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md",
+  "latest_unity_conviction_handoff": "docs/unity/session-handoffs/2026-04-17-unity-conviction-scoring-and-bands.md",
+  "latest_unity_dynasty_handoff": "docs/unity/session-handoffs/2026-04-17-unity-dynasty-core.md",
+  "latest_unity_faith_handoff": "docs/unity/session-handoffs/2026-04-17-unity-faith-commitment-and-intensity.md",
   "latest_governance_handoff": "docs/unity/session-handoffs/2026-04-17-governance-contract-source-of-truth.md",
+  "latest_browser_to_unity_migration_plan": "docs/plans/2026-04-17-browser-to-unity-migration-plan.md",
   "concurrent_session_contract": {
     "path": "docs/unity/CONCURRENT_SESSION_CONTRACT.md",
-    "revision": 1,
+    "revision": 3,
     "last_updated": "2026-04-17",
-    "last_updated_by": "claude-governance-2026-04-17",
+    "last_updated_by": "claude-continuity-refresh-2026-04-17",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
-    "active_lanes": ["graphics-infrastructure"],
-    "paused_lanes": ["combat-attack-move"],
-    "retired_lanes": ["economy-and-ai", "combat-and-projectile"]
+    "active_lanes": [],
+    "paused_lanes": ["combat-group-movement-and-stances"],
+    "retired_lanes": [
+      "economy-and-ai",
+      "combat-and-projectile",
+      "combat-attack-move",
+      "combat-acquisition-and-sight",
+      "graphics-infrastructure",
+      "ai-barracks-observability",
+      "conviction-scoring",
+      "dynasty-core",
+      "faith-commitment"
+    ],
+    "next_unblocked_tier_1_lanes": [
+      "state-snapshot-restore",
+      "fortification-siege-imminent-engagement",
+      "dual-clock-match-progression",
+      "ai-strategic-layer-port"
+    ]
   },
   "latest_unity_economy_handoff": "docs/unity/session-handoffs/2026-04-17-unity-cap-pressure-response.md",
   "latest_continuation_prompt": "03_PROMPTS/CONTINUATION_PROMPT_2026-04-16_SESSION_111.md",
@@ -1110,6 +1131,58 @@
     "wrapper_lock_session": "codex-target-acquisition-los",
     "session_handoff": "docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md"
   },
+  "unity_group_movement_and_stances": {
+    "status": "complete_on_branch_pending_merge_coordination",
+    "branch": "codex/unity-group-movement-and-stances",
+    "rebased_master_head": "9036d91",
+    "components": [
+      "unity/Assets/_Bloodlines/Code/Combat/GroupMovementOrderComponent.cs",
+      "unity/Assets/_Bloodlines/Code/Combat/UnitSeparationComponent.cs",
+      "unity/Assets/_Bloodlines/Code/Combat/RecentImpactComponent.cs",
+      "unity/Assets/_Bloodlines/Code/Combat/CombatStanceComponent.cs"
+    ],
+    "systems": [
+      "unity/Assets/_Bloodlines/Code/Combat/GroupMovementResolutionSystem.cs",
+      "unity/Assets/_Bloodlines/Code/Combat/UnitSeparationSystem.cs",
+      "unity/Assets/_Bloodlines/Code/Combat/RecentImpactRecoverySystem.cs",
+      "unity/Assets/_Bloodlines/Code/Combat/CombatStanceResolutionSystem.cs"
+    ],
+    "runtime_defaults": "unity/Assets/_Bloodlines/Code/Combat/CombatUnitRuntimeDefaults.cs",
+    "debug_command_surface_partials": [
+      "unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Movement.cs",
+      "unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Stances.cs"
+    ],
+    "shared_spawn_integration": [
+      "unity/Assets/_Bloodlines/Code/Authoring/BloodlinesMapBootstrapAuthoring.cs",
+      "unity/Assets/_Bloodlines/Code/Editor/BloodlinesMapBootstrapBaker.cs",
+      "unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs",
+      "unity/Assets/_Bloodlines/Code/Systems/UnitProductionSystem.cs"
+    ],
+    "unit_definition_extension": "unity/Assets/_Bloodlines/Code/Definitions/UnitDefinition.cs",
+    "json_importer_extension": "unity/Assets/_Bloodlines/Code/Editor/JsonContentImporter.cs",
+    "combat_smoke_validator": "unity/Assets/_Bloodlines/Code/Editor/BloodlinesCombatSmokeValidation.cs",
+    "combat_smoke_wrapper": "scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1",
+    "combat_smoke_log": "artifacts/unity-combat-smoke.log",
+    "combat_smoke_pass_line": "Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True, groupMovementPhase=True, separationPhase=True, stancePhase=True.",
+    "retreat_pass_line": "Combat smoke validation retreat sub-phase passed: initialDistance=0.5, finalDistance=7.5, finalRetreatDistance=0.",
+    "bootstrap_runtime_smoke_preserved_green": true,
+    "bootstrap_runtime_smoke_log": "artifacts/unity-bootstrap-runtime-smoke.log",
+    "scene_shell_validation_preserved_green": true,
+    "bootstrap_scene_log": "artifacts/unity-bootstrap-scene-validate.log",
+    "gameplay_scene_log": "artifacts/unity-gameplay-scene-validate.log",
+    "graphics_runtime_validation_preserved_green": true,
+    "graphics_runtime_log": "artifacts/unity-graphics-runtime.log",
+    "assembly_csharp_project_synced_for_new_files": true,
+    "wrapper_lock_required": true,
+    "wrapper_lock_session": "codex-movement",
+    "wrapper_hardening": [
+      "scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1",
+      "scripts/Invoke-BloodlinesUnityValidateBootstrapSceneShell.ps1",
+      "scripts/Invoke-BloodlinesUnityValidateGameplaySceneShell.ps1",
+      "scripts/Invoke-BloodlinesUnityGraphicsRuntimeValidation.ps1"
+    ],
+    "session_handoff": "docs/unity/session-handoffs/2026-04-17-unity-group-movement-and-stances.md"
+  },
   "preservation_guarantees": [
     "nothing_deleted_without_explicit_authorization",
     "all_existing_canon_preserved_in_numbered_folders",
@@ -1134,6 +1207,8 @@
     "unity_combat_distances_normalized_additively_at_authoring_and_baker_seam",
     "unity_projectile_combat_added_additively",
     "unity_target_acquisition_throttling_and_sight_cleanup_added_additively",
+    "unity_group_movement_separation_and_stances_added_additively",
+    "governed_unity_wrappers_wait_for_explicit_log_outcomes_under_harness",
     "tests_remain_green"
   ]
 }
