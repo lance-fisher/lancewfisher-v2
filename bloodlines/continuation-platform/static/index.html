@@ -88,75 +88,152 @@
         <section class="metrics-grid" id="metricGrid"></section>
 
         <section class="view-panel active" data-view-panel="console">
-          <div class="console-layout">
-            <article class="panel console-panel">
-              <div class="panel-head console-panel-head">
-                <div>
-                  <p class="eyebrow">Offline Agent Console</p>
-                  <h3>Back-And-Forth Bloodlines Command Deck</h3>
-                </div>
-                <div class="panel-actions">
-                  <button id="consoleResumeButton" class="secondary compact-action">Resume</button>
-                  <button id="consoleRescanButton" class="secondary compact-action">Rescan</button>
-                </div>
+          <article class="panel auto-continue-panel">
+            <div class="auto-continue-head">
+              <div>
+                <p class="eyebrow">Auto Continue</p>
+                <h3>One Button. Keep Bloodlines Progressing.</h3>
+                <p class="auto-continue-lead">
+                  Press <strong>START</strong>. The platform runs its own preflight, generates the next single-file proposal, and drafts the change. Leave auto-loop on and it will keep going on its own every few minutes. Drafts stage under review below. Applied drafts land in the offline work ledger for Claude or Codex to verify later.
+                </p>
               </div>
-              <div id="consoleMessages" class="console-messages"></div>
-              <div class="console-composer">
-                <div id="consoleCommandHints" class="hero-chip-row console-chip-row"></div>
-                <textarea
-                  id="consoleInput"
-                  class="console-input"
-                  placeholder="Ask the local Bloodlines agent to summarize state, search canon, read files, or draft governed updates. Use /help for direct commands."
-                ></textarea>
-                <div class="console-composer-actions">
-                  <button id="consoleResetButton" class="secondary">Reset Thread</button>
-                  <button id="consoleSendButton" class="primary">Send To Local Agent</button>
+              <div class="auto-continue-controls">
+                <button id="autoStartButton" class="primary continue-mega-button">START AUTO CONTINUE</button>
+                <button id="autoStopButton" class="secondary continue-stop-button hidden">STOP</button>
+                <div class="auto-continue-secondary-row">
+                  <button id="autoWarmupButton" class="secondary compact-action" title="Load the model into VRAM so the first cycle isn't slow">Warm up</button>
+                  <label class="auto-continue-model">
+                    <span>Model:</span>
+                    <select id="autoModelSelect">
+                      <option value="">auto (use routing policy)</option>
+                    </select>
+                  </label>
                 </div>
+                <label class="auto-continue-toggle">
+                  <input id="autoLoopToggle" type="checkbox" checked />
+                  <span>Auto-loop: run another cycle after each finishes</span>
+                </label>
+                <div id="autoContinuePhase" class="auto-continue-phase">Phase: idle</div>
+                <div id="autoContinueStaleness" class="auto-continue-staleness hidden">No activity for a while. Consider STOP + retry.</div>
               </div>
-            </article>
+            </div>
+          </article>
 
-            <aside class="console-sidebar">
-              <article class="panel console-side-panel">
-                <div class="panel-head">
+          <article class="panel auto-continue-log-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Live Work Log</p>
+                <h3>What The Local Agent Is Doing</h3>
+              </div>
+              <div class="panel-actions">
+                <span id="autoContinueStatusPill" class="status-pill muted">idle</span>
+              </div>
+            </div>
+            <div id="autoContinueLog" class="auto-continue-log"></div>
+          </article>
+
+          <article id="autoContinueDraftPanel" class="panel auto-continue-draft-panel hidden">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Draft Ready</p>
+                <h3 id="autoContinueDraftTitle">Latest Staged Change</h3>
+              </div>
+              <div class="panel-actions">
+                <button id="autoApproveDraftButton" class="primary compact-action">Approve &amp; Apply</button>
+                <button id="autoSkipDraftButton" class="secondary compact-action">Skip</button>
+              </div>
+            </div>
+            <div id="autoContinueDraftMeta" class="detail-stack"></div>
+            <pre id="autoContinueDraftDiff" class="handoff-preview compact"></pre>
+          </article>
+
+          <article id="autoContinueProposalPanel" class="panel auto-continue-proposal-panel hidden">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Proposal Only</p>
+                <h3>Drafting Did Not Stage A Change</h3>
+              </div>
+              <div class="panel-actions">
+                <button id="autoRetryDraftButton" class="primary compact-action" title="Re-run only the drafting turn for the same proposal">Retry Drafting</button>
+                <button id="autoDismissProposalButton" class="secondary compact-action">Dismiss</button>
+              </div>
+            </div>
+            <div id="autoContinueProposalFields" class="detail-stack"></div>
+            <div id="autoContinueFailureChip" class="auto-continue-failure-chip hidden"></div>
+            <details class="auto-continue-raw-expander hidden" id="autoContinueRawExpander">
+              <summary>Show raw model response</summary>
+              <pre id="autoContinueRawResponse" class="handoff-preview compact"></pre>
+            </details>
+          </article>
+
+          <details class="auto-continue-advanced">
+            <summary>Advanced: chat composer and slash commands</summary>
+            <div class="console-layout">
+              <article class="panel console-panel">
+                <div class="panel-head console-panel-head">
                   <div>
-                    <p class="eyebrow">Session Status</p>
-                    <h3>Current Context</h3>
+                    <p class="eyebrow">Offline Agent Console</p>
+                    <h3>Manual Chat (optional)</h3>
+                  </div>
+                  <div class="panel-actions">
+                    <button id="consoleResumeButton" class="secondary compact-action">Resume</button>
+                    <button id="consoleRescanButton" class="secondary compact-action">Rescan</button>
                   </div>
                 </div>
-                <div id="consoleStatusSummary" class="detail-stack"></div>
-              </article>
-
-              <article class="panel console-side-panel">
-                <div class="panel-head">
-                  <div>
-                    <p class="eyebrow">Suggested Prompts</p>
-                    <h3>Fast Start</h3>
+                <div id="consoleMessages" class="console-messages"></div>
+                <div class="console-composer">
+                  <div id="consoleCommandHints" class="hero-chip-row console-chip-row"></div>
+                  <textarea
+                    id="consoleInput"
+                    class="console-input"
+                    placeholder="Type 'continue' or any slash command. Leave empty and use Auto Continue above for hands-off mode."
+                  ></textarea>
+                  <div class="console-composer-actions">
+                    <button id="consoleResetButton" class="secondary">Reset Thread</button>
+                    <button id="consoleSendButton" class="primary">Send To Local Agent</button>
                   </div>
                 </div>
-                <div id="consoleSuggestedPrompts" class="list-stack"></div>
               </article>
-
-              <article class="panel console-side-panel">
-                <div class="panel-head">
-                  <div>
-                    <p class="eyebrow">Latest Citations</p>
-                    <h3>Grounding Files</h3>
+              <aside class="console-sidebar">
+                <article class="panel console-side-panel">
+                  <div class="panel-head">
+                    <div>
+                      <p class="eyebrow">Write Drafts</p>
+                      <h3>Pending Changes</h3>
+                    </div>
                   </div>
-                </div>
-                <div id="consoleLatestCitations" class="list-stack"></div>
-              </article>
-
-              <article class="panel console-side-panel">
-                <div class="panel-head">
-                  <div>
-                    <p class="eyebrow">Write Drafts</p>
-                    <h3>Governed Changes</h3>
+                  <div id="consoleDrafts" class="list-stack"></div>
+                </article>
+                <article class="panel console-side-panel">
+                  <div class="panel-head">
+                    <div>
+                      <p class="eyebrow">Latest Citations</p>
+                      <h3>Grounding Files</h3>
+                    </div>
                   </div>
-                </div>
-                <div id="consoleDrafts" class="list-stack"></div>
-              </article>
-            </aside>
-          </div>
+                  <div id="consoleLatestCitations" class="list-stack"></div>
+                </article>
+                <article class="panel console-side-panel">
+                  <div class="panel-head">
+                    <div>
+                      <p class="eyebrow">Session Status</p>
+                      <h3>Current Context</h3>
+                    </div>
+                  </div>
+                  <div id="consoleStatusSummary" class="detail-stack"></div>
+                </article>
+                <article class="panel console-side-panel">
+                  <div class="panel-head">
+                    <div>
+                      <p class="eyebrow">Suggested Prompts</p>
+                      <h3>Fast Start</h3>
+                    </div>
+                  </div>
+                  <div id="consoleSuggestedPrompts" class="list-stack"></div>
+                </article>
+              </aside>
+            </div>
+          </details>
         </section>
 
         <section class="view-panel" data-view-panel="dashboard">

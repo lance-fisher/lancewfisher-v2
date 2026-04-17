@@ -98,7 +98,16 @@ class BloodlinesContinuationCore:
         self.doctrine_rules = self._load_json(self.config_dir / "doctrine_rules.json")
         self.source_subset = self._load_json(self.config_dir / "source_subset.json")
         self.tier_gate_hashes = self._load_json(self.config_dir / "tier_gate_hashes.json")
-        self.command_runner_policy = self._load_json(self.config_dir / "command_runner_policy.json")
+        self.command_runner_policy = self._load_json(
+            self.config_dir / "command_runner_policy.json",
+            {
+                "runtime": "powershell",
+                "validation_required_tier": "tier_3",
+                "default_timeout_seconds": 120,
+                "max_output_chars": 14000,
+                "policy_file": "continuation-platform/config/command_runner_policy.json",
+            },
+        )
 
         self.bloodlines_root = Path(self.scan_settings["bloodlines_root"]).resolve()
         self.db_path = self.state_dir / "continuation.sqlite3"
@@ -973,6 +982,7 @@ class BloodlinesContinuationCore:
             {"command": "/drafts", "description": "List pending governed write drafts."},
             {"command": "/apply-draft <id>", "description": "Apply a pending write draft if the tier gate is unlocked."},
             {"command": "/dismiss-draft <id>", "description": "Remove a pending draft without applying it."},
+            {"command": "/continue", "description": "Run one full auto-continue cycle: preflight, proposal, draft. Typing bare 'continue' runs the same flow."},
             {"command": "/clear", "description": "Reset the current local conversation thread."},
         ]
 
@@ -1014,6 +1024,20 @@ class BloodlinesContinuationCore:
         self._save_agent_console_session(self._default_agent_console_session())
         return self.get_agent_console_state()
 
+    _BARE_CONTINUE_TOKENS = {
+        "continue",
+        "continue.",
+        "continue!",
+        "keep going",
+        "next",
+        "proceed",
+        "go",
+    }
+
+    def _is_bare_continue(self, message: str) -> bool:
+        stripped = message.strip().strip("\"'`").rstrip("!.?").lower()
+        return stripped in {t.rstrip("!.?") for t in self._BARE_CONTINUE_TOKENS}
+
     def submit_agent_console_message(self, message: str) -> dict[str, Any]:
         normalized = re.sub(r"\r\n?", "\n", message or "").strip()
         if not normalized:
@@ -1022,9 +1046,43 @@ class BloodlinesContinuationCore:
         if normalized.lower() == "/clear":
             return self.reset_agent_console()
 
+        if self._is_bare_continue(normalized):
+            normalized = "/continue"
+
         session = self._load_agent_console_session()
         self._append_agent_console_message(session, role="user", kind="prompt", content=normalized)
-        if normalized.startswith("/"):
+        if normalized.lower() == "/continue":
+            cycle = self.run_autonomous_cycle()
+            summary_lines = [
+                f"Auto-continue cycle {cycle.get('status')}.",
+                "",
+                "Events:",
+            ]
+            for event in cycle.get("events", []):
+                summary_lines.append(f"- [{event.get('status')}] {event.get('step')}: {event.get('detail','')}")
+            if cycle.get("draft"):
+                draft = cycle["draft"]
+                preview = draft.get("preview", {})
+                summary_lines.append("")
+                summary_lines.append(
+                    f"Staged draft {draft.get('id')} for {draft.get('relative_path')} (changed={preview.get('changed')}, required={preview.get('required_tier')})."
+                )
+            elif cycle.get("proposal"):
+                summary_lines.append("")
+                summary_lines.append("Proposal:")
+                summary_lines.append(cycle.get("proposal", ""))
+            response = {
+                "kind": "command",
+                "assistant_message": "\n".join(summary_lines),
+                "citations": (cycle.get("proposal_result") or {}).get("citations", [])[:12]
+                    or ["continuation-platform/state/auto_continue_status.json"],
+                "actions_taken": [f"Auto-continue event: {e.get('step')}" for e in cycle.get("events", [])][:8],
+                "routing": {"mode": "auto_continue", "status": cycle.get("status")},
+                "confidence": 0.7 if cycle.get("status") == "draft_ready" else 0.5,
+                "draft_ids": [cycle["draft"]["id"]] if cycle.get("draft") else [],
+                "unresolved_items": cycle.get("recovery_hints", []),
+            }
+        elif normalized.startswith("/"):
             response = self._handle_agent_console_command(normalized)
         else:
             response = self._run_agent_console_prompt(session, normalized)
@@ -1080,6 +1138,717 @@ class BloodlinesContinuationCore:
             return None
         candidates.sort(key=lambda item: (item[0], item[1]), reverse=True)
         return candidates[0][2]
+
+    _AUTO_CONTINUE_MAX_FILE_LINES = 500
+
+    _AUTO_CONTINUE_FORBIDDEN_TARGETS = (
+        "CURRENT_PROJECT_STATE.md",
+        "NEXT_SESSION_HANDOFF.md",
+        "continuity/PROJECT_STATE.json",
+        "MASTER_PROJECT_INDEX.md",
+        "MASTER_BLOODLINES_CONTEXT.md",
+        "SOURCE_PROVENANCE_MAP.md",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "HANDOFF.md",
+        "README.md",
+    )
+
+    def _is_forbidden_auto_target(self, relative_path: str) -> bool:
+        norm = (relative_path or "").replace("\\", "/").strip().lstrip("/")
+        if not norm:
+            return True
+        if norm.startswith("governance/") or norm.startswith("continuation-platform/"):
+            return True
+        for forbidden in self._AUTO_CONTINUE_FORBIDDEN_TARGETS:
+            if norm.lower() == forbidden.lower() or norm.lower().endswith("/" + forbidden.lower()):
+                return True
+        return False
+
+    def _auto_continue_status_path(self) -> Path:
+        return self.state_dir / "auto_continue_status.json"
+
+    def _offline_work_ledger_path(self) -> Path:
+        return self.state_dir / "offline_work_ledger.md"
+
+    def _write_auto_continue_status(self, status: dict[str, Any]) -> None:
+        try:
+            self._write_json(self._auto_continue_status_path(), {"updated_at": utc_now(), **status})
+        except Exception:
+            pass
+
+    def get_auto_continue_status(self) -> dict[str, Any]:
+        status = self._load_json(
+            self._auto_continue_status_path(),
+            {"phase": "idle", "cycle_id": None, "events": [], "updated_at": None, "staged_draft_id": None},
+        )
+        status["recent_journal"] = self._tail_journal_events(limit=24)
+        drafts_payload = self._load_agent_console_drafts()
+        status["pending_drafts"] = drafts_payload.get("drafts", [])[:6]
+        status["ledger_present"] = self._offline_work_ledger_path().exists()
+        status["forbidden_skip_count"] = self._read_forbidden_skip_count()
+        status["available_generation_models"] = self._list_available_generation_models()
+        status["configured_primary_model"] = (
+            (self.routing_policy.get("task_routing") or {}).get("generation") or {}
+        ).get("primary_model")
+        return status
+
+    _FORBIDDEN_SKIP_PATH_NAME = "auto_continue_forbidden_skips.json"
+
+    def _forbidden_skip_path(self) -> Path:
+        return self.state_dir / self._FORBIDDEN_SKIP_PATH_NAME
+
+    def _read_forbidden_skip_count(self) -> int:
+        try:
+            data = self._load_json(self._forbidden_skip_path(), {"count": 0, "recent": []})
+            return int(data.get("count", 0))
+        except Exception:
+            return 0
+
+    def _bump_forbidden_skip_counter(self, target: str) -> None:
+        try:
+            data = self._load_json(self._forbidden_skip_path(), {"count": 0, "recent": []})
+            data["count"] = int(data.get("count", 0)) + 1
+            recent = list(data.get("recent", []))
+            recent.insert(0, {"target": target, "at": utc_now()})
+            data["recent"] = recent[:12]
+            self._write_json(self._forbidden_skip_path(), data)
+        except Exception:
+            pass
+
+    def _list_available_generation_models(self) -> list[str]:
+        try:
+            tags = self._ollama_request("/api/tags", method="GET", timeout_seconds=5)
+            return sorted({m.get("name", "") for m in tags.get("models", []) if m.get("name")})
+        except Exception:
+            return []
+
+    def warmup_generation_model(self, model_override: str | None = None) -> dict[str, Any]:
+        """Fire a trivial Ollama call to load the target model into VRAM."""
+        routing = (self.routing_policy.get("task_routing") or {}).get("generation") or {}
+        model = model_override or routing.get("primary_model") or "qwen2.5-coder:7b-instruct"
+        started = time.time()
+        try:
+            response = self._ollama_request(
+                "/api/generate",
+                method="POST",
+                payload={
+                    "model": model,
+                    "stream": False,
+                    "prompt": "Reply with exactly the word: ready",
+                    "options": {"temperature": 0.0, "num_predict": 6, "num_ctx": 2048},
+                },
+                timeout_seconds=90,
+            )
+            elapsed = time.time() - started
+            self._journal_event(
+                event_type="auto_continue",
+                status="warmup_completed",
+                summary=f"Warmed up {model} in {elapsed:.1f}s.",
+                payload={"model": model, "elapsed_seconds": elapsed, "eval_count": response.get("eval_count", 0)},
+                provenance=["continuation-platform/config/routing_policy.json"],
+            )
+            return {
+                "status": "ok",
+                "model": model,
+                "elapsed_seconds": round(elapsed, 2),
+                "response": (response.get("response") or "").strip()[:200],
+                "eval_count": response.get("eval_count", 0),
+            }
+        except Exception as exc:
+            return {"status": "error", "model": model, "error": str(exc)}
+
+    def run_drafting_only(
+        self,
+        goal: str,
+        target_file: str,
+        why_now: str = "",
+        model_override: str | None = None,
+    ) -> dict[str, Any]:
+        """Retry drafting for an existing proposal without re-running preflight or proposal."""
+        if not goal or not target_file:
+            return {"status": "invalid", "error": "goal and target_file are required"}
+        target_resolved = self._resolve_project_file_reference(target_file) or target_file
+        if self._is_forbidden_auto_target(target_resolved):
+            self._bump_forbidden_skip_counter(target_resolved)
+            return {
+                "status": "forbidden_target",
+                "target_file": target_resolved,
+                "draft": None,
+                "drafting_info": {"abort_reason": "target is on forbidden list"},
+            }
+        absolute_target = (self.bloodlines_root / target_resolved).resolve()
+        if not absolute_target.exists():
+            return {
+                "status": "target_missing",
+                "target_file": target_resolved,
+                "draft": None,
+                "drafting_info": {"abort_reason": "target file does not exist"},
+            }
+        try:
+            line_count = sum(1 for _ in absolute_target.open("r", encoding="utf-8", errors="ignore"))
+        except Exception:
+            line_count = 0
+        if line_count > self._AUTO_CONTINUE_MAX_FILE_LINES:
+            return {
+                "status": "target_too_large",
+                "target_file": target_resolved,
+                "draft": None,
+                "drafting_info": {"abort_reason": f"target is {line_count} lines; over {self._AUTO_CONTINUE_MAX_FILE_LINES} cap"},
+            }
+
+        try:
+            staged_draft, info = self._direct_drafting_call(
+                goal=goal,
+                target_relative=target_resolved,
+                absolute_target=absolute_target,
+                why_now=why_now,
+                model_override=model_override,
+            )
+        except Exception as exc:
+            return {
+                "status": "error",
+                "target_file": target_resolved,
+                "draft": None,
+                "drafting_info": {"abort_reason": str(exc)},
+            }
+
+        self._journal_event(
+            event_type="auto_continue",
+            status="redraft_completed" if staged_draft else "redraft_weak",
+            summary=("Redraft staged a draft." if staged_draft else "Redraft did not stage a draft."),
+            payload={
+                "goal": goal,
+                "target_file": target_resolved,
+                "draft_id": staged_draft.get("id") if staged_draft else None,
+                "model": info.get("model"),
+            },
+            provenance=[target_resolved],
+        )
+        return {
+            "status": "draft_ready" if staged_draft else "proposal_only",
+            "target_file": target_resolved,
+            "draft": staged_draft,
+            "drafting_info": info,
+        }
+
+    def _tail_journal_events(self, limit: int = 24) -> list[dict[str, Any]]:
+        if not self.journal_path.exists():
+            return []
+        try:
+            lines = self.journal_path.read_text(encoding="utf-8").splitlines()[-limit:]
+        except Exception:
+            return []
+        events: list[dict[str, Any]] = []
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                events.append(json.loads(line))
+            except Exception:
+                continue
+        return events
+
+    def _continue_preflight(self) -> dict[str, Any]:
+        checks: list[dict[str, Any]] = []
+        blockers: list[str] = []
+        warnings: list[str] = []
+        recovery_hints: list[str] = []
+
+        ollama_status = "ok"
+        ollama_detail = "Ollama reachable."
+        available_models: list[str] = []
+        try:
+            tags = self._ollama_request("/api/tags", method="GET", timeout_seconds=8)
+            available_models = [m.get("name", "") for m in tags.get("models", []) if m.get("name")]
+        except Exception as exc:
+            ollama_status = "fail"
+            ollama_detail = f"Ollama unreachable: {exc}"
+            blockers.append("ollama_unreachable")
+            recovery_hints.append("Start Ollama (`ollama serve` or the system tray app), then retry.")
+        checks.append({"name": "ollama_reachable", "status": ollama_status, "detail": ollama_detail})
+
+        generation_routing = (self.routing_policy.get("task_routing") or {}).get("generation") or {}
+        required_primary = generation_routing.get("primary_model")
+        model_status = "ok"
+        model_detail = f"Primary generation model present: {required_primary}"
+        if ollama_status == "ok" and required_primary and required_primary not in available_models:
+            model_status = "fail"
+            model_detail = (
+                f"Primary model '{required_primary}' not in Ollama inventory. "
+                f"Installed: {', '.join(available_models[:8]) or 'none'}."
+            )
+            blockers.append("model_missing")
+            recovery_hints.append(f"Run `ollama pull {required_primary}`, then retry.")
+        checks.append({"name": "generation_model_available", "status": model_status, "detail": model_detail})
+
+        last_scan_iso = ((self.telemetry or {}).get("ingestion") or {}).get("last_scan_time")
+        scan_age_hours: float | None = None
+        if last_scan_iso:
+            try:
+                parsed = datetime.fromisoformat(last_scan_iso.replace("Z", "+00:00"))
+                scan_age_hours = (datetime.now(timezone.utc) - parsed).total_seconds() / 3600.0
+            except Exception:
+                scan_age_hours = None
+        scan_status = "ok"
+        scan_detail = f"Last scan: {last_scan_iso or 'never'}"
+        rescan_triggered = False
+        if scan_age_hours is None or scan_age_hours > 12:
+            try:
+                self.perform_rescan(mode="auto_continue_preflight")
+                rescan_triggered = True
+                scan_detail = "Auto-rescan completed (state was stale or missing)."
+            except Exception as exc:
+                scan_status = "fail"
+                scan_detail = f"Auto-rescan failed: {exc}"
+                blockers.append("scan_failed")
+                recovery_hints.append("Run /rescan manually and check Timeline.")
+        elif scan_age_hours > 4:
+            warnings.append(f"Scan is {scan_age_hours:.1f}h old. Consider /rescan after manual edits.")
+        checks.append({"name": "scan_freshness", "status": scan_status, "detail": scan_detail, "age_hours": scan_age_hours, "auto_rescanned": rescan_triggered})
+
+        resume_state = self._apply_resume_override(self._load_json(self.resume_state_path, {}))
+        anchor = resume_state.get("effective_anchor") or resume_state.get("anchor") or {}
+        anchor_status = "ok"
+        anchor_detail = f"Resume anchor: {anchor.get('label') or 'unresolved'}"
+        if resume_state.get("selection_required"):
+            anchor_status = "warn"
+            anchor_detail = "Multiple resume candidates compete. Using highest-authority fallback."
+            warnings.append(anchor_detail)
+        checks.append({"name": "continuity_anchor", "status": anchor_status, "detail": anchor_detail})
+
+        posture = self.get_write_posture() or {}
+        posture_detail = f"Write posture: {posture.get('write_posture')} (tier: {posture.get('active_tier') or 'locked'})"
+        if posture.get("write_posture") != "read_only":
+            warnings.append("Write gate UNLOCKED. Auto-apply is possible; review carefully.")
+        checks.append({"name": "write_posture", "status": "ok", "detail": posture_detail})
+
+        overall = "fail" if blockers else ("warn" if warnings else "ok")
+        return {
+            "status": overall,
+            "checks": checks,
+            "warnings": warnings,
+            "blockers": blockers,
+            "recovery_hints": recovery_hints,
+            "available_models": available_models,
+        }
+
+    def _continuity_prompt_text(self) -> str:
+        return (
+            "Continue Bloodlines work from the current authoritative state.\n\n"
+            "Ground yourself in these files first (cite any you use): governance/OWNER_DIRECTION_2026-04-16_FULL_CANON_UNITY.md, "
+            "HANDOFF.md if present, NEXT_SESSION_HANDOFF.md, CURRENT_PROJECT_STATE.md, the most recent "
+            "docs/unity/session-handoffs/*.md, and continuity/PROJECT_STATE.json.\n\n"
+            "Identify ONE single smallest next unit of work that is:\n"
+            "- aligned with the Unity shipping lane or canon preservation mandate,\n"
+            "- scoped to a concrete SMALL file (under 500 lines),\n"
+            "- verifiable by reading the result (no Unity editor required),\n"
+            "- NOT boot-order sensitive, NOT multi-file, NOT a brand-new system,\n"
+            "- NOT a 'review' or 'analyze' task and NOT a meta proposal about the continuity system itself.\n\n"
+            "FORBIDDEN targets (never propose these as TARGET FILE): CURRENT_PROJECT_STATE.md, NEXT_SESSION_HANDOFF.md, "
+            "continuity/PROJECT_STATE.json, MASTER_PROJECT_INDEX.md, MASTER_BLOODLINES_CONTEXT.md, SOURCE_PROVENANCE_MAP.md, "
+            "AGENTS.md, CLAUDE.md, HANDOFF.md, README.md, anything under governance/, anything under continuation-platform/.\n"
+            "Good candidates: specific files under docs/, tasks/, 18_EXPORTS/, 02_SESSION_INGESTIONS/, or a concrete small Unity .cs file under unity/Assets/_Bloodlines/Code/.\n\n"
+            "Respond ONLY as a JSON object with this shape:\n"
+            "{\n"
+            "  \"mode\": \"final\",\n"
+            "  \"assistant_message\": \"<the proposal in the exact block format below>\",\n"
+            "  \"citations\": [<relative paths you read>],\n"
+            "  \"actions_taken\": [<short strings>],\n"
+            "  \"confidence\": <0.0 to 1.0>\n"
+            "}\n\n"
+            "assistant_message MUST be a single text block shaped exactly like this:\n"
+            "GOAL: <one imperative sentence>\n"
+            "TARGET FILE: <relative path inside the Bloodlines root>\n"
+            "WHY NOW: <one sentence grounded in cited handoff or owner direction>\n"
+            "CITATIONS: <comma-separated files you read>\n"
+            "CHECK: <how an operator can verify the change by reading, no Unity editor run>\n\n"
+            "Do not draft the change yet. Stop after the proposal."
+        )
+
+    def _extract_proposal_fields(self, assistant_message: str) -> dict[str, str]:
+        fields = {"goal": "", "target_file": "", "why_now": "", "check": "", "citations": ""}
+        if not assistant_message:
+            return fields
+        for line in assistant_message.splitlines():
+            match = re.match(r"\s*(GOAL|TARGET FILE|WHY NOW|CHECK|CITATIONS)\s*:\s*(.+)$", line.strip(), re.IGNORECASE)
+            if not match:
+                continue
+            key = match.group(1).lower().replace(" ", "_")
+            value = match.group(2).strip()
+            if key in fields and not fields[key]:
+                fields[key] = value
+        return fields
+
+    def _direct_drafting_call(
+        self,
+        goal: str,
+        target_relative: str,
+        absolute_target: Path,
+        why_now: str,
+        model_override: str | None = None,
+    ) -> tuple[dict[str, Any] | None, dict[str, Any]]:
+        """Direct Ollama call for drafting.
+
+        Returns (draft_or_none, info_dict) where info_dict always has:
+          model, raw_response, parsed_mode, abort_reason, decode_error.
+        """
+        if absolute_target.exists():
+            try:
+                current_content = absolute_target.read_text(encoding="utf-8", errors="ignore")
+            except Exception:
+                current_content = ""
+        else:
+            current_content = ""
+
+        routing = (self.routing_policy.get("task_routing") or {}).get("generation") or {}
+        model = model_override or routing.get("primary_model") or "qwen2.5-coder:7b-instruct"
+
+        info: dict[str, Any] = {
+            "model": model,
+            "raw_response": "",
+            "parsed_mode": None,
+            "abort_reason": None,
+            "decode_error": None,
+        }
+
+        prompt = (
+            "Produce a governed write draft that executes the approved proposal.\n\n"
+            f"GOAL: {goal}\n"
+            f"TARGET FILE: {target_relative}\n"
+            f"WHY NOW: {why_now}\n\n"
+            "CURRENT FILE CONTENT (use this as the base; preserve everything not explicitly changed):\n"
+            "-----BEGIN FILE-----\n"
+            f"{current_content}\n"
+            "-----END FILE-----\n\n"
+            "Respond ONLY as a JSON object matching this schema:\n"
+            "{\n"
+            "  \"mode\": \"draft_write\",\n"
+            "  \"summary\": \"<one sentence summary of the change>\",\n"
+            "  \"relative_path\": \"" + target_relative + "\",\n"
+            "  \"content\": \"<FULL new file content after the edit>\",\n"
+            "  \"confidence\": <0.0 to 1.0>\n"
+            "}\n\n"
+            "Hard rules:\n"
+            "- Preserve ALL existing content. The change must be additive unless GOAL explicitly says otherwise.\n"
+            "- Do NOT reformat unchanged lines.\n"
+            "- Do NOT touch boot-order logic or multi-file systems.\n"
+            "- If the change cannot be made safely within this single file, respond with {\"mode\":\"abort\",\"reason\":\"<why>\"}.\n"
+            "- Output valid JSON only. No explanation text outside the JSON."
+        )
+
+        try:
+            response = self._ollama_request(
+                "/api/generate",
+                method="POST",
+                payload={
+                    "model": model,
+                    "stream": False,
+                    "format": "json",
+                    "prompt": prompt,
+                    "options": {
+                        "temperature": 0.15,
+                        "num_predict": 4096,
+                        "num_ctx": 16384,
+                    },
+                },
+                timeout_seconds=300,
+            )
+        except Exception as exc:
+            raise RuntimeError(f"Ollama drafting call failed: {exc}") from exc
+
+        raw = (response.get("response") or "").strip()
+        info["raw_response"] = raw[:4000]
+        if not raw:
+            return None, info
+        try:
+            parsed = self._extract_json_object(raw)
+        except Exception as decode_exc:
+            info["decode_error"] = str(decode_exc)
+            return None, info
+
+        mode = str(parsed.get("mode", "")).strip().lower()
+        info["parsed_mode"] = mode
+        if mode == "abort":
+            info["abort_reason"] = str(parsed.get("reason", ""))[:400] or "model aborted without reason"
+            return None, info
+        if mode != "draft_write":
+            info["abort_reason"] = f"unexpected mode '{mode}', expected 'draft_write'"
+            return None, info
+        new_content = parsed.get("content")
+        if not isinstance(new_content, str) or not new_content.strip():
+            info["abort_reason"] = "model returned draft_write with empty content"
+            return None, info
+        if new_content == current_content:
+            info["abort_reason"] = "model returned unchanged content"
+            return None, info
+
+        summary = str(parsed.get("summary") or goal)[:400]
+        citations = [target_relative]
+        draft = self._create_agent_console_draft(
+            relative_path=target_relative,
+            reason=summary,
+            content=new_content,
+            citations=citations,
+        )
+        return draft, info
+
+    def _build_auto_drafting_prompt(self, goal: str, target_file: str, why_now: str) -> str:
+        return (
+            "A proposal has been approved. Produce a governed write draft that executes it.\n\n"
+            f"GOAL: {goal}\n"
+            f"TARGET FILE: {target_file}\n"
+            f"WHY NOW: {why_now}\n\n"
+            "Workflow:\n"
+            "1. Use the read_file tool to load TARGET FILE exactly once.\n"
+            "2. Decide the smallest additive change that satisfies GOAL.\n"
+            "3. Respond ONLY as a JSON object with mode='draft_write'.\n\n"
+            "Schema:\n"
+            "{\n"
+            "  \"mode\": \"draft_write\",\n"
+            "  \"assistant_message\": \"<one sentence summary of the change>\",\n"
+            "  \"write_draft\": {\n"
+            "    \"relative_path\": \"<TARGET FILE>\",\n"
+            "    \"reason\": \"<the GOAL sentence>\",\n"
+            "    \"content\": \"<FULL new file content after the edit, preserving everything not explicitly changed>\"\n"
+            "  },\n"
+            "  \"citations\": [<relative paths used>],\n"
+            "  \"confidence\": <0.0 to 1.0>\n"
+            "}\n\n"
+            "Hard rules:\n"
+            "- Preserve ALL existing content. Additive unless GOAL explicitly says otherwise.\n"
+            "- Do NOT reformat unchanged lines.\n"
+            "- Do NOT touch BloodlinesBootstrap.cs, boot-order, or multi-file systems.\n"
+            "- If the change cannot fit in one file, respond with mode='final' and explain why."
+        )
+
+    def run_autonomous_cycle(self, model_override: str | None = None) -> dict[str, Any]:
+        cycle_id = f"cycle-{int(time.time() * 1000)}"
+        events: list[dict[str, Any]] = []
+
+        def add_event(step: str, status: str, detail: str = "", **extra: Any) -> None:
+            event = {"step": step, "status": status, "detail": detail, "at": utc_now(), **extra}
+            events.append(event)
+            phase = "cycling"
+            if status == "failed" or status == "blocked":
+                phase = "blocked"
+            self._write_auto_continue_status({"phase": phase, "cycle_id": cycle_id, "events": events[-16:]})
+
+        add_event("preflight", "running", "Checking Ollama, model, scan freshness, anchor, write posture.")
+        preflight = self._continue_preflight()
+        add_event(
+            "preflight",
+            "completed" if preflight["status"] != "fail" else "failed",
+            "; ".join(c["detail"] for c in preflight["checks"]),
+            preflight_status=preflight["status"],
+            warnings=preflight.get("warnings", []),
+        )
+        if preflight["status"] == "fail":
+            self._write_auto_continue_status({"phase": "blocked", "cycle_id": cycle_id, "events": events})
+            self._journal_event(
+                event_type="auto_continue",
+                status="blocked",
+                summary="Auto-continue halted by preflight.",
+                payload={"preflight": preflight, "cycle_id": cycle_id},
+                provenance=[],
+            )
+            return {
+                "status": "blocked",
+                "cycle_id": cycle_id,
+                "events": events,
+                "preflight": preflight,
+                "recovery_hints": preflight.get("recovery_hints", []),
+            }
+
+        add_event("proposal", "running", "Asking local model for the next single-file unit of work.")
+        session = self._load_agent_console_session()
+        proposal_result = self._run_agent_console_prompt(session, self._continuity_prompt_text())
+        self._save_agent_console_session(session)
+        proposal_text = proposal_result.get("assistant_message", "") or ""
+        fields = self._extract_proposal_fields(proposal_text)
+        goal = fields.get("goal") or ""
+        target_file = fields.get("target_file") or ""
+        why_now = fields.get("why_now") or ""
+        add_event(
+            "proposal",
+            "completed" if goal and target_file else "weak",
+            (goal or "(no GOAL extracted)") + (f" -> {target_file}" if target_file else ""),
+            goal=goal,
+            target_file=target_file,
+            proposal=proposal_text[:1800],
+        )
+
+        if not goal or not target_file:
+            self._write_auto_continue_status({"phase": "review", "cycle_id": cycle_id, "events": events})
+            self._journal_event(
+                event_type="auto_continue",
+                status="proposal_only",
+                summary="Auto-continue returned a proposal without extractable GOAL or TARGET FILE.",
+                payload={"cycle_id": cycle_id, "fields": fields},
+                provenance=proposal_result.get("citations", [])[:12],
+            )
+            return {
+                "status": "proposal_only",
+                "cycle_id": cycle_id,
+                "events": events,
+                "proposal": proposal_text,
+                "fields": fields,
+                "proposal_result": proposal_result,
+                "draft": None,
+            }
+
+        target_resolved = self._resolve_project_file_reference(target_file) or target_file
+        if self._is_forbidden_auto_target(target_resolved):
+            self._bump_forbidden_skip_counter(target_resolved)
+            add_event(
+                "drafting",
+                "skipped",
+                f"Target {target_resolved} is on the auto-continue forbidden list (continuity/governance file). Proposal stands.",
+                target_file=target_resolved,
+            )
+            self._write_auto_continue_status({"phase": "review", "cycle_id": cycle_id, "events": events})
+            self._journal_event(
+                event_type="auto_continue",
+                status="drafting_skipped_forbidden_target",
+                summary=f"Auto-continue skipped drafting {target_resolved}; target is on forbidden list.",
+                payload={"cycle_id": cycle_id, "target_file": target_resolved, "goal": goal},
+                provenance=[target_resolved],
+            )
+            return {
+                "status": "proposal_only",
+                "cycle_id": cycle_id,
+                "events": events,
+                "proposal": proposal_text,
+                "fields": fields,
+                "proposal_result": proposal_result,
+                "draft": None,
+                "drafting_skipped_reason": "forbidden_target",
+            }
+
+        absolute_target = (self.bloodlines_root / target_resolved).resolve()
+        target_line_count = 0
+        if absolute_target.exists():
+            try:
+                target_line_count = sum(1 for _ in absolute_target.open("r", encoding="utf-8", errors="ignore"))
+            except Exception:
+                target_line_count = 0
+        if target_line_count > self._AUTO_CONTINUE_MAX_FILE_LINES:
+            add_event(
+                "drafting",
+                "skipped",
+                f"{target_resolved} is {target_line_count} lines; exceeds auto-draft safety ceiling of {self._AUTO_CONTINUE_MAX_FILE_LINES}.",
+                target_line_count=target_line_count,
+            )
+            self._write_auto_continue_status({"phase": "review", "cycle_id": cycle_id, "events": events})
+            self._journal_event(
+                event_type="auto_continue",
+                status="drafting_skipped_large_file",
+                summary=f"Auto-continue skipped drafting; {target_resolved} too large for 7B drafting.",
+                payload={"cycle_id": cycle_id, "target_line_count": target_line_count, "goal": goal},
+                provenance=[target_resolved],
+            )
+            return {
+                "status": "proposal_only",
+                "cycle_id": cycle_id,
+                "events": events,
+                "proposal": proposal_text,
+                "fields": fields,
+                "proposal_result": proposal_result,
+                "draft": None,
+                "drafting_skipped_reason": "target_file_too_large",
+            }
+
+        add_event("drafting", "running", f"Drafting additive change for {target_resolved}.")
+        staged_draft = None
+        drafting_error: str | None = None
+        drafting_info: dict[str, Any] = {}
+        try:
+            staged_draft, drafting_info = self._direct_drafting_call(
+                goal=goal,
+                target_relative=target_resolved,
+                absolute_target=absolute_target,
+                why_now=why_now,
+                model_override=model_override,
+            )
+            if not staged_draft:
+                drafting_error = drafting_info.get("abort_reason") or drafting_info.get("decode_error") or "model returned no valid write_draft"
+        except Exception as exc:
+            drafting_error = str(exc)
+
+        if staged_draft:
+            add_event(
+                "drafting",
+                "completed",
+                f"Staged draft {staged_draft.get('id')} for {staged_draft.get('relative_path')}.",
+                draft_id=staged_draft.get("id"),
+            )
+        else:
+            add_event(
+                "drafting",
+                "weak",
+                f"Drafting turn did not produce a staged draft. Reason: {drafting_error or 'model returned no valid write_draft'}.",
+            )
+
+        staged_draft_id = staged_draft.get("id") if staged_draft else None
+        self._write_auto_continue_status(
+            {"phase": "review", "cycle_id": cycle_id, "events": events, "staged_draft_id": staged_draft_id}
+        )
+        self._journal_event(
+            event_type="auto_continue",
+            status="completed",
+            summary="Auto-continue cycle completed"
+            + (" and staged a draft." if staged_draft else " (no draft staged)."),
+            payload={
+                "cycle_id": cycle_id,
+                "goal": goal,
+                "target_file": target_resolved,
+                "draft_id": staged_draft_id,
+            },
+            provenance=[target_resolved] + proposal_result.get("citations", [])[:6],
+        )
+        return {
+            "status": "draft_ready" if staged_draft else "proposal_only",
+            "cycle_id": cycle_id,
+            "events": events,
+            "proposal": proposal_text,
+            "fields": fields,
+            "proposal_result": proposal_result,
+            "drafting_error": drafting_error,
+            "drafting_info": drafting_info,
+            "model_override": model_override,
+            "draft": staged_draft,
+        }
+
+    def _append_offline_work_ledger(self, draft_meta: dict[str, Any], write_result: dict[str, Any]) -> None:
+        ledger_path = self._offline_work_ledger_path()
+        timestamp = utc_now()
+        relative_path = draft_meta.get("relative_path") or write_result.get("target_path") or "unknown"
+        reason = draft_meta.get("reason") or "(no reason provided)"
+        draft_id = draft_meta.get("id") or "(no id)"
+        header = ""
+        if not ledger_path.exists():
+            header = (
+                "# Offline Work Ledger\n\n"
+                "Every draft applied by the offline continuation platform is recorded here.\n"
+                "When Claude or Codex usage returns, the returning agent MUST read this file and "
+                "`continuation-platform/docs/VERIFY_OFFLINE_WORK.md` before new feature work.\n\n"
+                "Most recent entry is at the top.\n\n---\n\n"
+            )
+        try:
+            existing = ledger_path.read_text(encoding="utf-8") if ledger_path.exists() else ""
+            entry = (
+                f"## {timestamp} | {relative_path}\n"
+                f"- Draft id: `{draft_id}`\n"
+                f"- Reason: {reason}\n"
+                f"- Source basis: {draft_meta.get('source_basis') or 'unknown'}\n"
+                f"- Backup: {write_result.get('backup_path') or '(none recorded)'}\n"
+                f"- Applied sha256: {write_result.get('sha256_after') or write_result.get('sha256') or '(not captured)'}\n"
+                f"- Verification status: pending (mark VERIFIED or REVERTED when reviewed)\n\n"
+            )
+            ledger_path.write_text(header + entry + existing, encoding="utf-8")
+        except Exception:
+            pass
 
     def _handle_agent_console_command(self, raw_command: str) -> dict[str, Any]:
         command_line = raw_command.strip()
@@ -1676,6 +2445,7 @@ Tool trace so far:
         )
         drafts_payload["drafts"] = [item for item in drafts if item.get("id") != draft_id]
         self._save_agent_console_drafts(drafts_payload)
+        self._append_offline_work_ledger(target_draft, result)
         self.perform_rescan(mode="agent_console_apply")
         return result
 
@@ -1727,7 +2497,7 @@ Tool trace so far:
                         "stream": False,
                         "format": "json",
                         "prompt": prompt,
-                        "options": {"temperature": 0.2, "num_predict": 700},
+                        "options": {"temperature": 0.2, "num_predict": 700, "num_ctx": 16384},
                     },
                     timeout_seconds=180,
                 )
@@ -3554,7 +4324,7 @@ Tool trace so far:
                     "stream": False,
                     "format": "json",
                     "prompt": prompt,
-                    "options": {"temperature": 0.2, "num_predict": 320},
+                    "options": {"temperature": 0.2, "num_predict": 320, "num_ctx": 16384},
                 },
                 timeout_seconds=150,
             )
@@ -3797,8 +4567,28 @@ Retrieved support:
                 """,
                 (created_at, event_type, status, doctrine_check, json.dumps(provenance), summary, json.dumps(payload)),
             )
+        self._rotate_journal_if_needed()
         with self.journal_path.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(record) + "\n")
+
+    _JOURNAL_ROTATION_BYTES = 10 * 1024 * 1024  # 10 MB
+
+    def _rotate_journal_if_needed(self) -> None:
+        try:
+            if not self.journal_path.exists():
+                return
+            if self.journal_path.stat().st_size < self._JOURNAL_ROTATION_BYTES:
+                return
+            archive = self.journal_path.with_suffix(".jsonl.1")
+            if archive.exists():
+                try:
+                    archive.unlink()
+                except Exception:
+                    pass
+            self.journal_path.rename(archive)
+            self.journal_path.write_text("", encoding="utf-8")
+        except Exception:
+            pass
 
     def get_timeline(self, limit: int = 20) -> list[dict[str, Any]]:
         with self._connect() as connection:

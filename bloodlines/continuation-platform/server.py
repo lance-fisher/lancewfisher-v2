@@ -64,6 +64,9 @@ class ContinuationRequestHandler(BaseHTTPRequestHandler):
         if parsed.path == "/api/handoff-builder":
             self._send_json(CORE.get_handoff_builder_state())
             return
+        if parsed.path == "/api/continue/status":
+            self._send_json(CORE.get_auto_continue_status())
+            return
         self.send_error(HTTPStatus.NOT_FOUND, "Not found")
 
     def do_POST(self) -> None:
@@ -75,6 +78,24 @@ class ContinuationRequestHandler(BaseHTTPRequestHandler):
                 return
             if parsed.path == "/api/agent/resume":
                 self._send_json(CORE.resume_from_last_good_state())
+                return
+            if parsed.path == "/api/continue/cycle":
+                model_override = (payload.get("model_override") or None) if payload else None
+                self._send_json(CORE.run_autonomous_cycle(model_override=model_override))
+                return
+            if parsed.path == "/api/continue/redraft":
+                self._send_json(
+                    CORE.run_drafting_only(
+                        goal=(payload.get("goal") or "").strip() if payload else "",
+                        target_file=(payload.get("target_file") or "").strip() if payload else "",
+                        why_now=(payload.get("why_now") or "") if payload else "",
+                        model_override=(payload.get("model_override") or None) if payload else None,
+                    )
+                )
+                return
+            if parsed.path == "/api/continue/warmup":
+                model_override = (payload.get("model_override") or None) if payload else None
+                self._send_json(CORE.warmup_generation_model(model_override=model_override))
                 return
             if parsed.path == "/api/agent-console/message":
                 self._send_json(CORE.submit_agent_console_message(payload.get("message", "")))

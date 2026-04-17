@@ -18,9 +18,14 @@
       "reason": "Balanced general summarization without tying up the coding model."
     },
     "generation": {
+      "primary_model": "qwen2.5-coder:7b-instruct",
+      "fallback_model": "qwen2.5-coder:14b",
+      "reason": "7B fits entirely in the 4070 Laptop 8GB VRAM, keeping auto-continue turns responsive. 14B is fallback for batch work."
+    },
+    "batch_generation": {
       "primary_model": "qwen2.5-coder:14b",
       "fallback_model": "qwen2.5:14b-instruct",
-      "reason": "Strongest installed local model for implementation-sensitive continuation work."
+      "reason": "Reserved for long single-shot targeted tasks where quality justifies CPU offload latency."
     },
     "design_continuation": {
       "primary_model": "qwen2.5:14b-instruct",
