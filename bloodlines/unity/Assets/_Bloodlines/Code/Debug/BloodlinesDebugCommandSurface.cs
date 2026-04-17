@@ -3350,6 +3350,24 @@ namespace Bloodlines.Debug
                     .Append(" (available ")
                     .Append(factionSnapshot.PopulationAvailable)
                     .Append(')');
+
+                if (factionSnapshot.PopulationCap > 0)
+                {
+                    int densityPct = Mathf.Clamp(
+                        Mathf.RoundToInt(
+                            (float)factionSnapshot.PopulationTotal / factionSnapshot.PopulationCap * 100f),
+                        0,
+                        999);
+                    builder.Append("  density ").Append(densityPct).Append('%');
+                }
+
+                if (factionSnapshot.LoyaltyFound)
+                {
+                    builder.Append("    <b>Loyalty</b>: ")
+                        .Append(Mathf.RoundToInt(factionSnapshot.Loyalty))
+                        .Append('/')
+                        .Append(Mathf.RoundToInt(factionSnapshot.LoyaltyMax));
+                }
             }
             else
             {
@@ -3436,6 +3454,7 @@ namespace Bloodlines.Debug
                 ComponentType.ReadOnly<ResourceStockpileComponent>(),
                 ComponentType.ReadOnly<PopulationComponent>());
 
+            using var entities = query.ToEntityArray(Allocator.Temp);
             using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
             using var stockpiles = query.ToComponentDataArray<ResourceStockpileComponent>(Allocator.Temp);
             using var populations = query.ToComponentDataArray<PopulationComponent>(Allocator.Temp);
@@ -3447,7 +3466,7 @@ namespace Bloodlines.Debug
                     continue;
                 }
 
-                return new FactionHudSnapshot
+                var snapshot = new FactionHudSnapshot
                 {
                     Found = true,
                     Gold = stockpiles[i].Gold,
@@ -3461,6 +3480,16 @@ namespace Bloodlines.Debug
                     PopulationCap = populations[i].Cap,
                     PopulationAvailable = populations[i].Available,
                 };
+
+                if (entityManager.HasComponent<FactionLoyaltyComponent>(entities[i]))
+                {
+                    var loyalty = entityManager.GetComponentData<FactionLoyaltyComponent>(entities[i]);
+                    snapshot.LoyaltyFound = true;
+                    snapshot.Loyalty = loyalty.Current;
+                    snapshot.LoyaltyMax = loyalty.Max > 0f ? loyalty.Max : 100f;
+                }
+
+                return snapshot;
             }
 
             return default;
@@ -3573,6 +3602,9 @@ namespace Bloodlines.Debug
             public int PopulationTotal;
             public int PopulationCap;
             public int PopulationAvailable;
+            public float Loyalty;
+            public float LoyaltyMax;
+            public bool LoyaltyFound;
         }
 
         private struct TerritoryHudSnapshot
