@@ -38,6 +38,8 @@ namespace Bloodlines.Systems
                     WaterCrisisOutmigrationPerCycle = 1,
                     FamineLoyaltyDeltaPerCycle = -4,
                     WaterCrisisLoyaltyDeltaPerCycle = -6,
+                    PopulationCapPressureRatio = 0.95f,
+                    CapPressureLoyaltyDeltaPerCycle = -1,
                 });
             }
         }

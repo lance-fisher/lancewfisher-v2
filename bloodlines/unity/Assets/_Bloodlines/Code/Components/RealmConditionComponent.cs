@@ -22,6 +22,7 @@ namespace Bloodlines.Components
         public float AssaultFailureStrain;
         public double CohesionPenaltyUntil;
         public int LastStarvationResponseCycle;
+        public int LastCapPressureResponseCycle;
     }
 
     /// <summary>
@@ -45,5 +46,7 @@ namespace Bloodlines.Components
         public int WaterCrisisOutmigrationPerCycle;
         public int FamineLoyaltyDeltaPerCycle;
         public int WaterCrisisLoyaltyDeltaPerCycle;
+        public float PopulationCapPressureRatio;
+        public int CapPressureLoyaltyDeltaPerCycle;
     }
 }
