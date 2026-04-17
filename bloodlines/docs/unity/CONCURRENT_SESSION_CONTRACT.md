@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 2
+- Revision: 3
 - Last Updated: 2026-04-17
-- Last Updated By: codex-unity-target-acquisition-los-2026-04-17
-- Supersedes: revision 0 (pre-schema document)
+- Last Updated By: claude-continuity-refresh-2026-04-17
+- Supersedes: revision 2 (Tier 1 migration plan now authoritative; Tier 1 Conviction, Dynasty, Faith slices merged; group-movement slice merged with all 8 combat phases; continuity prompt v2 published)
 
 ## Purpose
 
@@ -56,7 +56,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: graphics-infrastructure
 
-- Status: active
+- Status: retired (first slice merged via `548d780`; follow-up polish items unstaffed, available to claim as new lane)
 - Branch Prefix: `claude/unity-graphics-infrastructure`
 - Owner Agent: claude-code
 - Owned Paths (exclusive):
@@ -77,8 +77,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: combat-attack-move
 
-- Status: complete_pending_merge_coordination
-- Branch Prefix: `codex/unity-attack-move`
+- Status: retired (merged into master via `5167a0b`)
+- Branch Prefix: `codex/unity-attack-orders-attack-move`
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/Combat/**` (extends the combat-and-projectile foundation)
@@ -93,7 +93,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: combat-acquisition-and-sight
 
-- Status: active
+- Status: retired (merged into master via `dc00fff`)
 - Branch Prefix: `codex/unity-target-acquisition-los`
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -103,8 +103,115 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md`
-- Current Branch In Flight: `codex/unity-target-acquisition-los` (stacked on `codex/unity-attack-move` until the attack-move branch is merged)
+- Current Branch In Flight: none
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md`
+
+### Lane: ai-barracks-observability
+
+- Status: retired (merged into master via `3101e98`)
+- Branch Prefix: `claude/unity-ai-expansion-and-faith`
+- Owner Agent: claude-code
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/AI/AIEconomyControllerComponent.cs` (additive fields: `TargetBarracksCount`, `ControlledBarracksCountCached`)
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AI.cs` (additive `TryDebugGetAIBuildingCounts`)
+- Current Branch In Flight: none
+
+### Lane: conviction-scoring
+
+- Status: retired (merged into master via `7f8de3c`)
+- Branch Prefix: `claude/unity-conviction-scoring`
+- Owner Agent: claude-code
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Conviction/**`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Conviction.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesConvictionSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityConvictionSmokeValidation.ps1`
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-17-unity-conviction-scoring-and-bands.md`
+- Current Branch In Flight: none
+- Follow-Up (pending operator design call): wire `ConvictionBandEffects.LoyaltyProtectionMultiplier` into loyalty decline, `PopulationGrowthMultiplier` into population growth, `CaptureMultiplier` into capture speed. Browser never applied these multipliers, so wiring is a design decision not an automatic port.
+
+### Lane: dynasty-core
+
+- Status: retired (merged into master via `1aa6ade`)
+- Branch Prefix: `claude/unity-dynasty-core`
+- Owner Agent: claude-code
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Dynasties/**`
+  - `unity/Assets/_Bloodlines/Code/Components/DynastyMemberComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Dynasty.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastySmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityDynastySmokeValidation.ps1`
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-17-unity-dynasty-core.md`
+- Current Branch In Flight: none
+- Follow-Up (next dynasty slice): wire `DynastyBootstrap.AttachDynasty` into `SkirmishBootstrapSystem`; extend `BloodlinesBootstrapRuntimeSmokeValidation` to assert 8 members per playable faction.
+
+### Lane: faith-commitment
+
+- Status: retired (merged into master via `9036d91`)
+- Branch Prefix: `claude/unity-faith-commitment`
+- Owner Agent: claude-code
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Faith/**`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Faith.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFaithSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityFaithSmokeValidation.ps1`
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-17-unity-faith-commitment-and-intensity.md`
+- Current Branch In Flight: none
+- Follow-Up (later faith slices): sacred-site exposure walker, structure intensity regen, wayshrine amplification, covenant tests, holy wars, divine right, conviction event on commit.
+
+### Lane: combat-group-movement-and-stances
+
+- Status: retired (merged into master via `d9e58fc`; all 8 combat phases green)
+- Branch Prefix: `codex/unity-group-movement-and-stances`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Combat/**` (group movement, combat stances, unit separation, recent impact recovery)
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Stances.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Movement.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesCombatSmokeValidation.cs` (phases 1-8: melee, projectile, explicit attack, attack-move, target-visibility, group-movement, separation, stance)
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-17-unity-group-movement-and-stances.md`
+- Current Branch In Flight: none
+
+## Next Unblocked Tier 1 Lanes (Unclaimed)
+
+Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
+
+### Next Lane Candidate: state-snapshot-restore
+
+- Suggested Branch: `claude/unity-save-load-snapshot` or `codex/unity-save-load-snapshot`.
+- Target Paths: `unity/Assets/_Bloodlines/Code/SaveLoad/**`, `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSaveLoadSmokeValidation.cs`, `scripts/Invoke-BloodlinesUnitySaveLoadSmokeValidation.ps1`.
+- Browser Reference: `src/game/core/simulation.js` `exportStateSnapshot`, `restoreStateSnapshot`.
+- Scope: round-trip all live ECS state (factions, loyalty, resources, realm conditions, conviction, dynasty + members + fallen ledger, faith + exposure, combat state, units, buildings, control points). Snapshot twice across a 30-second tick, clear world, restore, deep-equal compare.
+
+### Next Lane Candidate: fortification-siege-imminent-engagement
+
+- Suggested Branch: `claude/unity-fortification-siege` or `codex/unity-fortification-siege`.
+- Target Paths: `unity/Assets/_Bloodlines/Code/Fortification/**`, `unity/Assets/_Bloodlines/Code/Siege/**`, new Fortification/Siege/ImminentEngagement components.
+- Browser Reference: `src/game/core/simulation.js` `advanceFortificationTier`, `tickFortificationReserves`, `tickSiegeSupportLogistics`, `tickImminentEngagementWarnings`.
+- Canon: `04_SYSTEMS/TERRITORY_SYSTEM.md`, `governance/DEFENSIVE_FORTIFICATION_DOCTRINE.md`.
+
+### Next Lane Candidate: dual-clock-match-progression
+
+- Suggested Branch: `claude/unity-dual-clock` or `codex/unity-dual-clock`.
+- Target Paths: `unity/Assets/_Bloodlines/Code/Time/**`, `unity/Assets/_Bloodlines/Code/Components/DualClockComponent.cs`, `unity/Assets/_Bloodlines/Code/Components/MatchProgressionComponent.cs`.
+- Browser Reference: `src/game/core/simulation.js` `tickDualClock`, `updateMatchProgressionState`, `computeMatchProgressionState`, `getMatchProgressionSnapshot`, `declareInWorldTime`.
+- Canon: `02_SESSION_INGESTIONS/SESSION_2026-04-15_match-structure-time-system-multiplayer-doctrine*.md`.
+
+### Next Lane Candidate: ai-strategic-layer-port
+
+- Suggested Branch: `claude/unity-ai-strategic-layer` or `codex/unity-ai-strategic-layer`.
+- Target Paths: `unity/Assets/_Bloodlines/Code/AI/**` (extensive additions).
+- Browser Reference: `src/game/core/ai.js` (3,141 LOC full strategic brain).
+- Scope: port in per-stage slices. Each sub-slice gets its own handoff.
 
 ## Shared Files (Narrow Modification Rights for All Lanes)
 
