@@ -1,6 +1,6 @@
 # NEXT_SESSION_HANDOFF
 
-Last updated: 2026-04-17 (Session 113: Unity combat foundation green on branch `codex/unity-combat-foundation` with CombatStats/AttackTarget/Hostility payloads, auto-acquire/attack/death systems, bootstrap + production combat-stat wiring, browser-pixel-to-Unity-world combat-distance normalization via `map.tileSize`, dedicated combat smoke pass, and bootstrap runtime smoke preserved green in both the worktree-equivalent batch run and the unchanged governed wrapper; Session 112: Unity worker gather-deposit primary economy loop green with WorkerGatherComponent, WorkerGatherSystem driving Seeking/Gathering/Returning/Depositing phases, nearest-command-hall drop-off targeting, all seven canonical primary resource types routed into ResourceStockpileComponent, debug API for gather assignment and stockpile inspection, governed 5-worker gold-gather cycle proof carried into bootstrap runtime smoke artifact with controlled faction gold rising 45 to 55, startup timeout raised 75 to 120 seconds for the fuller sequence, and the first Git push of Sessions 100-108 + full canonical corpus + continuation platform source to origin lance-fisher/lancewfisher-v2; Session 111: finalization handoff and next-session continuation prompt refreshed so future sessions resume from the live Session 110 command-deck and Unity-shipping state instead of the obsolete Session 104 prompt; Session 110: continuation platform chat-first Command Deck green with persistent offline Bloodlines agent conversation, slash commands, local-model turns, governed write-draft staging and apply flow, live HTTP validation, and `8067` promoted into the main offline continuation surface; Session 109: continuation platform execution packet and governed write workbench green with dynamic current-canon ingestion, Unity shipping-lane Execution view, safe project-file load and diff preview, tier-gated canonical project writes with stale-source protection, live HTTP validation, and repaired current Unity recommendation; Session 108: Unity first-shell production progress observability green with world-space production progress bar, debug API progress getter, governed mid-production advancement proof carried into bootstrap runtime smoke artifact, and spawn-floor and equality gates scoped to allow mid-production observation; Session 107: Unity first-shell construction progress observability and UI green with selection-aware progress panel, world-space progress bar, governed mid-construction advancement proof, and refreshed bootstrap runtime smoke artifact; Session 106: owner direction refresh saved with full-canon Unity 6.3 DOTS/ECS delivery, browser freeze, and no-MVP rule; Session 105: project-completion handoff refreshed with completed-vs-remaining summary; Session 104: Unity constructed production continuity green and ready-to-paste next-session prompt added; Session 103: Unity first governed construction slice green; Session 102: Unity two-deep production queue tail-cancel validation green; Session 101: Unity production queue cancel-and-refund slice green; Session 100: Unity first production slice green; continuation platform quality-of-life pass validated with persistent view state, in-view filtering, quick-jump controls, copy actions, toast feedback, and manual anchor clear; graphics lane through Batch 08 with refreshed Unity testbeds and applied batch-review governance; Session 96: Naval world integration; Session 95: Trueborn recognition; Session 94: Rise arc; Session 93: Trueborn City; Sessions 88-92: sovereignty/pact deepening; all prior lanes preserved)
+Last updated: 2026-04-17 (Session 120: Unity projectile combat green on branch `codex/unity-projectile-combat` with projectile runtime payloads, ranged and projectile-siege delivery split from melee instant-hit combat, bootstrap + production projectile spawn wiring, projectile debug proxies, dedicated melee-plus-projectile combat smoke validation, bootstrap runtime smoke preserved green with all economy proofs still present, and both canonical scene-shell validators preserved green in the clean projectile worktree; Session 113: Unity combat foundation green on branch `codex/unity-combat-foundation` with CombatStats/AttackTarget/Hostility payloads, auto-acquire/attack/death systems, bootstrap + production combat-stat wiring, browser-pixel-to-Unity-world combat-distance normalization via `map.tileSize`, dedicated combat smoke pass, and bootstrap runtime smoke preserved green in both the worktree-equivalent batch run and the unchanged governed wrapper; Session 112: Unity worker gather-deposit primary economy loop green with WorkerGatherComponent, WorkerGatherSystem driving Seeking/Gathering/Returning/Depositing phases, nearest-command-hall drop-off targeting, all seven canonical primary resource types routed into ResourceStockpileComponent, debug API for gather assignment and stockpile inspection, governed 5-worker gold-gather cycle proof carried into bootstrap runtime smoke artifact with controlled faction gold rising 45 to 55, startup timeout raised 75 to 120 seconds for the fuller sequence, and the first Git push of Sessions 100-108 + full canonical corpus + continuation platform source to origin lance-fisher/lancewfisher-v2; Session 111: finalization handoff and next-session continuation prompt refreshed so future sessions resume from the live Session 110 command-deck and Unity-shipping state instead of the obsolete Session 104 prompt; Session 110: continuation platform chat-first Command Deck green with persistent offline Bloodlines agent conversation, slash commands, local-model turns, governed write-draft staging and apply flow, live HTTP validation, and `8067` promoted into the main offline continuation surface; Session 109: continuation platform execution packet and governed write workbench green with dynamic current-canon ingestion, Unity shipping-lane Execution view, safe project-file load and diff preview, tier-gated canonical project writes with stale-source protection, live HTTP validation, and repaired current Unity recommendation; Session 108: Unity first-shell production progress observability green with world-space production progress bar, debug API progress getter, governed mid-production advancement proof carried into bootstrap runtime smoke artifact, and spawn-floor and equality gates scoped to allow mid-production observation; Session 107: Unity first-shell construction progress observability and UI green with selection-aware progress panel, world-space progress bar, governed mid-construction advancement proof, and refreshed bootstrap runtime smoke artifact; Session 106: owner direction refresh saved with full-canon Unity 6.3 DOTS/ECS delivery, browser freeze, and no-MVP rule; Session 105: project-completion handoff refreshed with completed-vs-remaining summary; Session 104: Unity constructed production continuity green and ready-to-paste next-session prompt added; Session 103: Unity first governed construction slice green; Session 102: Unity two-deep production queue tail-cancel validation green; Session 101: Unity production queue cancel-and-refund slice green; Session 100: Unity first production slice green; continuation platform quality-of-life pass validated with persistent view state, in-view filtering, quick-jump controls, copy actions, toast feedback, and manual anchor clear; graphics lane through Batch 08 with refreshed Unity testbeds and applied batch-review governance; Session 96: Naval world integration; Session 95: Trueborn recognition; Session 94: Rise arc; Session 93: Trueborn City; Sessions 88-92: sovereignty/pact deepening; all prior lanes preserved)
 Previous author: Claude
 Next recommended action applies to whichever agent (Claude or Codex) runs next.
 
@@ -28,10 +28,49 @@ Next recommended action applies to whichever agent (Claude or Codex) runs next.
 
 ## Remaining Before Bloodlines Is Entirely Done
 
-- Unity still needs broader gameplay depth, more construction and production coverage, richer runtime UI, explicit attack orders or attack-move, projectile delivery for ranged units, and deeper combat presentation or balance beyond the first combat foundation.
+- Unity still needs broader gameplay depth, more construction and production coverage, richer runtime UI, explicit attack orders or attack-move, acquisition throttling or line-of-sight gating, and deeper combat presentation or balance beyond the new projectile delivery foundation.
 - Browser-side unfinished follow-up remains preserved historically as reference material, but future realization of those systems belongs in Unity rather than in new browser feature work.
 - Graphics is still at concept and staging level pending formal review calls and later runtime-ready asset production.
 - Wwise audio integration, Netcode for Entities multiplayer realization, broader UX polish, full QA or balance passes, and stronger end-to-end shipping readiness are still unfinished.
+
+## 2026-04-17 Session 120 Unity Projectile Combat
+
+- Branch lane: `codex/unity-projectile-combat`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-17-unity-projectile-combat.md`
+- The combat-foundation base was already merged into `master` at `a8dd553`, and this follow-up slice now lands the first real ranged projectile lifecycle:
+  - `ProjectileComponent`
+  - `ProjectileFactoryComponent`
+  - `ProjectileMovementSystem`
+  - `ProjectileImpactSystem`
+- `AttackResolutionSystem` now keeps melee on the old instant-hit path while routing ranged and projectile-capable siege attacks through spawned projectile entities.
+- Bootstrap authoring, baking, skirmish bootstrap spawn, and produced-unit spawn now all carry projectile speed, lifetime, and arrival-radius payloads.
+- The debug presentation bridge now renders live projectile proxy spheres so projectile travel is visible in Play Mode.
+- `BloodlinesCombatSmokeValidation` now proves both:
+  - melee instant-hit kill resolution still works
+  - bowman projectile travel is visible in flight before impact and still kills on arrival
+- Validation for this branch is green:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`
+  - `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`
+  - clean-worktree bootstrap runtime smoke via `BloodlinesBootstrapRuntimeSmokeValidation.RunBatchBootstrapRuntimeSmokeValidation`
+  - clean-worktree bootstrap scene shell validation via `BloodlinesGameplaySceneBootstrap.RunBatchValidateBootstrapSceneShell`
+  - clean-worktree gameplay scene shell validation via `BloodlinesGameplaySceneBootstrap.RunBatchValidateGameplaySceneShell`
+  - `node tests/data-validation.mjs`
+  - `node tests/runtime-bridge.mjs`
+- Bootstrap runtime smoke still ends with the full economy proof set green:
+  - `gatherDepositObserved=True`
+  - `trickleGainObserved=True`
+  - `starvationObserved=True`
+  - `loyaltyDeclineObserved=True`
+  - `capPressureObserved=True`
+- Shared-file compatibility note:
+  - current `master` still references Claude-lane AI economy attachment before the actual AI component file is merged
+  - `SkirmishBootstrapSystem` now attaches that component reflectively when it exists so this projectile branch remains buildable without taking ownership of `Code/AI/**`
+- Stop state for the next session:
+  - wait in merge coordination for `codex/unity-projectile-combat`
+  - do not widen this branch into attack-move, line-of-sight, death polish, or renown hooks before merge
+  - after merge, the next combat priority is explicit attack orders or attack-move
 
 ## 2026-04-17 Session 113 Unity Combat Foundation
 
