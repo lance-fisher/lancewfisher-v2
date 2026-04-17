@@ -25,6 +25,7 @@ namespace Bloodlines.Systems
             var entityManager = state.EntityManager;
             var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
             var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
+            var combatDefinitionsEntity = FindCombatDefinitionsEntity(entityManager);
 
             foreach (var (facilityRw, buildingPosition, buildingFaction, buildingHealth, buildingEntity) in
                 SystemAPI.Query<
@@ -57,7 +58,9 @@ namespace Bloodlines.Systems
                 }
 
                 SpawnQueuedUnit(
+                    entityManager,
                     ecb,
+                    combatDefinitionsEntity,
                     buildingPosition.ValueRO.Value,
                     buildingFaction.ValueRO.FactionId,
                     facilityRw.ValueRO.SpawnSequence,
@@ -107,7 +110,9 @@ namespace Bloodlines.Systems
         }
 
         private static void SpawnQueuedUnit(
+            EntityManager entityManager,
             EntityCommandBuffer ecb,
+            Entity combatDefinitionsEntity,
             float3 buildingPosition,
             FixedString32Bytes factionId,
             int spawnSequence,
@@ -141,12 +146,55 @@ namespace Bloodlines.Systems
             {
                 MaxSpeed = queueItem.MaxSpeed,
             });
+            ecb.AddComponent(entity, ResolveCombatStats(entityManager, combatDefinitionsEntity, queueItem.UnitId));
             ecb.AddComponent(entity, new MoveCommandComponent
             {
                 Destination = spawnPosition,
                 StoppingDistance = 0.2f,
                 IsActive = false,
             });
+        }
+
+        private static Entity FindCombatDefinitionsEntity(EntityManager entityManager)
+        {
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<MapBootstrapConfigComponent>(),
+                ComponentType.ReadOnly<UnitCombatDefinitionElement>());
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            return entities.Length > 0 ? entities[0] : Entity.Null;
+        }
+
+        private static CombatStatsComponent ResolveCombatStats(
+            EntityManager entityManager,
+            Entity combatDefinitionsEntity,
+            FixedString64Bytes unitId)
+        {
+            if (combatDefinitionsEntity != Entity.Null &&
+                entityManager.Exists(combatDefinitionsEntity) &&
+                entityManager.HasBuffer<UnitCombatDefinitionElement>(combatDefinitionsEntity))
+            {
+                var definitions = entityManager.GetBuffer<UnitCombatDefinitionElement>(combatDefinitionsEntity);
+                for (int i = 0; i < definitions.Length; i++)
+                {
+                    var definition = definitions[i];
+                    if (!definition.UnitId.Equals(unitId))
+                    {
+                        continue;
+                    }
+
+                    return new CombatStatsComponent
+                    {
+                        AttackDamage = definition.AttackDamage,
+                        AttackRange = definition.AttackRange,
+                        AttackCooldown = definition.AttackCooldown,
+                        Sight = definition.Sight,
+                        CooldownRemaining = 0f,
+                    };
+                }
+            }
+
+            return default;
         }
 
         private static float3 ResolveSpawnPosition(float3 buildingPosition, int spawnSequence)
