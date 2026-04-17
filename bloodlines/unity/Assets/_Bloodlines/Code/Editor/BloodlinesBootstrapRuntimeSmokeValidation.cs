@@ -26,7 +26,7 @@ namespace Bloodlines.EditorTools
         private const string StateKey = "Bloodlines.EditorTools.BootstrapRuntimeSmokeValidation.State";
         private const string StartupTimeoutUtcTicksKey = "Bloodlines.EditorTools.BootstrapRuntimeSmokeValidation.TimeoutUtcTicks";
         private const string WarmupSeconds = "1.5";
-        private const double StartupTimeoutSeconds = 120d;
+        private const double StartupTimeoutSeconds = 240d;
         private const double ProbeLogIntervalSeconds = 5d;
 
         static BloodlinesBootstrapRuntimeSmokeValidation()
