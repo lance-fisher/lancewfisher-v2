@@ -43,5 +43,7 @@ namespace Bloodlines.Components
         public int WaterCrisisConsecutiveCycles;
         public int FaminePopulationDeclinePerCycle;
         public int WaterCrisisOutmigrationPerCycle;
+        public int FamineLoyaltyDeltaPerCycle;
+        public int WaterCrisisLoyaltyDeltaPerCycle;
     }
 }

@@ -36,6 +36,8 @@ namespace Bloodlines.Systems
                     WaterCrisisConsecutiveCycles = 1,
                     FaminePopulationDeclinePerCycle = 1,
                     WaterCrisisOutmigrationPerCycle = 1,
+                    FamineLoyaltyDeltaPerCycle = -4,
+                    WaterCrisisLoyaltyDeltaPerCycle = -6,
                 });
             }
         }

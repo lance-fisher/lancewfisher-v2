@@ -44,11 +44,14 @@ namespace Bloodlines.Systems
             int waterCrisisThreshold = math.max(1, cfg.WaterCrisisConsecutiveCycles);
             int faminePopulationDecline = math.max(0, cfg.FaminePopulationDeclinePerCycle);
             int waterCrisisOutmigration = math.max(0, cfg.WaterCrisisOutmigrationPerCycle);
+            float famineLoyaltyDelta = cfg.FamineLoyaltyDeltaPerCycle;
+            float waterCrisisLoyaltyDelta = cfg.WaterCrisisLoyaltyDeltaPerCycle;
 
-            foreach (var (realmRw, populationRw) in
+            foreach (var (realmRw, populationRw, loyaltyRw) in
                 SystemAPI.Query<
                     RefRW<RealmConditionComponent>,
-                    RefRW<PopulationComponent>>())
+                    RefRW<PopulationComponent>,
+                    RefRW<FactionLoyaltyComponent>>())
             {
                 ref var realm = ref realmRw.ValueRW;
 
@@ -57,29 +60,42 @@ namespace Bloodlines.Systems
                     continue;
                 }
 
-                int totalDecline = 0;
-                if (realm.FoodStrainStreak >= famineThreshold)
+                bool famineActive = realm.FoodStrainStreak >= famineThreshold;
+                bool waterCrisisActive = realm.WaterStrainStreak >= waterCrisisThreshold;
+
+                int totalPopulationDecline = 0;
+                float totalLoyaltyDelta = 0f;
+
+                if (famineActive)
                 {
-                    totalDecline += faminePopulationDecline;
+                    totalPopulationDecline += faminePopulationDecline;
+                    totalLoyaltyDelta += famineLoyaltyDelta;
                 }
 
-                if (realm.WaterStrainStreak >= waterCrisisThreshold)
+                if (waterCrisisActive)
                 {
-                    totalDecline += waterCrisisOutmigration;
+                    totalPopulationDecline += waterCrisisOutmigration;
+                    totalLoyaltyDelta += waterCrisisLoyaltyDelta;
                 }
 
                 realm.LastStarvationResponseCycle = realm.CycleCount;
 
-                if (totalDecline <= 0)
+                if (totalPopulationDecline > 0)
                 {
-                    continue;
+                    ref var population = ref populationRw.ValueRW;
+                    int newTotal = math.max(0, population.Total - totalPopulationDecline);
+                    int appliedDecline = population.Total - newTotal;
+                    population.Total = newTotal;
+                    population.Available = math.max(0, population.Available - appliedDecline);
                 }
 
-                ref var population = ref populationRw.ValueRW;
-                int newTotal = math.max(0, population.Total - totalDecline);
-                int appliedDecline = population.Total - newTotal;
-                population.Total = newTotal;
-                population.Available = math.max(0, population.Available - appliedDecline);
+                if (totalLoyaltyDelta != 0f)
+                {
+                    ref var loyalty = ref loyaltyRw.ValueRW;
+                    float newLoyalty = loyalty.Current + totalLoyaltyDelta;
+                    float max = loyalty.Max > 0f ? loyalty.Max : 100f;
+                    loyalty.Current = math.clamp(newLoyalty, loyalty.Floor, max);
+                }
             }
         }
     }

@@ -158,6 +158,12 @@ namespace Bloodlines.Systems
                 Influence = seed.Influence,
             });
             entityManager.AddComponentData(entity, new RealmConditionComponent());
+            entityManager.AddComponentData(entity, new FactionLoyaltyComponent
+            {
+                Current = 70f,
+                Max = 100f,
+                Floor = 0f,
+            });
             entityManager.AddComponentData(entity, new ConvictionComponent { Band = ConvictionBand.Neutral });
             entityManager.AddComponentData(entity, new FaithStateComponent
             {
