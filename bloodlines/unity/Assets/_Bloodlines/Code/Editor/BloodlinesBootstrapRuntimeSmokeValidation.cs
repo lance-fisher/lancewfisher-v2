@@ -126,6 +126,7 @@ namespace Bloodlines.EditorTools
                     aiActivityTimeoutSeconds = 35f,
                     aiMinimumBuildingGain = 1,
                     aiConstructionTimeoutSeconds = 30f,
+                    stabilitySurplusTimeoutSeconds = 10f,
                 };
 
                 SaveState(state);
@@ -332,9 +333,7 @@ namespace Bloodlines.EditorTools
                 unitCount < state.expectedUnitCountAfterProduction;
             bool aiObservationWindow =
                 state.aiBaselineSampled && !state.aiActivityObserved;
-            bool aiFlexibleWindow =
-                state.aiBaselineSampled &&
-                (!state.aiActivityObserved || !state.aiConstructionObserved);
+            bool aiFlexibleWindow = state.aiBaselineSampled;
             bool unitCountFlexibleWindow = midProductionObservationWindow || aiFlexibleWindow;
             if (midProductionObservationWindow)
             {
@@ -1025,6 +1024,12 @@ namespace Bloodlines.EditorTools
                 return aiConstructionProbe.Value;
             }
 
+            var stabilitySurplusProbe = ProbeStabilitySurplusResponse(commandSurface, state, diagnostics);
+            if (stabilitySurplusProbe.HasValue)
+            {
+                return stabilitySurplusProbe.Value;
+            }
+
             diagnostics =
                 diagnostics.TrimEnd('.') +
                 ", controlledUnits=" + controlledUnitCount +
@@ -1087,7 +1092,11 @@ namespace Bloodlines.EditorTools
                 ", aiActivityObserved=" + state.aiActivityObserved +
                 ", aiInitialBuildingCount=" + state.aiInitialBuildingCount +
                 ", aiLatestBuildingCount=" + state.aiLatestBuildingCount +
-                ", aiConstructionObserved=" + state.aiConstructionObserved + ".";
+                ", aiConstructionObserved=" + state.aiConstructionObserved +
+                ", stabilitySurplusForced=" + state.stabilitySurplusForced +
+                ", stabilitySurplusLoyaltyBefore=" + state.stabilitySurplusLoyaltyBefore.ToString("0.00") +
+                ", stabilitySurplusLoyaltyLatest=" + state.stabilitySurplusLoyaltyLatest.ToString("0.00") +
+                ", stabilitySurplusObserved=" + state.stabilitySurplusObserved + ".";
 
             return ProbeResult.Pass(
                 "Bootstrap runtime smoke validation passed for " + BootstrapScenePath +
@@ -1155,6 +1164,96 @@ namespace Bloodlines.EditorTools
             }
 
             return count;
+        }
+
+        private static ProbeResult? ProbeStabilitySurplusResponse(
+            BloodlinesDebugCommandSurface commandSurface,
+            RuntimeSmokeState state,
+            string diagnostics)
+        {
+            if (state.stabilitySurplusObserved)
+            {
+                return null;
+            }
+
+            if (!state.stabilitySurplusForced)
+            {
+                if (!commandSurface.TryDebugGetFactionLoyalty(
+                    commandSurface.ControlledFactionId,
+                    out float loyaltyBefore,
+                    out _,
+                    out _))
+                {
+                    return ProbeResult.Fail(
+                        "Bootstrap runtime smoke validation failed: could not read loyalty before stability-surplus cycle. " +
+                        diagnostics);
+                }
+
+                if (!commandSurface.TryDebugForceStabilitySurplusCycle(
+                    commandSurface.ControlledFactionId,
+                    out float _,
+                    out float foodRatioAfter,
+                    out float waterRatioAfter))
+                {
+                    return ProbeResult.Fail(
+                        "Bootstrap runtime smoke validation failed: could not force stability-surplus cycle for " +
+                        Quote(commandSurface.ControlledFactionId) + ". " + diagnostics);
+                }
+
+                state.stabilitySurplusForced = true;
+                state.stabilitySurplusLoyaltyBefore = loyaltyBefore;
+                state.stabilitySurplusLoyaltyLatest = loyaltyBefore;
+                state.stabilitySurplusLoyaltyExpectedMinimumAfter = loyaltyBefore + 0.5f;
+                state.stabilitySurplusFoodRatioAfter = foodRatioAfter;
+                state.stabilitySurplusWaterRatioAfter = waterRatioAfter;
+                state.stabilitySurplusForcedUtcTicks = DateTime.UtcNow.Ticks;
+                SaveState(state);
+                return ProbeResult.NotReady(
+                    "Stability-surplus cycle forced for controlled faction. loyaltyBefore=" +
+                    loyaltyBefore.ToString("0.00") +
+                    ", foodRatioAfter=" + foodRatioAfter.ToString("0.00") +
+                    ", waterRatioAfter=" + waterRatioAfter.ToString("0.00") + ". " + diagnostics);
+            }
+
+            if (!commandSurface.TryDebugGetFactionLoyalty(
+                commandSurface.ControlledFactionId,
+                out float currentLoyalty,
+                out _,
+                out _))
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: could not read loyalty during stability-surplus observation. " +
+                    diagnostics);
+            }
+
+            state.stabilitySurplusLoyaltyLatest = currentLoyalty;
+
+            if (currentLoyalty >= state.stabilitySurplusLoyaltyExpectedMinimumAfter)
+            {
+                state.stabilitySurplusObserved = true;
+                SaveState(state);
+                return null;
+            }
+
+            double elapsedSeconds = ElapsedSeconds(state.stabilitySurplusForcedUtcTicks);
+            if (elapsedSeconds >= state.stabilitySurplusTimeoutSeconds)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: stability-surplus loyalty restoration did not apply within " +
+                    state.stabilitySurplusTimeoutSeconds.ToString("0.0") + "s. loyaltyBefore=" +
+                    state.stabilitySurplusLoyaltyBefore.ToString("0.00") +
+                    ", currentLoyalty=" + currentLoyalty.ToString("0.00") +
+                    ", expectedMinimum=" + state.stabilitySurplusLoyaltyExpectedMinimumAfter.ToString("0.00") + ". " +
+                    diagnostics);
+            }
+
+            return ProbeResult.NotReady(
+                "Waiting for stability-surplus loyalty restoration. loyaltyBefore=" +
+                state.stabilitySurplusLoyaltyBefore.ToString("0.00") +
+                ", currentLoyalty=" + currentLoyalty.ToString("0.00") +
+                ", expectedMinimum=" + state.stabilitySurplusLoyaltyExpectedMinimumAfter.ToString("0.00") +
+                ", elapsedSeconds=" + elapsedSeconds.ToString("0.0") + "/" +
+                state.stabilitySurplusTimeoutSeconds.ToString("0.0") + ". " + diagnostics);
         }
 
         private static ProbeResult? ProbeAIConstructionActivity(
@@ -2368,6 +2467,15 @@ namespace Bloodlines.EditorTools
             public int aiMinimumBuildingGain;
             public float aiConstructionTimeoutSeconds;
             public bool aiConstructionObserved;
+            public bool stabilitySurplusForced;
+            public float stabilitySurplusLoyaltyBefore;
+            public float stabilitySurplusLoyaltyLatest;
+            public float stabilitySurplusLoyaltyExpectedMinimumAfter;
+            public float stabilitySurplusFoodRatioAfter;
+            public float stabilitySurplusWaterRatioAfter;
+            public long stabilitySurplusForcedUtcTicks;
+            public float stabilitySurplusTimeoutSeconds;
+            public bool stabilitySurplusObserved;
         }
 
         private readonly struct ProbeResult

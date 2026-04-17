@@ -23,6 +23,7 @@ namespace Bloodlines.Components
         public double CohesionPenaltyUntil;
         public int LastStarvationResponseCycle;
         public int LastCapPressureResponseCycle;
+        public int LastStabilitySurplusResponseCycle;
     }
 
     /// <summary>
@@ -48,5 +49,9 @@ namespace Bloodlines.Components
         public int WaterCrisisLoyaltyDeltaPerCycle;
         public float PopulationCapPressureRatio;
         public int CapPressureLoyaltyDeltaPerCycle;
+        public float StabilitySurplusFoodRatio;
+        public float StabilitySurplusWaterRatio;
+        public int StabilitySurplusLoyaltyDeltaPerCycle;
+        public float StabilitySurplusMaxLoyaltyToApply;
     }
 }
