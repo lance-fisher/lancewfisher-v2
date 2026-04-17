@@ -46,9 +46,11 @@ namespace Bloodlines.Components
         public int TargetDwellingCount;
         public int TargetFarmCount;
         public int TargetWellCount;
+        public int TargetBarracksCount;
         public int ControlledDwellingCountCached;
         public int ControlledFarmCountCached;
         public int ControlledWellCountCached;
+        public int ControlledBarracksCountCached;
         public int ConstructionPlacementsAttempted;
         public int ConstructionPlacementsSucceeded;
 
