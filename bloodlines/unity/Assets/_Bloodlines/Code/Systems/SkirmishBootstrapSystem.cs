@@ -158,6 +158,12 @@ namespace Bloodlines.Systems
                 Influence = seed.Influence,
             });
             entityManager.AddComponentData(entity, new RealmConditionComponent());
+            entityManager.AddComponentData(entity, new FactionLoyaltyComponent
+            {
+                Current = 70f,
+                Max = 100f,
+                Floor = 0f,
+            });
             entityManager.AddComponentData(entity, new ConvictionComponent { Band = ConvictionBand.Neutral });
             entityManager.AddComponentData(entity, new FaithStateComponent
             {
@@ -277,6 +283,26 @@ namespace Bloodlines.Systems
                 SpawnSequence = 0,
             });
             entityManager.AddBuffer<ProductionQueueItemElement>(entity);
+
+            if (seed.GoldTrickle > 0f ||
+                seed.FoodTrickle > 0f ||
+                seed.WaterTrickle > 0f ||
+                seed.WoodTrickle > 0f ||
+                seed.StoneTrickle > 0f ||
+                seed.IronTrickle > 0f ||
+                seed.InfluenceTrickle > 0f)
+            {
+                entityManager.AddComponentData(entity, new ResourceTrickleBuildingComponent
+                {
+                    GoldPerSecond = seed.GoldTrickle,
+                    FoodPerSecond = seed.FoodTrickle,
+                    WaterPerSecond = seed.WaterTrickle,
+                    WoodPerSecond = seed.WoodTrickle,
+                    StonePerSecond = seed.StoneTrickle,
+                    IronPerSecond = seed.IronTrickle,
+                    InfluencePerSecond = seed.InfluenceTrickle,
+                });
+            }
         }
 
         static void SpawnUnitEntity(EntityManager entityManager, MapUnitSeedElement seed)

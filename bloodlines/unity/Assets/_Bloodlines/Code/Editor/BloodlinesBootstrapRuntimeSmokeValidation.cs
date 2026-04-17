@@ -113,6 +113,13 @@ namespace Bloodlines.EditorTools
                     gatherResourceId = "gold",
                     gatherMinimumDepositAmount = 5f,
                     gatherCycleTimeoutSeconds = 40f,
+                    trickleMinimumFoodGain = 2f,
+                    trickleMinimumWaterGain = 2f,
+                    trickleTimeoutSeconds = 30f,
+                    starvationIncludeWaterCrisis = true,
+                    starvationTimeoutSeconds = 15f,
+                    loyaltyMinimumDeltaMagnitude = 8f,
+                    capPressureTimeoutSeconds = 10f,
                 };
 
                 SaveState(state);
@@ -964,10 +971,34 @@ namespace Bloodlines.EditorTools
                     controlledUnitCount + " but found " + commandSelectionCount + ". " + diagnostics);
             }
 
+            var trickleBaselineProbe = ProbeResourceTrickleBaseline(commandSurface, state, diagnostics);
+            if (trickleBaselineProbe.HasValue)
+            {
+                return trickleBaselineProbe.Value;
+            }
+
             var gatherProbe = ProbeWorkerGatherCycle(commandSurface, state, diagnostics);
             if (gatherProbe.HasValue)
             {
                 return gatherProbe.Value;
+            }
+
+            var trickleGainProbe = ProbeResourceTrickleGain(commandSurface, state, diagnostics);
+            if (trickleGainProbe.HasValue)
+            {
+                return trickleGainProbe.Value;
+            }
+
+            var starvationProbe = ProbeStarvationResponse(commandSurface, state, diagnostics);
+            if (starvationProbe.HasValue)
+            {
+                return starvationProbe.Value;
+            }
+
+            var capPressureProbe = ProbeCapPressureResponse(commandSurface, state, diagnostics);
+            if (capPressureProbe.HasValue)
+            {
+                return capPressureProbe.Value;
             }
 
             diagnostics =
@@ -1000,7 +1031,28 @@ namespace Bloodlines.EditorTools
                 ", gatherAssignedWorkerCount=" + state.gatherAssignedWorkerCount +
                 ", gatherInitialFactionGold=" + state.gatherInitialFactionGold.ToString("0.0") +
                 ", gatherLatestFactionGold=" + state.gatherLatestFactionGold.ToString("0.0") +
-                ", gatherDepositObserved=" + state.gatherDepositObserved + ".";
+                ", gatherDepositObserved=" + state.gatherDepositObserved +
+                ", trickleInitialFood=" + state.trickleInitialFood.ToString("0.00") +
+                ", trickleLatestFood=" + state.trickleLatestFood.ToString("0.00") +
+                ", trickleInitialWater=" + state.trickleInitialWater.ToString("0.00") +
+                ", trickleLatestWater=" + state.trickleLatestWater.ToString("0.00") +
+                ", trickleGainObserved=" + state.trickleGainObserved +
+                ", starvationForced=" + state.starvationForced +
+                ", starvationIncludeWaterCrisis=" + state.starvationIncludeWaterCrisis +
+                ", starvationPreviousPopulation=" + state.starvationPreviousPopulationTotal +
+                ", starvationExpectedPopulation=" + state.starvationExpectedPopulationTotal +
+                ", starvationLatestPopulation=" + state.starvationLatestPopulationTotal +
+                ", starvationObserved=" + state.starvationObserved +
+                ", loyaltyPreviousValue=" + state.loyaltyPreviousValue.ToString("0.00") +
+                ", loyaltyLatestValue=" + state.loyaltyLatestValue.ToString("0.00") +
+                ", loyaltyExpectedMaximumAfterCycle=" + state.loyaltyExpectedMaximumAfterCycle.ToString("0.00") +
+                ", loyaltyDeclineObserved=" + state.loyaltyDeclineObserved +
+                ", capPressureForced=" + state.capPressureForced +
+                ", capPressureTotalAfterSpike=" + state.capPressureTotalAfterSpike +
+                ", capPressureCapAfterSpike=" + state.capPressureCapAfterSpike +
+                ", capPressureLoyaltyBeforeCycle=" + state.capPressureLoyaltyBeforeCycle.ToString("0.00") +
+                ", capPressureLatestLoyalty=" + state.capPressureLatestLoyalty.ToString("0.00") +
+                ", capPressureObserved=" + state.capPressureObserved + ".";
 
             return ProbeResult.Pass(
                 "Bootstrap runtime smoke validation passed for " + BootstrapScenePath +
@@ -1068,6 +1120,294 @@ namespace Bloodlines.EditorTools
             }
 
             return count;
+        }
+
+        private static ProbeResult? ProbeCapPressureResponse(
+            BloodlinesDebugCommandSurface commandSurface,
+            RuntimeSmokeState state,
+            string diagnostics)
+        {
+            if (state.capPressureObserved)
+            {
+                return null;
+            }
+
+            if (!state.capPressureForced)
+            {
+                if (!commandSurface.TryDebugForceCapPressureCycle(
+                    commandSurface.ControlledFactionId,
+                    out int totalAfterSpike,
+                    out int capAfterSpike,
+                    out float loyaltyBeforeCycle))
+                {
+                    return ProbeResult.Fail(
+                        "Bootstrap runtime smoke validation failed: command shell could not force cap-pressure cycle for " +
+                        Quote(commandSurface.ControlledFactionId) + ". " + diagnostics);
+                }
+
+                state.capPressureForced = true;
+                state.capPressureTotalAfterSpike = totalAfterSpike;
+                state.capPressureCapAfterSpike = capAfterSpike;
+                state.capPressureLoyaltyBeforeCycle = loyaltyBeforeCycle;
+                state.capPressureLatestLoyalty = loyaltyBeforeCycle;
+                state.capPressureExpectedMaximumAfterCycle = loyaltyBeforeCycle - 0.5f;
+                state.capPressureForcedUtcTicks = DateTime.UtcNow.Ticks;
+                SaveState(state);
+                return ProbeResult.NotReady(
+                    "Cap-pressure cycle forced. populationTotal=" + totalAfterSpike +
+                    "/" + capAfterSpike + ", loyaltyBeforeCycle=" + loyaltyBeforeCycle.ToString("0.00") + ". " + diagnostics);
+            }
+
+            if (!commandSurface.TryDebugGetFactionLoyalty(
+                commandSurface.ControlledFactionId,
+                out float currentLoyalty,
+                out _,
+                out _))
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: could not read loyalty after forced cap-pressure cycle. " +
+                    diagnostics);
+            }
+
+            state.capPressureLatestLoyalty = currentLoyalty;
+
+            if (currentLoyalty <= state.capPressureExpectedMaximumAfterCycle)
+            {
+                state.capPressureObserved = true;
+                SaveState(state);
+                return null;
+            }
+
+            double elapsedSeconds = ElapsedSeconds(state.capPressureForcedUtcTicks);
+            if (elapsedSeconds >= state.capPressureTimeoutSeconds)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: cap-pressure loyalty delta did not apply within " +
+                    state.capPressureTimeoutSeconds.ToString("0.0") + "s. loyaltyBeforeCycle=" +
+                    state.capPressureLoyaltyBeforeCycle.ToString("0.00") + ", currentLoyalty=" + currentLoyalty.ToString("0.00") +
+                    ", expectedMaximumAfterCycle=" + state.capPressureExpectedMaximumAfterCycle.ToString("0.00") + ". " +
+                    diagnostics);
+            }
+
+            return ProbeResult.NotReady(
+                "Waiting for CapPressureResponseSystem to reduce loyalty. loyaltyBeforeCycle=" +
+                state.capPressureLoyaltyBeforeCycle.ToString("0.00") + ", currentLoyalty=" + currentLoyalty.ToString("0.00") +
+                ", expectedMaximumAfterCycle=" + state.capPressureExpectedMaximumAfterCycle.ToString("0.00") +
+                ", elapsedSeconds=" + elapsedSeconds.ToString("0.0") + "/" +
+                state.capPressureTimeoutSeconds.ToString("0.0") + ". " + diagnostics);
+        }
+
+        private static ProbeResult? ProbeStarvationResponse(
+            BloodlinesDebugCommandSurface commandSurface,
+            RuntimeSmokeState state,
+            string diagnostics)
+        {
+            if (state.starvationObserved)
+            {
+                return null;
+            }
+
+            if (!state.starvationForced)
+            {
+                if (!commandSurface.TryDebugGetFactionLoyalty(
+                    commandSurface.ControlledFactionId,
+                    out float previousLoyalty,
+                    out _,
+                    out _))
+                {
+                    return ProbeResult.Fail(
+                        "Bootstrap runtime smoke validation failed: command shell could not read loyalty before forced starvation cycle for " +
+                        Quote(commandSurface.ControlledFactionId) + ". " + diagnostics);
+                }
+
+                if (!commandSurface.TryDebugForceStarvationCycle(
+                    commandSurface.ControlledFactionId,
+                    state.starvationIncludeWaterCrisis,
+                    out int previousTotal,
+                    out int expectedTotal))
+                {
+                    return ProbeResult.Fail(
+                        "Bootstrap runtime smoke validation failed: command shell could not force starvation cycle for " +
+                        Quote(commandSurface.ControlledFactionId) + ". " + diagnostics);
+                }
+
+                state.starvationForced = true;
+                state.starvationPreviousPopulationTotal = previousTotal;
+                state.starvationExpectedPopulationTotal = expectedTotal;
+                state.starvationLatestPopulationTotal = previousTotal;
+                state.starvationForcedUtcTicks = DateTime.UtcNow.Ticks;
+                state.loyaltyPreviousValue = previousLoyalty;
+                state.loyaltyLatestValue = previousLoyalty;
+                state.loyaltyExpectedMaximumAfterCycle =
+                    previousLoyalty - Mathf.Max(0f, state.loyaltyMinimumDeltaMagnitude);
+                SaveState(state);
+                return ProbeResult.NotReady(
+                    "Starvation cycle forced for controlled faction. previousPopulationTotal=" +
+                    previousTotal + ", expectedPopulationTotal=" + expectedTotal +
+                    ", previousLoyalty=" + previousLoyalty.ToString("0.00") + ". " + diagnostics);
+            }
+
+            if (!commandSurface.TryDebugGetFactionPopulation(
+                commandSurface.ControlledFactionId,
+                out int currentTotal,
+                out _,
+                out _))
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: could not read population after forced starvation cycle. " +
+                    diagnostics);
+            }
+
+            state.starvationLatestPopulationTotal = currentTotal;
+
+            if (currentTotal <= state.starvationExpectedPopulationTotal)
+            {
+                if (!commandSurface.TryDebugGetFactionLoyalty(
+                    commandSurface.ControlledFactionId,
+                    out float currentLoyalty,
+                    out _,
+                    out _))
+                {
+                    return ProbeResult.Fail(
+                        "Bootstrap runtime smoke validation failed: could not read loyalty after starvation population decline. " +
+                        diagnostics);
+                }
+
+                state.loyaltyLatestValue = currentLoyalty;
+
+                if (currentLoyalty > state.loyaltyExpectedMaximumAfterCycle)
+                {
+                    return ProbeResult.Fail(
+                        "Bootstrap runtime smoke validation failed: starvation loyalty delta below minimum magnitude. previousLoyalty=" +
+                        state.loyaltyPreviousValue.ToString("0.00") + ", currentLoyalty=" + currentLoyalty.ToString("0.00") +
+                        ", expectedMaximumAfterCycle=" + state.loyaltyExpectedMaximumAfterCycle.ToString("0.00") +
+                        ", minimumDeltaMagnitude=" + state.loyaltyMinimumDeltaMagnitude.ToString("0.00") + ". " + diagnostics);
+                }
+
+                state.starvationObserved = true;
+                state.loyaltyDeclineObserved = true;
+                SaveState(state);
+                return null;
+            }
+
+            double elapsedSeconds = ElapsedSeconds(state.starvationForcedUtcTicks);
+            if (elapsedSeconds >= state.starvationTimeoutSeconds)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: starvation response did not reduce population within " +
+                    state.starvationTimeoutSeconds.ToString("0.0") + "s. previousPopulationTotal=" +
+                    state.starvationPreviousPopulationTotal + ", expectedPopulationTotal=" +
+                    state.starvationExpectedPopulationTotal + ", currentTotal=" + currentTotal +
+                    ". " + diagnostics);
+            }
+
+            return ProbeResult.NotReady(
+                "Waiting for StarvationResponseSystem to reduce population. previousPopulationTotal=" +
+                state.starvationPreviousPopulationTotal + ", expectedPopulationTotal=" +
+                state.starvationExpectedPopulationTotal + ", currentTotal=" + currentTotal +
+                ", elapsedSeconds=" + elapsedSeconds.ToString("0.0") + "/" +
+                state.starvationTimeoutSeconds.ToString("0.0") + ". " + diagnostics);
+        }
+
+        private static ProbeResult? ProbeResourceTrickleBaseline(
+            BloodlinesDebugCommandSurface commandSurface,
+            RuntimeSmokeState state,
+            string diagnostics)
+        {
+            if (state.trickleBaselineSampled)
+            {
+                return null;
+            }
+
+            if (!commandSurface.TryDebugGetFactionStockpile(
+                commandSurface.ControlledFactionId,
+                out _,
+                out _,
+                out _,
+                out _,
+                out float initialFood,
+                out float initialWater,
+                out _))
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: could not sample controlled faction food and water baseline before trickle proof. " +
+                    diagnostics);
+            }
+
+            state.trickleBaselineSampled = true;
+            state.trickleInitialFood = initialFood;
+            state.trickleInitialWater = initialWater;
+            state.trickleSampledUtcTicks = DateTime.UtcNow.Ticks;
+            SaveState(state);
+            return null;
+        }
+
+        private static ProbeResult? ProbeResourceTrickleGain(
+            BloodlinesDebugCommandSurface commandSurface,
+            RuntimeSmokeState state,
+            string diagnostics)
+        {
+            if (!state.trickleBaselineSampled)
+            {
+                return null;
+            }
+
+            if (state.trickleGainObserved)
+            {
+                return null;
+            }
+
+            if (!commandSurface.TryDebugGetFactionStockpile(
+                commandSurface.ControlledFactionId,
+                out _,
+                out _,
+                out _,
+                out _,
+                out float currentFood,
+                out float currentWater,
+                out _))
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: could not sample controlled faction food and water during trickle verification. " +
+                    diagnostics);
+            }
+
+            state.trickleLatestFood = currentFood;
+            state.trickleLatestWater = currentWater;
+
+            float foodGain = currentFood - state.trickleInitialFood;
+            float waterGain = currentWater - state.trickleInitialWater;
+            float requiredFoodGain = Mathf.Max(0.25f, state.trickleMinimumFoodGain);
+            float requiredWaterGain = Mathf.Max(0.25f, state.trickleMinimumWaterGain);
+
+            if (foodGain >= requiredFoodGain && waterGain >= requiredWaterGain)
+            {
+                state.trickleGainObserved = true;
+                SaveState(state);
+                return null;
+            }
+
+            double elapsedSeconds = ElapsedSeconds(state.trickleSampledUtcTicks);
+            if (elapsedSeconds >= state.trickleTimeoutSeconds)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: building resource trickle did not raise food and water above minimum gains within " +
+                    state.trickleTimeoutSeconds.ToString("0.0") + "s. initialFood=" +
+                    state.trickleInitialFood.ToString("0.00") + ", currentFood=" + currentFood.ToString("0.00") +
+                    ", foodGain=" + foodGain.ToString("0.00") + ", requiredFoodGain=" + requiredFoodGain.ToString("0.00") +
+                    ", initialWater=" + state.trickleInitialWater.ToString("0.00") + ", currentWater=" + currentWater.ToString("0.00") +
+                    ", waterGain=" + waterGain.ToString("0.00") + ", requiredWaterGain=" + requiredWaterGain.ToString("0.00") +
+                    ". " + diagnostics);
+            }
+
+            return ProbeResult.NotReady(
+                "Waiting for building resource trickle to raise food and water. initialFood=" +
+                state.trickleInitialFood.ToString("0.00") + ", currentFood=" + currentFood.ToString("0.00") +
+                ", foodGain=" + foodGain.ToString("0.00") + "/" + requiredFoodGain.ToString("0.00") +
+                ", initialWater=" + state.trickleInitialWater.ToString("0.00") + ", currentWater=" + currentWater.ToString("0.00") +
+                ", waterGain=" + waterGain.ToString("0.00") + "/" + requiredWaterGain.ToString("0.00") +
+                ", elapsedSeconds=" + elapsedSeconds.ToString("0.0") + "/" + state.trickleTimeoutSeconds.ToString("0.0") +
+                ". " + diagnostics);
         }
 
         private static ProbeResult? ProbeWorkerGatherCycle(
@@ -1771,6 +2111,38 @@ namespace Bloodlines.EditorTools
             public float gatherLatestFactionGold;
             public long gatherAssignedUtcTicks;
             public float gatherCycleTimeoutSeconds;
+            public bool trickleBaselineSampled;
+            public float trickleInitialFood;
+            public float trickleInitialWater;
+            public long trickleSampledUtcTicks;
+            public float trickleLatestFood;
+            public float trickleLatestWater;
+            public float trickleMinimumFoodGain;
+            public float trickleMinimumWaterGain;
+            public float trickleTimeoutSeconds;
+            public bool trickleGainObserved;
+            public bool starvationForced;
+            public bool starvationIncludeWaterCrisis;
+            public int starvationPreviousPopulationTotal;
+            public int starvationExpectedPopulationTotal;
+            public int starvationLatestPopulationTotal;
+            public long starvationForcedUtcTicks;
+            public float starvationTimeoutSeconds;
+            public bool starvationObserved;
+            public float loyaltyPreviousValue;
+            public float loyaltyExpectedMaximumAfterCycle;
+            public float loyaltyLatestValue;
+            public float loyaltyMinimumDeltaMagnitude;
+            public bool loyaltyDeclineObserved;
+            public bool capPressureForced;
+            public int capPressureTotalAfterSpike;
+            public int capPressureCapAfterSpike;
+            public float capPressureLoyaltyBeforeCycle;
+            public float capPressureExpectedMaximumAfterCycle;
+            public float capPressureLatestLoyalty;
+            public long capPressureForcedUtcTicks;
+            public float capPressureTimeoutSeconds;
+            public bool capPressureObserved;
         }
 
         private readonly struct ProbeResult

@@ -1140,6 +1140,24 @@ namespace Bloodlines.Debug
                 entityManager.AddBuffer<ProductionQueueItemElement>(buildingEntity);
             }
 
+            var trickle = buildingDefinition.resourceTrickle;
+            if (trickle != null &&
+                (trickle.gold > 0f || trickle.food > 0f || trickle.water > 0f ||
+                 trickle.wood > 0f || trickle.stone > 0f || trickle.iron > 0f ||
+                 trickle.influence > 0f))
+            {
+                entityManager.AddComponentData(buildingEntity, new ResourceTrickleBuildingComponent
+                {
+                    GoldPerSecond = trickle.gold,
+                    FoodPerSecond = trickle.food,
+                    WaterPerSecond = trickle.water,
+                    WoodPerSecond = trickle.wood,
+                    StonePerSecond = trickle.stone,
+                    IronPerSecond = trickle.iron,
+                    InfluencePerSecond = trickle.influence,
+                });
+            }
+
             message = (buildingDefinition.displayName ?? buildingDefinition.id ?? buildingId) + " construction started.";
             return true;
         }
@@ -2071,6 +2089,209 @@ namespace Bloodlines.Debug
             }
 
             return AssignSelectedWorkersToGatherResource(entityManager, resourceId);
+        }
+
+        public bool TryDebugForceStarvationCycle(
+            string factionId,
+            bool includeWaterCrisis,
+            out int previousPopulationTotal,
+            out int expectedPopulationTotal)
+        {
+            previousPopulationTotal = 0;
+            expectedPopulationTotal = 0;
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            if (!TryGetRealmCycleConfig(entityManager, out var cfg))
+            {
+                return false;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                typeof(RealmConditionComponent),
+                typeof(PopulationComponent),
+                typeof(ResourceStockpileComponent));
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var realms = query.ToComponentDataArray<RealmConditionComponent>(Allocator.Temp);
+            using var populations = query.ToComponentDataArray<PopulationComponent>(Allocator.Temp);
+            using var stockpiles = query.ToComponentDataArray<ResourceStockpileComponent>(Allocator.Temp);
+
+            var key = new FixedString32Bytes(factionId ?? string.Empty);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(key))
+                {
+                    continue;
+                }
+
+                previousPopulationTotal = populations[i].Total;
+
+                var realm = realms[i];
+                realm.FoodStrainStreak = math.max(realm.FoodStrainStreak, math.max(1, cfg.FoodFamineConsecutiveCycles));
+                if (includeWaterCrisis)
+                {
+                    realm.WaterStrainStreak = math.max(realm.WaterStrainStreak, math.max(1, cfg.WaterCrisisConsecutiveCycles));
+                }
+                realm.LastStarvationResponseCycle = realm.CycleCount;
+                realm.CycleCount += 1;
+                realm.CycleAccumulator = 0f;
+                entityManager.SetComponentData(entities[i], realm);
+
+                var stockpile = stockpiles[i];
+                stockpile.Food = 0f;
+                if (includeWaterCrisis)
+                {
+                    stockpile.Water = 0f;
+                }
+                entityManager.SetComponentData(entities[i], stockpile);
+
+                int totalDecline = math.max(0, cfg.FaminePopulationDeclinePerCycle);
+                if (includeWaterCrisis)
+                {
+                    totalDecline += math.max(0, cfg.WaterCrisisOutmigrationPerCycle);
+                }
+                expectedPopulationTotal = math.max(0, previousPopulationTotal - totalDecline);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool TryDebugForceCapPressureCycle(string factionId, out int totalAfterSpike, out int capAfterSpike, out float loyaltyBeforeCycle)
+        {
+            totalAfterSpike = 0;
+            capAfterSpike = 0;
+            loyaltyBeforeCycle = 0f;
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            if (!TryGetRealmCycleConfig(entityManager, out var cfg))
+            {
+                return false;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                typeof(RealmConditionComponent),
+                typeof(PopulationComponent),
+                typeof(FactionLoyaltyComponent));
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var realms = query.ToComponentDataArray<RealmConditionComponent>(Allocator.Temp);
+            using var populations = query.ToComponentDataArray<PopulationComponent>(Allocator.Temp);
+            using var loyalties = query.ToComponentDataArray<FactionLoyaltyComponent>(Allocator.Temp);
+
+            var key = new FixedString32Bytes(factionId ?? string.Empty);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(key))
+                {
+                    continue;
+                }
+
+                float threshold = cfg.PopulationCapPressureRatio > 0f ? cfg.PopulationCapPressureRatio : 0.95f;
+                int cap = math.max(1, populations[i].Cap);
+                int required = (int)math.ceil(cap * threshold);
+
+                var population = populations[i];
+                population.Total = math.max(population.Total, required);
+                population.Available = math.min(population.Available, population.Total);
+                entityManager.SetComponentData(entities[i], population);
+
+                var realm = realms[i];
+                realm.FoodStrainStreak = 0;
+                realm.WaterStrainStreak = 0;
+                realm.LastCapPressureResponseCycle = realm.CycleCount;
+                realm.CycleCount += 1;
+                realm.LastStarvationResponseCycle = realm.CycleCount;
+                realm.CycleAccumulator = 0f;
+                entityManager.SetComponentData(entities[i], realm);
+
+                totalAfterSpike = population.Total;
+                capAfterSpike = population.Cap;
+                loyaltyBeforeCycle = loyalties[i].Current;
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool TryDebugGetFactionLoyalty(string factionId, out float current, out float max, out float floor)
+        {
+            current = 0f;
+            max = 0f;
+            floor = 0f;
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<FactionLoyaltyComponent>());
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var loyalties = query.ToComponentDataArray<FactionLoyaltyComponent>(Allocator.Temp);
+
+            var key = new FixedString32Bytes(factionId ?? string.Empty);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(key))
+                {
+                    continue;
+                }
+
+                current = loyalties[i].Current;
+                max = loyalties[i].Max;
+                floor = loyalties[i].Floor;
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool TryDebugGetFactionPopulation(string factionId, out int total, out int available, out int cap)
+        {
+            total = 0;
+            available = 0;
+            cap = 0;
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            if (!TryGetFactionRuntimeSnapshot(entityManager, factionId, out var snapshot))
+            {
+                return false;
+            }
+
+            total = snapshot.Population.Total;
+            available = snapshot.Population.Available;
+            cap = snapshot.Population.Cap;
+            return true;
+        }
+
+        private static bool TryGetRealmCycleConfig(EntityManager entityManager, out RealmCycleConfig cfg)
+        {
+            cfg = default;
+            var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<RealmCycleConfig>());
+            using var data = query.ToComponentDataArray<RealmCycleConfig>(Allocator.Temp);
+            if (data.Length == 0)
+            {
+                return false;
+            }
+
+            cfg = data[0];
+            return true;
         }
 
         public bool TryDebugGetFactionStockpile(

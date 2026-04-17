@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-17T01:30:00-06:00",
+  "updated_at": "2026-04-17T06:45:00-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -346,7 +346,7 @@
     "neutral_power_stage_presence_and_trueborn_return_condition_foundation"
   ],
   "continuation_platform": {
-    "status": "production_ready_chat_first_command_deck_and_governed_write_flow_validated",
+    "status": "production_ready_chat_first_command_deck_with_governed_local_runner_task_loop_and_governed_write_flow_validated",
     "path": "D:\\ProjectsHome\\Bloodlines\\continuation-platform",
     "launch_windows": "D:\\ProjectsHome\\Bloodlines\\continuation-platform\\launch_windows.cmd",
     "local_url": "http://127.0.0.1:8067",
@@ -368,11 +368,17 @@
     "ollama_models_detected": 8,
     "agent_mode_live": "resume_last_good_state",
     "conversation_mode_live": "agent_console",
+    "command_runner_mode_live": "governed_local_runner_with_read_only_and_tier_gated_validation",
+    "task_loop_mode_live": "persistent_governed_execution_plans_with_recent_run_history",
     "resume_anchor_selection_mode": "explicit_operator_selection_when_continuity_health_is_attention",
     "operator_qol": [
       "chat_first_command_deck_default_view",
       "persistent_local_conversation_thread",
       "slash_command_local_actions",
+      "governed_local_command_runner",
+      "persistent_governed_execution_plans",
+      "recent_governed_run_history",
+      "plan_run_and_archive_actions",
       "conversation_citations_and_action_logs",
       "conversation_write_draft_staging",
       "persistent_active_view_state",
@@ -415,7 +421,9 @@
       "continuation-platform/state/handoff_pack_preview.md",
       "continuation-platform/state/execution_packet.json",
       "continuation-platform/state/agent_console_session.json",
-      "continuation-platform/state/agent_console_drafts.json"
+      "continuation-platform/state/agent_console_drafts.json",
+      "continuation-platform/state/agent_console_plans.json",
+      "continuation-platform/state/agent_console_runs.json"
     ],
     "validation": {
       "python_compileall": "passed",
@@ -425,6 +433,8 @@
       "http_bootstrap": "passed",
       "http_agent_console": "passed",
       "http_agent_console_message": "passed",
+      "http_agent_console_run_command": "passed",
+      "http_agent_console_run_plan": "passed",
       "http_change_report": "passed",
       "http_telemetry_drilldown": "passed",
       "http_handoff_builder": "passed",
@@ -447,7 +457,7 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-16-unity-worker-gather-deposit-primary-loop.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-17-unity-building-resource-trickle-and-concurrent-session-contract.md",
   "latest_continuation_prompt": "03_PROMPTS/CONTINUATION_PROMPT_2026-04-16_SESSION_111.md",
   "latest_finalization_checklist": "docs/plans/2026-04-16-bloodlines-finalization-execution-checklist.md",
   "latest_state_of_game_report": "docs/BLOODLINES_STATE_OF_GAME_REPORT_2026-04-15_SESSION_87.md",
