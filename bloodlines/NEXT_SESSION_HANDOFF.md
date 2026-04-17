@@ -1,6 +1,6 @@
 # NEXT_SESSION_HANDOFF
 
-Last updated: 2026-04-17 (Session 125: Unity explicit attack orders and first attack-move command layer green on branch `codex/unity-attack-orders-attack-move` with `AttackOrderComponent`, `AttackOrderSystem`, explicit-target preference inside `AutoAcquireTargetSystem`, debug right-click hostile attack orders plus `A` attack-move mode and `Esc` cancel in a new command-surface partial, dedicated melee-plus-projectile-plus-attack-order combat smoke validation, bootstrap runtime smoke preserved green with all economy proofs still present, and both canonical scene-shell validators preserved green in the clean attack-order worktree through clone-local wrapper scripts because the checked-in wrappers are still pinned to the dirty canonical checkout; Session 120: Unity projectile combat green on branch `codex/unity-projectile-combat` with projectile runtime payloads, ranged and projectile-siege delivery split from melee instant-hit combat, bootstrap + production projectile spawn wiring, projectile debug proxies, dedicated melee-plus-projectile combat smoke validation, bootstrap runtime smoke preserved green with all economy proofs still present, and both canonical scene-shell validators preserved green in the clean projectile worktree; Session 119: Unity combat foundation green on branch `codex/unity-combat-foundation` with CombatStats/AttackTarget/Hostility payloads, auto-acquire/attack/death systems, bootstrap + production combat-stat wiring, browser-pixel-to-Unity-world combat-distance normalization via `map.tileSize`, dedicated combat smoke pass, and bootstrap runtime smoke preserved green in both the worktree-equivalent batch run and the unchanged governed wrapper; Session 112: Unity worker gather-deposit primary economy loop green with WorkerGatherComponent, WorkerGatherSystem driving Seeking/Gathering/Returning/Depositing phases, nearest-command-hall drop-off targeting, all seven canonical primary resource types routed into ResourceStockpileComponent, debug API for gather assignment and stockpile inspection, governed 5-worker gold-gather cycle proof carried into bootstrap runtime smoke artifact with controlled faction gold rising 45 to 55, startup timeout raised 75 to 120 seconds for the fuller sequence, and the first Git push of Sessions 100-108 + full canonical corpus + continuation platform source to origin lance-fisher/lancewfisher-v2; Session 111: finalization handoff and next-session continuation prompt refreshed so future sessions resume from the live Session 110 command-deck and Unity-shipping state instead of the obsolete Session 104 prompt; Session 110: continuation platform chat-first Command Deck green with persistent offline Bloodlines agent conversation, slash commands, local-model turns, governed write-draft staging and apply flow, live HTTP validation, and `8067` promoted into the main offline continuation surface; Session 109: continuation platform execution packet and governed write workbench green with dynamic current-canon ingestion, Unity shipping-lane Execution view, safe project-file load and diff preview, tier-gated canonical project writes with stale-source protection, live HTTP validation, and repaired current Unity recommendation; Session 108: Unity first-shell production progress observability green with world-space production progress bar, debug API progress getter, governed mid-production advancement proof carried into bootstrap runtime smoke artifact, and spawn-floor and equality gates scoped to allow mid-production observation; Session 107: Unity first-shell construction progress observability and UI green with selection-aware progress panel, world-space progress bar, governed mid-construction advancement proof, and refreshed bootstrap runtime smoke artifact; Session 106: owner direction refresh saved with full-canon Unity 6.3 DOTS/ECS delivery, browser freeze, and no-MVP rule; Session 105: project-completion handoff refreshed with completed-vs-remaining summary; Session 104: Unity constructed production continuity green and ready-to-paste next-session prompt added; Session 103: Unity first governed construction slice green; Session 102: Unity two-deep production queue tail-cancel validation green; Session 101: Unity production queue cancel-and-refund slice green; Session 100: Unity first production slice green; continuation platform quality-of-life pass validated with persistent view state, in-view filtering, quick-jump controls, copy actions, toast feedback, and manual anchor clear; graphics lane through Batch 08 with refreshed Unity testbeds and applied batch-review governance; Session 96: Naval world integration; Session 95: Trueborn recognition; Session 94: Rise arc; Session 93: Trueborn City; Sessions 88-92: sovereignty/pact deepening; all prior lanes preserved)
+Last updated: 2026-04-17 (Session 127: Unity passive target-acquisition throttling and sight-loss cleanup green on stacked branch `codex/unity-target-acquisition-los` with additive targeting cadence fields in `CombatStatsComponent`, throttled passive scans in `AutoAcquireTargetSystem`, stale-target cleanup plus reacquire cooldown in `AttackResolutionSystem`, a fifth combat-smoke phase proving sight-loss clear plus delayed replacement acquire, bootstrap runtime smoke preserved green with all current economy and AI proofs still present, canonical scene-shell validators preserved green, and concurrent-session contract revision 2 documenting the stacked Codex follow-up lane; Session 126: Unity explicit attack orders and first attack-move command layer green on branch `codex/unity-attack-move`; all prior lanes preserved)
 Previous author: Codex
 Next recommended action applies to whichever agent (Claude or Codex) runs next.
 
@@ -1249,3 +1249,79 @@ node --check src/game/core/utils.js
 - `04_SYSTEMS/FORTIFICATION_SYSTEM.md`
 - `04_SYSTEMS/SIEGE_SYSTEM.md`
 - `03_PROMPTS/CONTINUATION_PROMPT_2026-04-14_SESSION_9.md`
+
+## Session 126 Unity Attack Orders And Attack-Move
+
+- Status: green on `codex/unity-attack-move` at `7759f84e1c00eeb8a1baf329ac33b38d0e074cbc`, rebased onto `master` head `548d7804ce55766420d75184385b3bedb739a3ee`.
+- Delivered:
+  - contract-shaped `AttackOrderComponent`
+  - new `AttackOrderResolutionSystem` before `AutoAcquireTargetSystem`
+  - minimal explicit-target preservation inside `AutoAcquireTargetSystem`
+  - explicit-order cleanup inside `DeathResolutionSystem`
+  - new governed debug API partial `BloodlinesDebugCommandSurface.Combat.cs`
+  - four-phase combat smoke proof including explicit attack and attack-move
+- Important integration note: current `master` already contains the older `AttackOrderSystem` and `BloodlinesDebugCommandSurface.AttackOrders.cs` from the previous merged attack-order lane. This slice composes with that state additively by:
+  - keeping `AttackOrders.cs` as the input owner
+  - adding only the governed API surface in `Combat.cs`
+  - marking `AttackOrderSystem` as `[DisableAutoCreation]` so it does not compete with `AttackOrderResolutionSystem`
+- Validation status:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo` green
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo` green
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1` green with:
+    - `explicitAttackPhase=True`
+    - `attackMovePhase=True`
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1` green with:
+    - `aiActivityObserved=True`
+    - `aiConstructionObserved=True`
+    - `stabilitySurplusObserved=True`
+    - `capPressureObserved=True`
+    - `loyaltyDeclineObserved=True`
+    - `starvationObserved=True`
+    - `trickleGainObserved=True`
+    - `gatherDepositObserved=True`
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1` green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+- Handoff doc: `docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md`
+
+## Next Session Instruction
+
+- Stop at merge coordination for `codex/unity-attack-move`.
+- Do not extend this branch into stance systems, patrol, guard, follow, AoE combat, HUD cursor polish, or AI consumption of attack orders.
+- If the branch merges cleanly, the next combat continuation should start from updated `master`, not from this branch tip.
+
+## Session 127 Unity Target Acquisition Throttling And Sight Loss
+
+- Status: green on stacked branch `codex/unity-target-acquisition-los`, built above `codex/unity-attack-move`.
+- Contract lane: `combat-acquisition-and-sight` in contract Revision 2.
+- Delivered:
+  - additive passive-target cadence and sight-retention state inside `CombatStatsComponent`
+  - throttled passive scans in `AutoAcquireTargetSystem`
+  - stale passive-target cleanup, chase-stop behavior, and reacquire cooldown arming in `AttackResolutionSystem`
+  - fifth governed combat smoke proof for sight-loss cleanup plus delayed replacement acquire
+- Validation status:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo` green
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo` green
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1` green with:
+    - `explicitAttackPhase=True`
+    - `attackMovePhase=True`
+    - `targetVisibilityPhase=True`
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1` green with:
+    - `aiActivityObserved=True`
+    - `aiConstructionObserved=True`
+    - `stabilitySurplusObserved=True`
+    - `capPressureObserved=True`
+    - `loyaltyDeclineObserved=True`
+    - `starvationObserved=True`
+    - `trickleGainObserved=True`
+    - `gatherDepositObserved=True`
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1` green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+- Handoff doc: `docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md`
+
+## Next Session Instruction (Session 127)
+
+- Claude or Lance should merge `codex/unity-attack-move` first.
+- Then rebase or merge `codex/unity-target-acquisition-los` onto the refreshed `master` tip.
+- Do not widen the stacked target-acquisition branch into death presentation, renown or conviction kill hooks, or shared presentation work without a fresh contract lane assignment.

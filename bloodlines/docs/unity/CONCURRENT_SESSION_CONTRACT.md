@@ -2,9 +2,9 @@
 
 ## Contract Metadata
 
-- Revision: 1
+- Revision: 2
 - Last Updated: 2026-04-17
-- Last Updated By: claude-governance-2026-04-17
+- Last Updated By: codex-unity-target-acquisition-los-2026-04-17
 - Supersedes: revision 0 (pre-schema document)
 
 ## Purpose
@@ -77,7 +77,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: combat-attack-move
 
-- Status: paused
+- Status: complete_pending_merge_coordination
 - Branch Prefix: `codex/unity-attack-move`
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -87,8 +87,24 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`
 - Lane Authority Documents:
   - `docs/unity/CODEX_NEXT_PROMPT_ATTACK_MOVE.md`
-- Current Branch In Flight: none (prompt ready at the authority document above; branch not yet started)
-- Last Slice Handoff: none
+  - `docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md`
+- Current Branch In Flight: `codex/unity-attack-move`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md`
+
+### Lane: combat-acquisition-and-sight
+
+- Status: active
+- Branch Prefix: `codex/unity-target-acquisition-los`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Combat/**`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesCombatSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md`
+- Current Branch In Flight: `codex/unity-target-acquisition-los` (stacked on `codex/unity-attack-move` until the attack-move branch is merged)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md`
 
 ## Shared Files (Narrow Modification Rights for All Lanes)
 
@@ -188,3 +204,5 @@ The following discrepancies were found between the pre-schema contract (revision
 5. **`BloodlinesBootstrapRuntimeSmokeValidation.cs` ownership ambiguity.** The pre-schema contract listed this file as exclusively owned by the economy lane. Per the Session 113+ handoff record, all lane slices must keep it green and may add narrow diagnostic phases when their new systems require proof. It is now documented as a shared file, not exclusively owned.
 
 6. **`BloodlinesDebugCommandSurface.cs` absent from shared-file list.** This file was implicitly economy-lane-owned in the pre-schema contract. The combat-attack-move lane will need to add debug command APIs for attack orders. It is now documented as a shared file with narrow-modification rules. No conflict has occurred yet.
+
+7. **Stacked Codex combat follow-up.** Lance delegated merge coordination for `codex/unity-attack-move` separately to Claude while Codex continued onto the next combat opportunity. Revision 2 documents the stacked follow-up branch `codex/unity-target-acquisition-los` explicitly so the lane and wrapper-lock ownership remain unambiguous.

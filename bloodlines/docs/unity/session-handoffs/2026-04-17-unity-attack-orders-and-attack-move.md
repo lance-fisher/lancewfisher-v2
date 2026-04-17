@@ -1,102 +1,97 @@
 # 2026-04-17 Unity Attack Orders And Attack-Move
 
-## Scope
+## Goal
 
-Concurrent Codex combat-lane follow-up after projectile combat under the contract in `docs/unity/CONCURRENT_SESSION_CONTRACT.md`:
-
-- owned: `unity/Assets/_Bloodlines/Code/Combat/**`
-- owned: `unity/Assets/_Bloodlines/Code/Editor/BloodlinesCombatSmokeValidation.cs`
-- owned: `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`
-- owned: `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AttackOrders.cs`
-- shared narrow edits only: `unity/Assembly-CSharp.csproj`, `unity/Assembly-CSharp-Editor.csproj`
+Give the player commandable combat on current Unity `master` by landing the missing explicit attack-order and attack-move slice without touching the active Claude graphics lane, the retired AI lane, or the governed bootstrap smoke surface.
 
 ## Delivered
 
-- Added explicit order payload:
-  - `AttackOrderComponent`
-- Added order-conversion runtime:
-  - `AttackOrderSystem`
-- Extended `AutoAcquireTargetSystem` so an active explicit attack order wins over passive auto-acquire whenever the hostile target is still alive and inside sight.
-- Extended `DeathResolutionSystem` so dead units drop any residual `AttackOrderComponent` alongside `AttackTargetComponent`.
-- Added a new debug-only partial:
-  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AttackOrders.cs`
-- Extended the dedicated combat smoke validator with a third phase that proves explicit attack orders through the debug API.
-
-## Canonical Semantics Landed
-
-- `AttackOrderComponent` now carries:
+- Added `unity/Assets/_Bloodlines/Code/Combat/AttackOrderComponent.cs` with the contract fields:
   - `ExplicitTargetEntity`
-  - `IsAttackMoveDestination`
   - `AttackMoveDestination`
+  - `IsAttackMoveActive`
   - `IsActive`
-- `AttackOrderSystem` now runs before `AutoAcquireTargetSystem` and converts combat orders into the existing `MoveCommandComponent` plus `AttackTargetComponent` flow.
-- Explicit attack orders now:
-  - bind to a specific hostile target
-  - maintain that target while it remains alive and inside sight
-  - stop pursuit, clear the attack target, and deactivate the order when the hostile leaves sight or dies
-- Attack-move orders now:
-  - store the issued ground destination on the unit
-  - let the unit engage local hostiles through the normal combat systems
-  - resume movement toward the stored destination after local engagement ends
-  - deactivate once the unit reaches the attack-move destination
-- Debug command bindings now exist for the first playable command path:
-  - right-click hostile unit with selected combat units issues an explicit attack order
-  - `A` enters attack-move cursor mode
-  - next right-click on ground becomes an attack-move destination
-  - `Esc` cancels attack-move mode and restores the pre-mode selection snapshot
+- Preserved compatibility with the already-merged older attack-order lane by keeping the additive compatibility property:
+  - `IsAttackMoveDestination` forwards to `IsAttackMoveActive`
+- Added `unity/Assets/_Bloodlines/Code/Combat/AttackOrderResolutionSystem.cs`:
+  - runs in `SimulationSystemGroup`
+  - updates before `AutoAcquireTargetSystem`
+  - translates explicit orders and attack-move orders into the existing `MoveCommandComponent` and `AttackTargetComponent` flow
+  - explicit target orders now chase commanded hostiles until death or invalidation
+  - attack-move now marches toward destination, interrupts to fight acquired hostiles, then resumes marching after the hostile dies
+- Extended `unity/Assets/_Bloodlines/Code/Combat/AutoAcquireTargetSystem.cs` minimally so:
+  - active explicit targets are respected and written through as the live `AttackTargetComponent`
+  - otherwise the previous nearest-hostile auto-acquire behavior stays intact
+- Extended `unity/Assets/_Bloodlines/Code/Combat/DeathResolutionSystem.cs` so:
+  - dead units lose any `AttackOrderComponent`
+  - attackers targeting a killed explicit target have that explicit order cleared immediately
+  - attack-move orders survive local kills so destination march can resume
+- Marked the older already-merged `unity/Assets/_Bloodlines/Code/Combat/AttackOrderSystem.cs` as `[DisableAutoCreation]` so the rebased contract-shaped system is the only active attack-order resolver on current `master`
+- Added `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Combat.cs` as the required new partial class file:
+  - `TryDebugIssueAttackOrderOnNearestHostile(factionId, out bool issued)`
+  - `TryDebugIssueAttackMove(float3 destination, out int orderedCount)`
+  - helper that resolves the nearest hostile from the current combat selection without duplicating the already-merged `BloodlinesDebugCommandSurface.AttackOrders.cs` input surface
+- Extended `unity/Assets/_Bloodlines/Code/Editor/BloodlinesCombatSmokeValidation.cs` from two phases to four:
+  - melee phase
+  - projectile phase
+  - explicit attack-order phase
+  - attack-move phase with a neutral decoy that must remain ignored
+
+## Important Integration Notes
+
+- Current `master` already contains an older merged attack-order lane from `codex/unity-attack-orders-attack-move`.
+- This branch rebased that older lane onto current `master` additively instead of replacing it:
+  - the existing `BloodlinesDebugCommandSurface.AttackOrders.cs` remains the input owner for right-click hostile targeting and `A` attack-move arming
+  - the new `BloodlinesDebugCommandSurface.Combat.cs` only adds the governed debug APIs required by the contract
+  - the existing `AttackOrderSystem` stays on disk but is disabled from auto-creation so it cannot compete with `AttackOrderResolutionSystem`
+- The combat smoke and bootstrap runtime smoke were rerun through the canonical wrappers under the required wrapper lock session:
+  - `codex-attack-move`
+- No forbidden paths were touched:
+  - no `Code/AI/**`
+  - no `Code/Economy/**`
+  - no `Code/Rendering/**`
+  - no shader lane files
+  - no bootstrap runtime smoke validator edits
 
 ## Validation
 
-Green in the clean attack-order worktree at `D:\ao\bloodlines`:
+Green on `codex/unity-attack-move` after rebase onto `548d7804ce55766420d75184385b3bedb739a3ee`:
 
 1. `dotnet build unity/Assembly-CSharp.csproj -nologo`
 2. `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`
-3. `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`
-4. clean-worktree bootstrap runtime smoke using the same execute method as the governed wrapper:
-   - `Bloodlines.EditorTools.BloodlinesBootstrapRuntimeSmokeValidation.RunBatchBootstrapRuntimeSmokeValidation`
-5. clean-worktree bootstrap scene shell validation:
-   - `Bloodlines.EditorTools.BloodlinesGameplaySceneBootstrap.RunBatchValidateBootstrapSceneShell`
-6. clean-worktree gameplay scene shell validation:
-   - `Bloodlines.EditorTools.BloodlinesGameplaySceneBootstrap.RunBatchValidateGameplaySceneShell`
-7. `node tests/data-validation.mjs`
-8. `node tests/runtime-bridge.mjs`
+3. `powershell -ExecutionPolicy Bypass -File scripts/Invoke-BloodlinesUnityWrapperWithLock.ps1 -Session "codex-attack-move" -WrapperScript "scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1"`
+4. `powershell -ExecutionPolicy Bypass -File scripts/Invoke-BloodlinesUnityWrapperWithLock.ps1 -Session "codex-attack-move" -WrapperScript "scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1"`
+5. `powershell -ExecutionPolicy Bypass -File scripts/Invoke-BloodlinesUnityWrapperWithLock.ps1 -Session "codex-attack-move" -WrapperScript "scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1"`
+6. `node tests/data-validation.mjs`
+7. `node tests/runtime-bridge.mjs`
 
 Combat smoke pass lines from `artifacts/unity-combat-smoke.log`:
 
 - `Combat smoke validation melee phase passed: dead='enemy', survivorHealth=6/12, elapsedSeconds=1.2.`
 - `Combat smoke validation projectile phase passed: projectileObserved=True, dead='enemy', elapsedSeconds=0.9.`
-- `Combat smoke validation attack-order phase passed: explicitTargetObserved=True, cooldownObserved=True, residualTarget=False, dead='enemy', elapsedSeconds=0.6.`
-- `Combat smoke validation passed: meleePhase=True, projectilePhase=True, attackOrderPhase=True.`
+- `Combat smoke validation explicit attack phase passed: explicitTargetObserved=True, chaseObserved=True, residualTarget=False, dead='enemy', elapsedSeconds=1.5.`
+- `Combat smoke validation attack-move phase passed: hostileDead=True, neutralIgnored=True, destinationReached=True, elapsedSeconds=2.2.`
+- `Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True.`
 
-Bootstrap runtime smoke pass line confirms the economy proofs still remained green:
+Bootstrap runtime smoke preserved the current economy + AI + HUD proofs on the same branch tip:
 
 - `gatherDepositObserved=True`
 - `trickleGainObserved=True`
 - `starvationObserved=True`
 - `loyaltyDeclineObserved=True`
 - `capPressureObserved=True`
-
-## Wrapper / Validation Note
-
-- The checked-in `scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1` and `scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1` wrappers are still pinned to `D:\ProjectsHome\Bloodlines`.
-- The canonical checkout was intentionally left alone because Claude's concurrent lane still had dirty shared files there.
-- To keep validation honest without colliding with that checkout, the same Unity batch execute methods were rerun through clone-local temporary wrapper scripts under `scripts/Invoke-BloodlinesUnityWrapperWithLock.ps1`.
+- `aiActivityObserved=True`
+- `aiConstructionObserved=True`
+- `stabilitySurplusObserved=True`
 
 ## Branch State
 
-- branch: `codex/unity-attack-orders-attack-move`
-- base master head: `aed6969b9152c630a67eacbd9f1759361ec28cdb`
+- branch: `codex/unity-attack-move`
+- head: `7759f84e1c00eeb8a1baf329ac33b38d0e074cbc`
+- rebased master head: `548d7804ce55766420d75184385b3bedb739a3ee`
 
-## What The Next Combat Slice Should Do
+## Next Action
 
-- stop at merge coordination for this branch
-- after merge, continue deeper combat control and feel through:
-  - acquisition throttling
-  - line-of-sight tuning
-  - combat presentation cleanup
-  - deeper command-surface combat ergonomics
-
-## Merge / Coordination Note
-
-This lane is green and should stop at branch state for merge coordination.
-Do not widen this branch into AI, economy, renown, or death-presentation polish before merge.
+- Stop at merge coordination for this branch.
+- Do not extend this branch into stances, patrol, guard, follow, AoE combat, AI consumption of attack orders, or HUD cursor polish.
+- After merge coordination, the next combat follow-up can start from updated `master` rather than extending this slice in place.
