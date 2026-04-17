@@ -38,6 +38,8 @@ namespace Bloodlines.Authoring
         private bool runtimeBootstrapInjectionFailed;
 #endif
 
+        private float CombatDistanceScale => math.max(1f, map != null ? map.tileSize : 32f);
+
         public MapDefinition Map => map;
         public bool SpawnFactions => spawnFactions;
         public bool SpawnBuildings => spawnBuildings;
@@ -165,18 +167,39 @@ namespace Bloodlines.Authoring
                 });
 
                 entityManager.AddBuffer<MapFactionSeedElement>(bootstrapEntity);
+                entityManager.AddBuffer<MapFactionHostilitySeedElement>(bootstrapEntity);
                 entityManager.AddBuffer<MapBuildingSeedElement>(bootstrapEntity);
                 entityManager.AddBuffer<MapUnitSeedElement>(bootstrapEntity);
+                entityManager.AddBuffer<UnitCombatDefinitionElement>(bootstrapEntity);
                 entityManager.AddBuffer<MapResourceNodeSeedElement>(bootstrapEntity);
                 entityManager.AddBuffer<MapControlPointSeedElement>(bootstrapEntity);
                 entityManager.AddBuffer<MapSettlementSeedElement>(bootstrapEntity);
 
                 var factionBuffer = entityManager.GetBuffer<MapFactionSeedElement>(bootstrapEntity);
+                var factionHostilityBuffer = entityManager.GetBuffer<MapFactionHostilitySeedElement>(bootstrapEntity);
                 var buildingBuffer = entityManager.GetBuffer<MapBuildingSeedElement>(bootstrapEntity);
                 var unitBuffer = entityManager.GetBuffer<MapUnitSeedElement>(bootstrapEntity);
+                var unitCombatDefinitionBuffer = entityManager.GetBuffer<UnitCombatDefinitionElement>(bootstrapEntity);
                 var resourceNodeBuffer = entityManager.GetBuffer<MapResourceNodeSeedElement>(bootstrapEntity);
                 var controlPointBuffer = entityManager.GetBuffer<MapControlPointSeedElement>(bootstrapEntity);
                 var settlementBuffer = entityManager.GetBuffer<MapSettlementSeedElement>(bootstrapEntity);
+
+                foreach (var unitDefinition in unitDefinitions ?? Array.Empty<UnitDefinition>())
+                {
+                    if (unitDefinition == null || string.IsNullOrWhiteSpace(unitDefinition.id))
+                    {
+                        continue;
+                    }
+
+                    unitCombatDefinitionBuffer.Add(new UnitCombatDefinitionElement
+                    {
+                        UnitId = unitDefinition.id,
+                        AttackDamage = math.max(0f, unitDefinition.attackDamage),
+                        AttackRange = NormalizeCombatDistance(unitDefinition.attackRange),
+                        AttackCooldown = math.max(0.1f, unitDefinition.attackCooldown),
+                        Sight = NormalizeCombatDistance(unitDefinition.sight),
+                    });
+                }
 
                 foreach (var resourceNode in map.resourceNodes ?? Array.Empty<ResourceNodeData>())
                 {
@@ -244,6 +267,20 @@ namespace Bloodlines.Authoring
                         PopulationReserved = faction.population?.reserved ?? 0,
                     });
 
+                    foreach (var hostileFactionId in faction.hostileTo ?? Array.Empty<string>())
+                    {
+                        if (string.IsNullOrWhiteSpace(hostileFactionId))
+                        {
+                            continue;
+                        }
+
+                        factionHostilityBuffer.Add(new MapFactionHostilitySeedElement
+                        {
+                            FactionId = faction.id ?? string.Empty,
+                            HostileFactionId = hostileFactionId,
+                        });
+                    }
+
                     foreach (var building in faction.buildings ?? Array.Empty<BuildingSeedData>())
                     {
                         var buildingDefinition = RequireDefinition(buildingLookup, building.typeId, "building");
@@ -275,6 +312,10 @@ namespace Bloodlines.Authoring
                             Position = new float3(unit.x, 0f, unit.y),
                             MaxHealth = unitDefinition.health,
                             MaxSpeed = unitDefinition.speed,
+                            AttackDamage = math.max(0f, unitDefinition.attackDamage),
+                            AttackRange = NormalizeCombatDistance(unitDefinition.attackRange),
+                            AttackCooldown = math.max(0.1f, unitDefinition.attackCooldown),
+                            Sight = NormalizeCombatDistance(unitDefinition.sight),
                             Role = ResolveUnitRole(unitDefinition.role),
                             SiegeClass = ResolveSiegeClass(unitDefinition.siegeClass),
                             PopulationCost = unitDefinition.populationCost,
@@ -328,6 +369,11 @@ namespace Bloodlines.Authoring
             }
 
             return lookup;
+        }
+
+        private float NormalizeCombatDistance(float rawDistance)
+        {
+            return math.max(0.1f, rawDistance / CombatDistanceScale);
         }
 
         private static TDefinition RequireDefinition<TDefinition>(

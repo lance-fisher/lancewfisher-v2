@@ -36,6 +36,7 @@ namespace Bloodlines.EditorTools
             var buildingDefinitions = LoadDefinitions(BuildingDefinitionsFolder, (BuildingDefinition definition) => definition.id);
             var unitDefinitions = LoadDefinitions(UnitDefinitionsFolder, (UnitDefinition definition) => definition.id);
             var settlementDefinitions = LoadDefinitions(SettlementDefinitionsFolder, (SettlementClassDefinition definition) => definition.id);
+            float combatDistanceScale = math.max(1f, authoring.Map.tileSize > 0 ? authoring.Map.tileSize : 32f);
 
             var entity = GetEntity(TransformUsageFlags.None);
             AddComponent<MapBootstrapPendingTag>(entity);
@@ -56,11 +57,30 @@ namespace Bloodlines.EditorTools
             });
 
             var factionBuffer = AddBuffer<MapFactionSeedElement>(entity);
+            var factionHostilityBuffer = AddBuffer<MapFactionHostilitySeedElement>(entity);
             var buildingBuffer = AddBuffer<MapBuildingSeedElement>(entity);
             var unitBuffer = AddBuffer<MapUnitSeedElement>(entity);
+            var unitCombatDefinitionBuffer = AddBuffer<UnitCombatDefinitionElement>(entity);
             var resourceNodeBuffer = AddBuffer<MapResourceNodeSeedElement>(entity);
             var controlPointBuffer = AddBuffer<MapControlPointSeedElement>(entity);
             var settlementBuffer = AddBuffer<MapSettlementSeedElement>(entity);
+
+            foreach (var unitDefinition in authoring.UnitDefinitions ?? Array.Empty<UnitDefinition>())
+            {
+                if (unitDefinition == null || string.IsNullOrWhiteSpace(unitDefinition.id))
+                {
+                    continue;
+                }
+
+                unitCombatDefinitionBuffer.Add(new UnitCombatDefinitionElement
+                {
+                    UnitId = unitDefinition.id,
+                    AttackDamage = math.max(0f, unitDefinition.attackDamage),
+                    AttackRange = NormalizeCombatDistance(unitDefinition.attackRange, combatDistanceScale),
+                    AttackCooldown = math.max(0.1f, unitDefinition.attackCooldown),
+                    Sight = NormalizeCombatDistance(unitDefinition.sight, combatDistanceScale),
+                });
+            }
 
             foreach (var resourceNode in authoring.Map.resourceNodes ?? Array.Empty<ResourceNodeData>())
             {
@@ -128,6 +148,20 @@ namespace Bloodlines.EditorTools
                     PopulationReserved = faction.population?.reserved ?? 0,
                 });
 
+                foreach (var hostileFactionId in faction.hostileTo ?? Array.Empty<string>())
+                {
+                    if (string.IsNullOrWhiteSpace(hostileFactionId))
+                    {
+                        continue;
+                    }
+
+                    factionHostilityBuffer.Add(new MapFactionHostilitySeedElement
+                    {
+                        FactionId = faction.id ?? string.Empty,
+                        HostileFactionId = hostileFactionId,
+                    });
+                }
+
                 foreach (var building in faction.buildings ?? Array.Empty<BuildingSeedData>())
                 {
                     var buildingDefinition = RequireDefinition(buildingDefinitions, building.typeId, "building");
@@ -159,6 +193,10 @@ namespace Bloodlines.EditorTools
                         Position = new float3(unit.x, 0f, unit.y),
                         MaxHealth = unitDefinition.health,
                         MaxSpeed = unitDefinition.speed,
+                        AttackDamage = math.max(0f, unitDefinition.attackDamage),
+                        AttackRange = NormalizeCombatDistance(unitDefinition.attackRange, combatDistanceScale),
+                        AttackCooldown = math.max(0.1f, unitDefinition.attackCooldown),
+                        Sight = NormalizeCombatDistance(unitDefinition.sight, combatDistanceScale),
                         Role = ResolveUnitRole(unitDefinition.role),
                         SiegeClass = ResolveSiegeClass(unitDefinition.siegeClass),
                         PopulationCost = unitDefinition.populationCost,
@@ -191,6 +229,11 @@ namespace Bloodlines.EditorTools
             }
 
             return definitions;
+        }
+
+        static float NormalizeCombatDistance(float rawDistance, float combatDistanceScale)
+        {
+            return math.max(0.1f, rawDistance / math.max(1f, combatDistanceScale));
         }
 
         static TDefinition RequireDefinition<TDefinition>(IReadOnlyDictionary<string, TDefinition> definitions, string id, string label)
