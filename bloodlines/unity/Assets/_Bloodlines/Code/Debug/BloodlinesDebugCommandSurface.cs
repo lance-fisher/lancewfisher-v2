@@ -2162,6 +2162,68 @@ namespace Bloodlines.Debug
             return false;
         }
 
+        public bool TryDebugForceCapPressureCycle(string factionId, out int totalAfterSpike, out int capAfterSpike, out float loyaltyBeforeCycle)
+        {
+            totalAfterSpike = 0;
+            capAfterSpike = 0;
+            loyaltyBeforeCycle = 0f;
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            if (!TryGetRealmCycleConfig(entityManager, out var cfg))
+            {
+                return false;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                typeof(RealmConditionComponent),
+                typeof(PopulationComponent),
+                typeof(FactionLoyaltyComponent));
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var realms = query.ToComponentDataArray<RealmConditionComponent>(Allocator.Temp);
+            using var populations = query.ToComponentDataArray<PopulationComponent>(Allocator.Temp);
+            using var loyalties = query.ToComponentDataArray<FactionLoyaltyComponent>(Allocator.Temp);
+
+            var key = new FixedString32Bytes(factionId ?? string.Empty);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(key))
+                {
+                    continue;
+                }
+
+                float threshold = cfg.PopulationCapPressureRatio > 0f ? cfg.PopulationCapPressureRatio : 0.95f;
+                int cap = math.max(1, populations[i].Cap);
+                int required = (int)math.ceil(cap * threshold);
+
+                var population = populations[i];
+                population.Total = math.max(population.Total, required);
+                population.Available = math.min(population.Available, population.Total);
+                entityManager.SetComponentData(entities[i], population);
+
+                var realm = realms[i];
+                realm.FoodStrainStreak = 0;
+                realm.WaterStrainStreak = 0;
+                realm.LastCapPressureResponseCycle = realm.CycleCount;
+                realm.CycleCount += 1;
+                realm.LastStarvationResponseCycle = realm.CycleCount;
+                realm.CycleAccumulator = 0f;
+                entityManager.SetComponentData(entities[i], realm);
+
+                totalAfterSpike = population.Total;
+                capAfterSpike = population.Cap;
+                loyaltyBeforeCycle = loyalties[i].Current;
+                return true;
+            }
+
+            return false;
+        }
+
         public bool TryDebugGetFactionLoyalty(string factionId, out float current, out float max, out float floor)
         {
             current = 0f;

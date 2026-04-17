@@ -119,6 +119,7 @@ namespace Bloodlines.EditorTools
                     starvationIncludeWaterCrisis = true,
                     starvationTimeoutSeconds = 15f,
                     loyaltyMinimumDeltaMagnitude = 8f,
+                    capPressureTimeoutSeconds = 10f,
                 };
 
                 SaveState(state);
@@ -994,6 +995,12 @@ namespace Bloodlines.EditorTools
                 return starvationProbe.Value;
             }
 
+            var capPressureProbe = ProbeCapPressureResponse(commandSurface, state, diagnostics);
+            if (capPressureProbe.HasValue)
+            {
+                return capPressureProbe.Value;
+            }
+
             diagnostics =
                 diagnostics.TrimEnd('.') +
                 ", controlledUnits=" + controlledUnitCount +
@@ -1039,7 +1046,13 @@ namespace Bloodlines.EditorTools
                 ", loyaltyPreviousValue=" + state.loyaltyPreviousValue.ToString("0.00") +
                 ", loyaltyLatestValue=" + state.loyaltyLatestValue.ToString("0.00") +
                 ", loyaltyExpectedMaximumAfterCycle=" + state.loyaltyExpectedMaximumAfterCycle.ToString("0.00") +
-                ", loyaltyDeclineObserved=" + state.loyaltyDeclineObserved + ".";
+                ", loyaltyDeclineObserved=" + state.loyaltyDeclineObserved +
+                ", capPressureForced=" + state.capPressureForced +
+                ", capPressureTotalAfterSpike=" + state.capPressureTotalAfterSpike +
+                ", capPressureCapAfterSpike=" + state.capPressureCapAfterSpike +
+                ", capPressureLoyaltyBeforeCycle=" + state.capPressureLoyaltyBeforeCycle.ToString("0.00") +
+                ", capPressureLatestLoyalty=" + state.capPressureLatestLoyalty.ToString("0.00") +
+                ", capPressureObserved=" + state.capPressureObserved + ".";
 
             return ProbeResult.Pass(
                 "Bootstrap runtime smoke validation passed for " + BootstrapScenePath +
@@ -1107,6 +1120,81 @@ namespace Bloodlines.EditorTools
             }
 
             return count;
+        }
+
+        private static ProbeResult? ProbeCapPressureResponse(
+            BloodlinesDebugCommandSurface commandSurface,
+            RuntimeSmokeState state,
+            string diagnostics)
+        {
+            if (state.capPressureObserved)
+            {
+                return null;
+            }
+
+            if (!state.capPressureForced)
+            {
+                if (!commandSurface.TryDebugForceCapPressureCycle(
+                    commandSurface.ControlledFactionId,
+                    out int totalAfterSpike,
+                    out int capAfterSpike,
+                    out float loyaltyBeforeCycle))
+                {
+                    return ProbeResult.Fail(
+                        "Bootstrap runtime smoke validation failed: command shell could not force cap-pressure cycle for " +
+                        Quote(commandSurface.ControlledFactionId) + ". " + diagnostics);
+                }
+
+                state.capPressureForced = true;
+                state.capPressureTotalAfterSpike = totalAfterSpike;
+                state.capPressureCapAfterSpike = capAfterSpike;
+                state.capPressureLoyaltyBeforeCycle = loyaltyBeforeCycle;
+                state.capPressureLatestLoyalty = loyaltyBeforeCycle;
+                state.capPressureExpectedMaximumAfterCycle = loyaltyBeforeCycle - 0.5f;
+                state.capPressureForcedUtcTicks = DateTime.UtcNow.Ticks;
+                SaveState(state);
+                return ProbeResult.NotReady(
+                    "Cap-pressure cycle forced. populationTotal=" + totalAfterSpike +
+                    "/" + capAfterSpike + ", loyaltyBeforeCycle=" + loyaltyBeforeCycle.ToString("0.00") + ". " + diagnostics);
+            }
+
+            if (!commandSurface.TryDebugGetFactionLoyalty(
+                commandSurface.ControlledFactionId,
+                out float currentLoyalty,
+                out _,
+                out _))
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: could not read loyalty after forced cap-pressure cycle. " +
+                    diagnostics);
+            }
+
+            state.capPressureLatestLoyalty = currentLoyalty;
+
+            if (currentLoyalty <= state.capPressureExpectedMaximumAfterCycle)
+            {
+                state.capPressureObserved = true;
+                SaveState(state);
+                return null;
+            }
+
+            double elapsedSeconds = ElapsedSeconds(state.capPressureForcedUtcTicks);
+            if (elapsedSeconds >= state.capPressureTimeoutSeconds)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: cap-pressure loyalty delta did not apply within " +
+                    state.capPressureTimeoutSeconds.ToString("0.0") + "s. loyaltyBeforeCycle=" +
+                    state.capPressureLoyaltyBeforeCycle.ToString("0.00") + ", currentLoyalty=" + currentLoyalty.ToString("0.00") +
+                    ", expectedMaximumAfterCycle=" + state.capPressureExpectedMaximumAfterCycle.ToString("0.00") + ". " +
+                    diagnostics);
+            }
+
+            return ProbeResult.NotReady(
+                "Waiting for CapPressureResponseSystem to reduce loyalty. loyaltyBeforeCycle=" +
+                state.capPressureLoyaltyBeforeCycle.ToString("0.00") + ", currentLoyalty=" + currentLoyalty.ToString("0.00") +
+                ", expectedMaximumAfterCycle=" + state.capPressureExpectedMaximumAfterCycle.ToString("0.00") +
+                ", elapsedSeconds=" + elapsedSeconds.ToString("0.0") + "/" +
+                state.capPressureTimeoutSeconds.ToString("0.0") + ". " + diagnostics);
         }
 
         private static ProbeResult? ProbeStarvationResponse(
@@ -2046,6 +2134,15 @@ namespace Bloodlines.EditorTools
             public float loyaltyLatestValue;
             public float loyaltyMinimumDeltaMagnitude;
             public bool loyaltyDeclineObserved;
+            public bool capPressureForced;
+            public int capPressureTotalAfterSpike;
+            public int capPressureCapAfterSpike;
+            public float capPressureLoyaltyBeforeCycle;
+            public float capPressureExpectedMaximumAfterCycle;
+            public float capPressureLatestLoyalty;
+            public long capPressureForcedUtcTicks;
+            public float capPressureTimeoutSeconds;
+            public bool capPressureObserved;
         }
 
         private readonly struct ProbeResult
