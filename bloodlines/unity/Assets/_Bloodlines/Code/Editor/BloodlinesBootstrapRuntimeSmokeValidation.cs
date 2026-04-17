@@ -1248,12 +1248,17 @@ namespace Bloodlines.EditorTools
                 }
 
                 int initialUnitCount = commandSurface.CountFactionUnits(factionId);
+                int initialBuildingCount = commandSurface.CountFactionBuildings(factionId);
                 state.aiBaselineSampled = true;
                 state.aiInitialGold = initialGold;
                 state.aiInitialUnitCount = initialUnitCount;
                 state.aiLatestGold = initialGold;
                 state.aiLatestUnitCount = initialUnitCount;
                 state.aiBaselineUtcTicks = DateTime.UtcNow.Ticks;
+                state.aiConstructionBaselineSampled = true;
+                state.aiInitialBuildingCount = initialBuildingCount;
+                state.aiLatestBuildingCount = initialBuildingCount;
+                state.aiConstructionBaselineUtcTicks = DateTime.UtcNow.Ticks;
                 SaveState(state);
                 return ProbeResult.NotReady(
                     "AI faction " + Quote(factionId) + " baseline captured: initialGold=" +
