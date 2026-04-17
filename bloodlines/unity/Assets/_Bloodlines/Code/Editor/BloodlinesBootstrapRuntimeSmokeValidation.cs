@@ -124,6 +124,8 @@ namespace Bloodlines.EditorTools
                     aiMinimumGoldDelta = 5f,
                     aiMinimumUnitDelta = 1,
                     aiActivityTimeoutSeconds = 35f,
+                    aiMinimumBuildingGain = 1,
+                    aiConstructionTimeoutSeconds = 30f,
                 };
 
                 SaveState(state);
@@ -330,7 +332,10 @@ namespace Bloodlines.EditorTools
                 unitCount < state.expectedUnitCountAfterProduction;
             bool aiObservationWindow =
                 state.aiBaselineSampled && !state.aiActivityObserved;
-            bool unitCountFlexibleWindow = midProductionObservationWindow || aiObservationWindow;
+            bool aiFlexibleWindow =
+                state.aiBaselineSampled &&
+                (!state.aiActivityObserved || !state.aiConstructionObserved);
+            bool unitCountFlexibleWindow = midProductionObservationWindow || aiFlexibleWindow;
             if (midProductionObservationWindow)
             {
                 var midProductionProgressProbe = ProbeProductionProgress(
@@ -375,7 +380,7 @@ namespace Bloodlines.EditorTools
                     state.expectedFactionCount + " but found " + factionCount + ". " + diagnostics);
             }
 
-            if (buildingCount != expectedBuildingCountForCurrentPhase)
+            if (buildingCount != expectedBuildingCountForCurrentPhase && !aiFlexibleWindow)
             {
                 return ProbeResult.Fail(
                     "Bootstrap runtime smoke validation failed: building count mismatch. Expected " +
@@ -1014,6 +1019,12 @@ namespace Bloodlines.EditorTools
                 return aiEconomyProbe.Value;
             }
 
+            var aiConstructionProbe = ProbeAIConstructionActivity(commandSurface, state, diagnostics);
+            if (aiConstructionProbe.HasValue)
+            {
+                return aiConstructionProbe.Value;
+            }
+
             diagnostics =
                 diagnostics.TrimEnd('.') +
                 ", controlledUnits=" + controlledUnitCount +
@@ -1073,7 +1084,10 @@ namespace Bloodlines.EditorTools
                 ", aiLatestUnitCount=" + state.aiLatestUnitCount +
                 ", aiGoldGainObserved=" + state.aiGoldGainObserved +
                 ", aiUnitGainObserved=" + state.aiUnitGainObserved +
-                ", aiActivityObserved=" + state.aiActivityObserved + ".";
+                ", aiActivityObserved=" + state.aiActivityObserved +
+                ", aiInitialBuildingCount=" + state.aiInitialBuildingCount +
+                ", aiLatestBuildingCount=" + state.aiLatestBuildingCount +
+                ", aiConstructionObserved=" + state.aiConstructionObserved + ".";
 
             return ProbeResult.Pass(
                 "Bootstrap runtime smoke validation passed for " + BootstrapScenePath +
@@ -1141,6 +1155,60 @@ namespace Bloodlines.EditorTools
             }
 
             return count;
+        }
+
+        private static ProbeResult? ProbeAIConstructionActivity(
+            BloodlinesDebugCommandSurface commandSurface,
+            RuntimeSmokeState state,
+            string diagnostics)
+        {
+            if (state.aiConstructionObserved)
+            {
+                return null;
+            }
+
+            string factionId = string.IsNullOrWhiteSpace(state.aiFactionId) ? "enemy" : state.aiFactionId;
+
+            if (!state.aiConstructionBaselineSampled)
+            {
+                int initialBuildingCount = commandSurface.CountFactionBuildings(factionId);
+                state.aiConstructionBaselineSampled = true;
+                state.aiInitialBuildingCount = initialBuildingCount;
+                state.aiLatestBuildingCount = initialBuildingCount;
+                state.aiConstructionBaselineUtcTicks = DateTime.UtcNow.Ticks;
+                SaveState(state);
+                return ProbeResult.NotReady(
+                    "AI construction baseline captured: initialBuildingCount=" + initialBuildingCount +
+                    " for faction " + Quote(factionId) + ". " + diagnostics);
+            }
+
+            int currentBuildingCount = commandSurface.CountFactionBuildings(factionId);
+            state.aiLatestBuildingCount = currentBuildingCount;
+            int gain = currentBuildingCount - state.aiInitialBuildingCount;
+            int requiredGain = Mathf.Max(1, state.aiMinimumBuildingGain);
+
+            if (gain >= requiredGain)
+            {
+                state.aiConstructionObserved = true;
+                SaveState(state);
+                return null;
+            }
+
+            double elapsedSeconds = ElapsedSeconds(state.aiConstructionBaselineUtcTicks);
+            if (elapsedSeconds >= state.aiConstructionTimeoutSeconds)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: AI construction activity did not reach threshold within " +
+                    state.aiConstructionTimeoutSeconds.ToString("0.0") + "s. faction=" + Quote(factionId) +
+                    ", initialBuildingCount=" + state.aiInitialBuildingCount + ", currentBuildingCount=" + currentBuildingCount +
+                    ", gain=" + gain + "/" + requiredGain + ". " + diagnostics);
+            }
+
+            return ProbeResult.NotReady(
+                "Waiting for AI construction on faction " + Quote(factionId) +
+                ": buildingGain=" + gain + "/" + requiredGain +
+                ", elapsedSeconds=" + elapsedSeconds.ToString("0.0") + "/" +
+                state.aiConstructionTimeoutSeconds.ToString("0.0") + ". " + diagnostics);
         }
 
         private static ProbeResult? ProbeAIEconomyActivity(
@@ -1225,7 +1293,7 @@ namespace Bloodlines.EditorTools
                 state.aiUnitGainObserved = true;
             }
 
-            if (state.aiGoldGainObserved && state.aiUnitGainObserved)
+            if (state.aiGoldGainObserved || state.aiUnitGainObserved)
             {
                 state.aiActivityObserved = true;
                 SaveState(state);
@@ -2288,6 +2356,13 @@ namespace Bloodlines.EditorTools
             public bool aiActivityObserved;
             public bool aiGoldGainObserved;
             public bool aiUnitGainObserved;
+            public bool aiConstructionBaselineSampled;
+            public int aiInitialBuildingCount;
+            public int aiLatestBuildingCount;
+            public long aiConstructionBaselineUtcTicks;
+            public int aiMinimumBuildingGain;
+            public float aiConstructionTimeoutSeconds;
+            public bool aiConstructionObserved;
         }
 
         private readonly struct ProbeResult

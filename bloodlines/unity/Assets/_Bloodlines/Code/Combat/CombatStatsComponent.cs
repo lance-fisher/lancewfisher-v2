@@ -28,5 +28,8 @@ namespace Bloodlines.Components
         public float AttackRange;
         public float AttackCooldown;
         public float Sight;
+        public float ProjectileSpeed;
+        public float ProjectileMaxLifetimeSeconds;
+        public float ProjectileArrivalRadius;
     }
 }

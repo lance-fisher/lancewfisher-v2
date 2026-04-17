@@ -40,5 +40,16 @@ namespace Bloodlines.Components
         public int ControlledMilitiaCountCached;
         public int IdleWorkerCountCached;
         public int ProductionQueueCountCached;
+
+        public float ConstructionAccumulator;
+        public float ConstructionIntervalSeconds;
+        public int TargetDwellingCount;
+        public int TargetFarmCount;
+        public int TargetWellCount;
+        public int ControlledDwellingCountCached;
+        public int ControlledFarmCountCached;
+        public int ControlledWellCountCached;
+        public int ConstructionPlacementsAttempted;
+        public int ConstructionPlacementsSucceeded;
     }
 }
