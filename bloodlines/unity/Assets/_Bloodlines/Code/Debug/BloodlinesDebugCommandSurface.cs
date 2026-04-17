@@ -20,7 +20,7 @@ namespace Bloodlines.Debug
     /// the first ECS bootstrap shell can exercise credible RTS command rhythm.
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class BloodlinesDebugCommandSurface : MonoBehaviour
+    public sealed partial class BloodlinesDebugCommandSurface : MonoBehaviour
     {
         private const float ConstructionStartHealthFraction = 0.18f;
         private static readonly string[] SupportedConstructionBuildingOrder =
@@ -128,6 +128,7 @@ namespace Bloodlines.Debug
             var entityManager = world.EntityManager;
             PruneSelection(entityManager);
             PruneControlGroups(entityManager);
+            TickAIFactions(entityManager, Time.deltaTime);
 
             var keyboard = Keyboard.current;
             var mouse = Mouse.current;
@@ -2091,6 +2092,76 @@ namespace Bloodlines.Debug
             return AssignSelectedWorkersToGatherResource(entityManager, resourceId);
         }
 
+        public bool TryDebugForceStabilitySurplusCycle(
+            string factionId,
+            out float loyaltyBeforeCycle,
+            out float foodRatioAfter,
+            out float waterRatioAfter)
+        {
+            loyaltyBeforeCycle = 0f;
+            foodRatioAfter = 0f;
+            waterRatioAfter = 0f;
+
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            if (!TryGetRealmCycleConfig(entityManager, out var cfg))
+            {
+                return false;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                typeof(RealmConditionComponent),
+                typeof(PopulationComponent),
+                typeof(ResourceStockpileComponent),
+                typeof(FactionLoyaltyComponent));
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var realms = query.ToComponentDataArray<RealmConditionComponent>(Allocator.Temp);
+            using var populations = query.ToComponentDataArray<PopulationComponent>(Allocator.Temp);
+            using var stockpiles = query.ToComponentDataArray<ResourceStockpileComponent>(Allocator.Temp);
+            using var loyalties = query.ToComponentDataArray<FactionLoyaltyComponent>(Allocator.Temp);
+
+            var key = new FixedString32Bytes(factionId ?? string.Empty);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(key))
+                {
+                    continue;
+                }
+
+                int pop = math.max(1, populations[i].Total);
+                float foodThreshold = cfg.StabilitySurplusFoodRatio > 0f ? cfg.StabilitySurplusFoodRatio : 1.75f;
+                float waterThreshold = cfg.StabilitySurplusWaterRatio > 0f ? cfg.StabilitySurplusWaterRatio : 1.75f;
+
+                var stockpile = stockpiles[i];
+                stockpile.Food = math.max(stockpile.Food, pop * (foodThreshold + 0.25f));
+                stockpile.Water = math.max(stockpile.Water, pop * (waterThreshold + 0.25f));
+                entityManager.SetComponentData(entities[i], stockpile);
+
+                var realm = realms[i];
+                realm.FoodStrainStreak = 0;
+                realm.WaterStrainStreak = 0;
+                realm.LastStabilitySurplusResponseCycle = realm.CycleCount;
+                realm.LastStarvationResponseCycle = realm.CycleCount + 1;
+                realm.LastCapPressureResponseCycle = realm.CycleCount + 1;
+                realm.CycleCount += 1;
+                realm.CycleAccumulator = 0f;
+                entityManager.SetComponentData(entities[i], realm);
+
+                loyaltyBeforeCycle = loyalties[i].Current;
+                foodRatioAfter = stockpile.Food / pop;
+                waterRatioAfter = stockpile.Water / pop;
+                return true;
+            }
+
+            return false;
+        }
+
         public bool TryDebugForceStarvationCycle(
             string factionId,
             bool includeWaterCrisis,
@@ -3279,6 +3350,24 @@ namespace Bloodlines.Debug
                     .Append(" (available ")
                     .Append(factionSnapshot.PopulationAvailable)
                     .Append(')');
+
+                if (factionSnapshot.PopulationCap > 0)
+                {
+                    int densityPct = Mathf.Clamp(
+                        Mathf.RoundToInt(
+                            (float)factionSnapshot.PopulationTotal / factionSnapshot.PopulationCap * 100f),
+                        0,
+                        999);
+                    builder.Append("  density ").Append(densityPct).Append('%');
+                }
+
+                if (factionSnapshot.LoyaltyFound)
+                {
+                    builder.Append("    <b>Loyalty</b>: ")
+                        .Append(Mathf.RoundToInt(factionSnapshot.Loyalty))
+                        .Append('/')
+                        .Append(Mathf.RoundToInt(factionSnapshot.LoyaltyMax));
+                }
             }
             else
             {
@@ -3365,6 +3454,7 @@ namespace Bloodlines.Debug
                 ComponentType.ReadOnly<ResourceStockpileComponent>(),
                 ComponentType.ReadOnly<PopulationComponent>());
 
+            using var entities = query.ToEntityArray(Allocator.Temp);
             using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
             using var stockpiles = query.ToComponentDataArray<ResourceStockpileComponent>(Allocator.Temp);
             using var populations = query.ToComponentDataArray<PopulationComponent>(Allocator.Temp);
@@ -3376,7 +3466,7 @@ namespace Bloodlines.Debug
                     continue;
                 }
 
-                return new FactionHudSnapshot
+                var snapshot = new FactionHudSnapshot
                 {
                     Found = true,
                     Gold = stockpiles[i].Gold,
@@ -3390,6 +3480,16 @@ namespace Bloodlines.Debug
                     PopulationCap = populations[i].Cap,
                     PopulationAvailable = populations[i].Available,
                 };
+
+                if (entityManager.HasComponent<FactionLoyaltyComponent>(entities[i]))
+                {
+                    var loyalty = entityManager.GetComponentData<FactionLoyaltyComponent>(entities[i]);
+                    snapshot.LoyaltyFound = true;
+                    snapshot.Loyalty = loyalty.Current;
+                    snapshot.LoyaltyMax = loyalty.Max > 0f ? loyalty.Max : 100f;
+                }
+
+                return snapshot;
             }
 
             return default;
@@ -3502,6 +3602,9 @@ namespace Bloodlines.Debug
             public int PopulationTotal;
             public int PopulationCap;
             public int PopulationAvailable;
+            public float Loyalty;
+            public float LoyaltyMax;
+            public bool LoyaltyFound;
         }
 
         private struct TerritoryHudSnapshot

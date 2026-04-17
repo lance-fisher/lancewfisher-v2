@@ -40,6 +40,10 @@ namespace Bloodlines.Systems
                     WaterCrisisLoyaltyDeltaPerCycle = -6,
                     PopulationCapPressureRatio = 0.95f,
                     CapPressureLoyaltyDeltaPerCycle = -1,
+                    StabilitySurplusFoodRatio = 1.75f,
+                    StabilitySurplusWaterRatio = 1.75f,
+                    StabilitySurplusLoyaltyDeltaPerCycle = 1,
+                    StabilitySurplusMaxLoyaltyToApply = 95f,
                 });
             }
         }

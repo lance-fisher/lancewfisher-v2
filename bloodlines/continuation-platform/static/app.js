@@ -1286,3 +1286,508 @@ refreshBootstrap(false).catch((error) => {
   document.getElementById("heroSubtitle").textContent = error.message;
   showToast(error.message, "error");
 });
+
+/* =========================================================================
+ * Auto Continue: one button, live log, optional auto-loop
+ * ========================================================================= */
+const AUTO_BACKOFF_STEPS_MS = [30_000, 60_000, 120_000, 300_000, 600_000, 1_200_000];
+const STALENESS_THRESHOLD_MS = 10 * 60 * 1000;
+
+const autoContinue = {
+  running: false,
+  stopRequested: false,
+  loopEnabled: true,
+  pollTimer: null,
+  cycleInFlight: false,
+  currentDraftId: null,
+  consecutiveFailures: 0,
+  lastCycleResult: null,
+  lastProposalFields: null,
+  lastEventAt: Date.now(),
+  stalenessFlagged: false,
+  pendingCycleTimer: null,
+  modelOverride: "",
+  availableModels: [],
+};
+
+function formatLogTimestamp(iso) {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleTimeString();
+  } catch (e) {
+    return iso || "";
+  }
+}
+
+function renderAutoLog(events) {
+  const container = document.getElementById("autoContinueLog");
+  if (!container) return;
+  if (!events || !events.length) {
+    container.innerHTML = '<p class="small-copy">No cycle activity yet. Press START to begin.</p>';
+    return;
+  }
+  container.innerHTML = events
+    .slice(-40)
+    .map((ev) => {
+      const status = String(ev.status || "").toLowerCase();
+      const step = ev.step || ev.event_type || "event";
+      const detail = ev.detail || ev.summary || "";
+      return `<div class="auto-continue-log-entry is-${escapeHtml(status)}">
+        <span class="log-ts">${escapeHtml(formatLogTimestamp(ev.at || ev.created_at))}</span>
+        <span class="log-step">${escapeHtml(step)}</span>
+        <span class="log-status">[${escapeHtml(status)}]</span>
+        ${detail ? `— ${escapeHtml(detail).slice(0, 520)}` : ""}
+      </div>`;
+    })
+    .join("");
+  container.scrollTop = 0;
+}
+
+function setAutoContinuePhase(phase) {
+  const pill = document.getElementById("autoContinueStatusPill");
+  const phaseEl = document.getElementById("autoContinuePhase");
+  const phaseText = phase || "idle";
+  if (pill) {
+    pill.textContent = phaseText;
+    pill.classList.remove("muted", "ready", "warning", "danger");
+    if (phaseText === "cycling" || phaseText === "running") pill.classList.add("warning");
+    else if (phaseText === "review") pill.classList.add("ready");
+    else if (phaseText === "blocked" || phaseText === "failed") pill.classList.add("danger");
+    else pill.classList.add("muted");
+  }
+  if (phaseEl) {
+    phaseEl.textContent = `Phase: ${phaseText}`;
+    phaseEl.classList.remove("is-cycling", "is-review", "is-blocked");
+    if (phaseText === "cycling" || phaseText === "running") phaseEl.classList.add("is-cycling");
+    else if (phaseText === "review") phaseEl.classList.add("is-review");
+    else if (phaseText === "blocked" || phaseText === "failed") phaseEl.classList.add("is-blocked");
+  }
+}
+
+function renderAutoDraft(draft) {
+  const panel = document.getElementById("autoContinueDraftPanel");
+  const title = document.getElementById("autoContinueDraftTitle");
+  const meta = document.getElementById("autoContinueDraftMeta");
+  const diff = document.getElementById("autoContinueDraftDiff");
+  if (!panel || !title || !meta || !diff) return;
+  if (!draft) {
+    panel.classList.add("hidden");
+    autoContinue.currentDraftId = null;
+    return;
+  }
+  autoContinue.currentDraftId = draft.id;
+  panel.classList.remove("hidden");
+  title.textContent = draft.relative_path || "Draft";
+  const preview = draft.preview || {};
+  meta.innerHTML = `
+    <div class="detail-line"><span>Draft id</span><strong>${escapeHtml(draft.id || "")}</strong></div>
+    <div class="detail-line"><span>Target</span><strong>${escapeHtml(draft.relative_path || "")}</strong></div>
+    <div class="detail-line"><span>Reason</span><strong>${escapeHtml(draft.reason || "")}</strong></div>
+    <div class="detail-line"><span>Required tier</span><strong>${escapeHtml(preview.required_tier || "unknown")}</strong></div>
+    <div class="detail-line"><span>Lines added</span><strong>${escapeHtml(preview.added_lines ?? "?")}</strong></div>
+    <div class="detail-line"><span>Lines removed</span><strong>${escapeHtml(preview.removed_lines ?? "?")}</strong></div>
+  `;
+  diff.textContent = preview.unified_diff || "(no diff preview available)";
+}
+
+function populateAutoModelDropdown(models, configuredPrimary) {
+  const select = document.getElementById("autoModelSelect");
+  if (!select) return;
+  const previousValue = autoContinue.modelOverride || select.value || "";
+  const list = Array.isArray(models) ? models : [];
+  autoContinue.availableModels = list;
+  const optionsHtml = [
+    `<option value="">auto (routing policy${configuredPrimary ? `: ${escapeHtml(configuredPrimary)}` : ""})</option>`,
+  ].concat(list.map((m) => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`));
+  select.innerHTML = optionsHtml.join("");
+  if (list.includes(previousValue)) {
+    select.value = previousValue;
+  } else {
+    select.value = "";
+    autoContinue.modelOverride = "";
+  }
+}
+
+function updateStalenessIndicator() {
+  const el = document.getElementById("autoContinueStaleness");
+  if (!el) return;
+  const stale = autoContinue.running
+    && autoContinue.cycleInFlight
+    && Date.now() - autoContinue.lastEventAt > STALENESS_THRESHOLD_MS;
+  autoContinue.stalenessFlagged = stale;
+  el.classList.toggle("hidden", !stale);
+}
+
+async function pollAutoContinueStatus() {
+  try {
+    const status = await requestJson("/api/continue/status");
+    const phase = status.phase || "idle";
+    setAutoContinuePhase(phase);
+    const combined = [...(status.recent_journal || []), ...(status.events || [])];
+    renderAutoLog(combined);
+    const latestAt = combined
+      .map((e) => e.at || e.created_at)
+      .filter(Boolean)
+      .sort()
+      .pop();
+    if (latestAt) {
+      const ts = Date.parse(latestAt);
+      if (!Number.isNaN(ts)) autoContinue.lastEventAt = Math.max(autoContinue.lastEventAt, ts);
+    }
+    if (phase === "review" && status.staged_draft_id && status.pending_drafts) {
+      const draft = status.pending_drafts.find((d) => d.id === status.staged_draft_id);
+      if (draft) renderAutoDraft(draft);
+    }
+    populateAutoModelDropdown(status.available_generation_models, status.configured_primary_model);
+    updateForbiddenSkipChip(status.forbidden_skip_count);
+  } catch (error) {
+    // Silent: polling failure should not spam toasts
+  }
+  updateStalenessIndicator();
+}
+
+function updateForbiddenSkipChip(count) {
+  let chip = document.getElementById("autoForbiddenChip");
+  if (!chip) {
+    const phaseEl = document.getElementById("autoContinuePhase");
+    if (!phaseEl || !phaseEl.parentElement) return;
+    chip = document.createElement("div");
+    chip.id = "autoForbiddenChip";
+    chip.className = "auto-continue-forbidden-chip hidden";
+    phaseEl.parentElement.insertBefore(chip, phaseEl);
+  }
+  if (!count || count <= 0) {
+    chip.classList.add("hidden");
+    return;
+  }
+  chip.classList.remove("hidden");
+  chip.textContent = `Skipped ${count} forbidden-target proposals`;
+}
+
+function renderProposalOnlyPanel(result) {
+  const panel = document.getElementById("autoContinueProposalPanel");
+  const fields = document.getElementById("autoContinueProposalFields");
+  const chip = document.getElementById("autoContinueFailureChip");
+  const expander = document.getElementById("autoContinueRawExpander");
+  const rawPre = document.getElementById("autoContinueRawResponse");
+  if (!panel || !fields || !chip || !expander || !rawPre) return;
+
+  if (!result || result.draft) {
+    panel.classList.add("hidden");
+    return;
+  }
+  const f = result.fields || {};
+  const info = result.drafting_info || {};
+  autoContinue.lastProposalFields = {
+    goal: f.goal || "",
+    target_file: f.target_file || "",
+    why_now: f.why_now || "",
+  };
+  panel.classList.remove("hidden");
+  fields.innerHTML = `
+    <div class="detail-line"><span>Goal</span><strong>${escapeHtml(f.goal || "(none extracted)")}</strong></div>
+    <div class="detail-line"><span>Target file</span><strong>${escapeHtml(f.target_file || "(none)")}</strong></div>
+    <div class="detail-line"><span>Why now</span><strong>${escapeHtml(f.why_now || "(none)")}</strong></div>
+    <div class="detail-line"><span>Check</span><strong>${escapeHtml(f.check || "(none)")}</strong></div>
+    <div class="detail-line"><span>Drafting model</span><strong>${escapeHtml(info.model || "(auto)")}</strong></div>
+  `;
+  const reason = result.drafting_error
+    || info.abort_reason
+    || info.decode_error
+    || (result.drafting_skipped_reason ? `skipped: ${result.drafting_skipped_reason}` : "no draft staged");
+  chip.classList.remove("hidden");
+  chip.textContent = `Drafting failure: ${reason}`;
+  const raw = info.raw_response || "";
+  if (raw) {
+    expander.classList.remove("hidden");
+    rawPre.textContent = raw;
+  } else {
+    expander.classList.add("hidden");
+    rawPre.textContent = "";
+  }
+}
+
+function dismissProposalPanel() {
+  const panel = document.getElementById("autoContinueProposalPanel");
+  if (panel) panel.classList.add("hidden");
+  autoContinue.lastProposalFields = null;
+}
+
+function startAutoContinuePolling() {
+  if (autoContinue.pollTimer) return;
+  autoContinue.pollTimer = window.setInterval(pollAutoContinueStatus, 2500);
+  pollAutoContinueStatus();
+}
+
+function stopAutoContinuePolling() {
+  if (autoContinue.pollTimer) {
+    window.clearInterval(autoContinue.pollTimer);
+    autoContinue.pollTimer = null;
+  }
+}
+
+function nextBackoffMs() {
+  const idx = Math.min(autoContinue.consecutiveFailures, AUTO_BACKOFF_STEPS_MS.length - 1);
+  return AUTO_BACKOFF_STEPS_MS[idx];
+}
+
+function scheduleNextCycle() {
+  if (!autoContinue.running || !autoContinue.loopEnabled || autoContinue.stopRequested) {
+    if (!autoContinue.loopEnabled) {
+      autoContinue.running = false;
+      updateAutoContinueButtons();
+    }
+    return;
+  }
+  const delay = nextBackoffMs();
+  if (autoContinue.pendingCycleTimer) window.clearTimeout(autoContinue.pendingCycleTimer);
+  autoContinue.pendingCycleTimer = window.setTimeout(() => {
+    autoContinue.pendingCycleTimer = null;
+    if (autoContinue.running && !autoContinue.stopRequested) runOneAutoCycle();
+  }, delay);
+}
+
+async function runOneAutoCycle() {
+  if (autoContinue.cycleInFlight) return;
+  autoContinue.cycleInFlight = true;
+  autoContinue.lastEventAt = Date.now();
+  autoContinue.stalenessFlagged = false;
+  updateStalenessIndicator();
+  setAutoContinuePhase("cycling");
+  dismissProposalPanel();
+  try {
+    const body = autoContinue.modelOverride
+      ? { model_override: autoContinue.modelOverride }
+      : {};
+    const result = await requestJson("/api/continue/cycle", {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+    autoContinue.lastCycleResult = result;
+    if (result.events && result.events.length) {
+      renderAutoLog([...(result.events || [])]);
+    }
+    autoContinue.lastEventAt = Date.now();
+
+    if (result.status === "blocked") {
+      autoContinue.consecutiveFailures += 1;
+      setAutoContinuePhase("blocked");
+      showToast(
+        `Auto-continue blocked: ${(result.recovery_hints || ["see log"]).join("; ")}`,
+        "error"
+      );
+    } else if (result.draft) {
+      autoContinue.consecutiveFailures = 0;
+      renderAutoDraft(result.draft);
+      setAutoContinuePhase("review");
+    } else {
+      autoContinue.consecutiveFailures += 1;
+      renderProposalOnlyPanel(result);
+      setAutoContinuePhase("review");
+    }
+  } catch (error) {
+    autoContinue.consecutiveFailures += 1;
+    showToast(`Cycle failed: ${error.message}`, "error");
+    setAutoContinuePhase("failed");
+  } finally {
+    autoContinue.cycleInFlight = false;
+    updateStalenessIndicator();
+  }
+
+  scheduleNextCycle();
+}
+
+async function retryDrafting() {
+  const fields = autoContinue.lastProposalFields;
+  if (!fields || !fields.goal || !fields.target_file) {
+    showToast("No proposal available to retry.", "error");
+    return;
+  }
+  setAutoContinuePhase("cycling");
+  try {
+    const body = {
+      goal: fields.goal,
+      target_file: fields.target_file,
+      why_now: fields.why_now || "",
+    };
+    if (autoContinue.modelOverride) body.model_override = autoContinue.modelOverride;
+    const result = await requestJson("/api/continue/redraft", {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+    autoContinue.lastEventAt = Date.now();
+    if (result.draft) {
+      autoContinue.consecutiveFailures = 0;
+      renderAutoDraft(result.draft);
+      dismissProposalPanel();
+      setAutoContinuePhase("review");
+      showToast("Retry succeeded — draft staged.", "success");
+    } else {
+      const reason = (result.drafting_info && (result.drafting_info.abort_reason || result.drafting_info.decode_error))
+        || result.status
+        || "no draft staged";
+      renderProposalOnlyPanel({ ...autoContinue.lastCycleResult, fields, drafting_info: result.drafting_info, drafting_error: reason });
+      setAutoContinuePhase("review");
+      showToast(`Retry did not stage a draft: ${reason}`, "error");
+    }
+  } catch (error) {
+    showToast(`Retry failed: ${error.message}`, "error");
+  } finally {
+    updateStalenessIndicator();
+  }
+}
+
+async function warmupModel() {
+  showToast("Warming up model (this loads it into VRAM)...", "info");
+  try {
+    const body = autoContinue.modelOverride ? { model_override: autoContinue.modelOverride } : {};
+    const result = await requestJson("/api/continue/warmup", {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+    if (result.status === "ok") {
+      showToast(`Warmed ${result.model} in ${result.elapsed_seconds}s.`, "success");
+    } else {
+      showToast(`Warmup failed: ${result.error || "unknown"}`, "error");
+    }
+  } catch (error) {
+    showToast(`Warmup failed: ${error.message}`, "error");
+  }
+}
+
+function updateAutoContinueButtons() {
+  const startBtn = document.getElementById("autoStartButton");
+  const stopBtn = document.getElementById("autoStopButton");
+  if (!startBtn || !stopBtn) return;
+  if (autoContinue.running) {
+    startBtn.classList.add("hidden");
+    stopBtn.classList.remove("hidden");
+  } else {
+    startBtn.classList.remove("hidden");
+    stopBtn.classList.add("hidden");
+    startBtn.disabled = false;
+    startBtn.textContent = "START AUTO CONTINUE";
+  }
+}
+
+function startAutoContinue() {
+  if (autoContinue.running) return;
+  autoContinue.running = true;
+  autoContinue.stopRequested = false;
+  autoContinue.consecutiveFailures = 0;
+  autoContinue.lastEventAt = Date.now();
+  updateAutoContinueButtons();
+  startAutoContinuePolling();
+  runOneAutoCycle();
+}
+
+function stopAutoContinue() {
+  autoContinue.stopRequested = true;
+  autoContinue.running = false;
+  if (autoContinue.pendingCycleTimer) {
+    window.clearTimeout(autoContinue.pendingCycleTimer);
+    autoContinue.pendingCycleTimer = null;
+  }
+  setAutoContinuePhase("idle");
+  updateAutoContinueButtons();
+  updateStalenessIndicator();
+  showToast("Auto-continue stopped. Any in-flight cycle will still finish.", "info");
+}
+
+async function approveCurrentDraft() {
+  if (!autoContinue.currentDraftId) {
+    showToast("No draft staged.", "error");
+    return;
+  }
+  try {
+    await requestJson("/api/agent-console/apply-draft", {
+      method: "POST",
+      body: JSON.stringify({ draft_id: autoContinue.currentDraftId }),
+    });
+    showToast("Draft applied. Logged to offline_work_ledger.md.", "success");
+    renderAutoDraft(null);
+    autoContinue.consecutiveFailures = 0;
+    await refreshBootstrap(false);
+  } catch (error) {
+    showToast(`Apply failed: ${error.message}`, "error");
+    return;
+  }
+  if (autoContinue.running && autoContinue.loopEnabled) {
+    scheduleNextCycle();
+  }
+}
+
+async function skipCurrentDraft() {
+  if (!autoContinue.currentDraftId) {
+    renderAutoDraft(null);
+    return;
+  }
+  try {
+    await requestJson("/api/agent-console/dismiss-draft", {
+      method: "POST",
+      body: JSON.stringify({ draft_id: autoContinue.currentDraftId }),
+    });
+    showToast("Draft skipped.", "info");
+  } catch (error) {
+    showToast(`Skip failed: ${error.message}`, "error");
+  }
+  renderAutoDraft(null);
+  if (autoContinue.running && autoContinue.loopEnabled) {
+    scheduleNextCycle();
+  }
+}
+
+const autoStartBtn = document.getElementById("autoStartButton");
+const autoStopBtn = document.getElementById("autoStopButton");
+const autoLoopToggle = document.getElementById("autoLoopToggle");
+const autoApproveBtn = document.getElementById("autoApproveDraftButton");
+const autoSkipBtn = document.getElementById("autoSkipDraftButton");
+const autoRetryBtn = document.getElementById("autoRetryDraftButton");
+const autoDismissProposalBtn = document.getElementById("autoDismissProposalButton");
+const autoWarmupBtn = document.getElementById("autoWarmupButton");
+const autoModelSelect = document.getElementById("autoModelSelect");
+
+if (autoStartBtn) autoStartBtn.addEventListener("click", () => performAction(startAutoContinue));
+if (autoStopBtn) autoStopBtn.addEventListener("click", () => performAction(stopAutoContinue));
+if (autoLoopToggle) {
+  autoLoopToggle.addEventListener("change", (e) => {
+    autoContinue.loopEnabled = e.target.checked;
+  });
+  autoContinue.loopEnabled = autoLoopToggle.checked;
+}
+if (autoApproveBtn) autoApproveBtn.addEventListener("click", () => performAction(approveCurrentDraft));
+if (autoSkipBtn) autoSkipBtn.addEventListener("click", () => performAction(skipCurrentDraft));
+if (autoRetryBtn) autoRetryBtn.addEventListener("click", () => performAction(retryDrafting));
+if (autoDismissProposalBtn) autoDismissProposalBtn.addEventListener("click", () => dismissProposalPanel());
+if (autoWarmupBtn) autoWarmupBtn.addEventListener("click", () => performAction(warmupModel));
+if (autoModelSelect) {
+  autoModelSelect.addEventListener("change", (e) => {
+    autoContinue.modelOverride = e.target.value || "";
+    if (autoContinue.modelOverride) {
+      showToast(`Model override: ${autoContinue.modelOverride}`, "info");
+    } else {
+      showToast("Model override cleared — using routing policy.", "info");
+    }
+  });
+}
+
+// Spacebar toggles START/STOP when focus is not on an input/textarea/select
+document.addEventListener("keydown", (event) => {
+  if (event.code !== "Space" || event.repeat) return;
+  const tag = (event.target && event.target.tagName) || "";
+  if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+  if (event.target && event.target.isContentEditable) return;
+  event.preventDefault();
+  if (autoContinue.running) {
+    stopAutoContinue();
+  } else {
+    performAction(startAutoContinue);
+  }
+});
+
+// Background staleness watcher (in addition to the status poll updates)
+window.setInterval(updateStalenessIndicator, 5000);
+
+// Boot: paint status once so the log reflects any prior cycle
+pollAutoContinueStatus();
+startAutoContinuePolling();
