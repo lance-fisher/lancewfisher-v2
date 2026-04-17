@@ -12,6 +12,7 @@ This slice is intentionally contained inside the canonical Bloodlines root so it
 - Tracks last-good-state candidates, surfaces ambiguity, and lets the operator explicitly select the resume anchor when multiple candidates compete
 - Builds a live Unity execution packet from the current owner direction, handoff, latest Unity lane handoff, and canonical continuity files
 - Surfaces a Windows-first local GUI with Dashboard, Agent Workspace, Execution, Tasks, Memory, Diff Panel, Timeline, Handoff Builder, Telemetry, and Config views
+- Opens on a chat-first Command Deck that supports back-and-forth Bloodlines prompts, slash commands, local-model reasoning, citations, and governed write-draft staging
 - Routes local tasks across the actual Ollama inventory on this machine and makes those routing decisions visible in the UI
 - Keeps project-artifact writes locked unless the session unlocks at the required Boss tier, while still allowing governed file load and write preview
 - Applies real project-artifact writes inside the Bloodlines root after unlock, with tier checks, stale-source protection, and automatic backup capture
@@ -51,11 +52,14 @@ Default URL:
 ## Product-Ready Operator Flow
 
 1. Launch `launch_windows.cmd`
-2. Review Dashboard health, last scan, and high-signal changes
-3. If continuity health is `attention`, select the intended resume anchor in the Resume Anchor card
-4. Run `Resume Last Good State`
+2. Work from the Command Deck on the main screen for the primary loop:
+   - type natural-language prompts for local Bloodlines reasoning
+   - use slash commands like `/resume`, `/status`, `/search`, `/read`, `/drafts`, and `/apply-draft`
+   - review citations, actions taken, and any governed write drafts in the right rail
+3. If continuity health is `attention`, select the intended resume anchor in the Resume Anchor card or with `/anchor <candidate>`
+4. Run `Resume Last Good State` from the hero bar, the Command Deck, or `/resume`
 5. Open the Execution view to confirm the current Unity shipping-lane packet, scene target, validation commands, and in-editor verification checklist
-6. Use the governed write workbench when canonical project files need to be updated after the session is unlocked at the required tier
+6. Use the governed write workbench or draft-apply flow when canonical project files need to be updated after the session is unlocked at the required tier
 7. Use Diff Panel, Telemetry, and Tasks to decide the next approved move
 8. Use Handoff Builder when packaging continuity back to Claude Code or Codex
 
@@ -67,6 +71,9 @@ Default URL:
 - Handoff Prompt, Handoff Preview, and the current recommended next step can be copied directly from the UI.
 - Manual resume-anchor overrides can now be cleared from the Dashboard without restarting the session.
 - Rescan, resume, unlock, export, and copy actions now report through in-app toast feedback instead of blocking browser alerts.
+- The Command Deck is now the default main screen, giving the platform a Codex/Claude-style local conversation loop for Bloodlines continuation.
+- Natural-language turns can call the local model, while slash commands hit governed local actions directly.
+- Draft file updates can now be staged from the conversation thread and applied later through the same tier gate as the workbench.
 
 ## Execution And Writes
 
