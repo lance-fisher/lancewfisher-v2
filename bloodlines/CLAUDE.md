@@ -95,3 +95,29 @@ The governing implications are:
 - Unity continuation is the active shipping lane.
 - Full commercial polish remains in scope for art, audio, UX, onboarding, tutorials, campaign, lobby, HUD, and in-game panels.
 - The project is both a preserved archive and an active implementation workspace, but new implementation direction now points at full-canon Unity delivery only.
+
+## Unity Slice Completion Protocol
+
+When completing any Unity implementation slice, execute these steps in order before committing:
+
+1. Run all validation gates listed in the Validation Gate section below. All must be green.
+2. Write a per-slice handoff at `docs/unity/session-handoffs/YYYY-MM-DD-unity-<lane>-<slice>.md`. Include: goal, work completed, verification results, current readiness, next action.
+3. Append slice state to `CURRENT_PROJECT_STATE.md`, `NEXT_SESSION_HANDOFF.md`, and `continuity/PROJECT_STATE.json` after rebasing. Append only; do not overwrite other lanes' entries.
+4. **If this slice created, renamed, retired, or changed the owned paths of any lane:** update `docs/unity/CONCURRENT_SESSION_CONTRACT.md` -- bump Revision, set Last Updated to today (YYYY-MM-DD), set Last Updated By to the session identifier (e.g. `claude-graphics-2026-04-17`), and amend the affected lane subsection. Then run `scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1` and confirm it exits 0 before committing.
+5. Stage only files within the lane's owned scope plus shared files with narrow edits. Do not stage unrelated files.
+6. Commit on the lane branch. Do not push to master; push to the lane branch only.
+
+## Unity Validation Gate
+
+Run these commands serially before every slice handoff (Unity holds a project lock; parallel execution will fail):
+
+1. `dotnet build unity/Assembly-CSharp.csproj -nologo` -- 0 errors required.
+2. `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo` -- 0 errors required.
+3. `powershell -ExecutionPolicy Bypass -File scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1` -- success line must carry all prior proof fields.
+4. `powershell -ExecutionPolicy Bypass -File scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1` -- melee and projectile phases both green. All lanes must not break the combat smoke.
+5. `powershell -ExecutionPolicy Bypass -File scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1` -- both Bootstrap and Gameplay scene shells green.
+6. `node tests/data-validation.mjs` -- exit 0 required.
+7. `node tests/runtime-bridge.mjs` -- exit 0 required.
+8. `powershell -ExecutionPolicy Bypass -File scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1` -- exit 0 required; confirms the concurrent session contract is current.
+
+The canonical lane registry, file-scope boundaries, and wrapper lock protocol live in `docs/unity/CONCURRENT_SESSION_CONTRACT.md`. Read it before starting any Unity slice.

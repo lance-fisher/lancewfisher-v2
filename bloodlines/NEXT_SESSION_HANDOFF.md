@@ -34,6 +34,33 @@ Next recommended action applies to whichever agent (Claude or Codex) runs next.
 - Graphics is still at concept and staging level pending formal review calls and later runtime-ready asset production.
 - Wwise audio integration, Netcode for Entities multiplayer realization, broader UX polish, full QA or balance passes, and stronger end-to-end shipping readiness are still unfinished.
 
+## 2026-04-17 Session 125 Unity Graphics Infrastructure Foundation
+
+- Branch lane: `claude/unity-graphics-infrastructure`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-17-unity-graphics-infrastructure-foundation.md`
+- First-class runtime rendering path now exists alongside the debug primitive bridge:
+  - `BloodlinesFactionColor.shader` (URP lit + per-instance faction tint + rim silhouette + selection highlight + DOTS instancing fallback)
+  - `UnitVisualDefinition` and `BuildingVisualDefinition` ScriptableObject visual layer keyed to the same `id` values as the gameplay definitions
+  - `FactionTintComponent`, `FactionTintPalette` canonical palette for all nine founding houses plus tribes/neutral, `FactionTintAttachSystem` ISystem in `InitializationSystemGroup`
+  - `BloodlinesVisualCatalog` editor-backed registry and `BloodlinesVisualPresentationBridge` per-entity mesh + material proxy driver
+  - `BloodlinesPlaceholderMeshGenerator` editor menu that procedurally creates 18 unit silhouettes, 17 building silhouettes, paired visual ScriptableObjects, and a shared faction material
+  - `BloodlinesGraphicsRuntimeValidation` governed Play-Mode validator proving every definition-backed entity has a live mesh + material + tint
+  - `scripts/Invoke-BloodlinesUnityGraphicsRuntimeValidation.ps1` batch-mode wrapper
+- Scope is infrastructure, not a shipping visual pass. Commercial art direction (silhouettes, materials, portraits, VFX, terrain, lighting) remains human-owned and out of scope.
+- Validation for this branch is green:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`
+  - `scripts/Invoke-BloodlinesUnityGraphicsRuntimeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1` (all Sessions 115-119 economy + combat proofs preserved)
+  - `scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1`
+  - `node tests/data-validation.mjs`
+  - `node tests/runtime-bridge.mjs`
+- Stop state for the next session:
+  - within the graphics lane: add serialized toggle on debug bridge to skip primitives where visual bridge has a proxy, expose `FactionTintStrength` and `SelectedTag` driver, refine per-class silhouettes (staves, tabards, capes) without any commercial art decision
+  - commercial art direction stays human-owned
+
 ## 2026-04-17 Session 125 Unity Attack Orders And Attack-Move
 
 - Branch lane: `codex/unity-attack-orders-attack-move`
@@ -72,9 +99,19 @@ Next recommended action applies to whichever agent (Claude or Codex) runs next.
   - `loyaltyDeclineObserved=True`
   - `capPressureObserved=True`
 - Stop state for the next session:
-  - wait in merge coordination for `codex/unity-attack-orders-attack-move`
-  - do not widen this branch into AI, economy, renown hooks, or death-presentation polish before merge
   - after merge, the next combat priority is acquisition throttling, line-of-sight tuning, and deeper combat feel polish
+
+## 2026-04-17 Governance: Concurrent Session Contract Source of Truth
+
+- Branch: `claude/unity-graphics-infrastructure` (governance-only slice predated the gameplay graphics slice on the same branch)
+- Dedicated slice handoff: `docs/unity/session-handoffs/2026-04-17-governance-contract-source-of-truth.md`
+- What changed:
+  - `docs/unity/CONCURRENT_SESSION_CONTRACT.md` rewritten to revision 1 with full schema: Contract Metadata, Purpose, Active Lanes (economy-and-ai retired, combat-and-projectile retired, graphics-infrastructure active, combat-attack-move paused), Shared Files with explicit per-file narrow-modification rules, Forbidden Paths, State Documents, Branch Discipline, Wrapper Lock, Validation Gate (canonical 8-step), Staleness Rule, Reconciliation Notes.
+  - `scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1` created: reads the contract date, scans handoff filename prefixes, exits 0 if current, exits 1 with diagnostic if stale or malformed.
+  - `CLAUDE.md` extended with "Unity Slice Completion Protocol" and "Unity Validation Gate" sections (additive; no existing content changed).
+- Staleness check gate: `powershell -ExecutionPolicy Bypass -File scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1`
+- No gameplay validation gates were run for this slice because no Unity code changed at that commit. The later graphics-infrastructure slice on the same branch exercises the full gameplay gate chain.
+- Any session starting Unity work should run the staleness check as step 8 of the canonical validation gate.
 
 ## 2026-04-17 Session 120 Unity Projectile Combat
 
