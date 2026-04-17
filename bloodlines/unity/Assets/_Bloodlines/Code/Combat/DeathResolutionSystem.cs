@@ -11,6 +11,7 @@ namespace Bloodlines.Systems
     /// </summary>
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(AttackResolutionSystem))]
+    [UpdateAfter(typeof(ProjectileImpactSystem))]
     public partial struct DeathResolutionSystem : ISystem
     {
         public void OnCreate(ref SystemState state)

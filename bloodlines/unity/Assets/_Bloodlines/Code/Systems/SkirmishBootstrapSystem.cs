@@ -214,6 +214,11 @@ namespace Bloodlines.Systems
                     GatherAssignmentIntervalSeconds = 2.5f,
                     ProductionAccumulator = 0f,
                     ProductionIntervalSeconds = 2.5f,
+                    ConstructionAccumulator = 0f,
+                    ConstructionIntervalSeconds = 5f,
+                    TargetDwellingCount = 2,
+                    TargetFarmCount = 2,
+                    TargetWellCount = 1,
                 });
             }
 
@@ -414,6 +419,16 @@ namespace Bloodlines.Systems
                 StoppingDistance = 0.2f,
                 IsActive = false,
             });
+
+            if (seed.ProjectileSpeed > 0f)
+            {
+                entityManager.AddComponentData(entity, new ProjectileFactoryComponent
+                {
+                    ProjectileSpeed = seed.ProjectileSpeed,
+                    ProjectileMaxLifetimeSeconds = math.max(0.1f, seed.ProjectileMaxLifetimeSeconds),
+                    ProjectileArrivalRadius = math.max(0.05f, seed.ProjectileArrivalRadius),
+                });
+            }
         }
     }
 }

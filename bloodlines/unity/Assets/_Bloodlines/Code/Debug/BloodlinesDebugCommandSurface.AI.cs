@@ -48,9 +48,11 @@ namespace Bloodlines.Debug
 
                 controller.GatherAssignmentAccumulator += dt;
                 controller.ProductionAccumulator += dt;
+                controller.ConstructionAccumulator += dt;
 
                 float gatherInterval = math.max(0.5f, controller.GatherAssignmentIntervalSeconds);
                 float productionInterval = math.max(0.5f, controller.ProductionIntervalSeconds);
+                float constructionInterval = math.max(0.5f, controller.ConstructionIntervalSeconds);
 
                 if (controller.GatherAssignmentAccumulator >= gatherInterval)
                 {
@@ -62,6 +64,12 @@ namespace Bloodlines.Debug
                 {
                     controller.ProductionAccumulator = 0f;
                     AIRunProductionPlan(entityManager, factionId, ref controller);
+                }
+
+                if (controller.ConstructionAccumulator >= constructionInterval)
+                {
+                    controller.ConstructionAccumulator = 0f;
+                    AIRunConstructionPlan(entityManager, factionId, ref controller);
                 }
 
                 entityManager.SetComponentData(entities[i], controller);
@@ -108,15 +116,22 @@ namespace Bloodlines.Debug
                 }
             }
 
+            controller.ControlledDwellingCountCached = 0;
+            controller.ControlledFarmCountCached = 0;
+            controller.ControlledWellCountCached = 0;
+
             var buildingQuery = entityManager.CreateEntityQuery(
                 ComponentType.ReadOnly<FactionComponent>(),
-                ComponentType.ReadOnly<BuildingTypeComponent>());
+                ComponentType.ReadOnly<BuildingTypeComponent>(),
+                ComponentType.ReadOnly<HealthComponent>());
             using (var buildingEntities = buildingQuery.ToEntityArray(Allocator.Temp))
             using (var buildingFactions = buildingQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp))
+            using (var buildingTypes = buildingQuery.ToComponentDataArray<BuildingTypeComponent>(Allocator.Temp))
+            using (var buildingHealth = buildingQuery.ToComponentDataArray<HealthComponent>(Allocator.Temp))
             {
                 for (int i = 0; i < buildingEntities.Length; i++)
                 {
-                    if (!buildingFactions[i].FactionId.Equals(factionKey))
+                    if (!buildingFactions[i].FactionId.Equals(factionKey) || buildingHealth[i].Current <= 0f)
                     {
                         continue;
                     }
@@ -126,8 +141,179 @@ namespace Bloodlines.Debug
                         controller.ProductionQueueCountCached +=
                             entityManager.GetBuffer<ProductionQueueItemElement>(buildingEntities[i]).Length;
                     }
+
+                    var typeId = buildingTypes[i].TypeId;
+                    if (typeId.Equals(new FixedString64Bytes("dwelling")))
+                    {
+                        controller.ControlledDwellingCountCached++;
+                    }
+                    else if (typeId.Equals(new FixedString64Bytes("farm")))
+                    {
+                        controller.ControlledFarmCountCached++;
+                    }
+                    else if (typeId.Equals(new FixedString64Bytes("well")))
+                    {
+                        controller.ControlledWellCountCached++;
+                    }
                 }
             }
+        }
+
+        private void AIRunConstructionPlan(EntityManager entityManager, string factionId, ref AIEconomyControllerComponent controller)
+        {
+            string targetBuildingId = null;
+
+            if (controller.ControlledDwellingCountCached < controller.TargetDwellingCount)
+            {
+                targetBuildingId = "dwelling";
+            }
+            else if (controller.ControlledFarmCountCached < controller.TargetFarmCount)
+            {
+                targetBuildingId = "farm";
+            }
+            else if (controller.ControlledWellCountCached < controller.TargetWellCount)
+            {
+                targetBuildingId = "well";
+            }
+
+            if (targetBuildingId == null)
+            {
+                return;
+            }
+
+            if (!TryResolveBuildingDefinition(targetBuildingId, out var buildingDefinition))
+            {
+                return;
+            }
+
+            if (!TryGetFactionRuntimeSnapshot(entityManager, factionId, out var factionSnapshot))
+            {
+                return;
+            }
+
+            if (!CanAffordCost(factionSnapshot.Resources, buildingDefinition.cost))
+            {
+                return;
+            }
+
+            if (!TryFindIdleAIWorker(entityManager, factionId, out Entity workerEntity, out float3 workerPosition))
+            {
+                return;
+            }
+
+            if (!TryGetNearestOwnedCommandHallPosition(entityManager, factionId, out float3 hallPosition))
+            {
+                return;
+            }
+
+            controller.ConstructionPlacementsAttempted++;
+
+            if (TryPickAIBuildPosition(
+                entityManager,
+                buildingDefinition,
+                hallPosition,
+                controller.ConstructionPlacementsAttempted,
+                out float3 buildPosition))
+            {
+                if (TryPlaceConstruction(entityManager, workerEntity, targetBuildingId, buildPosition, out _))
+                {
+                    controller.ConstructionPlacementsSucceeded++;
+                }
+            }
+        }
+
+        private static bool TryFindIdleAIWorker(
+            EntityManager entityManager,
+            string factionId,
+            out Entity workerEntity,
+            out float3 workerPosition)
+        {
+            workerEntity = Entity.Null;
+            workerPosition = default;
+
+            var factionKey = new FixedString32Bytes(factionId);
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<UnitTypeComponent>(),
+                ComponentType.ReadOnly<PositionComponent>(),
+                ComponentType.ReadOnly<HealthComponent>());
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var unitTypes = query.ToComponentDataArray<UnitTypeComponent>(Allocator.Temp);
+            using var positions = query.ToComponentDataArray<PositionComponent>(Allocator.Temp);
+            using var health = query.ToComponentDataArray<HealthComponent>(Allocator.Temp);
+
+            Entity fallbackWorker = Entity.Null;
+            float3 fallbackPosition = default;
+
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(factionKey) ||
+                    unitTypes[i].Role != UnitRole.Worker ||
+                    health[i].Current <= 0f)
+                {
+                    continue;
+                }
+
+                if (!entityManager.HasComponent<WorkerGatherComponent>(entities[i]) ||
+                    entityManager.GetComponentData<WorkerGatherComponent>(entities[i]).Phase == WorkerGatherPhase.Idle)
+                {
+                    workerEntity = entities[i];
+                    workerPosition = positions[i].Value;
+                    return true;
+                }
+
+                if (fallbackWorker == Entity.Null)
+                {
+                    fallbackWorker = entities[i];
+                    fallbackPosition = positions[i].Value;
+                }
+            }
+
+            if (fallbackWorker != Entity.Null)
+            {
+                workerEntity = fallbackWorker;
+                workerPosition = fallbackPosition;
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool TryPickAIBuildPosition(
+            EntityManager entityManager,
+            BuildingDefinition buildingDefinition,
+            float3 hallPosition,
+            int attemptIndex,
+            out float3 buildPosition)
+        {
+            const float baseRadius = 4f;
+            const int maxRings = 3;
+            const int perRing = 8;
+
+            for (int ring = 1; ring <= maxRings; ring++)
+            {
+                float radius = baseRadius * ring;
+                int attemptsInRing = perRing * ring;
+                for (int step = 0; step < attemptsInRing; step++)
+                {
+                    int stepIndex = (step + attemptIndex) % attemptsInRing;
+                    float angle = (stepIndex / (float)attemptsInRing) * math.PI * 2f;
+                    float x = hallPosition.x + math.cos(angle) * radius;
+                    float z = hallPosition.z + math.sin(angle) * radius;
+                    var candidate = new float3(x, hallPosition.y, z);
+
+                    if (CanPlaceConstructionAt(entityManager, buildingDefinition, candidate, out _))
+                    {
+                        buildPosition = candidate;
+                        return true;
+                    }
+                }
+            }
+
+            buildPosition = default;
+            return false;
         }
 
         private void AIAssignIdleWorkersToGather(EntityManager entityManager, string factionId, ref AIEconomyControllerComponent controller)
@@ -434,6 +620,40 @@ namespace Bloodlines.Debug
             return false;
         }
 
+        public bool TryDebugEnableAIForFaction(string factionId, bool enabled)
+        {
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                typeof(AIEconomyControllerComponent));
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var controllers = query.ToComponentDataArray<AIEconomyControllerComponent>(Allocator.Temp);
+
+            var key = new FixedString32Bytes(factionId ?? string.Empty);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(key))
+                {
+                    continue;
+                }
+
+                var controller = controllers[i];
+                controller.Enabled = enabled;
+                controller.GatherAssignmentAccumulator = 0f;
+                controller.ProductionAccumulator = 0f;
+                entityManager.SetComponentData(entities[i], controller);
+                return true;
+            }
+
+            return false;
+        }
+
         public bool TryDebugGetAIEconomyStats(
             string factionId,
             out bool aiEnabled,
@@ -484,6 +704,36 @@ namespace Bloodlines.Debug
             }
 
             return false;
+        }
+
+        public int CountFactionBuildings(string factionId)
+        {
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return 0;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<BuildingTypeComponent>(),
+                ComponentType.ReadOnly<HealthComponent>());
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var health = query.ToComponentDataArray<HealthComponent>(Allocator.Temp);
+
+            var key = new FixedString32Bytes(factionId ?? string.Empty);
+            int count = 0;
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(key) || health[i].Current <= 0f)
+                {
+                    continue;
+                }
+                count++;
+            }
+
+            return count;
         }
 
         public int CountFactionUnits(string factionId)
