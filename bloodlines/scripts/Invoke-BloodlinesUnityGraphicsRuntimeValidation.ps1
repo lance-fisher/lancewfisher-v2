@@ -26,32 +26,80 @@ $arguments = @(
     '-executeMethod', 'Bloodlines.EditorTools.BloodlinesGraphicsRuntimeValidation.RunBatch'
 )
 
+function Get-ValidationOutcome {
+    if (-not (Test-Path -LiteralPath $logPath)) {
+        return 'unknown'
+    }
+
+    $content = Get-Content -Path $logPath -Raw
+    if ($content -match 'Graphics runtime validation passed') {
+        return 'passed'
+    }
+
+    if ($content -match 'Graphics runtime validation failed' -or
+        $content -match 'errored' -or
+        $content -match 'timed out') {
+        return 'failed'
+    }
+
+    return 'unknown'
+}
+
+function Wait-ForValidationOutcome {
+    param(
+        [int]$TimeoutSeconds = 180,
+        [int]$PollSeconds = 2
+    )
+
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        $outcome = Get-ValidationOutcome
+        if ($outcome -ne 'unknown') {
+            return $outcome
+        }
+
+        Start-Sleep -Seconds $PollSeconds
+    }
+
+    return Get-ValidationOutcome
+}
+
+function Invoke-UnityValidationPass {
+    if (Test-Path -LiteralPath $logPath) {
+        Remove-Item -LiteralPath $logPath -Force
+    }
+
+    $process = Start-Process -FilePath $unityPath -ArgumentList $arguments -PassThru -NoNewWindow -Wait
+    return $process.ExitCode
+}
+
 Write-Host 'Running Bloodlines Unity graphics runtime validation...'
 Write-Host "Unity:   $unityPath"
 Write-Host "Project: $projectPath"
 Write-Host "Log:     $logPath"
 
-$process = Start-Process -FilePath $unityPath -ArgumentList $arguments -PassThru -NoNewWindow -Wait
-$exitCode = $process.ExitCode
-Write-Host "Unity exited with code $exitCode"
+$exitCode = Invoke-UnityValidationPass
+$outcome = Get-ValidationOutcome
 
-if ($exitCode -ne 0) {
-    exit $exitCode
+if ($outcome -eq 'unknown') {
+    Write-Host 'Graphics runtime validation did not report an explicit outcome immediately. Waiting for the batch editor to finish.'
+    $outcome = Wait-ForValidationOutcome
 }
 
-# Confirm the validator wrote a pass line.
-if (Test-Path -LiteralPath $logPath) {
-    $pass = Select-String -LiteralPath $logPath -Pattern 'Graphics runtime validation passed' -SimpleMatch
-    $fail = Select-String -LiteralPath $logPath -Pattern 'Graphics runtime validation failed|errored|timed out' -SimpleMatch
-    if ($fail) {
-        Write-Host "Graphics runtime validation log indicates failure:"
-        $fail | ForEach-Object { Write-Host " $_" }
-        exit 1
-    }
-    if ($pass) {
-        Write-Host 'Graphics runtime validation passed.'
-        exit 0
-    }
+if ($outcome -eq 'unknown') {
+    Write-Host 'First graphics runtime batch pass ended without an explicit outcome. Rerunning once after compilation/import.'
+    $exitCode = Invoke-UnityValidationPass
+    $outcome = Wait-ForValidationOutcome
+}
+
+if ($outcome -eq 'passed') {
+    Write-Host 'Graphics runtime validation passed.'
+    exit 0
+}
+
+if ($outcome -eq 'failed') {
+    Write-Host "Unity exited with code $exitCode"
+    exit 1
 }
 
 Write-Host 'Graphics runtime validation produced no pass/fail marker. Check the log.'

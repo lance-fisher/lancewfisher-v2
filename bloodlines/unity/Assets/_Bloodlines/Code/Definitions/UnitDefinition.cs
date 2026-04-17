@@ -33,6 +33,7 @@ namespace Bloodlines.DataDefinitions
         public int ironmarkBloodPrice;
         public float bloodProductionLoadDelta;
         public string[] notes;
+        public float separationRadius;
 
         [Header("Unity Only")]
         public GameObject runtimePrefab;

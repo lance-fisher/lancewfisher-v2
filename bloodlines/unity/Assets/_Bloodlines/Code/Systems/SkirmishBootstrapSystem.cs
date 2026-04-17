@@ -418,6 +418,17 @@ namespace Bloodlines.Systems
                 Sight = seed.Sight,
                 CooldownRemaining = 0f,
             });
+            entityManager.AddComponentData(entity, new UnitSeparationComponent
+            {
+                Radius = CombatUnitRuntimeDefaults.ResolveSeparationRadius(seed.Role, seed.SiegeClass, seed.SeparationRadius),
+            });
+            entityManager.AddComponentData(entity, new CombatStanceComponent
+            {
+                Stance = CombatUnitRuntimeDefaults.ResolveDefaultStance(seed.Role),
+                LowHealthRetreatThreshold = CombatUnitRuntimeDefaults.DefaultLowHealthRetreatThreshold,
+            });
+            entityManager.AddComponentData(entity, new CombatStanceRuntimeComponent());
+            entityManager.AddComponentData(entity, new RecentImpactComponent());
             entityManager.AddComponentData(entity, new MoveCommandComponent
             {
                 Destination = seed.Position,

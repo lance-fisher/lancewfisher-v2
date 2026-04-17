@@ -103,12 +103,7 @@ namespace Bloodlines.Debug
 
         public bool TryDebugIssueAttackMove(float3 destination)
         {
-            if (!TryGetEntityManager(out var entityManager))
-            {
-                return false;
-            }
-
-            return IssueAttackMoveOrder(entityManager, destination) > 0;
+            return TryDebugIssueGroupMoveOrder(destination, attackMove: true, out _);
         }
 
         private void BeginAttackMoveMode()
@@ -164,6 +159,11 @@ namespace Bloodlines.Debug
                     entityManager.SetComponentData(entity, moveCommand);
                 }
 
+                if (entityManager.HasComponent<GroupMovementOrderComponent>(entity))
+                {
+                    entityManager.RemoveComponent<GroupMovementOrderComponent>(entity);
+                }
+
                 if (entityManager.HasComponent<AttackTargetComponent>(entity))
                 {
                     entityManager.RemoveComponent<AttackTargetComponent>(entity);
@@ -194,59 +194,7 @@ namespace Bloodlines.Debug
 
         private int IssueAttackMoveOrder(EntityManager entityManager, float3 destination)
         {
-            int issued = 0;
-
-            for (int i = 0; i < selectedEntities.Count; i++)
-            {
-                var entity = selectedEntities[i];
-                if (!CanIssueCombatOrder(entityManager, entity))
-                {
-                    continue;
-                }
-
-                if (entityManager.HasComponent<AttackTargetComponent>(entity))
-                {
-                    entityManager.RemoveComponent<AttackTargetComponent>(entity);
-                }
-
-                var moveCommand = entityManager.HasComponent<MoveCommandComponent>(entity)
-                    ? entityManager.GetComponentData<MoveCommandComponent>(entity)
-                    : default;
-
-                moveCommand.Destination = destination;
-                moveCommand.StoppingDistance = math.max(0.1f, commandStoppingDistance);
-                moveCommand.IsActive = true;
-
-                if (entityManager.HasComponent<MoveCommandComponent>(entity))
-                {
-                    entityManager.SetComponentData(entity, moveCommand);
-                }
-                else
-                {
-                    entityManager.AddComponentData(entity, moveCommand);
-                }
-
-                var attackOrder = new AttackOrderComponent
-                {
-                    ExplicitTargetEntity = Entity.Null,
-                    IsAttackMoveDestination = true,
-                    AttackMoveDestination = destination,
-                    IsActive = true,
-                };
-
-                if (entityManager.HasComponent<AttackOrderComponent>(entity))
-                {
-                    entityManager.SetComponentData(entity, attackOrder);
-                }
-                else
-                {
-                    entityManager.AddComponentData(entity, attackOrder);
-                }
-
-                issued++;
-            }
-
-            return issued;
+            return IssueGroupMoveOrder(entityManager, destination, attackMove: true);
         }
 
         private int GetSelectedCombatUnitCount(EntityManager entityManager)
