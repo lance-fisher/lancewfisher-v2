@@ -85,13 +85,63 @@ namespace Bloodlines.Systems
 
                 if (combat.AttackDamage > 0f && combat.CooldownRemaining <= 0f)
                 {
-                    targetHealth.Current = math.max(0f, targetHealth.Current - combat.AttackDamage);
-                    entityManager.SetComponentData(attackTarget.TargetEntity, targetHealth);
+                    if (entityManager.HasComponent<ProjectileFactoryComponent>(entity))
+                    {
+                        var projectileFactory = entityManager.GetComponentData<ProjectileFactoryComponent>(entity);
+                        SpawnProjectile(
+                            ecb,
+                            entity,
+                            faction.ValueRO.FactionId,
+                            attackTarget.TargetEntity,
+                            position.ValueRO.Value,
+                            targetPosition.Value,
+                            combat.AttackDamage,
+                            projectileFactory);
+                    }
+                    else
+                    {
+                        targetHealth.Current = math.max(0f, targetHealth.Current - combat.AttackDamage);
+                        entityManager.SetComponentData(attackTarget.TargetEntity, targetHealth);
+                    }
+
                     combat.CooldownRemaining = math.max(0.1f, combat.AttackCooldown);
                 }
 
                 combatRw.ValueRW = combat;
             }
+        }
+
+        private static void SpawnProjectile(
+            EntityCommandBuffer ecb,
+            Entity ownerEntity,
+            FixedString32Bytes ownerFactionId,
+            Entity targetEntity,
+            float3 launchPosition,
+            float3 targetPosition,
+            float damage,
+            in ProjectileFactoryComponent projectileFactory)
+        {
+            var projectileEntity = ecb.CreateEntity();
+            ecb.AddComponent(projectileEntity, new PositionComponent { Value = launchPosition });
+            ecb.AddComponent(projectileEntity, new Unity.Transforms.LocalTransform
+            {
+                Position = launchPosition,
+                Rotation = quaternion.identity,
+                Scale = 0.18f,
+            });
+            ecb.AddComponent(projectileEntity, new ProjectileComponent
+            {
+                OwnerEntity = ownerEntity,
+                OwnerFactionId = ownerFactionId,
+                TargetEntity = targetEntity,
+                TargetPosition = targetPosition,
+                LaunchPosition = launchPosition,
+                Damage = damage,
+                Speed = math.max(0.05f, projectileFactory.ProjectileSpeed),
+                MaxLifetimeSeconds = math.max(0.1f, projectileFactory.ProjectileMaxLifetimeSeconds),
+                ElapsedSeconds = 0f,
+                ArrivalRadius = math.max(0.05f, projectileFactory.ProjectileArrivalRadius),
+            });
         }
 
         private static bool IsFactionHostile(

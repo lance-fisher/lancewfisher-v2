@@ -64,18 +64,29 @@ namespace Bloodlines.EditorTools
 
         private static bool RunValidation(out string message)
         {
-            using var world = new World("BloodlinesCombatSmokeValidation");
-            var entityManager = world.EntityManager;
-            world.GetOrCreateSystemManaged<InitializationSystemGroup>();
-            var simulationGroup = world.GetOrCreateSystemManaged<SimulationSystemGroup>();
-            world.GetOrCreateSystemManaged<PresentationSystemGroup>();
+            if (!RunMeleePhase(out string meleeMessage))
+            {
+                message = meleeMessage;
+                return false;
+            }
 
-            var endSimulation = world.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>();
-            simulationGroup.AddSystemToUpdateList(endSimulation);
-            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<AutoAcquireTargetSystem>());
-            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<AttackResolutionSystem>());
-            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<DeathResolutionSystem>());
-            simulationGroup.SortSystems();
+            UnityDebug.Log(meleeMessage);
+
+            if (!RunProjectilePhase(out string projectileMessage))
+            {
+                message = projectileMessage;
+                return false;
+            }
+
+            UnityDebug.Log(projectileMessage);
+            message = "Combat smoke validation passed: meleePhase=True, projectilePhase=True.";
+            return true;
+        }
+
+        private static bool RunMeleePhase(out string message)
+        {
+            using var world = CreateValidationWorld("BloodlinesCombatSmokeValidation_Melee");
+            var entityManager = world.EntityManager;
 
             CreateFaction(entityManager, "player", "enemy");
             CreateFaction(entityManager, "enemy", "player");
@@ -102,6 +113,121 @@ namespace Bloodlines.EditorTools
                 attackCooldown: 0.4f,
                 sight: 8f);
 
+            return RunUntilSingleDeath(
+                world,
+                entityManager,
+                playerUnit,
+                enemyUnit,
+                "Combat smoke validation melee phase passed",
+                out message);
+        }
+
+        private static bool RunProjectilePhase(out string message)
+        {
+            using var world = CreateValidationWorld("BloodlinesCombatSmokeValidation_Projectile");
+            var entityManager = world.EntityManager;
+
+            CreateFaction(entityManager, "player", "enemy");
+            CreateFaction(entityManager, "enemy", "player");
+
+            Entity bowman = CreateCombatUnit(
+                entityManager,
+                "player",
+                "bowman",
+                new float3(0f, 0f, 0f),
+                maxHealth: 10f,
+                attackDamage: 10f,
+                attackRange: 4f,
+                attackCooldown: 0.8f,
+                sight: 8f,
+                role: UnitRole.Ranged,
+                projectileSpeed: 4.5f,
+                projectileMaxLifetimeSeconds: 4f,
+                projectileArrivalRadius: 0.2f);
+
+            Entity villager = CreateCombatUnit(
+                entityManager,
+                "enemy",
+                "villager",
+                new float3(3.2f, 0f, 0f),
+                maxHealth: 9f,
+                attackDamage: 0f,
+                attackRange: 0.5f,
+                attackCooldown: 1f,
+                sight: 6f,
+                role: UnitRole.Worker);
+
+            bool sawProjectileInFlight = false;
+            double elapsed = 0d;
+
+            while (elapsed < TimeoutSeconds)
+            {
+                world.SetTime(new TimeData(elapsed, StepSeconds));
+                world.Update();
+                elapsed += StepSeconds;
+
+                using var projectileQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<ProjectileComponent>());
+                int projectileCount = projectileQuery.CalculateEntityCount();
+                if (projectileCount > 0 && !entityManager.HasComponent<DeadTag>(villager))
+                {
+                    sawProjectileInFlight = true;
+                }
+
+                if (!entityManager.HasComponent<DeadTag>(villager))
+                {
+                    continue;
+                }
+
+                if (!sawProjectileInFlight)
+                {
+                    message = "Combat smoke validation failed: projectile phase never observed an in-flight projectile.";
+                    return false;
+                }
+
+                var villagerHealth = entityManager.GetComponentData<HealthComponent>(villager);
+                if (villagerHealth.Current > 0f)
+                {
+                    message = "Combat smoke validation failed: projectile phase marked the target dead before health reached zero.";
+                    return false;
+                }
+
+                message =
+                    "Combat smoke validation projectile phase passed: projectileObserved=True, dead=" +
+                    Quote(entityManager.GetComponentData<FactionComponent>(villager).FactionId.ToString()) +
+                    ", elapsedSeconds=" + elapsed.ToString("0.###") + ".";
+                return true;
+            }
+
+            message = "Combat smoke validation failed: timeout waiting for the ranged projectile phase to resolve.";
+            return false;
+        }
+
+        private static World CreateValidationWorld(string worldName)
+        {
+            var world = new World(worldName);
+            world.GetOrCreateSystemManaged<InitializationSystemGroup>();
+            var simulationGroup = world.GetOrCreateSystemManaged<SimulationSystemGroup>();
+            world.GetOrCreateSystemManaged<PresentationSystemGroup>();
+
+            var endSimulation = world.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>();
+            simulationGroup.AddSystemToUpdateList(endSimulation);
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<AutoAcquireTargetSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<AttackResolutionSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<ProjectileMovementSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<ProjectileImpactSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<DeathResolutionSystem>());
+            simulationGroup.SortSystems();
+            return world;
+        }
+
+        private static bool RunUntilSingleDeath(
+            World world,
+            EntityManager entityManager,
+            Entity firstEntity,
+            Entity secondEntity,
+            string successLabel,
+            out string message)
+        {
             double elapsed = 0d;
             while (elapsed < TimeoutSeconds)
             {
@@ -109,21 +235,21 @@ namespace Bloodlines.EditorTools
                 world.Update();
                 elapsed += StepSeconds;
 
-                bool playerDead = entityManager.HasComponent<DeadTag>(playerUnit);
-                bool enemyDead = entityManager.HasComponent<DeadTag>(enemyUnit);
-                if (!playerDead && !enemyDead)
+                bool firstDead = entityManager.HasComponent<DeadTag>(firstEntity);
+                bool secondDead = entityManager.HasComponent<DeadTag>(secondEntity);
+                if (!firstDead && !secondDead)
                 {
                     continue;
                 }
 
-                if (playerDead == enemyDead)
+                if (firstDead == secondDead)
                 {
                     message = "Combat smoke validation failed: both combatants resolved to the same death state.";
                     return false;
                 }
 
-                var survivingEntity = playerDead ? enemyUnit : playerUnit;
-                var deadEntity = playerDead ? playerUnit : enemyUnit;
+                var survivingEntity = firstDead ? secondEntity : firstEntity;
+                var deadEntity = firstDead ? firstEntity : secondEntity;
                 var survivingHealth = entityManager.GetComponentData<HealthComponent>(survivingEntity);
                 var deadHealth = entityManager.GetComponentData<HealthComponent>(deadEntity);
 
@@ -140,7 +266,7 @@ namespace Bloodlines.EditorTools
                 }
 
                 message =
-                    "Combat smoke validation passed: dead=" + Quote(entityManager.GetComponentData<FactionComponent>(deadEntity).FactionId.ToString()) +
+                    successLabel + ": dead=" + Quote(entityManager.GetComponentData<FactionComponent>(deadEntity).FactionId.ToString()) +
                     ", survivorHealth=" + survivingHealth.Current.ToString("0.###") +
                     "/" + survivingHealth.Max.ToString("0.###") +
                     ", elapsedSeconds=" + elapsed.ToString("0.###") + ".";
@@ -178,7 +304,12 @@ namespace Bloodlines.EditorTools
             float attackDamage,
             float attackRange,
             float attackCooldown,
-            float sight)
+            float sight,
+            UnitRole role = UnitRole.Melee,
+            SiegeClass siegeClass = SiegeClass.None,
+            float projectileSpeed = 0f,
+            float projectileMaxLifetimeSeconds = 4f,
+            float projectileArrivalRadius = 0.4f)
         {
             var entity = entityManager.CreateEntity();
             entityManager.AddComponentData(entity, new FactionComponent { FactionId = factionId });
@@ -197,8 +328,8 @@ namespace Bloodlines.EditorTools
             entityManager.AddComponentData(entity, new UnitTypeComponent
             {
                 TypeId = typeId,
-                Role = UnitRole.Melee,
-                SiegeClass = SiegeClass.None,
+                Role = role,
+                SiegeClass = siegeClass,
                 PopulationCost = 1,
                 Stage = 1,
             });
@@ -217,6 +348,17 @@ namespace Bloodlines.EditorTools
                 StoppingDistance = attackRange,
                 IsActive = false,
             });
+
+            if (projectileSpeed > 0f)
+            {
+                entityManager.AddComponentData(entity, new ProjectileFactoryComponent
+                {
+                    ProjectileSpeed = projectileSpeed,
+                    ProjectileMaxLifetimeSeconds = projectileMaxLifetimeSeconds,
+                    ProjectileArrivalRadius = projectileArrivalRadius,
+                });
+            }
+
             return entity;
         }
 
