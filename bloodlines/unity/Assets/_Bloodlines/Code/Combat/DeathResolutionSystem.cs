@@ -62,6 +62,7 @@ namespace Bloodlines.Systems
                     if (attackTargets[i].TargetEntity == entity)
                     {
                         ecb.RemoveComponent<AttackTargetComponent>(attackTargetEntities[i]);
+                        ClearCompletedExplicitAttackOrder(entityManager, attackTargetEntities[i], entity);
                     }
                 }
 
@@ -112,6 +113,46 @@ namespace Bloodlines.Systems
             population = default;
             factionEntity = Entity.Null;
             return false;
+        }
+
+        private static void ClearCompletedExplicitAttackOrder(
+            EntityManager entityManager,
+            Entity attackerEntity,
+            Entity defeatedTarget)
+        {
+            if (!entityManager.HasComponent<AttackOrderComponent>(attackerEntity))
+            {
+                return;
+            }
+
+            var attackOrder = entityManager.GetComponentData<AttackOrderComponent>(attackerEntity);
+            if (!attackOrder.IsActive ||
+                attackOrder.IsAttackMoveActive ||
+                attackOrder.ExplicitTargetEntity != defeatedTarget)
+            {
+                return;
+            }
+
+            attackOrder.ExplicitTargetEntity = Entity.Null;
+            attackOrder.AttackMoveDestination = float3.zero;
+            attackOrder.IsAttackMoveActive = false;
+            attackOrder.IsActive = false;
+            entityManager.SetComponentData(attackerEntity, attackOrder);
+
+            if (!entityManager.HasComponent<MoveCommandComponent>(attackerEntity))
+            {
+                return;
+            }
+
+            var moveCommand = entityManager.GetComponentData<MoveCommandComponent>(attackerEntity);
+            moveCommand.IsActive = false;
+
+            if (entityManager.HasComponent<PositionComponent>(attackerEntity))
+            {
+                moveCommand.Destination = entityManager.GetComponentData<PositionComponent>(attackerEntity).Value;
+            }
+
+            entityManager.SetComponentData(attackerEntity, moveCommand);
         }
     }
 }

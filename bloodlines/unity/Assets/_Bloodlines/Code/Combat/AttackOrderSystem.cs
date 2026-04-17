@@ -10,6 +10,7 @@ namespace Bloodlines.Systems
     /// Explicit target orders only persist while the hostile remains visible. Attack-move orders
     /// preserve their destination so units resume marching after each local engagement.
     /// </summary>
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateBefore(typeof(AutoAcquireTargetSystem))]
     public partial struct AttackOrderSystem : ISystem
