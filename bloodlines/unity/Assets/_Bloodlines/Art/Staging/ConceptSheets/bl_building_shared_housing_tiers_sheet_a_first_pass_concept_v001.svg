@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#ece0cb"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Housing Tiers Sheet</text>
+  <text x="64" y="116" fill="#6c5a48" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: population support silhouettes, domestic density, and settlement-readability escalation</text>
+
+  <g font-family="Arial, sans-serif" font-size="16" fill="#47392c">
+    <text x="92" y="170">Tier I Cottages</text>
+    <text x="612" y="170">Tier II Street Cluster</text>
+    <text x="1128" y="170">Tier III Courtyard Block</text>
+    <text x="92" y="572">Frontier Housing Cluster</text>
+    <text x="612" y="572">Dense Town Row</text>
+    <text x="1128" y="572">Raided Housing Variant</text>
+  </g>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g transform="translate(84 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="34" y="100" width="72" height="46" fill="#ab9377" stroke="#695845" stroke-width="4"/>
+    <polygon points="28,100 70,70 112,100" fill="#7d5d39" stroke="#5f4526" stroke-width="4"/>
+    <rect x="130" y="92" width="84" height="54" fill="#b89e81" stroke="#715f4b" stroke-width="4"/>
+    <polygon points="120,92 172,54 224,92" fill="#886740" stroke="#644923" stroke-width="4"/>
+    <rect x="248" y="98" width="58" height="48" fill="#9f876a" stroke="#655544" stroke-width="4"/>
+    <polygon points="240,98 278,74 316,98" fill="#775936" stroke="#5a401f" stroke-width="4"/>
+    <path d="M0 162 L58 156 L136 164 L216 158 L286 166 L400 158 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Tier I should read as simple domestic shelter and household continuity, not civic power.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">A few roof masses and fenced traces are enough.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#ab9377"/>
+    <rect x="46" y="266" width="22" height="22" fill="#7d5d39"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8f7757"/>
+  </g>
+
+  <g transform="translate(600 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="28" y="90" width="90" height="56" fill="#b59d80" stroke="#705f4b" stroke-width="4"/>
+    <polygon points="18,90 72,52 126,90" fill="#886740" stroke="#634823" stroke-width="4"/>
+    <rect x="122" y="84" width="104" height="62" fill="#a89072" stroke="#675845" stroke-width="4"/>
+    <polygon points="112,84 174,44 236,84" fill="#7f5f3a" stroke="#5f4422" stroke-width="4"/>
+    <rect x="232" y="96" width="102" height="50" fill="#c0a689" stroke="#77654e" stroke-width="4"/>
+    <polygon points="224,96 286,62 344,96" fill="#8c6a42" stroke="#644923" stroke-width="4"/>
+    <path d="M0 162 L70 156 L154 164 L236 158 L326 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Tier II housing should show recognizable street rhythm and more settled domestic density.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">The read is neighborhood growth, not fortification or market frontage.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#b59d80"/>
+    <rect x="46" y="266" width="22" height="22" fill="#8c6a42"/>
+    <rect x="74" y="266" width="22" height="22" fill="#c0a689"/>
+  </g>
+
+  <g transform="translate(1116 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="44" y="80" width="120" height="66" fill="#c7b091" stroke="#7b674f" stroke-width="4"/>
+    <polygon points="34,80 102,40 170,80" fill="#8f6b42" stroke="#654923" stroke-width="4"/>
+    <rect x="176" y="74" width="132" height="72" fill="#b29a7d" stroke="#6d5c48" stroke-width="4"/>
+    <polygon points="166,74 242,30 318,74" fill="#7c5b38" stroke="#5d421f" stroke-width="4"/>
+    <rect x="108" y="120" width="92" height="26" fill="#8d775e" stroke="#5f5142" stroke-width="4"/>
+    <path d="M0 162 L72 156 L160 164 L248 158 L334 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Tier III should read as denser prosperity and civic permanence without becoming a palace block.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Courtyard or enclosed-yard logic helps the read at distance.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#c7b091"/>
+    <rect x="46" y="266" width="22" height="22" fill="#8f6b42"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8d775e"/>
+  </g>
+
+  <g transform="translate(84 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="30" y="102" width="88" height="44" fill="#9d8568" stroke="#615242" stroke-width="4"/>
+    <polygon points="22,102 72,68 124,102" fill="#7a5a37" stroke="#5a4021" stroke-width="4"/>
+    <rect x="148" y="92" width="78" height="54" fill="#ab9377" stroke="#685844" stroke-width="4"/>
+    <polygon points="138,92 188,54 238,92" fill="#896640" stroke="#634823" stroke-width="4"/>
+    <rect x="260" y="108" width="56" height="38" fill="#927b60" stroke="#5f5142" stroke-width="4"/>
+    <path d="M0 162 L68 156 L146 164 L230 158 L308 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Frontier housing clusters should read as quick settlement, not civic disorder or shanty slop.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Use patched growth logic, clear yards, and broad roof separation.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#9d8568"/>
+    <rect x="46" y="266" width="22" height="22" fill="#896640"/>
+    <rect x="74" y="266" width="22" height="22" fill="#927b60"/>
+  </g>
+
+  <g transform="translate(600 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="26" y="86" width="90" height="60" fill="#b7a082" stroke="#70604b" stroke-width="4"/>
+    <rect x="122" y="78" width="94" height="68" fill="#c0a689" stroke="#76634d" stroke-width="4"/>
+    <rect x="224" y="86" width="94" height="60" fill="#a58d71" stroke="#685744" stroke-width="4"/>
+    <polygon points="18,86 72,46 126,86" fill="#886740" stroke="#644923" stroke-width="4"/>
+    <polygon points="114,78 170,38 226,78" fill="#7f5f3a" stroke="#5e4321" stroke-width="4"/>
+    <polygon points="214,86 272,48 328,86" fill="#8c6a42" stroke="#644923" stroke-width="4"/>
+    <path d="M0 162 L64 156 L148 164 L228 158 L314 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Dense rows should read as urban population capacity, not commerce or fortification.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Rhythm and spacing matter more than micro-detail.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#c0a689"/>
+    <rect x="46" y="266" width="22" height="22" fill="#886740"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8f7757"/>
+  </g>
+
+  <g transform="translate(1116 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="36" y="96" width="82" height="50" fill="#8f785f" stroke="#5e5040" stroke-width="4"/>
+    <polygon points="28,96 76,64 126,96" fill="#6f5334" stroke="#543d22" stroke-width="4"/>
+    <path d="M154 142 L184 98 L220 138 L250 86 L284 134 L316 110 L348 142" fill="none" stroke="#7d684f" stroke-width="16" stroke-linecap="round"/>
+    <rect x="80" y="118" width="44" height="28" fill="#43362b"/>
+    <path d="M0 162 L66 156 L146 164 L228 158 L314 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Raided housing should preserve its domestic role while clearly signaling loss and instability.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Damage must stay broad and legible, not cinematic debris haze.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#8f785f"/>
+    <rect x="46" y="266" width="22" height="22" fill="#6f5334"/>
+    <rect x="74" y="266" width="22" height="22" fill="#43362b"/>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use for population-support prompts, settlement-density checks, and housing-tier placeholder planning. Housing must read as domestic capacity before any House-specific roof, trim, or damage-state treatment is layered in.</text>
+</svg>

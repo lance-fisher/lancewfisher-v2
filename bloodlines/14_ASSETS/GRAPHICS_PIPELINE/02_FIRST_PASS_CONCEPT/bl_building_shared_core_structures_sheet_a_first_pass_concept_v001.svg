@@ -1,0 +1,185 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#efe4cf"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Core Structures Sheet</text>
+  <text x="64" y="116" fill="#6e5a46" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: function silhouette, settlement logic, and fortification readability</text>
+
+  <g font-family="Arial, sans-serif" font-size="15" fill="#47392c">
+    <text x="92" y="172">Command Hall</text>
+    <text x="472" y="172">Farm</text>
+    <text x="852" y="172">Well</text>
+    <text x="1232" y="172">Barracks</text>
+
+    <text x="92" y="484">Stable</text>
+    <text x="472" y="484">Siege Workshop</text>
+    <text x="852" y="484">Supply Camp</text>
+    <text x="1232" y="484">Iron Works</text>
+
+    <text x="92" y="796">Wall Segment</text>
+    <text x="472" y="796">Watch Tower</text>
+    <text x="852" y="796">Gatehouse</text>
+    <text x="1232" y="796">Inner Keep</text>
+  </g>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="190" width="320" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="444" y="190" width="320" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="824" y="190" width="320" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="1204" y="190" width="320" height="250" rx="18" fill="#fcf7ef"/>
+
+    <rect x="64" y="502" width="320" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="444" y="502" width="320" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="824" y="502" width="320" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="1204" y="502" width="320" height="250" rx="18" fill="#fcf7ef"/>
+
+    <rect x="64" y="814" width="320" height="154" rx="18" fill="#fcf7ef"/>
+    <rect x="444" y="814" width="320" height="154" rx="18" fill="#fcf7ef"/>
+    <rect x="824" y="814" width="320" height="154" rx="18" fill="#fcf7ef"/>
+    <rect x="1204" y="814" width="320" height="154" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <!-- Command Hall -->
+  <g transform="translate(80 210)">
+    <rect width="288" height="176" rx="12" fill="#ede2cf"/>
+    <rect x="42" y="94" width="188" height="48" fill="#85684b" stroke="#4c3c2d" stroke-width="4"/>
+    <polygon points="28,94 136,40 244,94" fill="#6f5540" stroke="#4c3c2d" stroke-width="4"/>
+    <rect x="118" y="102" width="38" height="40" fill="#4e3d2f"/>
+    <rect x="204" y="70" width="24" height="72" fill="#6d5643" stroke="#4c3c2d" stroke-width="4"/>
+    <polygon points="196,70 216,48 236,70" fill="#765b45" stroke="#4c3c2d" stroke-width="4"/>
+    <text x="18" y="164" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Primary civic crown and seat-of-power read</text>
+  </g>
+
+  <!-- Farm -->
+  <g transform="translate(460 210)">
+    <rect width="288" height="176" rx="12" fill="#ede2cf"/>
+    <rect x="26" y="120" width="236" height="18" fill="#8c6d43"/>
+    <line x1="48" y1="116" x2="48" y2="62" stroke="#7c5d39" stroke-width="6"/>
+    <line x1="92" y1="116" x2="92" y2="72" stroke="#7c5d39" stroke-width="6"/>
+    <line x1="136" y1="116" x2="136" y2="58" stroke="#7c5d39" stroke-width="6"/>
+    <line x1="180" y1="116" x2="180" y2="68" stroke="#7c5d39" stroke-width="6"/>
+    <rect x="196" y="86" width="54" height="32" fill="#8a6a4b" stroke="#4d3f32" stroke-width="4"/>
+    <polygon points="188,86 223,62 258,86" fill="#bda15a" stroke="#7e6438" stroke-width="4"/>
+    <text x="18" y="164" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Field rows and shed silhouette carry the read</text>
+  </g>
+
+  <!-- Well -->
+  <g transform="translate(840 210)">
+    <rect width="288" height="176" rx="12" fill="#ede2cf"/>
+    <ellipse cx="118" cy="118" rx="52" ry="20" fill="#7d6956"/>
+    <rect x="66" y="84" width="104" height="36" rx="8" fill="#9b856e" stroke="#544539" stroke-width="4"/>
+    <line x1="80" y1="86" x2="80" y2="42" stroke="#715641" stroke-width="8"/>
+    <line x1="156" y1="86" x2="156" y2="42" stroke="#715641" stroke-width="8"/>
+    <line x1="80" y1="42" x2="156" y2="42" stroke="#715641" stroke-width="8"/>
+    <line x1="118" y1="42" x2="118" y2="82" stroke="#b3946c" stroke-width="4"/>
+    <rect x="112" y="82" width="12" height="16" rx="4" fill="#b3946c"/>
+    <text x="18" y="164" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Vertical support frame keeps water utility readable</text>
+  </g>
+
+  <!-- Barracks -->
+  <g transform="translate(1220 210)">
+    <rect width="288" height="176" rx="12" fill="#ede2cf"/>
+    <rect x="34" y="86" width="182" height="56" fill="#7c644f" stroke="#4d3f32" stroke-width="4"/>
+    <polygon points="24,86 126,42 226,86" fill="#66503e" stroke="#4d3f32" stroke-width="4"/>
+    <rect x="112" y="102" width="26" height="40" fill="#4a3b2d"/>
+    <rect x="232" y="54" width="12" height="88" fill="#6b5544"/>
+    <polygon points="244,54 268,64 244,74" fill="#8d1f1f"/>
+    <line x1="244" y1="102" x2="278" y2="102" stroke="#8c6f49" stroke-width="6"/>
+    <text x="18" y="164" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Drill-house mass plus banner and rack lane</text>
+  </g>
+
+  <!-- Stable -->
+  <g transform="translate(80 522)">
+    <rect width="288" height="176" rx="12" fill="#ede2cf"/>
+    <rect x="30" y="88" width="214" height="52" fill="#856a4d" stroke="#4d3f32" stroke-width="4"/>
+    <polygon points="20,88 138,46 254,88" fill="#755840" stroke="#4d3f32" stroke-width="4"/>
+    <line x1="78" y1="90" x2="78" y2="140" stroke="#4d3f32" stroke-width="4"/>
+    <line x1="126" y1="90" x2="126" y2="140" stroke="#4d3f32" stroke-width="4"/>
+    <line x1="174" y1="90" x2="174" y2="140" stroke="#4d3f32" stroke-width="4"/>
+    <path d="M214 122 Q228 100 250 104" fill="none" stroke="#5f4a35" stroke-width="6"/>
+    <text x="18" y="164" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Wide roofline, stall rhythm, and tack read</text>
+  </g>
+
+  <!-- Siege Workshop -->
+  <g transform="translate(460 522)">
+    <rect width="288" height="176" rx="12" fill="#ede2cf"/>
+    <rect x="28" y="92" width="170" height="50" fill="#7c654b" stroke="#4d3f32" stroke-width="4"/>
+    <polygon points="18,92 112,46 206,92" fill="#66503d" stroke="#4d3f32" stroke-width="4"/>
+    <line x1="214" y1="134" x2="214" y2="54" stroke="#70563a" stroke-width="8"/>
+    <line x1="214" y1="54" x2="248" y2="30" stroke="#70563a" stroke-width="8"/>
+    <line x1="214" y1="72" x2="264" y2="72" stroke="#b39266" stroke-width="6"/>
+    <circle cx="92" cy="144" r="14" fill="#3a2d22"/>
+    <circle cx="140" cy="144" r="14" fill="#3a2d22"/>
+    <text x="18" y="164" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Crane arm and wheel stock mark heavy engineering</text>
+  </g>
+
+  <!-- Supply Camp -->
+  <g transform="translate(840 522)">
+    <rect width="288" height="176" rx="12" fill="#ede2cf"/>
+    <polygon points="28,132 76,72 126,132" fill="#b49972" stroke="#5d4b36" stroke-width="4"/>
+    <polygon points="108,132 154,64 202,132" fill="#c1a77e" stroke="#5d4b36" stroke-width="4"/>
+    <rect x="212" y="92" width="38" height="24" fill="#7d6447" stroke="#4d3f32" stroke-width="4"/>
+    <rect x="220" y="70" width="22" height="22" fill="#8c6f49"/>
+    <circle cx="232" cy="140" r="12" fill="#5f4735"/>
+    <text x="18" y="164" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Tent mass and stacked supply logic carry logistics read</text>
+  </g>
+
+  <!-- Iron Works -->
+  <g transform="translate(1220 522)">
+    <rect width="288" height="176" rx="12" fill="#ede2cf"/>
+    <rect x="34" y="92" width="164" height="50" fill="#6f5a48" stroke="#4d3f32" stroke-width="4"/>
+    <polygon points="24,92 116,56 208,92" fill="#615144" stroke="#4d3f32" stroke-width="4"/>
+    <rect x="214" y="48" width="24" height="94" fill="#51463f"/>
+    <rect x="246" y="66" width="20" height="76" fill="#51463f"/>
+    <ellipse cx="224" cy="44" rx="16" ry="6" fill="#51463f"/>
+    <ellipse cx="256" cy="62" rx="14" ry="6" fill="#51463f"/>
+    <text x="18" y="164" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Stack silhouette and industrial roof split the economy seat</text>
+  </g>
+
+  <!-- Wall Segment -->
+  <g transform="translate(80 834)">
+    <rect width="288" height="112" rx="12" fill="#ede2cf"/>
+    <rect x="22" y="56" width="244" height="30" fill="#8a7a66" stroke="#55483c" stroke-width="4"/>
+    <rect x="34" y="42" width="18" height="14" fill="#8a7a66"/>
+    <rect x="70" y="42" width="18" height="14" fill="#8a7a66"/>
+    <rect x="106" y="42" width="18" height="14" fill="#8a7a66"/>
+    <rect x="142" y="42" width="18" height="14" fill="#8a7a66"/>
+    <rect x="178" y="42" width="18" height="14" fill="#8a7a66"/>
+    <rect x="214" y="42" width="18" height="14" fill="#8a7a66"/>
+    <text x="18" y="100" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Long low mass with crenel rhythm</text>
+  </g>
+
+  <!-- Watch Tower -->
+  <g transform="translate(460 834)">
+    <rect width="288" height="112" rx="12" fill="#ede2cf"/>
+    <rect x="102" y="36" width="54" height="56" fill="#8b7a63" stroke="#55483c" stroke-width="4"/>
+    <rect x="92" y="22" width="74" height="16" fill="#8b7a63"/>
+    <rect x="98" y="18" width="12" height="10" fill="#8b7a63"/>
+    <rect x="123" y="18" width="12" height="10" fill="#8b7a63"/>
+    <rect x="148" y="18" width="12" height="10" fill="#8b7a63"/>
+    <text x="18" y="100" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Vertical sightline crown and tower body</text>
+  </g>
+
+  <!-- Gatehouse -->
+  <g transform="translate(840 834)">
+    <rect width="288" height="112" rx="12" fill="#ede2cf"/>
+    <rect x="44" y="42" width="194" height="44" fill="#8a7964" stroke="#55483c" stroke-width="4"/>
+    <rect x="122" y="52" width="36" height="34" fill="#4e4033"/>
+    <rect x="44" y="28" width="34" height="14" fill="#8a7964"/>
+    <rect x="204" y="28" width="34" height="14" fill="#8a7964"/>
+    <text x="18" y="100" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Twin-mass defense with readable central passage</text>
+  </g>
+
+  <!-- Inner Keep -->
+  <g transform="translate(1220 834)">
+    <rect width="288" height="112" rx="12" fill="#ede2cf"/>
+    <rect x="74" y="34" width="138" height="56" fill="#80705d" stroke="#55483c" stroke-width="4"/>
+    <rect x="106" y="18" width="24" height="16" fill="#80705d"/>
+    <rect x="156" y="18" width="24" height="16" fill="#80705d"/>
+    <rect x="128" y="46" width="28" height="44" fill="#4a3b2e"/>
+    <rect x="214" y="40" width="14" height="50" fill="#6d5b47"/>
+    <polygon points="228,40 246,48 228,56" fill="#8f7958"/>
+    <text x="18" y="100" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Dense core mass and banner make the seat unmistakable</text>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use with: buildings manifest, terrain track, and fortification doctrine. These are concept placeholders for later mesh, texture, and damage-state production.</text>
+</svg>

@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#ece0cb"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Storehouse And Granary Variants Sheet</text>
+  <text x="64" y="116" fill="#6c5a48" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: storage and food-security variants with clear massing, access, and defensive support logic</text>
+
+  <g font-family="Arial, sans-serif" font-size="16" fill="#47392c">
+    <text x="92" y="170">Elevated Granary</text>
+    <text x="612" y="170">Twin Storehouse</text>
+    <text x="1128" y="170">Fortified Food Depot</text>
+    <text x="92" y="572">Route Warehouse</text>
+    <text x="612" y="572">Frontier Pantry</text>
+    <text x="1128" y="572">Levy Stockyard</text>
+  </g>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g transform="translate(84 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="76" y="118" width="224" height="14" fill="#8f7758"/>
+    <rect x="96" y="84" width="184" height="62" fill="#b39a7b" stroke="#6f5d49" stroke-width="4"/>
+    <polygon points="86,84 188,32 290,84" fill="#8a673f" stroke="#644924" stroke-width="4"/>
+    <rect x="104" y="146" width="10" height="18" fill="#6f5d49"/>
+    <rect x="262" y="146" width="10" height="18" fill="#6f5d49"/>
+    <rect x="140" y="100" width="96" height="12" fill="#d7c48e"/>
+    <path d="M0 162 L62 156 L144 164 L230 158 L318 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">Elevated granaries should read as protected food mass with lifted floors and vent rhythm.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">Avoid barn casualness. This is food security, not scenery.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#d7c48e"/>
+    <rect x="46" y="266" width="22" height="22" fill="#8a673f"/>
+    <rect x="74" y="266" width="22" height="22" fill="#6f5d49"/>
+  </g>
+
+  <g transform="translate(600 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="42" y="96" width="110" height="50" fill="#a58e71" stroke="#675845" stroke-width="4"/>
+    <rect x="248" y="96" width="110" height="50" fill="#a58e71" stroke="#675845" stroke-width="4"/>
+    <polygon points="32,96 96,52 162,96" fill="#86633c" stroke="#644924" stroke-width="4"/>
+    <polygon points="238,96 302,52 368,96" fill="#795836" stroke="#5d4122" stroke-width="4"/>
+    <rect x="164" y="110" width="72" height="22" fill="#8f7758"/>
+    <rect x="176" y="76" width="48" height="16" fill="#d9ccb1" stroke="#7a674f" stroke-width="3"/>
+    <path d="M0 162 L68 156 L154 164 L238 158 L326 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">Twin storehouses imply throughput and route load, not simply a larger warehouse.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">The twin mass should stay legible as paired cargo buildings at gameplay height.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#d9ccb1"/>
+    <rect x="46" y="266" width="22" height="22" fill="#86633c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8f7758"/>
+  </g>
+
+  <g transform="translate(1116 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="58" y="88" width="284" height="58" fill="#9f876a" stroke="#625241" stroke-width="4"/>
+    <polygon points="46,88 122,38 200,88" fill="#7d5b37" stroke="#5d4122" stroke-width="4"/>
+    <polygon points="194,88 272,38 354,88" fill="#73522f" stroke="#563b20" stroke-width="4"/>
+    <rect x="60" y="66" width="18" height="80" fill="#6f5d49"/>
+    <rect x="322" y="66" width="18" height="80" fill="#6f5d49"/>
+    <rect x="184" y="110" width="32" height="36" fill="#6e5847"/>
+    <path d="M0 162 L68 156 L156 164 L238 158 L326 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">Fortified depots need stronger corners and doors, but should still read as logistics before defense.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">Do not let them collapse into barracks or towers.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#6e5847"/>
+    <rect x="46" y="266" width="22" height="22" fill="#73522f"/>
+    <rect x="74" y="266" width="22" height="22" fill="#9f876a"/>
+  </g>
+
+  <g transform="translate(84 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="44" y="120" width="314" height="20" fill="#8f7758"/>
+    <rect x="72" y="84" width="126" height="56" fill="#b59c7c" stroke="#6f5d49" stroke-width="4"/>
+    <rect x="212" y="92" width="98" height="48" fill="#967d63" stroke="#605141" stroke-width="4"/>
+    <polygon points="60,84 134,42 210,84" fill="#86623d" stroke="#644924" stroke-width="4"/>
+    <circle cx="330" cy="146" r="16" fill="#6d5948"/>
+    <circle cx="358" cy="146" r="12" fill="#6d5948"/>
+    <path d="M0 162 L60 156 L142 164 L228 158 L318 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">Route warehouses need clear loading logic and wagon access across the roofline silhouette.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">The wheel read helps throughput, but cargo remains the core message.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#b59c7c"/>
+    <rect x="46" y="266" width="22" height="22" fill="#6d5948"/>
+    <rect x="74" y="266" width="22" height="22" fill="#86623d"/>
+  </g>
+
+  <g transform="translate(600 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="84" y="96" width="200" height="50" fill="#b39a7b" stroke="#6f5d49" stroke-width="4"/>
+    <polygon points="72,96 132,56 192,96" fill="#8a673f" stroke="#644924" stroke-width="4"/>
+    <polygon points="176,96 234,56 296,96" fill="#775431" stroke="#5b4022" stroke-width="4"/>
+    <rect x="300" y="108" width="42" height="38" fill="#93775e" stroke="#5e4f40" stroke-width="4"/>
+    <rect x="110" y="78" width="30" height="10" fill="#d7c48e"/>
+    <path d="M0 162 L68 156 L154 164 L240 158 L328 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">Frontier pantry reads should stay smaller and more vulnerable than mainline granaries.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">This is support stock, not a central food palace.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#d7c48e"/>
+    <rect x="46" y="266" width="22" height="22" fill="#775431"/>
+    <rect x="74" y="266" width="22" height="22" fill="#93775e"/>
+  </g>
+
+  <g transform="translate(1116 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="42" y="120" width="320" height="18" fill="#8f7758"/>
+    <rect x="56" y="94" width="66" height="44" fill="#a89173" stroke="#6a5a47" stroke-width="4"/>
+    <rect x="138" y="84" width="74" height="54" fill="#967d63" stroke="#605141" stroke-width="4"/>
+    <rect x="230" y="92" width="64" height="46" fill="#b59c7c" stroke="#6f5d49" stroke-width="4"/>
+    <rect x="306" y="98" width="32" height="40" fill="#7d674d" stroke="#5d4f40" stroke-width="4"/>
+    <path d="M0 162 L66 156 L150 164 L236 158 L324 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">Levy stockyards should show rough supply mass and animal-feed utility, not luxury care.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">Keep them temporary and practical so they do not read as stables.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#a89173"/>
+    <rect x="46" y="266" width="22" height="22" fill="#7d674d"/>
+    <rect x="74" y="266" width="22" height="22" fill="#b59c7c"/>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use for deeper storage-family prompting. Granary and storehouse variants must preserve food or cargo meaning even when upgrade state, House trim, or defensive reinforcement is added later.</text>
+</svg>

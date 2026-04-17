@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: axeman
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:UnitDefinition
+  id: axeman
+  displayName: Axeman
+  stage: 1
+  role: unique-melee
+  siegeClass: 
+  prototypeEnabled: 1
+  populationCost: 1
+  health: 110
+  speed: 58
+  attackDamage: 16
+  attackRange: 18
+  attackCooldown: 1.05
+  sight: 118
+  projectileSpeed: 0
+  carryCapacity: 0
+  gatherRate: 0
+  buildRate: 0
+  structuralDamageMultiplier: 0
+  antiUnitDamageMultiplier: 0
+  cost:
+    gold: 95
+    food: 0
+    water: 0
+    wood: 30
+    stone: 0
+    iron: 0
+    influence: 0
+  house: ironmark
+  notes:
+  - Session 69 enables Axeman as the first live Ironmark unique unit.
+  - Axeman carries a heavier blood levy and blood-production load than standard Ironmark
+    infantry, tying house identity back into Ironmark's civilizational cost lane.
+  runtimePrefab: {fileID: 0}
+  icon: {fileID: 0}
+  selectClip: {fileID: 0}
+  deathClip: {fileID: 0}

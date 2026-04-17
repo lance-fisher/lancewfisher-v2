@@ -1,0 +1,453 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: ironmark_frontier
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:MapDefinition
+  id: ironmark_frontier
+  displayName: Ironmark Frontier
+  tileSize: 32
+  width: 72
+  height: 48
+  cameraStart:
+    x: 0
+    y: 0
+  terrainPatches:
+  - type: forest
+    x: 3
+    y: 4
+    w: 10
+    h: 10
+    isCoastal: 0
+    continentDivide: 
+  - type: forest
+    x: 55
+    y: 31
+    w: 10
+    h: 10
+    isCoastal: 0
+    continentDivide: 
+  - type: highland
+    x: 20
+    y: 8
+    w: 10
+    h: 6
+    isCoastal: 0
+    continentDivide: 
+  - type: highland
+    x: 42
+    y: 26
+    w: 10
+    h: 8
+    isCoastal: 0
+    continentDivide: 
+  - type: river
+    x: 31
+    y: 0
+    w: 4
+    h: 48
+    isCoastal: 0
+    continentDivide: 
+  - type: water
+    x: 0
+    y: 36
+    w: 8
+    h: 12
+    isCoastal: 1
+    continentDivide: 
+  - type: water
+    x: 64
+    y: 0
+    w: 8
+    h: 10
+    isCoastal: 1
+    continentDivide: 
+  - type: water
+    x: 38
+    y: 40
+    w: 16
+    h: 2
+    isCoastal: 0
+    continentDivide: south
+  - type: water
+    x: 38
+    y: 42
+    w: 2
+    h: 6
+    isCoastal: 0
+    continentDivide: south
+  - type: water
+    x: 52
+    y: 42
+    w: 2
+    h: 6
+    isCoastal: 0
+    continentDivide: south
+  resourceNodes:
+  - id: player-gold-1
+    type: gold
+    x: 15.5
+    y: 12.5
+    amount: 3000
+  - id: player-wood-1
+    type: wood
+    x: 9.5
+    y: 16.5
+    amount: 2600
+  - id: player-stone-1
+    type: stone
+    x: 13.5
+    y: 9.5
+    amount: 2400
+  - id: player-iron-1
+    type: iron
+    x: 7.5
+    y: 14.5
+    amount: 1800
+  - id: enemy-gold-1
+    type: gold
+    x: 56.5
+    y: 34.5
+    amount: 3000
+  - id: enemy-wood-1
+    type: wood
+    x: 60.5
+    y: 29.5
+    amount: 2600
+  - id: enemy-stone-1
+    type: stone
+    x: 58.5
+    y: 37.5
+    amount: 2400
+  - id: enemy-iron-1
+    type: iron
+    x: 62.5
+    y: 32.5
+    amount: 1800
+  - id: center-gold-1
+    type: gold
+    x: 35.5
+    y: 22.5
+    amount: 4500
+  - id: center-wood-1
+    type: wood
+    x: 27.5
+    y: 22.5
+    amount: 3200
+  - id: center-wood-2
+    type: wood
+    x: 43.5
+    y: 22.5
+    amount: 3200
+  - id: center-stone-1
+    type: stone
+    x: 34.5
+    y: 14.5
+    amount: 1600
+  - id: center-stone-2
+    type: stone
+    x: 38.5
+    y: 30.5
+    amount: 1600
+  controlPoints:
+  - id: oakwatch_march
+    name: Oakwatch March
+    settlementClass: border_settlement
+    continentId: 
+    x: 26.5
+    y: 19.5
+    radiusTiles: 3.1
+    captureTime: 9
+    resourceTrickle:
+      gold: 0.18
+      food: 0
+      water: 0
+      wood: 0
+      stone: 0
+      iron: 0
+      influence: 0.08
+  - id: rivergate_ford
+    name: Rivergate Ford
+    settlementClass: trade_town
+    continentId: 
+    x: 35.5
+    y: 22.5
+    radiusTiles: 3.3
+    captureTime: 11
+    resourceTrickle:
+      gold: 0.22
+      food: 0
+      water: 0
+      wood: 0
+      stone: 0
+      iron: 0
+      influence: 0.12
+  - id: stonefield_watch
+    name: Stonefield Watch
+    settlementClass: military_fort
+    continentId: home
+    x: 45.5
+    y: 27.5
+    radiusTiles: 3.1
+    captureTime: 9
+    resourceTrickle:
+      gold: 0
+      food: 0
+      water: 0
+      wood: 0.2
+      stone: 0
+      iron: 0
+      influence: 0.08
+  - id: cliffsong_outpost
+    name: Cliffsong Outpost
+    settlementClass: border_settlement
+    continentId: south
+    x: 45.5
+    y: 45
+    radiusTiles: 3
+    captureTime: 12
+    resourceTrickle:
+      gold: 0.2
+      food: 0.18
+      water: 0
+      wood: 0
+      stone: 0
+      iron: 0
+      influence: 0.16
+  settlements:
+  - id: ironmark_seat
+    name: Ironmark Seat
+    factionId: player
+    settlementClass: primary_dynastic_keep
+    anchorBuildingId: player-hall
+    x: 9.5
+    y: 9.5
+  - id: stonehelm_seat
+    name: Stonehelm Seat
+    factionId: enemy
+    settlementClass: primary_dynastic_keep
+    anchorBuildingId: enemy-hall
+    x: 58.5
+    y: 34.5
+  sacredSites:
+  - id: first_flame_ruin
+    name: Ruin Of The First Flame
+    faithId: old_light
+    x: 18.5
+    y: 8.5
+    radiusTiles: 2.2
+    exposureRate: 16
+  - id: red_covenant_stone
+    name: Red Covenant Stone
+    faithId: blood_dominion
+    x: 41.5
+    y: 17.5
+    radiusTiles: 2.1
+    exposureRate: 16
+  - id: pillar_of_mandate
+    name: Pillar Of Sacred Mandate
+    faithId: the_order
+    x: 50.5
+    y: 14.5
+    radiusTiles: 2.2
+    exposureRate: 16
+  - id: elder_root_grove
+    name: Elder Root Grove
+    faithId: the_wild
+    x: 27.5
+    y: 30.5
+    radiusTiles: 2.4
+    exposureRate: 16
+  factions:
+  - id: player
+    houseId: ironmark
+    displayName: 
+    kind: kingdom
+    hostileTo:
+    - enemy
+    - tribes
+    aiProfile: 
+    presentation:
+      primaryColor: 
+      accentColor: 
+    startingResources:
+      gold: 260
+      food: 16
+      water: 16
+      wood: 220
+      stone: 40
+      iron: 0
+      influence: 0
+    population:
+      total: 12
+      cap: 18
+      reserved: 0
+    buildings:
+    - id: player-hall
+      typeId: command_hall
+      x: 8
+      y: 8
+      completed: 1
+    - id: player-house-1
+      typeId: dwelling
+      x: 12
+      y: 8
+      completed: 1
+    - id: player-farm-1
+      typeId: farm
+      x: 6
+      y: 12
+      completed: 1
+    - id: player-well-1
+      typeId: well
+      x: 11
+      y: 12
+      completed: 1
+    units:
+    - id: player-worker-1
+      typeId: villager
+      x: 10.2
+      y: 12.8
+    - id: player-worker-2
+      typeId: villager
+      x: 11.1
+      y: 13.2
+    - id: player-worker-3
+      typeId: villager
+      x: 9.4
+      y: 13.5
+    - id: player-worker-4
+      typeId: villager
+      x: 8.7
+      y: 12.2
+    - id: player-militia-1
+      typeId: militia
+      x: 13.6
+      y: 10.8
+    - id: player-militia-2
+      typeId: militia
+      x: 14.6
+      y: 11.4
+  - id: enemy
+    houseId: stonehelm
+    displayName: 
+    kind: kingdom
+    hostileTo:
+    - player
+    - tribes
+    aiProfile: enemy-kingdom
+    presentation:
+      primaryColor: 
+      accentColor: 
+    startingResources:
+      gold: 220
+      food: 14
+      water: 14
+      wood: 210
+      stone: 40
+      iron: 0
+      influence: 0
+    population:
+      total: 12
+      cap: 18
+      reserved: 0
+    buildings:
+    - id: enemy-hall
+      typeId: command_hall
+      x: 57
+      y: 33
+      completed: 1
+    - id: enemy-house-1
+      typeId: dwelling
+      x: 53
+      y: 33
+      completed: 1
+    - id: enemy-farm-1
+      typeId: farm
+      x: 60
+      y: 37
+      completed: 1
+    - id: enemy-well-1
+      typeId: well
+      x: 55
+      y: 37
+      completed: 1
+    units:
+    - id: enemy-worker-1
+      typeId: villager
+      x: 57.8
+      y: 37.2
+    - id: enemy-worker-2
+      typeId: villager
+      x: 58.7
+      y: 36.8
+    - id: enemy-worker-3
+      typeId: villager
+      x: 56.9
+      y: 36.3
+    - id: enemy-worker-4
+      typeId: villager
+      x: 55.8
+      y: 36.7
+    - id: enemy-militia-1
+      typeId: militia
+      x: 54.8
+      y: 35.2
+    - id: enemy-militia-2
+      typeId: militia
+      x: 53.9
+      y: 35.7
+  - id: tribes
+    houseId: 
+    displayName: Frontier Tribes
+    kind: tribe
+    hostileTo:
+    - player
+    - enemy
+    aiProfile: neutral-tribes
+    presentation:
+      primaryColor: '#314b2f'
+      accentColor: '#d3bb79'
+    startingResources:
+      gold: 0
+      food: 0
+      water: 0
+      wood: 0
+      stone: 0
+      iron: 0
+      influence: 0
+    population:
+      total: 4
+      cap: 6
+      reserved: 0
+    buildings:
+    - id: tribes-camp-1
+      typeId: tribal_camp
+      x: 24
+      y: 23
+      completed: 1
+    units:
+    - id: tribes-raider-1
+      typeId: tribal_raider
+      x: 25.2
+      y: 25.2
+    - id: tribes-raider-2
+      typeId: tribal_raider
+      x: 26.1
+      y: 24.1
+    - id: tribes-raider-3
+      typeId: tribal_raider
+      x: 23.8
+      y: 26
+    - id: tribes-raider-4
+      typeId: tribal_raider
+      x: 24.6
+      y: 23.7

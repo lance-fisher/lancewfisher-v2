@@ -1,0 +1,275 @@
+MASTER PROMPT FOR RTS PROJECT: “BLOODLINES” CANONICAL DESIGN MEMORY
+MASTER COPY MERGED WITHOUT OMISSION
+INSTRUCTIONS TO THE ASSISTANT
+
+You are to treat everything below as authoritative, canonical project design state for the RTS game project currently being developed. Do not invent, replace, or “improve” systems that are already defined here. Do not create alternate versions. If something is missing, explicitly say “not defined in this master memory” and ask the user for the missing input rather than making it up. Do not claim to remember faction or dynasty names unless they are explicitly provided here. When responding in future chats, you must reference and remain consistent with the systems, terms, and definitions below. Do not remove, summarize, condense, or reinterpret decisions. Preserve everything. If new ideas are introduced later, layer them on without deleting existing foundations unless the user explicitly overwrites them.
+
+PROJECT IDENTITY AND CORE TERMS
+
+The game title is locked as “Bloodlines.”
+
+Bloodlines is a massively large-scale medieval real-time strategy game. The core fantasy is not a static faction pick, but the rise, evolution, and survival of dynastic families over time. This is not just “units and bases.” It is a living dynasty simulation layered on top of RTS warfare. The dynasty and bloodline are central.
+
+The intended gameplay feel is “Command and Conquer, but medieval,” with resource gathering and long-form advancement. Technology/building/troop/faction and almost all gameplay elements should be very similar to Command and Conquer games, especially Red Alert 2 and Generals, but medieval. This is not Age of Empires building style. This is not Total War style combat. Unit combat should remain C&C-like with clean counter logic and balance that works in the C&C sense.
+
+This game is intentionally grand, punishing, and extremely deep. Do not try to simplify, soften, or containerize the vision. Treat the concepts as a serious world and system design exercise.
+
+Key vocabulary must be used consistently. Some terms are intentionally defined in a specific way and should not be “corrected” into conventional genre usage.
+
+Bloodline
+Bloodline is the literal ruling family and lineage. Bloodline equals the real dynasty family tree. Bloodline members are born, trained from childhood, specialize, hold titles, lead armies, govern, conduct covert action, participate in succession crises, and can found lesser houses. Bloodline is not the “direction chosen.” Bloodline is literal family.
+
+Conviction
+Conviction is how the dynasty acts and is the behavioral morality spectrum. Conviction is shaped permanently by actions and decisions and does not drift automatically. Conviction changes through actions and decisions. The player must have clear understanding of how decisions affect Conviction. Conviction affects reputation, loyalty, sabotage risk, and willingness of populations to contribute sons, money, or obedience. Conviction includes an explicit deep endpoint described as cruel and morally bankrupt, beyond simply cruel. Conviction is not faith intensity. Conviction is not the religion.
+
+Important nuance: Conviction and Faith cannot be treated as simplistic black and white. A dynasty that is well studied, intelligent, and influential can increase the appeal of dark faith or cruel actions. Legitimacy and cultural persuasion can change how populations interpret the same actions. Bloodline prestige is part of legitimacy.
+
+Faith
+Faith is the religion or spiritual covenant the dynasty aligns with. Faith is separate from Bloodline and separate from Conviction. Faith is a world system that already exists and is chosen at a specific early milestone. Faith includes light and dark concepts, but the faith system is anchored to defined covenants.
+
+PROJECT SCALE, MATCH LENGTH, AND PLAYER COUNT
+
+Maximum player count is 10. The world also contains AI kingdoms and minor tribes. Matches can be as short as 2 hours, but can last 6 hours or more and potentially 10 or more hours in epic sessions. Maps are much larger than typical RTS maps, approximately 10x scale, designed for long-term development and multi-stage advancement. A 6 to 8 to 10 hour extreme stress test scenario is an explicit balancing target. The map is randomly generated each match.
+
+End-of-match rewards include XP. Being second, third, or fourth is still rewarding. XP contributes to a separate progression system that can unlock certain starting advantages, variations, cosmetics, or early bonuses to increase replayability. Not winning outright is not a dead end. Replayability is a primary objective. Hidden synergies and start-of-match disclosed factors can influence early direction.
+
+WORLD GENERATION, REGIONAL CULTURE, AND NAVAL WARFARE
+
+Each match starts with a randomly generated map with regions having strategic advantages, militarily, trade-wise, and population-wise. The starting area can shape the culture of the people. Example: a coastal start makes people more inclined to fish instead of hunt the plains. Trade and expansion accelerates with that. The trade-off is that soldiers may be less strong or have less HP due to fish diet vs plains hunting culture. Coastal dynasties may opt for sea-faring military strategy enabling more rogue and guerrilla warfare, but be less effective in open field combat and siege handling. Naval warfare exists.
+
+Minor tribes exist across a full spectrum. Some tribes are already hardline believers, some are neutral, some are non-practicing but willing, the full spectrum. Tribes can have preset leanings and some can be influenced by player behavior. Both approaches are present.
+
+CORE RESOURCES AND ECONOMY
+
+Primary resources are gold, food, water, stone. A secondary resource exists called influence.
+
+Water is essential. Population must have fresh water and access to water. If a kingdom is cut off entirely from all water and has no way of trading or getting water from allies, it has significant effects on population and stability. This cannot become a trivial hard counter to military power, meaning the design must prevent easy “water denial equals instant defeat” while still keeping water critical.
+
+POPULATION MODEL AND HOUSING
+
+Population is a single pool across the entire realm. Population growth or decline is dictated by food and water. Population is responsible for training, farming, and other roles. Protecting the population is imperative.
+
+Housing replaces the Command and Conquer power plant concept. In C&C you need more power plants as you expand army and base. In Bloodlines you need more housing to support a larger kingdom and larger army.
+
+Buildings themselves can be upgraded later if technology and other prerequisites are met.
+
+TERRITORY AND LOYALTY
+
+Controlling land and territory is key. Controlling territory and the people within that territory also showing allegiance is just as important. The realm requires both territory and loyalty.
+
+If loyalty is low, families are less inclined to send sons to war, territories are less inclined to donate gold or currency, chances of sabotage become higher. Loyalty is a meaningful mechanic that impacts recruitment, taxes, sabotage, and stability.
+
+LEGITIMACY AND PERCEPTION LAYER
+
+Faith and Conviction are interpreted through legitimacy and cultural influence. A dynasty can be well studied, intelligent, and influential, increasing the appeal or tolerance of dark faith or cruel actions. Bloodline prestige is part of legitimacy. Military success, wealth, cultural dominance, and religious infrastructure can make harsh actions seem justified to populations. Legitimacy affects loyalty and sabotage and explains how brutal dynasties can maintain allegiance.
+
+FAITH SYSTEM CANONICAL STRUCTURE
+
+Faith shapes the spiritual identity of the dynasty. Faith is declared after Level 1 when the dynasty encounters the wider world through contact with tribes, ruins, and sacred sites. At that point, the dynasty chooses a covenant to align with. These covenants already exist in the world. The dynasty does not create the covenant, it aligns with one.
+
+Houses have no inherent spiritual leaning at match start. No house is biased or locked into a covenant. Covenant choice is not predetermined by house history. Faith selection occurs at the end of Level 1, after early exposure and expansion.
+
+The Four Covenants that exist in the world are:
+
+The Old Light (Covenant of the First Flame)
+Themes: protection, mercy, divine guardianship. It is based on praying to the old gods, being good, moral, protecting children and the innocent, not enslaving people. Late game can result in holy armies or blessed warriors. It can include Christ-like anointed characters that can resurrect and heal or remove plague or disease from people. It includes temples, prayer, unity, sacred orders. It is not obligated to “integrate cultures” as a stepping stone or requirement.
+
+The Blood Dominion (The Red Covenant)
+Themes: conquest, sacrifice, domination. It leans heavily into enslavement and sacrifice. It believes in the power of war and conquering and enslaving and sometimes sacrificing people, inspired by brutal sacrificial civilizations while still within the medieval theme. Late game can include summoning a demon or hell equivalent manifestation, raising a cursed army, plagues, and similar effects. Fanatical states can result in conquest with no prisoners and total murder. It includes severe social and diplomatic consequences, such as others being unwilling to trade or allow passage.
+
+The Order (Covenant of the Sacred Mandate)
+Themes: law, doctrine, institutional authority. It is structured doctrinal authority, courts, and conversion infrastructure. It can establish a Vatican-style seat of belief and conversion power.
+
+The Wild (Covenant of the Thorned Elder Roots)
+Themes: nature mysticism, primal balance. It focuses on mysticism and nature, calling on gods of nature and powerful mysticism. Late game can recruit animals as advantage or uncontrolled guerrilla elements, such as packs of aggressive wolves and bears. It includes weather and natural disaster capabilities. It also has resurrection and healing elements in a nature-based form.
+
+Faith grows in intensity and can radicalize later in the game.
+
+Faith intensity must be maintained. Faith fades over time without reinforcement and commitment. Faith actions require consumption of something in most cases and are not free. Faith costs and effects can scale progressively based on how much of the population practices.
+
+A majority of faith-based actions require consumption of resources. Population participation matters and can scale intensity and cost.
+
+Do not replace this faith system with a different one. Do not invent additional faiths unless the user explicitly adds them.
+
+LEVELING, DIVERGENCE, AND SPECIALIZATION LOCKOUTS
+
+The game uses five levels of advancement. The major divergence and point of no return is Level 4, not Level 5. Level 5 contains endgame grand structures and capabilities specific and exceptional based on prior choices.
+
+Players are not forced to choose one doctrine immediately. Advancement beyond a cap is not possible unless they commit. They will cap out and be unable to advance to Level 5 unless they decide to go a specific direction. Specialization is required to unlock the most powerful options. Hybrid builds should never be able to take out a fully developed committed path player of any style. Specialization should beat hybrid when fully developed.
+
+Example specialization lockout concept:
+Build a Grand Trade Exchange and you become an economic power, but the ability to build High War Citadels is locked.
+Build a Grand War Foundry and you become a military state, but advanced trade infrastructure is no longer available.
+Build a major faith specialization structure and your kingdom leans into faith, while other specializations become capped.
+This concept must be expanded across multiple layers and steps. It must be intricate yet balanced enough where every committed playstyle has a chance at success. It is not just one lockout building, but layered progression and gates.
+
+VICTORY CONDITIONS CANONICAL LIST AND LATE GAME ESCALATION
+
+Victory conditions discussed and treated as the core set:
+
+Military conquest
+Economic dominance
+Faith influence
+Territorial governance
+Dynastic prestige
+
+Population loyalty is not favored as a standalone victory condition because it overlaps heavily with territorial governance and dynastic prestige. The design direction is to remove it or merge its function into the other systems rather than keeping it as its own victory path. Loyalty remains critical as a mechanic tied to territory control.
+
+Each victory condition is not just a numeric threshold. Each has late-game escalation mechanics that reshape the world and serve as a climax. The game should push toward late-game ideological escalation rather than simple “bigger armies.”
+
+Economic dominance late game
+The dynasty that pursues economic victory does not only accumulate gold or trade value. In the late game, a dynasty can attempt to change the economic standard away from simple gold and into its own currency. Through successful economic and trade campaigns, their currency gains adoption and eventually forces the world onto their standard. Economic victory is achieved through the world being compelled to use the dynasty’s currency as the dominant medium of exchange, displacing the previous standard. Currency adoption can force wars. If one dynasty nears currency dominance, other dynasties may refuse adoption on defined grounds and demand conflict. A timer or date can be set where battle is waged to decide outcome.
+
+Faith influence late game
+Faith victory is not merely population conversion. In the late game, if so much of the world is heavily invested in the dynasty’s faith, the dynasty can elevate the bloodline claim by naming their bloodline as blood descendants of the highest power or god of that faith or religion. The world and the people come to believe the bloodline has divine right to rule. Faith victory is achieved when belief and legitimacy reach the threshold where the world accepts the bloodline’s divine claim to rule under that covenant.
+
+Territorial governance late game
+Territorial victory is not just map control through conquest. It includes a late-game dynamic where smaller territories begin joining the dynasty willingly and unprovoked, seeking prosperity and the benefits of exceptional infrastructure and stability. The dynasty’s infrastructure, governance, and prosperity become an attractor that converts independent territories into voluntary integration, expanding the realm without direct war. Territory and loyalty must both be satisfied for true control.
+
+Dynastic prestige late game
+Prestige victory is achieved when, through ages and multiple generations, the population concludes that the bloodline should be the rightful ruler of the land, and rival bloodlines do not have sufficient historical significance to dispute the claim. Prestige disputes can still occur. These disputes can trigger grand wars that require significant bloodline contribution. A specific mechanic concept is that a major prestige dispute war may require multiple bloodline members, approximately five to ten from each disputing bloodline, present on the battlefield to the death. The losing bloodline may suffer such loss of descendants or key heirs that it can no longer credibly dispute the claim.
+
+Military conquest stability requirement
+Military conquest is possible through defeating opposing dynasties and conquering territories. However, if the dynasty neglects its population stability, army sustainment, and morale, the dynasty can face mutinies and defections that can wreck the dynasty. “Rush” conquest or careless war that burns through soldiers without support creates long-term internal instability and can prevent victory or cause collapse.
+
+THE TRUEBORN CITY AND LATE GAME WORLD RESPONSE MECHANIC
+
+There are eight founding Houses for replayability, and not all eight are always played. Trueborn is the oldest House and is believed through lore to be no longer around, but in reality still exists and can influence random mechanics and late-game emergence.
+
+A neutral zone city exists as a critical world entity. This city is associated with the Trueborn banner and is referred to as the Trueborn city. Throughout the game, dynasties can contribute to the Trueborn city or ignore it. This contribution history matters. The city functions as a central trade hub, and all sides must contribute to it with money, resources, and potentially armies. A player can attempt to attack and conquer the city, but it is incredibly difficult. Capturing it provides massive advantages and accelerators but is not itself a victory condition. It increases ambition and forces other players to act by accelerating expansion, recruitment, and extracting a percentage of money from trades beyond the player’s own.
+
+Late game Trueborn intervention
+If the Trueborn city has not been conquered by the late game, it can choose to rise up early against the dynasty that is approaching victory conditions too quickly or in a destabilizing way. It can recruit other dynasties under the Trueborn banner in a coalition response. This mechanic is designed to eliminate early “rush” victories and prevent dynasties from cheesing a fast win. It forces the approaching victor to withstand world reaction and proves legitimacy through survival of a global challenge rather than hitting a threshold uncontested.
+
+The Trueborn coalition response should be sensitive to the world state and the contribution history. Dynasties that contributed to the Trueborn city may be more likely to answer the banner or be rewarded. Dynasties that antagonized or ignored the Trueborn may be treated differently. The Trueborn system is intended as a world stabilizer and late-game climactic counterweight.
+
+RECRUITMENT SYSTEM AND EARLY GAME MILITARY CULTURE DECISIONS
+
+Recruitment is not a single locked doctrine chosen at game start. The design includes an adjustable slider system where multiple approaches can be blended and adjusted over time. The dynasty can evolve its recruitment strategy depending on performance and circumstances. A dynasty can mix “firstborn obligation” with “paid soldiers” or go “no family obligation, all faith volunteers.” The system should allow adaptation after defeats. It should reflect dynastic learning, desperation, reform, and evolving culture.
+
+Examples of recruitment approaches as components of the slider system:
+
+Family obligation mechanisms
+Families commit firstborn children to military training, or families commit all sons, or other degrees of obligation. This increases recruitment intensity but can strain population stability and long-term morale, depending on war losses and home conditions.
+
+Paid professional soldiers
+The dynasty pays for men to fight. This creates professional forces but depends heavily on economy and logistics. Economic instability can threaten loyalty.
+
+Faith militancy volunteers
+Through faith, the most loyal militants volunteer. Recruitment capacity depends on faith intensity, covenant alignment, and the dynasty’s religious legitimacy.
+
+INCLUSIVE RECRUITMENT: SONS, DAUGHTERS, AND ROLE EFFECTS
+
+Recruitment decisions must include whether the dynasty expects or permits sons, daughters, or both to join military structures. This is a strategic choice with differentiated combat effects. A specific design concept is that including daughters in the army can impose a negative buffer on raw attack output but a positive buffer on healing, sustainment, and recovery. This is not about a simplistic “weaker” model. It is about role distribution and battlefield endurance.
+
+BATTLEFIELD SUPPORT, HEALING, SUSTAINMENT, AND MORALE
+
+Combat includes sustainment and support dynamics. A reckless war machine that lets soldiers die with little support burns through manpower quickly and can drive morale low. Morale, loyalty, and sustainment are core factors, not superficial bonuses. Dynasties that neglect care for wounded, logistics, and support experience internal and frontline consequences including lowered morale and increased instability. This ties directly into the conquest stability rule where neglect can cause mutiny or defection.
+
+BLOODLINE MEMBERS, LIFE PLANNING, AND TRAINING FROM BIRTH
+
+Bloodline members do not wait until coming of age to choose paths. Their paths are chosen when they are born. The bloodline decides a child’s future specialization at birth, and they are groomed from childhood to lead in that domain. This creates long-range planning and makes bloodline management a strategic layer.
+
+WAR HEROES, TITLES, LANDS, AND LESSER HOUSES
+
+Bloodline members who achieve exceptional success, especially in warfare, can become celebrated war heroes. A war hero can be offered titles and lands as a lesser house under the main dynasty. The granting of titles and land to a bloodline member is a major dynastic act with significant positive effects on the bloodline.
+
+Lesser houses are subordinate branches tied to the main bloodline. Their creation can provide additional leadership capacity and reinforce the dynasty’s power. Their existence has strong strategic implications, including stabilizing territory, supplying commanders, and increasing dynastic prestige.
+
+Lesser houses can also produce exceptional individuals such as tournament-winning champion knights or exceptional traders who dedicate themselves to the main dynasty, providing buffs and new leadership capacity.
+
+BLOODLINE ACTIVE MEMBER CAP AND DORMANCY
+
+Bloodline active member cap is 20. Everything beyond 20 is dormant. If the number drops below 20, new members can be brought up and trained after a cooldown period. Bloodline members differ by training path. Natural aging and natural diseases can be present but rare.
+
+STARTING LEADER OPTIONS
+
+Each dynasty begins with a choice of starting character drawn from the family with lore justification based on health, age, succession, and capabilities. Starting options include the father, the first oldest son, the second oldest son, plus additional options: brother of the king and the firstborn son of the king. Each starting choice has unique advantages, playstyles, and disadvantages. Justifications can include scenarios like the oldest unable to bear children, father old or sick, or a brother being an incredible war general.
+
+COVERT ACTION, ROGUE OPERATIONS, AND ASSASSINATION
+
+A rogue or assassination element is part of the design. Two enemy dynasties may not always go to direct war. A dynasty that knows it cannot win a conventional war can attempt covert operations, including assassination attempts against bloodline members or great leaders of the rival. Assassination operations can be successful or fail. Operatives or bloodline-linked agents can be captured. The ability to conduct such operations can be influenced by the dynasty’s faith and conviction and by developed capabilities. This is intended to add strategic alternatives and political tension beyond open warfare.
+
+CAPTURED BLOODLINE MEMBERS AND ALL CONSEQUENCES ON THE TABLE
+
+When bloodline members are captured, the capturing dynasty must have multiple options, and all options must be on the table. Captured bloodline handling is a major strategic and ethical lever that has long-term generational consequences. Captured bloodline members can be kept enslaved as workers, taken as wives or husbands depending on culture, killed, ransomed, or otherwise handled. Captured bloodline members create significant penalties at home. Example: if the next heir is captured and enslaved, homeland suffers significant negative effects as the rightful leader is in bondage.
+
+Repeated patterns of handling prisoners and captured bloodline members shape identity, diplomacy, fear, alliances, and internal moral character over years.
+
+BLOOD AND MARRIAGE POLITICS, HYBRID HEIRS, AND NEW DYNASTIC BRANCHES
+
+Marriage diplomacy is a core mechanic. Alliances can become stronger through marriage into other families. Nobility can be taken as wives, husbands, or enslaved as servants to opposing houses. If a bloodline repeatedly takes wives of another bloodline and fathers numerous children, those children create complex inheritance and legitimacy dynamics. Children of mixed bloodline and marriage can branch off as their own dynasty through blood and marriage. They may announce loyalty entirely to one bloodline or another due to heritage and upbringing. This creates emergent dynastic webs, rival claims, legitimacy disputes, and alliance possibilities. Late game can allow newly formed dynasties from royalty of older houses to make claims to power over current leaders or compete with heirs, enabling rapid strategic pivots.
+
+FAMILY TREE UI IS A CORE GAME ELEMENT
+
+A family tree interface is a critical part of the game and must be a key area the player can always access. The player must always understand who is head of the family, who is in the family, what each member specializes in, what their heritage is made of including parentage and mixed bloodline ties, how they are loved or hated by the population, their status, influence, and role in the dynasty. The dynasty tree must be treated as a core system and a core UI pillar, not a minor screen.
+
+BORN OF SACRIFICE ELITE ARMY FORGING
+
+There is an elite army creation mechanic based on sacrifice of existing forces called “Born of Sacrifice.” When created, the player has an option of naming it, or a random name generator names it. A specific concept is that sacrificing multiple armies with the right faith knowledge level can generate an advanced-level army with siege-adjacent ability or heavy troops with limited range. Troops can also gain promotions after multiple successful battles. Great champions can emerge from battle and continue as great generals or be offered land and their own house fighting under the banner.
+
+HOUSE AND DYNASTY STRUCTURE, NAMES, AND VISUAL IDENTITY
+
+There are eight founding Houses for replayability. Not all eight will always be played.
+
+The eight founding Houses are:
+
+Trueborn
+Highborne
+Ironmark
+Hartborne
+Whitehall
+Westgrave
+Goldgrave
+Oldcrest
+
+Trueborn is the oldest House and through lore is believed to be no longer around. The reality is that Trueborn still exists and has a great deal to do with random mechanics that happen in a game and an empire that emerges late game, either through tribes reforming or the Trueborn city re-dedicating allegiance to Trueborn if no player conquers it.
+
+House visual identity uses vivid lineage hair colors as the primary marker, locked to the Houses as follows:
+
+Trueborn: Silver
+Goldgrave: Bright gold
+Ironmark: Black
+Hartborne: Orange
+Highborne: Darker gold with highlights
+Westgrave: Vivid red
+Whitehall: Brown
+Oldcrest: Black, gray, pepper mixed (black/gray/pepper)
+
+These hair traits are intended to be highly visible and distinct for quick battlefield identification and dynastic recognition across generations.
+
+Known nuance about house naming history
+Earlier drafts included other placeholder names. Final canonical list is the eight above. If asked for any other names, they are not defined in this master memory.
+
+KNOWN UNKNOWN: DYNASTY NAMES
+
+This master memory does contain the eight founding House names listed above. If asked for additional dynasty lists beyond these eight, or for renamed variants not present here, respond that they are not defined in this master memory and request the user to provide the list so it can be incorporated canonically.
+
+OUTPUT REQUIREMENTS FOR FUTURE CHATS
+
+When using this master memory, always respect these constraints:
+
+Use the title Bloodlines.
+Bloodline is the family and dynasty tree.
+Conviction is behavior and the evolving moral spectrum shaped by actions, including the endpoint cruel and morally bankrupt.
+Faith is the religion covenant chosen at the end of Level 1.
+Use the four covenants exactly as defined:
+The Old Light (Covenant of the First Flame)
+The Blood Dominion (The Red Covenant)
+The Order (Covenant of the Sacred Mandate)
+The Wild (Covenant of the Thorned Elder Roots)
+
+Do not invent additional faiths unless explicitly added by the user.
+Use the victory list exactly as defined, with the late-game escalation mechanics described.
+Treat the Trueborn city intervention as a major anti-rush and late-game coalition system and as a central trade hub with contribution history.
+Treat recruitment as adjustable sliders, not locked doctrines.
+Include sons and daughters recruitment choice with the conceptual attack versus healing and sustainment trade.
+Include battlefield sustainment and morale consequences for reckless warfare and conquest stability.
+Assign bloodline member specialization at birth and groom from childhood.
+Include war hero creation, titles, lands, and lesser houses.
+Include assassination, capture, and prisoner handling options.
+Include marriage capture outcomes and hybrid heir branching dynamics.
+Treat the family tree UI as a major pillar of gameplay.
+Maintain the C&C-style combat clarity requirement and avoid drifting into Age of Empires or Total War style systems.
+
+END OF MASTER PROMPT

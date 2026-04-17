@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#efe4cf"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Resource Ground And Edge Blend Sheet</text>
+  <text x="64" y="116" fill="#6e5a46" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: economy-site wear, route attachment, and biome-edge transitions</text>
+
+  <g font-family="Arial, sans-serif" font-size="15" fill="#47392c">
+    <text x="88" y="168">Lumber Ground Treatment</text>
+    <text x="468" y="168">Quarry Ground Treatment</text>
+    <text x="848" y="168">Iron Site Ground Treatment</text>
+    <text x="1228" y="168">Well And Water Structure Ground</text>
+    <text x="88" y="562">Farm To Path Blend</text>
+    <text x="468" y="562">Path To Mud Siege Wear</text>
+    <text x="848" y="562">Grass To Stone Slope Blend</text>
+    <text x="1228" y="562">Plains To Forest Edge Blend</text>
+  </g>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="184" width="320" height="312" rx="18" fill="#fcf7ef"/>
+    <rect x="444" y="184" width="320" height="312" rx="18" fill="#fcf7ef"/>
+    <rect x="824" y="184" width="320" height="312" rx="18" fill="#fcf7ef"/>
+    <rect x="1204" y="184" width="320" height="312" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="578" width="320" height="312" rx="18" fill="#fcf7ef"/>
+    <rect x="444" y="578" width="320" height="312" rx="18" fill="#fcf7ef"/>
+    <rect x="824" y="578" width="320" height="312" rx="18" fill="#fcf7ef"/>
+    <rect x="1204" y="578" width="320" height="312" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g transform="translate(80 198)">
+    <rect width="288" height="162" rx="14" fill="#7f8751"/>
+    <circle cx="44" cy="40" r="18" fill="#5c693f"/>
+    <circle cx="82" cy="30" r="16" fill="#5c693f"/>
+    <circle cx="124" cy="48" r="18" fill="#5c693f"/>
+    <path d="M16 116 L44 126 L76 118 L104 132 L138 122 L166 136 L208 126 L248 140" fill="none" stroke="#866f4f" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="68" cy="112" r="10" fill="#755a3a"/>
+    <circle cx="122" cy="104" r="9" fill="#755a3a"/>
+    <rect x="186" y="98" width="34" height="20" fill="#92754f"/>
+    <text x="18" y="192" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Stumps, ruts, and cut-lane logic identify the wood site before zoom.</text>
+    <text x="18" y="214" fill="#695544" font-family="Arial, sans-serif" font-size="12">Wear should read as worked forest, not random debris.</text>
+    <rect x="18" y="232" width="18" height="18" fill="#7f8751"/>
+    <rect x="42" y="232" width="18" height="18" fill="#866f4f"/>
+    <rect x="66" y="232" width="18" height="18" fill="#5c693f"/>
+  </g>
+
+  <g transform="translate(460 198)">
+    <rect width="288" height="162" rx="14" fill="#b5ac9c"/>
+    <polygon points="0,114 36,98 72,114 104,92 132,116 168,86 210,112 246,96 288,112 288,162 0,162" fill="#8f8678"/>
+    <path d="M32 128 L70 116 L112 126 L150 112 L190 126 L232 116" fill="none" stroke="#d6cdc0" stroke-width="12" stroke-linecap="round"/>
+    <circle cx="88" cy="102" r="8" fill="#cfc6b8"/>
+    <circle cx="164" cy="96" r="10" fill="#cfc6b8"/>
+    <circle cx="230" cy="106" r="8" fill="#cfc6b8"/>
+    <text x="18" y="192" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Quarry sites need spoil dust, broken stone, and hauling-path logic.</text>
+    <text x="18" y="214" fill="#695544" font-family="Arial, sans-serif" font-size="12">The ground should help identify stone extraction even when the node is busy.</text>
+    <rect x="18" y="232" width="18" height="18" fill="#b5ac9c"/>
+    <rect x="42" y="232" width="18" height="18" fill="#8f8678"/>
+    <rect x="66" y="232" width="18" height="18" fill="#d6cdc0"/>
+  </g>
+
+  <g transform="translate(840 198)">
+    <rect width="288" height="162" rx="14" fill="#7b6a58"/>
+    <path d="M0 118 L48 110 L94 120 L138 102 L182 118 L228 108 L288 122 L288 162 L0 162 Z" fill="#5f5146"/>
+    <path d="M20 94 L56 104 L92 94 L132 112 L172 100 L212 116 L248 104" fill="none" stroke="#b6441f" stroke-width="10" stroke-linecap="round"/>
+    <rect x="124" y="80" width="34" height="20" fill="#35393e"/>
+    <rect x="160" y="88" width="22" height="14" fill="#6d5842"/>
+    <circle cx="74" cy="124" r="8" fill="#2c3137"/>
+    <circle cx="204" cy="130" r="10" fill="#2c3137"/>
+    <text x="18" y="192" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Iron sites need spoil, soot, and controlled slag or ember marks.</text>
+    <text x="18" y="214" fill="#695544" font-family="Arial, sans-serif" font-size="12">Do not over-brighten the site into fantasy lava language.</text>
+    <rect x="18" y="232" width="18" height="18" fill="#2c3137"/>
+    <rect x="42" y="232" width="18" height="18" fill="#b6441f"/>
+    <rect x="66" y="232" width="18" height="18" fill="#6d5842"/>
+  </g>
+
+  <g transform="translate(1220 198)">
+    <rect width="288" height="162" rx="14" fill="#bfb49d"/>
+    <path d="M0 74 C42 56 82 74 126 64 S210 44 288 70 L288 162 L0 162 Z" fill="#86a3a6"/>
+    <path d="M0 94 C40 86 78 98 118 92 S200 74 288 90" fill="none" stroke="#afc9cf" stroke-width="16" stroke-linecap="round"/>
+    <circle cx="142" cy="88" r="26" fill="#d9d1c1" stroke="#8c7b67" stroke-width="4"/>
+    <circle cx="142" cy="88" r="10" fill="#4a4036"/>
+    <path d="M94 114 L116 124 L142 116 L170 126 L198 116" fill="none" stroke="#8f6f48" stroke-width="10" stroke-linecap="round"/>
+    <text x="18" y="192" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Wells and water structures need damp ground, foot traffic, and calm civic wear.</text>
+    <text x="18" y="214" fill="#695544" font-family="Arial, sans-serif" font-size="12">This should read as life-support infrastructure, not a combat prop.</text>
+    <rect x="18" y="232" width="18" height="18" fill="#afc9cf"/>
+    <rect x="42" y="232" width="18" height="18" fill="#d9d1c1"/>
+    <rect x="66" y="232" width="18" height="18" fill="#8f6f48"/>
+  </g>
+
+  <g transform="translate(80 592)">
+    <rect width="288" height="162" rx="14" fill="#b6a14f"/>
+    <path d="M0 48 L288 48" stroke="#d8cb79" stroke-width="10"/>
+    <path d="M0 78 L288 78" stroke="#cfbf68" stroke-width="10"/>
+    <path d="M0 108 L288 108" stroke="#d8cb79" stroke-width="10"/>
+    <path d="M0 138 L288 138" stroke="#cfbf68" stroke-width="10"/>
+    <path d="M0 118 C34 100 70 110 106 100 S170 82 204 88 S246 108 288 102" fill="none" stroke="#8f6e47" stroke-width="16" stroke-linecap="round"/>
+    <path d="M0 118 C34 102 70 112 106 102 S170 86 204 92 S246 110 288 104" fill="none" stroke="#d9c2a2" stroke-width="8" stroke-linecap="round"/>
+    <text x="18" y="192" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Field belts should dissolve into roads by wheel wear, not hard tile seams.</text>
+    <text x="18" y="214" fill="#695544" font-family="Arial, sans-serif" font-size="12">The farm still reads as managed land even where traffic cuts through it.</text>
+    <rect x="18" y="232" width="18" height="18" fill="#d8cb79"/>
+    <rect x="42" y="232" width="18" height="18" fill="#b6a14f"/>
+    <rect x="66" y="232" width="18" height="18" fill="#8f6e47"/>
+  </g>
+
+  <g transform="translate(460 592)">
+    <rect width="288" height="162" rx="14" fill="#a1835d"/>
+    <path d="M0 44 C40 30 78 44 120 36 S204 34 288 52 L288 88 C244 76 198 80 152 92 S66 110 0 120 Z" fill="#b39169"/>
+    <path d="M0 108 C40 90 80 104 120 96 S206 72 288 90 L288 162 L0 162 Z" fill="#7f6448"/>
+    <path d="M20 108 C56 84 98 98 136 90 S218 74 270 88" fill="none" stroke="#c1a07b" stroke-width="18" stroke-linecap="round"/>
+    <path d="M32 124 C58 112 86 118 116 110 S180 96 216 102" fill="none" stroke="#8b704f" stroke-width="12" stroke-linecap="round"/>
+    <text x="18" y="192" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Path-to-mud transition should show pressure, camps, and siege wear without becoming sludge.</text>
+    <text x="18" y="214" fill="#695544" font-family="Arial, sans-serif" font-size="12">Keep the route readable even when the lane is churned.</text>
+    <rect x="18" y="232" width="18" height="18" fill="#c1a07b"/>
+    <rect x="42" y="232" width="18" height="18" fill="#7f6448"/>
+    <rect x="66" y="232" width="18" height="18" fill="#8b704f"/>
+  </g>
+
+  <g transform="translate(840 592)">
+    <rect width="288" height="162" rx="14" fill="#b9b578"/>
+    <path d="M0 108 C42 92 82 106 118 98 S174 74 220 78 S254 90 288 88 L288 162 L0 162 Z" fill="#9aa564"/>
+    <path d="M0 42 C50 30 94 42 146 36 S230 34 288 44 L288 96 C250 82 206 84 160 96 S72 112 0 122 Z" fill="#a59a8b"/>
+    <path d="M0 118 C44 116 88 118 134 110 S208 94 288 100" fill="none" stroke="#60584f" stroke-width="12" stroke-linecap="round"/>
+    <text x="18" y="192" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Grass should bleed into exposed stone by slope and erosion, not by sudden color jumps.</text>
+    <text x="18" y="214" fill="#695544" font-family="Arial, sans-serif" font-size="12">This blend carries defensive topography and route choice.</text>
+    <rect x="18" y="232" width="18" height="18" fill="#9aa564"/>
+    <rect x="42" y="232" width="18" height="18" fill="#a59a8b"/>
+    <rect x="66" y="232" width="18" height="18" fill="#60584f"/>
+  </g>
+
+  <g transform="translate(1220 592)">
+    <rect width="288" height="162" rx="14" fill="#b8b274"/>
+    <path d="M0 74 C40 62 82 76 126 64 S206 44 250 54 S274 60 288 58 L288 162 L0 162 Z" fill="#98a55c"/>
+    <circle cx="42" cy="44" r="18" fill="#51603b"/>
+    <circle cx="88" cy="36" r="16" fill="#51603b"/>
+    <circle cx="142" cy="52" r="20" fill="#51603b"/>
+    <circle cx="206" cy="42" r="18" fill="#51603b"/>
+    <circle cx="248" cy="70" r="16" fill="#51603b"/>
+    <path d="M0 110 C40 98 86 112 134 102 S214 84 288 96" fill="none" stroke="#6a7445" stroke-width="12" stroke-linecap="round"/>
+    <text x="18" y="192" fill="#3f3328" font-family="Arial, sans-serif" font-size="14">Forest edges should define concealment and lane pressure without a hard asset wall.</text>
+    <text x="18" y="214" fill="#695544" font-family="Arial, sans-serif" font-size="12">The edge is a tactical threshold, not a decorative border.</text>
+    <rect x="18" y="232" width="18" height="18" fill="#98a55c"/>
+    <rect x="42" y="232" width="18" height="18" fill="#51603b"/>
+    <rect x="66" y="232" width="18" height="18" fill="#6a7445"/>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use with: terrain and biome manifest, resource logic, and map visual rules for edge blending, route wear, and economy-site readability. These remain concept placeholders for later decal, splatmap, and material-family production.</text>
+</svg>

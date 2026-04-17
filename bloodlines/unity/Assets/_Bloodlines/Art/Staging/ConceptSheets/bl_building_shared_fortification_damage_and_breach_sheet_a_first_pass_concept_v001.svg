@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#efe4cf"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Fortification Damage And Breach Sheet</text>
+  <text x="64" y="116" fill="#6e5a46" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: siege-state legibility, breach readability, and damage escalation without clutter</text>
+
+  <g font-family="Arial, sans-serif" font-size="16" fill="#47392c">
+    <text x="92" y="170">Wall Intact</text>
+    <text x="612" y="170">Wall Cracked</text>
+    <text x="1128" y="170">Wall Breached</text>
+    <text x="92" y="572">Gatehouse Intact</text>
+    <text x="612" y="572">Gatehouse Burning / Broken</text>
+    <text x="1128" y="572">Tower And Keep Damage Read</text>
+  </g>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g transform="translate(84 204)">
+    <rect width="400" height="190" rx="14" fill="#d7cec0"/>
+    <rect x="40" y="92" width="320" height="54" fill="#8c7b67" stroke="#5a4d40" stroke-width="4"/>
+    <rect x="62" y="72" width="18" height="20" fill="#8c7b67"/>
+    <rect x="110" y="72" width="18" height="20" fill="#8c7b67"/>
+    <rect x="158" y="72" width="18" height="20" fill="#8c7b67"/>
+    <rect x="206" y="72" width="18" height="20" fill="#8c7b67"/>
+    <rect x="254" y="72" width="18" height="20" fill="#8c7b67"/>
+    <rect x="302" y="72" width="18" height="20" fill="#8c7b67"/>
+    <polygon points="20,146 58,138 92,146 126,136 160,146 196,138 230,146 270,134 320,146 360,138 392,146 400,190 0,190 0,156" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">State 01 should look whole, defensible, and tactically closed.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">The unbroken silhouette is the baseline for later damage reads.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#8c7b67"/>
+    <rect x="46" y="266" width="22" height="22" fill="#d7cec0"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8f7757"/>
+  </g>
+
+  <g transform="translate(600 204)">
+    <rect width="400" height="190" rx="14" fill="#d7cec0"/>
+    <rect x="40" y="92" width="320" height="54" fill="#8c7b67" stroke="#5a4d40" stroke-width="4"/>
+    <rect x="62" y="72" width="18" height="20" fill="#8c7b67"/>
+    <rect x="110" y="72" width="18" height="20" fill="#8c7b67"/>
+    <rect x="158" y="72" width="18" height="20" fill="#8c7b67"/>
+    <rect x="206" y="72" width="18" height="20" fill="#8c7b67"/>
+    <rect x="254" y="72" width="18" height="20" fill="#8c7b67"/>
+    <rect x="302" y="72" width="18" height="20" fill="#8c7b67"/>
+    <path d="M164 74 L176 102 L162 126 L182 150" fill="none" stroke="#57493c" stroke-width="7" stroke-linecap="round"/>
+    <path d="M214 92 L204 116 L216 136 L198 156" fill="none" stroke="#57493c" stroke-width="7" stroke-linecap="round"/>
+    <path d="M258 88 L248 114 L258 136" fill="none" stroke="#57493c" stroke-width="7" stroke-linecap="round"/>
+    <polygon points="20,146 58,138 92,146 126,136 160,146 196,138 230,146 270,134 320,146 360,138 392,146 400,190 0,190 0,156" fill="#8f7757"/>
+    <circle cx="198" cy="168" r="18" fill="#7b6750"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Cracks widen the threat read without hiding the wall function.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Damage stays broad and tactical, not illustration-heavy.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#8c7b67"/>
+    <rect x="46" y="266" width="22" height="22" fill="#57493c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#7b6750"/>
+  </g>
+
+  <g transform="translate(1116 204)">
+    <rect width="400" height="190" rx="14" fill="#d7cec0"/>
+    <rect x="40" y="92" width="104" height="54" fill="#8c7b67" stroke="#5a4d40" stroke-width="4"/>
+    <rect x="258" y="92" width="102" height="54" fill="#8c7b67" stroke="#5a4d40" stroke-width="4"/>
+    <rect x="62" y="72" width="18" height="20" fill="#8c7b67"/>
+    <rect x="110" y="72" width="18" height="20" fill="#8c7b67"/>
+    <rect x="274" y="72" width="18" height="20" fill="#8c7b67"/>
+    <rect x="322" y="72" width="18" height="20" fill="#8c7b67"/>
+    <polygon points="144,92 178,126 158,156 120,156 104,128" fill="#6f5e4c"/>
+    <polygon points="258,92 230,134 252,156 284,148 300,122" fill="#6f5e4c"/>
+    <path d="M126 146 L186 164 L240 158 L290 170" fill="none" stroke="#876b4d" stroke-width="14" stroke-linecap="round"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">The breach is a tactical opening first and rubble second.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Keep the gap wide and obvious enough for assault pathing to read.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#8c7b67"/>
+    <rect x="46" y="266" width="22" height="22" fill="#6f5e4c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#876b4d"/>
+  </g>
+
+  <g transform="translate(84 606)">
+    <rect width="400" height="190" rx="14" fill="#d7cec0"/>
+    <rect x="80" y="82" width="240" height="70" fill="#897864" stroke="#5a4d40" stroke-width="4"/>
+    <rect x="172" y="96" width="56" height="56" fill="#4b3e33"/>
+    <rect x="80" y="64" width="42" height="18" fill="#897864"/>
+    <rect x="278" y="64" width="42" height="18" fill="#897864"/>
+    <rect x="192" y="30" width="16" height="34" fill="#6d5c48"/>
+    <polygon points="208,30 236,42 208,54" fill="#8e7653"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">The intact gatehouse reads as a locked central threshold.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Twin flank masses and a dark gate void carry the read.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#897864"/>
+    <rect x="46" y="266" width="22" height="22" fill="#4b3e33"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8e7653"/>
+  </g>
+
+  <g transform="translate(600 606)">
+    <rect width="400" height="190" rx="14" fill="#d7cec0"/>
+    <rect x="80" y="82" width="240" height="70" fill="#897864" stroke="#5a4d40" stroke-width="4"/>
+    <rect x="180" y="112" width="40" height="40" fill="#3a2e26"/>
+    <path d="M170 86 L162 114 L174 142" fill="none" stroke="#5a4d40" stroke-width="7" stroke-linecap="round"/>
+    <path d="M236 88 L244 116 L234 146" fill="none" stroke="#5a4d40" stroke-width="7" stroke-linecap="round"/>
+    <path d="M168 82 Q188 52 208 82 Q228 40 250 82" fill="none" stroke="#d28439" stroke-width="10" stroke-linecap="round"/>
+    <path d="M160 76 Q182 36 202 74 Q222 22 246 74 Q266 40 286 82" fill="none" stroke="#f1c56e" stroke-width="6" stroke-linecap="round"/>
+    <polygon points="122,152 160,140 198,152 244,142 288,154 320,146 336,190 64,190 76,164" fill="#6c5a47"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Burning or broken gates must signal vulnerability immediately.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Fire is a state accent, not a screen-filling effect.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#897864"/>
+    <rect x="46" y="266" width="22" height="22" fill="#d28439"/>
+    <rect x="74" y="266" width="22" height="22" fill="#6c5a47"/>
+  </g>
+
+  <g transform="translate(1116 606)">
+    <rect width="400" height="190" rx="14" fill="#d7cec0"/>
+    <rect x="44" y="94" width="84" height="64" fill="#8c7b67" stroke="#5a4d40" stroke-width="4"/>
+    <rect x="60" y="78" width="52" height="16" fill="#8c7b67"/>
+    <path d="M44 132 L70 108 L84 128 L64 154" fill="#6f5e4c"/>
+    <rect x="210" y="70" width="120" height="88" fill="#81715d" stroke="#5a4d40" stroke-width="4"/>
+    <rect x="252" y="86" width="34" height="72" fill="#4b3e33"/>
+    <path d="M286 70 L298 96 L284 118 L300 142" fill="none" stroke="#5a4d40" stroke-width="7" stroke-linecap="round"/>
+    <path d="M120 164 L184 150 L244 168 L328 154" fill="none" stroke="#8f7357" stroke-width="14" stroke-linecap="round"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Tower and keep damage must still preserve the building class read.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">A weakened strongpoint is still a strongpoint until it truly falls.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#81715d"/>
+    <rect x="46" y="266" width="22" height="22" fill="#6f5e4c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8f7357"/>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use with: buildings manifest, fortification doctrine, and review tags for scale, silhouette, and integration readiness. Damage states remain concept placeholders until in-engine testing proves readability at gameplay height.</text>
+</svg>

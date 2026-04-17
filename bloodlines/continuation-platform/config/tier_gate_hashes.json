@@ -1,0 +1,8 @@
+{
+  "hash_algorithm": "sha256",
+  "tiers": {
+    "tier3": "63f0e3ece6db0aa96d9255f7efd9e93257ef3e69aeeb1d0089a7f6eb920e9d7d",
+    "tier4": "f80037d782c0529f02beed3ed9b2f21225d220b2713f4c920be4e601fbc4e9ad"
+  },
+  "notes": "Raw confirmation phrases are intentionally not stored here."
+}

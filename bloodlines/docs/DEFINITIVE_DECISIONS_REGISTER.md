@@ -402,3 +402,49 @@ If only a few decisions are going to be locked now, lock these first:
 - Commanders are battlefield-present bloodline members
 - Faith is discovered through map interaction, not chosen at lobby start
 - Naval warfare is not required for the first completion-stage milestone
+
+## Decision 21: Defensive Fortification Doctrine Lock (2026-04-14)
+
+Summary:
+Bloodlines treats defensive fortification as a canonical major strategic pillar. Meaningful investment into fortification produces real security, real deterrence, and real military difficulty for the attacker. Fortification is not cosmetic, symbolic, or merely delaying. Primary dynastic keeps developed to fortress-citadel tier are canonically the hardest targets in the game.
+
+Context:
+The doctrine was locked on 2026-04-14 by Lance W. Fisher direction. Full canonical text at `01_CANON/DEFENSIVE_FORTIFICATION_DOCTRINE.md`. Defender-side specification at `04_SYSTEMS/FORTIFICATION_SYSTEM.md`. Attacker-side specification at `04_SYSTEMS/SIEGE_SYSTEM.md`. Design-bible integration at Sections 82-85 in `18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE_v3.3.md`. Canonical rules and lock entries added to `01_CANON/CANONICAL_RULES.md` (Fourteenth Session Canon) and `01_CANON/CANON_LOCK.md` (Defensive Fortification section).
+
+The doctrine has ten pillars that must be honored without reduction: layered fortification, interconnected defensive ecosystem, real defensive leverage from deep investment, bloodline-keep resilience, wave-spam denial, earned siege, late-game defensive relevance, real tradeoffs with real reward, distinct settlement class ceilings, and felt difference between fortified and unfortified realms.
+
+Recommended default (which is now canonical):
+- Implement fortification as a layered, data-driven, tier-based system rather than singular health-bar structures
+- Enforce assault failure penalties in simulation so wave-spam is a losing branch
+- Require plural siege commitments (engines, engineers, logistics, scouting, elites, faith, sabotage, multi-front, isolation) for serious siege
+- Integrate bloodline presence bonuses at keeps (implemented partially via 2026-04-14 Dynasty Consequence Cascade)
+- Preserve scope: fortress-centered strategy must remain viable through late-game
+
+If delayed:
+Implementation debt accumulates. Current runtime has commander presence live (2026-04-14) but no layered fortifications, no siege engines, no assault failure mathematics. Delaying implementation does not reduce the canonical lock. No session may contradict the ten pillars without explicit authorization from Lance.
+
+## Updated Recommended Lock Order
+
+With Decision 21 added:
+
+1. Product Mode Lock
+2. Runtime Stack Lock
+3. Match Scale Lock
+4. House Rollout Lock
+5. Early Roster Lock
+6. Territory Model Lock
+7. Bloodline Scope Lock
+8. Commander Presence Lock
+9. Faith Entry Lock
+10. Conviction Model Lock
+11. Operations Scope Lock
+12. Victory Condition Lock
+13. AI Scope Lock
+14. Save and Session Model Lock
+15. UI Surface Lock
+16. Release Gate Lock
+17. Defensive Fortification Doctrine Lock (Decision 21) — LOCKED 2026-04-14
+
+## Immediate Recommendation (Updated 2026-04-14)
+
+Decisions 1-20 remain as previously stated. Decision 21 is already locked. The immediate next step is not more design decisions but implementation of the canonical fortification doctrine in a phased rollout that honors the ten pillars.

@@ -1,0 +1,240 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#efe4cf"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Live Roster Sheet</text>
+  <text x="64" y="116" fill="#6e5a46" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: gameplay-height silhouette, palette, and class separation</text>
+
+  <g font-family="Arial, sans-serif" font-size="15" fill="#47392c">
+    <text x="92" y="172">Villager</text>
+    <text x="472" y="172">Militia</text>
+    <text x="852" y="172">Swordsman</text>
+    <text x="1232" y="172">Bowman</text>
+
+    <text x="92" y="484">Scout Rider</text>
+    <text x="472" y="484">Siege Engineer</text>
+    <text x="852" y="484">Supply Wagon</text>
+    <text x="1232" y="484">Axeman</text>
+
+    <text x="92" y="796">Verdant Warden</text>
+    <text x="472" y="796">Ram</text>
+    <text x="852" y="796">Trebuchet</text>
+    <text x="1232" y="796">Ballista / Mantlet</text>
+  </g>
+
+  <!-- Card frames -->
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="190" width="320" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="444" y="190" width="320" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="824" y="190" width="320" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="1204" y="190" width="320" height="250" rx="18" fill="#fcf7ef"/>
+
+    <rect x="64" y="502" width="320" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="444" y="502" width="320" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="824" y="502" width="320" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="1204" y="502" width="320" height="250" rx="18" fill="#fcf7ef"/>
+
+    <rect x="64" y="814" width="320" height="154" rx="18" fill="#fcf7ef"/>
+    <rect x="444" y="814" width="320" height="154" rx="18" fill="#fcf7ef"/>
+    <rect x="824" y="814" width="320" height="154" rx="18" fill="#fcf7ef"/>
+    <rect x="1204" y="814" width="320" height="154" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <!-- Villager -->
+  <g transform="translate(80 212)">
+    <rect width="288" height="170" rx="12" fill="#ede2cf"/>
+    <circle cx="74" cy="44" r="18" fill="#7c5837"/>
+    <rect x="60" y="62" width="28" height="52" rx="10" fill="#8c6b4f"/>
+    <rect x="43" y="70" width="20" height="48" rx="8" fill="#b7996d"/>
+    <rect x="85" y="70" width="20" height="48" rx="8" fill="#b7996d"/>
+    <rect x="60" y="112" width="10" height="34" rx="5" fill="#5c4634"/>
+    <rect x="78" y="112" width="10" height="34" rx="5" fill="#5c4634"/>
+    <rect x="126" y="52" width="10" height="80" rx="4" fill="#7f6240"/>
+    <rect x="136" y="62" width="28" height="12" rx="5" fill="#a88352"/>
+    <text x="182" y="60" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Low-threat worker</text>
+    <text x="182" y="84" fill="#695544" font-family="Arial, sans-serif" font-size="13">Tool posture and carry read</text>
+    <rect x="182" y="110" width="20" height="20" fill="#c5b49d"/>
+    <rect x="208" y="110" width="20" height="20" fill="#8e6d4f"/>
+    <rect x="234" y="110" width="20" height="20" fill="#5a4735"/>
+  </g>
+
+  <!-- Militia -->
+  <g transform="translate(460 212)">
+    <rect width="288" height="170" rx="12" fill="#ede2cf"/>
+    <circle cx="64" cy="44" r="17" fill="#6c4f35"/>
+    <rect x="52" y="60" width="24" height="56" rx="8" fill="#7b644c"/>
+    <rect x="36" y="72" width="18" height="44" rx="7" fill="#a98b64"/>
+    <rect x="74" y="72" width="16" height="44" rx="7" fill="#a98b64"/>
+    <rect x="56" y="114" width="8" height="30" rx="4" fill="#46372a"/>
+    <rect x="68" y="114" width="8" height="30" rx="4" fill="#46372a"/>
+    <path d="M122 66 L156 52 L182 72 L182 120 L150 138 L122 122 Z" fill="#826849" stroke="#4d3f31" stroke-width="4"/>
+    <line x1="96" y1="76" x2="124" y2="124" stroke="#614c39" stroke-width="8"/>
+    <line x1="96" y1="76" x2="110" y2="54" stroke="#b89a72" stroke-width="4"/>
+    <text x="198" y="58" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Levy shield + mixed weapon</text>
+    <text x="198" y="82" fill="#695544" font-family="Arial, sans-serif" font-size="13">Readable but uneven military line</text>
+    <rect x="198" y="108" width="20" height="20" fill="#c3b39e"/>
+    <rect x="224" y="108" width="20" height="20" fill="#8a1f1f"/>
+    <rect x="250" y="108" width="20" height="20" fill="#5f4a36"/>
+  </g>
+
+  <!-- Swordsman -->
+  <g transform="translate(840 212)">
+    <rect width="288" height="170" rx="12" fill="#ede2cf"/>
+    <circle cx="64" cy="42" r="17" fill="#43342a"/>
+    <rect x="51" y="58" width="26" height="58" rx="8" fill="#5a6870"/>
+    <rect x="36" y="70" width="16" height="42" rx="7" fill="#7b8790"/>
+    <rect x="76" y="70" width="18" height="42" rx="7" fill="#7b8790"/>
+    <rect x="54" y="114" width="8" height="30" rx="4" fill="#3d3128"/>
+    <rect x="67" y="114" width="8" height="30" rx="4" fill="#3d3128"/>
+    <path d="M124 72 L168 72 L172 120 L146 138 L120 120 Z" fill="#84705b" stroke="#4e4032" stroke-width="4"/>
+    <rect x="96" y="44" width="8" height="86" rx="4" fill="#b8bfc7"/>
+    <polygon points="100,30 94,44 106,44" fill="#d7dde2"/>
+    <text x="190" y="58" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Cleaner infantry core</text>
+    <text x="190" y="82" fill="#695544" font-family="Arial, sans-serif" font-size="13">Partial iron and tighter line</text>
+    <rect x="190" y="108" width="20" height="20" fill="#bfc7cf"/>
+    <rect x="216" y="108" width="20" height="20" fill="#5f6c75"/>
+    <rect x="242" y="108" width="20" height="20" fill="#4d3f32"/>
+  </g>
+
+  <!-- Bowman -->
+  <g transform="translate(1220 212)">
+    <rect width="288" height="170" rx="12" fill="#ede2cf"/>
+    <circle cx="62" cy="42" r="16" fill="#5b4431"/>
+    <rect x="52" y="58" width="20" height="58" rx="8" fill="#7b6b53"/>
+    <rect x="36" y="70" width="16" height="42" rx="7" fill="#a89063"/>
+    <rect x="72" y="70" width="16" height="42" rx="7" fill="#a89063"/>
+    <rect x="54" y="114" width="8" height="30" rx="4" fill="#3d3128"/>
+    <rect x="64" y="114" width="8" height="30" rx="4" fill="#3d3128"/>
+    <path d="M126 42 Q92 92 126 142" fill="none" stroke="#84653d" stroke-width="8"/>
+    <line x1="126" y1="42" x2="126" y2="142" stroke="#d8dac9" stroke-width="2"/>
+    <line x1="126" y1="92" x2="170" y2="92" stroke="#73624b" stroke-width="4"/>
+    <polygon points="170,92 160,86 160,98" fill="#73624b"/>
+    <text x="188" y="58" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Light ranged silhouette</text>
+    <text x="188" y="82" fill="#695544" font-family="Arial, sans-serif" font-size="13">Bow arc must survive zoom</text>
+    <rect x="188" y="108" width="20" height="20" fill="#c9c1a9"/>
+    <rect x="214" y="108" width="20" height="20" fill="#8a6f48"/>
+    <rect x="240" y="108" width="20" height="20" fill="#594532"/>
+  </g>
+
+  <!-- Scout Rider -->
+  <g transform="translate(80 524)">
+    <rect width="288" height="170" rx="12" fill="#ede2cf"/>
+    <path d="M42 122 Q62 82 102 84 L132 62 L156 72 L180 72 L210 92 L238 92 L246 108 L232 122 L204 124 L178 142 L132 142 L104 126 L74 126 Z" fill="#694d33" stroke="#3f3124" stroke-width="4"/>
+    <circle cx="224" cy="112" r="14" fill="#5a3f2a"/>
+    <circle cx="108" cy="144" r="14" fill="#2e241d"/>
+    <circle cx="196" cy="144" r="14" fill="#2e241d"/>
+    <rect x="146" y="44" width="12" height="44" rx="4" fill="#6d5439"/>
+    <polygon points="158,44 186,54 158,66" fill="#8d6f48"/>
+    <text x="24" y="36" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Fast reconnaissance and raid read</text>
+    <text x="24" y="58" fill="#695544" font-family="Arial, sans-serif" font-size="13">Lean horse, light rider, no noble bulk</text>
+    <rect x="24" y="76" width="20" height="20" fill="#7a644e"/>
+    <rect x="50" y="76" width="20" height="20" fill="#a18458"/>
+    <rect x="76" y="76" width="20" height="20" fill="#3b2f25"/>
+  </g>
+
+  <!-- Siege Engineer -->
+  <g transform="translate(460 524)">
+    <rect width="288" height="170" rx="12" fill="#ede2cf"/>
+    <circle cx="60" cy="48" r="17" fill="#604a37"/>
+    <rect x="48" y="64" width="24" height="54" rx="8" fill="#8a7151"/>
+    <rect x="36" y="74" width="14" height="40" rx="6" fill="#b09a6f"/>
+    <rect x="72" y="74" width="14" height="40" rx="6" fill="#b09a6f"/>
+    <rect x="52" y="116" width="8" height="28" rx="4" fill="#4b3c2e"/>
+    <rect x="64" y="116" width="8" height="28" rx="4" fill="#4b3c2e"/>
+    <line x1="110" y1="52" x2="162" y2="108" stroke="#6e553e" stroke-width="8"/>
+    <line x1="142" y1="58" x2="184" y2="30" stroke="#b8a484" stroke-width="8"/>
+    <line x1="174" y1="72" x2="206" y2="46" stroke="#b8a484" stroke-width="6"/>
+    <text x="190" y="58" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Tool-heavy support unit</text>
+    <text x="190" y="82" fill="#695544" font-family="Arial, sans-serif" font-size="13">Distinct from worker and infantry</text>
+    <rect x="190" y="108" width="20" height="20" fill="#d1c2aa"/>
+    <rect x="216" y="108" width="20" height="20" fill="#8b7451"/>
+    <rect x="242" y="108" width="20" height="20" fill="#534030"/>
+  </g>
+
+  <!-- Supply Wagon -->
+  <g transform="translate(840 524)">
+    <rect width="288" height="170" rx="12" fill="#ede2cf"/>
+    <rect x="70" y="76" width="132" height="42" rx="8" fill="#705940" stroke="#4b3a2a" stroke-width="4"/>
+    <rect x="82" y="58" width="108" height="26" rx="6" fill="#b79d72"/>
+    <circle cx="96" cy="132" r="18" fill="#342920"/>
+    <circle cx="176" cy="132" r="18" fill="#342920"/>
+    <rect x="202" y="82" width="38" height="10" rx="5" fill="#6e573d"/>
+    <line x1="238" y1="86" x2="270" y2="70" stroke="#6e573d" stroke-width="6"/>
+    <circle cx="278" cy="68" r="10" fill="#6a5037"/>
+    <text x="26" y="42" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Convoy and sustainment anchor</text>
+    <text x="26" y="64" fill="#695544" font-family="Arial, sans-serif" font-size="13">Cargo mass must read before detail</text>
+    <rect x="26" y="88" width="20" height="20" fill="#c2ab7d"/>
+    <rect x="52" y="88" width="20" height="20" fill="#7c6549"/>
+    <rect x="78" y="88" width="20" height="20" fill="#4a392b"/>
+  </g>
+
+  <!-- Axeman -->
+  <g transform="translate(1220 524)">
+    <rect width="288" height="170" rx="12" fill="#ede2cf"/>
+    <circle cx="62" cy="42" r="17" fill="#221e1d"/>
+    <rect x="48" y="58" width="28" height="58" rx="8" fill="#394046"/>
+    <rect x="34" y="70" width="16" height="42" rx="7" fill="#4a5259"/>
+    <rect x="76" y="70" width="18" height="42" rx="7" fill="#4a5259"/>
+    <rect x="52" y="114" width="10" height="30" rx="4" fill="#26211f"/>
+    <rect x="66" y="114" width="10" height="30" rx="4" fill="#26211f"/>
+    <rect x="114" y="40" width="10" height="88" rx="5" fill="#80552e"/>
+    <path d="M124 42 L174 42 L188 62 L172 80 L124 80 Z" fill="#3f454b" stroke="#202325" stroke-width="4"/>
+    <polygon points="174,42 202,56 174,80" fill="#b44822"/>
+    <text x="200" y="54" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Ironmark unique line</text>
+    <text x="200" y="78" fill="#695544" font-family="Arial, sans-serif" font-size="13">Dark iron, ember accent, heavy axe head</text>
+    <rect x="200" y="104" width="20" height="20" fill="#2d3137"/>
+    <rect x="226" y="104" width="20" height="20" fill="#b6441f"/>
+    <rect x="252" y="104" width="20" height="20" fill="#5b4633"/>
+  </g>
+
+  <!-- Verdant Warden -->
+  <g transform="translate(80 836)">
+    <rect width="288" height="112" rx="12" fill="#ede2cf"/>
+    <circle cx="56" cy="34" r="14" fill="#644931"/>
+    <rect x="46" y="48" width="20" height="40" rx="7" fill="#7d6447"/>
+    <path d="M98 42 L126 34 L142 48 L142 84 L118 96 L98 84 Z" fill="#8e6940" stroke="#4a3a2d" stroke-width="4"/>
+    <rect x="154" y="28" width="8" height="66" rx="4" fill="#7a5b34"/>
+    <polygon points="158,20 150,34 166,34" fill="#d7c18a"/>
+    <text x="182" y="38" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Hartvale defender</text>
+    <text x="182" y="60" fill="#695544" font-family="Arial, sans-serif" font-size="13">Warm agrarian guard profile</text>
+    <rect x="182" y="76" width="18" height="18" fill="#9d5a23"/>
+    <rect x="206" y="76" width="18" height="18" fill="#8c2f24"/>
+    <rect x="230" y="76" width="18" height="18" fill="#d7b162"/>
+  </g>
+
+  <!-- Ram -->
+  <g transform="translate(460 836)">
+    <rect width="288" height="112" rx="12" fill="#ede2cf"/>
+    <polygon points="26,78 78,52 176,52 214,78 176,94 78,94" fill="#765d40" stroke="#48392c" stroke-width="4"/>
+    <rect x="92" y="40" width="18" height="66" fill="#4a392a"/>
+    <rect x="150" y="40" width="18" height="66" fill="#4a392a"/>
+    <rect x="212" y="70" width="44" height="12" rx="6" fill="#81562d"/>
+    <text x="26" y="30" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Breach engine wedge</text>
+    <text x="26" y="102" fill="#695544" font-family="Arial, sans-serif" font-size="13">Mass and forward point must read first</text>
+  </g>
+
+  <!-- Trebuchet -->
+  <g transform="translate(840 836)">
+    <rect width="288" height="112" rx="12" fill="#ede2cf"/>
+    <line x1="52" y1="96" x2="144" y2="30" stroke="#70563a" stroke-width="8"/>
+    <line x1="144" y1="30" x2="166" y2="84" stroke="#70563a" stroke-width="8"/>
+    <line x1="76" y1="96" x2="168" y2="96" stroke="#4c3c2c" stroke-width="8"/>
+    <line x1="116" y1="58" x2="190" y2="18" stroke="#a37d4f" stroke-width="6"/>
+    <circle cx="192" cy="18" r="12" fill="#554232"/>
+    <text x="202" y="34" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Long-arm siege read</text>
+    <text x="202" y="56" fill="#695544" font-family="Arial, sans-serif" font-size="13">Frame and arm stay clear at zoom</text>
+  </g>
+
+  <!-- Ballista / Mantlet -->
+  <g transform="translate(1220 836)">
+    <rect width="288" height="112" rx="12" fill="#ede2cf"/>
+    <rect x="28" y="58" width="78" height="28" rx="8" fill="#6d5841" stroke="#48392c" stroke-width="4"/>
+    <line x1="114" y1="82" x2="164" y2="52" stroke="#644b33" stroke-width="8"/>
+    <line x1="114" y1="52" x2="164" y2="82" stroke="#644b33" stroke-width="8"/>
+    <line x1="164" y1="66" x2="212" y2="66" stroke="#8b6c46" stroke-width="6"/>
+    <polygon points="212,66 196,58 196,74" fill="#8b6c46"/>
+    <text x="28" y="30" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Mantlet cover + bolt frame</text>
+    <text x="28" y="102" fill="#695544" font-family="Arial, sans-serif" font-size="13">Shielded support and anti-personnel siege split</text>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use with: House identity packs, units manifest, and prompt templates. These are concept placeholders for later raster or 3D replacement.</text>
+</svg>

@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#efe4cf"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Founding Houses Heraldry Sheet</text>
+  <text x="64" y="116" fill="#6e5a46" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Status: candidate emblem directions, not settled canon marks</text>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="168" width="460" height="246" rx="18" fill="#fcf7ef"/>
+    <rect x="570" y="168" width="460" height="246" rx="18" fill="#fcf7ef"/>
+    <rect x="1076" y="168" width="460" height="246" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="438" width="460" height="246" rx="18" fill="#fcf7ef"/>
+    <rect x="570" y="438" width="460" height="246" rx="18" fill="#fcf7ef"/>
+    <rect x="1076" y="438" width="460" height="246" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="708" width="460" height="246" rx="18" fill="#fcf7ef"/>
+    <rect x="570" y="708" width="460" height="246" rx="18" fill="#fcf7ef"/>
+    <rect x="1076" y="708" width="460" height="246" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g font-family="Georgia, serif" font-size="28" fill="#2f261d">
+    <text x="92" y="212">Trueborn</text>
+    <text x="598" y="212">Highborne</text>
+    <text x="1104" y="212">Ironmark</text>
+    <text x="92" y="482">Goldgrave</text>
+    <text x="598" y="482">Stonehelm</text>
+    <text x="1104" y="482">Westland</text>
+    <text x="92" y="752">Hartvale</text>
+    <text x="598" y="752">Whitehall</text>
+    <text x="1104" y="752">Oldcrest</text>
+  </g>
+
+  <!-- Trueborn -->
+  <g transform="translate(92 226)">
+    <path d="M108 16 L180 38 L180 116 C180 164 152 194 108 216 C64 194 36 164 36 116 L36 38 Z" fill="#b7c4d1" stroke="#495760" stroke-width="6"/>
+    <path d="M74 78 L108 48 L142 78 L142 112 L108 138 L74 112 Z" fill="#f0d38c"/>
+    <circle cx="108" cy="78" r="14" fill="#f7f0e3"/>
+    <text x="224" y="76" fill="#3f3328" font-family="Arial, sans-serif" font-size="16">Candidate: seal-crown of legitimacy</text>
+    <text x="224" y="102" fill="#6d5a45" font-family="Arial, sans-serif" font-size="14">Administrative order, balanced authority, old institutional memory</text>
+    <rect x="224" y="128" width="20" height="20" fill="#b7c4d1"/>
+    <rect x="250" y="128" width="20" height="20" fill="#f0d38c"/>
+    <rect x="276" y="128" width="20" height="20" fill="#495760"/>
+  </g>
+
+  <!-- Highborne -->
+  <g transform="translate(598 226)">
+    <path d="M108 16 L180 38 L180 116 C180 164 152 194 108 216 C64 194 36 164 36 116 L36 38 Z" fill="#8a6b2b" stroke="#4c3c1a" stroke-width="6"/>
+    <path d="M76 112 L92 66 L108 86 L124 54 L140 112 Z" fill="#e2bf62"/>
+    <circle cx="108" cy="128" r="18" fill="#f4e8c8"/>
+    <text x="224" y="76" fill="#3f3328" font-family="Arial, sans-serif" font-size="16">Candidate: aristocratic sun-crown</text>
+    <text x="224" y="102" fill="#6d5a45" font-family="Arial, sans-serif" font-size="14">Inherited wealth, elevation, composure, and old-family hauteur</text>
+    <rect x="224" y="128" width="20" height="20" fill="#8a6b2b"/>
+    <rect x="250" y="128" width="20" height="20" fill="#e2bf62"/>
+    <rect x="276" y="128" width="20" height="20" fill="#f4e8c8"/>
+  </g>
+
+  <!-- Ironmark -->
+  <g transform="translate(1104 226)">
+    <path d="M108 16 L180 38 L180 116 C180 164 152 194 108 216 C64 194 36 164 36 116 L36 38 Z" fill="#2c3137" stroke="#171b1f" stroke-width="6"/>
+    <rect x="100" y="56" width="16" height="92" rx="6" fill="#6f4b2c"/>
+    <path d="M116 58 L170 58 L182 76 L170 94 L116 94 Z" fill="#9098a0" stroke="#171b1f" stroke-width="4"/>
+    <polygon points="170,58 196,76 170,94" fill="#b6441f"/>
+    <text x="224" y="76" fill="#3f3328" font-family="Arial, sans-serif" font-size="16">Candidate: forged axe mark</text>
+    <text x="224" y="102" fill="#6d5a45" font-family="Arial, sans-serif" font-size="14">Matches current canon symbol direction and dark-iron material lane</text>
+    <rect x="224" y="128" width="20" height="20" fill="#2c3137"/>
+    <rect x="250" y="128" width="20" height="20" fill="#b6441f"/>
+    <rect x="276" y="128" width="20" height="20" fill="#9098a0"/>
+  </g>
+
+  <!-- Goldgrave -->
+  <g transform="translate(92 496)">
+    <path d="M108 16 L180 38 L180 116 C180 164 152 194 108 216 C64 194 36 164 36 116 L36 38 Z" fill="#79632b" stroke="#443716" stroke-width="6"/>
+    <circle cx="86" cy="102" r="22" fill="#f3d55b"/>
+    <circle cx="130" cy="102" r="22" fill="#f3d55b"/>
+    <rect x="78" y="72" width="60" height="18" rx="8" fill="#f6e7a6"/>
+    <text x="224" y="76" fill="#3f3328" font-family="Arial, sans-serif" font-size="16">Candidate: twin-coin exchange seal</text>
+    <text x="224" y="102" fill="#6d5a45" font-family="Arial, sans-serif" font-size="14">Trade visibility, currency power, and market authority</text>
+    <rect x="224" y="128" width="20" height="20" fill="#b78819"/>
+    <rect x="250" y="128" width="20" height="20" fill="#f3d55b"/>
+    <rect x="276" y="128" width="20" height="20" fill="#79632b"/>
+  </g>
+
+  <!-- Stonehelm -->
+  <g transform="translate(598 496)">
+    <path d="M108 16 L180 38 L180 116 C180 164 152 194 108 216 C64 194 36 164 36 116 L36 38 Z" fill="#6a543d" stroke="#3e3024" stroke-width="6"/>
+    <rect x="72" y="94" width="72" height="28" fill="#c0a37a"/>
+    <rect x="82" y="60" width="52" height="34" fill="#c0a37a"/>
+    <rect x="88" y="48" width="12" height="12" fill="#c0a37a"/>
+    <rect x="102" y="48" width="12" height="12" fill="#c0a37a"/>
+    <rect x="116" y="48" width="12" height="12" fill="#c0a37a"/>
+    <text x="224" y="76" fill="#3f3328" font-family="Arial, sans-serif" font-size="16">Candidate: bulwark tower mark</text>
+    <text x="224" y="102" fill="#6d5a45" font-family="Arial, sans-serif" font-size="14">Fortress logic, wall rhythm, and mountain defense identity</text>
+    <rect x="224" y="128" width="20" height="20" fill="#6a543d"/>
+    <rect x="250" y="128" width="20" height="20" fill="#c0a37a"/>
+    <rect x="276" y="128" width="20" height="20" fill="#3e3024"/>
+  </g>
+
+  <!-- Westland -->
+  <g transform="translate(1104 496)">
+    <path d="M108 16 L180 38 L180 116 C180 164 152 194 108 216 C64 194 36 164 36 116 L36 38 Z" fill="#922a22" stroke="#4e1512" stroke-width="6"/>
+    <line x1="108" y1="48" x2="108" y2="152" stroke="#df7143" stroke-width="12"/>
+    <polygon points="108,42 86,64 130,64" fill="#ffd0a9"/>
+    <polygon points="120,70 164,90 120,108" fill="#ffd0a9"/>
+    <text x="224" y="76" fill="#3f3328" font-family="Arial, sans-serif" font-size="16">Candidate: frontier spear pennon</text>
+    <text x="224" y="102" fill="#6d5a45" font-family="Arial, sans-serif" font-size="14">Forward pressure, route conquest, and exposed-border identity</text>
+    <rect x="224" y="128" width="20" height="20" fill="#922a22"/>
+    <rect x="250" y="128" width="20" height="20" fill="#df7143"/>
+    <rect x="276" y="128" width="20" height="20" fill="#ffd0a9"/>
+  </g>
+
+  <!-- Hartvale -->
+  <g transform="translate(92 766)">
+    <path d="M108 16 L180 38 L180 116 C180 164 152 194 108 216 C64 194 36 164 36 116 L36 38 Z" fill="#9d5a23" stroke="#5b3312" stroke-width="6"/>
+    <path d="M108 54 C120 78 136 98 136 126 C136 148 124 164 108 178 C92 164 80 148 80 126 C80 98 96 78 108 54 Z" fill="#ebc968"/>
+    <line x1="108" y1="60" x2="108" y2="178" stroke="#5b3312" stroke-width="6"/>
+    <text x="224" y="76" fill="#3f3328" font-family="Arial, sans-serif" font-size="16">Candidate: harvest flame-sheaf</text>
+    <text x="224" y="102" fill="#6d5a45" font-family="Arial, sans-serif" font-size="14">Agrarian abundance, water care, and hearthland authority</text>
+    <rect x="224" y="128" width="20" height="20" fill="#9d5a23"/>
+    <rect x="250" y="128" width="20" height="20" fill="#eb9a42"/>
+    <rect x="276" y="128" width="20" height="20" fill="#ebc968"/>
+  </g>
+
+  <!-- Whitehall -->
+  <g transform="translate(598 766)">
+    <path d="M108 16 L180 38 L180 116 C180 164 152 194 108 216 C64 194 36 164 36 116 L36 38 Z" fill="#80705c" stroke="#4b4033" stroke-width="6"/>
+    <rect x="100" y="52" width="16" height="92" rx="8" fill="#d4c3aa"/>
+    <circle cx="108" cy="52" r="18" fill="none" stroke="#d4c3aa" stroke-width="8"/>
+    <rect x="104" y="118" width="8" height="28" fill="#d4c3aa"/>
+    <text x="224" y="76" fill="#3f3328" font-family="Arial, sans-serif" font-size="16">Candidate: key-seal of governance</text>
+    <text x="224" y="102" fill="#6d5a45" font-family="Arial, sans-serif" font-size="14">Institutional access, records, and diplomatic passage</text>
+    <rect x="224" y="128" width="20" height="20" fill="#80705c"/>
+    <rect x="250" y="128" width="20" height="20" fill="#d4c3aa"/>
+    <rect x="276" y="128" width="20" height="20" fill="#4b4033"/>
+  </g>
+
+  <!-- Oldcrest -->
+  <g transform="translate(1104 766)">
+    <path d="M108 16 L180 38 L180 116 C180 164 152 194 108 216 C64 194 36 164 36 116 L36 38 Z" fill="#51565d" stroke="#2f3237" stroke-width="6"/>
+    <path d="M78 132 C82 86 94 58 108 46 C122 58 134 86 138 132" fill="none" stroke="#c7c5c0" stroke-width="10"/>
+    <line x1="82" y1="116" x2="134" y2="116" stroke="#c7c5c0" stroke-width="8"/>
+    <line x1="90" y1="92" x2="126" y2="92" stroke="#c7c5c0" stroke-width="6"/>
+    <text x="224" y="76" fill="#3f3328" font-family="Arial, sans-serif" font-size="16">Candidate: ancient arch and lineage bar</text>
+    <text x="224" y="102" fill="#6d5a45" font-family="Arial, sans-serif" font-size="14">Accumulated history, layered eras, and ancestral continuity</text>
+    <rect x="224" y="128" width="20" height="20" fill="#51565d"/>
+    <rect x="250" y="128" width="20" height="20" fill="#c7c5c0"/>
+    <rect x="276" y="128" width="20" height="20" fill="#2f3237"/>
+  </g>
+
+  <text x="64" y="994" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">These marks are graphics-lane candidates only. They should be reviewed against House identity packs before any canon-facing or runtime-facing adoption.</text>
+</svg>

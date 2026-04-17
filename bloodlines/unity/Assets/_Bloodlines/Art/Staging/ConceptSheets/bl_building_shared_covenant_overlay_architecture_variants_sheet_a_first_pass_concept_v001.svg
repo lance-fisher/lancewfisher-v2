@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#ece0cb"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Covenant Overlay Architecture Variants Sheet</text>
+  <text x="64" y="116" fill="#6c5a48" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: the four canonical covenant overlays modifying House architecture without erasing dynasty identity</text>
+
+  <g font-family="Arial, sans-serif" font-size="16" fill="#47392c">
+    <text x="92" y="170">Old Light Overlay</text>
+    <text x="612" y="170">Blood Dominion Overlay</text>
+    <text x="1128" y="170">The Order Overlay</text>
+    <text x="92" y="572">The Wild Overlay</text>
+    <text x="612" y="572">Festival Procession Lane</text>
+    <text x="1128" y="572">Interrupted Rite Read</text>
+  </g>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g transform="translate(84 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="64" y="90" width="272" height="56" fill="#cfc6b7" stroke="#7a674f" stroke-width="4"/>
+    <polygon points="52,90 126,40 200,90" fill="#92724a" stroke="#664923" stroke-width="4"/>
+    <polygon points="192,90 270,40 348,90" fill="#84643d" stroke="#604322" stroke-width="4"/>
+    <line x1="202" y1="34" x2="202" y2="146" stroke="#ece0b1" stroke-width="8"/>
+    <rect x="194" y="24" width="16" height="18" fill="#ece0b1"/>
+    <path d="M0 162 L72 154 L156 164 L240 158 L326 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">Old Light overlays should use illumination, witness markers, and clean processional emphasis.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">The House silhouette stays intact. The covenant modifies light and clarity, not massing alone.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#ece0b1"/>
+    <rect x="46" y="266" width="22" height="22" fill="#cfc6b7"/>
+    <rect x="74" y="266" width="22" height="22" fill="#92724a"/>
+  </g>
+
+  <g transform="translate(600 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="58" y="92" width="284" height="54" fill="#8d765a" stroke="#5c4f40" stroke-width="4"/>
+    <polygon points="44,92 124,42 204,92" fill="#6d2d23" stroke="#3f1712" stroke-width="4"/>
+    <polygon points="194,92 276,42 354,92" fill="#53211a" stroke="#31100b" stroke-width="4"/>
+    <rect x="182" y="110" width="36" height="36" fill="#d0b278" stroke="#7f6c46" stroke-width="3"/>
+    <line x1="200" y1="42" x2="200" y2="24" stroke="#3f1712" stroke-width="6"/>
+    <path d="M0 162 L70 156 L154 164 L238 158 L324 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">Blood Dominion overlays should feel consequential, enclosed, and ritual-weighted.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">Use altar geometry and wound-red accents carefully so the House base is still readable.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#6d2d23"/>
+    <rect x="46" y="266" width="22" height="22" fill="#d0b278"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8d765a"/>
+  </g>
+
+  <g transform="translate(1116 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="60" y="90" width="280" height="56" fill="#c7c1b5" stroke="#7a674f" stroke-width="4"/>
+    <polygon points="48,90 118,44 188,90" fill="#7d6845" stroke="#5b4528" stroke-width="4"/>
+    <polygon points="186,90 262,44 352,90" fill="#6f5b3e" stroke="#503c23" stroke-width="4"/>
+    <line x1="122" y1="54" x2="122" y2="146" stroke="#47443b" stroke-width="4"/>
+    <line x1="202" y1="48" x2="202" y2="146" stroke="#47443b" stroke-width="4"/>
+    <line x1="282" y1="54" x2="282" y2="146" stroke="#47443b" stroke-width="4"/>
+    <path d="M0 162 L72 156 L156 164 L238 158 L322 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">The Order overlay organizes space through threshold, sequence, and explicit structure.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">The read should be lawful and ranked, not ornamental for ornament's sake.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#47443b"/>
+    <rect x="46" y="266" width="22" height="22" fill="#c7c1b5"/>
+    <rect x="74" y="266" width="22" height="22" fill="#7d6845"/>
+  </g>
+
+  <g transform="translate(84 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="54" y="94" width="282" height="52" fill="#b39a7b" stroke="#6f5d49" stroke-width="4"/>
+    <polygon points="42,94 116,48 190,94" fill="#6b5a31" stroke="#4c3d1f" stroke-width="4"/>
+    <polygon points="184,94 258,48 348,94" fill="#58703c" stroke="#3b4d25" stroke-width="4"/>
+    <line x1="102" y1="52" x2="78" y2="144" stroke="#6f8453" stroke-width="8"/>
+    <line x1="302" y1="52" x2="326" y2="144" stroke="#6f8453" stroke-width="8"/>
+    <circle cx="202" cy="68" r="10" fill="#6f8453"/>
+    <path d="M0 162 L68 156 L150 164 L238 158 L322 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">The Wild overlay integrates growth, grove marking, and natural structure into the base form.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">It must look living and territorial, not whimsical or uncontrolled.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#6f8453"/>
+    <rect x="46" y="266" width="22" height="22" fill="#58703c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#b39a7b"/>
+  </g>
+
+  <g transform="translate(600 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="42" y="120" width="318" height="18" fill="#8f7758"/>
+    <line x1="72" y1="48" x2="72" y2="120" stroke="#ece0b1" stroke-width="6"/>
+    <line x1="150" y1="48" x2="150" y2="120" stroke="#6d2d23" stroke-width="6"/>
+    <line x1="228" y1="48" x2="228" y2="120" stroke="#47443b" stroke-width="6"/>
+    <line x1="306" y1="48" x2="306" y2="120" stroke="#6f8453" stroke-width="6"/>
+    <rect x="60" y="34" width="24" height="18" fill="#ece0b1"/>
+    <rect x="138" y="34" width="24" height="18" fill="#6d2d23"/>
+    <rect x="216" y="34" width="24" height="18" fill="#47443b"/>
+    <rect x="294" y="34" width="24" height="18" fill="#6f8453"/>
+    <path d="M0 162 L66 156 L150 164 L236 158 L324 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">Festival and procession lanes should clarify covenant presence without replacing base building identity.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">Use temporary lines, banners, basins, or posts, not permanent spectacle on every structure.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#ece0b1"/>
+    <rect x="46" y="266" width="22" height="22" fill="#6d2d23"/>
+    <rect x="74" y="266" width="22" height="22" fill="#6f8453"/>
+  </g>
+
+  <g transform="translate(1116 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="56" y="92" width="276" height="54" fill="#a89173" stroke="#6a5a47" stroke-width="4"/>
+    <polygon points="44,92 120,44 196,92" fill="#86623d" stroke="#644924" stroke-width="4"/>
+    <polygon points="186,92 264,44 340,92" fill="#7b5a36" stroke="#5d4122" stroke-width="4"/>
+    <line x1="118" y1="54" x2="104" y2="98" stroke="#3f1712" stroke-width="6"/>
+    <line x1="282" y1="54" x2="296" y2="98" stroke="#3f1712" stroke-width="6"/>
+    <rect x="186" y="108" width="24" height="38" fill="#6e5847"/>
+    <path d="M0 162 L68 156 L154 164 L240 158 L326 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">Interrupted or desecrated rite reads should show stress and failure without turning into fantasy corruption.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">Broken processional order and damaged ritual fixtures are enough.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#3f1712"/>
+    <rect x="46" y="266" width="22" height="22" fill="#6e5847"/>
+    <rect x="74" y="266" width="22" height="22" fill="#86623d"/>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use for faith-overlay prompting and House-plus-covenant compatibility checks. Covenant language should modify structure, procession, and material emphasis without erasing dynasty ownership or function.</text>
+</svg>

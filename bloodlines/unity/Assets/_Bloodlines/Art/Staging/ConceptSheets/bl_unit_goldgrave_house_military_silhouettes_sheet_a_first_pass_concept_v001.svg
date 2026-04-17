@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#eadfc9"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e2" stroke="#2e2720" stroke-width="3"/>
+  <text x="64" y="84" fill="#241f1b" font-family="Georgia, serif" font-size="34">Bloodlines House Goldgrave Military Silhouettes</text>
+  <text x="64" y="116" fill="#69584a" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Scope: house treatment study, not a roster rewrite</text>
+
+  <g transform="translate(1160 58)">
+    <rect width="344" height="112" rx="16" fill="#efe3cd" stroke="#9c8461" stroke-width="2"/>
+    <text x="18" y="28" fill="#392f28" font-family="Arial, sans-serif" font-size="16">Palette / Material Read</text>
+    <rect x="18" y="42" width="26" height="26" rx="6" fill="#b78819"/>
+    <rect x="52" y="42" width="26" height="26" rx="6" fill="#f3d55b"/>
+    <rect x="86" y="42" width="26" height="26" rx="6" fill="#6b5435"/>
+    <rect x="120" y="42" width="26" height="26" rx="6" fill="#a7a29a"/>
+    <text x="18" y="92" fill="#5f4d40" font-family="Arial, sans-serif" font-size="13">Trade gold, bright reserve accent, maintained leather, clean steel. Professional polish before noble theater.</text>
+  </g>
+
+  <g stroke="#baa384" stroke-width="2">
+    <rect x="64" y="190" width="340" height="322" rx="20" fill="#fbf5ea"/>
+    <rect x="438" y="190" width="340" height="322" rx="20" fill="#fbf5ea"/>
+    <rect x="812" y="190" width="340" height="322" rx="20" fill="#fbf5ea"/>
+    <rect x="1186" y="190" width="340" height="322" rx="20" fill="#fbf5ea"/>
+    <rect x="64" y="548" width="1462" height="404" rx="20" fill="#fbf5ea"/>
+  </g>
+
+  <g font-family="Arial, sans-serif">
+    <text x="90" y="228" fill="#352c26" font-size="18">Contract levy line</text>
+    <text x="464" y="228" fill="#352c26" font-size="18">Coin guard lane</text>
+    <text x="838" y="228" fill="#352c26" font-size="18">Crossbow support lane</text>
+    <text x="1212" y="228" fill="#352c26" font-size="18">Merchant command lane</text>
+  </g>
+
+  <g transform="translate(98 252)">
+    <rect width="272" height="176" rx="14" fill="#e8dcc8"/>
+    <circle cx="56" cy="40" r="17" fill="#2d261d"/>
+    <rect x="44" y="56" width="26" height="66" rx="10" fill="#b78819"/>
+    <rect x="34" y="72" width="12" height="40" rx="6" fill="#cfbc7a"/>
+    <rect x="68" y="72" width="12" height="40" rx="6" fill="#cfbc7a"/>
+    <rect x="47" y="122" width="8" height="30" rx="4" fill="#2a231d"/>
+    <rect x="57" y="122" width="8" height="30" rx="4" fill="#2a231d"/>
+    <path d="M108 74 L148 62 L170 76 L170 124 L146 138 L108 124 Z" fill="#d2c4aa" stroke="#887145" stroke-width="4"/>
+    <text x="188" y="60" fill="#352d28" font-size="15">Paid discipline and clean</text>
+    <text x="188" y="84" fill="#645243" font-size="13">maintenance should read before</text>
+    <text x="188" y="108" fill="#645243" font-size="13">wealth display or family pomp.</text>
+  </g>
+
+  <g transform="translate(472 252)">
+    <rect width="272" height="176" rx="14" fill="#e8dcc8"/>
+    <circle cx="54" cy="38" r="17" fill="#2a221b"/>
+    <rect x="42" y="54" width="28" height="70" rx="10" fill="#ad7f17"/>
+    <path d="M34 66 L44 56 L70 56 L82 66 L82 112 L68 124 L44 124 L34 112 Z" fill="none" stroke="#f3d55b" stroke-width="5"/>
+    <rect x="106" y="44" width="10" height="98" rx="5" fill="#6b5435"/>
+    <path d="M116 48 L162 48 L178 62 L162 78 L116 78 Z" fill="#d9c58a" stroke="#8f731a" stroke-width="4"/>
+    <polygon points="162,48 196,62 162,78" fill="#f3d55b"/>
+    <text x="198" y="60" fill="#352d28" font-size="15">Guard lane reads as funded</text>
+    <text x="198" y="84" fill="#645243" font-size="13">and reliable, not hereditary</text>
+    <text x="198" y="108" fill="#645243" font-size="13">court prestige.</text>
+  </g>
+
+  <g transform="translate(846 252)">
+    <rect width="272" height="176" rx="14" fill="#e8dcc8"/>
+    <circle cx="54" cy="40" r="16" fill="#30271f"/>
+    <rect x="44" y="56" width="22" height="64" rx="9" fill="#b78819"/>
+    <rect x="48" y="120" width="7" height="28" rx="4" fill="#2a231d"/>
+    <rect x="57" y="120" width="7" height="28" rx="4" fill="#2a231d"/>
+    <rect x="102" y="62" width="18" height="54" rx="4" fill="#6b5435"/>
+    <line x1="120" y1="88" x2="160" y2="88" stroke="#a7a29a" stroke-width="5"/>
+    <polygon points="160,88 150,82 150,94" fill="#a7a29a"/>
+    <text x="182" y="60" fill="#352d28" font-size="15">Ranged support should read</text>
+    <text x="182" y="84" fill="#645243" font-size="13">as maintained contract force,</text>
+    <text x="182" y="108" fill="#645243" font-size="13">not fragile court pageantry.</text>
+  </g>
+
+  <g transform="translate(1220 252)">
+    <rect width="272" height="176" rx="14" fill="#e8dcc8"/>
+    <circle cx="56" cy="38" r="17" fill="#2a221b"/>
+    <rect x="44" y="54" width="28" height="70" rx="10" fill="#ad7f17"/>
+    <rect x="47" y="122" width="8" height="30" rx="4" fill="#2a231d"/>
+    <rect x="59" y="122" width="8" height="30" rx="4" fill="#2a231d"/>
+    <rect x="106" y="42" width="8" height="100" rx="4" fill="#6b5435"/>
+    <polygon points="114,42 154,54 114,68" fill="#d9c58a"/>
+    <text x="182" y="60" fill="#352d28" font-size="15">Command authority comes from</text>
+    <text x="182" y="84" fill="#645243" font-size="13">wealth-backed organization, not</text>
+    <text x="182" y="108" fill="#645243" font-size="13">ornate noble inheritance.</text>
+  </g>
+
+  <g transform="translate(88 574)" font-family="Arial, sans-serif">
+    <text x="0" y="24" fill="#322922" font-size="22">House Read Rules</text>
+    <text x="0" y="62" fill="#5e4d40" font-size="16">1. Goldgrave should read as money-backed professionalism: clean kit, practical polish, and maintained surfaces instead of aristocratic flourish.</text>
+    <text x="0" y="92" fill="#5e4d40" font-size="16">2. Gold accents signal capital and maintenance quality, not treasure-hoard spectacle or ceremonial overload.</text>
+    <text x="0" y="122" fill="#5e4d40" font-size="16">3. Crossbow and guard lanes should feel disciplined and urban, tied to trade security rather than feudal mystique.</text>
+
+    <text x="0" y="178" fill="#322922" font-size="22">What To Avoid</text>
+    <text x="0" y="216" fill="#5e4d40" font-size="16">- Do not turn Goldgrave into bright parade gold, jewel armor, or lavish fantasy merchant princes.</text>
+    <text x="0" y="246" fill="#5e4d40" font-size="16">- Do not confuse this lane with Highborne nobility, Whitehall bureaucracy, or Trueborn state authority.</text>
+    <text x="0" y="276" fill="#5e4d40" font-size="16">- Do not let the visual language drift into mercenary chaos; it should feel ordered and funded.</text>
+
+    <text x="0" y="332" fill="#322922" font-size="22">Use In Review</text>
+    <text x="0" y="370" fill="#5e4d40" font-size="16">This sheet is a silhouette and material-direction board for future prompting, 3D blockout, icon treatment, and approved staging review.</text>
+    <text x="0" y="400" fill="#5e4d40" font-size="16">It does not declare new canon units beyond the settled Goldgrave visual treatment lane.</text>
+  </g>
+
+  <text x="64" y="992" fill="#6a5848" font-family="Arial, sans-serif" font-size="15">House-specific silhouette board for governed graphics-lane review. Keep additive to canon and stage only through approved Unity staging surfaces.</text>
+</svg>

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: stonehelm
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:HouseDefinition
+  id: stonehelm
+  displayName: Stonehelm
+  status: partially-locked
+  hairColor: Brown
+  primaryColor: '#6a543d'
+  accentColor: '#c0a37a'
+  symbol: 
+  societalAdvantage: Fortification cost discount (canonical 20%)
+  requiredDisadvantage: 
+  prototypePlayable: 1
+  notes:
+  - Canonically linked to defense and fortification tendencies
+  - Second playable house in Session 11 via URL flag play.html?house=stonehelm
+  - Fortification cost discount of 20% and build-speed multiplier of 1.2 reflect
+    the canonical defensive-tendency profile from 04_SYSTEMS/TERRITORY_SYSTEM.md

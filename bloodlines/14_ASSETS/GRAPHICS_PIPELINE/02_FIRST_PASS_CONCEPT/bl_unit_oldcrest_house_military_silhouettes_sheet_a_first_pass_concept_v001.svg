@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#ddd8d0"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f2eee8" stroke="#2c2723" stroke-width="3"/>
+  <text x="64" y="84" fill="#241f1c" font-family="Georgia, serif" font-size="34">Bloodlines House Oldcrest Military Silhouettes</text>
+  <text x="64" y="116" fill="#69584a" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Scope: house treatment study, not a roster rewrite</text>
+
+  <g transform="translate(1160 58)">
+    <rect width="344" height="112" rx="16" fill="#e7e2db" stroke="#867f78" stroke-width="2"/>
+    <text x="18" y="28" fill="#392f29" font-family="Arial, sans-serif" font-size="16">Palette / Material Read</text>
+    <rect x="18" y="42" width="26" height="26" rx="6" fill="#51565d"/>
+    <rect x="52" y="42" width="26" height="26" rx="6" fill="#c7c5c0"/>
+    <rect x="86" y="42" width="26" height="26" rx="6" fill="#6f6558"/>
+    <rect x="120" y="42" width="26" height="26" rx="6" fill="#8e949a"/>
+    <text x="18" y="92" fill="#5f4d40" font-family="Arial, sans-serif" font-size="13">Weathered blue-gray, pale memory cloth, aged leather, repaired steel. Inherited layers before fresh polish.</text>
+  </g>
+
+  <g stroke="#aaa49a" stroke-width="2">
+    <rect x="64" y="190" width="340" height="322" rx="20" fill="#f8f5ef"/>
+    <rect x="438" y="190" width="340" height="322" rx="20" fill="#f8f5ef"/>
+    <rect x="812" y="190" width="340" height="322" rx="20" fill="#f8f5ef"/>
+    <rect x="1186" y="190" width="340" height="322" rx="20" fill="#f8f5ef"/>
+    <rect x="64" y="548" width="1462" height="404" rx="20" fill="#f8f5ef"/>
+  </g>
+
+  <g font-family="Arial, sans-serif">
+    <text x="90" y="228" fill="#352c27" font-size="18">Ancestral levy line</text>
+    <text x="464" y="228" fill="#352c27" font-size="18">Heirloom guard lane</text>
+    <text x="838" y="228" fill="#352c27" font-size="18">Watch archer lane</text>
+    <text x="1212" y="228" fill="#352c27" font-size="18">Memory command lane</text>
+  </g>
+
+  <g transform="translate(98 252)">
+    <rect width="272" height="176" rx="14" fill="#ddd9d3"/>
+    <circle cx="56" cy="40" r="17" fill="#2a2623"/>
+    <rect x="42" y="56" width="24" height="66" rx="10" fill="#51565d"/>
+    <rect x="30" y="72" width="14" height="42" rx="7" fill="#868b92"/>
+    <rect x="66" y="72" width="16" height="42" rx="7" fill="#868b92"/>
+    <rect x="46" y="120" width="8" height="32" rx="4" fill="#272320"/>
+    <rect x="57" y="120" width="8" height="32" rx="4" fill="#272320"/>
+    <path d="M108 74 L148 62 L170 76 L170 124 L146 138 L108 124 Z" fill="#c7c5c0" stroke="#666c73" stroke-width="4"/>
+    <text x="188" y="60" fill="#352d28" font-size="15">Levy should read as inherited</text>
+    <text x="188" y="84" fill="#645243" font-size="13">equipment kept working through</text>
+    <text x="188" y="108" fill="#645243" font-size="13">repair rather than replacement.</text>
+  </g>
+
+  <g transform="translate(472 252)">
+    <rect width="272" height="176" rx="14" fill="#ddd9d3"/>
+    <circle cx="54" cy="38" r="17" fill="#2a2623"/>
+    <rect x="42" y="54" width="26" height="68" rx="10" fill="#51565d"/>
+    <path d="M34 66 L44 56 L70 56 L82 66 L82 112 L68 124 L44 124 L34 112 Z" fill="none" stroke="#c7c5c0" stroke-width="5"/>
+    <rect x="106" y="42" width="10" height="100" rx="5" fill="#6f6558"/>
+    <path d="M116 48 L162 48 L178 62 L162 78 L116 78 Z" fill="#93989e" stroke="#5d6268" stroke-width="4"/>
+    <text x="198" y="60" fill="#352d28" font-size="15">Guard lane should feel layered</text>
+    <text x="198" y="84" fill="#645243" font-size="13">and heirloom-heavy, but still</text>
+    <text x="198" y="108" fill="#645243" font-size="13">battleworthy and readable.</text>
+  </g>
+
+  <g transform="translate(846 252)">
+    <rect width="272" height="176" rx="14" fill="#ddd9d3"/>
+    <circle cx="54" cy="40" r="16" fill="#302b27"/>
+    <rect x="44" y="56" width="22" height="64" rx="9" fill="#51565d"/>
+    <rect x="48" y="120" width="7" height="28" rx="4" fill="#272320"/>
+    <rect x="57" y="120" width="7" height="28" rx="4" fill="#272320"/>
+    <path d="M112 38 Q84 90 112 144" fill="none" stroke="#6f6558" stroke-width="8"/>
+    <line x1="112" y1="38" x2="112" y2="144" stroke="#d6d7d8" stroke-width="2"/>
+    <text x="182" y="60" fill="#352d28" font-size="15">Oldcrest ranged support should</text>
+    <text x="182" y="84" fill="#645243" font-size="13">feel watchful and historical, not</text>
+    <text x="182" y="108" fill="#645243" font-size="13">mystic or spectral.</text>
+  </g>
+
+  <g transform="translate(1220 252)">
+    <rect width="272" height="176" rx="14" fill="#ddd9d3"/>
+    <circle cx="56" cy="38" r="17" fill="#2a2623"/>
+    <rect x="44" y="54" width="28" height="68" rx="10" fill="#51565d"/>
+    <rect x="47" y="122" width="8" height="30" rx="4" fill="#272320"/>
+    <rect x="59" y="122" width="8" height="30" rx="4" fill="#272320"/>
+    <rect x="106" y="42" width="8" height="100" rx="4" fill="#6f6558"/>
+    <polygon points="114,42 154,54 114,68" fill="#c7c5c0"/>
+    <text x="182" y="60" fill="#352d28" font-size="15">Command reads as memory, oath,</text>
+    <text x="182" y="84" fill="#645243" font-size="13">and old authority, not occult</text>
+    <text x="182" y="108" fill="#645243" font-size="13">spectacle or necrotic fantasy.</text>
+  </g>
+
+  <g transform="translate(88 574)" font-family="Arial, sans-serif">
+    <text x="0" y="24" fill="#322922" font-size="22">House Read Rules</text>
+    <text x="0" y="62" fill="#5e4d40" font-size="16">1. Oldcrest should read as inherited continuity: repaired harness, mixed-era forms, and age-worn cloth that still functions as live warfare equipment.</text>
+    <text x="0" y="92" fill="#5e4d40" font-size="16">2. Pale accents signal memory and lineage, not ghostliness or magical glow.</text>
+    <text x="0" y="122" fill="#5e4d40" font-size="16">3. Guard and command lanes should project solemn continuity, not decayed weakness or fantasy ruin-personas.</text>
+
+    <text x="0" y="178" fill="#322922" font-size="22">What To Avoid</text>
+    <text x="0" y="216" fill="#5e4d40" font-size="16">- Do not drift into undead, necromantic, spectral, or overt old-faith magic silhouettes.</text>
+    <text x="0" y="246" fill="#5e4d40" font-size="16">- Do not confuse Oldcrest with Stonehelm's warm fortress mass or Whitehall's cleaner administrative order.</text>
+    <text x="0" y="276" fill="#5e4d40" font-size="16">- Do not make the lane so ruined that it stops reading as an active military force.</text>
+
+    <text x="0" y="332" fill="#322922" font-size="22">Use In Review</text>
+    <text x="0" y="370" fill="#5e4d40" font-size="16">This sheet is a silhouette and material-direction board for future prompting, 3D blockout, icon treatment, and approved staging review.</text>
+    <text x="0" y="400" fill="#5e4d40" font-size="16">It does not declare new canon units beyond the settled Oldcrest visual treatment lane.</text>
+  </g>
+
+  <text x="64" y="992" fill="#6a5848" font-family="Arial, sans-serif" font-size="15">House-specific silhouette board for governed graphics-lane review. Keep additive to canon and stage only through approved Unity staging surfaces.</text>
+</svg>

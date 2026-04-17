@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: the_wild
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:FaithDefinition
+  id: the_wild
+  displayName: The Wild
+  covenantName: Covenant of the Thorned Elder Roots
+  prototypeEnabled: 1
+  alignmentPaths:
+  - light
+  - dark
+  prototypeEffects:
+    light:
+      label: Rootbound Renewal
+      auraAttackMultiplier: 1.06
+      auraRadiusBonus: 22
+      auraSightBonus: 22
+      stabilizationMultiplier: 1.2
+      captureMultiplier: 1.04
+      populationGrowthMultiplier: 1.1
+    dark:
+      label: Predator's Claim
+      auraAttackMultiplier: 1.16
+      auraRadiusBonus: 14
+      auraSightBonus: 14
+      stabilizationMultiplier: 0.94
+      captureMultiplier: 1.22
+      populationGrowthMultiplier: 0.95

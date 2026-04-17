@@ -1,0 +1,107 @@
+{
+  "canonical_subset": [
+    {
+      "path": "18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE_v3.4.md",
+      "classification": "authoritative",
+      "authority_score": 1.0,
+      "topic": "design_bible",
+      "notes": "Current integrated Bloodlines bible."
+    },
+    {
+      "path": "01_CANON/BLOODLINES_MASTER_DESIGN_DOCTRINE_2026-04-14.md",
+      "classification": "authoritative",
+      "authority_score": 0.99,
+      "topic": "design_doctrine",
+      "notes": "Current doctrine spine."
+    },
+    {
+      "path": "AGENTS.md",
+      "classification": "authoritative",
+      "authority_score": 0.96,
+      "topic": "session_entry",
+      "notes": "Canonical AI session entry surface."
+    },
+    {
+      "path": "README.md",
+      "classification": "authoritative",
+      "authority_score": 0.95,
+      "topic": "project_root",
+      "notes": "Canonical runtime and root guidance."
+    },
+    {
+      "path": "CLAUDE.md",
+      "classification": "authoritative",
+      "authority_score": 0.95,
+      "topic": "governance",
+      "notes": "Project-level governance."
+    },
+    {
+      "path": "MASTER_PROJECT_INDEX.md",
+      "classification": "authoritative",
+      "authority_score": 0.94,
+      "topic": "navigation",
+      "notes": "Project navigation spine."
+    },
+    {
+      "path": "MASTER_BLOODLINES_CONTEXT.md",
+      "classification": "authoritative",
+      "authority_score": 0.94,
+      "topic": "context",
+      "notes": "High-signal context restore."
+    },
+    {
+      "path": "CURRENT_PROJECT_STATE.md",
+      "classification": "authoritative",
+      "authority_score": 0.97,
+      "topic": "continuity_state",
+      "notes": "Current state surface."
+    },
+    {
+      "path": "NEXT_SESSION_HANDOFF.md",
+      "classification": "authoritative",
+      "authority_score": 0.98,
+      "topic": "resume_point",
+      "notes": "Current next-action surface."
+    },
+    {
+      "path": "SOURCE_PROVENANCE_MAP.md",
+      "classification": "authoritative",
+      "authority_score": 0.93,
+      "topic": "provenance",
+      "notes": "Source lineage and preservation map."
+    },
+    {
+      "path": "continuity/PROJECT_STATE.json",
+      "classification": "authoritative",
+      "authority_score": 0.97,
+      "topic": "machine_state",
+      "notes": "Machine-readable continuity state."
+    },
+    {
+      "path": "docs/BLOODLINES_STATE_OF_GAME_REPORT_2026-04-15_SESSION_87.md",
+      "classification": "secondary",
+      "authority_score": 0.89,
+      "topic": "latest_frontier_report",
+      "notes": "Latest completed state-of-game report before Session 88."
+    },
+    {
+      "path": "HANDOFF.md",
+      "classification": "secondary",
+      "authority_score": 0.87,
+      "topic": "interrupted_session",
+      "notes": "Active interrupted-session handoff."
+    },
+    {
+      "path": "tasks/todo.md",
+      "classification": "secondary",
+      "authority_score": 0.85,
+      "topic": "active_plan",
+      "notes": "Active implementation plan."
+    }
+  ],
+  "known_questions": [
+    "What is the current authoritative project state?",
+    "What was the latest frontier-session direction?",
+    "What should continue next?"
+  ]
+}

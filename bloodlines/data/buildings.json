@@ -7,7 +7,7 @@
     "health": 1400,
     "buildTime": 0,
     "populationCapBonus": 12,
-    "dropoffResources": ["gold", "wood"],
+    "dropoffResources": ["gold", "wood", "stone", "iron"],
     "trainableUnits": ["villager"],
     "cost": {}
   },
@@ -31,6 +31,11 @@
     "footprint": { "w": 2, "h": 2 },
     "health": 300,
     "buildTime": 11,
+    "scoutRaidable": true,
+    "raidLoss": {
+      "food": 12,
+      "influence": 2
+    },
     "resourceTrickle": {
       "food": 0.5
     },
@@ -46,6 +51,13 @@
     "footprint": { "w": 2, "h": 2 },
     "health": 260,
     "buildTime": 10,
+    "scoutRaidable": true,
+    "raidLoss": {
+      "water": 12,
+      "influence": 2
+    },
+    "armyWaterSupportRadius": 180,
+    "armyWaterSupportDurationSeconds": 16,
     "resourceTrickle": {
       "water": 0.45
     },
@@ -61,6 +73,11 @@
     "footprint": { "w": 2, "h": 2 },
     "health": 340,
     "buildTime": 10,
+    "scoutRaidable": true,
+    "raidLoss": {
+      "wood": 14,
+      "influence": 2
+    },
     "dropoffResources": ["wood"],
     "cost": {
       "gold": 35,
@@ -74,11 +91,63 @@
     "footprint": { "w": 2, "h": 2 },
     "health": 340,
     "buildTime": 10,
+    "scoutRaidable": true,
+    "raidLoss": {
+      "gold": 10,
+      "influence": 2
+    },
     "dropoffResources": ["gold"],
     "cost": {
       "gold": 45,
       "wood": 35
     }
+  },
+  {
+    "id": "quarry",
+    "name": "Quarry",
+    "prototypeEnabled": true,
+    "footprint": { "w": 2, "h": 2 },
+    "health": 360,
+    "buildTime": 12,
+    "scoutRaidable": true,
+    "raidLoss": {
+      "stone": 12,
+      "influence": 2
+    },
+    "dropoffResources": ["stone"],
+    "cost": {
+      "gold": 40,
+      "wood": 40
+    },
+    "notes": [
+      "Canonical stone dropoff. Fortification fuel line begins here."
+    ]
+  },
+  {
+    "id": "iron_mine",
+    "name": "Iron Mine",
+    "prototypeEnabled": true,
+    "footprint": { "w": 2, "h": 2 },
+    "health": 360,
+    "buildTime": 14,
+    "scoutRaidable": true,
+    "raidLoss": {
+      "iron": 10,
+      "wood": 4,
+      "influence": 3
+    },
+    "dropoffResources": ["iron"],
+    "smeltingFuelResource": "wood",
+    "smeltingFuelRatio": 0.5,
+    "cost": {
+      "gold": 55,
+      "wood": 50
+    },
+    "notes": [
+      "Canonical iron production with smelting chain.",
+      "Iron delivery consumes wood as smelting fuel at ratio 0.5 wood per iron.",
+      "If wood is insufficient, iron is returned to node."
+    ]
   },
   {
     "id": "barracks",
@@ -87,11 +156,167 @@
     "footprint": { "w": 3, "h": 2 },
     "health": 850,
     "buildTime": 16,
-    "trainableUnits": ["militia", "swordsman", "bowman"],
+    "trainableUnits": ["militia", "swordsman", "bowman", "axeman", "verdant_warden"],
     "cost": {
       "gold": 85,
       "wood": 95
     }
+  },
+  {
+    "id": "stable",
+    "name": "Stable",
+    "prototypeEnabled": true,
+    "footprint": { "w": 3, "h": 2 },
+    "health": 780,
+    "buildTime": 18,
+    "trainableUnits": ["scout_rider"],
+    "cost": {
+      "gold": 95,
+      "wood": 110,
+      "iron": 20
+    },
+    "notes": [
+      "Canonical cavalry seat for stage 2 warfare.",
+      "Scout Riders require Stable plus iron access."
+    ]
+  },
+  {
+    "id": "siege_workshop",
+    "name": "Siege Workshop",
+    "prototypeEnabled": true,
+    "footprint": { "w": 3, "h": 3 },
+    "health": 980,
+    "buildTime": 22,
+    "supportsSiegePreparation": true,
+    "trainableUnits": ["ram", "siege_tower", "trebuchet", "ballista", "mantlet", "siege_engineer", "supply_wagon"],
+    "cost": {
+      "gold": 120,
+      "wood": 140,
+      "stone": 90,
+      "iron": 35
+    },
+    "notes": [
+      "Dedicated siege infrastructure required for serious formal assaults.",
+      "Ram, Siege Tower, Trebuchet, Engineer, and Supply Wagon production now routes through this workshop instead of the Barracks."
+    ]
+  },
+  {
+    "id": "supply_camp",
+    "name": "Supply Camp",
+    "prototypeEnabled": true,
+    "footprint": { "w": 3, "h": 2 },
+    "health": 520,
+    "buildTime": 16,
+    "scoutRaidable": true,
+    "raidLoss": {
+      "food": 12,
+      "water": 12,
+      "wood": 8,
+      "influence": 4
+    },
+    "supportsSiegeLogistics": true,
+    "supplyLinkRadius": 360,
+    "armyWaterSupportRadius": 160,
+    "armyWaterSupportDurationSeconds": 14,
+    "cost": {
+      "gold": 70,
+      "wood": 110,
+      "stone": 40
+    },
+    "notes": [
+      "Canonical forward logistics seat for a formal siege line.",
+      "Supply wagons must remain linked to a live camp to keep nearby siege engines fully supplied.",
+      "Also acts as first-layer field-water anchor for campaigning land armies."
+    ]
+  },
+  {
+    "id": "wall_segment",
+    "name": "Wall Segment",
+    "prototypeEnabled": true,
+    "fortificationRole": "wall",
+    "fortificationTierContribution": 1,
+    "footprint": { "w": 2, "h": 1 },
+    "health": 900,
+    "buildTime": 10,
+    "armor": 8,
+    "blocksPassage": true,
+    "structuralDamageMultiplier": 0.2,
+    "cost": {
+      "stone": 45,
+      "wood": 5
+    },
+    "notes": [
+      "Canonical outer-works component. Structural damage multiplier of 0.2 means line infantry cannot efficiently break walls.",
+      "Wall segments adjacent to a settlement contribute to its fortification tier."
+    ]
+  },
+  {
+    "id": "watch_tower",
+    "name": "Watch Tower",
+    "prototypeEnabled": true,
+    "fortificationRole": "tower",
+    "fortificationTierContribution": 1,
+    "footprint": { "w": 2, "h": 2 },
+    "health": 650,
+    "buildTime": 14,
+    "armor": 6,
+    "sightBonusRadius": 200,
+    "auraAttackMultiplier": 1.08,
+    "auraRadius": 140,
+    "structuralDamageMultiplier": 0.15,
+    "cost": {
+      "stone": 60,
+      "wood": 20
+    },
+    "notes": [
+      "Canonical flanking tower. Sight bonus extends vision for friendly units within auraRadius.",
+      "Modest attack aura reinforces overwatch doctrine."
+    ]
+  },
+  {
+    "id": "gatehouse",
+    "name": "Gatehouse",
+    "prototypeEnabled": true,
+    "fortificationRole": "gate",
+    "fortificationTierContribution": 2,
+    "footprint": { "w": 3, "h": 2 },
+    "health": 1200,
+    "buildTime": 18,
+    "armor": 12,
+    "blocksPassage": false,
+    "structuralDamageMultiplier": 0.3,
+    "cost": {
+      "stone": 90,
+      "wood": 40,
+      "iron": 15
+    },
+    "notes": [
+      "Canonical gatehouse with killing-bay. Only wall opening that passes friendly traffic.",
+      "Higher armor and structural multiplier than wall because gate is canonically harder to force."
+    ]
+  },
+  {
+    "id": "keep_tier_1",
+    "name": "Inner Keep",
+    "prototypeEnabled": true,
+    "fortificationRole": "keep",
+    "fortificationTierContribution": 2,
+    "footprint": { "w": 4, "h": 4 },
+    "health": 2600,
+    "buildTime": 45,
+    "armor": 16,
+    "populationCapBonus": 18,
+    "structuralDamageMultiplier": 0.1,
+    "cost": {
+      "stone": 220,
+      "wood": 80,
+      "iron": 60,
+      "gold": 180
+    },
+    "notes": [
+      "Canonical primary-keep foundation. Unlocks higher fortification tier at the bloodline seat.",
+      "Structural multiplier of 0.1 makes the keep canonically resilient — even rams take meaningful time to breach."
+    ]
   },
   {
     "id": "tribal_camp",
@@ -101,5 +326,194 @@
     "health": 620,
     "buildTime": 0,
     "cost": {}
+  },
+  {
+    "id": "wayshrine",
+    "name": "Wayshrine",
+    "prototypeEnabled": true,
+    "faithRole": "shrine",
+    "faithTier": 1,
+    "footprint": { "w": 2, "h": 2 },
+    "health": 420,
+    "buildTime": 14,
+    "armor": 4,
+    "faithExposureAmplification": 1.8,
+    "faithExposureRadius": 180,
+    "faithIntensityRegenBonus": 0.18,
+    "cost": {
+      "gold": 60,
+      "wood": 40,
+      "stone": 50
+    },
+    "notes": [
+      "Canonical first-tier covenant structure per master doctrine section XIX.",
+      "When built within faithExposureRadius of any sacred site, amplifies the faction's faith exposure accrual there by faithExposureAmplification.",
+      "Once the faction has committed to a covenant, Wayshrines tied to that covenant contribute to faith intensity regen, strengthening ward profiles on nearby fortifications.",
+      "Session 13 first canonical layer. L2 Hall, L3 Grand Sanctuary, L4 Apex structures remain DOCUMENTED pending further sessions."
+    ]
+  },
+  {
+    "id": "covenant_hall",
+    "name": "Covenant Hall",
+    "prototypeEnabled": true,
+    "faithRole": "hall",
+    "faithTier": 2,
+    "requiresFaithCommitment": true,
+    "footprint": { "w": 3, "h": 3 },
+    "health": 840,
+    "buildTime": 22,
+    "armor": 7,
+    "faithExposureAmplification": 2.4,
+    "faithExposureRadius": 240,
+    "faithIntensityRegenBonus": 0.32,
+    "wardSightBonusExtra": 6,
+    "wardDefenderAttackBonusExtra": 0.04,
+    "cost": {
+      "gold": 160,
+      "wood": 100,
+      "stone": 140,
+      "iron": 30
+    },
+    "trainableUnits": [
+      "flame_warden", "judgment_pyre",
+      "consecrated_blade", "crimson_reaver",
+      "mandate_sentinel", "edict_enforcer",
+      "root_warden", "predator_stalker"
+    ],
+    "notes": [
+      "Session 17: canonical L2 covenant hall per master doctrine section XIX.",
+      "Requires that the faction has committed to a covenant; building fails if no doctrine path is selected.",
+      "Stronger exposure amp (2.4x vs Wayshrine 1.8x) and wider radius (240 vs 180).",
+      "When built within faith-aura of a fortified settlement owned by the same faction, adds wardSightBonusExtra and wardDefenderAttackBonusExtra on top of the covenant ward profile.",
+      "Session 20: trains all 8 canonical L3 faith units (2 per covenant per doctrine path). Training guards on committed faith + doctrine path match.",
+      "L4 Apex structures remain DOCUMENTED pending further sessions."
+    ]
+  },
+  {
+    "id": "grand_sanctuary",
+    "name": "Grand Sanctuary",
+    "prototypeEnabled": true,
+    "faithRole": "sanctuary",
+    "faithTier": 3,
+    "requiresFaithCommitment": true,
+    "footprint": { "w": 4, "h": 4 },
+    "health": 1400,
+    "buildTime": 32,
+    "armor": 10,
+    "faithExposureAmplification": 3.0,
+    "faithExposureRadius": 320,
+    "faithIntensityRegenBonus": 0.48,
+    "wardSightBonusExtra": 12,
+    "wardDefenderAttackBonusExtra": 0.08,
+    "trainableUnits": [
+      "flame_herald", "pyre_sovereign",
+      "blood_consort", "crimson_exarch",
+      "mandate_paladin", "edict_inquisitor",
+      "elder_grove_keeper", "predator_ascendant"
+    ],
+    "cost": {
+      "gold": 300,
+      "wood": 180,
+      "stone": 260,
+      "iron": 90
+    },
+    "notes": [
+      "Session 21: canonical L3 Grand Sanctuary per master doctrine section XIX.",
+      "Requires committed covenant + doctrine path (via requiresFaithCommitment gate).",
+      "Strongest-yet non-apex exposure amp (3.0x) and radius (320).",
+      "Recruitment seat for L4 canonical faith units (8 total, 2 per covenant per path)."
+    ]
+  },
+  {
+    "id": "harbor_tier_1",
+    "name": "Harbor",
+    "prototypeEnabled": true,
+    "navalRole": "harbor",
+    "navalTier": 1,
+    "requiresCoastalAdjacency": true,
+    "footprint": { "w": 3, "h": 3 },
+    "health": 950,
+    "buildTime": 20,
+    "armor": 6,
+    "dropoffResources": ["food", "wood"],
+    "trainableUnits": ["fishing_boat", "scout_vessel", "war_galley", "transport_ship"],
+    "cost": {
+      "gold": 130,
+      "wood": 120,
+      "stone": 70
+    },
+    "notes": [
+      "Session 27: canonical L1 harbor per master doctrine section XV + 11_MATCHFLOW/NAVAL_SYSTEM.md.",
+      "Gates vessel training; must be placed adjacent to a water tile (requiresCoastalAdjacency).",
+      "Food + wood dropoff reflects canonical coastal economy (fishing + shipbuilding).",
+      "Session 28: transport_ship added to trainables.",
+      "L3 Admiralty remains DOCUMENTED pending a later session."
+    ]
+  },
+  {
+    "id": "harbor_tier_2",
+    "name": "Great Harbor",
+    "prototypeEnabled": true,
+    "navalRole": "harbor",
+    "navalTier": 2,
+    "requiresCoastalAdjacency": true,
+    "footprint": { "w": 4, "h": 4 },
+    "health": 1600,
+    "buildTime": 30,
+    "armor": 10,
+    "dropoffResources": ["food", "wood", "gold"],
+    "trainableUnits": ["fire_ship", "capital_ship"],
+    "cost": {
+      "gold": 260,
+      "wood": 240,
+      "stone": 170,
+      "iron": 60
+    },
+    "notes": [
+      "Session 28: canonical L2 harbor. Trains apex vessel classes (Fire Ship, Capital Ship).",
+      "Larger 4x4 footprint, stronger dropoff chain including gold (canonical naval trade pressure).",
+      "L3 Admiralty still DOCUMENTED."
+    ]
+  },
+  {
+    "id": "apex_covenant",
+    "name": "Apex Covenant",
+    "prototypeEnabled": true,
+    "faithRole": "apex",
+    "faithTier": 4,
+    "requiresFaithCommitment": true,
+    "requiresFaithIntensity": 80,
+    "footprint": { "w": 5, "h": 5 },
+    "health": 2400,
+    "buildTime": 48,
+    "armor": 14,
+    "faithExposureAmplification": 3.6,
+    "faithExposureRadius": 400,
+    "faithIntensityRegenBonus": 0.72,
+    "wardSightBonusExtra": 20,
+    "wardDefenderAttackBonusExtra": 0.14,
+    "apexUnitBinding": {
+      "old_light": "the_unbroken",
+      "blood_dominion": "the_sacrificed",
+      "the_order": "the_mandate",
+      "the_wild": "the_first_wild"
+    },
+    "trainableUnits": [
+      "the_unbroken", "the_sacrificed", "the_mandate", "the_first_wild"
+    ],
+    "cost": {
+      "gold": 600,
+      "wood": 320,
+      "stone": 480,
+      "iron": 200,
+      "influence": 80
+    },
+    "notes": [
+      "Session 22: canonical L4 Apex covenant structure per master doctrine section XIX.",
+      "Requires committed covenant + doctrine path AND faith intensity >= 80 (Fervent tier).",
+      "Trains the L5 apex unit corresponding to the faction's committed covenant (only 1 of 4 is accessible per match, enforced by faithId + doctrinePath gates).",
+      "Strongest-yet exposure amp (3.6x) and radius (400). Biggest footprint (5x5).",
+      "Anti-snowball: only reachable by a faction that has genuinely committed to and sustained its covenant. Canonical late-game divergence lock per master doctrine section XXI."
+    ]
   }
 ]

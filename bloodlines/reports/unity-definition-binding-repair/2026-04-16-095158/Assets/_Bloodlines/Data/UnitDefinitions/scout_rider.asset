@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: scout_rider
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:UnitDefinition
+  id: scout_rider
+  displayName: Scout Rider
+  stage: 2
+  role: light-cavalry
+  siegeClass: 
+  prototypeEnabled: 1
+  populationCost: 1
+  health: 90
+  speed: 108
+  attackDamage: 8
+  attackRange: 18
+  attackCooldown: 0.8
+  sight: 180
+  projectileSpeed: 0
+  carryCapacity: 0
+  gatherRate: 0
+  buildRate: 0
+  structuralDamageMultiplier: 0
+  antiUnitDamageMultiplier: 0
+  cost:
+    gold: 90
+    food: 0
+    water: 0
+    wood: 25
+    stone: 0
+    iron: 15
+    influence: 0
+  house: 
+  notes:
+  - Canonical first cavalry unit, light reconnaissance and raid arm of stage 2 warfare.
+  - 'Live Session 79 layer: can disable undefended enemy infrastructure, strip local
+    resources, and depress march loyalty.'
+  - 'Live Session 80 layer: can harry worked seams directly, scatter nearby workers,
+    and force local counter-raid response.'
+  - 'Live Session 81 layer: can intercept moving logistics carriers, starting with
+    supply wagons, and break active siege and field-water sustainment.'
+  runtimePrefab: {fileID: 0}
+  icon: {fileID: 0}
+  selectClip: {fileID: 0}
+  deathClip: {fileID: 0}

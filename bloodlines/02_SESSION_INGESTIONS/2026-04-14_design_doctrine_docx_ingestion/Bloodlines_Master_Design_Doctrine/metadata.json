@@ -1,0 +1,143 @@
+{
+  "source_name": "Bloodlines_Master_Design_Doctrine.docx",
+  "original_source_path": "D:\\Lance\\Downloads\\Bloodlines_Master_Design_Doctrine.docx",
+  "preserved_archive_path": "D:\\ProjectsHome\\Bloodlines\\archive_preserved_sources\\2026-04-14_downloads_bloodlines_design_doctrine_docx\\Bloodlines_Master_Design_Doctrine.docx",
+  "sha256": "6d7145f0d7064f5d8da5fcda8d0dd73cec8013480cdf6b9eb6ecc83ff9de3883",
+  "package_file_count": 22,
+  "package_listing": [
+    {
+      "filename": "word/",
+      "file_size": 0,
+      "compress_size": 0
+    },
+    {
+      "filename": "word/_rels/",
+      "file_size": 0,
+      "compress_size": 0
+    },
+    {
+      "filename": "word/_rels/document.xml.rels",
+      "file_size": 1057,
+      "compress_size": 250
+    },
+    {
+      "filename": "word/document.xml",
+      "file_size": 155489,
+      "compress_size": 23518
+    },
+    {
+      "filename": "word/styles.xml",
+      "file_size": 5678,
+      "compress_size": 899
+    },
+    {
+      "filename": "docProps/",
+      "file_size": 0,
+      "compress_size": 0
+    },
+    {
+      "filename": "docProps/core.xml",
+      "file_size": 643,
+      "compress_size": 311
+    },
+    {
+      "filename": "word/numbering.xml",
+      "file_size": 3172,
+      "compress_size": 624
+    },
+    {
+      "filename": "_rels/",
+      "file_size": 0,
+      "compress_size": 0
+    },
+    {
+      "filename": "_rels/.rels",
+      "file_size": 718,
+      "compress_size": 230
+    },
+    {
+      "filename": "[Content_Types].xml",
+      "file_size": 2104,
+      "compress_size": 410
+    },
+    {
+      "filename": "docProps/custom.xml",
+      "file_size": 228,
+      "compress_size": 146
+    },
+    {
+      "filename": "docProps/app.xml",
+      "file_size": 230,
+      "compress_size": 147
+    },
+    {
+      "filename": "word/footnotes.xml",
+      "file_size": 1709,
+      "compress_size": 462
+    },
+    {
+      "filename": "word/_rels/footnotes.xml.rels",
+      "file_size": 123,
+      "compress_size": 109
+    },
+    {
+      "filename": "word/endnotes.xml",
+      "file_size": 1682,
+      "compress_size": 449
+    },
+    {
+      "filename": "word/_rels/endnotes.xml.rels",
+      "file_size": 123,
+      "compress_size": 109
+    },
+    {
+      "filename": "word/settings.xml",
+      "file_size": 1395,
+      "compress_size": 417
+    },
+    {
+      "filename": "word/comments.xml",
+      "file_size": 2246,
+      "compress_size": 453
+    },
+    {
+      "filename": "word/_rels/comments.xml.rels",
+      "file_size": 123,
+      "compress_size": 109
+    },
+    {
+      "filename": "word/fontTable.xml",
+      "file_size": 835,
+      "compress_size": 285
+    },
+    {
+      "filename": "word/_rels/fontTable.xml.rels",
+      "file_size": 123,
+      "compress_size": 109
+    }
+  ],
+  "extracted_parts": [
+    {
+      "part": "word/document.xml",
+      "paragraph_count": 265,
+      "text_file": "D:\\ProjectsHome\\Bloodlines\\02_SESSION_INGESTIONS\\2026-04-14_design_doctrine_docx_ingestion\\Bloodlines_Master_Design_Doctrine\\text_parts\\word__document.xml.md"
+    },
+    {
+      "part": "word/comments.xml",
+      "paragraph_count": 0,
+      "text_file": "D:\\ProjectsHome\\Bloodlines\\02_SESSION_INGESTIONS\\2026-04-14_design_doctrine_docx_ingestion\\Bloodlines_Master_Design_Doctrine\\text_parts\\word__comments.xml.md"
+    },
+    {
+      "part": "word/footnotes.xml",
+      "paragraph_count": 0,
+      "text_file": "D:\\ProjectsHome\\Bloodlines\\02_SESSION_INGESTIONS\\2026-04-14_design_doctrine_docx_ingestion\\Bloodlines_Master_Design_Doctrine\\text_parts\\word__footnotes.xml.md"
+    },
+    {
+      "part": "word/endnotes.xml",
+      "paragraph_count": 0,
+      "text_file": "D:\\ProjectsHome\\Bloodlines\\02_SESSION_INGESTIONS\\2026-04-14_design_doctrine_docx_ingestion\\Bloodlines_Master_Design_Doctrine\\text_parts\\word__endnotes.xml.md"
+    }
+  ],
+  "full_text_extract": "D:\\ProjectsHome\\Bloodlines\\02_SESSION_INGESTIONS\\2026-04-14_design_doctrine_docx_ingestion\\Bloodlines_Master_Design_Doctrine\\Bloodlines_Master_Design_Doctrine_FULL_TEXT_EXTRACT.md",
+  "exploded_package_root": "D:\\ProjectsHome\\Bloodlines\\02_SESSION_INGESTIONS\\2026-04-14_design_doctrine_docx_ingestion\\Bloodlines_Master_Design_Doctrine\\exploded_package"
+}

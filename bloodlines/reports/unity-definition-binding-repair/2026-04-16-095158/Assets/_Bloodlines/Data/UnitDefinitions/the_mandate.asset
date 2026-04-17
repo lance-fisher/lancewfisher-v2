@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: the_mandate
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:UnitDefinition
+  id: the_mandate
+  displayName: The Mandate
+  stage: 5
+  role: faith-apex
+  siegeClass: 
+  prototypeEnabled: 1
+  populationCost: 5
+  health: 420
+  speed: 62
+  attackDamage: 40
+  attackRange: 26
+  attackCooldown: 0.95
+  sight: 210
+  projectileSpeed: 0
+  carryCapacity: 0
+  gatherRate: 0
+  buildRate: 0
+  structuralDamageMultiplier: 0
+  antiUnitDamageMultiplier: 0
+  cost:
+    gold: 360
+    food: 0
+    water: 0
+    wood: 105
+    stone: 0
+    iron: 135
+    influence: 45
+  house: 
+  notes:
+  - Session 22 canonical Order L5 apex unit. One-per-match per canon. The Mandate-incarnate
+    inviolable.
+  runtimePrefab: {fileID: 0}
+  icon: {fileID: 0}
+  selectClip: {fileID: 0}
+  deathClip: {fileID: 0}

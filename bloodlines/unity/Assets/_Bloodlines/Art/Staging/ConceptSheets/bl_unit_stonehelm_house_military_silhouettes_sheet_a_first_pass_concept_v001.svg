@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#e7dccd"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f5eee4" stroke="#332b24" stroke-width="3"/>
+  <text x="64" y="84" fill="#262019" font-family="Georgia, serif" font-size="34">Bloodlines House Stonehelm Military Silhouettes</text>
+  <text x="64" y="116" fill="#68574a" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Scope: defensive house silhouette treatment, not a gameplay rewrite</text>
+
+  <g transform="translate(1160 58)">
+    <rect width="344" height="110" rx="16" fill="#ece2d5" stroke="#8f7963" stroke-width="2"/>
+    <text x="18" y="28" fill="#3e342d" font-family="Arial, sans-serif" font-size="16">Palette / Material Read</text>
+    <rect x="18" y="42" width="26" height="26" rx="6" fill="#6a543d"/>
+    <rect x="52" y="42" width="26" height="26" rx="6" fill="#c0a37a"/>
+    <rect x="86" y="42" width="26" height="26" rx="6" fill="#8c7863"/>
+    <rect x="120" y="42" width="26" height="26" rx="6" fill="#4d4338"/>
+    <text x="18" y="92" fill="#615042" font-family="Arial, sans-serif" font-size="13">Warm stone, dense timber, hide, wool, iron braces. Broad shields and low-center silhouettes.</text>
+  </g>
+
+  <g stroke="#b6a28f" stroke-width="2">
+    <rect x="64" y="190" width="340" height="322" rx="20" fill="#fbf6ee"/>
+    <rect x="438" y="190" width="340" height="322" rx="20" fill="#fbf6ee"/>
+    <rect x="812" y="190" width="340" height="322" rx="20" fill="#fbf6ee"/>
+    <rect x="1186" y="190" width="340" height="322" rx="20" fill="#fbf6ee"/>
+    <rect x="64" y="548" width="1462" height="404" rx="20" fill="#fbf6ee"/>
+  </g>
+
+  <g font-family="Arial, sans-serif">
+    <text x="90" y="228" fill="#3a3028" font-size="18">Garrison levy line</text>
+    <text x="464" y="228" fill="#3a3028" font-size="18">Wall guard lane</text>
+    <text x="838" y="228" fill="#3a3028" font-size="18">Tower ranged lane</text>
+    <text x="1212" y="228" fill="#3a3028" font-size="18">Keep captain lane</text>
+  </g>
+
+  <g transform="translate(94 252)">
+    <rect width="280" height="176" rx="14" fill="#e6dbc9"/>
+    <circle cx="58" cy="42" r="18" fill="#5a4735"/>
+    <rect x="44" y="60" width="30" height="60" rx="10" fill="#8d775f"/>
+    <rect x="30" y="72" width="14" height="38" rx="6" fill="#b59d80"/>
+    <rect x="74" y="72" width="14" height="38" rx="6" fill="#b59d80"/>
+    <rect x="48" y="118" width="10" height="32" rx="5" fill="#463b32"/>
+    <rect x="62" y="118" width="10" height="32" rx="5" fill="#463b32"/>
+    <path d="M106 62 L156 52 L192 74 L192 126 L154 144 L106 126 Z" fill="#6a543d" stroke="#493d31" stroke-width="4"/>
+    <text x="206" y="60" fill="#392f27" font-size="15">Shield area stays broader</text>
+    <text x="206" y="84" fill="#635243" font-size="13">than body width.</text>
+    <text x="206" y="108" fill="#635243" font-size="13">Defensive weight over speed.</text>
+    <rect x="206" y="130" width="20" height="20" fill="#6a543d"/>
+    <rect x="232" y="130" width="20" height="20" fill="#c0a37a"/>
+    <rect x="258" y="130" width="20" height="20" fill="#8c7863"/>
+  </g>
+
+  <g transform="translate(468 252)">
+    <rect width="280" height="176" rx="14" fill="#e6dbc9"/>
+    <circle cx="58" cy="40" r="18" fill="#4f4032"/>
+    <rect x="42" y="58" width="32" height="64" rx="10" fill="#78634f"/>
+    <rect x="28" y="72" width="14" height="40" rx="6" fill="#9d856d"/>
+    <rect x="74" y="72" width="14" height="40" rx="6" fill="#9d856d"/>
+    <rect x="46" y="120" width="10" height="30" rx="5" fill="#433930"/>
+    <rect x="60" y="120" width="10" height="30" rx="5" fill="#433930"/>
+    <path d="M108 60 L160 48 L198 72 L198 130 L154 148 L108 128 Z" fill="#5d4c3a" stroke="#40352b" stroke-width="4"/>
+    <rect x="96" y="36" width="8" height="100" rx="4" fill="#cbb296"/>
+    <polygon points="100,24 92,36 108,36" fill="#e2d4bf"/>
+    <text x="212" y="58" fill="#392f27" font-size="15">Shield-forward spear read.</text>
+    <text x="212" y="82" fill="#635243" font-size="13">Nothing should feel</text>
+    <text x="212" y="106" fill="#635243" font-size="13">fragile or courtly.</text>
+    <rect x="212" y="130" width="20" height="20" fill="#6a543d"/>
+    <rect x="238" y="130" width="20" height="20" fill="#c0a37a"/>
+  </g>
+
+  <g transform="translate(842 252)">
+    <rect width="280" height="176" rx="14" fill="#e6dbc9"/>
+    <circle cx="56" cy="40" r="17" fill="#5b4938"/>
+    <rect x="44" y="58" width="24" height="60" rx="9" fill="#7e6a57"/>
+    <rect x="30" y="72" width="14" height="38" rx="6" fill="#b59d80"/>
+    <rect x="68" y="72" width="14" height="38" rx="6" fill="#b59d80"/>
+    <rect x="48" y="116" width="8" height="28" rx="4" fill="#443931"/>
+    <rect x="60" y="116" width="8" height="28" rx="4" fill="#443931"/>
+    <path d="M118 40 Q86 90 118 142" fill="none" stroke="#82684c" stroke-width="8"/>
+    <line x1="118" y1="40" x2="118" y2="142" stroke="#dbd4cb" stroke-width="2"/>
+    <line x1="118" y1="92" x2="164" y2="92" stroke="#6d5a46" stroke-width="4"/>
+    <polygon points="164,92 154,86 154,98" fill="#6d5a46"/>
+    <path d="M90 54 L106 72 L90 90" fill="none" stroke="#c0a37a" stroke-width="4"/>
+    <text x="182" y="58" fill="#392f27" font-size="15">Tower and wall service,</text>
+    <text x="182" y="82" fill="#635243" font-size="13">not skirmisher lightness.</text>
+    <text x="182" y="106" fill="#635243" font-size="13">Bow silhouette stays stable.</text>
+    <rect x="182" y="130" width="20" height="20" fill="#6a543d"/>
+    <rect x="208" y="130" width="20" height="20" fill="#c0a37a"/>
+    <rect x="234" y="130" width="20" height="20" fill="#4d4338"/>
+  </g>
+
+  <g transform="translate(1216 252)">
+    <rect width="280" height="176" rx="14" fill="#e6dbc9"/>
+    <circle cx="60" cy="38" r="18" fill="#534233"/>
+    <rect x="44" y="56" width="32" height="66" rx="10" fill="#6a5744"/>
+    <path d="M34 68 L44 56 L76 56 L88 68 L88 114 L74 126 L44 126 L34 114 Z" fill="none" stroke="#c0a37a" stroke-width="6"/>
+    <rect x="48" y="122" width="10" height="30" rx="4" fill="#433830"/>
+    <rect x="62" y="122" width="10" height="30" rx="4" fill="#433830"/>
+    <path d="M114 62 L172 46 L210 70 L210 118 L170 142 L114 122 Z" fill="#6a543d" stroke="#473b2f" stroke-width="4"/>
+    <circle cx="162" cy="92" r="10" fill="#c0a37a"/>
+    <text x="224" y="58" fill="#392f27" font-size="15">Captains read like living</text>
+    <text x="224" y="82" fill="#635243" font-size="13">extensions of the keep.</text>
+    <text x="224" y="106" fill="#635243" font-size="13">Authority through weight.</text>
+    <rect x="224" y="130" width="20" height="20" fill="#6a543d"/>
+    <rect x="250" y="130" width="20" height="20" fill="#c0a37a"/>
+  </g>
+
+  <g transform="translate(88 574)" font-family="Arial, sans-serif">
+    <text x="0" y="24" fill="#332921" font-size="22">House Read Rules</text>
+    <text x="0" y="62" fill="#615041" font-size="16">1. Stonehelm must feel prepared and anchored: broad shields, layered protection, heavy cloaks, and compact stance.</text>
+    <text x="0" y="92" fill="#615041" font-size="16">2. The color read stays warm and terrestrial. Defensive authority comes from stone and garrison logic, not bright heraldic flourish.</text>
+    <text x="0" y="122" fill="#615041" font-size="16">3. Command silhouettes gain wall-linked symbols and added cloak volume, but remain practical.</text>
+
+    <text x="0" y="178" fill="#332921" font-size="22">What To Avoid</text>
+    <text x="0" y="216" fill="#615041" font-size="16">- Do not make Stonehelm look like a generic paladin faction or a silver court house.</text>
+    <text x="0" y="246" fill="#615041" font-size="16">- Do not borrow Ironmark's soot-dark industrial rhythm or Hartvale's harvest warmth.</text>
+    <text x="0" y="276" fill="#615041" font-size="16">- Do not over-detail crenel motifs until the large shield and low-center stance already read at height.</text>
+
+    <text x="0" y="332" fill="#332921" font-size="22">Use In Review</text>
+    <text x="0" y="370" fill="#615041" font-size="16">This sheet is for defensive silhouette review, prompt conditioning, and future 3D fortification-retinue blockout.</text>
+    <text x="0" y="400" fill="#615041" font-size="16">It stays additive to the current Stonehelm canon and does not settle new unit classes.</text>
+  </g>
+
+  <text x="64" y="992" fill="#69584a" font-family="Arial, sans-serif" font-size="15">House-specific silhouette board for governed graphics-lane review. Preserve Stonehelm's warm fortress identity and shield-heavy battlefield read.</text>
+</svg>

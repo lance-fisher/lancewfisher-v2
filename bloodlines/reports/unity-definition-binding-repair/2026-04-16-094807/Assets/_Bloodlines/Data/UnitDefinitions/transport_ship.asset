@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: transport_ship
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:UnitDefinition
+  id: transport_ship
+  displayName: Transport Ship
+  stage: 2
+  role: vessel
+  siegeClass: 
+  prototypeEnabled: 1
+  populationCost: 2
+  health: 280
+  speed: 52
+  attackDamage: 0
+  attackRange: 0
+  attackCooldown: 1
+  sight: 150
+  projectileSpeed: 0
+  carryCapacity: 0
+  gatherRate: 0
+  buildRate: 0
+  structuralDamageMultiplier: 0
+  antiUnitDamageMultiplier: 0
+  cost:
+    gold: 110
+    food: 0
+    water: 0
+    wood: 140
+    stone: 0
+    iron: 0
+    influence: 0
+  house: 
+  notes:
+  - Session 28 canonical vessel class 4 of 6.
+  - Carries up to 6 land units across water. Transport mechanic itself remains DOCUMENTED
+    pending the embark/disembark layer.
+  runtimePrefab: {fileID: 0}
+  icon: {fileID: 0}
+  selectClip: {fileID: 0}
+  deathClip: {fileID: 0}

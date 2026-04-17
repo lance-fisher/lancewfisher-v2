@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#ece0cb"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Market, Storehouse, And Granary Sheet</text>
+  <text x="64" y="116" fill="#6c5a48" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: food and cargo support structures with clear RTS economy reads</text>
+
+  <g font-family="Arial, sans-serif" font-size="16" fill="#47392c">
+    <text x="92" y="170">Granary</text>
+    <text x="612" y="170">Storehouse</text>
+    <text x="1128" y="170">Market Hall</text>
+    <text x="92" y="572">Open Market Court</text>
+    <text x="612" y="572">Cargo Yard</text>
+    <text x="1128" y="572">Food Depot Annex</text>
+  </g>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g transform="translate(84 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="44" y="84" width="128" height="62" fill="#b39a7b" stroke="#6f5d49" stroke-width="4"/>
+    <polygon points="34,84 108,40 182,84" fill="#8a673f" stroke="#644924" stroke-width="4"/>
+    <rect x="214" y="72" width="110" height="74" fill="#9f876a" stroke="#625241" stroke-width="4"/>
+    <polygon points="204,72 270,32 336,72" fill="#7d5b37" stroke="#5d4122" stroke-width="4"/>
+    <rect x="344" y="96" width="28" height="50" fill="#8d765a" stroke="#5c4f40" stroke-width="4"/>
+    <path d="M0 162 L62 156 L142 164 L222 158 L296 166 L400 158 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Granaries must read as food security first: elevated mass, reinforced doors, and vent rhythm.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Do not let them collapse into generic barns or become mansion silhouettes.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#b39a7b"/>
+    <rect x="46" y="266" width="22" height="22" fill="#8a673f"/>
+    <rect x="74" y="266" width="22" height="22" fill="#d7c48e"/>
+  </g>
+
+  <g transform="translate(600 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="38" y="92" width="296" height="54" fill="#a58e71" stroke="#675845" stroke-width="4"/>
+    <polygon points="28,92 112,46 192,92" fill="#86633c" stroke="#644924" stroke-width="4"/>
+    <polygon points="184,92 270,46 348,92" fill="#7a5835" stroke="#5b4023" stroke-width="4"/>
+    <rect x="348" y="76" width="24" height="70" fill="#8b7357" stroke="#5d4f40" stroke-width="4"/>
+    <rect x="74" y="112" width="34" height="34" fill="#6e5847"/>
+    <rect x="266" y="112" width="42" height="34" fill="#6e5847"/>
+    <path d="M0 162 L70 156 L156 164 L232 158 L328 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Storehouses need wide access and cargo logic before decoration or House trim.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Broad doors, loading platforms, and stacked-goods mass carry the function.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#a58e71"/>
+    <rect x="46" y="266" width="22" height="22" fill="#86633c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#6e5847"/>
+  </g>
+
+  <g transform="translate(1116 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="56" y="94" width="280" height="52" fill="#c6b191" stroke="#7a674f" stroke-width="4"/>
+    <polygon points="44,94 124,52 204,94" fill="#926d41" stroke="#664923" stroke-width="4"/>
+    <polygon points="194,94 268,52 346,94" fill="#8a663f" stroke="#644924" stroke-width="4"/>
+    <line x1="196" y1="38" x2="196" y2="94" stroke="#684f31" stroke-width="6"/>
+    <rect x="182" y="34" width="28" height="16" fill="#bf9b4f"/>
+    <path d="M0 162 L72 154 L160 164 L246 158 L334 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Market halls need exchange frontage, signal flag logic, and route-facing openness.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Keep the read civic and commercial, not religious or dynastic.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#c6b191"/>
+    <rect x="46" y="266" width="22" height="22" fill="#bf9b4f"/>
+    <rect x="74" y="266" width="22" height="22" fill="#926d41"/>
+  </g>
+
+  <g transform="translate(84 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="30" y="118" width="340" height="26" fill="#b8a07f" stroke="#725f49" stroke-width="4"/>
+    <rect x="44" y="86" width="54" height="32" fill="#987342"/>
+    <rect x="110" y="76" width="58" height="42" fill="#c29c58"/>
+    <rect x="178" y="84" width="50" height="34" fill="#8f5c3f"/>
+    <rect x="240" y="76" width="56" height="42" fill="#b0884a"/>
+    <rect x="308" y="86" width="42" height="32" fill="#7d674d"/>
+    <path d="M0 162 L60 156 L132 164 L222 158 L304 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Open market courts read through stall rhythm, awnings, and route-edge activity.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Keep stalls broad and countable at RTS height. No clutter fog.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#c29c58"/>
+    <rect x="46" y="266" width="22" height="22" fill="#8f5c3f"/>
+    <rect x="74" y="266" width="22" height="22" fill="#b8a07f"/>
+  </g>
+
+  <g transform="translate(600 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="34" y="120" width="330" height="20" fill="#8f7758"/>
+    <rect x="60" y="92" width="70" height="48" fill="#a89173" stroke="#6a5a47" stroke-width="4"/>
+    <rect x="146" y="84" width="58" height="56" fill="#967d63" stroke="#605141" stroke-width="4"/>
+    <rect x="222" y="88" width="62" height="52" fill="#b59c7c" stroke="#6f5d49" stroke-width="4"/>
+    <circle cx="318" cy="142" r="18" fill="#6d5948"/>
+    <circle cx="352" cy="144" r="14" fill="#6d5948"/>
+    <path d="M0 162 L62 156 L148 164 L232 158 L312 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Cargo yards should show wagon handling and stacked goods before interior detail.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Keep the yard usable and route-facing, not maze-like.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#a89173"/>
+    <rect x="46" y="266" width="22" height="22" fill="#8f7758"/>
+    <rect x="74" y="266" width="22" height="22" fill="#6d5948"/>
+  </g>
+
+  <g transform="translate(1116 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="48" y="88" width="92" height="58" fill="#b59b77" stroke="#6f5d48" stroke-width="4"/>
+    <rect x="150" y="78" width="98" height="68" fill="#a89173" stroke="#675845" stroke-width="4"/>
+    <rect x="262" y="96" width="74" height="50" fill="#93775e" stroke="#5e4f40" stroke-width="4"/>
+    <polygon points="40,88 94,54 148,88" fill="#86623d" stroke="#644924" stroke-width="4"/>
+    <polygon points="140,78 198,40 256,78" fill="#7d5c38" stroke="#624723" stroke-width="4"/>
+    <path d="M0 162 L70 156 L154 164 L238 158 L326 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Food depots should bridge granary security and storehouse throughput.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Read as support infrastructure, not as a command structure or luxury warehouse.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#b59b77"/>
+    <rect x="46" y="266" width="22" height="22" fill="#86623d"/>
+    <rect x="74" y="266" width="22" height="22" fill="#d2c08c"/>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use for economy-support prompting and support-building lookdev. These sheets should keep food, cargo, and market purpose legible from roofline and frontage alone before House overlays or damage states are added.</text>
+</svg>

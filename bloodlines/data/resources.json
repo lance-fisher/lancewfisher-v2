@@ -31,21 +31,21 @@
     "id": "stone",
     "name": "Stone",
     "category": "primary",
-    "enabledInPrototype": false,
+    "enabledInPrototype": true,
     "description": "Fortification and major structure material."
   },
   {
     "id": "iron",
     "name": "Iron",
     "category": "primary",
-    "enabledInPrototype": false,
-    "description": "Mid-to-late game military modernization material."
+    "enabledInPrototype": true,
+    "description": "Mid-to-late game military modernization material. Production consumes wood as smelting fuel."
   },
   {
     "id": "influence",
     "name": "Influence",
     "category": "advanced",
-    "enabledInPrototype": false,
+    "enabledInPrototype": true,
     "description": "Political leverage, strategic pressure, and systemic soft power."
   }
 ]

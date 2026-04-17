@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#ece0cb"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Shared Foundation Material Boards</text>
+  <text x="64" y="116" fill="#6c5a48" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: baseline stone, timber, iron, plaster, cloth, and ground value control</text>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="176" width="470" height="220" rx="18" fill="#fcf7ef"/>
+    <rect x="564" y="176" width="470" height="220" rx="18" fill="#fcf7ef"/>
+    <rect x="1064" y="176" width="470" height="220" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="430" width="470" height="220" rx="18" fill="#fcf7ef"/>
+    <rect x="564" y="430" width="470" height="220" rx="18" fill="#fcf7ef"/>
+    <rect x="1064" y="430" width="470" height="220" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="684" width="1470" height="244" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g font-family="Arial, sans-serif" font-size="18" fill="#3b3026">
+    <text x="92" y="210">Shared Stone</text>
+    <text x="592" y="210">Shared Timber</text>
+    <text x="1092" y="210">Shared Iron</text>
+    <text x="92" y="464">Shared Plaster / Lime</text>
+    <text x="592" y="464">Shared Cloth / Leather</text>
+    <text x="1092" y="464">Road Dust / Mud / Riverbank</text>
+  </g>
+
+  <g transform="translate(88 226)">
+    <rect x="0" y="0" width="68" height="68" fill="#8d8477"/>
+    <rect x="78" y="0" width="68" height="68" fill="#a39a8d"/>
+    <rect x="156" y="0" width="68" height="68" fill="#746c60"/>
+    <rect x="252" y="0" width="150" height="92" rx="10" fill="#8d8477" stroke="#5e554a" stroke-width="4"/>
+    <line x1="274" y1="18" x2="380" y2="18" stroke="#a39a8d" stroke-width="8"/>
+    <line x1="274" y1="44" x2="362" y2="44" stroke="#746c60" stroke-width="8"/>
+    <line x1="274" y1="70" x2="394" y2="70" stroke="#c2baae" stroke-width="8"/>
+    <text x="0" y="118" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Keep shared stone muted and broad-value. Contrast belongs to silhouette edges, not noisy grain.</text>
+  </g>
+
+  <g transform="translate(588 226)">
+    <rect x="0" y="0" width="68" height="68" fill="#7d603d"/>
+    <rect x="78" y="0" width="68" height="68" fill="#9a774d"/>
+    <rect x="156" y="0" width="68" height="68" fill="#5a4630"/>
+    <rect x="252" y="0" width="150" height="92" rx="10" fill="#7d603d" stroke="#583f28" stroke-width="4"/>
+    <line x1="270" y1="18" x2="386" y2="18" stroke="#b38958" stroke-width="8"/>
+    <line x1="270" y1="44" x2="356" y2="44" stroke="#5a4630" stroke-width="8"/>
+    <line x1="270" y1="70" x2="398" y2="70" stroke="#8f6b41" stroke-width="8"/>
+    <text x="0" y="118" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Timber must separate fresh structural wood from aged boards without looking glossy or painted.</text>
+  </g>
+
+  <g transform="translate(1088 226)">
+    <rect x="0" y="0" width="68" height="68" fill="#5f646a"/>
+    <rect x="78" y="0" width="68" height="68" fill="#8a9096"/>
+    <rect x="156" y="0" width="68" height="68" fill="#34383d"/>
+    <rect x="252" y="0" width="150" height="92" rx="10" fill="#5f646a" stroke="#43484e" stroke-width="4"/>
+    <line x1="270" y1="18" x2="390" y2="18" stroke="#9ba1a7" stroke-width="8"/>
+    <line x1="270" y1="44" x2="360" y2="44" stroke="#34383d" stroke-width="8"/>
+    <line x1="270" y1="70" x2="398" y2="70" stroke="#c0c5cb" stroke-width="8"/>
+    <text x="0" y="118" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Iron should stay readable as cold mass with wear edges, not mirror shine or fantasy steel-blue.</text>
+  </g>
+
+  <g transform="translate(88 480)">
+    <rect x="0" y="0" width="68" height="68" fill="#d8cbb9"/>
+    <rect x="78" y="0" width="68" height="68" fill="#c9bea9"/>
+    <rect x="156" y="0" width="68" height="68" fill="#b8ac98"/>
+    <rect x="252" y="0" width="150" height="92" rx="10" fill="#d8cbb9" stroke="#968875" stroke-width="4"/>
+    <line x1="270" y1="18" x2="392" y2="18" stroke="#f1e5d4" stroke-width="8"/>
+    <line x1="270" y1="44" x2="362" y2="44" stroke="#b8ac98" stroke-width="8"/>
+    <line x1="270" y1="70" x2="398" y2="70" stroke="#c9bea9" stroke-width="8"/>
+    <text x="0" y="118" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Plaster and lime tones keep civic structures readable without washing out banners or trim.</text>
+  </g>
+
+  <g transform="translate(588 480)">
+    <rect x="0" y="0" width="68" height="68" fill="#8c6f55"/>
+    <rect x="78" y="0" width="68" height="68" fill="#75614f"/>
+    <rect x="156" y="0" width="68" height="68" fill="#c2ab7e"/>
+    <rect x="252" y="0" width="150" height="92" rx="10" fill="#8c6f55" stroke="#654d3b" stroke-width="4"/>
+    <line x1="270" y1="18" x2="392" y2="18" stroke="#c2ab7e" stroke-width="8"/>
+    <line x1="270" y1="44" x2="360" y2="44" stroke="#75614f" stroke-width="8"/>
+    <line x1="270" y1="70" x2="398" y2="70" stroke="#dcc9a2" stroke-width="8"/>
+    <text x="0" y="118" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Cloth and leather trims should give role identity without becoming saturated costume color blocks.</text>
+  </g>
+
+  <g transform="translate(1088 480)">
+    <rect x="0" y="0" width="68" height="68" fill="#8a7357"/>
+    <rect x="78" y="0" width="68" height="68" fill="#6d5642"/>
+    <rect x="156" y="0" width="68" height="68" fill="#6f6859"/>
+    <rect x="252" y="0" width="150" height="92" rx="10" fill="#8a7357" stroke="#5f4e3d" stroke-width="4"/>
+    <line x1="270" y1="18" x2="390" y2="18" stroke="#b39c7d" stroke-width="8"/>
+    <line x1="270" y1="44" x2="360" y2="44" stroke="#6d5642" stroke-width="8"/>
+    <line x1="270" y1="70" x2="398" y2="70" stroke="#5c7b8c" stroke-width="8"/>
+    <text x="0" y="118" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Ground families need clear road, mud, and bank separation without muddying units into the terrain.</text>
+  </g>
+
+  <g transform="translate(88 714)" font-family="Arial, sans-serif">
+    <text x="0" y="24" fill="#322923" font-size="22">Material Control Rules</text>
+    <text x="0" y="60" fill="#5e4d40" font-size="16">1. Shared material families define the world baseline so House overlays can stay controlled and meaningful.</text>
+    <text x="0" y="90" fill="#5e4d40" font-family="Arial, sans-serif" font-size="16">2. Every material board should support silhouette and function before surface richness.</text>
+    <text x="0" y="120" fill="#5e4d40" font-family="Arial, sans-serif" font-size="16">3. If a swatch becomes more memorable than the building or unit role, it is too loud for Bloodlines.</text>
+
+    <text x="0" y="176" fill="#322923" font-size="22">Apply In Unity 6.3</text>
+    <text x="0" y="212" fill="#5e4d40" font-size="16">- shared stone, timber, iron, terrain, and plaster belong in `Materials/Shared` or `Materials/Terrain` before House variants branch out</text>
+    <text x="0" y="242" fill="#5e4d40" font-size="16">- House-specific trims should tint or accent these families rather than replacing them wholesale</text>
+    <text x="0" y="272" fill="#5e4d40" font-size="16">- keep material testbeds readable under neutral daylight before dusk or ward-light stress tests</text>
+
+    <text x="0" y="328" fill="#322923" font-size="22">Avoid</text>
+    <text x="0" y="364" fill="#5e4d40" font-size="16">- wet-look specular on everything</text>
+    <text x="0" y="394" fill="#5e4d40" font-size="16">- color-coded faction materials so intense they flatten heraldry and unit-role separation</text>
+    <text x="0" y="424" fill="#5e4d40" font-size="16">- terrain values so close to units that combat lines dissolve at gameplay height</text>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use for shared-material prompting, staging material creation, and lookdev testbed calibration. These are not final physically based libraries; they are value-and-family control boards for later replacement and refinement.</text>
+</svg>

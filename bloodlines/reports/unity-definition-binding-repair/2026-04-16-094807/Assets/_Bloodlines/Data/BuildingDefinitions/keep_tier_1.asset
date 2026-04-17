@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: keep_tier_1
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:BuildingDefinition
+  id: keep_tier_1
+  displayName: Inner Keep
+  prototypeEnabled: 1
+  footprint:
+    w: 4
+    h: 4
+  health: 2600
+  buildTime: 45
+  populationCapBonus: 18
+  dropoffResources: []
+  trainableUnits: []
+  cost:
+    gold: 180
+    food: 0
+    water: 0
+    wood: 80
+    stone: 220
+    iron: 60
+    influence: 0
+  resourceTrickle:
+    gold: 0
+    food: 0
+    water: 0
+    wood: 0
+    stone: 0
+    iron: 0
+    influence: 0
+  fortificationRole: keep
+  fortificationTierContribution: 2
+  structuralDamageMultiplier: 0.1
+  armor: 16
+  blocksPassage: 0
+  sightBonusRadius: 0
+  auraAttackMultiplier: 0
+  auraRadius: 0
+  smeltingFuelResource: 
+  smeltingFuelRatio: 0
+  runtimePrefab: {fileID: 0}
+  icon: {fileID: 0}

@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#efe4cf"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Terrain And Biomes Sheet</text>
+  <text x="64" y="116" fill="#6e5a46" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: top-down readability, edge logic, and battlefield path language</text>
+
+  <g font-family="Arial, sans-serif" font-size="15" fill="#47392c">
+    <text x="92" y="170">Reclaimed Plains</text>
+    <text x="472" y="170">Dry Earth And Trampled Ground</text>
+    <text x="852" y="170">River Edge And Shallow Water</text>
+    <text x="1232" y="170">Agricultural Ground</text>
+    <text x="92" y="586">Stone Highlands</text>
+    <text x="472" y="586">Forest Floor</text>
+    <text x="852" y="586">Marsh And Wetland</text>
+    <text x="1232" y="586">Road And Worn Path Language</text>
+  </g>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="186" width="320" height="340" rx="18" fill="#fcf7ef"/>
+    <rect x="444" y="186" width="320" height="340" rx="18" fill="#fcf7ef"/>
+    <rect x="824" y="186" width="320" height="340" rx="18" fill="#fcf7ef"/>
+    <rect x="1204" y="186" width="320" height="340" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="602" width="320" height="340" rx="18" fill="#fcf7ef"/>
+    <rect x="444" y="602" width="320" height="340" rx="18" fill="#fcf7ef"/>
+    <rect x="824" y="602" width="320" height="340" rx="18" fill="#fcf7ef"/>
+    <rect x="1204" y="602" width="320" height="340" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g transform="translate(80 202)">
+    <rect width="288" height="184" rx="14" fill="#b6b274"/>
+    <path d="M0 94 C34 70 60 82 96 68 S154 126 192 106 S250 88 288 114 L288 184 L0 184 Z" fill="#98a55c"/>
+    <path d="M0 38 C38 18 72 34 112 22 S182 42 220 28 S266 22 288 38 L288 84 C258 74 232 70 192 78 S116 56 84 70 S34 66 0 84 Z" fill="#c5c178"/>
+    <circle cx="54" cy="136" r="10" fill="#838b4f"/>
+    <circle cx="88" cy="118" r="12" fill="#838b4f"/>
+    <circle cx="166" cy="146" r="11" fill="#838b4f"/>
+    <circle cx="224" cy="124" r="9" fill="#838b4f"/>
+    <text x="20" y="214" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Soft tonal shifts, sparse rocks, and broad value lanes.</text>
+    <text x="20" y="238" fill="#695544" font-family="Arial, sans-serif" font-size="13">Plains should read as traversable ground, not decorative carpet.</text>
+    <rect x="20" y="258" width="22" height="22" fill="#c5c178"/>
+    <rect x="48" y="258" width="22" height="22" fill="#98a55c"/>
+    <rect x="76" y="258" width="22" height="22" fill="#5d6036"/>
+  </g>
+
+  <g transform="translate(460 202)">
+    <rect width="288" height="184" rx="14" fill="#a0835e"/>
+    <path d="M0 26 C42 8 72 40 122 20 S202 38 244 18 S276 18 288 26 L288 56 C248 42 210 50 164 62 S84 74 42 66 S12 56 0 62 Z" fill="#b09066"/>
+    <path d="M22 148 C58 116 98 124 138 138 S208 168 244 146 S278 130 288 136 L288 184 L0 184 L0 154 C12 154 16 154 22 148 Z" fill="#7f6448"/>
+    <path d="M26 82 L72 104 L110 92 L142 112 L188 96 L224 116 L266 104" fill="none" stroke="#c1a07b" stroke-width="10" stroke-linecap="round"/>
+    <text x="20" y="214" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Use dry ground to show war wear, convoy pressure, and siege churn.</text>
+    <text x="20" y="238" fill="#695544" font-family="Arial, sans-serif" font-size="13">Trampled mud stays broad and legible, never noise-heavy.</text>
+    <rect x="20" y="258" width="22" height="22" fill="#c1a07b"/>
+    <rect x="48" y="258" width="22" height="22" fill="#a0835e"/>
+    <rect x="76" y="258" width="22" height="22" fill="#6a523d"/>
+  </g>
+
+  <g transform="translate(840 202)">
+    <rect width="288" height="184" rx="14" fill="#8ba08d"/>
+    <path d="M0 70 C42 58 82 86 124 70 S198 40 238 56 S270 72 288 70 L288 184 L0 184 Z" fill="#6383a0"/>
+    <path d="M0 120 C32 94 72 110 108 98 S172 88 212 104 S264 126 288 122" fill="none" stroke="#adc2d2" stroke-width="14" stroke-linecap="round"/>
+    <path d="M0 52 C48 40 86 56 130 44 S216 34 288 58" fill="none" stroke="#d8d0bb" stroke-width="20" stroke-linecap="round"/>
+    <circle cx="188" cy="132" r="10" fill="#75846f"/>
+    <circle cx="226" cy="146" r="12" fill="#75846f"/>
+    <text x="20" y="214" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Water edge must stay readable from gameplay height and minimap scale.</text>
+    <text x="20" y="238" fill="#695544" font-family="Arial, sans-serif" font-size="13">The bank line, not tiny ripples, carries the tactical read.</text>
+    <rect x="20" y="258" width="22" height="22" fill="#adc2d2"/>
+    <rect x="48" y="258" width="22" height="22" fill="#6383a0"/>
+    <rect x="76" y="258" width="22" height="22" fill="#d8d0bb"/>
+  </g>
+
+  <g transform="translate(1220 202)">
+    <rect width="288" height="184" rx="14" fill="#b5a04e"/>
+    <path d="M0 62 L288 62" stroke="#cfbf68" stroke-width="10"/>
+    <path d="M0 92 L288 92" stroke="#d8cb79" stroke-width="10"/>
+    <path d="M0 122 L288 122" stroke="#cfbf68" stroke-width="10"/>
+    <path d="M0 152 L288 152" stroke="#d8cb79" stroke-width="10"/>
+    <path d="M44 0 L44 184" stroke="#8b7e40" stroke-width="6"/>
+    <path d="M102 0 L102 184" stroke="#8b7e40" stroke-width="6"/>
+    <path d="M162 0 L162 184" stroke="#8b7e40" stroke-width="6"/>
+    <path d="M228 0 L228 184" stroke="#8b7e40" stroke-width="6"/>
+    <rect x="194" y="120" width="54" height="34" fill="#8d6d4a" stroke="#5f492f" stroke-width="4"/>
+    <text x="20" y="214" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Fields should read as worked land and economy territory at a glance.</text>
+    <text x="20" y="238" fill="#695544" font-family="Arial, sans-serif" font-size="13">Crop rhythm matters more than small plant detail.</text>
+    <rect x="20" y="258" width="22" height="22" fill="#d8cb79"/>
+    <rect x="48" y="258" width="22" height="22" fill="#b5a04e"/>
+    <rect x="76" y="258" width="22" height="22" fill="#755d32"/>
+  </g>
+
+  <g transform="translate(80 618)">
+    <rect width="288" height="184" rx="14" fill="#9f9485"/>
+    <polygon points="0,126 42,98 66,118 108,80 144,116 188,72 224,100 258,84 288,104 288,184 0,184" fill="#80756a"/>
+    <polygon points="0,72 36,48 68,62 96,38 132,66 170,30 208,52 240,34 288,60 288,110 0,110" fill="#c3b7a8"/>
+    <circle cx="84" cy="142" r="10" fill="#6b6258"/>
+    <circle cx="206" cy="138" r="13" fill="#6b6258"/>
+    <text x="20" y="214" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Highland surfaces use broad angular value changes, not busy pebbles.</text>
+    <text x="20" y="238" fill="#695544" font-family="Arial, sans-serif" font-size="13">Cliff or ridge logic belongs in strong shape transitions.</text>
+    <rect x="20" y="258" width="22" height="22" fill="#c3b7a8"/>
+    <rect x="48" y="258" width="22" height="22" fill="#9f9485"/>
+    <rect x="76" y="258" width="22" height="22" fill="#5d554d"/>
+  </g>
+
+  <g transform="translate(460 618)">
+    <rect width="288" height="184" rx="14" fill="#6d7543"/>
+    <circle cx="42" cy="42" r="18" fill="#51603b"/>
+    <circle cx="90" cy="34" r="16" fill="#51603b"/>
+    <circle cx="144" cy="56" r="20" fill="#51603b"/>
+    <circle cx="222" cy="40" r="18" fill="#51603b"/>
+    <circle cx="256" cy="82" r="16" fill="#51603b"/>
+    <path d="M0 118 C34 102 70 114 102 100 S156 110 188 96 S244 116 288 102 L288 184 L0 184 Z" fill="#5a6033"/>
+    <path d="M34 132 L82 150 L126 138 L162 152 L208 144 L248 158" fill="none" stroke="#867552" stroke-width="9" stroke-linecap="round"/>
+    <text x="20" y="214" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Canopy shadows stay grouped and readable under units and buildings.</text>
+    <text x="20" y="238" fill="#695544" font-family="Arial, sans-serif" font-size="13">Forest floor is a support plane, not a texture-detail contest.</text>
+    <rect x="20" y="258" width="22" height="22" fill="#7b8650"/>
+    <rect x="48" y="258" width="22" height="22" fill="#5a6033"/>
+    <rect x="76" y="258" width="22" height="22" fill="#867552"/>
+  </g>
+
+  <g transform="translate(840 618)">
+    <rect width="288" height="184" rx="14" fill="#71846d"/>
+    <path d="M0 120 C36 92 74 112 108 98 S176 94 214 108 S256 126 288 118 L288 184 L0 184 Z" fill="#536c55"/>
+    <path d="M0 74 C32 44 82 58 124 74 S198 98 246 84 S270 72 288 82" fill="none" stroke="#8da59c" stroke-width="22" stroke-linecap="round"/>
+    <circle cx="58" cy="144" r="12" fill="#536c55"/>
+    <circle cx="146" cy="136" r="10" fill="#536c55"/>
+    <circle cx="236" cy="150" r="13" fill="#536c55"/>
+    <text x="20" y="214" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Wetland zones widen silhouettes and slow the eye without losing lanes.</text>
+    <text x="20" y="238" fill="#695544" font-family="Arial, sans-serif" font-size="13">Pools and reeds stay broad enough to survive top-down zoom.</text>
+    <rect x="20" y="258" width="22" height="22" fill="#8da59c"/>
+    <rect x="48" y="258" width="22" height="22" fill="#71846d"/>
+    <rect x="76" y="258" width="22" height="22" fill="#536c55"/>
+  </g>
+
+  <g transform="translate(1220 618)">
+    <rect width="288" height="184" rx="14" fill="#b59a73"/>
+    <path d="M18 122 C52 92 92 106 130 92 S214 76 270 100" fill="none" stroke="#8f6e47" stroke-width="18" stroke-linecap="round"/>
+    <path d="M28 124 C62 96 98 110 136 96 S218 80 262 104" fill="none" stroke="#d9c2a2" stroke-width="8" stroke-linecap="round"/>
+    <path d="M96 0 L116 184" stroke="#806749" stroke-width="10" stroke-linecap="round"/>
+    <path d="M208 0 L188 184" stroke="#806749" stroke-width="10" stroke-linecap="round"/>
+    <text x="20" y="214" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Roads need a readable backbone, soft edges, and convoy-friendly width.</text>
+    <text x="20" y="238" fill="#695544" font-family="Arial, sans-serif" font-size="13">Paths split from roads by weight, not by different fantasy styling.</text>
+    <rect x="20" y="258" width="22" height="22" fill="#d9c2a2"/>
+    <rect x="48" y="258" width="22" height="22" fill="#b59a73"/>
+    <rect x="76" y="258" width="22" height="22" fill="#806749"/>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use with: terrain manifest, map and terrain visual track, and battlefield readability rules. These remain concept placeholders for later terrain textures, splatmaps, and mesh-aligned material production.</text>
+</svg>

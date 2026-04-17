@@ -305,3 +305,81 @@ This order does not reduce Bloodlines scope. It surfaces the canonical systems i
 ## 10. Summary
 
 Bloodlines is in a healthier shape than any prior audit would suggest. The combination of a full archival canon, a working browser RTS core, meaningful data-driven content, active enemy and neutral AI, operable faith and dynasty runtime state, and explicit completion gates means the project has moved from "design archive" into "prototype-with-convergence-plan". The immediate risk is not scope creep. The immediate risk is treating the prototype as a toy because it is now playable, and shrinking the vision to match what already runs. Bloodlines is not a toy, and the audit found no reason to reduce scope. The forward path is to thread the documented systems into the runtime one well-scoped milestone at a time, while preserving the full canon.
+
+---
+
+## 11. 2026-04-14 Integration Addendum — Dynasty Consequence Cascade and Fortification Doctrine
+
+This addendum records the state changes produced by the 2026-04-14 session. The consolidated canonical root is now `D:\ProjectsHome\FisherSovereign\lancewfisher-v2\bloodlines` (per `docs/CONSOLIDATION_NOTE_2026-04-13_SINGLE_ROOT.md`). References in earlier sections of this analysis to `deploy/bloodlines/` as the canonical root should be read against that consolidation note; the canonical code, tests, and docs now live in `bloodlines/`.
+
+### 11.1 Dynasty Consequence Cascade — Implemented
+
+The implementation matrix (Section 3.2) is updated by the following canonical runtime additions:
+
+| System | Previous status | Current status (2026-04-14) |
+|---|---|---|
+| Commander battlefield presence | DOCUMENTED | LIVE (commander attachment to combat unit with aura bonus, death registered) |
+| Bloodline member attachment to armies | DATA-ONLY | LIVE (commander role resolves to unit; tested) |
+| Commander death / capture / succession | DOCUMENTED | PARTIAL → LIVE (capture vs kill resolution, succession cascade, heir backfill, interregnum state) |
+| Governor fall on territorial loss | not previously classified | LIVE (captured or displaced based on hostile presence at flip) |
+| Captive ledger | not previously classified | LIVE (faction.dynasty.captives with ransom influence trickle) |
+| Fallen ledger | not previously classified | LIVE (faction.dynasty.attachments.fallenMembers with disposition) |
+| Doctrine Path divergence (Light/Dark) per covenant | PARTIAL | LIVE (doctrine effects applied to capture, stabilization, growth, aura; commit UI surfaces Light/Dark choices) |
+| Conviction behavior ledger (Ruthlessness, Stewardship, Oathkeeping, Desecration) | DOCUMENTED | LIVE (four-bucket accrual, derived band label, runtime triggers) |
+| Occupation vs stabilized control distinction | PARTIAL | LIVE (occupied → stabilized transition at loyalty threshold) |
+| Ironmark Blood Production / blood cost loop | PARTIAL | LIVE (basic: non-worker training consumes a blood-levy pop + ruthlessness event) |
+
+Verification: `tests/data-validation.mjs` and `tests/runtime-bridge.mjs` both pass from `bloodlines/`. All runtime modules pass `node --check`. Live browser boot on `http://localhost:8057/play.html` shows dynasty panel, debug overlay, heir line, captives block rendering without console or network errors.
+
+### 11.2 Defensive Fortification Doctrine — Canonical Lock
+
+New canonical strategic pillar locked 2026-04-14. Full doctrine at `01_CANON/DEFENSIVE_FORTIFICATION_DOCTRINE.md`. Defender specification: `04_SYSTEMS/FORTIFICATION_SYSTEM.md`. Attacker specification: `04_SYSTEMS/SIEGE_SYSTEM.md`. Design-bible integration at Sections 82-85 in `18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE_v3.3.md` (bible bumped v3.2 → v3.3, canonical desktop copy at `D:/Lance/Desktop/BLOODLINES_COMPLETE_DESIGN_BIBLE_v3.3.md`).
+
+Implications on the implementation matrix (Section 3.2):
+
+| System | Doctrine implication |
+|---|---|
+| Layered fortification (outer works, inner ring, final core) | CANONICAL, implementation pending |
+| Defensive ecosystem components (walls, gates, towers, garrisons, chokepoints, kill zones, signal systems, reserve mustering, fallback positions) | CANONICAL, implementation pending |
+| Settlement class hierarchy (border, military fort, trade town, regional stronghold, primary keep, fortress-citadel) | CANONICAL, implementation pending |
+| Fortification specialist populations (garrison, engineers, signal keepers, wall wardens, tower artillerists, keep guard) | CANONICAL, implementation pending |
+| Siege engines and engineer specialists | CANONICAL, implementation pending |
+| Siege supply continuity and scouting | CANONICAL, implementation pending |
+| Assault failure penalty mathematics (wave-spam denial) | CANONICAL, implementation pending |
+| Faith-integrated fortifications (Old Light pyre wards, Blood Dominion altar reserves, Order edict wards, Wild root wards) | CANONICAL, implementation pending |
+| Bloodline presence bonuses at keep | CANONICAL, implementation pending; partial runtime via 2026-04-14 cascade |
+| Late-game apex fortifications | CANONICAL, implementation pending |
+
+### 11.3 Gates Status Update
+
+Per `docs/COMPLETION_STAGE_GATES.md`, current 2026-04-14 delta:
+
+| Gate | Previous | Updated (2026-04-14) |
+|---|---|---|
+| 2: Territory Layer | PARTIAL | PARTIAL → broader (occupation/stabilized distinction live; governor loss live; fortification tier + layered defense CANONICAL, implementation pending) |
+| 4: Bloodline Layer | PARTIAL (roster only) | PARTIAL → deeper (commander presence live, capture live, succession cascade live, interregnum live, captive ledger live; marriage/inheritance still DOCUMENTED) |
+| 5: Faith & Conviction | PARTIAL | PARTIAL → deeper (doctrine path effects live, conviction ledger live) |
+
+No previously-closed gate is re-opened by this addendum.
+
+### 11.4 Top New Risks
+
+1. **Fortification implementation debt.** The Defensive Fortification Doctrine is canonical but not yet implemented. Any future implementation work against fortifications must honor the ten pillars. Scope reduction is explicitly not permitted.
+2. **Wave-spam denial math must be tunable.** The assault failure penalty mathematics are canonical; the specific tuning values (fortification-tier factor, morale decay rate, supply drain per assault) remain to be specified in the data layer.
+3. **AI siege planning.** The doctrine requires AI attacking a developed fortress to not throw line infantry at walls. The current AI (in `ai.js`) has no fortification awareness. Implementation must introduce siege-preparation decision trees before the AI can coexist with canonical fortifications.
+4. **Captive ledger growth cap.** Captives currently have no explicit cap beyond the 16-entry ledger limit. Future ransom / rescue flows may need a formal capacity model.
+
+### 11.5 Next Engineering Focus (Updated)
+
+Ordered by canonical priority and upward-building progression:
+
+1. **Fortification tier metadata on control points and settlements.** Smallest canonical unlock; introduces tier attribute and begins the wall/tower progression pipeline.
+2. **Assault failure penalty simulation.** Wave-spam denial math is a canonical non-negotiable and unlocks AI fortification awareness.
+3. **Siege engine unit class.** First attacker-side concrete entity.
+4. **Reserve cycling for garrisons.** Makes the defensive ecosystem a live artifact rather than a building list.
+5. **Captured member rescue / ransom operations.** Builds on the 2026-04-14 cascade.
+6. **Governor specialization (city / border / keep).** Makes the Defense role a live specialization pipeline.
+7. **Faith-integrated fortification bonuses.** Activates covenant-specific defensive expressions.
+8. **Commander presence bonuses at the keep.** Extends the 2026-04-14 commander aura into fortification-specific leverage.
+
+These items honor both the Dynasty Consequence Cascade runtime surface and the Fortification Doctrine canonical lock. Neither scope is reducible.

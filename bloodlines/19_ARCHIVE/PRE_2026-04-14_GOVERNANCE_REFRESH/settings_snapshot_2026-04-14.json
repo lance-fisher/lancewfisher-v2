@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat D:/ProjectsHome/Bloodlines/01_CANON/CANONICAL_RULES.md D:/ProjectsHome/Bloodlines/00_ADMIN/PROJECT_STATUS.md 2>/dev/null || echo 'Bloodlines canonical files not found.'"
+          }
+        ]
+      }
+    ]
+  }
+}

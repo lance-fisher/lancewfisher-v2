@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: siege_tower
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:UnitDefinition
+  id: siege_tower
+  displayName: Siege Tower
+  stage: 2
+  role: siege-engine
+  siegeClass: siege_tower
+  prototypeEnabled: 1
+  populationCost: 2
+  health: 520
+  speed: 26
+  attackDamage: 16
+  attackRange: 28
+  attackCooldown: 2.2
+  sight: 132
+  projectileSpeed: 0
+  carryCapacity: 0
+  gatherRate: 0
+  buildRate: 0
+  structuralDamageMultiplier: 1.8
+  antiUnitDamageMultiplier: 0.65
+  cost:
+    gold: 110
+    food: 0
+    water: 0
+    wood: 180
+    stone: 110
+    iron: 70
+    influence: 0
+  house: 
+  notes:
+  - Slow wall-height assault engine that supports nearby infantry pushing a defended
+    wall line.
+  - Nearby allies attacking structures gain better assault reach and more effective
+    structural pressure.
+  runtimePrefab: {fileID: 0}
+  icon: {fileID: 0}
+  selectClip: {fileID: 0}
+  deathClip: {fileID: 0}

@@ -1,0 +1,1790 @@
+{
+  "meta": {
+    "generated": "2026-03-26",
+    "sources": [
+      "03_PROMPTS/INPUT_WORKBOOK.md",
+      "17_TASKS/OPEN_QUESTIONS.md"
+    ],
+    "bible_reference": "18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE.md",
+    "total_workbook_questions": 53,
+    "total_open_questions": 79,
+    "total_bible_sections": 69
+  },
+  "section_keywords": {
+    "section-1": {
+      "title": "What Bloodlines Is",
+      "keywords": ["identity", "genre", "scope", "competitive", "narrative", "philosophy", "rts", "strategy", "medieval", "dynasty", "vision", "core"]
+    },
+    "section-2": {
+      "title": "Design Pillars",
+      "keywords": ["pillars", "dynasty", "faith", "conviction", "territory", "design", "principles", "core", "systems", "interconnected", "sacrifice"]
+    },
+    "section-3": {
+      "title": "World History — The Four Eras",
+      "keywords": ["history", "eras", "lore", "ancient", "world", "timeline", "origin", "past", "civilization", "founding", "collapse"]
+    },
+    "section-4": {
+      "title": "The Sovereignty Seat",
+      "keywords": ["sovereignty", "seat", "throne", "power", "authority", "ruling", "claim", "legitimacy", "control", "dominion", "crown"]
+    },
+    "section-5": {
+      "title": "The Nine Founding Houses — Overview",
+      "keywords": ["houses", "factions", "founding", "nine", "overview", "dynasties", "great", "lineage", "noble", "bloodline", "identity"]
+    },
+    "section-6": {
+      "title": "House Strategic Profiles",
+      "keywords": ["house", "strategy", "profile", "asymmetry", "unique", "playstyle", "strengths", "weaknesses", "bonuses", "abilities", "faction"]
+    },
+    "section-7": {
+      "title": "The Trueborn City",
+      "keywords": ["trueborn", "city", "neutral", "trade", "hub", "sanctuary", "rise", "diplomacy", "market", "center", "urban"]
+    },
+    "section-8": {
+      "title": "Minor Tribes",
+      "keywords": ["tribes", "minor", "neutral", "npc", "archetypes", "barbarian", "indigenous", "raider", "nomad", "settlement", "encounter"]
+    },
+    "section-9": {
+      "title": "AI Kingdoms",
+      "keywords": ["ai", "kingdom", "opponent", "personality", "behavior", "computer", "rival", "enemy", "archetype", "named", "autonomous"]
+    },
+    "section-10": {
+      "title": "The Living Bloodline",
+      "keywords": ["bloodline", "family", "dynasty", "heir", "succession", "marriage", "children", "lineage", "tier", "generational", "living"]
+    },
+    "section-11": {
+      "title": "Marriage, Children, and Offspring",
+      "keywords": ["marriage", "children", "offspring", "breeding", "heir", "spouse", "genetics", "traits", "birth", "family", "union", "fertility"]
+    },
+    "section-12": {
+      "title": "Bloodline Member Functional Roles",
+      "keywords": ["roles", "commander", "governor", "diplomat", "steward", "champion", "spy", "priest", "assignment", "bloodline", "function"]
+    },
+    "section-13": {
+      "title": "Succession",
+      "keywords": ["succession", "heir", "death", "leader", "revolt", "choice", "impact", "transition", "throne", "crown", "inheritance"]
+    },
+    "section-14": {
+      "title": "The Keep",
+      "keywords": ["keep", "castle", "visual", "dynasty", "state", "headquarters", "stronghold", "representation", "home", "seat"]
+    },
+    "section-15": {
+      "title": "Bloodline Active Cap",
+      "keywords": ["cap", "limit", "active", "dormant", "twenty", "generational", "scale", "members", "bloodline", "overflow", "management"]
+    },
+    "section-16": {
+      "title": "Ten Terrain Types",
+      "keywords": ["terrain", "biome", "plains", "forest", "mountain", "desert", "tundra", "swamp", "coast", "island", "geography", "tiles"]
+    },
+    "section-17": {
+      "title": "Map Structure",
+      "keywords": ["map", "grid", "territory", "hex", "province", "layer", "generation", "boundaries", "structure", "layout", "region"]
+    },
+    "section-18": {
+      "title": "Minor Tribes Diplomacy",
+      "keywords": ["tribes", "diplomacy", "relationship", "memory", "development", "alliance", "tribute", "absorption", "minor", "negotiation"]
+    },
+    "section-19": {
+      "title": "Trueborn City Architecture",
+      "keywords": ["trueborn", "architecture", "city", "buildings", "diplomacy", "rise", "arc", "market", "council", "neutral", "governance"]
+    },
+    "section-20": {
+      "title": "Random World Generation",
+      "keywords": ["generation", "random", "procedural", "seed", "starting", "conditions", "spawn", "placement", "distribution", "world", "map"]
+    },
+    "section-21": {
+      "title": "The Four Ancient Faiths",
+      "keywords": ["faith", "covenant", "religion", "doctrine", "temple", "worship", "prayer", "sacred", "divine", "ancient", "four"]
+    },
+    "section-22": {
+      "title": "Faith Intensity System",
+      "keywords": ["intensity", "faith", "tier", "maintenance", "devotion", "fervor", "piety", "level", "escalation", "commitment", "cost"]
+    },
+    "section-23": {
+      "title": "Faith Buildings",
+      "keywords": ["faith", "buildings", "temple", "shrine", "cathedral", "sanctuary", "architecture", "construction", "covenant", "sacred", "structure"]
+    },
+    "section-24": {
+      "title": "Faith Doctrine Paths",
+      "keywords": ["doctrine", "path", "light", "dark", "choice", "alignment", "faith", "divergence", "branch", "philosophy", "direction"]
+    },
+    "section-25": {
+      "title": "Faith Units",
+      "keywords": ["faith", "units", "holy", "warrior", "crusader", "zealot", "paladin", "templar", "elite", "military", "covenant", "sacred"]
+    },
+    "section-26": {
+      "title": "The Covenant Test",
+      "keywords": ["covenant", "test", "trial", "challenge", "faith", "demand", "action", "consequence", "choice", "sacrifice", "proof"]
+    },
+    "section-27": {
+      "title": "Faith Spread",
+      "keywords": ["spread", "faith", "conversion", "missionary", "influence", "territory", "global", "tracking", "population", "religious", "expansion"]
+    },
+    "section-28": {
+      "title": "The Conviction Axis",
+      "keywords": ["conviction", "axis", "moral", "spectrum", "independence", "scale", "merciful", "ruthless", "alignment", "ethics", "choice"]
+    },
+    "section-29": {
+      "title": "Conviction Milestones",
+      "keywords": ["conviction", "milestone", "threshold", "unlock", "reward", "penalty", "progression", "tier", "achievement", "consequence"]
+    },
+    "section-30": {
+      "title": "Conviction and Population",
+      "keywords": ["conviction", "population", "morale", "loyalty", "growth", "happiness", "unrest", "stability", "citizen", "effect"]
+    },
+    "section-31": {
+      "title": "Conviction and Other Systems",
+      "keywords": ["conviction", "interaction", "systems", "faith", "diplomacy", "combat", "trade", "cross-system", "integration", "synergy"]
+    },
+    "section-32": {
+      "title": "The Squad System",
+      "keywords": ["squad", "formation", "group", "unit", "composition", "tactical", "visual", "identity", "team", "military", "organization"]
+    },
+    "section-33": {
+      "title": "Level 1 and Level 2 Units",
+      "keywords": ["units", "level", "infantry", "archer", "spearman", "militia", "recruitment", "basic", "upgrade", "iron", "survival"]
+    },
+    "section-34": {
+      "title": "Cavalry System",
+      "keywords": ["cavalry", "horse", "mounted", "charge", "flanking", "bear", "rider", "speed", "shock", "pursuit", "mobility"]
+    },
+    "section-35": {
+      "title": "Born of Sacrifice",
+      "keywords": ["sacrifice", "born", "population", "army", "cost", "power", "moral", "extreme", "ritual", "transformation", "permanent"]
+    },
+    "section-36": {
+      "title": "Siege and Naval Warfare",
+      "keywords": ["siege", "naval", "warfare", "walls", "ram", "catapult", "ship", "blockade", "coastal", "bombardment", "fortification"]
+    },
+    "section-37": {
+      "title": "Bloodline Member in Combat",
+      "keywords": ["bloodline", "combat", "commander", "battlefield", "hero", "death", "risk", "morale", "leadership", "duel", "presence"]
+    },
+    "section-38": {
+      "title": "Army Composition and Recruitment Slider",
+      "keywords": ["army", "composition", "recruitment", "slider", "ratio", "military", "civilian", "balance", "conscription", "allocation"]
+    },
+    "section-39": {
+      "title": "Military Events",
+      "keywords": ["military", "events", "battle", "ambush", "skirmish", "rout", "surrender", "campaign", "war", "trigger", "narrative"]
+    },
+    "section-40": {
+      "title": "The Six Resources",
+      "keywords": ["resources", "gold", "food", "water", "wood", "stone", "iron", "economy", "gathering", "production", "supply"]
+    },
+    "section-41": {
+      "title": "Population as Resource",
+      "keywords": ["population", "resource", "civilian", "worker", "growth", "conversion", "military", "pool", "cycle", "labor", "unified"]
+    },
+    "section-42": {
+      "title": "Economic Buildings and Tech Tree",
+      "keywords": ["buildings", "tech", "tree", "economy", "construction", "upgrade", "prerequisite", "research", "unlock", "progression", "infrastructure"]
+    },
+    "section-43": {
+      "title": "Trade, Caravans, Trueborn Economy",
+      "keywords": ["trade", "caravan", "trueborn", "economy", "merchant", "route", "commerce", "market", "goods", "exchange", "blockade"]
+    },
+    "section-44": {
+      "title": "Economic Victory Path",
+      "keywords": ["economic", "victory", "currency", "dominance", "wealth", "monopoly", "trade", "financial", "win", "condition", "gold"]
+    },
+    "section-45": {
+      "title": "The Four Match Stages",
+      "keywords": ["match", "stages", "phase", "progression", "early", "mid", "late", "endgame", "transition", "trigger", "pacing"]
+    },
+    "section-46": {
+      "title": "Match Scale and Pacing",
+      "keywords": ["scale", "pacing", "duration", "speed", "tempo", "length", "timing", "recovery", "momentum", "rhythm", "match"]
+    },
+    "section-47": {
+      "title": "Political Events System",
+      "keywords": ["political", "events", "crisis", "rebellion", "coup", "assassination", "marriage", "alliance", "betrayal", "intrigue", "narrative"]
+    },
+    "section-48": {
+      "title": "Diplomatic System",
+      "keywords": ["diplomacy", "alliance", "war", "peace", "treaty", "vassal", "tribute", "negotiation", "relations", "pact", "embargo"]
+    },
+    "section-49": {
+      "title": "Victory Conditions Overview",
+      "keywords": ["victory", "conditions", "win", "defeat", "elimination", "paths", "conquest", "prestige", "faith", "economic", "territorial"]
+    },
+    "section-50": {
+      "title": "Military Conquest and Territorial Governance",
+      "keywords": ["conquest", "military", "territory", "governance", "occupation", "control", "loyalty", "resistance", "annex", "subjugate"]
+    },
+    "section-51": {
+      "title": "Dynastic Prestige Victory",
+      "keywords": ["prestige", "dynasty", "victory", "legacy", "reputation", "honor", "glory", "influence", "renown", "dispute", "claim"]
+    },
+    "section-52": {
+      "title": "Faith Divine Right and Alliance Victory",
+      "keywords": ["faith", "divine", "right", "alliance", "victory", "coalition", "covenant", "unity", "crusade", "holy", "cooperation"]
+    },
+    "section-53": {
+      "title": "House Trueborn",
+      "keywords": ["trueborn", "house", "neutral", "trade", "diplomacy", "heritage", "legacy", "balance", "city", "founding"]
+    },
+    "section-54": {
+      "title": "House Highborne",
+      "keywords": ["highborne", "house", "nobility", "culture", "refinement", "prestige", "influence", "diplomacy", "art", "elegance"]
+    },
+    "section-55": {
+      "title": "House Ironmark",
+      "keywords": ["ironmark", "house", "military", "forge", "iron", "discipline", "strength", "warfare", "armor", "industrial"]
+    },
+    "section-56": {
+      "title": "House Goldgrave",
+      "keywords": ["goldgrave", "house", "wealth", "trade", "gold", "merchant", "economy", "banking", "luxury", "commerce"]
+    },
+    "section-57": {
+      "title": "House Stonehelm",
+      "keywords": ["stonehelm", "house", "defense", "fortress", "stone", "walls", "siege", "endurance", "mountain", "resilience"]
+    },
+    "section-58": {
+      "title": "House Westland",
+      "keywords": ["westland", "house", "exploration", "naval", "coast", "seafaring", "frontier", "expansion", "discovery", "maritime"]
+    },
+    "section-59": {
+      "title": "House Hartvale",
+      "keywords": ["hartvale", "house", "nature", "agriculture", "fertility", "growth", "harvest", "pastoral", "healing", "abundance"]
+    },
+    "section-60": {
+      "title": "House Whitehall",
+      "keywords": ["whitehall", "house", "faith", "piety", "order", "justice", "law", "temple", "religious", "righteous"]
+    },
+    "section-61": {
+      "title": "House Oldcrest",
+      "keywords": ["oldcrest", "house", "knowledge", "ancient", "wisdom", "scholarship", "history", "archives", "lore", "tradition"]
+    },
+    "section-63": {
+      "title": "Operations System Architecture",
+      "keywords": ["operations", "system", "architecture", "covert", "military", "faith", "mission", "espionage", "action", "framework"]
+    },
+    "section-64": {
+      "title": "Covert Operations",
+      "keywords": ["covert", "espionage", "spy", "sabotage", "assassination", "infiltration", "intelligence", "stealth", "agent", "subterfuge"]
+    },
+    "section-65": {
+      "title": "Faith Operations",
+      "keywords": ["faith", "operations", "covenant", "missionary", "conversion", "ritual", "holy", "crusade", "inquisition", "religious"]
+    },
+    "section-66": {
+      "title": "Military Operations",
+      "keywords": ["military", "operations", "campaign", "assault", "raid", "patrol", "deployment", "logistics", "command", "tactical"]
+    },
+    "section-67": {
+      "title": "The Timing System",
+      "keywords": ["timing", "cooldown", "duration", "schedule", "trigger", "tick", "real-time", "synchronization", "clock", "tempo"]
+    },
+    "section-68": {
+      "title": "Faith Switching",
+      "keywords": ["faith", "switching", "change", "conversion", "apostasy", "cost", "penalty", "transition", "betrayal", "reformation"]
+    },
+    "section-69": {
+      "title": "Design Philosophy",
+      "keywords": ["philosophy", "design", "principles", "vision", "identity", "depth", "authenticity", "ambition", "scope", "soul"]
+    }
+  },
+  "questions": [
+    {
+      "id": "Q1.1",
+      "text": "Competitive vs. Narrative Focus",
+      "description": "The game supports both multiplayer competition and long-form narrative play. Where does the balance sit?",
+      "options": [
+        "(a) Primarily competitive RTS with narrative flavor",
+        "(b) Primarily narrative strategy with competitive viability",
+        "(c) Two distinct modes with different balance targets",
+        "(d) Other"
+      ],
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-1", "section-2", "section-69"],
+      "workbook_ref": null,
+      "application_note": "Updates Design Bible Section 1 and Section 2"
+    },
+    {
+      "id": "Q1.2",
+      "text": "Accessibility vs. Depth",
+      "description": "Classic RTS games often force a choice between accessibility for new players and depth for experienced ones. Where should Bloodlines sit? How steep should the learning curve be? Should the dynastic and faith systems be immediately visible or gradually revealed? Is the target audience experienced RTS players, strategy game enthusiasts broadly, or both?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-1", "section-2", "section-69"],
+      "workbook_ref": null,
+      "application_note": "Updates Design Bible Section 1 and Section 2"
+    },
+    {
+      "id": "Q1.3",
+      "text": "Visual Benchmark",
+      "description": "The design references Command and Conquer Generals as a visual benchmark. Should Bloodlines aim for a specific visual style?",
+      "options": [
+        "(a) Isometric 2D (classic RTS)",
+        "(b) 3D with fixed camera angle (C&C Generals style)",
+        "(c) 3D with rotatable camera",
+        "(d) Top-down strategic map view",
+        "(e) Other"
+      ],
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-1", "section-69"],
+      "workbook_ref": null,
+      "application_note": "Updates Design Bible Section 1"
+    },
+    {
+      "id": "Q1.4",
+      "text": "Mod and Custom Map Support",
+      "description": "Should the game be designed with modding and custom map creation in mind from the start, or is this a post-launch consideration?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-1", "section-17", "section-69"],
+      "workbook_ref": null,
+      "application_note": "Updates Design Bible Section 1"
+    },
+    {
+      "id": "Q2.1",
+      "text": "Starting Conditions",
+      "description": "When a match begins, what does the player have? How many workers/villagers? What starting buildings (Settlement Hall only, or more)? What starting resources (how much gold, food, water, wood, stone)? Any starting military units? Any starting bloodline members beyond the leader?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-20", "section-40", "section-41", "section-45"],
+      "workbook_ref": null,
+      "application_note": "Creates new content in Match Structure and updates User Guide"
+    },
+    {
+      "id": "Q2.2",
+      "text": "First 60 Seconds",
+      "description": "What should the player do in the first minute of a match? Walk through the actions: Place buildings? Assign workers? Scout? All three? Is there an immediate threat or is the opening peaceful? How does the player learn the immediate surroundings?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-45", "section-46"],
+      "workbook_ref": null,
+      "application_note": "Creates new content in Match Structure"
+    },
+    {
+      "id": "Q2.3",
+      "text": "First Contact",
+      "description": "When does the player first encounter another faction, tribe, or world element? Is it a guaranteed event at a set time, or random based on exploration? What happens at first contact? How do encounters with minor tribes differ from encounters with AI kingdoms?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-8", "section-9", "section-18", "section-45", "section-48"],
+      "workbook_ref": null,
+      "application_note": "Creates new content in Match Structure"
+    },
+    {
+      "id": "Q2.4",
+      "text": "Faith Selection Moment",
+      "description": "The design says faith is selected at the end of Stage 1. What does this moment look like? Does the player encounter all four covenants and choose, or only the ones near their territory? Is it a menu selection, a narrative event, or an in-world interaction? Can the player delay faith selection? What happens if two players try to select the same faith?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-21", "section-22", "section-45"],
+      "workbook_ref": null,
+      "application_note": "Creates new content in Match Structure"
+    },
+    {
+      "id": "Q2.5",
+      "text": "Stage Transition Triggers",
+      "description": "What causes the transition from Stage 1 to Stage 2, and from each subsequent stage? Time-based? Achievement-based (reach X population, build Y structure)? Player-initiated (choose to advance)? Different for each stage?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-45", "section-46"],
+      "workbook_ref": null,
+      "application_note": "Creates new content in Match Structure"
+    },
+    {
+      "id": "Q2.6",
+      "text": "Early Game Pacing Feel",
+      "description": "What should the early game feel like? Urgent and tense (immediate threats, limited time)? Exploratory and deliberate (room to build and discover)? Variable (depends on map generation and nearby factions)?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-45", "section-46", "section-69"],
+      "workbook_ref": null,
+      "application_note": "Creates new content in Match Structure"
+    },
+    {
+      "id": "Q3.1",
+      "text": "Degree of Asymmetry",
+      "description": "How different should houses feel from each other?",
+      "options": [
+        "(a) Purely cosmetic (same mechanics, different art/lore)",
+        "(b) Minor stat bonuses (small starting advantages)",
+        "(c) Unique passive abilities (each house has one special trait)",
+        "(d) Unique units or buildings (houses unlock different content)",
+        "(e) Fully asymmetric (houses play fundamentally differently, like Starcraft races)",
+        "(f) Other"
+      ],
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-5", "section-6"],
+      "workbook_ref": null,
+      "application_note": "Updates Founding Houses and creates Faction Canon"
+    },
+    {
+      "id": "Q3.2",
+      "text": "Starting Differences",
+      "description": "Do houses start with different resources, buildings, or positions? Does Goldgrave start with more gold? Does Ironmark start with a military advantage? Does Stonehelm start with better fortifications? Or do all houses start identically?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-5", "section-6", "section-20"],
+      "workbook_ref": null,
+      "application_note": "Updates Founding Houses"
+    },
+    {
+      "id": "Q3.3",
+      "text": "House-Faith Affinity",
+      "description": "Do certain houses have natural affinities for certain faiths? Example: Does Whitehall naturally align with The Order? If so, is this a starting bonus, a lore suggestion, or a mechanical constraint? Can any house choose any faith?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-5", "section-6", "section-21"],
+      "workbook_ref": null,
+      "application_note": "Updates Founding Houses"
+    },
+    {
+      "id": "Q3.4",
+      "text": "What Should Make a House Feel Different Before Unique Units Appear?",
+      "description": "In the first few minutes, before any unique content is unlocked, how does a player know they are playing Ironmark vs Hartvale? What feels different?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-5", "section-6", "section-45"],
+      "workbook_ref": null,
+      "application_note": "Updates Founding Houses"
+    },
+    {
+      "id": "Q4.1",
+      "text": "Exclusive Content per Faith",
+      "description": "Does each faith unlock exclusive buildings, units, abilities, or technologies? If yes, how many exclusive elements per faith? Are exclusives powerful enough to be build-defining or are they supplementary?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-21", "section-23", "section-25"],
+      "workbook_ref": null,
+      "application_note": "Updates Faith System and Four Ancient Faiths"
+    },
+    {
+      "id": "Q4.2",
+      "text": "Faith Change",
+      "description": "Can a dynasty change its faith mid-match? If yes, at what cost? If no, is this an intentional design constraint (commitment matters)?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-21", "section-22", "section-68"],
+      "workbook_ref": null,
+      "application_note": "Updates Faith System"
+    },
+    {
+      "id": "Q4.3",
+      "text": "Multiple Faiths in One Territory",
+      "description": "Can different populations within a dynasty's territory practice different faiths? If conquered population follows a different faith, what happens? Does forced conversion exist? At what cost? Can religious tolerance be a governance strategy?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-21", "section-27", "section-50"],
+      "workbook_ref": null,
+      "application_note": "Updates Faith System"
+    },
+    {
+      "id": "Q4.4",
+      "text": "Faith and Diplomacy",
+      "description": "How does shared faith affect diplomatic relations? Is same-faith easier to ally with? Does faith alignment difference within the same covenant create schism risk? Can faith difference be a casus belli (justification for war)?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-21", "section-48", "section-52"],
+      "workbook_ref": null,
+      "application_note": "Updates Faith System"
+    },
+    {
+      "id": "Q4.5",
+      "text": "Faith Functional Metaphor",
+      "description": "Which metaphor best describes the role of faith in gameplay?",
+      "options": [
+        "(a) Doctrine (a set of rules that constrain and empower)",
+        "(b) Covenant (a pact with a higher power that grants abilities at a price)",
+        "(c) Law (a governance framework imposed on the population)",
+        "(d) Spiritual power (a magic system with religious flavor)",
+        "(e) State identity (a civilization-defining ideology, like communism vs capitalism)",
+        "(f) All of the above, layered",
+        "(g) Other"
+      ],
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-2", "section-21", "section-24"],
+      "workbook_ref": null,
+      "application_note": "Updates Faith System and Four Ancient Faiths"
+    },
+    {
+      "id": "Q5.1",
+      "text": "Conviction Scope",
+      "description": "Is conviction tracked at which level?",
+      "options": [
+        "(a) Per-dynasty (one conviction value for the entire civilization)",
+        "(b) Per-territory (different regions develop different moral character)",
+        "(c) Per-army (armies that commit atrocities carry that mark)",
+        "(d) Per-bloodline-member (individual moral records)",
+        "(e) Multiple levels simultaneously"
+      ],
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-28", "section-29"],
+      "workbook_ref": null,
+      "application_note": "Updates Conviction System and creates Canonical Rules entries"
+    },
+    {
+      "id": "Q5.2",
+      "text": "Conviction Visibility",
+      "description": "Should the player see their conviction?",
+      "options": [
+        "(a) Visible as a numeric score or bar",
+        "(b) Visible through effects and indicators but not as a direct number",
+        "(c) Partially hidden, with general direction visible but exact state inferred",
+        "(d) Fully hidden, experienced only through consequences"
+      ],
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-28", "section-29"],
+      "workbook_ref": null,
+      "application_note": "Updates Conviction System"
+    },
+    {
+      "id": "Q5.3",
+      "text": "Conviction Axes",
+      "description": "Is conviction a single light-to-dark spectrum, or multiple independent axes? Example single axis: Merciful <-------> Ruthless. Example multiple axes: Militaristic, Mercantile, Devout, Expansionist (each tracked separately). What conviction directions have you imagined?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-28"],
+      "workbook_ref": null,
+      "application_note": "Updates Conviction System"
+    },
+    {
+      "id": "Q5.4",
+      "text": "Specific Action Examples",
+      "description": "For specific in-game actions (protecting civilians during war, burning a captured city, ransoming/executing captured bloodline members, enslaving conquered population, building temples in conquered territory, sacrificing armies, trading food to starving rivals), what should happen to conviction?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-28", "section-29", "section-31", "section-35"],
+      "workbook_ref": null,
+      "application_note": "Updates Conviction System"
+    },
+    {
+      "id": "Q5.5",
+      "text": "Late-Game Divergence Feel",
+      "description": "At Level 4, conviction and faith combine to create an irreversible divergence. What should this feel like? Not just statistically different, but dramatically different. What changes in the game's tone, visuals, music, or mechanics at this point?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-24", "section-28", "section-29", "section-45"],
+      "workbook_ref": null,
+      "application_note": "Updates Conviction System"
+    },
+    {
+      "id": "Q6.1",
+      "text": "Population Conversion",
+      "description": "When a civilian is converted to a soldier, what exactly happens? Does the population number decrease by 1? Can soldiers return to civilian status? Is there a training time, or is conversion instant? What is the maximum percentage of population that can be military before the economy collapses?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-38", "section-41"],
+      "workbook_ref": null,
+      "application_note": "Updates Population System and Resource System"
+    },
+    {
+      "id": "Q6.2",
+      "text": "Population Growth Rate",
+      "description": "How fast should population grow? Should a comfortable economy double population in 5 minutes? 15 minutes? 30 minutes? What is the target population size for a healthy mid-game civilization? Is there a natural cap beyond housing (food, water, morale)?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-41", "section-46"],
+      "workbook_ref": null,
+      "application_note": "Updates Population System"
+    },
+    {
+      "id": "Q6.3",
+      "text": "Resource Gathering Workers",
+      "description": "Do workers gather resources like in Age of Empires (assigned to specific tasks) or like in Command and Conquer (automated from buildings)? If worker-assigned: How many workers per resource node? If building-automated: Does population size affect production rate?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-40", "section-41", "section-42"],
+      "workbook_ref": null,
+      "application_note": "Updates Population System and Resource System"
+    },
+    {
+      "id": "Q6.4",
+      "text": "Trade Between Dynasties",
+      "description": "Does inter-dynasty trade exist? If yes: What can be traded? Resources? Population? Technology? Bloodline members? How is trade initiated? Can trade be blockaded?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-43", "section-48"],
+      "workbook_ref": null,
+      "application_note": "Updates Population System and Resource System"
+    },
+    {
+      "id": "Q7.1",
+      "text": "Succession",
+      "description": "When the dynasty leader dies, what happens? Does the eldest heir automatically succeed? Can the player choose an heir? Can succession be contested by other bloodline members? What happens if there is no heir?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-10", "section-13"],
+      "workbook_ref": null,
+      "application_note": "Updates Dynastic System"
+    },
+    {
+      "id": "Q7.2",
+      "text": "Dormancy Mechanics",
+      "description": "When bloodline members exceed the active cap of 20, what determines which become dormant? Player choice? Automatic based on age, skill, or role? How does the player experience the transition to dormancy? Can dormant members be reactivated?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-10", "section-15"],
+      "workbook_ref": null,
+      "application_note": "Updates Dynastic System"
+    },
+    {
+      "id": "Q7.3",
+      "text": "Character Traits",
+      "description": "Do bloodline members have inheritable traits? If yes: Are traits genetic (inherited from parents), trained (from training path), or both? What kinds of traits exist? Can traits be improved through experience?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-10", "section-11", "section-12"],
+      "workbook_ref": null,
+      "application_note": "Updates Dynastic System"
+    },
+    {
+      "id": "Q7.4",
+      "text": "Bloodline Member Agency",
+      "description": "Do bloodline members have their own opinions, goals, or loyalty levels? Can a bloodline member rebel? Can a bloodline member refuse an order? Do members have relationships with each other (rivalries, alliances)?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-10", "section-12", "section-47"],
+      "workbook_ref": null,
+      "application_note": "Updates Dynastic System"
+    },
+    {
+      "id": "Q7.5",
+      "text": "Lifespan Model",
+      "description": "How do bloodline members age and die? Fixed lifespan in game ticks/minutes? Age-based decay with increasing death probability? Event-driven death only (battle, assassination, sacrifice)?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-10", "section-46"],
+      "workbook_ref": null,
+      "application_note": "Updates Dynastic System"
+    },
+    {
+      "id": "Q8.1",
+      "text": "Diplomatic States",
+      "description": "What formal diplomatic states exist between dynasties? War, Peace, Alliance, Non-Aggression Pact, Vassal, Trade Partner, Tributary? Others?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-48"],
+      "workbook_ref": null,
+      "application_note": "Creates new content in Mechanics Index and Territory System"
+    },
+    {
+      "id": "Q8.2",
+      "text": "Lesser House Control",
+      "description": "The design says lesser houses can be AI-autonomous or player-controlled. How does the player interact with their lesser houses? Direct command? Request-based? Autonomous with influence? Adjustable control level?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-9", "section-48"],
+      "workbook_ref": null,
+      "application_note": "Creates new content in Mechanics Index"
+    },
+    {
+      "id": "Q8.3",
+      "text": "Loyalty vs. Territory Ownership",
+      "description": "If you own a territory militarily but the population is disloyal, what specifically cannot you do that a loyal territory allows?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-30", "section-50"],
+      "workbook_ref": null,
+      "application_note": "Creates new content in Mechanics Index and Territory System"
+    },
+    {
+      "id": "Q9.1",
+      "text": "Level 2 Units",
+      "description": "What new unit types should appear at Level 2? Cavalry? Siege equipment? Upgraded versions of Level 1 units? Faith-specific units? What role does each new unit fill that Level 1 does not?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-33", "section-34"],
+      "workbook_ref": null,
+      "application_note": "Updates Unit Index and creates content for Levels 2-5"
+    },
+    {
+      "id": "Q9.2",
+      "text": "Siege Warfare",
+      "description": "How should siege warfare work? Do armies automatically attack walls, or do they need siege equipment? What siege equipment exists? How do defenders interact with siege? How long should a typical siege last?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-36"],
+      "workbook_ref": null,
+      "application_note": "Updates Unit Index"
+    },
+    {
+      "id": "Q9.3",
+      "text": "Cavalry",
+      "description": "Given that spearmen are described as 'strong against cavalry,' cavalry must exist. When does cavalry become available? What roles does cavalry serve? Is cavalry drawn from population like infantry? Does cavalry require special resources or buildings?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-34"],
+      "workbook_ref": null,
+      "application_note": "Updates Unit Index"
+    },
+    {
+      "id": "Q9.4",
+      "text": "Naval Units",
+      "description": "Naval warfare exists in the design. What naval units should exist? Warships, transport ships, trade ships, fishing vessels? How do naval and land forces interact? Can naval units bombard coastal positions?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-36"],
+      "workbook_ref": null,
+      "application_note": "Updates Unit Index"
+    },
+    {
+      "id": "Q10.1",
+      "text": "Map Structure",
+      "description": "What map type best fits Bloodlines?",
+      "options": [
+        "(a) Hex grid (clear territory boundaries, turn-based feel)",
+        "(b) Province/region map (like Crusader Kings or Europa Universalis)",
+        "(c) Continuous terrain (like Command and Conquer, no grid)",
+        "(d) Hybrid (continuous terrain with province overlay)",
+        "(e) Other"
+      ],
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-17", "section-20"],
+      "workbook_ref": null,
+      "application_note": "Populates World History, Timeline, and World Index"
+    },
+    {
+      "id": "Q10.2",
+      "text": "World History",
+      "description": "Do you have a vision for the world's history? How old is this world? Were the four faiths always separate, or did they diverge from one? What happened to the Trueborn dynasty? Are there ancient ruins?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-3", "section-7", "section-21"],
+      "workbook_ref": null,
+      "application_note": "Populates World History and Timeline"
+    },
+    {
+      "id": "Q10.3",
+      "text": "Geography",
+      "description": "What types of terrain and biomes should the map contain? Plains, forests, mountains, deserts, tundra, swamps, coasts, islands? Do terrain types affect which resources are available? Do terrain types affect military combat?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-16", "section-17"],
+      "workbook_ref": null,
+      "application_note": "Populates World Index"
+    },
+    {
+      "id": "Q11.1",
+      "text": "Victory Thresholds",
+      "description": "For each victory path (Military Conquest, Currency Dominance, Faith Divine Right, Territorial Governance, Dynastic Prestige), what is the specific win condition?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-49", "section-50", "section-51", "section-52", "section-44"],
+      "workbook_ref": null,
+      "application_note": "Updates Match Structure and Canonical Rules"
+    },
+    {
+      "id": "Q11.2",
+      "text": "Defeat Conditions",
+      "description": "When is a player eliminated? When their last settlement is destroyed? When their bloodline has no living members? When their population reaches zero? Can a defeated dynasty be absorbed rather than eliminated?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-49"],
+      "workbook_ref": null,
+      "application_note": "Updates Match Structure and Canonical Rules"
+    },
+    {
+      "id": "Q11.3",
+      "text": "Victory Visibility",
+      "description": "How do players know someone is approaching victory? Public announcements? Visible victory progress bars? Hidden until threshold is crossed? Should nearing victory trigger the Trueborn coalition?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-7", "section-49"],
+      "workbook_ref": null,
+      "application_note": "Updates Match Structure and Canonical Rules"
+    },
+    {
+      "id": "Q12.1",
+      "text": "Information Priority",
+      "description": "When the player looks at the main game screen, what information is always visible? Resources? Population count? Faith intensity? Conviction indicator? Minimap? Family tree shortcut? Current stage/level?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-14"],
+      "workbook_ref": null,
+      "application_note": "Populates UI Notes"
+    },
+    {
+      "id": "Q12.2",
+      "text": "Family Tree Interaction",
+      "description": "The family tree is described as a 'central gameplay element.' How does the player interact with it? Fullscreen overlay? Side panel? Separate screen? Can the player issue commands from the family tree? How does the player learn about dormant members?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-10", "section-14", "section-15"],
+      "workbook_ref": null,
+      "application_note": "Populates UI Notes"
+    },
+    {
+      "id": "Q13.1",
+      "text": "First System to Prototype",
+      "description": "Which system should be prototyped first?",
+      "options": [
+        "(a) Resource gathering and building construction",
+        "(b) Population growth and housing",
+        "(c) Military recruitment and Level 1 combat",
+        "(d) Territory control and loyalty",
+        "(e) The economic loop (resources to buildings to population to more resources)"
+      ],
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-40", "section-41", "section-42"],
+      "workbook_ref": null,
+      "application_note": "Informs Prototype directory"
+    },
+    {
+      "id": "Q13.2",
+      "text": "Target Platform",
+      "description": "What platform(s) is the game being built for? PC only? PC + Console? Browser-based prototype first? Mobile ever?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-1", "section-69"],
+      "workbook_ref": null,
+      "application_note": "Informs Prototype directory and Master Memory"
+    },
+    {
+      "id": "Q13.3",
+      "text": "Engine/Technology",
+      "description": "Is there a preferred engine or technology stack? Unity? Unreal? Custom engine? Web-based (the bootstrap prompt suggests TypeScript)? Godot?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-1", "section-69"],
+      "workbook_ref": null,
+      "application_note": "Informs Prototype directory and Master Memory"
+    },
+    {
+      "id": "Q14.1",
+      "text": "Minimum Viable Slice",
+      "description": "What is the smallest playable experience that would feel like Bloodlines? Just resource gathering and building? Resource gathering + military + one enemy? Resource gathering + population + territory + one AI opponent?",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-1", "section-2", "section-45"],
+      "workbook_ref": null,
+      "application_note": "Creates a new prototype spec document"
+    },
+    {
+      "id": "Q14.2",
+      "text": "What Must the Prototype Prove?",
+      "description": "What question should the first prototype answer? 'Does the economic loop feel right?' 'Does territory loyalty add meaningful gameplay?' 'Does the population-as-resource model create interesting tradeoffs?' 'Does combat feel like a C&C-style RTS?'",
+      "options": null,
+      "severity": null,
+      "source": "workbook",
+      "bible_sections": ["section-1", "section-2", "section-69"],
+      "workbook_ref": null,
+      "application_note": "Creates a new prototype spec document"
+    },
+    {
+      "id": "W1",
+      "text": "What map type? Hex grid, province, continuous terrain, or hybrid?",
+      "description": null,
+      "options": null,
+      "severity": "BLOCKING",
+      "source": "open_questions",
+      "bible_sections": ["section-17", "section-20"],
+      "workbook_ref": "Q10.1",
+      "application_note": null
+    },
+    {
+      "id": "W2",
+      "text": "What terrain types exist and how do they affect gameplay?",
+      "description": null,
+      "options": null,
+      "severity": "BLOCKING",
+      "source": "open_questions",
+      "bible_sections": ["section-16", "section-17"],
+      "workbook_ref": "Q10.3",
+      "application_note": null
+    },
+    {
+      "id": "W3",
+      "text": "How are territory boundaries drawn and contested?",
+      "description": null,
+      "options": null,
+      "severity": "BLOCKING",
+      "source": "open_questions",
+      "bible_sections": ["section-17", "section-50"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "W4",
+      "text": "What is the size of a typical map (number of territories, playable area)?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-17", "section-46"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "W5",
+      "text": "How does random world generation distribute resources and terrain?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-16", "section-20", "section-40"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "W6",
+      "text": "Are there neutral territories, contested zones, or sacred sites?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-7", "section-8", "section-17", "section-21"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "W7",
+      "text": "What types of water features exist (rivers, lakes, ocean, straits)?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-16", "section-17", "section-36"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "M1",
+      "text": "What are the player's starting conditions (units, buildings, resources)?",
+      "description": null,
+      "options": null,
+      "severity": "BLOCKING",
+      "source": "open_questions",
+      "bible_sections": ["section-20", "section-40", "section-41", "section-45"],
+      "workbook_ref": "Q2.1",
+      "application_note": null
+    },
+    {
+      "id": "M2",
+      "text": "What does the first 10 minutes of a match look like step by step?",
+      "description": null,
+      "options": null,
+      "severity": "BLOCKING",
+      "source": "open_questions",
+      "bible_sections": ["section-45", "section-46"],
+      "workbook_ref": "Q2.2",
+      "application_note": null
+    },
+    {
+      "id": "M3",
+      "text": "What triggers the transition from Stage 1 to Stage 2?",
+      "description": null,
+      "options": null,
+      "severity": "BLOCKING",
+      "source": "open_questions",
+      "bible_sections": ["section-45"],
+      "workbook_ref": "Q2.5",
+      "application_note": null
+    },
+    {
+      "id": "M4",
+      "text": "What triggers transitions for all subsequent stages?",
+      "description": null,
+      "options": null,
+      "severity": "BLOCKING",
+      "source": "open_questions",
+      "bible_sections": ["section-45", "section-46"],
+      "workbook_ref": "Q2.5",
+      "application_note": null
+    },
+    {
+      "id": "M5",
+      "text": "How does the faith selection moment work in practice?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-21", "section-22", "section-45"],
+      "workbook_ref": "Q2.4",
+      "application_note": null
+    },
+    {
+      "id": "M6",
+      "text": "When does the player first encounter another faction or tribe?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-8", "section-9", "section-18", "section-45"],
+      "workbook_ref": "Q2.3",
+      "application_note": null
+    },
+    {
+      "id": "M7",
+      "text": "What specific match options exist in the lobby (match length, victory types, map size)?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-45", "section-46", "section-49"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "C1",
+      "text": "What is the combat resolution model (real-time direct, auto-resolve, hybrid)?",
+      "description": null,
+      "options": null,
+      "severity": "BLOCKING",
+      "source": "open_questions",
+      "bible_sections": ["section-32", "section-33", "section-37"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "C2",
+      "text": "What units exist at Levels 2, 3, 4, and 5?",
+      "description": null,
+      "options": null,
+      "severity": "BLOCKING",
+      "source": "open_questions",
+      "bible_sections": ["section-25", "section-33", "section-34"],
+      "workbook_ref": "Q9.1",
+      "application_note": null
+    },
+    {
+      "id": "C3",
+      "text": "When does cavalry appear and what roles does it serve?",
+      "description": null,
+      "options": null,
+      "severity": "BLOCKING",
+      "source": "open_questions",
+      "bible_sections": ["section-34"],
+      "workbook_ref": "Q9.3",
+      "application_note": null
+    },
+    {
+      "id": "C4",
+      "text": "How does siege warfare work mechanically?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-36"],
+      "workbook_ref": "Q9.2",
+      "application_note": null
+    },
+    {
+      "id": "C5",
+      "text": "How does terrain affect combat?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-16", "section-32", "section-37"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "C6",
+      "text": "How do bloodline commanders affect battlefield outcomes?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-12", "section-37"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "C7",
+      "text": "How do morale, conviction, and faith affect combat performance?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-28", "section-31", "section-37"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "C8",
+      "text": "What naval units exist and how do naval/land forces interact?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-36"],
+      "workbook_ref": "Q9.4",
+      "application_note": null
+    },
+    {
+      "id": "C9",
+      "text": "What faith-specific military units or abilities exist?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-25", "section-65"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "C10",
+      "text": "What house-specific military units or abilities exist?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-6", "section-33"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "F1",
+      "text": "What degree of mechanical asymmetry exists between houses?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-5", "section-6"],
+      "workbook_ref": "Q3.1",
+      "application_note": null
+    },
+    {
+      "id": "F2",
+      "text": "Do houses have different starting conditions?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-5", "section-6", "section-20"],
+      "workbook_ref": "Q3.2",
+      "application_note": null
+    },
+    {
+      "id": "F3",
+      "text": "Do houses have natural affinities for certain faiths?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-5", "section-6", "section-21"],
+      "workbook_ref": "Q3.3",
+      "application_note": null
+    },
+    {
+      "id": "F4",
+      "text": "How does a house feel mechanically different before unique content is unlocked?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-5", "section-6", "section-45"],
+      "workbook_ref": "Q3.4",
+      "application_note": null
+    },
+    {
+      "id": "F5",
+      "text": "Do houses have unique buildings, units, or technologies?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-6", "section-42"],
+      "workbook_ref": "Q3.1",
+      "application_note": null
+    },
+    {
+      "id": "FA1",
+      "text": "What exclusive content (buildings, units, abilities) does each faith unlock?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-21", "section-23", "section-25"],
+      "workbook_ref": "Q4.1",
+      "application_note": null
+    },
+    {
+      "id": "FA2",
+      "text": "Can a dynasty change its faith mid-match?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-21", "section-68"],
+      "workbook_ref": "Q4.2",
+      "application_note": null
+    },
+    {
+      "id": "FA3",
+      "text": "Can multiple faiths coexist in one territory?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-21", "section-27", "section-50"],
+      "workbook_ref": "Q4.3",
+      "application_note": null
+    },
+    {
+      "id": "FA4",
+      "text": "How does shared faith affect diplomatic relations?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-21", "section-48", "section-52"],
+      "workbook_ref": "Q4.4",
+      "application_note": null
+    },
+    {
+      "id": "FA5",
+      "text": "What are the specific grand faith structures for each covenant?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-23"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "FA6",
+      "text": "What specific faith manifestation mechanics exist at extreme intensity?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-22", "section-26"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "FA7",
+      "text": "What specific resource costs does faith intensity maintenance require?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-22", "section-40"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "CV1",
+      "text": "Is conviction tracked per-dynasty, per-territory, per-army, or per-member?",
+      "description": null,
+      "options": null,
+      "severity": "BLOCKING",
+      "source": "open_questions",
+      "bible_sections": ["section-28"],
+      "workbook_ref": "Q5.1",
+      "application_note": null
+    },
+    {
+      "id": "CV2",
+      "text": "Is conviction visible to the player? In what form?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-28", "section-29"],
+      "workbook_ref": "Q5.2",
+      "application_note": null
+    },
+    {
+      "id": "CV3",
+      "text": "Is conviction a single axis or multiple axes?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-28"],
+      "workbook_ref": "Q5.3",
+      "application_note": null
+    },
+    {
+      "id": "CV4",
+      "text": "What specific actions change conviction, and by how much?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-28", "section-29", "section-31"],
+      "workbook_ref": "Q5.4",
+      "application_note": null
+    },
+    {
+      "id": "CV5",
+      "text": "What conviction thresholds exist and what do they unlock or lock?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-29"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "CV6",
+      "text": "How does conviction interact with faith alignment mechanically?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-24", "section-28", "section-31"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "P1",
+      "text": "How do workers gather resources (worker-assigned or building-automated)?",
+      "description": null,
+      "options": null,
+      "severity": "BLOCKING",
+      "source": "open_questions",
+      "bible_sections": ["section-40", "section-41", "section-42"],
+      "workbook_ref": "Q6.3",
+      "application_note": null
+    },
+    {
+      "id": "P2",
+      "text": "What are the specific population growth rates?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-41", "section-46"],
+      "workbook_ref": "Q6.2",
+      "application_note": null
+    },
+    {
+      "id": "P3",
+      "text": "What happens when a civilian is converted to a soldier? Can they return?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-38", "section-41"],
+      "workbook_ref": "Q6.1",
+      "application_note": null
+    },
+    {
+      "id": "P4",
+      "text": "Does inter-dynasty trade exist? What can be traded?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-43", "section-48"],
+      "workbook_ref": "Q6.4",
+      "application_note": null
+    },
+    {
+      "id": "P5",
+      "text": "What is the Influence secondary resource and how does it work?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-40", "section-48"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "D1",
+      "text": "How does succession work when the leader dies?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-10", "section-13"],
+      "workbook_ref": "Q7.1",
+      "application_note": null
+    },
+    {
+      "id": "D2",
+      "text": "What determines which members become dormant at the 20 cap?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-10", "section-15"],
+      "workbook_ref": "Q7.2",
+      "application_note": null
+    },
+    {
+      "id": "D3",
+      "text": "Do bloodline members have inheritable character traits?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-10", "section-11"],
+      "workbook_ref": "Q7.3",
+      "application_note": null
+    },
+    {
+      "id": "D4",
+      "text": "Do bloodline members have agency, opinions, or loyalty levels?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-10", "section-12", "section-47"],
+      "workbook_ref": "Q7.4",
+      "application_note": null
+    },
+    {
+      "id": "D5",
+      "text": "How do bloodline members age and die?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-10", "section-46"],
+      "workbook_ref": "Q7.5",
+      "application_note": null
+    },
+    {
+      "id": "D6",
+      "text": "Can bloodline members be sacrificed through Born of Sacrifice?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-10", "section-35"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "DI1",
+      "text": "What formal diplomatic states exist between dynasties?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-48"],
+      "workbook_ref": "Q8.1",
+      "application_note": null
+    },
+    {
+      "id": "DI2",
+      "text": "How does the player interact with lesser houses?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-9", "section-48"],
+      "workbook_ref": "Q8.2",
+      "application_note": null
+    },
+    {
+      "id": "DI3",
+      "text": "What specific actions can loyalty enable that ownership alone cannot?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-30", "section-50"],
+      "workbook_ref": "Q8.3",
+      "application_note": null
+    },
+    {
+      "id": "DI4",
+      "text": "What is the diplomatic UI?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-48"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "DI5",
+      "text": "How does AI diplomatic behavior work?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-9", "section-48"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "T1",
+      "text": "What is researched vs unlocked by level progression?",
+      "description": null,
+      "options": null,
+      "severity": "BLOCKING",
+      "source": "open_questions",
+      "bible_sections": ["section-42", "section-45"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "T2",
+      "text": "What is the building prerequisite chain?",
+      "description": null,
+      "options": null,
+      "severity": "BLOCKING",
+      "source": "open_questions",
+      "bible_sections": ["section-42"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "T3",
+      "text": "Do faith-specific technologies or abilities exist?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-21", "section-24", "section-42"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "T4",
+      "text": "What Level 4 divergence choices exist concretely?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-24", "section-29", "section-45"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "T5",
+      "text": "What does Level 5 apex gameplay look like?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-25", "section-45"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "V1",
+      "text": "What specific threshold triggers each victory path?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-44", "section-49", "section-50", "section-51", "section-52"],
+      "workbook_ref": "Q11.1",
+      "application_note": null
+    },
+    {
+      "id": "V2",
+      "text": "What are the defeat/elimination conditions?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-49"],
+      "workbook_ref": "Q11.2",
+      "application_note": null
+    },
+    {
+      "id": "V3",
+      "text": "How do players know someone is approaching victory?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-7", "section-49"],
+      "workbook_ref": "Q11.3",
+      "application_note": null
+    },
+    {
+      "id": "V4",
+      "text": "How does currency dominance work mechanically?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-44"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "V5",
+      "text": "How do prestige dispute wars work mechanically?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-51"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "A1",
+      "text": "What AI behavior models/personalities exist?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-9"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "A2",
+      "text": "How does AI prioritize faith, expansion, economy, and diplomacy?",
+      "description": null,
+      "options": null,
+      "severity": "ENRICHING",
+      "source": "open_questions",
+      "bible_sections": ["section-9"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "A3",
+      "text": "What multiplayer lobby options exist?",
+      "description": null,
+      "options": null,
+      "severity": "FUTURE",
+      "source": "open_questions",
+      "bible_sections": ["section-45", "section-46"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "A4",
+      "text": "What network architecture supports multiplayer?",
+      "description": null,
+      "options": null,
+      "severity": "FUTURE",
+      "source": "open_questions",
+      "bible_sections": ["section-67", "section-69"],
+      "workbook_ref": null,
+      "application_note": null
+    },
+    {
+      "id": "U1",
+      "text": "What information is always visible on the main game screen?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-14"],
+      "workbook_ref": "Q12.1",
+      "application_note": null
+    },
+    {
+      "id": "U2",
+      "text": "How does the player interact with the family tree?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-10", "section-14", "section-15"],
+      "workbook_ref": "Q12.2",
+      "application_note": null
+    },
+    {
+      "id": "U3",
+      "text": "What is the camera model (fixed isometric, rotatable 3D, etc.)?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-1", "section-69"],
+      "workbook_ref": "Q1.3",
+      "application_note": null
+    },
+    {
+      "id": "TE1",
+      "text": "What is the target platform?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-1", "section-69"],
+      "workbook_ref": "Q13.2",
+      "application_note": null
+    },
+    {
+      "id": "TE2",
+      "text": "What engine/technology stack?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-1", "section-69"],
+      "workbook_ref": "Q13.3",
+      "application_note": null
+    },
+    {
+      "id": "TE3",
+      "text": "What is the minimum viable prototype scope?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-1", "section-2", "section-45"],
+      "workbook_ref": "Q14.1",
+      "application_note": null
+    },
+    {
+      "id": "TE4",
+      "text": "What question must the first prototype answer?",
+      "description": null,
+      "options": null,
+      "severity": "IMPORTANT",
+      "source": "open_questions",
+      "bible_sections": ["section-1", "section-2", "section-69"],
+      "workbook_ref": "Q14.2",
+      "application_note": null
+    }
+  ]
+}

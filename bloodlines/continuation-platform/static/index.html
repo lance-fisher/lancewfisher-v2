@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bloodlines Continuation Platform</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="side-rail">
+        <div class="brand-block">
+          <div class="brand-mark">BC</div>
+          <div>
+            <p class="eyebrow">Offline Continuation</p>
+            <h1>Bloodlines Ops</h1>
+          </div>
+        </div>
+        <nav class="nav-links">
+          <button class="nav-link active" data-view="console">Command Deck</button>
+          <button class="nav-link" data-view="dashboard">Dashboard</button>
+          <button class="nav-link" data-view="agent">Agent Workspace</button>
+          <button class="nav-link" data-view="execution">Execution</button>
+          <button class="nav-link" data-view="tasks">Tasks</button>
+          <button class="nav-link" data-view="memory">Memory</button>
+          <button class="nav-link" data-view="diff">Diff Panel</button>
+          <button class="nav-link" data-view="timeline">Timeline</button>
+          <button class="nav-link" data-view="handoff">Handoff</button>
+          <button class="nav-link" data-view="telemetry">Telemetry</button>
+          <button class="nav-link" data-view="config">Config</button>
+        </nav>
+        <div class="write-posture-card">
+          <p class="eyebrow">Write Posture</p>
+          <div id="writePosturePill" class="status-pill muted">Read only</div>
+          <p id="writeTierText" class="small-copy">Tier locked for project writes.</p>
+          <input id="unlockInput" type="password" placeholder="Enter tier phrase" />
+          <button id="unlockButton" class="primary ghost">Unlock Session</button>
+        </div>
+      </aside>
+
+      <main class="main-stage">
+        <header class="hero">
+          <div>
+            <p class="eyebrow">Local, offline by default</p>
+            <h2 id="heroTitle">Bloodlines offline command and continuity deck</h2>
+            <p id="heroSubtitle" class="hero-copy">
+              Loading continuity health, scan state, and last-good-state anchor.
+            </p>
+            <div id="heroChips" class="hero-chip-row"></div>
+          </div>
+          <div class="hero-actions">
+            <button id="rescanButton" class="primary">Rescan Bloodlines</button>
+            <button id="resumeButton" class="secondary">Resume Last Good State</button>
+            <button id="handoffButton" class="secondary">Export Handoff</button>
+          </div>
+        </header>
+
+        <section class="command-strip">
+          <article class="command-card">
+            <div>
+              <p class="eyebrow">Operator Filter</p>
+              <h3>Focus Current View</h3>
+            </div>
+            <input
+              id="viewFilterInput"
+              type="text"
+              placeholder="Filter cards, rows, and timeline items in the active view"
+            />
+            <p id="viewFilterMeta" class="small-copy">Filtering applies to the active view only.</p>
+          </article>
+          <article class="command-card">
+            <div>
+              <p class="eyebrow">Quick Jump</p>
+              <h3>Move Fast</h3>
+            </div>
+            <div class="hero-chip-row quick-jump-row">
+              <button class="secondary quick-jump-button" data-view-target="dashboard" data-scroll-target="resumeAnchorCard">Resume Anchor</button>
+              <button class="secondary quick-jump-button" data-view-target="tasks" data-scroll-target="taskRecommendation">Next Work</button>
+              <button class="secondary quick-jump-button" data-view-target="diff" data-scroll-target="highSignalChanges">High Signal</button>
+              <button class="secondary quick-jump-button" data-view-target="handoff" data-scroll-target="handoffPrompt">Handoff Prompt</button>
+              <button class="secondary quick-jump-button" data-view-target="telemetry" data-scroll-target="telemetryTasks">Telemetry</button>
+            </div>
+          </article>
+        </section>
+
+        <section id="degradedBanner" class="degraded-banner hidden"></section>
+
+        <section class="metrics-grid" id="metricGrid"></section>
+
+        <section class="view-panel active" data-view-panel="console">
+          <div class="console-layout">
+            <article class="panel console-panel">
+              <div class="panel-head console-panel-head">
+                <div>
+                  <p class="eyebrow">Offline Agent Console</p>
+                  <h3>Back-And-Forth Bloodlines Command Deck</h3>
+                </div>
+                <div class="panel-actions">
+                  <button id="consoleResumeButton" class="secondary compact-action">Resume</button>
+                  <button id="consoleRescanButton" class="secondary compact-action">Rescan</button>
+                </div>
+              </div>
+              <div id="consoleMessages" class="console-messages"></div>
+              <div class="console-composer">
+                <div id="consoleCommandHints" class="hero-chip-row console-chip-row"></div>
+                <textarea
+                  id="consoleInput"
+                  class="console-input"
+                  placeholder="Ask the local Bloodlines agent to summarize state, search canon, read files, or draft governed updates. Use /help for direct commands."
+                ></textarea>
+                <div class="console-composer-actions">
+                  <button id="consoleResetButton" class="secondary">Reset Thread</button>
+                  <button id="consoleSendButton" class="primary">Send To Local Agent</button>
+                </div>
+              </div>
+            </article>
+
+            <aside class="console-sidebar">
+              <article class="panel console-side-panel">
+                <div class="panel-head">
+                  <div>
+                    <p class="eyebrow">Session Status</p>
+                    <h3>Current Context</h3>
+                  </div>
+                </div>
+                <div id="consoleStatusSummary" class="detail-stack"></div>
+              </article>
+
+              <article class="panel console-side-panel">
+                <div class="panel-head">
+                  <div>
+                    <p class="eyebrow">Suggested Prompts</p>
+                    <h3>Fast Start</h3>
+                  </div>
+                </div>
+                <div id="consoleSuggestedPrompts" class="list-stack"></div>
+              </article>
+
+              <article class="panel console-side-panel">
+                <div class="panel-head">
+                  <div>
+                    <p class="eyebrow">Latest Citations</p>
+                    <h3>Grounding Files</h3>
+                  </div>
+                </div>
+                <div id="consoleLatestCitations" class="list-stack"></div>
+              </article>
+
+              <article class="panel console-side-panel">
+                <div class="panel-head">
+                  <div>
+                    <p class="eyebrow">Write Drafts</p>
+                    <h3>Governed Changes</h3>
+                  </div>
+                </div>
+                <div id="consoleDrafts" class="list-stack"></div>
+              </article>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view-panel" data-view-panel="dashboard">
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Resume Anchor</p>
+                  <h3>Last Good State</h3>
+                </div>
+                <span id="continuityHealth" class="status-pill">Unknown</span>
+              </div>
+              <div id="resumeAnchorCard" class="detail-stack"></div>
+              <div id="resumeCandidates" class="hero-chip-row"></div>
+              <div class="inline-actions">
+                <button id="clearAnchorButton" class="secondary compact-action hidden">Clear Manual Anchor</button>
+              </div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Operational Health</p>
+                  <h3>Current Posture</h3>
+                </div>
+              </div>
+              <div id="operationalHealth" class="detail-stack"></div>
+            </article>
+          </div>
+
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Latest Changes</p>
+                  <h3>Recent Files</h3>
+                </div>
+              </div>
+              <div id="recentChanges" class="list-stack"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Frontier Awareness</p>
+                  <h3>Detected Session Artifacts</h3>
+                </div>
+              </div>
+              <div id="frontierArtifacts" class="list-stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view-panel" data-view-panel="agent">
+          <div class="panel workspace">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Agent Workspace</p>
+                <h3>Resume Mode</h3>
+              </div>
+            </div>
+            <div id="agentStatus" class="workspace-status">No resume run yet in this session.</div>
+            <div class="workspace-grid">
+              <div>
+                <h4>Reasoning Summary</h4>
+                <div id="agentSummary" class="workspace-card"></div>
+              </div>
+              <div>
+                <h4>Recommended Next Step</h4>
+                <div class="inline-actions inline-actions-tight">
+                  <button id="copyNextStepButton" class="secondary compact-action">Copy Next Step</button>
+                </div>
+                <div id="agentNextStep" class="workspace-card"></div>
+              </div>
+            </div>
+            <div class="workspace-grid">
+              <div>
+                <h4>Unresolved Items</h4>
+                <div id="agentUnresolved" class="workspace-card"></div>
+              </div>
+              <div>
+                <h4>Provenance</h4>
+                <div id="agentProvenance" class="workspace-card"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view-panel" data-view-panel="execution">
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Execution Packet</p>
+                  <h3>Unity Shipping Lane</h3>
+                </div>
+              </div>
+              <div id="executionSummary" class="detail-stack"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Current Verified State</p>
+                  <h3>What Is Already Green</h3>
+                </div>
+              </div>
+              <div id="executionVerifiedState" class="list-stack"></div>
+            </article>
+          </div>
+
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Current Priority</p>
+                  <h3>Session-by-Session Work Spine</h3>
+                </div>
+              </div>
+              <div id="executionPriority" class="list-stack"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Manual Verification</p>
+                  <h3>In-Editor Checklist</h3>
+                </div>
+              </div>
+              <div id="executionManualChecklist" class="list-stack"></div>
+            </article>
+          </div>
+
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Validation</p>
+                  <h3>Governed Commands</h3>
+                </div>
+              </div>
+              <div id="executionValidationCommands" class="list-stack"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Canonical Sources</p>
+                  <h3>Files Driving This Packet</h3>
+                </div>
+              </div>
+              <div id="executionCanonicalSources" class="list-stack"></div>
+            </article>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Governed Write Workbench</p>
+                <h3>Project File Read, Preview, and Apply</h3>
+              </div>
+            </div>
+            <div class="workspace-grid">
+              <div>
+                <label class="eyebrow" for="projectWritePath">Relative Path</label>
+                <input id="projectWritePath" type="text" class="workbench-input" placeholder="CURRENT_PROJECT_STATE.md" />
+              </div>
+              <div>
+                <label class="eyebrow" for="projectWriteReason">Reason</label>
+                <input id="projectWriteReason" type="text" class="workbench-input" placeholder="Session continuity update" />
+              </div>
+            </div>
+            <div class="workspace-grid">
+              <div>
+                <label class="eyebrow" for="projectWriteSourceBasis">Source Basis</label>
+                <input id="projectWriteSourceBasis" type="text" class="workbench-input" value="continuation-platform/ui" />
+              </div>
+              <div class="inline-actions execution-actions">
+                <button id="projectFileLoadButton" class="secondary">Load File</button>
+                <button id="projectWritePreviewButton" class="secondary">Preview Write</button>
+                <button id="projectWriteApplyButton" class="primary">Apply Write</button>
+              </div>
+            </div>
+            <div class="workspace-grid">
+              <div>
+                <h4>Current Content</h4>
+                <textarea id="projectWriteCurrent" class="workbench-textarea" spellcheck="false"></textarea>
+              </div>
+              <div>
+                <h4>Proposed Content</h4>
+                <textarea id="projectWriteProposed" class="workbench-textarea" spellcheck="false"></textarea>
+              </div>
+            </div>
+            <div class="panel-subsection">
+              <p class="eyebrow">Write Preview</p>
+              <pre id="projectWritePreview" class="handoff-preview compact"></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="view-panel" data-view-panel="memory">
+          <div class="two-column">
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Project Memory</p>
+                  <h3>Canonical Source Registry</h3>
+                </div>
+              </div>
+              <div id="memoryRegistry" class="table-wrap"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Discovered Corpus</p>
+                  <h3>Authority And Conflict Preview</h3>
+                </div>
+              </div>
+              <div id="discoveredRegistry" class="list-stack"></div>
+              <div class="panel-subsection">
+                <p class="eyebrow">Conflict Clusters</p>
+                <div id="conflictClusters" class="list-stack"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view-panel" data-view-panel="tasks">
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Tasks Board</p>
+                  <h3>Open Execution Items</h3>
+                </div>
+              </div>
+              <div id="openTasks" class="list-stack"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Carryover</p>
+                  <h3>Handoff Priorities</h3>
+                </div>
+              </div>
+              <div id="handoffPriorities" class="list-stack"></div>
+              <div class="panel-subsection">
+                <p class="eyebrow">Recommended Next Step</p>
+                <div id="taskRecommendation" class="workspace-card"></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view-panel" data-view-panel="diff">
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Change Summary</p>
+                  <h3>Recent Continuity Delta</h3>
+                </div>
+              </div>
+              <div id="changeSummary" class="detail-stack"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Frontier Crossover</p>
+                  <h3>Session Artifact Updates</h3>
+                </div>
+              </div>
+              <div id="frontierUpdates" class="list-stack"></div>
+            </article>
+          </div>
+
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">High Signal</p>
+                  <h3>Most Meaningful Changed Files</h3>
+                </div>
+              </div>
+              <div id="highSignalChanges" class="list-stack"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Authority Watch</p>
+                  <h3>Likely Canonical Updates</h3>
+                </div>
+              </div>
+              <div id="authoritativeUpdates" class="list-stack"></div>
+            </article>
+          </div>
+
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Conflict Watch</p>
+                  <h3>Divergence Clusters</h3>
+                </div>
+              </div>
+              <div id="changeConflictWatch" class="list-stack"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Hot Spots</p>
+                  <h3>Most Active Project Areas</h3>
+                </div>
+              </div>
+              <div id="changeHotspots" class="list-stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view-panel" data-view-panel="handoff">
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Builder Summary</p>
+                  <h3>Re-entry Packet State</h3>
+                </div>
+              </div>
+              <div id="handoffBuilderSummary" class="detail-stack"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Frontier Briefing</p>
+                  <h3>Operator-Facing Brief</h3>
+                </div>
+              </div>
+              <div id="handoffBuilderBriefing" class="list-stack"></div>
+            </article>
+          </div>
+
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Canonical Pointers</p>
+                  <h3>Source Spine</h3>
+                </div>
+              </div>
+              <div id="handoffCanonicalSources" class="list-stack"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Escalation Queue</p>
+                  <h3>Frontier Candidates</h3>
+                </div>
+              </div>
+              <div id="handoffEscalations" class="list-stack"></div>
+            </article>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Handoff Builder</p>
+                <h3>Frontier Re-entry Prompt</h3>
+              </div>
+              <div class="panel-actions">
+                <button id="copyHandoffPromptButton" class="secondary compact-action">Copy Prompt</button>
+                <button id="copyHandoffPreviewButton" class="secondary compact-action">Copy Preview</button>
+                <button id="handoffRebuildButton" class="secondary">Rebuild Pack</button>
+              </div>
+            </div>
+            <pre id="handoffPrompt" class="handoff-preview compact"></pre>
+            <pre id="handoffPreview" class="handoff-preview"></pre>
+          </div>
+        </section>
+
+        <section class="view-panel" data-view-panel="timeline">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Continuity Timeline</p>
+                <h3>Operations Journal</h3>
+              </div>
+            </div>
+            <div id="timelineEvents" class="timeline"></div>
+          </div>
+        </section>
+
+        <section class="view-panel" data-view-panel="config">
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Routing</p>
+                  <h3>Model Assignments</h3>
+                </div>
+              </div>
+              <div id="routingAssignments" class="list-stack"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Telemetry</p>
+                  <h3>Observed Metrics</h3>
+                </div>
+              </div>
+              <div id="telemetryPanel" class="list-stack"></div>
+            </article>
+          </div>
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Models</p>
+                  <h3>Ollama Inventory</h3>
+                </div>
+              </div>
+              <div id="modelInventory" class="list-stack"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Environment</p>
+                  <h3>Windows and WSL Status</h3>
+                </div>
+              </div>
+              <div id="environmentPanel" class="list-stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="view-panel" data-view-panel="telemetry">
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Task Execution</p>
+                  <h3>Recent Local Agent Work</h3>
+                </div>
+              </div>
+              <div id="telemetryTasks" class="list-stack"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Retrieval Provenance</p>
+                  <h3>Context Source Distribution</h3>
+                </div>
+              </div>
+              <div id="telemetryRetrieval" class="list-stack"></div>
+            </article>
+          </div>
+
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Write Gate</p>
+                  <h3>Approval Outcomes</h3>
+                </div>
+              </div>
+              <div id="telemetryWrites" class="list-stack"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Degraded History</p>
+                  <h3>Failure Mode Visibility</h3>
+                </div>
+              </div>
+              <div id="telemetryDegraded" class="list-stack"></div>
+            </article>
+          </div>
+
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Routing Decisions</p>
+                  <h3>Task-Type Counts</h3>
+                </div>
+              </div>
+              <div id="telemetryRouting" class="list-stack"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Recent Scans</p>
+                  <h3>Ingestion Runs</h3>
+                </div>
+              </div>
+              <div id="telemetryScans" class="list-stack"></div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+    <div id="toastStack" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

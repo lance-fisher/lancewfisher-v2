@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#e5d6c3"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f4ece0" stroke="#2b2623" stroke-width="3"/>
+  <text x="64" y="84" fill="#241f1c" font-family="Georgia, serif" font-size="34">Bloodlines House Ironmark Military Silhouettes</text>
+  <text x="64" y="116" fill="#6a5648" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Scope: house treatment study, not a roster rewrite</text>
+
+  <g transform="translate(1160 58)">
+    <rect width="344" height="110" rx="16" fill="#ede1d1" stroke="#8d755d" stroke-width="2"/>
+    <text x="18" y="28" fill="#392f29" font-family="Arial, sans-serif" font-size="16">Palette / Material Read</text>
+    <rect x="18" y="42" width="26" height="26" rx="6" fill="#2c3137"/>
+    <rect x="52" y="42" width="26" height="26" rx="6" fill="#b6441f"/>
+    <rect x="86" y="42" width="26" height="26" rx="6" fill="#6d5842"/>
+    <rect x="120" y="42" width="26" height="26" rx="6" fill="#8f9498"/>
+    <text x="18" y="92" fill="#5f4d40" font-family="Arial, sans-serif" font-size="13">Charcoal iron, ember accent, forge timber, dull steel. Dense mass before ornament.</text>
+  </g>
+
+  <g stroke="#b8a28b" stroke-width="2">
+    <rect x="64" y="190" width="340" height="322" rx="20" fill="#faf4ea"/>
+    <rect x="438" y="190" width="340" height="322" rx="20" fill="#faf4ea"/>
+    <rect x="812" y="190" width="340" height="322" rx="20" fill="#faf4ea"/>
+    <rect x="1186" y="190" width="340" height="322" rx="20" fill="#faf4ea"/>
+    <rect x="64" y="548" width="1462" height="404" rx="20" fill="#faf4ea"/>
+  </g>
+
+  <g font-family="Arial, sans-serif">
+    <text x="90" y="228" fill="#352c27" font-size="18">Forge levy line</text>
+    <text x="464" y="228" fill="#352c27" font-size="18">Axeman lane</text>
+    <text x="838" y="228" fill="#352c27" font-size="18">Ranged support lane</text>
+    <text x="1212" y="228" fill="#352c27" font-size="18">Command lane</text>
+  </g>
+
+  <g transform="translate(94 252)">
+    <rect width="280" height="176" rx="14" fill="#e6d8c7"/>
+    <circle cx="56" cy="42" r="18" fill="#231f1d"/>
+    <rect x="42" y="60" width="30" height="62" rx="10" fill="#43484e"/>
+    <rect x="28" y="72" width="16" height="42" rx="7" fill="#5f666c"/>
+    <rect x="72" y="72" width="16" height="42" rx="7" fill="#5f666c"/>
+    <rect x="46" y="120" width="10" height="32" rx="5" fill="#272220"/>
+    <rect x="60" y="120" width="10" height="32" rx="5" fill="#272220"/>
+    <path d="M110 72 L150 58 L180 78 L180 126 L146 142 L110 126 Z" fill="#575d63" stroke="#2f3236" stroke-width="4"/>
+    <line x1="92" y1="74" x2="112" y2="122" stroke="#6f573d" stroke-width="8"/>
+    <text x="196" y="62" fill="#352d28" font-size="15">Blocky shield and short cloth.</text>
+    <text x="196" y="86" fill="#645243" font-size="13">Read as labor militarized fast.</text>
+    <text x="196" y="110" fill="#645243" font-size="13">No aristocratic taper.</text>
+    <rect x="196" y="130" width="20" height="20" fill="#2c3137"/>
+    <rect x="222" y="130" width="20" height="20" fill="#b6441f"/>
+    <rect x="248" y="130" width="20" height="20" fill="#6d5842"/>
+  </g>
+
+  <g transform="translate(468 252)">
+    <rect width="280" height="176" rx="14" fill="#e6d8c7"/>
+    <circle cx="54" cy="40" r="18" fill="#1f1c1a"/>
+    <rect x="40" y="58" width="32" height="64" rx="10" fill="#363c41"/>
+    <rect x="26" y="72" width="16" height="40" rx="7" fill="#4b5258"/>
+    <rect x="72" y="72" width="18" height="40" rx="7" fill="#4b5258"/>
+    <rect x="46" y="120" width="10" height="32" rx="5" fill="#25211f"/>
+    <rect x="60" y="120" width="10" height="32" rx="5" fill="#25211f"/>
+    <rect x="106" y="40" width="10" height="92" rx="5" fill="#82552c"/>
+    <path d="M116 42 L172 42 L190 62 L172 82 L116 82 Z" fill="#3d4349" stroke="#212427" stroke-width="4"/>
+    <polygon points="172,42 206,62 172,82" fill="#b6441f"/>
+    <text x="206" y="60" fill="#352d28" font-size="15">Axe head and shoulder mass</text>
+    <text x="206" y="84" fill="#645243" font-size="13">must dominate the read.</text>
+    <text x="206" y="108" fill="#645243" font-size="13">Ember accent stays controlled.</text>
+    <rect x="206" y="130" width="20" height="20" fill="#2c3137"/>
+    <rect x="232" y="130" width="20" height="20" fill="#b6441f"/>
+    <rect x="258" y="130" width="20" height="20" fill="#8f9498"/>
+  </g>
+
+  <g transform="translate(842 252)">
+    <rect width="280" height="176" rx="14" fill="#e6d8c7"/>
+    <circle cx="54" cy="40" r="17" fill="#2b2521"/>
+    <rect x="42" y="58" width="26" height="62" rx="9" fill="#4c5258"/>
+    <rect x="28" y="72" width="14" height="38" rx="6" fill="#656b71"/>
+    <rect x="68" y="72" width="14" height="38" rx="6" fill="#656b71"/>
+    <rect x="46" y="118" width="8" height="30" rx="4" fill="#282320"/>
+    <rect x="58" y="118" width="8" height="30" rx="4" fill="#282320"/>
+    <path d="M118 40 Q84 90 118 142" fill="none" stroke="#6e573d" stroke-width="8"/>
+    <line x1="118" y1="40" x2="118" y2="142" stroke="#d4d7d9" stroke-width="2"/>
+    <line x1="118" y1="92" x2="164" y2="92" stroke="#8f9498" stroke-width="4"/>
+    <polygon points="164,92 154,86 154,98" fill="#8f9498"/>
+    <text x="182" y="60" fill="#352d28" font-size="15">Iron-rich trim, still practical.</text>
+    <text x="182" y="84" fill="#645243" font-size="13">Avoid noble lightness or</text>
+    <text x="182" y="108" fill="#645243" font-size="13">high-fantasy ornament.</text>
+    <rect x="182" y="130" width="20" height="20" fill="#2c3137"/>
+    <rect x="208" y="130" width="20" height="20" fill="#8f9498"/>
+    <rect x="234" y="130" width="20" height="20" fill="#6d5842"/>
+  </g>
+
+  <g transform="translate(1216 252)">
+    <rect width="280" height="176" rx="14" fill="#e6d8c7"/>
+    <circle cx="58" cy="38" r="18" fill="#1f1b19"/>
+    <rect x="44" y="56" width="32" height="66" rx="10" fill="#343a40"/>
+    <path d="M34 68 L44 58 L76 58 L88 68 L88 112 L74 124 L44 124 L34 112 Z" fill="none" stroke="#b6441f" stroke-width="6"/>
+    <rect x="46" y="122" width="10" height="30" rx="4" fill="#241f1d"/>
+    <rect x="62" y="122" width="10" height="30" rx="4" fill="#241f1d"/>
+    <rect x="106" y="44" width="10" height="96" rx="5" fill="#5f4830"/>
+    <polygon points="116,44 158,56 116,70" fill="#8f9498"/>
+    <text x="184" y="60" fill="#352d28" font-size="15">Authority through forge marks,</text>
+    <text x="184" y="84" fill="#645243" font-size="13">not court flourish.</text>
+    <text x="184" y="108" fill="#645243" font-size="13">Cloak stays short and heavy.</text>
+    <rect x="184" y="130" width="20" height="20" fill="#2c3137"/>
+    <rect x="210" y="130" width="20" height="20" fill="#b6441f"/>
+    <rect x="236" y="130" width="20" height="20" fill="#4c5258"/>
+  </g>
+
+  <g transform="translate(88 574)" font-family="Arial, sans-serif">
+    <text x="0" y="24" fill="#322923" font-size="22">House Read Rules</text>
+    <text x="0" y="62" fill="#5e4d40" font-size="16">1. Ironmark reads as forged pressure: thick silhouettes, repairable plate logic, soot-dark mass, and ember accents used as heat marks rather than ornament.</text>
+    <text x="0" y="92" fill="#5e4d40" font-size="16">2. Weapon heads and shield faces should be easy to identify at gameplay height before cloth detail or heraldic marks.</text>
+    <text x="0" y="122" fill="#5e4d40" font-size="16">3. Command silhouettes gain heavier shoulder and banner treatment, but stay grounded and industrial.</text>
+
+    <text x="0" y="178" fill="#322923" font-size="22">What To Avoid</text>
+    <text x="0" y="216" fill="#5e4d40" font-size="16">- Do not drift into villain-coded spikes, demonic exaggeration, or fantasy-black armor.</text>
+    <text x="0" y="246" fill="#5e4d40" font-size="16">- Do not confuse Ironmark with Stonehelm's warmer fortress palette or Oldcrest's age-worn lineage layering.</text>
+    <text x="0" y="276" fill="#5e4d40" font-size="16">- Do not turn ember red into a bright parade color; it should read like controlled forge heat.</text>
+
+    <text x="0" y="332" fill="#322923" font-size="22">Use In Review</text>
+    <text x="0" y="370" fill="#5e4d40" font-size="16">This sheet is a silhouette and material-direction board for future concept prompting, 3D blockout, icon treatment, and roster polish.</text>
+    <text x="0" y="400" fill="#5e4d40" font-size="16">It does not add new canon units beyond the already-live or already-settled Ironmark treatment lane.</text>
+  </g>
+
+  <text x="64" y="992" fill="#6a5848" font-family="Arial, sans-serif" font-size="15">House-specific silhouette board for governed graphics-lane review. Keep additive to canon and stage only through approved Unity staging surfaces.</text>
+</svg>

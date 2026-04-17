@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: ram
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:UnitDefinition
+  id: ram
+  displayName: Battering Ram
+  stage: 2
+  role: siege-engine
+  siegeClass: ram
+  prototypeEnabled: 1
+  populationCost: 2
+  health: 450
+  speed: 30
+  attackDamage: 22
+  attackRange: 22
+  attackCooldown: 1.8
+  sight: 120
+  projectileSpeed: 0
+  carryCapacity: 0
+  gatherRate: 0
+  buildRate: 0
+  structuralDamageMultiplier: 3.5
+  antiUnitDamageMultiplier: 0.4
+  cost:
+    gold: 90
+    food: 0
+    water: 0
+    wood: 150
+    stone: 0
+    iron: 100
+    influence: 0
+  house: 
+  notes:
+  - 'Canonical first siege engine. Primary purpose: gate and wall-base breach.'
+  - Structural multiplier 3.5 counters wall 0.2 multiplier for net 0.7x effective
+    wall damage.
+  - Anti-unit damage reduced to 0.4 because ram is a structural weapon requiring
+    escort.
+  runtimePrefab: {fileID: 0}
+  icon: {fileID: 0}
+  selectClip: {fileID: 0}
+  deathClip: {fileID: 0}

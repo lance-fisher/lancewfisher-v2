@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: apex_covenant
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:BuildingDefinition
+  id: apex_covenant
+  displayName: Apex Covenant
+  prototypeEnabled: 1
+  footprint:
+    w: 5
+    h: 5
+  health: 2400
+  buildTime: 48
+  populationCapBonus: 0
+  dropoffResources: []
+  trainableUnits:
+  - the_unbroken
+  - the_sacrificed
+  - the_mandate
+  - the_first_wild
+  cost:
+    gold: 600
+    food: 0
+    water: 0
+    wood: 320
+    stone: 480
+    iron: 200
+    influence: 80
+  resourceTrickle:
+    gold: 0
+    food: 0
+    water: 0
+    wood: 0
+    stone: 0
+    iron: 0
+    influence: 0
+  fortificationRole: 
+  fortificationTierContribution: 0
+  structuralDamageMultiplier: 0
+  armor: 14
+  blocksPassage: 0
+  sightBonusRadius: 0
+  auraAttackMultiplier: 0
+  auraRadius: 0
+  smeltingFuelResource: 
+  smeltingFuelRatio: 0
+  runtimePrefab: {fileID: 0}
+  icon: {fileID: 0}

@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bloodlines: Design Guide &amp; Workbook</title>
+<style>
+  :root {
+    --bg: #1a1a1e;
+    --surface: #24242a;
+    --surface2: #2e2e36;
+    --border: #3a3a44;
+    --gold: #c9a84c;
+    --gold-dim: #8a7234;
+    --text: #d4d4d8;
+    --text-dim: #9898a0;
+    --accent: #7c6f3e;
+    --red: #a04040;
+    --green: #4a8a4a;
+    --locked: #4a8a4a;
+    --proposed: #8a7234;
+    --open: #a04040;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  html { scroll-behavior: smooth; scroll-padding-top: 3.5rem; }
+  header { background: linear-gradient(135deg, #1a1510 0%, #2a2218 50%, #1a1510 100%); border-bottom: 2px solid var(--gold-dim); padding: 2.5rem 2rem; text-align: center; }
+  header h1 { font-family: Georgia, 'Times New Roman', serif; color: var(--gold); font-size: 2rem; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.2rem; }
+  header .subtitle { color: var(--text-dim); font-size: 0.85rem; letter-spacing: 0.05em; margin-bottom: 0.8rem; }
+  .toolbar { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .toolbar button { background: var(--surface2); color: var(--gold); border: 1px solid var(--gold-dim); padding: 0.4rem 1.2rem; font-size: 0.8rem; cursor: pointer; letter-spacing: 0.05em; transition: all 0.2s; }
+  .toolbar button:hover { background: var(--gold-dim); color: #fff; }
+  .toolbar .save-status { color: var(--green); font-size: 0.8rem; align-self: center; opacity: 0; transition: opacity 0.3s; }
+  .toolbar .save-status.visible { opacity: 1; }
+  nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0.6rem 2rem; display: flex; flex-wrap: wrap; gap: 0.3rem 0.8rem; justify-content: center; position: sticky; top: 0; z-index: 99; }
+  nav a { color: var(--text-dim); text-decoration: none; font-size: 0.7rem; padding: 0.15rem 0.4rem; border-radius: 3px; transition: all 0.2s; }
+  nav a:hover { color: var(--gold); background: var(--surface2); }
+  nav a.active { color: var(--gold); background: var(--surface2); font-weight: 600; }
+  main { max-width: 960px; margin: 0 auto; padding: 2rem; }
+  .intro { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--gold-dim); padding: 1.5rem; margin-bottom: 3rem; font-size: 0.9rem; color: var(--text-dim); }
+  .intro strong { color: var(--text); }
+  section { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+  h2 { font-family: Georgia, 'Times New Roman', serif; color: var(--gold); font-size: 1.5rem; font-weight: 400; letter-spacing: 0.08em; margin-bottom: 0.8rem; padding-top: 1rem; }
+  h3 { color: var(--text); font-size: 1.05rem; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+  h4 { color: var(--gold-dim); font-size: 0.9rem; margin-top: 1.2rem; margin-bottom: 0.4rem; letter-spacing: 0.03em; }
+
+  /* Guide content blocks */
+  .guide-content { background: var(--surface); border: 1px solid var(--border); padding: 1.2rem 1.5rem; margin-bottom: 1.2rem; font-size: 0.9rem; line-height: 1.8; }
+  .guide-content p { margin-bottom: 0.8rem; }
+  .guide-content p:last-child { margin-bottom: 0; }
+  .guide-content ul, .guide-content ol { padding-left: 1.5rem; margin-bottom: 0.8rem; }
+  .guide-content li { margin-bottom: 0.3rem; }
+  .guide-content strong { color: var(--gold); }
+  .guide-content em { color: var(--text-dim); }
+
+  .status-tag { display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.15rem 0.5rem; border-radius: 2px; margin-left: 0.3rem; vertical-align: middle; }
+  .status-tag.locked { background: var(--locked); color: #fff; }
+  .status-tag.proposed { background: var(--proposed); color: #fff; }
+  .status-tag.open { background: var(--open); color: #fff; }
+  .status-tag.established { background: #3a6a8a; color: #fff; }
+
+  .ref-table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.85rem; }
+  .ref-table th { background: var(--surface2); color: var(--gold-dim); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.5rem 0.7rem; text-align: left; border: 1px solid var(--border); }
+  .ref-table td { border: 1px solid var(--border); padding: 0.5rem 0.7rem; color: var(--text); background: var(--surface); }
+
+  /* Divider between guide and questions */
+  .divider { display: flex; align-items: center; gap: 1rem; margin: 2rem 0 1.5rem 0; }
+  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--gold-dim); }
+  .divider span { color: var(--gold); font-family: Georgia, serif; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+
+  /* Question blocks */
+  .question-block { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--open); padding: 1.2rem 1.5rem; margin-bottom: 1rem; }
+  .question-block .q-label { color: var(--gold); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
+  .question-block .q-text { color: var(--text); font-size: 0.95rem; margin-bottom: 0.5rem; font-weight: 500; }
+  .question-block .q-context { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 0.8rem; }
+  .question-block .q-options { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 0.8rem; padding-left: 1.2rem; }
+  .question-block .q-options li { margin-bottom: 0.2rem; }
+  textarea { width: 100%; min-height: 80px; background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 0.8rem; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 0.9rem; line-height: 1.6; resize: vertical; transition: border-color 0.2s; }
+  textarea:focus { outline: none; border-color: var(--gold-dim); background: #1e1e24; }
+  .question-block:focus-within { border-left-color: var(--gold-dim); }
+  textarea::placeholder { color: #555; font-style: italic; }
+  .answer-table { width: 100%; border-collapse: collapse; margin-bottom: 0.8rem; }
+  .answer-table th { background: var(--surface2); color: var(--text-dim); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.5rem; text-align: left; border: 1px solid var(--border); }
+  .answer-table td { border: 1px solid var(--border); padding: 0.3rem; }
+  .answer-table td:first-child { color: var(--text-dim); font-size: 0.85rem; padding: 0.5rem; width: 55%; background: var(--surface); }
+  .answer-table input { width: 100%; background: var(--bg); color: var(--text); border: none; padding: 0.5rem; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 0.85rem; }
+  .answer-table input:focus { outline: none; background: #1e1e24; }
+  .application-note { background: var(--surface2); color: var(--text-dim); font-size: 0.8rem; padding: 0.6rem 1rem; margin-top: 1rem; border-left: 2px solid var(--accent); }
+  .application-note strong { color: var(--gold-dim); }
+  .progress-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); padding: 0.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; z-index: 100; }
+  .progress-bar .bar-track { flex: 1; height: 4px; background: var(--surface2); margin: 0 1rem; border-radius: 2px; overflow: hidden; }
+  .progress-bar .bar-fill { height: 100%; background: var(--gold-dim); transition: width 0.3s; border-radius: 2px; }
+  .progress-bar span { color: var(--text-dim); }
+  footer { text-align: center; color: var(--text-dim); font-size: 0.75rem; padding: 2rem; padding-bottom: 4rem; }
+  @media (max-width: 700px) { main { padding: 1rem; } header { padding: 1.5rem 1rem; } header h1 { font-size: 1.4rem; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Bloodlines</h1>
+  <div class="subtitle">Design Guide &amp; Input Workbook</div>
+  <div class="toolbar">
+    <button onclick="saveAll()">Save to Browser</button>
+    <button onclick="exportMarkdown()">Export Answers as Markdown</button>
+    <button onclick="clearAll()">Clear All Answers</button>
+    <span class="save-status" id="saveStatus">Saved</span>
+  </div>
+</header>
+<nav id="toc"></nav>
+
+<main>
+  <div class="intro">
+    <strong>This is the central Bloodlines design reference and input workbook.</strong> Each section presents what has already been established in the game design, followed by the open questions that need answers. Scroll to read the full design state, and fill in input fields wherever you have answers. Your inputs auto-save to the browser every 30 seconds. Click <strong>Export Answers as Markdown</strong> to download your responses for processing by a future Claude Code session.
+  </div>
+
+  <!-- ======================================== -->
+  <!-- SECTION 1: PROJECT IDENTITY -->
+  <!-- ======================================== -->
+  <section id="s1">
+    <h2>Project Identity and Core Philosophy</h2>
+
+    <div class="guide-content">
+      <p><strong>Game Title:</strong> Bloodlines <span class="status-tag locked">Locked</span></p>
+      <p><strong>Title History:</strong> Evolved from an early title direction of "Crown and Conquest" into the locked title "Bloodlines." The name reflects the design's shift toward hereditary power, dynastic identity, and generational consequence.</p>
+      <p><strong>Genre:</strong> Massively large-scale medieval real-time strategy game. <span class="status-tag locked">Locked</span></p>
+      <p><strong>Design Inspiration:</strong> Command and Conquer style RTS with strong emphasis on base building, offense and defense, resource gathering, strategic freedom, and broad viability across multiple playstyles. The project explicitly values the artistic and structural lesson of C&amp;C Generals: the game does not need to be visually extravagant if balance, playability, and experimentation value are strong.</p>
+      <p><strong>What Bloodlines Is Not:</strong> Not Age of Empires building style. Not Total War combat style.</p>
+      <p><strong>Creative Intent:</strong> Built to stand the test of time. Deep, balanced systems that allow repeated return and experimentation. This is a serious long-form game design, not a lightweight concept sketch.</p>
+    </div>
+
+    <div class="guide-content">
+      <h3>Core Design Philosophy</h3>
+      <p>Priorities: <strong>Clarity</strong> in presentation. <strong>Balance</strong> across viable playstyles. <strong>Replayability</strong> through emergent narrative. <strong>Long-term depth</strong> that does not peak early.</p>
+      <p>The game now centers not just on kingdoms and armies, but on hereditary power, dynastic identity, ideological divergence, moral trajectory, family continuity, and the social character of a civilization.</p>
+    </div>
+
+    <div class="guide-content">
+      <h3>The Four Foundational Pillars <span class="status-tag locked">Locked</span></h3>
+      <ol>
+        <li><strong>Territory</strong> &mdash; physical space, resources, loyalty required to hold it</li>
+        <li><strong>Population</strong> &mdash; living resource that feeds economy, military, faith, and politics</li>
+        <li><strong>Faith</strong> &mdash; spiritual covenant that empowers and constrains</li>
+        <li><strong>Dynasty</strong> &mdash; ruling bloodline with members, marriages, succession, and legacy</li>
+      </ol>
+      <p>No single pillar can be neglected without consequences across the other three.</p>
+    </div>
+
+    <div class="guide-content">
+      <h3>Canonical Vocabulary <span class="status-tag locked">Locked</span></h3>
+      <table class="ref-table">
+        <tr><th>Term</th><th>Meaning</th><th>Nature</th></tr>
+        <tr><td><strong>Bloodline</strong></td><td>The family (ruling dynasty)</td><td>Structural, generational</td></tr>
+        <tr><td><strong>Conviction</strong></td><td>The philosophy (shaped by actions)</td><td>Behavioral, emergent</td></tr>
+        <tr><td><strong>Faith</strong></td><td>The religion (covenant alignment)</td><td>Chosen, maintained</td></tr>
+      </table>
+    </div>
+
+    <div class="divider"><span>Open Questions</span></div>
+
+    <div class="question-block">
+      <div class="q-label">Q1.1</div>
+      <div class="q-text">Competitive vs. Narrative Focus</div>
+      <div class="q-context">The game supports both. Where does the balance sit?</div>
+      <ol class="q-options"><li>Primarily competitive RTS with narrative flavor</li><li>Primarily narrative strategy with competitive viability</li><li>Two distinct modes with different balance targets</li><li>Other</li></ol>
+      <textarea data-id="q1.1" placeholder="Your answer..."></textarea>
+    </div>
+
+    <div class="question-block">
+      <div class="q-label">Q1.2</div>
+      <div class="q-text">Accessibility vs. Depth</div>
+      <div class="q-context">How steep should the learning curve be? Should dynastic/faith systems be immediately visible or gradually revealed? Target audience?</div>
+      <textarea data-id="q1.2" placeholder="Your answer..."></textarea>
+    </div>
+
+    <div class="question-block">
+      <div class="q-label">Q1.3</div>
+      <div class="q-text">Visual Benchmark</div>
+      <ol class="q-options"><li>Isometric 2D (classic RTS)</li><li>3D with fixed camera (C&amp;C Generals style)</li><li>3D with rotatable camera</li><li>Top-down strategic map view</li><li>Other</li></ol>
+      <textarea data-id="q1.3" placeholder="Your answer..."></textarea>
+    </div>
+
+    <div class="question-block">
+      <div class="q-label">Q1.4</div>
+      <div class="q-text">Mod and Custom Map Support</div>
+      <div class="q-context">Design for modding from the start, or post-launch consideration?</div>
+      <textarea data-id="q1.4" placeholder="Your answer..."></textarea>
+    </div>
+  </section>
+
+  <!-- ======================================== -->
+  <!-- SECTION 2: MATCH STRUCTURE -->
+  <!-- ======================================== -->
+  <section id="s2">
+    <h2>Match Structure and Progression</h2>
+
+    <div class="guide-content">
+      <h3>Four Match Stages <span class="status-tag locked">Locked</span></h3>
+      <table class="ref-table">
+        <tr><th>Stage</th><th>Name</th><th>Key Events</th></tr>
+        <tr><td>1 / Level 1</td><td><strong>Founding</strong></td><td>Settlement, exploration, resource gathering. <em>Faith selected at end.</em></td></tr>
+        <tr><td>2 / Level 2</td><td><strong>Consolidation</strong></td><td>Infrastructure expansion, territory stabilization, population growth.</td></tr>
+        <tr><td>3 / Level 3</td><td><strong>Ideological Expansion</strong></td><td>Faith shapes society. Dynastic politics intensify. Conviction becomes visible.</td></tr>
+        <tr><td>4 / Level 4</td><td><strong>Irreversible Divergence</strong></td><td><strong>Point of no return.</strong> Grand faith structures unlocked. Strategic commitment.</td></tr>
+        <tr><td>5 / Level 5</td><td><strong>Apex</strong></td><td>Grand endgame structures. Final civilizational expression.</td></tr>
+      </table>
+      <p><em>Historical note: both "Level" and "Stage" terminology appear in the archive. Both preserved.</em></p>
+    </div>
+
+    <div class="guide-content">
+      <h3>Match Pacing</h3>
+      <p><strong>Duration:</strong> Optional long matches from 2 to 10+ hours. Large matches may extend well beyond ten hours. <span class="status-tag locked">Locked</span></p>
+      <p><strong>Player Count:</strong> Up to 10 players with AI kingdoms and minor tribes. <span class="status-tag locked">Locked</span></p>
+      <p><strong>Arc:</strong> Early game = expansion and survival. Mid game = dynastic politics and religious development. Late game = ideological wars and victory escalation. Matches represent civilizational arcs, not just military escalation.</p>
+    </div>
+
+    <div class="guide-content">
+      <h3>Victory Conditions</h3>
+      <table class="ref-table">
+        <tr><th>Path</th><th>Concept</th><th>Status</th></tr>
+        <tr><td><strong>Military Conquest</strong></td><td>Domination with instability risk. Reckless warfare causes mutinies.</td><td><span class="status-tag locked">Locked</span></td></tr>
+        <tr><td><strong>Currency Dominance</strong></td><td>Introduce own currency; world economy becomes dependent on it.</td><td><span class="status-tag proposed">Proposed</span></td></tr>
+        <tr><td><strong>Faith Divine Right</strong></td><td>Religious influence and dominance.</td><td><span class="status-tag proposed">Proposed</span></td></tr>
+        <tr><td><strong>Territorial Governance</strong></td><td>Territories join willingly due to prosperity. Voluntary integration.</td><td><span class="status-tag proposed">Proposed</span></td></tr>
+        <tr><td><strong>Dynastic Prestige</strong></td><td>Prestige dispute wars with bloodline members on the battlefield.</td><td><span class="status-tag proposed">Proposed</span></td></tr>
+      </table>
+      <p><em>Population loyalty as standalone victory path: not favored.</em></p>
+    </div>
+
+    <div class="divider"><span>Open Questions</span></div>
+
+    <div class="question-block">
+      <div class="q-label">Q2.1</div>
+      <div class="q-text">Starting Conditions</div>
+      <div class="q-context">When a match begins, what does the player have? Workers, buildings, resources, military, bloodline members?</div>
+      <textarea data-id="q2.1" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q2.2</div>
+      <div class="q-text">First 60 Seconds</div>
+      <div class="q-context">Walk through the player's first minute. Place buildings? Assign workers? Scout? Immediate threat or peaceful opening?</div>
+      <textarea data-id="q2.2" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q2.3</div>
+      <div class="q-text">First Contact</div>
+      <div class="q-context">When does the player encounter another faction/tribe? Guaranteed or random? What happens?</div>
+      <textarea data-id="q2.3" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q2.4</div>
+      <div class="q-text">Faith Selection Moment</div>
+      <div class="q-context">Faith selected at end of Stage 1. Encounter all four or only nearby? Menu, narrative event, or in-world interaction? Can it be delayed? What if two players pick the same?</div>
+      <textarea data-id="q2.4" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q2.5</div>
+      <div class="q-text">Stage Transition Triggers</div>
+      <div class="q-context">Time-based? Achievement-based? Player-initiated? Different per stage?</div>
+      <textarea data-id="q2.5" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q2.6</div>
+      <div class="q-text">Early Game Pacing Feel</div>
+      <div class="q-context">Urgent and tense? Exploratory and deliberate? Variable by map?</div>
+      <textarea data-id="q2.6" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q2.7</div>
+      <div class="q-text">Victory Thresholds</div>
+      <div class="q-context">What specific event triggers each victory path?</div>
+      <table class="answer-table">
+        <tr><th>Victory Path</th><th>What Triggers Victory?</th></tr>
+        <tr><td>Military Conquest</td><td><input data-id="q2.7a" placeholder="Trigger..."></td></tr>
+        <tr><td>Currency Dominance</td><td><input data-id="q2.7b" placeholder="Trigger..."></td></tr>
+        <tr><td>Faith Divine Right</td><td><input data-id="q2.7c" placeholder="Trigger..."></td></tr>
+        <tr><td>Territorial Governance</td><td><input data-id="q2.7d" placeholder="Trigger..."></td></tr>
+        <tr><td>Dynastic Prestige</td><td><input data-id="q2.7e" placeholder="Trigger..."></td></tr>
+      </table>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q2.8</div>
+      <div class="q-text">Defeat Conditions</div>
+      <div class="q-context">Last settlement destroyed? No living bloodline? Zero population? Can a defeated dynasty be absorbed?</div>
+      <textarea data-id="q2.8" placeholder="Your answer..."></textarea>
+    </div>
+  </section>
+
+  <!-- ======================================== -->
+  <!-- SECTION 3: FOUNDING HOUSES -->
+  <!-- ======================================== -->
+  <section id="s3">
+    <h2>The Founding Houses</h2>
+
+    <div class="guide-content">
+      <h3>Nine Founding Houses <span class="status-tag locked">Locked</span></h3>
+      <table class="ref-table">
+        <tr><th>House</th><th>Suffix</th><th>Thematic Identity</th></tr>
+        <tr><td><strong>Trueborn</strong></td><td>-born</td><td>Oldest lineage, neutral city, late-game re-emergence</td></tr>
+        <tr><td><strong>Highborne</strong></td><td>-borne</td><td>Noble heritage, elevated bloodline</td></tr>
+        <tr><td><strong>Ironmark</strong></td><td>-mark</td><td>Martial strength, forged identity</td></tr>
+        <tr><td><strong>Goldgrave</strong></td><td>-grave</td><td>Wealth and buried power</td></tr>
+        <tr><td><strong>Stonehelm</strong></td><td>-helm</td><td>Fortification and endurance</td></tr>
+        <tr><td><strong>Westland</strong></td><td>-land</td><td>Frontier expansion, western territories</td></tr>
+        <tr><td><strong>Hartvale</strong></td><td>-vale</td><td>Heart of the valley, pastoral strength</td></tr>
+        <tr><td><strong>Whitehall</strong></td><td>-hall</td><td>Governance and institutional authority</td></tr>
+        <tr><td><strong>Oldcrest</strong></td><td>-crest</td><td>Ancient lineage, traditional power</td></tr>
+      </table>
+      <p><strong>Naming Principles:</strong> 2-3 syllables max, distinct first letters for UI readability, no repeated suffix patterns. All nine suffixes are unique.</p>
+      <p><strong>Visual Identity:</strong> Distinct hair colors per house. Common ancestry, no ethnic division. <span class="status-tag locked">Locked</span></p>
+      <p><strong>Role:</strong> Houses are structural gameplay entities interacting with population, faith, politics, diplomacy, and inheritance. Not every match includes every house; unused houses appear as AI kingdoms.</p>
+      <p><strong>Trueborn Special Role:</strong> Oldest lineage. Neutral city serves as trade hub and world stabilizer. Can raise coalitions against hegemons in late game. <span class="status-tag locked">Locked</span></p>
+    </div>
+
+    <div class="guide-content">
+      <h4>Faction Asymmetry <span class="status-tag open">Open</span></h4>
+      <p>How houses differ <em>mechanically</em> is not yet defined. This is a major design gap. House selection is currently cosmetic beyond thematic identity.</p>
+    </div>
+
+    <div class="divider"><span>Open Questions</span></div>
+
+    <div class="question-block">
+      <div class="q-label">Q3.1</div>
+      <div class="q-text">Degree of Asymmetry</div>
+      <ol class="q-options"><li>Purely cosmetic</li><li>Minor stat bonuses</li><li>Unique passive abilities</li><li>Unique units or buildings</li><li>Fully asymmetric (like Starcraft races)</li><li>Other</li></ol>
+      <textarea data-id="q3.1" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q3.2</div>
+      <div class="q-text">Starting Differences</div>
+      <div class="q-context">Does Goldgrave start with more gold? Ironmark with a military edge? Stonehelm with better fortifications? Or identical starts?</div>
+      <textarea data-id="q3.2" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q3.3</div>
+      <div class="q-text">House-Faith Affinity</div>
+      <div class="q-context">Natural affinities? Starting bonus, lore suggestion, or constraint? Can any house choose any faith?</div>
+      <textarea data-id="q3.3" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q3.4</div>
+      <div class="q-text">What Makes a House Feel Different Before Unique Units?</div>
+      <div class="q-context">In the first few minutes, how does a player know they are playing Ironmark vs Hartvale?</div>
+      <textarea data-id="q3.4" placeholder="Your answer..."></textarea>
+    </div>
+  </section>
+
+  <!-- ======================================== -->
+  <!-- SECTION 4: FAITH -->
+  <!-- ======================================== -->
+  <section id="s4">
+    <h2>The Four Ancient Faiths</h2>
+
+    <div class="guide-content">
+      <p>The four covenants predate the founding houses. Faith is a major strategic axis, not decorative. Selected at end of Stage 1 when the dynasty encounters tribes, ruins, and sacred sites. The dynasty aligns with an existing covenant; it does not create one.</p>
+      <h4>The Old Light (Covenant of the First Flame)</h4>
+      <p>Protection, mercy, divine guardianship, defense of innocents, enlightenment, unity, societal cohesion, disciplined governance, defensive stability. Followers seek to preserve life and maintain order through compassionate governance.</p>
+      <h4>The Blood Dominion (The Red Covenant)</h4>
+      <p>Conquest, sacrifice, domination, strength as divine favor. Darker tone, moral cost and conviction consequences, strong military benefits. Power is the truest measure of divine approval.</p>
+      <h4>The Order (Covenant of the Sacred Mandate)</h4>
+      <p>Law, doctrine, institutional authority, structured governance under divine mandate. Rigid hierarchy, administrative control. Governance itself is a sacred act; laws are divine instructions.</p>
+      <h4>The Wild (Covenant of the Thorned Elder Roots)</h4>
+      <p>Nature mysticism, ancient spirits, balance of the natural world. Adaptive survival, environmental strength. The oldest covenant; power from harmony with the earth, forests, and waters.</p>
+    </div>
+
+    <div class="guide-content">
+      <h3>Faith Mechanics: Three Components <span class="status-tag locked">Locked</span></h3>
+      <ol>
+        <li><strong>Covenant</strong> &mdash; which religion the dynasty follows</li>
+        <li><strong>Faith Intensity</strong> &mdash; degree of active practice (costly, population-scaled, maintenance-dependent)</li>
+        <li><strong>Faith Alignment</strong> &mdash; light vs dark spectrum. Same covenant can be interpreted differently. Large differences within the same covenant cause schisms.</li>
+      </ol>
+      <p><strong>Faith Actions</strong> (consume resources, may consume captives or population): Rituals, offerings, temple construction, priesthood expansion, religious festivals, sacrificial rites.</p>
+      <p><strong>Faith Buildings:</strong> Shrine (small, +intensity), Temple (major, enables rituals), Grand Sanctuary (late-game, faith victory). <span class="status-tag locked">Locked</span></p>
+      <p><strong>Spiritual Manifestations</strong> <span class="status-tag proposed">Proposed</span>: At extreme intensity, angels, demons, cursed armies, healing, resurrection, plague removal, nature forces. World-level pressure from extreme dark behavior.</p>
+    </div>
+
+    <div class="divider"><span>Open Questions</span></div>
+
+    <div class="question-block">
+      <div class="q-label">Q4.1</div>
+      <div class="q-text">Exclusive Content per Faith</div>
+      <div class="q-context">Does each faith unlock exclusive buildings, units, abilities, or technologies? How many? Build-defining or supplementary?</div>
+      <textarea data-id="q4.1" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q4.2</div>
+      <div class="q-text">Faith Change</div>
+      <div class="q-context">Can a dynasty change faith mid-match? At what cost? Or intentionally irreversible?</div>
+      <textarea data-id="q4.2" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q4.3</div>
+      <div class="q-text">Multiple Faiths in One Territory</div>
+      <div class="q-context">Conquered populations practicing different faiths? Forced conversion? Religious tolerance as a strategy?</div>
+      <textarea data-id="q4.3" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q4.4</div>
+      <div class="q-text">Faith and Diplomacy</div>
+      <div class="q-context">Same-faith easier to ally? Alignment differences create schism risk? Faith as casus belli?</div>
+      <textarea data-id="q4.4" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q4.5</div>
+      <div class="q-text">What Does Faith Function Like?</div>
+      <div class="q-context">Doctrine? Covenant? Law? Spiritual power? State identity? All layered?</div>
+      <textarea data-id="q4.5" placeholder="Your answer..."></textarea>
+    </div>
+  </section>
+
+  <!-- ======================================== -->
+  <!-- SECTION 5: CONVICTION -->
+  <!-- ======================================== -->
+  <section id="s5">
+    <h2>The Conviction System</h2>
+
+    <div class="guide-content">
+      <p><strong>Core Concept</strong> <span class="status-tag locked">Locked</span>: Conviction is a behavioral morality spectrum shaped permanently by actions. Not chosen in a menu. Produced by what the player actually does.</p>
+      <p><strong>Faith is chosen. Conviction is lived.</strong> Faith determines doctrine and worldview. Conviction determines what kind of civilization the player has become through action. These two systems influence each other but remain separate.</p>
+      <p><strong>Actions that shape conviction:</strong> Warfare practices, treatment of prisoners, enslavement, protection of civilians, pillage, sacrifice, governance decisions.</p>
+      <p><strong>Conviction permanently shapes:</strong> Available abilities, faith alignment interactions, kingdom development paths, late-game powers, how other dynasties perceive the civilization.</p>
+      <p><strong>Conviction directions:</strong> Conquest, prosperity through trade, faith authority, territorial governance, dynastic prestige.</p>
+      <p><strong>Design tension:</strong> High conviction enables extraordinary actions (including Born of Sacrifice). Low conviction leads to desertion, unrest, and collapse from within.</p>
+    </div>
+
+    <div class="guide-content">
+      <h4>What Is NOT Yet Defined <span class="status-tag open">Open</span></h4>
+      <p>Specific triggers and thresholds. Whether conviction is visible to the player. How it is measured or scored. Whether it is one axis or many. Scope (per-dynasty, per-territory, per-army). Exact interaction formulas with other systems.</p>
+    </div>
+
+    <div class="divider"><span>Open Questions</span></div>
+
+    <div class="question-block">
+      <div class="q-label">Q5.1</div>
+      <div class="q-text">Conviction Scope</div>
+      <div class="q-context">Per-dynasty (one value)? Per-territory? Per-army? Per-bloodline-member? Multiple levels simultaneously?</div>
+      <textarea data-id="q5.1" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q5.2</div>
+      <div class="q-text">Conviction Visibility</div>
+      <div class="q-context">Visible as number/bar? Through effects only? Partially hidden? Fully hidden?</div>
+      <textarea data-id="q5.2" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q5.3</div>
+      <div class="q-text">Conviction Axes</div>
+      <div class="q-context">Single light-to-dark spectrum? Or multiple independent axes (Militaristic, Mercantile, Devout, Expansionist)?</div>
+      <textarea data-id="q5.3" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q5.4</div>
+      <div class="q-text">Specific Action Effects</div>
+      <table class="answer-table">
+        <tr><th>Action</th><th>Conviction Effect</th></tr>
+        <tr><td>Protecting civilians during war</td><td><input data-id="q5.4a" placeholder="Effect..."></td></tr>
+        <tr><td>Burning a captured city</td><td><input data-id="q5.4b" placeholder="Effect..."></td></tr>
+        <tr><td>Ransoming a captured bloodline member</td><td><input data-id="q5.4c" placeholder="Effect..."></td></tr>
+        <tr><td>Executing a captured bloodline member</td><td><input data-id="q5.4d" placeholder="Effect..."></td></tr>
+        <tr><td>Enslaving a conquered population</td><td><input data-id="q5.4e" placeholder="Effect..."></td></tr>
+        <tr><td>Building a temple in conquered territory</td><td><input data-id="q5.4f" placeholder="Effect..."></td></tr>
+        <tr><td>Sacrificing an army via Born of Sacrifice</td><td><input data-id="q5.4g" placeholder="Effect..."></td></tr>
+        <tr><td>Trading food to a starving rival</td><td><input data-id="q5.4h" placeholder="Effect..."></td></tr>
+      </table>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q5.5</div>
+      <div class="q-text">What Should Make Late-Game Divergence Feel Irreversible and Dramatic?</div>
+      <div class="q-context">At Level 4, not just statistically different. What changes in tone, visuals, music, or mechanics?</div>
+      <textarea data-id="q5.5" placeholder="Your answer..."></textarea>
+    </div>
+  </section>
+
+  <!-- ======================================== -->
+  <!-- SECTION 6: POPULATION & ECONOMY -->
+  <!-- ======================================== -->
+  <section id="s6">
+    <h2>Population and Resource Economy</h2>
+
+    <div class="guide-content">
+      <h3>Population Model <span class="status-tag locked">Locked</span></h3>
+      <p>Population is a <strong>unified pool</strong>, single realm-wide value. Not just a cap but a living strategic resource: labor, military, civic, and ideological body. Can be converted to workers, soldiers, specialists, or religious participants. Every conversion has a cost; every soldier is a laborer lost.</p>
+      <p><strong>Growth:</strong> Depends on food and water. <strong>Housing</strong> determines max capacity, replacing traditional RTS power grid mechanics. <span class="status-tag locked">Locked</span></p>
+      <p><strong>Population determines:</strong> Workforce, tax revenue, recruitment capacity, territorial loyalty.</p>
+      <p><strong>Decline causes:</strong> Famine, warfare, plagues, religious conflict.</p>
+      <p><strong>Loyalty:</strong> Low loyalty reduces tax income, increases sabotage/rebellion. Reckless warfare lowers morale, causes mutinies. Population is a political body, not just a labor pool.</p>
+    </div>
+
+    <div class="guide-content">
+      <h3>Five Primary Resources <span class="status-tag locked">Locked</span></h3>
+      <table class="ref-table">
+        <tr><th>Resource</th><th>Role</th><th>Source</th></tr>
+        <tr><td><strong>Gold</strong></td><td>Currency, trade, recruitment, diplomacy, ransom</td><td>Taxation, markets, trade networks</td></tr>
+        <tr><td><strong>Food</strong></td><td>Population growth, army sustenance</td><td>Farms, ranches</td></tr>
+        <tr><td><strong>Water</strong></td><td>Population survival, agricultural production</td><td>Wells, territory water sources</td></tr>
+        <tr><td><strong>Wood</strong></td><td>Construction, fuel, siege equipment, ships</td><td>Lumber camps (renewable, location-dependent)</td></tr>
+        <tr><td><strong>Stone</strong></td><td>Walls, towers, major structures</td><td>Quarries (finite)</td></tr>
+      </table>
+      <p><strong>Secondary Resource:</strong> Influence <span class="status-tag proposed">Proposed</span></p>
+      <p><strong>Design philosophy:</strong> Grounded and legible. Strong core simplicity with deep interaction. Resource nodes create natural conflict points.</p>
+      <p><strong>Water design:</strong> Essential but not a trivial hard-counter. Fish-diet vs plains-hunting tradeoffs. Coastal civilizations may have food through fishing but lower military strength.</p>
+      <p><strong>Currency Dominance</strong> <span class="status-tag proposed">Proposed</span>: Introduce own currency. World transitions to dynasty's standard. Economic victory when world economy depends on it.</p>
+    </div>
+
+    <div class="divider"><span>Open Questions</span></div>
+
+    <div class="question-block">
+      <div class="q-label">Q6.1</div>
+      <div class="q-text">Population Conversion</div>
+      <div class="q-context">Civilian becomes soldier: population decreases by 1? Can they return? Training time? Max military % before economic collapse?</div>
+      <textarea data-id="q6.1" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q6.2</div>
+      <div class="q-text">Population Growth Rate</div>
+      <div class="q-context">Doubling time? Target mid-game size? Natural cap beyond housing?</div>
+      <textarea data-id="q6.2" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q6.3</div>
+      <div class="q-text">Resource Gathering Model</div>
+      <div class="q-context">Worker-assigned (AoE style) or building-automated (C&amp;C style)? This is a fundamental feel decision.</div>
+      <textarea data-id="q6.3" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q6.4</div>
+      <div class="q-text">Trade Between Dynasties</div>
+      <div class="q-context">Does it exist? What can be traded? How initiated? Can trade be blockaded?</div>
+      <textarea data-id="q6.4" placeholder="Your answer..."></textarea>
+    </div>
+  </section>
+
+  <!-- ======================================== -->
+  <!-- SECTION 7: TERRITORY -->
+  <!-- ======================================== -->
+  <section id="s7">
+    <h2>Territory and Loyalty</h2>
+
+    <div class="guide-content">
+      <p><strong>Core Rule</strong> <span class="status-tag locked">Locked</span>: Territory requires <em>both</em> military control <em>and</em> population loyalty. A region held only by force is unstable and may revolt. This is a defining design departure from most RTS games.</p>
+      <p><strong>Each territory contains:</strong> Resources, population, infrastructure, loyalty level.</p>
+      <p><strong>Low loyalty consequences:</strong> Decreased tax revenue, difficult recruitment, sabotage risk, rebellions.</p>
+      <p><strong>Control factors:</strong> Military presence, local loyalty, infrastructure, faith influence.</p>
+      <p><strong>Loyalty maintenance:</strong> Governance structures, faith influence, economic prosperity, dynasty reputation.</p>
+      <p><strong>Voluntary Integration</strong> <span class="status-tag proposed">Proposed</span>: Late-game, smaller territories join willingly due to prosperity. Governance attraction rather than conquest.</p>
+    </div>
+
+    <div class="guide-content">
+      <h3>Civic Buildings <span class="status-tag locked">Locked</span></h3>
+      <table class="ref-table">
+        <tr><th>Building</th><th>Function</th></tr>
+        <tr><td>Settlement Hall</td><td>Establishes control, collects taxes</td></tr>
+        <tr><td>Housing District</td><td>Expands population capacity</td></tr>
+        <tr><td>Well</td><td>Provides water supply</td></tr>
+        <tr><td>Granary</td><td>Stores food reserves</td></tr>
+      </table>
+    </div>
+
+    <div class="divider"><span>Open Questions</span></div>
+
+    <div class="question-block">
+      <div class="q-label">Q7.1</div>
+      <div class="q-text">Map Structure</div>
+      <ol class="q-options"><li>Hex grid</li><li>Province/region map (Crusader Kings / EU style)</li><li>Continuous terrain (C&amp;C style, no grid)</li><li>Hybrid</li><li>Other</li></ol>
+      <textarea data-id="q7.1" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q7.2</div>
+      <div class="q-text">What Should Loyalty Allow That Ownership Alone Does Not?</div>
+      <div class="q-context">If you hold a territory militarily but the population is disloyal, what specifically cannot you do?</div>
+      <textarea data-id="q7.2" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q7.3</div>
+      <div class="q-text">Geography and Biomes</div>
+      <div class="q-context">Plains, forests, mountains, deserts, tundra, swamps, coasts, islands? Effect on resources? Effect on combat?</div>
+      <textarea data-id="q7.3" placeholder="Your answer..."></textarea>
+    </div>
+  </section>
+
+  <!-- ======================================== -->
+  <!-- SECTION 8: DYNASTY & BLOODLINE -->
+  <!-- ======================================== -->
+  <section id="s8">
+    <h2>The Dynastic System and Bloodline Members</h2>
+
+    <div class="guide-content">
+      <p>The dynastic system is the heart of Bloodlines and one of the four foundational pillars. It is the source of the game's title and its emotional core. Players shepherd a family through triumph and tragedy.</p>
+      <h3>Bloodline Members <span class="status-tag locked">Locked</span></h3>
+      <p><strong>Active cap:</strong> 20 members. Beyond 20, members become <strong>dormant</strong> (mechanical state, not permanent removal).</p>
+      <p><strong>Birth:</strong> Born into dynasty over time. Paths chosen at birth, trained from childhood.</p>
+      <p><strong>Training paths:</strong> Military command, governance, religious leadership, diplomacy, covert operations, economic stewardship.</p>
+      <p><strong>Active roles:</strong> Commanders, governors, diplomats, ideological leaders.</p>
+      <p><strong>Starting leader options:</strong> Father, first oldest son, second oldest son, brother of the king, firstborn son of the king.</p>
+    </div>
+
+    <div class="guide-content">
+      <h3>Dynastic Interactions <span class="status-tag established">Established</span></h3>
+      <p><strong>Captured bloodline members:</strong> Enslaved as workers, executed, ransomed, or married into the capturing dynasty.</p>
+      <p><strong>Marriage diplomacy:</strong> Cross-dynasty marriages create new branches. Children may declare loyalty to either bloodline or form an entirely new dynasty.</p>
+      <p><strong>War heroes &amp; lesser houses:</strong> Exceptional commanders earn titles and lands, creating lesser houses. Lesser houses are optional AI-autonomous or player-controlled.</p>
+      <p><strong>Recruitment:</strong> Adjustable sliders (not hard doctrines). Mix family obligations, paid soldiers, faith volunteers. <span class="status-tag locked">Locked</span></p>
+      <p><strong>Sons/Daughters tradeoff</strong> <span class="status-tag proposed">Proposed</span>: Including daughters produces negative attack buffer but positive healing/sustainment buffer.</p>
+      <p><strong>Covert operations:</strong> Assassination and covert warfare exist as strategic tools.</p>
+    </div>
+
+    <div class="guide-content">
+      <h3>Family Tree UI</h3>
+      <p>Not decorative. A critical gameplay element. Player must always know: who leads, who the heirs are, specializations, heritage, population reputation.</p>
+    </div>
+
+    <div class="divider"><span>Open Questions</span></div>
+
+    <div class="question-block">
+      <div class="q-label">Q8.1</div>
+      <div class="q-text">Succession</div>
+      <div class="q-context">When the leader dies: automatic eldest? Player chooses? Contested? What if no heir?</div>
+      <textarea data-id="q8.1" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q8.2</div>
+      <div class="q-text">Dormancy Mechanics</div>
+      <div class="q-context">At 20 cap, what determines who becomes dormant? Player choice? Automatic? How does the player experience this? Reactivation?</div>
+      <textarea data-id="q8.2" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q8.3</div>
+      <div class="q-text">Character Traits</div>
+      <div class="q-context">Inheritable? Genetic, trained, or both? What kinds of traits? Improvable through experience?</div>
+      <textarea data-id="q8.3" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q8.4</div>
+      <div class="q-text">Bloodline Member Agency</div>
+      <div class="q-context">Do they have opinions, goals, or loyalty? Can they rebel or refuse orders? Relationships with each other?</div>
+      <textarea data-id="q8.4" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q8.5</div>
+      <div class="q-text">Lifespan Model</div>
+      <div class="q-context">Fixed lifespan? Age-based decay? Event-driven death only?</div>
+      <textarea data-id="q8.5" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q8.6</div>
+      <div class="q-text">Lesser House Control</div>
+      <div class="q-context">Direct command? Request-based? Autonomous with influence? Adjustable?</div>
+      <textarea data-id="q8.6" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q8.7</div>
+      <div class="q-text">Diplomatic States</div>
+      <div class="q-context">What formal states exist between dynasties? War, Peace, Alliance, Non-Aggression, Vassal, Trade Partner, Tributary? Others?</div>
+      <textarea data-id="q8.7" placeholder="Your answer..."></textarea>
+    </div>
+  </section>
+
+  <!-- ======================================== -->
+  <!-- SECTION 9: BORN OF SACRIFICE -->
+  <!-- ======================================== -->
+  <section id="s9">
+    <h2>Born of Sacrifice</h2>
+
+    <div class="guide-content">
+      <p>This is the system that gives Bloodlines its moral weight. Extraordinary power at extraordinary cost. <span class="status-tag locked">Locked</span></p>
+      <p><strong>Mechanic:</strong> Sacrifice multiple armies to create a powerful elite force. Example: five standard armies produce one elite force.</p>
+      <p><strong>Elite army benefits:</strong> Siege capability, enhanced armor, extreme morale.</p>
+      <p><strong>Naming:</strong> Player-named or random generator. These units become legendary figures within a match.</p>
+      <p><strong>Design intent:</strong> Not just a stat upgrade. Identity-rich, memorable battlefield units tied to the civilization's ideological and dynastic character. Sacrifice is not free. It costs people. It may cost your own children. Players who rely heavily on sacrifice field terrifying armies but rule hollowed-out populations.</p>
+    </div>
+
+    <div class="guide-content">
+      <h4>What Is NOT Yet Defined <span class="status-tag open">Open</span></h4>
+      <p>Specific sacrifice ratios, faith-specific variations, cooldowns/limits, diplomatic consequences of sacrifice, whether bloodline members can be sacrificed, relationship to conviction scoring.</p>
+    </div>
+  </section>
+
+  <!-- ======================================== -->
+  <!-- SECTION 10: MILITARY -->
+  <!-- ======================================== -->
+  <section id="s10">
+    <h2>Army Structure and Military</h2>
+
+    <div class="guide-content">
+      <h3>Level 1 Units <span class="status-tag locked">Locked</span></h3>
+      <table class="ref-table">
+        <tr><th>Unit</th><th>Role</th><th>Key Traits</th></tr>
+        <tr><td><strong>Militia</strong></td><td>Emergency defense</td><td>Cheap, weak, low morale, drawn from population</td></tr>
+        <tr><td><strong>Swordsmen</strong></td><td>Frontline + recon</td><td>Moderate stats, fast, increased sight. <em>Replaces scouts.</em></td></tr>
+        <tr><td><strong>Spearmen</strong></td><td>Defensive infantry</td><td>Higher defense, slower, holds lines, strong vs cavalry</td></tr>
+        <tr><td><strong>Hunters</strong></td><td>Harassment/ambush</td><td>Light ranged, drawn from population, weak in melee</td></tr>
+        <tr><td><strong>Bowmen</strong></td><td>Ranged support</td><td>Upgraded from hunters. Offensive (damage) or Defensive (range/accuracy)</td></tr>
+      </table>
+      <p><strong>Levels 2-5:</strong> <span class="status-tag open">Not Defined</span>. This is a confirmed major design gap.</p>
+    </div>
+
+    <div class="guide-content">
+      <h3>Building Infrastructure <span class="status-tag locked">Locked</span></h3>
+      <p><strong>Economic:</strong> Farm, Ranch, Market, Lumber Camp, Quarry</p>
+      <p><strong>Military:</strong> Barracks, Training Grounds, Armory, Fortified Keep, Watchtower</p>
+      <p><strong>Special:</strong> Dynasty Estate, Academy, Treasury</p>
+      <p><em>19 buildings total across 5 categories. Technology tree and upgrade paths are undefined.</em></p>
+    </div>
+
+    <div class="divider"><span>Open Questions</span></div>
+
+    <div class="question-block">
+      <div class="q-label">Q10.1</div>
+      <div class="q-text">Combat Resolution Model</div>
+      <div class="q-context">Real-time with direct unit control (C&amp;C style)? Auto-resolve? Hybrid? This determines the entire military UX.</div>
+      <textarea data-id="q10.1" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q10.2</div>
+      <div class="q-text">Level 2 Units</div>
+      <div class="q-context">What new types? Cavalry (referenced in spearmen description)? Siege? Upgraded Level 1? Faith-specific?</div>
+      <textarea data-id="q10.2" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q10.3</div>
+      <div class="q-text">Cavalry</div>
+      <div class="q-context">Spearmen are "strong against cavalry," so cavalry must exist. When available? Roles? Special resources?</div>
+      <textarea data-id="q10.3" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q10.4</div>
+      <div class="q-text">Siege Warfare</div>
+      <div class="q-context">Auto-attack walls or need equipment? What equipment? Defender interactions? Typical duration?</div>
+      <textarea data-id="q10.4" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q10.5</div>
+      <div class="q-text">Naval Units</div>
+      <div class="q-context">Warships, transports, trade ships, fishing vessels? Naval-land interaction? Coastal bombardment?</div>
+      <textarea data-id="q10.5" placeholder="Your answer..."></textarea>
+    </div>
+  </section>
+
+  <!-- ======================================== -->
+  <!-- SECTION 11: WORLD LORE -->
+  <!-- ======================================== -->
+  <section id="s11">
+    <h2>World, Lore, and AI Kingdoms</h2>
+
+    <div class="guide-content">
+      <p><strong>World generation:</strong> Random, with regional cultures shaping economy and military identity. <span class="status-tag locked">Locked</span></p>
+      <p><strong>Naval warfare:</strong> Exists. Coastal trade, fishing, sea-faring guerrilla possibilities. <span class="status-tag locked">Locked</span></p>
+      <p><strong>AI kingdoms:</strong> Active participants using the same core systems. Form alliances, join coalitions, react to hegemons. Behavior models undefined.</p>
+      <p><strong>Minor tribes:</strong> World elements during exploration. Interaction opportunities.</p>
+      <p><strong>World history and timeline:</strong> <span class="status-tag open">Empty</span>. No lore content has been written yet.</p>
+    </div>
+
+    <div class="divider"><span>Open Questions</span></div>
+
+    <div class="question-block">
+      <div class="q-label">Q11.1</div>
+      <div class="q-text">World History</div>
+      <div class="q-context">How old is this world? Were the four faiths always separate or did they diverge from one? What happened to the Trueborn that they became neutral? Are there ancient ruins?</div>
+      <textarea data-id="q11.1" placeholder="Your answer..."></textarea>
+    </div>
+  </section>
+
+  <!-- ======================================== -->
+  <!-- SECTION 12: UI/UX & TECHNICAL -->
+  <!-- ======================================== -->
+  <section id="s12">
+    <h2>UI/UX and Technical Direction</h2>
+
+    <div class="guide-content">
+      <h3>Technical Architecture Direction <span class="status-tag established">Established</span></h3>
+      <p>A deterministic RTS architecture bootstrap prompt was generated: clean sim/presentation separation, deterministic fixed-tick loop (20 TPS), seeded RNG, command buffer pipeline, snapshot system, per-tick hash for desync detection.</p>
+      <p><strong>Non-negotiables:</strong> No Math.random in sim. No Date.now in sim. No floats in sim state. Stable iteration order. Seeded RNG consumption must not depend on object key ordering.</p>
+      <p><strong>UI/UX and Audio/Visual:</strong> <span class="status-tag open">Empty</span>. No design work yet.</p>
+    </div>
+
+    <div class="divider"><span>Open Questions</span></div>
+
+    <div class="question-block">
+      <div class="q-label">Q12.1</div>
+      <div class="q-text">Always-Visible Information</div>
+      <div class="q-context">On the main game screen, what is always visible? Resources? Population? Faith? Conviction? Minimap? Family tree shortcut? Stage?</div>
+      <textarea data-id="q12.1" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q12.2</div>
+      <div class="q-text">Family Tree Interaction</div>
+      <div class="q-context">Fullscreen overlay? Side panel? Can commands be issued from it?</div>
+      <textarea data-id="q12.2" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q12.3</div>
+      <div class="q-text">Target Platform</div>
+      <div class="q-context">PC only? PC + Console? Browser prototype first? Mobile ever?</div>
+      <textarea data-id="q12.3" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q12.4</div>
+      <div class="q-text">Engine / Technology Stack</div>
+      <div class="q-context">Unity? Unreal? Custom? Web-based (TypeScript)? Godot?</div>
+      <textarea data-id="q12.4" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q12.5</div>
+      <div class="q-text">First System to Prototype</div>
+      <ol class="q-options"><li>Resource gathering + building</li><li>Population + housing</li><li>Military recruitment + Level 1 combat</li><li>Territory + loyalty</li><li>Full economic loop</li></ol>
+      <textarea data-id="q12.5" placeholder="Your answer..."></textarea>
+    </div>
+    <div class="question-block">
+      <div class="q-label">Q12.6</div>
+      <div class="q-text">What Must the Prototype Prove?</div>
+      <div class="q-context">What single question should the first playable answer? "Does the economic loop feel right?" "Does territory loyalty add gameplay?" "Does combat feel like C&amp;C?"</div>
+      <textarea data-id="q12.6" placeholder="Your answer..."></textarea>
+    </div>
+  </section>
+
+</main>
+
+<footer>Bloodlines Design Guide &amp; Workbook &mdash; Consolidated 2026-03-15</footer>
+
+<div class="progress-bar">
+  <span id="progressLabel">0 / 0 answered</span>
+  <div class="bar-track"><div class="bar-fill" id="progressFill" style="width:0%"></div></div>
+  <span id="progressPct">0%</span>
+</div>
+
+<script>
+const STORAGE_KEY = 'bloodlines-workbook-v2';
+
+function getAllInputs() {
+  return [...document.querySelectorAll('textarea[data-id], input[data-id]')];
+}
+
+function saveAll() {
+  const data = {};
+  getAllInputs().forEach(el => { data[el.dataset.id] = el.value; });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  // Migrate from v1
+  const v1 = localStorage.getItem('bloodlines-workbook-v1');
+  if (v1) { try { const d = JSON.parse(v1); Object.entries(d).forEach(([k,v]) => { if (!data[k]) { const el = document.querySelector(`[data-id="${k}"]`); if (el && !el.value) el.value = v; }}); } catch(e){} }
+  const s = document.getElementById('saveStatus');
+  s.textContent = 'Saved'; s.classList.add('visible');
+  setTimeout(() => s.classList.remove('visible'), 2000);
+}
+
+function loadAll() {
+  try {
+    let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    // Also try v1 data
+    const v1 = localStorage.getItem('bloodlines-workbook-v1');
+    if (v1) { const d1 = JSON.parse(v1); Object.entries(d1).forEach(([k,v]) => { if (!data[k]) data[k] = v; }); }
+    getAllInputs().forEach(el => { if (data[el.dataset.id]) el.value = data[el.dataset.id]; });
+  } catch(e) {}
+}
+
+function clearAll() {
+  if (!confirm('Clear all answers? This cannot be undone.')) return;
+  getAllInputs().forEach(el => { el.value = ''; });
+  localStorage.removeItem(STORAGE_KEY);
+  updateProgress();
+}
+
+function updateProgress() {
+  const inputs = getAllInputs();
+  const filled = inputs.filter(el => el.value.trim().length > 0).length;
+  const total = inputs.length;
+  const pct = total ? Math.round((filled / total) * 100) : 0;
+  document.getElementById('progressLabel').textContent = `${filled} / ${total} answered`;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function exportMarkdown() {
+  const sections = document.querySelectorAll('section');
+  let md = '# Bloodlines Workbook Answers\n\n';
+  md += `**Exported:** ${new Date().toISOString().split('T')[0]}\n\n---\n\n`;
+  sections.forEach(sec => {
+    const title = sec.querySelector('h2')?.textContent || '';
+    let hasAnswers = false;
+    let sectionMd = `## ${title}\n\n`;
+    sec.querySelectorAll('.question-block').forEach(block => {
+      const label = block.querySelector('.q-label')?.textContent || '';
+      const text = block.querySelector('.q-text')?.textContent || '';
+      block.querySelectorAll('textarea[data-id], input[data-id]').forEach(inp => {
+        const val = inp.value.trim();
+        if (val) { sectionMd += `### ${label}: ${text}\n\n${val}\n\n`; hasAnswers = true; }
+      });
+    });
+    if (hasAnswers) md += sectionMd;
+  });
+  const blob = new Blob([md], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `bloodlines-workbook-answers-${new Date().toISOString().split('T')[0]}.md`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Build TOC
+const toc = document.getElementById('toc');
+document.querySelectorAll('section').forEach(sec => {
+  const h = sec.querySelector('h2');
+  if (h) {
+    const a = document.createElement('a');
+    a.href = '#' + sec.id;
+    a.textContent = h.textContent;
+    toc.appendChild(a);
+  }
+});
+
+// Active section highlighting on scroll
+const tocLinks = document.querySelectorAll('#toc a');
+const sectionEls = document.querySelectorAll('section');
+function updateActiveSection() {
+  let current = '';
+  sectionEls.forEach(sec => {
+    const top = sec.getBoundingClientRect().top;
+    if (top < 120) current = sec.id;
+  });
+  tocLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+}
+window.addEventListener('scroll', updateActiveSection, { passive: true });
+
+// Ctrl+S / Cmd+S to save
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault();
+    saveAll();
+  }
+});
+
+// Auto-save every 30s (silently, only show status on manual save)
+setInterval(() => {
+  const data = {};
+  getAllInputs().forEach(el => { data[el.dataset.id] = el.value; });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}, 30000);
+
+getAllInputs().forEach(el => el.addEventListener('input', updateProgress));
+loadAll();
+updateProgress();
+updateActiveSection();
+</script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#efe4cf"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Cliff And Shoreline Transition Sheet</text>
+  <text x="64" y="116" fill="#6e5a46" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: elevation breaks, bank language, fords, and coastal edge readability</text>
+
+  <g font-family="Arial, sans-serif" font-size="16" fill="#47392c">
+    <text x="92" y="170">Walkable Slope To Cliff Face</text>
+    <text x="612" y="170">Highland Ridge Edge</text>
+    <text x="1128" y="170">Cliff Base With Path Foot</text>
+    <text x="92" y="572">Dry Shore To Wet Bank</text>
+    <text x="612" y="572">Ford Lane And Shallow Crossing</text>
+    <text x="1128" y="572">Reed Shore And Stone Landing</text>
+  </g>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g transform="translate(84 204)">
+    <rect width="400" height="190" rx="14" fill="#b8b59a"/>
+    <path d="M0 44 C52 26 90 48 140 36 S238 38 286 26 S360 32 400 44 L400 112 C344 96 300 100 248 112 S138 118 80 132 S22 140 0 140 Z" fill="#c7c3a5"/>
+    <path d="M0 130 C50 126 94 140 140 124 S232 88 294 98 S356 110 400 102 L400 190 L0 190 Z" fill="#8f8677"/>
+    <path d="M0 126 C42 126 82 142 122 128 S210 94 274 102 S354 114 400 106" fill="none" stroke="#5f5950" stroke-width="16" stroke-linecap="round"/>
+    <circle cx="248" cy="146" r="12" fill="#6d675d"/>
+    <circle cx="292" cy="158" r="10" fill="#6d675d"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">The player must read walkable top and impassable break in one glance.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Use value and contour change, not tiny rocks, to separate slope from cliff face.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#c7c3a5"/>
+    <rect x="46" y="266" width="22" height="22" fill="#8f8677"/>
+    <rect x="74" y="266" width="22" height="22" fill="#5f5950"/>
+  </g>
+
+  <g transform="translate(600 204)">
+    <rect width="400" height="190" rx="14" fill="#a59a8b"/>
+    <polygon points="0,104 42,80 94,90 140,56 198,88 248,46 308,80 360,64 400,84 400,190 0,190" fill="#867b6f"/>
+    <polygon points="0,56 56,26 108,42 158,8 210,42 258,4 320,34 372,16 400,28 400,92 0,92" fill="#c6b9a8"/>
+    <path d="M8 104 L70 86 L130 102 L188 82 L246 100 L320 78 L394 96" fill="none" stroke="#60584f" stroke-width="14" stroke-linecap="round"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Ridge lines should advertise tactical height and artillery visibility.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Keep the crest broad enough to survive zoom and fog-of-war reduction.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#c6b9a8"/>
+    <rect x="46" y="266" width="22" height="22" fill="#867b6f"/>
+    <rect x="74" y="266" width="22" height="22" fill="#60584f"/>
+  </g>
+
+  <g transform="translate(1116 204)">
+    <rect width="400" height="190" rx="14" fill="#b3a994"/>
+    <path d="M0 56 C46 40 102 60 148 44 S242 34 304 48 S362 64 400 60 L400 100 C358 94 310 102 250 116 S112 130 48 122 S12 114 0 118 Z" fill="#cfc3ad"/>
+    <path d="M0 108 C58 96 112 136 166 122 S260 82 324 92 S374 102 400 98 L400 190 L0 190 Z" fill="#8c7f6e"/>
+    <path d="M102 144 C126 128 156 128 184 142" fill="none" stroke="#8d7354" stroke-width="14" stroke-linecap="round"/>
+    <path d="M0 132 C52 132 102 142 156 130 S246 100 326 112 S370 122 400 120" fill="none" stroke="#5f584d" stroke-width="12" stroke-linecap="round"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Cliff bases still need a path foot or assault lane that reads around the wall of rock.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Show where pressure can flow without flattening the defensive value.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#cfc3ad"/>
+    <rect x="46" y="266" width="22" height="22" fill="#8c7f6e"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8d7354"/>
+  </g>
+
+  <g transform="translate(84 606)">
+    <rect width="400" height="190" rx="14" fill="#c7bfab"/>
+    <path d="M0 78 C44 58 98 76 144 66 S256 42 322 58 S372 74 400 74 L400 190 L0 190 Z" fill="#7f9a9f"/>
+    <path d="M0 96 C40 88 90 104 146 96 S256 72 332 86 S372 96 400 96" fill="none" stroke="#a9c1c8" stroke-width="18" stroke-linecap="round"/>
+    <path d="M0 58 C44 40 94 50 150 42 S264 30 334 44 S376 56 400 56" fill="none" stroke="#e1d8c6" stroke-width="22" stroke-linecap="round"/>
+    <path d="M6 122 L64 132 L120 126 L176 136 L228 128 L286 138 L344 132" fill="none" stroke="#7a8e76" stroke-width="10" stroke-linecap="round"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Dry shore, damp bank, and water band need clear value separation.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">The shoreline should guide the eye without mirror-heavy water effects.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#e1d8c6"/>
+    <rect x="46" y="266" width="22" height="22" fill="#7f9a9f"/>
+    <rect x="74" y="266" width="22" height="22" fill="#7a8e76"/>
+  </g>
+
+  <g transform="translate(600 606)">
+    <rect width="400" height="190" rx="14" fill="#b4c2bd"/>
+    <path d="M0 58 C44 50 96 70 146 60 S236 34 302 48 S364 62 400 60 L400 190 L0 190 Z" fill="#6889a2"/>
+    <path d="M0 104 C42 84 88 102 134 94 S220 70 292 82 S354 102 400 96" fill="none" stroke="#b5c9d6" stroke-width="16" stroke-linecap="round"/>
+    <path d="M104 116 C132 102 168 98 208 104 S286 118 332 112" fill="none" stroke="#d9cfb8" stroke-width="22" stroke-linecap="round"/>
+    <path d="M106 116 C136 104 170 100 208 106 S284 118 330 114" fill="none" stroke="#efe7d8" stroke-width="8" stroke-linecap="round"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Fords must be visible before units enter the water.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Use a lighter shallow band and calm banks rather than special effects.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#b5c9d6"/>
+    <rect x="46" y="266" width="22" height="22" fill="#6889a2"/>
+    <rect x="74" y="266" width="22" height="22" fill="#efe7d8"/>
+  </g>
+
+  <g transform="translate(1116 606)">
+    <rect width="400" height="190" rx="14" fill="#c9c0ae"/>
+    <path d="M0 84 C54 62 112 86 168 72 S266 52 332 70 S374 84 400 84 L400 190 L0 190 Z" fill="#6f8da0"/>
+    <path d="M0 104 C52 92 108 108 168 98 S274 82 334 92 S376 100 400 100" fill="none" stroke="#aec6cf" stroke-width="16" stroke-linecap="round"/>
+    <path d="M44 128 L74 110 L98 130 L126 112 L154 132" fill="none" stroke="#7d9372" stroke-width="12" stroke-linecap="round"/>
+    <circle cx="252" cy="142" r="12" fill="#7f7b73"/>
+    <circle cx="286" cy="130" r="10" fill="#7f7b73"/>
+    <circle cx="316" cy="146" r="12" fill="#7f7b73"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Reed shore and stone landing should signal both softness and usable approach.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">This is where docks, bridge starts, or civic edges can attach cleanly later.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#aec6cf"/>
+    <rect x="46" y="266" width="22" height="22" fill="#7d9372"/>
+    <rect x="74" y="266" width="22" height="22" fill="#7f7b73"/>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use with: terrain manifest, map-and-terrain track, and review tags for elevation read, crossing clarity, edge blending, and path attachment. These remain concept placeholders for later terrain-material and spline production.</text>
+</svg>

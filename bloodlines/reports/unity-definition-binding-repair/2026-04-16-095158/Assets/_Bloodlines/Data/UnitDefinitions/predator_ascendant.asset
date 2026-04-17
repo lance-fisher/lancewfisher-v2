@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: predator_ascendant
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:UnitDefinition
+  id: predator_ascendant
+  displayName: Predator Ascendant
+  stage: 4
+  role: faith-unit
+  siegeClass: 
+  prototypeEnabled: 1
+  populationCost: 3
+  health: 185
+  speed: 88
+  attackDamage: 34
+  attackRange: 20
+  attackCooldown: 0.9
+  sight: 185
+  projectileSpeed: 0
+  carryCapacity: 0
+  gatherRate: 0
+  buildRate: 0
+  structuralDamageMultiplier: 0
+  antiUnitDamageMultiplier: 0
+  cost:
+    gold: 200
+    food: 50
+    water: 0
+    wood: 70
+    stone: 0
+    iron: 0
+    influence: 0
+  house: 
+  notes:
+  - Session 21 canonical Wild Dark-path L4. Ascended predator-claim hunter-king.
+  runtimePrefab: {fileID: 0}
+  icon: {fileID: 0}
+  selectClip: {fileID: 0}
+  deathClip: {fileID: 0}

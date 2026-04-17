@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "bloodlines-main",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8057", "--directory", "D:/ProjectsHome/FisherSovereign/lancewfisher-v2/bloodlines"],
+      "port": 8057
+    },
+    {
+      "name": "bloodlines-docs",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8077", "--directory", "D:/ProjectsHome/FisherSovereign/lancewfisher-v2/bloodlines/docs"],
+      "port": 8077
+    },
+    {
+      "name": "lancewfisher-deploy",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8079", "--directory", "D:/ProjectsHome/FisherSovereign/lancewfisher-v2/deploy"],
+      "port": 8079
+    }
+  ]
+}

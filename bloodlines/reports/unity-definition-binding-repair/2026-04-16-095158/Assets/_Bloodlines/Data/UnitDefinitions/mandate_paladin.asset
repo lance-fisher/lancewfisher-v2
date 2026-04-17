@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: mandate_paladin
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:UnitDefinition
+  id: mandate_paladin
+  displayName: Mandate Paladin
+  stage: 4
+  role: faith-unit
+  siegeClass: 
+  prototypeEnabled: 1
+  populationCost: 3
+  health: 235
+  speed: 60
+  attackDamage: 24
+  attackRange: 22
+  attackCooldown: 0.95
+  sight: 170
+  projectileSpeed: 0
+  carryCapacity: 0
+  gatherRate: 0
+  buildRate: 0
+  structuralDamageMultiplier: 0
+  antiUnitDamageMultiplier: 0
+  cost:
+    gold: 190
+    food: 0
+    water: 0
+    wood: 55
+    stone: 0
+    iron: 60
+    influence: 0
+  house: 
+  notes:
+  - Session 21 canonical Order Light-path L4. Paladin-of-Stewardship apex defender.
+  runtimePrefab: {fileID: 0}
+  icon: {fileID: 0}
+  selectClip: {fileID: 0}
+  deathClip: {fileID: 0}

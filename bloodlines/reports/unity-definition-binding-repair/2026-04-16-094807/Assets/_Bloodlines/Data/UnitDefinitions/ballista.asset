@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: ballista
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:UnitDefinition
+  id: ballista
+  displayName: Ballista
+  stage: 2
+  role: siege-engine
+  siegeClass: ballista
+  prototypeEnabled: 1
+  populationCost: 2
+  health: 260
+  speed: 28
+  attackDamage: 26
+  attackRange: 170
+  attackCooldown: 2
+  sight: 160
+  projectileSpeed: 260
+  carryCapacity: 0
+  gatherRate: 0
+  buildRate: 0
+  structuralDamageMultiplier: 1.6
+  antiUnitDamageMultiplier: 1.2
+  cost:
+    gold: 100
+    food: 0
+    water: 0
+    wood: 110
+    stone: 40
+    iron: 55
+    influence: 0
+  house: 
+  notes:
+  - Ranged anti-personnel siege-support engine. Between bowman and trebuchet in range.
+  - Anti-unit multiplier is boosted over other engines because ballista targets formed
+    infantry approaching the siege line.
+  - 'Structural multiplier is moderate: ballista can pressure towers and gatehouses
+    but is not a primary wall-breaker.'
+  runtimePrefab: {fileID: 0}
+  icon: {fileID: 0}
+  selectClip: {fileID: 0}
+  deathClip: {fileID: 0}

@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#efe4cf"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Logistics And Setpieces Sheet</text>
+  <text x="64" y="116" fill="#6e5a46" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: support props, siege-camp readability, and world-setpiece lane foundations</text>
+
+  <g font-family="Arial, sans-serif" font-size="16" fill="#47392c">
+    <text x="92" y="170">Supply Wagon Cluster</text>
+    <text x="612" y="170">Field Camp And Tent Ring</text>
+    <text x="1128" y="170">Fence And Palisade Markers</text>
+    <text x="92" y="572">Debris And Ruin Scatter</text>
+    <text x="612" y="572">Roadside Shrine</text>
+    <text x="1128" y="572">Watchfire And Signal Post</text>
+  </g>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g transform="translate(84 204)">
+    <rect width="400" height="190" rx="14" fill="#d7cec0"/>
+    <rect x="52" y="88" width="88" height="30" fill="#7b6145" stroke="#4d3b2a" stroke-width="4"/>
+    <circle cx="74" cy="126" r="14" fill="#352920"/>
+    <circle cx="120" cy="126" r="14" fill="#352920"/>
+    <rect x="168" y="76" width="96" height="36" fill="#8c704e" stroke="#5a4630" stroke-width="4"/>
+    <circle cx="192" cy="124" r="14" fill="#352920"/>
+    <circle cx="240" cy="124" r="14" fill="#352920"/>
+    <rect x="278" y="94" width="68" height="24" fill="#91785a" stroke="#5a4630" stroke-width="4"/>
+    <circle cx="298" cy="126" r="12" fill="#352920"/>
+    <circle cx="330" cy="126" r="12" fill="#352920"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Grouped wagons should read as supply presence, not random carts.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Use repeated wheel rhythm and cargo mass for rapid identification.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#7b6145"/>
+    <rect x="46" y="266" width="22" height="22" fill="#8c704e"/>
+    <rect x="74" y="266" width="22" height="22" fill="#352920"/>
+  </g>
+
+  <g transform="translate(600 204)">
+    <rect width="400" height="190" rx="14" fill="#d7cec0"/>
+    <polygon points="70,122 114,76 158,122" fill="#8b6d4a" stroke="#5a4630" stroke-width="4"/>
+    <polygon points="138,136 184,84 230,136" fill="#9b7e58" stroke="#5a4630" stroke-width="4"/>
+    <polygon points="216,122 260,74 304,122" fill="#8b6d4a" stroke="#5a4630" stroke-width="4"/>
+    <circle cx="188" cy="132" r="20" fill="#5f4a32"/>
+    <path d="M96 142 L142 156 L188 146 L232 158 L282 146" fill="none" stroke="#8f7757" stroke-width="12" stroke-linecap="round"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Camp rings need obvious footprint and lane pressure without hiding units.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">The camp must read as logistics and muster space from the RTS camera.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#8b6d4a"/>
+    <rect x="46" y="266" width="22" height="22" fill="#5f4a32"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8f7757"/>
+  </g>
+
+  <g transform="translate(1116 204)">
+    <rect width="400" height="190" rx="14" fill="#d7cec0"/>
+    <path d="M34 140 L64 96 L94 140" fill="none" stroke="#70563a" stroke-width="10" stroke-linecap="round"/>
+    <path d="M100 140 L130 92 L160 140" fill="none" stroke="#70563a" stroke-width="10" stroke-linecap="round"/>
+    <path d="M168 140 L200 100 L232 140" fill="none" stroke="#70563a" stroke-width="10" stroke-linecap="round"/>
+    <path d="M244 140 L274 96 L304 140" fill="none" stroke="#70563a" stroke-width="10" stroke-linecap="round"/>
+    <path d="M316 140 L346 104 L376 140" fill="none" stroke="#70563a" stroke-width="10" stroke-linecap="round"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Fence and palisade props should define limits and lanes without visual fog.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Use these as edge markers, camp rings, and rural boundary language.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#70563a"/>
+    <rect x="46" y="266" width="22" height="22" fill="#d7cec0"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8f7757"/>
+  </g>
+
+  <g transform="translate(84 606)">
+    <rect width="400" height="190" rx="14" fill="#d7cec0"/>
+    <path d="M34 144 L82 118 L120 142 L162 110 L200 138 L242 118 L286 144 L334 126 L372 146" fill="none" stroke="#6f5e4c" stroke-width="18" stroke-linecap="round"/>
+    <rect x="148" y="128" width="46" height="18" fill="#7d6851"/>
+    <circle cx="94" cy="142" r="10" fill="#7d6851"/>
+    <circle cx="256" cy="138" r="12" fill="#7d6851"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Debris scatter should show conflict or ruin without turning into pathing clutter.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Prefer broad piles and beams over tiny hand-placed fragments.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#6f5e4c"/>
+    <rect x="46" y="266" width="22" height="22" fill="#7d6851"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8f7757"/>
+  </g>
+
+  <g transform="translate(600 606)">
+    <rect width="400" height="190" rx="14" fill="#d7cec0"/>
+    <rect x="158" y="78" width="84" height="72" fill="#8c7b67" stroke="#5a4d40" stroke-width="4"/>
+    <rect x="184" y="50" width="32" height="28" fill="#6d5c48"/>
+    <circle cx="200" cy="114" r="18" fill="#4b3e33"/>
+    <path d="M126 144 L156 126 L200 136 L242 124 L278 142" fill="none" stroke="#8f7757" stroke-width="10" stroke-linecap="round"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Shrines should read as small faith anchors, not giant landmarks.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Keep silhouette clean enough for roadside, village-edge, and battlefield use.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#8c7b67"/>
+    <rect x="46" y="266" width="22" height="22" fill="#4b3e33"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8f7757"/>
+  </g>
+
+  <g transform="translate(1116 606)">
+    <rect width="400" height="190" rx="14" fill="#d7cec0"/>
+    <rect x="182" y="46" width="12" height="92" fill="#6d5c48"/>
+    <polygon points="188,28 214,64 162,64" fill="#7b6145"/>
+    <path d="M154 142 Q174 94 188 142 Q202 88 224 142" fill="none" stroke="#d28439" stroke-width="12" stroke-linecap="round"/>
+    <path d="M160 138 Q176 106 188 138 Q200 100 216 138" fill="none" stroke="#f1c56e" stroke-width="6" stroke-linecap="round"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Watchfires must read as signal or guard infrastructure before flame spectacle.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">The post, base, and light cone matter more than big cinematic fire.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#6d5c48"/>
+    <rect x="46" y="266" width="22" height="22" fill="#d28439"/>
+    <rect x="74" y="266" width="22" height="22" fill="#f1c56e"/>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use with: environment-setpiece manifest, map clutter rules, and logistics-read guidance. These remain concept placeholders for later prop-kit, decal, and prefab-family production.</text>
+</svg>

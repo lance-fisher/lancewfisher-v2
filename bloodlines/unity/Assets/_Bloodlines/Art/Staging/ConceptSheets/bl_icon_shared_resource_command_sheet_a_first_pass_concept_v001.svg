@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="980" viewBox="0 0 1600 980">
+  <rect width="1600" height="980" fill="#efe4cf"/>
+  <rect x="28" y="28" width="1544" height="924" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Resource And Command Marker Sheet</text>
+  <text x="64" y="116" fill="#6e5a46" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: clean UI glyphs for pills, alerts, overlays, and command state</text>
+
+  <g font-family="Arial, sans-serif" font-size="15" fill="#47392c">
+    <text x="96" y="182">Food</text>
+    <text x="386" y="182">Water</text>
+    <text x="676" y="182">Wood</text>
+    <text x="966" y="182">Stone</text>
+    <text x="1256" y="182">Iron</text>
+
+    <text x="96" y="472">Influence</text>
+    <text x="386" y="472">Population</text>
+    <text x="676" y="472">Loyalty</text>
+    <text x="966" y="472">Fortification</text>
+    <text x="1256" y="472">Army</text>
+
+    <text x="96" y="762">Faith</text>
+    <text x="386" y="762">Conviction</text>
+    <text x="676" y="762">Logistics</text>
+    <text x="966" y="762">World Pressure</text>
+    <text x="1256" y="762">Command Alert</text>
+  </g>
+
+  <g stroke="#baa58b" stroke-width="2">
+    <rect x="64" y="198" width="240" height="220" rx="18" fill="#fcf7ef"/>
+    <rect x="354" y="198" width="240" height="220" rx="18" fill="#fcf7ef"/>
+    <rect x="644" y="198" width="240" height="220" rx="18" fill="#fcf7ef"/>
+    <rect x="934" y="198" width="240" height="220" rx="18" fill="#fcf7ef"/>
+    <rect x="1224" y="198" width="240" height="220" rx="18" fill="#fcf7ef"/>
+
+    <rect x="64" y="488" width="240" height="220" rx="18" fill="#fcf7ef"/>
+    <rect x="354" y="488" width="240" height="220" rx="18" fill="#fcf7ef"/>
+    <rect x="644" y="488" width="240" height="220" rx="18" fill="#fcf7ef"/>
+    <rect x="934" y="488" width="240" height="220" rx="18" fill="#fcf7ef"/>
+    <rect x="1224" y="488" width="240" height="220" rx="18" fill="#fcf7ef"/>
+
+    <rect x="64" y="778" width="240" height="120" rx="18" fill="#fcf7ef"/>
+    <rect x="354" y="778" width="240" height="120" rx="18" fill="#fcf7ef"/>
+    <rect x="644" y="778" width="240" height="120" rx="18" fill="#fcf7ef"/>
+    <rect x="934" y="778" width="240" height="120" rx="18" fill="#fcf7ef"/>
+    <rect x="1224" y="778" width="240" height="120" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <!-- Food -->
+  <g transform="translate(84 220)">
+    <circle cx="80" cy="74" r="56" fill="#6d5d2f"/>
+    <path d="M74 38 C114 44 118 92 80 116 C42 92 40 46 74 38 Z" fill="#d4c36d"/>
+    <line x1="80" y1="42" x2="80" y2="116" stroke="#6d5d2f" stroke-width="6"/>
+  </g>
+
+  <!-- Water -->
+  <g transform="translate(374 220)">
+    <circle cx="80" cy="74" r="56" fill="#4d6672"/>
+    <path d="M80 22 C98 54 116 72 116 92 C116 116 100 132 80 132 C60 132 44 116 44 92 C44 72 62 54 80 22 Z" fill="#b4d9df"/>
+  </g>
+
+  <!-- Wood -->
+  <g transform="translate(664 220)">
+    <circle cx="80" cy="74" r="56" fill="#5c4631"/>
+    <polygon points="80,26 44,92 66,92 66,124 94,124 94,92 116,92" fill="#a58b56"/>
+    <rect x="72" y="124" width="16" height="18" fill="#7a5f3c"/>
+  </g>
+
+  <!-- Stone -->
+  <g transform="translate(954 220)">
+    <circle cx="80" cy="74" r="56" fill="#6d6d71"/>
+    <polygon points="80,30 118,56 106,112 54,112 42,56" fill="#d0d0d2"/>
+  </g>
+
+  <!-- Iron -->
+  <g transform="translate(1244 220)">
+    <circle cx="80" cy="74" r="56" fill="#373c42"/>
+    <polygon points="80,28 120,58 108,118 52,118 40,58" fill="#9aa3ac"/>
+    <line x1="56" y1="58" x2="104" y2="106" stroke="#5d6670" stroke-width="6"/>
+    <line x1="104" y1="58" x2="56" y2="106" stroke="#5d6670" stroke-width="6"/>
+  </g>
+
+  <!-- Influence -->
+  <g transform="translate(84 510)">
+    <circle cx="80" cy="74" r="56" fill="#5f4c67"/>
+    <path d="M80 30 L92 54 L118 58 L98 76 L104 104 L80 92 L56 104 L62 76 L42 58 L68 54 Z" fill="#dbc7e2"/>
+  </g>
+
+  <!-- Population -->
+  <g transform="translate(374 510)">
+    <circle cx="80" cy="74" r="56" fill="#71614f"/>
+    <circle cx="62" cy="62" r="16" fill="#e0d0b7"/>
+    <circle cx="100" cy="62" r="16" fill="#e0d0b7"/>
+    <rect x="48" y="84" width="28" height="28" rx="10" fill="#e0d0b7"/>
+    <rect x="86" y="84" width="28" height="28" rx="10" fill="#e0d0b7"/>
+  </g>
+
+  <!-- Loyalty -->
+  <g transform="translate(664 510)">
+    <circle cx="80" cy="74" r="56" fill="#884e3e"/>
+    <path d="M80 120 L48 88 C30 68 42 34 70 34 C82 34 90 40 96 48 C102 40 110 34 122 34 C150 34 162 68 144 88 Z" fill="#f0c0b5"/>
+  </g>
+
+  <!-- Fortification -->
+  <g transform="translate(954 510)">
+    <circle cx="80" cy="74" r="56" fill="#645749"/>
+    <rect x="44" y="78" width="72" height="28" fill="#dac8b0"/>
+    <rect x="54" y="48" width="16" height="30" fill="#dac8b0"/>
+    <rect x="90" y="48" width="16" height="30" fill="#dac8b0"/>
+    <rect x="58" y="40" width="8" height="8" fill="#dac8b0"/>
+    <rect x="94" y="40" width="8" height="8" fill="#dac8b0"/>
+  </g>
+
+  <!-- Army -->
+  <g transform="translate(1244 510)">
+    <circle cx="80" cy="74" r="56" fill="#574139"/>
+    <line x1="50" y1="108" x2="110" y2="44" stroke="#e3d4c0" stroke-width="10"/>
+    <line x1="64" y1="40" x2="116" y2="92" stroke="#e3d4c0" stroke-width="10"/>
+  </g>
+
+  <!-- Faith -->
+  <g transform="translate(84 790)">
+    <circle cx="56" cy="50" r="38" fill="#65593d"/>
+    <line x1="56" y1="24" x2="56" y2="78" stroke="#efe3c4" stroke-width="8"/>
+    <line x1="34" y1="50" x2="78" y2="50" stroke="#efe3c4" stroke-width="8"/>
+  </g>
+
+  <!-- Conviction -->
+  <g transform="translate(374 790)">
+    <circle cx="56" cy="50" r="38" fill="#534846"/>
+    <path d="M56 22 L74 50 L56 78 L38 50 Z" fill="#d7d2cf"/>
+  </g>
+
+  <!-- Logistics -->
+  <g transform="translate(664 790)">
+    <circle cx="56" cy="50" r="38" fill="#64533f"/>
+    <rect x="34" y="42" width="44" height="18" rx="6" fill="#e4d4bb"/>
+    <circle cx="40" cy="66" r="8" fill="#e4d4bb"/>
+    <circle cx="72" cy="66" r="8" fill="#e4d4bb"/>
+  </g>
+
+  <!-- World Pressure -->
+  <g transform="translate(954 790)">
+    <circle cx="56" cy="50" r="38" fill="#6e433b"/>
+    <circle cx="56" cy="50" r="20" fill="none" stroke="#f0c5ba" stroke-width="7"/>
+    <line x1="56" y1="6" x2="56" y2="22" stroke="#f0c5ba" stroke-width="7"/>
+    <line x1="56" y1="78" x2="56" y2="94" stroke="#f0c5ba" stroke-width="7"/>
+    <line x1="12" y1="50" x2="28" y2="50" stroke="#f0c5ba" stroke-width="7"/>
+    <line x1="84" y1="50" x2="100" y2="50" stroke="#f0c5ba" stroke-width="7"/>
+  </g>
+
+  <!-- Command Alert -->
+  <g transform="translate(1244 790)">
+    <circle cx="56" cy="50" r="38" fill="#7b4f2e"/>
+    <polygon points="56,18 82,74 30,74" fill="#f4d0a0"/>
+    <rect x="52" y="38" width="8" height="18" fill="#7b4f2e"/>
+    <rect x="52" y="60" width="8" height="8" fill="#7b4f2e"/>
+  </g>
+
+  <g font-family="Arial, sans-serif" font-size="13" fill="#675644">
+    <text x="86" y="676">Pill and alert glyph direction only</text>
+    <text x="376" y="676">Vector-friendly placeholders for later atlas work</text>
+    <text x="666" y="676">Shape-first before color or effects</text>
+  </g>
+
+  <text x="64" y="930" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use with: interface art manifest and UI doctrine. These are deterministic SVG-first markers suitable for review, replacement, or later sprite-atlas conversion.</text>
+</svg>

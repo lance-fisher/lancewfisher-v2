@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: the_order
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:FaithDefinition
+  id: the_order
+  displayName: The Order
+  covenantName: Covenant of the Sacred Mandate
+  prototypeEnabled: 1
+  alignmentPaths:
+  - light
+  - dark
+  prototypeEffects:
+    light:
+      label: Mandate Of Stewardship
+      auraAttackMultiplier: 1.04
+      auraRadiusBonus: 20
+      auraSightBonus: 16
+      stabilizationMultiplier: 1.38
+      captureMultiplier: 1.02
+      populationGrowthMultiplier: 1.06
+    dark:
+      label: Edict Of Submission
+      auraAttackMultiplier: 1.11
+      auraRadiusBonus: 12
+      auraSightBonus: 10
+      stabilizationMultiplier: 1.08
+      captureMultiplier: 1.2
+      populationGrowthMultiplier: 0.98

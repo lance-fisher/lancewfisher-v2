@@ -3,28 +3,108 @@
     "id": "old_light",
     "name": "The Old Light",
     "covenantName": "Covenant of the First Flame",
-    "prototypeEnabled": false,
-    "alignmentPaths": ["light", "dark"]
+    "prototypeEnabled": true,
+    "alignmentPaths": ["light", "dark"],
+    "prototypeEffects": {
+      "light": {
+        "label": "Vigilant Flame",
+        "auraAttackMultiplier": 1.05,
+        "auraRadiusBonus": 18,
+        "auraSightBonus": 20,
+        "stabilizationMultiplier": 1.34,
+        "captureMultiplier": 1,
+        "populationGrowthMultiplier": 1.08
+      },
+      "dark": {
+        "label": "Judgment By Fire",
+        "auraAttackMultiplier": 1.14,
+        "auraRadiusBonus": 10,
+        "auraSightBonus": 12,
+        "stabilizationMultiplier": 1.04,
+        "captureMultiplier": 1.12,
+        "populationGrowthMultiplier": 0.97
+      }
+    }
   },
   {
     "id": "blood_dominion",
     "name": "The Blood Dominion",
     "covenantName": "The Red Covenant",
-    "prototypeEnabled": false,
-    "alignmentPaths": ["light", "dark"]
+    "prototypeEnabled": true,
+    "alignmentPaths": ["light", "dark"],
+    "prototypeEffects": {
+      "light": {
+        "label": "Consecrated Blood Oath",
+        "auraAttackMultiplier": 1.08,
+        "auraRadiusBonus": 14,
+        "auraSightBonus": 10,
+        "stabilizationMultiplier": 1.16,
+        "captureMultiplier": 1.06,
+        "populationGrowthMultiplier": 1.02
+      },
+      "dark": {
+        "label": "Crimson Exaction",
+        "auraAttackMultiplier": 1.18,
+        "auraRadiusBonus": 8,
+        "auraSightBonus": 8,
+        "stabilizationMultiplier": 0.96,
+        "captureMultiplier": 1.24,
+        "populationGrowthMultiplier": 0.93
+      }
+    }
   },
   {
     "id": "the_order",
     "name": "The Order",
     "covenantName": "Covenant of the Sacred Mandate",
-    "prototypeEnabled": false,
-    "alignmentPaths": ["light", "dark"]
+    "prototypeEnabled": true,
+    "alignmentPaths": ["light", "dark"],
+    "prototypeEffects": {
+      "light": {
+        "label": "Mandate Of Stewardship",
+        "auraAttackMultiplier": 1.04,
+        "auraRadiusBonus": 20,
+        "auraSightBonus": 16,
+        "stabilizationMultiplier": 1.38,
+        "captureMultiplier": 1.02,
+        "populationGrowthMultiplier": 1.06
+      },
+      "dark": {
+        "label": "Edict Of Submission",
+        "auraAttackMultiplier": 1.11,
+        "auraRadiusBonus": 12,
+        "auraSightBonus": 10,
+        "stabilizationMultiplier": 1.08,
+        "captureMultiplier": 1.2,
+        "populationGrowthMultiplier": 0.98
+      }
+    }
   },
   {
     "id": "the_wild",
     "name": "The Wild",
     "covenantName": "Covenant of the Thorned Elder Roots",
-    "prototypeEnabled": false,
-    "alignmentPaths": ["light", "dark"]
+    "prototypeEnabled": true,
+    "alignmentPaths": ["light", "dark"],
+    "prototypeEffects": {
+      "light": {
+        "label": "Rootbound Renewal",
+        "auraAttackMultiplier": 1.06,
+        "auraRadiusBonus": 22,
+        "auraSightBonus": 22,
+        "stabilizationMultiplier": 1.2,
+        "captureMultiplier": 1.04,
+        "populationGrowthMultiplier": 1.1
+      },
+      "dark": {
+        "label": "Predator's Claim",
+        "auraAttackMultiplier": 1.16,
+        "auraRadiusBonus": 14,
+        "auraSightBonus": 14,
+        "stabilizationMultiplier": 0.94,
+        "captureMultiplier": 1.22,
+        "populationGrowthMultiplier": 0.95
+      }
+    }
   }
 ]
