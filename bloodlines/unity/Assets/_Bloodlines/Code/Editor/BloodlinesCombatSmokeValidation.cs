@@ -98,8 +98,16 @@ namespace Bloodlines.EditorTools
             }
 
             UnityDebug.Log(attackMoveMessage);
+            
+            if (!RunTargetVisibilityPhase(out string targetVisibilityMessage))
+            {
+                message = targetVisibilityMessage;
+                return false;
+            }
+
+            UnityDebug.Log(targetVisibilityMessage);
             message =
-                "Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True.";
+                "Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True.";
             return true;
         }
 
@@ -491,6 +499,152 @@ namespace Bloodlines.EditorTools
             return false;
         }
 
+        private static bool RunTargetVisibilityPhase(out string message)
+        {
+            using var world = CreateValidationWorld("BloodlinesCombatSmokeValidation_TargetVisibility");
+            var entityManager = world.EntityManager;
+
+            CreateFaction(entityManager, "player", "enemy");
+            CreateFaction(entityManager, "enemy", "player");
+
+            Entity playerMilitia = CreateCombatUnit(
+                entityManager,
+                "player",
+                "militia",
+                new float3(0f, 0f, 0f),
+                maxHealth: 12f,
+                attackDamage: 3f,
+                attackRange: 1.5f,
+                attackCooldown: 0.4f,
+                sight: 3.5f);
+
+            Entity firstEnemy = CreateCombatUnit(
+                entityManager,
+                "enemy",
+                "villager",
+                new float3(2.8f, 0f, 0f),
+                maxHealth: 20f,
+                attackDamage: 0f,
+                attackRange: 0.5f,
+                attackCooldown: 1f,
+                sight: 2f,
+                role: UnitRole.Worker);
+
+            Entity replacementEnemy = CreateCombatUnit(
+                entityManager,
+                "enemy",
+                "villager",
+                new float3(8f, 0f, 0f),
+                maxHealth: 20f,
+                attackDamage: 0f,
+                attackRange: 0.5f,
+                attackCooldown: 1f,
+                sight: 2f,
+                role: UnitRole.Worker);
+
+            bool initialAcquireObserved = false;
+            bool targetsRepositioned = false;
+            bool sightLossCleared = false;
+            bool chaseStoppedOnLoss = false;
+            bool reacquireCooldownObserved = false;
+            bool replacementTargetObserved = false;
+            bool reacquireDelayed = false;
+            double sightLossElapsed = -1d;
+            double elapsed = 0d;
+
+            while (elapsed < TimeoutSeconds)
+            {
+                world.SetTime(new TimeData(elapsed, StepSeconds));
+                world.Update();
+                elapsed += StepSeconds;
+
+                var combatStats = entityManager.GetComponentData<CombatStatsComponent>(playerMilitia);
+                var moveCommand = entityManager.GetComponentData<MoveCommandComponent>(playerMilitia);
+
+                if (!targetsRepositioned &&
+                    entityManager.HasComponent<AttackTargetComponent>(playerMilitia) &&
+                    entityManager.GetComponentData<AttackTargetComponent>(playerMilitia).TargetEntity == firstEnemy)
+                {
+                    initialAcquireObserved = true;
+                    targetsRepositioned = true;
+                    SetUnitPosition(entityManager, firstEnemy, new float3(20f, 0f, 0f));
+                    SetUnitPosition(entityManager, replacementEnemy, new float3(2.9f, 0f, 0f));
+                    continue;
+                }
+
+                if (!targetsRepositioned)
+                {
+                    continue;
+                }
+
+                if (!entityManager.HasComponent<AttackTargetComponent>(playerMilitia))
+                {
+                    if (!sightLossCleared)
+                    {
+                        sightLossCleared = true;
+                        sightLossElapsed = elapsed;
+                        chaseStoppedOnLoss = !moveCommand.IsActive;
+                        reacquireCooldownObserved = combatStats.AcquireCooldownRemaining > 0f;
+                    }
+
+                    continue;
+                }
+
+                if (!sightLossCleared)
+                {
+                    continue;
+                }
+
+                if (entityManager.GetComponentData<AttackTargetComponent>(playerMilitia).TargetEntity != replacementEnemy)
+                {
+                    continue;
+                }
+
+                replacementTargetObserved = true;
+                reacquireDelayed = elapsed - sightLossElapsed >= 0.2d;
+
+                if (!initialAcquireObserved)
+                {
+                    message = "Combat smoke validation failed: target-visibility phase never observed the initial passive acquire.";
+                    return false;
+                }
+
+                if (!chaseStoppedOnLoss)
+                {
+                    message = "Combat smoke validation failed: target-visibility phase did not stop chase movement after sight loss.";
+                    return false;
+                }
+
+                if (!reacquireCooldownObserved)
+                {
+                    message = "Combat smoke validation failed: target-visibility phase never observed a reacquire cooldown after sight loss.";
+                    return false;
+                }
+
+                if (!reacquireDelayed)
+                {
+                    message = "Combat smoke validation failed: target-visibility phase reacquired a new hostile without the expected throttle delay.";
+                    return false;
+                }
+
+                message =
+                    "Combat smoke validation target-visibility phase passed: sightLossCleared=True, chaseStopped=True, reacquireCooldownObserved=True, replacementTargetObserved=True, reacquireDelayed=True, elapsedSeconds=" +
+                    elapsed.ToString("0.###") + ".";
+                return true;
+            }
+
+            message =
+                "Combat smoke validation failed: timeout waiting for the target-visibility phase to resolve. " +
+                "initialAcquireObserved=" + initialAcquireObserved +
+                ", sightLossCleared=" + sightLossCleared +
+                ", chaseStoppedOnLoss=" + chaseStoppedOnLoss +
+                ", reacquireCooldownObserved=" + reacquireCooldownObserved +
+                ", replacementTargetObserved=" + replacementTargetObserved +
+                ", reacquireDelayed=" + reacquireDelayed +
+                ", lastAcquireCooldownRemaining=" + entityManager.GetComponentData<CombatStatsComponent>(playerMilitia).AcquireCooldownRemaining.ToString("0.###") + ".";
+            return false;
+        }
+
         private static World CreateValidationWorld(string worldName)
         {
             var world = new World(worldName);
@@ -637,6 +791,10 @@ namespace Bloodlines.EditorTools
                 AttackCooldown = attackCooldown,
                 Sight = sight,
                 CooldownRemaining = 0f,
+                TargetAcquireIntervalSeconds = 0.25f,
+                AcquireCooldownRemaining = 0f,
+                TargetSightGraceSeconds = 0.35f,
+                TargetOutOfSightSeconds = 0f,
             });
             entityManager.AddComponentData(entity, new MoveCommandComponent
             {
@@ -661,6 +819,20 @@ namespace Bloodlines.EditorTools
         private static string Quote(string value)
         {
             return "'" + (value ?? string.Empty) + "'";
+        }
+
+        private static void SetUnitPosition(EntityManager entityManager, Entity entity, float3 position)
+        {
+            entityManager.SetComponentData(entity, new PositionComponent { Value = position });
+
+            if (!entityManager.HasComponent<LocalTransform>(entity))
+            {
+                return;
+            }
+
+            var transform = entityManager.GetComponentData<LocalTransform>(entity);
+            transform.Position = position;
+            entityManager.SetComponentData(entity, transform);
         }
 
         private sealed class DebugCommandSurfaceScope : IDisposable
