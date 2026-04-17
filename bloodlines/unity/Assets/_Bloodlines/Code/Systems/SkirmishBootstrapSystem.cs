@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Bloodlines.Components;
 using Unity.Collections;
 using Unity.Entities;
@@ -32,6 +33,7 @@ namespace Bloodlines.Systems
             {
                 var config = entityManager.GetComponentData<MapBootstrapConfigComponent>(bootstrapEntity);
                 var factionSeeds = default(NativeArray<MapFactionSeedElement>);
+                var factionHostilitySeeds = default(NativeArray<MapFactionHostilitySeedElement>);
                 var settlementSeeds = default(NativeArray<MapSettlementSeedElement>);
                 var controlPointSeeds = default(NativeArray<MapControlPointSeedElement>);
                 var resourceNodeSeeds = default(NativeArray<MapResourceNodeSeedElement>);
@@ -41,6 +43,7 @@ namespace Bloodlines.Systems
                 if (config.SpawnFactions)
                 {
                     factionSeeds = entityManager.GetBuffer<MapFactionSeedElement>(bootstrapEntity).ToNativeArray(Allocator.Temp);
+                    factionHostilitySeeds = entityManager.GetBuffer<MapFactionHostilitySeedElement>(bootstrapEntity).ToNativeArray(Allocator.Temp);
                 }
 
                 if (config.SpawnSettlements)
@@ -70,11 +73,34 @@ namespace Bloodlines.Systems
 
                 try
                 {
+                    var factionEntitiesById = new Dictionary<string, Entity>(System.StringComparer.OrdinalIgnoreCase);
+
                     if (config.SpawnFactions)
                     {
                         for (var i = 0; i < factionSeeds.Length; i++)
                         {
-                            SpawnFactionEntity(entityManager, factionSeeds[i]);
+                            var factionEntity = SpawnFactionEntity(entityManager, factionSeeds[i]);
+                            factionEntitiesById[factionSeeds[i].FactionId.ToString()] = factionEntity;
+                        }
+
+                        for (var i = 0; i < factionHostilitySeeds.Length; i++)
+                        {
+                            var seed = factionHostilitySeeds[i];
+                            if (!factionEntitiesById.TryGetValue(seed.FactionId.ToString(), out var factionEntity))
+                            {
+                                continue;
+                            }
+
+                            if (!entityManager.HasBuffer<HostilityComponent>(factionEntity))
+                            {
+                                entityManager.AddBuffer<HostilityComponent>(factionEntity);
+                            }
+
+                            var hostilityBuffer = entityManager.GetBuffer<HostilityComponent>(factionEntity);
+                            hostilityBuffer.Add(new HostilityComponent
+                            {
+                                HostileFactionId = seed.HostileFactionId,
+                            });
                         }
                     }
 
@@ -123,6 +149,7 @@ namespace Bloodlines.Systems
                 finally
                 {
                     if (factionSeeds.IsCreated) factionSeeds.Dispose();
+                    if (factionHostilitySeeds.IsCreated) factionHostilitySeeds.Dispose();
                     if (settlementSeeds.IsCreated) settlementSeeds.Dispose();
                     if (controlPointSeeds.IsCreated) controlPointSeeds.Dispose();
                     if (resourceNodeSeeds.IsCreated) resourceNodeSeeds.Dispose();
@@ -132,7 +159,7 @@ namespace Bloodlines.Systems
             }
         }
 
-        static void SpawnFactionEntity(EntityManager entityManager, MapFactionSeedElement seed)
+        static Entity SpawnFactionEntity(EntityManager entityManager, MapFactionSeedElement seed)
         {
             var entity = entityManager.CreateEntity();
             entityManager.AddComponentData(entity, new FactionComponent { FactionId = seed.FactionId });
@@ -173,6 +200,8 @@ namespace Bloodlines.Systems
                 Level = 0,
             });
             entityManager.AddBuffer<FaithExposureElement>(entity);
+            entityManager.AddBuffer<HostilityComponent>(entity);
+            return entity;
         }
 
         static void SpawnSettlementEntity(EntityManager entityManager, MapSettlementSeedElement seed)
@@ -332,6 +361,14 @@ namespace Bloodlines.Systems
             entityManager.AddComponentData(entity, new MovementStatsComponent
             {
                 MaxSpeed = seed.MaxSpeed,
+            });
+            entityManager.AddComponentData(entity, new CombatStatsComponent
+            {
+                AttackDamage = seed.AttackDamage,
+                AttackRange = seed.AttackRange,
+                AttackCooldown = seed.AttackCooldown,
+                Sight = seed.Sight,
+                CooldownRemaining = 0f,
             });
             entityManager.AddComponentData(entity, new MoveCommandComponent
             {
