@@ -1,4 +1,40 @@
-# Session Handoff - 2026-04-17 00:07 MDT
+# Session Handoff - 2026-04-17 03:09 MDT
+
+## Session 125 Update
+
+### Task
+Build the first explicit Unity combat command layer in the Codex lane on top of merged projectile combat: explicit attack orders, first attack-move support, and a dedicated proof that those orders actually drive combat.
+
+### Status
+- [x] Complete
+- [ ] In Progress - ~0% done
+- [ ] Blocked
+
+### Completed This Session
+- `unity/Assets/_Bloodlines/Code/Combat/AttackOrderComponent.cs` - added the per-unit explicit order payload for explicit targets and attack-move destinations.
+- `unity/Assets/_Bloodlines/Code/Combat/AttackOrderSystem.cs` - added the runtime that converts active attack orders into the existing move plus attack-target flow before auto-acquire runs.
+- `unity/Assets/_Bloodlines/Code/Combat/AutoAcquireTargetSystem.cs` - extended to prefer a live explicit hostile target from `AttackOrderComponent` over passive nearest-hostile acquire.
+- `unity/Assets/_Bloodlines/Code/Combat/DeathResolutionSystem.cs` - extended death cleanup to remove residual `AttackOrderComponent` state.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AttackOrders.cs` - added debug right-click hostile attack orders, `A` attack-move mode, and `Esc` cancel with selection restoration.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesCombatSmokeValidation.cs` - extended the governed combat smoke validator with a third phase proving explicit attack-order resolution through the debug API.
+- `docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md` - added the slice-specific combat handoff.
+- `CURRENT_PROJECT_STATE.md`, `NEXT_SESSION_HANDOFF.md`, and `continuity/PROJECT_STATE.json` - updated for Session 125 continuity after validating the branch against current `origin/master`.
+
+### Verification
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`
+- `powershell -ExecutionPolicy Bypass -File scripts/Invoke-BloodlinesUnityWrapperWithLock.ps1 -Session codex -WrapperScript scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`
+- clean-worktree Unity batch run of `Bloodlines.EditorTools.BloodlinesBootstrapRuntimeSmokeValidation.RunBatchBootstrapRuntimeSmokeValidation`
+- clean-worktree Unity batch runs of:
+  - `Bloodlines.EditorTools.BloodlinesGameplaySceneBootstrap.RunBatchValidateBootstrapSceneShell`
+  - `Bloodlines.EditorTools.BloodlinesGameplaySceneBootstrap.RunBatchValidateGameplaySceneShell`
+- `node tests/data-validation.mjs`
+- `node tests/runtime-bridge.mjs`
+
+### Next Action
+- Stop at merge coordination for `codex/unity-attack-orders-attack-move`.
+- Rebase only if `master` moves before coordination; it was still at `aed6969b9152c630a67eacbd9f1759361ec28cdb` when this slice finished.
+- After merge, continue combat through acquisition throttling, line-of-sight tuning, and deeper combat feel polish rather than widening this branch further.
 
 ## Session 113 Update
 

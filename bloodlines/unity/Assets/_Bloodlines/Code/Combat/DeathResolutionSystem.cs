@@ -45,6 +45,11 @@ namespace Bloodlines.Systems
                     ecb.RemoveComponent<AttackTargetComponent>(entity);
                 }
 
+                if (entityManager.HasComponent<AttackOrderComponent>(entity))
+                {
+                    ecb.RemoveComponent<AttackOrderComponent>(entity);
+                }
+
                 if (entityManager.HasComponent<MoveCommandComponent>(entity))
                 {
                     var moveCommand = entityManager.GetComponentData<MoveCommandComponent>(entity);
