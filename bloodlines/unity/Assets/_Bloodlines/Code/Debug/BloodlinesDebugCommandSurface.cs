@@ -2092,6 +2092,76 @@ namespace Bloodlines.Debug
             return AssignSelectedWorkersToGatherResource(entityManager, resourceId);
         }
 
+        public bool TryDebugForceStabilitySurplusCycle(
+            string factionId,
+            out float loyaltyBeforeCycle,
+            out float foodRatioAfter,
+            out float waterRatioAfter)
+        {
+            loyaltyBeforeCycle = 0f;
+            foodRatioAfter = 0f;
+            waterRatioAfter = 0f;
+
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            if (!TryGetRealmCycleConfig(entityManager, out var cfg))
+            {
+                return false;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                typeof(RealmConditionComponent),
+                typeof(PopulationComponent),
+                typeof(ResourceStockpileComponent),
+                typeof(FactionLoyaltyComponent));
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var realms = query.ToComponentDataArray<RealmConditionComponent>(Allocator.Temp);
+            using var populations = query.ToComponentDataArray<PopulationComponent>(Allocator.Temp);
+            using var stockpiles = query.ToComponentDataArray<ResourceStockpileComponent>(Allocator.Temp);
+            using var loyalties = query.ToComponentDataArray<FactionLoyaltyComponent>(Allocator.Temp);
+
+            var key = new FixedString32Bytes(factionId ?? string.Empty);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(key))
+                {
+                    continue;
+                }
+
+                int pop = math.max(1, populations[i].Total);
+                float foodThreshold = cfg.StabilitySurplusFoodRatio > 0f ? cfg.StabilitySurplusFoodRatio : 1.75f;
+                float waterThreshold = cfg.StabilitySurplusWaterRatio > 0f ? cfg.StabilitySurplusWaterRatio : 1.75f;
+
+                var stockpile = stockpiles[i];
+                stockpile.Food = math.max(stockpile.Food, pop * (foodThreshold + 0.25f));
+                stockpile.Water = math.max(stockpile.Water, pop * (waterThreshold + 0.25f));
+                entityManager.SetComponentData(entities[i], stockpile);
+
+                var realm = realms[i];
+                realm.FoodStrainStreak = 0;
+                realm.WaterStrainStreak = 0;
+                realm.LastStabilitySurplusResponseCycle = realm.CycleCount;
+                realm.LastStarvationResponseCycle = realm.CycleCount + 1;
+                realm.LastCapPressureResponseCycle = realm.CycleCount + 1;
+                realm.CycleCount += 1;
+                realm.CycleAccumulator = 0f;
+                entityManager.SetComponentData(entities[i], realm);
+
+                loyaltyBeforeCycle = loyalties[i].Current;
+                foodRatioAfter = stockpile.Food / pop;
+                waterRatioAfter = stockpile.Water / pop;
+                return true;
+            }
+
+            return false;
+        }
+
         public bool TryDebugForceStarvationCycle(
             string factionId,
             bool includeWaterCrisis,
