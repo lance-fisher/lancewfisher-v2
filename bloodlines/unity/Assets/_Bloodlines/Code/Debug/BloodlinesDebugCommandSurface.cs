@@ -2162,6 +2162,41 @@ namespace Bloodlines.Debug
             return false;
         }
 
+        public bool TryDebugGetFactionLoyalty(string factionId, out float current, out float max, out float floor)
+        {
+            current = 0f;
+            max = 0f;
+            floor = 0f;
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<FactionLoyaltyComponent>());
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var loyalties = query.ToComponentDataArray<FactionLoyaltyComponent>(Allocator.Temp);
+
+            var key = new FixedString32Bytes(factionId ?? string.Empty);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(key))
+                {
+                    continue;
+                }
+
+                current = loyalties[i].Current;
+                max = loyalties[i].Max;
+                floor = loyalties[i].Floor;
+                return true;
+            }
+
+            return false;
+        }
+
         public bool TryDebugGetFactionPopulation(string factionId, out int total, out int available, out int cap)
         {
             total = 0;

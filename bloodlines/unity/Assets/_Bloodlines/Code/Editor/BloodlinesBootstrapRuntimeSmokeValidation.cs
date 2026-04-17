@@ -118,6 +118,7 @@ namespace Bloodlines.EditorTools
                     trickleTimeoutSeconds = 30f,
                     starvationIncludeWaterCrisis = true,
                     starvationTimeoutSeconds = 15f,
+                    loyaltyMinimumDeltaMagnitude = 8f,
                 };
 
                 SaveState(state);
@@ -1034,7 +1035,11 @@ namespace Bloodlines.EditorTools
                 ", starvationPreviousPopulation=" + state.starvationPreviousPopulationTotal +
                 ", starvationExpectedPopulation=" + state.starvationExpectedPopulationTotal +
                 ", starvationLatestPopulation=" + state.starvationLatestPopulationTotal +
-                ", starvationObserved=" + state.starvationObserved + ".";
+                ", starvationObserved=" + state.starvationObserved +
+                ", loyaltyPreviousValue=" + state.loyaltyPreviousValue.ToString("0.00") +
+                ", loyaltyLatestValue=" + state.loyaltyLatestValue.ToString("0.00") +
+                ", loyaltyExpectedMaximumAfterCycle=" + state.loyaltyExpectedMaximumAfterCycle.ToString("0.00") +
+                ", loyaltyDeclineObserved=" + state.loyaltyDeclineObserved + ".";
 
             return ProbeResult.Pass(
                 "Bootstrap runtime smoke validation passed for " + BootstrapScenePath +
@@ -1116,6 +1121,17 @@ namespace Bloodlines.EditorTools
 
             if (!state.starvationForced)
             {
+                if (!commandSurface.TryDebugGetFactionLoyalty(
+                    commandSurface.ControlledFactionId,
+                    out float previousLoyalty,
+                    out _,
+                    out _))
+                {
+                    return ProbeResult.Fail(
+                        "Bootstrap runtime smoke validation failed: command shell could not read loyalty before forced starvation cycle for " +
+                        Quote(commandSurface.ControlledFactionId) + ". " + diagnostics);
+                }
+
                 if (!commandSurface.TryDebugForceStarvationCycle(
                     commandSurface.ControlledFactionId,
                     state.starvationIncludeWaterCrisis,
@@ -1132,10 +1148,15 @@ namespace Bloodlines.EditorTools
                 state.starvationExpectedPopulationTotal = expectedTotal;
                 state.starvationLatestPopulationTotal = previousTotal;
                 state.starvationForcedUtcTicks = DateTime.UtcNow.Ticks;
+                state.loyaltyPreviousValue = previousLoyalty;
+                state.loyaltyLatestValue = previousLoyalty;
+                state.loyaltyExpectedMaximumAfterCycle =
+                    previousLoyalty - Mathf.Max(0f, state.loyaltyMinimumDeltaMagnitude);
                 SaveState(state);
                 return ProbeResult.NotReady(
                     "Starvation cycle forced for controlled faction. previousPopulationTotal=" +
-                    previousTotal + ", expectedPopulationTotal=" + expectedTotal + ". " + diagnostics);
+                    previousTotal + ", expectedPopulationTotal=" + expectedTotal +
+                    ", previousLoyalty=" + previousLoyalty.ToString("0.00") + ". " + diagnostics);
             }
 
             if (!commandSurface.TryDebugGetFactionPopulation(
@@ -1153,7 +1174,30 @@ namespace Bloodlines.EditorTools
 
             if (currentTotal <= state.starvationExpectedPopulationTotal)
             {
+                if (!commandSurface.TryDebugGetFactionLoyalty(
+                    commandSurface.ControlledFactionId,
+                    out float currentLoyalty,
+                    out _,
+                    out _))
+                {
+                    return ProbeResult.Fail(
+                        "Bootstrap runtime smoke validation failed: could not read loyalty after starvation population decline. " +
+                        diagnostics);
+                }
+
+                state.loyaltyLatestValue = currentLoyalty;
+
+                if (currentLoyalty > state.loyaltyExpectedMaximumAfterCycle)
+                {
+                    return ProbeResult.Fail(
+                        "Bootstrap runtime smoke validation failed: starvation loyalty delta below minimum magnitude. previousLoyalty=" +
+                        state.loyaltyPreviousValue.ToString("0.00") + ", currentLoyalty=" + currentLoyalty.ToString("0.00") +
+                        ", expectedMaximumAfterCycle=" + state.loyaltyExpectedMaximumAfterCycle.ToString("0.00") +
+                        ", minimumDeltaMagnitude=" + state.loyaltyMinimumDeltaMagnitude.ToString("0.00") + ". " + diagnostics);
+                }
+
                 state.starvationObserved = true;
+                state.loyaltyDeclineObserved = true;
                 SaveState(state);
                 return null;
             }
@@ -1997,6 +2041,11 @@ namespace Bloodlines.EditorTools
             public long starvationForcedUtcTicks;
             public float starvationTimeoutSeconds;
             public bool starvationObserved;
+            public float loyaltyPreviousValue;
+            public float loyaltyExpectedMaximumAfterCycle;
+            public float loyaltyLatestValue;
+            public float loyaltyMinimumDeltaMagnitude;
+            public bool loyaltyDeclineObserved;
         }
 
         private readonly struct ProbeResult
