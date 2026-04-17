@@ -72,6 +72,10 @@ namespace Bloodlines.Components
         public float3 Position;
         public float MaxHealth;
         public float MaxSpeed;
+        public float AttackDamage;
+        public float AttackRange;
+        public float AttackCooldown;
+        public float Sight;
         public UnitRole Role;
         public SiegeClass SiegeClass;
         public int PopulationCost;

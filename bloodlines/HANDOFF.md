@@ -1,4 +1,37 @@
-# Session Handoff - 2026-04-16 18:06 MDT
+# Session Handoff - 2026-04-17 00:07 MDT
+
+## Session 113 Update
+
+### Task
+Build the first real Unity combat foundation in the concurrent Codex lane without colliding with Claude's economy work, keep the bootstrap shell green, and leave a merge-ready combat branch.
+
+### Status
+- [x] Complete
+- [ ] In Progress - ~0% done
+- [ ] Blocked
+
+### Completed This Session
+- `unity/Assets/_Bloodlines/Code/Combat/` - added `CombatStatsComponent`, `AttackTargetComponent`, `HostilityComponent`, `AutoAcquireTargetSystem`, `AttackResolutionSystem`, and `DeathResolutionSystem`.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesCombatSmokeValidation.cs` - added the dedicated governed combat smoke validator for an isolated two-unit face-off.
+- `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1` - added the dedicated combat smoke wrapper.
+- `unity/Assets/_Bloodlines/Code/Components/MapBootstrapComponents.cs` - extended `MapUnitSeedElement` with combat-stat fields.
+- `unity/Assets/_Bloodlines/Code/Authoring/BloodlinesMapBootstrapAuthoring.cs`, `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMapBootstrapBaker.cs`, `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs`, and `unity/Assets/_Bloodlines/Code/Systems/UnitProductionSystem.cs` - wired hostility and combat stats through authoring, baking, bootstrap spawning, and produced-unit spawning.
+- `docs/unity/session-handoffs/2026-04-17-unity-combat-foundation.md` - added the slice-specific combat handoff.
+- Normalized browser-spec combat distances into Unity world-space by scaling `attackRange` and `sight` by `map.tileSize` at the authoring and baker seam, which prevented the new combat systems from destabilizing the existing bootstrap runtime shell.
+
+### Verification
+- `dotnet build D:\ProjectsHome\Bloodlines_codex_unity_combat\bloodlines\unity\Assembly-CSharp.csproj -nologo`
+- `dotnet build D:\ProjectsHome\Bloodlines_codex_unity_combat\bloodlines\unity\Assembly-CSharp-Editor.csproj -nologo`
+- `powershell -ExecutionPolicy Bypass -File D:\ProjectsHome\Bloodlines_codex_unity_combat\bloodlines\scripts\Invoke-BloodlinesUnityCombatSmokeValidation.ps1`
+- worktree-equivalent Unity batch run of `Bloodlines.EditorTools.BloodlinesBootstrapRuntimeSmokeValidation.RunBatchBootstrapRuntimeSmokeValidation`
+- `powershell -ExecutionPolicy Bypass -File D:\ProjectsHome\Bloodlines_codex_unity_combat\bloodlines\scripts\Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1`
+- `node D:\ProjectsHome\Bloodlines_codex_unity_combat\bloodlines\tests\data-validation.mjs`
+- `node D:\ProjectsHome\Bloodlines_codex_unity_combat\bloodlines\tests\runtime-bridge.mjs`
+
+### Next Action
+- Rebase `codex/unity-combat-foundation` onto current `master` if master moves before merge coordination.
+- Merge or cherry-pick the combat slice after coordination with Claude's parallel economy lane.
+- Then extend combat into explicit attack orders or attack-move, ranged projectile delivery, line-of-sight/acquisition tuning, death presentation, and renown or conviction hooks.
 
 ## Session 111 Update
 
