@@ -1578,3 +1578,29 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Keep future design and implementation work aligned with the 2026-04-14 master doctrine, especially around population, water, logistics, naval strategy, and UI clarity.
 - Keep future Bloodlines prompts, handoffs, research, and imported source material inside this root.
 - Update continuity files at the end of each meaningful work block.
+
+### 2026-04-17 Unity Attack Orders And Attack-Move (Session 126)
+
+- The governed Unity combat command slice is now complete on `codex/unity-attack-move` and rebased onto current `master` at `548d7804ce55766420d75184385b3bedb739a3ee`.
+- `unity/Assets/_Bloodlines/Code/Combat/AttackOrderComponent.cs` now carries the contract-shaped explicit-target and attack-move state fields while preserving compatibility with the older already-merged `IsAttackMoveDestination` naming.
+- `unity/Assets/_Bloodlines/Code/Combat/AttackOrderResolutionSystem.cs` now resolves explicit attack orders and attack-move into the existing movement and attack-target flow before `AutoAcquireTargetSystem`, so commanded units chase out-of-range hostiles, fight when in range, and resume destination marching after local engagements.
+- `unity/Assets/_Bloodlines/Code/Combat/AutoAcquireTargetSystem.cs` now honors active explicit targets first and otherwise preserves the prior nearest-hostile auto-acquire behavior.
+- `unity/Assets/_Bloodlines/Code/Combat/DeathResolutionSystem.cs` now clears completed explicit orders on target death while leaving attack-move continuity intact.
+- Because current `master` already contained the older merged `AttackOrderSystem`, that file was preserved in place and marked `[DisableAutoCreation]` so the rebased contract-shaped resolver is the only active attack-order system.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Combat.cs` now provides the governed debug APIs required by the contract without duplicating the already-merged `BloodlinesDebugCommandSurface.AttackOrders.cs` input surface.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesCombatSmokeValidation.cs` now proves four combat phases: melee, projectile, explicit attack order, and attack-move with a neutral decoy that must remain ignored.
+- All required completion gates were rerun green on this branch tip:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`
+  - wrapper-locked combat smoke
+  - wrapper-locked bootstrap runtime smoke
+  - wrapper-locked canonical scene-shell validation
+  - `node tests/data-validation.mjs`
+  - `node tests/runtime-bridge.mjs`
+- The new per-slice handoff lives at `docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md`.
+
+### Immediate Next Direction Override (Session 126)
+
+- Do not expand the attack-order branch further. This slice is intentionally stopped at merge coordination.
+- The next action for this lane is merge coordination of `codex/unity-attack-move` onto current `master`, not stance or patrol expansion on the same branch.
+- After merge coordination, any next combat follow-up should start from refreshed `master` and stay outside the out-of-scope list from the concurrent-session contract unless a new prompt changes that scope.
