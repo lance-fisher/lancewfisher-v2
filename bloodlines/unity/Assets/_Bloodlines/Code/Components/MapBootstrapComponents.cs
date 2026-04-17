@@ -79,6 +79,7 @@ namespace Bloodlines.Components
         public float ProjectileSpeed;
         public float ProjectileMaxLifetimeSeconds;
         public float ProjectileArrivalRadius;
+        public float SeparationRadius;
         public UnitRole Role;
         public SiegeClass SiegeClass;
         public int PopulationCost;

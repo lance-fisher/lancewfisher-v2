@@ -39,6 +39,24 @@ namespace Bloodlines.Systems
             {
                 var combat = combatRw.ValueRO;
                 combat.CooldownRemaining = math.max(0f, combat.CooldownRemaining - dt);
+                var stance = entityManager.HasComponent<CombatStanceComponent>(entity)
+                    ? entityManager.GetComponentData<CombatStanceComponent>(entity)
+                    : default;
+                var stanceRuntime = entityManager.HasComponent<CombatStanceRuntimeComponent>(entity)
+                    ? entityManager.GetComponentData<CombatStanceRuntimeComponent>(entity)
+                    : default;
+
+                if (stanceRuntime.IsRetreating)
+                {
+                    combat.TargetOutOfSightSeconds = 0f;
+                    combat.AcquireCooldownRemaining = combat.ResolveTargetAcquireIntervalSeconds();
+                    var retreatCommand = moveCommandRw.ValueRO;
+                    StopTargetPursuit(position.ValueRO.Value, ref retreatCommand);
+                    moveCommandRw.ValueRW = retreatCommand;
+                    combatRw.ValueRW = combat;
+                    ecb.RemoveComponent<AttackTargetComponent>(entity);
+                    continue;
+                }
 
                 var attackTarget = attackTargetRw.ValueRO;
                 if (attackTarget.TargetEntity == Entity.Null ||
@@ -76,6 +94,20 @@ namespace Bloodlines.Systems
 
                 float distanceSq = math.distancesq(position.ValueRO.Value, targetPosition.Value);
                 bool preserveTargetBeyondSight = HasPersistentExplicitTarget(entityManager, entity, attackTarget.TargetEntity);
+                if (stance.Stance == CombatStance.HoldPosition &&
+                    !preserveTargetBeyondSight &&
+                    distanceSq > combat.AttackRange * combat.AttackRange)
+                {
+                    combat.TargetOutOfSightSeconds = 0f;
+                    combat.AcquireCooldownRemaining = combat.ResolveTargetAcquireIntervalSeconds();
+                    var holdCommand = moveCommandRw.ValueRO;
+                    StopTargetPursuit(position.ValueRO.Value, ref holdCommand);
+                    moveCommandRw.ValueRW = holdCommand;
+                    combatRw.ValueRW = combat;
+                    ecb.RemoveComponent<AttackTargetComponent>(entity);
+                    continue;
+                }
+
                 float sightRange = math.max(0.1f, combat.Sight);
                 if (!preserveTargetBeyondSight && distanceSq > sightRange * sightRange)
                 {
@@ -134,6 +166,14 @@ namespace Bloodlines.Systems
                     {
                         targetHealth.Current = math.max(0f, targetHealth.Current - combat.AttackDamage);
                         entityManager.SetComponentData(attackTarget.TargetEntity, targetHealth);
+
+                        if (entityManager.HasComponent<RecentImpactComponent>(attackTarget.TargetEntity))
+                        {
+                            entityManager.SetComponentData(attackTarget.TargetEntity, new RecentImpactComponent
+                            {
+                                SecondsRemaining = 0.1f,
+                            });
+                        }
                     }
 
                     combat.CooldownRemaining = math.max(0.1f, combat.AttackCooldown);

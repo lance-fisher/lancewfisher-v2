@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System;
+using System.Collections.Generic;
 using Bloodlines.Components;
 using Bloodlines.Debug;
 using Bloodlines.Pathing;
@@ -106,8 +107,32 @@ namespace Bloodlines.EditorTools
             }
 
             UnityDebug.Log(targetVisibilityMessage);
+            
+            if (!RunGroupMovementPhase(out string groupMovementMessage))
+            {
+                message = groupMovementMessage;
+                return false;
+            }
+
+            UnityDebug.Log(groupMovementMessage);
+            
+            if (!RunSeparationPhase(out string separationMessage))
+            {
+                message = separationMessage;
+                return false;
+            }
+
+            UnityDebug.Log(separationMessage);
+
+            if (!RunStancePhase(out string stanceMessage))
+            {
+                message = stanceMessage;
+                return false;
+            }
+
+            UnityDebug.Log(stanceMessage);
             message =
-                "Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True.";
+                "Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True, groupMovementPhase=True, separationPhase=True, stancePhase=True.";
             return true;
         }
 
@@ -645,6 +670,412 @@ namespace Bloodlines.EditorTools
             return false;
         }
 
+        private static bool RunGroupMovementPhase(out string message)
+        {
+            using var world = CreateValidationWorld("BloodlinesCombatSmokeValidation_GroupMovement");
+            var entityManager = world.EntityManager;
+
+            CreateFaction(entityManager, "player");
+
+            var startingPositions = new[]
+            {
+                new float3(-1.4f, 0f, -0.8f),
+                new float3(0.2f, 0f, 0.4f),
+                new float3(1.5f, 0f, -0.2f),
+                new float3(2.3f, 0f, 1.3f),
+            };
+
+            var units = new[]
+            {
+                CreateCombatUnit(entityManager, "player", "militia", startingPositions[0], 12f, 3f, 1.5f, 0.4f, 8f),
+                CreateCombatUnit(entityManager, "player", "militia", startingPositions[1], 12f, 3f, 1.5f, 0.4f, 8f),
+                CreateCombatUnit(entityManager, "player", "militia", startingPositions[2], 12f, 3f, 1.5f, 0.4f, 8f),
+                CreateCombatUnit(entityManager, "player", "militia", startingPositions[3], 12f, 3f, 1.5f, 0.4f, 8f),
+            };
+
+            float[] initialPairwiseDistances = CapturePairwiseDistances(startingPositions);
+            float3 destination = new float3(11.5f, 0f, 7.75f);
+
+            using var commandSurfaceScope = new DebugCommandSurfaceScope(world);
+            var commandSurface = commandSurfaceScope.CommandSurface;
+            if (!commandSurface.TryDebugSelectAllControlledUnits())
+            {
+                message = "Combat smoke validation failed: group-movement phase could not select the controlled units.";
+                return false;
+            }
+
+            if (!commandSurface.TryDebugIssueGroupMoveOrder(destination, attackMove: false, out int memberCount) ||
+                memberCount != units.Length)
+            {
+                message = "Combat smoke validation failed: group-movement phase could not issue a group move order to the full selection.";
+                return false;
+            }
+
+            if (!commandSurface.TryDebugInspectGroupMovement(
+                    units[0],
+                    out FixedString32Bytes groupId,
+                    out float3 localOffset,
+                    out float3 destinationCenter) ||
+                groupId.IsEmpty ||
+                math.distancesq(destinationCenter, destination) > 0.01f)
+            {
+                message = "Combat smoke validation failed: group-movement phase did not stamp inspectable per-unit group metadata.";
+                return false;
+            }
+
+            double elapsed = 0d;
+            while (elapsed < TimeoutSeconds)
+            {
+                world.SetTime(new TimeData(elapsed, StepSeconds));
+                world.Update();
+                elapsed += StepSeconds;
+
+                bool allAtRest = true;
+                for (int i = 0; i < units.Length; i++)
+                {
+                    if (entityManager.GetComponentData<MoveCommandComponent>(units[i]).IsActive)
+                    {
+                        allAtRest = false;
+                        break;
+                    }
+                }
+
+                if (!allAtRest)
+                {
+                    continue;
+                }
+
+                float3[] finalPositions = CapturePositions(entityManager, units);
+                float3 finalCentroid = ComputeCentroid(finalPositions);
+                if (math.distance(finalCentroid, destination) > 0.6f)
+                {
+                    message =
+                        "Combat smoke validation failed: group-movement phase reached rest with the group centroid too far from the destination. " +
+                        "centroid=" + finalCentroid +
+                        ", destination=" + destination + ".";
+                    return false;
+                }
+
+                if (!PairwiseDistancesMatch(finalPositions, initialPairwiseDistances, 0.6f, out float maxDeviation))
+                {
+                    message =
+                        "Combat smoke validation failed: group-movement phase distorted the preserved formation beyond tolerance. " +
+                        "maxDeviation=" + maxDeviation.ToString("0.###") + ".";
+                    return false;
+                }
+
+                if (HasCoincidentPositions(finalPositions, 0.05f, out float minimumDistance))
+                {
+                    message =
+                        "Combat smoke validation failed: group-movement phase left two units occupying the same resting position. " +
+                        "minimumDistance=" + minimumDistance.ToString("0.###") + ".";
+                    return false;
+                }
+
+                if (math.length(localOffset) <= 0.001f)
+                {
+                    message = "Combat smoke validation failed: group-movement phase expected a non-zero preserved local offset for the inspected unit.";
+                    return false;
+                }
+
+                message =
+                    "Combat smoke validation group-movement phase passed: memberCount=" + memberCount +
+                    ", centroidDistanceToDestination=" + math.distance(finalCentroid, destination).ToString("0.###") +
+                    ", maxPairwiseDeviation=" + maxDeviation.ToString("0.###") +
+                    ", elapsedSeconds=" + elapsed.ToString("0.###") + ".";
+                return true;
+            }
+
+            message = "Combat smoke validation failed: timeout waiting for the group-movement phase to settle.";
+            return false;
+        }
+
+        private static bool RunSeparationPhase(out string message)
+        {
+            using var world = CreateValidationWorld("BloodlinesCombatSmokeValidation_Separation");
+            var entityManager = world.EntityManager;
+
+            CreateFaction(entityManager, "player");
+
+            float3 spawnPosition = new float3(2f, 0f, -1f);
+            var units = new Entity[6];
+            for (int i = 0; i < units.Length; i++)
+            {
+                units[i] = CreateCombatUnit(
+                    entityManager,
+                    "player",
+                    "militia",
+                    spawnPosition,
+                    maxHealth: 12f,
+                    attackDamage: 3f,
+                    attackRange: 1.5f,
+                    attackCooldown: 0.4f,
+                    sight: 8f);
+            }
+
+            double elapsed = 0d;
+            while (elapsed < 3.5d)
+            {
+                world.SetTime(new TimeData(elapsed, StepSeconds));
+                world.Update();
+                elapsed += StepSeconds;
+            }
+
+            float3[] finalPositions = CapturePositions(entityManager, units);
+            float3 finalCentroid = ComputeCentroid(finalPositions);
+            float separationRadius = entityManager.GetComponentData<UnitSeparationComponent>(units[0]).Radius;
+
+            if (HasCoincidentPositions(finalPositions, separationRadius * 0.9f, out float minimumDistance))
+            {
+                message =
+                    "Combat smoke validation failed: separation phase left units inside their minimum personal space. " +
+                    "minimumDistance=" + minimumDistance.ToString("0.###") +
+                    ", requiredMinimum=" + (separationRadius * 0.9f).ToString("0.###") + ".";
+                return false;
+            }
+
+            if (math.distance(finalCentroid, spawnPosition) > 3f)
+            {
+                message =
+                    "Combat smoke validation failed: separation phase drifted the spawn centroid too far. " +
+                    "spawnCentroid=" + spawnPosition +
+                    ", finalCentroid=" + finalCentroid + ".";
+                return false;
+            }
+
+            message =
+                "Combat smoke validation separation phase passed: unitCount=" + units.Length +
+                ", minimumDistance=" + minimumDistance.ToString("0.###") +
+                ", centroidDrift=" + math.distance(finalCentroid, spawnPosition).ToString("0.###") + ".";
+            return true;
+        }
+
+        private static bool RunStancePhase(out string message)
+        {
+            if (!RunHoldPositionStanceSubPhase(out string holdMessage))
+            {
+                message = holdMessage;
+                return false;
+            }
+
+            UnityDebug.Log(holdMessage);
+
+            if (!RunRetreatStanceSubPhase(out string retreatMessage))
+            {
+                message = retreatMessage;
+                return false;
+            }
+
+            message =
+                "Combat smoke validation stance phase passed: holdPosition=True, retreatOnLowHealth=True. " +
+                retreatMessage;
+            return true;
+        }
+
+        private static bool RunHoldPositionStanceSubPhase(out string message)
+        {
+            using var world = CreateValidationWorld("BloodlinesCombatSmokeValidation_HoldPosition");
+            var entityManager = world.EntityManager;
+
+            CreateFaction(entityManager, "player", "enemy");
+            CreateFaction(entityManager, "enemy", "player");
+
+            Entity playerMilitia = CreateCombatUnit(
+                entityManager,
+                "player",
+                "militia",
+                new float3(0f, 0f, 0f),
+                maxHealth: 12f,
+                attackDamage: 3f,
+                attackRange: 1.5f,
+                attackCooldown: 0.4f,
+                sight: 8f);
+
+            Entity enemyMilitia = CreateCombatUnit(
+                entityManager,
+                "enemy",
+                "militia",
+                new float3(5f, 0f, 0f),
+                maxHealth: 14f,
+                attackDamage: 1f,
+                attackRange: 1.5f,
+                attackCooldown: 0.6f,
+                sight: 8f);
+
+            var initialHealth = entityManager.GetComponentData<HealthComponent>(enemyMilitia);
+            var enemyMove = entityManager.GetComponentData<MoveCommandComponent>(enemyMilitia);
+            enemyMove.Destination = new float3(0.4f, 0f, 0f);
+            enemyMove.StoppingDistance = 0.2f;
+            enemyMove.IsActive = true;
+            entityManager.SetComponentData(enemyMilitia, enemyMove);
+
+            using var commandSurfaceScope = new DebugCommandSurfaceScope(world);
+            var commandSurface = commandSurfaceScope.CommandSurface;
+            if (!commandSurface.TryDebugSetStance(playerMilitia, CombatStance.HoldPosition))
+            {
+                message = "Combat smoke validation failed: hold-position phase could not set the militia stance.";
+                return false;
+            }
+
+            double elapsed = 0d;
+            while (elapsed < 4d)
+            {
+                world.SetTime(new TimeData(elapsed, StepSeconds));
+                world.Update();
+                elapsed += StepSeconds;
+            }
+
+            float movementFromOrigin = math.distance(
+                entityManager.GetComponentData<PositionComponent>(playerMilitia).Value,
+                float3.zero);
+            float enemyHealthDelta = initialHealth.Current - entityManager.GetComponentData<HealthComponent>(enemyMilitia).Current;
+
+            if (movementFromOrigin > 0.5f)
+            {
+                message =
+                    "Combat smoke validation failed: hold-position phase let the militia chase outside its anchor point. " +
+                    "movementFromOrigin=" + movementFromOrigin.ToString("0.###") + ".";
+                return false;
+            }
+
+            if (enemyHealthDelta <= 0f)
+            {
+                message =
+                    "Combat smoke validation failed: hold-position phase never fired back once the hostile walked into range.";
+                return false;
+            }
+
+            message =
+                "Combat smoke validation hold-position sub-phase passed: movementFromOrigin=" +
+                movementFromOrigin.ToString("0.###") +
+                ", enemyHealthDelta=" + enemyHealthDelta.ToString("0.###") + ".";
+            return true;
+        }
+
+        private static bool RunRetreatStanceSubPhase(out string message)
+        {
+            using var world = CreateValidationWorld("BloodlinesCombatSmokeValidation_Retreat");
+            var entityManager = world.EntityManager;
+
+            CreateFaction(entityManager, "player", "enemy");
+            CreateFaction(entityManager, "enemy", "player");
+
+            Entity playerMilitia = CreateCombatUnit(
+                entityManager,
+                "player",
+                "militia",
+                new float3(0f, 0f, 0f),
+                maxHealth: 12f,
+                attackDamage: 3f,
+                attackRange: 1.5f,
+                attackCooldown: 0.4f,
+                sight: 8f);
+
+            var damagedHealth = entityManager.GetComponentData<HealthComponent>(playerMilitia);
+            damagedHealth.Current = damagedHealth.Max * 0.2f;
+            entityManager.SetComponentData(playerMilitia, damagedHealth);
+
+            Entity enemyMilitia = CreateCombatUnit(
+                entityManager,
+                "enemy",
+                "militia",
+                new float3(0.5f, 0f, 0f),
+                maxHealth: 14f,
+                attackDamage: 1f,
+                attackRange: 1.5f,
+                attackCooldown: 0.6f,
+                sight: 8f);
+
+            float3 retreatAnchor = new float3(8f, 0f, 0f);
+            CreateFriendlyBuilding(
+                entityManager,
+                "player",
+                "command_hall",
+                retreatAnchor,
+                maxHealth: 50f);
+
+            float initialEnemyDistance = math.distance(
+                entityManager.GetComponentData<PositionComponent>(playerMilitia).Value,
+                entityManager.GetComponentData<PositionComponent>(enemyMilitia).Value);
+            float initialRetreatDistance = math.distance(
+                entityManager.GetComponentData<PositionComponent>(playerMilitia).Value,
+                retreatAnchor);
+
+            using var commandSurfaceScope = new DebugCommandSurfaceScope(world);
+            var commandSurface = commandSurfaceScope.CommandSurface;
+            if (!commandSurface.TryDebugSetStance(enemyMilitia, CombatStance.HoldPosition))
+            {
+                message = "Combat smoke validation failed: retreat phase could not anchor the hostile reference unit.";
+                return false;
+            }
+
+            if (!commandSurface.TryDebugSetStance(
+                    playerMilitia,
+                    CombatStance.RetreatOnLowHealth,
+                    lowHealthThreshold: 0.25f))
+            {
+                message = "Combat smoke validation failed: retreat phase could not set the militia stance.";
+                return false;
+            }
+
+            double elapsed = 0d;
+            while (elapsed < 5d)
+            {
+                world.SetTime(new TimeData(elapsed, StepSeconds));
+                world.Update();
+                elapsed += StepSeconds;
+            }
+
+            float finalEnemyDistance = math.distance(
+                entityManager.GetComponentData<PositionComponent>(playerMilitia).Value,
+                entityManager.GetComponentData<PositionComponent>(enemyMilitia).Value);
+            float finalRetreatDistance = math.distance(
+                entityManager.GetComponentData<PositionComponent>(playerMilitia).Value,
+                retreatAnchor);
+            bool stillAttacking = entityManager.HasComponent<AttackTargetComponent>(playerMilitia);
+            var stance = entityManager.GetComponentData<CombatStanceComponent>(playerMilitia);
+
+            if (stillAttacking)
+            {
+                message = "Combat smoke validation failed: retreat phase left the low-health militia actively attacking.";
+                return false;
+            }
+
+            if (finalRetreatDistance >= initialRetreatDistance - 4f)
+            {
+                message =
+                    "Combat smoke validation failed: retreat phase did not move meaningfully toward the friendly command hall. " +
+                    "initialRetreatDistance=" + initialRetreatDistance.ToString("0.###") +
+                    ", finalRetreatDistance=" + finalRetreatDistance.ToString("0.###") + ".";
+                return false;
+            }
+
+            if (finalEnemyDistance < initialEnemyDistance + 5f)
+            {
+                message =
+                    "Combat smoke validation failed: retreat phase did not create enough separation from the original hostile. " +
+                    "initialDistance=" + initialEnemyDistance.ToString("0.###") +
+                    ", finalDistance=" + finalEnemyDistance.ToString("0.###") + ".";
+                return false;
+            }
+
+            if (stance.Stance != CombatStance.RetreatOnLowHealth &&
+                stance.Stance != CombatStance.PursueInRange)
+            {
+                message =
+                    "Combat smoke validation failed: retreat phase left the unit in an unexpected stance state " +
+                    stance.Stance + ".";
+                return false;
+            }
+
+            message =
+                "Combat smoke validation retreat sub-phase passed: initialDistance=" +
+                initialEnemyDistance.ToString("0.###") +
+                ", finalDistance=" + finalEnemyDistance.ToString("0.###") +
+                ", finalRetreatDistance=" + finalRetreatDistance.ToString("0.###") + ".";
+            return true;
+        }
+
         private static World CreateValidationWorld(string worldName)
         {
             var world = new World(worldName);
@@ -654,13 +1085,17 @@ namespace Bloodlines.EditorTools
 
             var endSimulation = world.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>();
             simulationGroup.AddSystemToUpdateList(endSimulation);
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<GroupMovementResolutionSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<CombatStanceResolutionSystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<AttackOrderResolutionSystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<AutoAcquireTargetSystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<AttackResolutionSystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<UnitMovementSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<UnitSeparationSystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<PositionToLocalTransformSystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<ProjectileMovementSystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<ProjectileImpactSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<RecentImpactRecoverySystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<DeathResolutionSystem>());
             simulationGroup.SortSystems();
             return world;
@@ -796,6 +1231,17 @@ namespace Bloodlines.EditorTools
                 TargetSightGraceSeconds = 0.35f,
                 TargetOutOfSightSeconds = 0f,
             });
+            entityManager.AddComponentData(entity, new UnitSeparationComponent
+            {
+                Radius = CombatUnitRuntimeDefaults.ResolveSeparationRadius(role, siegeClass),
+            });
+            entityManager.AddComponentData(entity, new CombatStanceComponent
+            {
+                Stance = CombatUnitRuntimeDefaults.ResolveDefaultStance(role),
+                LowHealthRetreatThreshold = CombatUnitRuntimeDefaults.DefaultLowHealthRetreatThreshold,
+            });
+            entityManager.AddComponentData(entity, new CombatStanceRuntimeComponent());
+            entityManager.AddComponentData(entity, new RecentImpactComponent());
             entityManager.AddComponentData(entity, new MoveCommandComponent
             {
                 Destination = position,
@@ -816,9 +1262,139 @@ namespace Bloodlines.EditorTools
             return entity;
         }
 
+        private static Entity CreateFriendlyBuilding(
+            EntityManager entityManager,
+            string factionId,
+            string buildingTypeId,
+            float3 position,
+            float maxHealth = 30f)
+        {
+            var entity = entityManager.CreateEntity();
+            entityManager.AddComponentData(entity, new FactionComponent { FactionId = factionId });
+            entityManager.AddComponentData(entity, new PositionComponent { Value = position });
+            entityManager.AddComponentData(entity, new LocalTransform
+            {
+                Position = position,
+                Rotation = quaternion.identity,
+                Scale = 1f,
+            });
+            entityManager.AddComponentData(entity, new HealthComponent
+            {
+                Current = maxHealth,
+                Max = maxHealth,
+            });
+            entityManager.AddComponentData(entity, new BuildingTypeComponent
+            {
+                TypeId = buildingTypeId,
+                FortificationRole = FortificationRole.None,
+                StructuralDamageMultiplier = 1f,
+                PopulationCapBonus = 0,
+                BlocksPassage = false,
+                SupportsSiegePreparation = false,
+                SupportsSiegeLogistics = false,
+            });
+            return entity;
+        }
+
         private static string Quote(string value)
         {
             return "'" + (value ?? string.Empty) + "'";
+        }
+
+        private static float3[] CapturePositions(EntityManager entityManager, IReadOnlyList<Entity> entities)
+        {
+            var positions = new float3[entities.Count];
+            for (int i = 0; i < entities.Count; i++)
+            {
+                positions[i] = entityManager.GetComponentData<PositionComponent>(entities[i]).Value;
+            }
+
+            return positions;
+        }
+
+        private static float[] CapturePairwiseDistances(IReadOnlyList<float3> positions)
+        {
+            int pairCount = (positions.Count * (positions.Count - 1)) / 2;
+            var pairwiseDistances = new float[pairCount];
+            int index = 0;
+
+            for (int i = 0; i < positions.Count; i++)
+            {
+                for (int j = i + 1; j < positions.Count; j++)
+                {
+                    pairwiseDistances[index++] = math.distance(positions[i], positions[j]);
+                }
+            }
+
+            return pairwiseDistances;
+        }
+
+        private static float3 ComputeCentroid(IReadOnlyList<float3> positions)
+        {
+            float3 centroid = float3.zero;
+            for (int i = 0; i < positions.Count; i++)
+            {
+                centroid += positions[i];
+            }
+
+            return centroid / math.max(1, positions.Count);
+        }
+
+        private static bool PairwiseDistancesMatch(
+            IReadOnlyList<float3> positions,
+            IReadOnlyList<float> expectedDistances,
+            float tolerance,
+            out float maxDeviation)
+        {
+            maxDeviation = 0f;
+            int index = 0;
+
+            for (int i = 0; i < positions.Count; i++)
+            {
+                for (int j = i + 1; j < positions.Count; j++)
+                {
+                    float distance = math.distance(positions[i], positions[j]);
+                    float deviation = math.abs(distance - expectedDistances[index++]);
+                    if (deviation > maxDeviation)
+                    {
+                        maxDeviation = deviation;
+                    }
+
+                    if (deviation > tolerance)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private static bool HasCoincidentPositions(
+            IReadOnlyList<float3> positions,
+            float minimumAllowedDistance,
+            out float minimumDistance)
+        {
+            minimumDistance = float.MaxValue;
+
+            for (int i = 0; i < positions.Count; i++)
+            {
+                for (int j = i + 1; j < positions.Count; j++)
+                {
+                    float distance = math.distance(positions[i], positions[j]);
+                    if (distance < minimumDistance)
+                    {
+                        minimumDistance = distance;
+                    }
+
+                    if (distance <= minimumAllowedDistance)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private static void SetUnitPosition(EntityManager entityManager, Entity entity, float3 position)

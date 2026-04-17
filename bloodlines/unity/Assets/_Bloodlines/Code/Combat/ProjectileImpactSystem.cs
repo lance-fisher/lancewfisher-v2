@@ -45,6 +45,14 @@ namespace Bloodlines.Systems
                     {
                         targetHealth.Current = math.max(0f, targetHealth.Current - math.max(0f, projectile.ValueRO.Damage));
                         entityManager.SetComponentData(projectile.ValueRO.TargetEntity, targetHealth);
+
+                        if (entityManager.HasComponent<RecentImpactComponent>(projectile.ValueRO.TargetEntity))
+                        {
+                            entityManager.SetComponentData(projectile.ValueRO.TargetEntity, new RecentImpactComponent
+                            {
+                                SecondsRemaining = 0.1f,
+                            });
+                        }
                     }
                 }
 

@@ -44,6 +44,31 @@ function Get-ValidationOutcome {
     return 'unknown'
 }
 
+function Wait-ForValidationOutcome {
+    param(
+        [int]$TimeoutSeconds = 120,
+        [int]$PollSeconds = 2
+    )
+
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        $outcome = Get-ValidationOutcome
+        if ($outcome -ne 'unknown') {
+            return $outcome
+        }
+
+        $unityRunning = @(Get-Process -Name Unity -ErrorAction SilentlyContinue).Count -gt 0
+        $lockPresent = Test-Path -LiteralPath (Join-Path $projectPath 'Temp\UnityLockfile')
+        if (-not $unityRunning -and -not $lockPresent) {
+            break
+        }
+
+        Start-Sleep -Seconds $PollSeconds
+    }
+
+    return Get-ValidationOutcome
+}
+
 function Invoke-UnityValidationPass {
     if (Test-Path -LiteralPath $logPath) {
         Remove-Item -LiteralPath $logPath -Force
@@ -61,15 +86,25 @@ Write-Host "Log:     $logPath"
 $exitCode = Invoke-UnityValidationPass
 $outcome = Get-ValidationOutcome
 
-if ($exitCode -eq 0 -and $outcome -eq 'unknown') {
+if ($outcome -eq 'unknown') {
+    Write-Host "Bootstrap scene validation did not report an explicit outcome immediately. Waiting for the batch editor to finish."
+    $outcome = Wait-ForValidationOutcome
+}
+
+if ($outcome -eq 'unknown') {
     Write-Host "First batch pass ended without an explicit validation outcome. Rerunning once after compilation/import."
     $exitCode = Invoke-UnityValidationPass
-    $outcome = Get-ValidationOutcome
+    $outcome = Wait-ForValidationOutcome
 }
 
-if ($exitCode -eq 0 -and $outcome -ne 'passed') {
-    throw "Unity exited with code 0 but Bootstrap scene validation did not report an explicit pass. See $logPath"
+if ($outcome -eq 'passed') {
+    Write-Host 'Bootstrap scene shell validation passed.'
+    exit 0
 }
 
-Write-Host "Unity exited with code $exitCode"
-exit $exitCode
+if ($outcome -eq 'failed') {
+    Write-Host "Unity exited with code $exitCode"
+    exit 1
+}
+
+throw "Bootstrap scene validation produced no explicit pass/fail outcome. See $logPath"

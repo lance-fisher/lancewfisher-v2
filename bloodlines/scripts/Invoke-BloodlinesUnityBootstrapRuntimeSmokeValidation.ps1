@@ -45,6 +45,25 @@ function Get-ValidationOutcome {
     return 'unknown'
 }
 
+function Wait-ForValidationOutcome {
+    param(
+        [int]$TimeoutSeconds = 420,
+        [int]$PollSeconds = 2
+    )
+
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        $outcome = Get-ValidationOutcome
+        if ($outcome -ne 'unknown') {
+            return $outcome
+        }
+
+        Start-Sleep -Seconds $PollSeconds
+    }
+
+    return Get-ValidationOutcome
+}
+
 function Invoke-UnityValidationPass {
     if (Test-Path -LiteralPath $logPath) {
         Remove-Item -LiteralPath $logPath -Force
@@ -62,15 +81,25 @@ Write-Host "Log:     $logPath"
 $exitCode = Invoke-UnityValidationPass
 $outcome = Get-ValidationOutcome
 
-if ($exitCode -eq 0 -and $outcome -eq 'unknown') {
+if ($outcome -eq 'unknown') {
+    Write-Host "Bootstrap runtime smoke did not report an explicit outcome immediately. Waiting for the batch editor to finish."
+    $outcome = Wait-ForValidationOutcome
+}
+
+if ($outcome -eq 'unknown') {
     Write-Host "First batch pass ended without an explicit runtime smoke outcome. Rerunning once after compilation/import."
     $exitCode = Invoke-UnityValidationPass
-    $outcome = Get-ValidationOutcome
+    $outcome = Wait-ForValidationOutcome
 }
 
-if ($exitCode -eq 0 -and $outcome -ne 'passed') {
-    throw "Unity exited with code 0 but Bootstrap runtime smoke validation did not report an explicit pass. See $logPath"
+if ($outcome -eq 'passed') {
+    Write-Host 'Bootstrap runtime smoke validation passed.'
+    exit 0
 }
 
-Write-Host "Unity exited with code $exitCode"
-exit $exitCode
+if ($outcome -eq 'failed') {
+    Write-Host "Unity exited with code $exitCode"
+    exit 1
+}
+
+throw "Bootstrap runtime smoke validation produced no explicit pass/fail outcome. See $logPath"
