@@ -19,6 +19,9 @@ namespace Bloodlines.EditorTools
     /// </summary>
     public sealed class BloodlinesMapBootstrapBaker : Baker<BloodlinesMapBootstrapAuthoring>
     {
+        const float DefaultProjectileSpeed = 14f;
+        const float DefaultProjectileMaxLifetimeSeconds = 4f;
+        const float DefaultProjectileArrivalRadius = 0.4f;
         const string BuildingDefinitionsFolder = "Assets/_Bloodlines/Data/BuildingDefinitions";
         const string UnitDefinitionsFolder = "Assets/_Bloodlines/Data/UnitDefinitions";
         const string SettlementDefinitionsFolder = "Assets/_Bloodlines/Data/SettlementClassDefinitions";
@@ -79,6 +82,9 @@ namespace Bloodlines.EditorTools
                     AttackRange = NormalizeCombatDistance(unitDefinition.attackRange, combatDistanceScale),
                     AttackCooldown = math.max(0.1f, unitDefinition.attackCooldown),
                     Sight = NormalizeCombatDistance(unitDefinition.sight, combatDistanceScale),
+                    ProjectileSpeed = ResolveProjectileSpeed(unitDefinition, combatDistanceScale),
+                    ProjectileMaxLifetimeSeconds = ResolveProjectileMaxLifetimeSeconds(unitDefinition),
+                    ProjectileArrivalRadius = ResolveProjectileArrivalRadius(unitDefinition),
                 });
             }
 
@@ -204,6 +210,9 @@ namespace Bloodlines.EditorTools
                         AttackRange = NormalizeCombatDistance(unitDefinition.attackRange, combatDistanceScale),
                         AttackCooldown = math.max(0.1f, unitDefinition.attackCooldown),
                         Sight = NormalizeCombatDistance(unitDefinition.sight, combatDistanceScale),
+                        ProjectileSpeed = ResolveProjectileSpeed(unitDefinition, combatDistanceScale),
+                        ProjectileMaxLifetimeSeconds = ResolveProjectileMaxLifetimeSeconds(unitDefinition),
+                        ProjectileArrivalRadius = ResolveProjectileArrivalRadius(unitDefinition),
                         Role = ResolveUnitRole(unitDefinition.role),
                         SiegeClass = ResolveSiegeClass(unitDefinition.siegeClass),
                         PopulationCost = unitDefinition.populationCost,
@@ -241,6 +250,39 @@ namespace Bloodlines.EditorTools
         static float NormalizeCombatDistance(float rawDistance, float combatDistanceScale)
         {
             return math.max(0.1f, rawDistance / math.max(1f, combatDistanceScale));
+        }
+
+        static float ResolveProjectileSpeed(UnitDefinition unitDefinition, float combatDistanceScale)
+        {
+            if (!UsesProjectileDelivery(unitDefinition))
+            {
+                return 0f;
+            }
+
+            return unitDefinition.projectileSpeed > 0f
+                ? math.max(0.1f, unitDefinition.projectileSpeed / math.max(1f, combatDistanceScale))
+                : DefaultProjectileSpeed;
+        }
+
+        static float ResolveProjectileMaxLifetimeSeconds(UnitDefinition unitDefinition)
+        {
+            return UsesProjectileDelivery(unitDefinition)
+                ? DefaultProjectileMaxLifetimeSeconds
+                : 0f;
+        }
+
+        static float ResolveProjectileArrivalRadius(UnitDefinition unitDefinition)
+        {
+            return UsesProjectileDelivery(unitDefinition)
+                ? DefaultProjectileArrivalRadius
+                : 0f;
+        }
+
+        static bool UsesProjectileDelivery(UnitDefinition unitDefinition)
+        {
+            return unitDefinition != null &&
+                (string.Equals(unitDefinition.role, "ranged", StringComparison.OrdinalIgnoreCase) ||
+                 unitDefinition.projectileSpeed > 0f);
         }
 
         static TDefinition RequireDefinition<TDefinition>(IReadOnlyDictionary<string, TDefinition> definitions, string id, string label)

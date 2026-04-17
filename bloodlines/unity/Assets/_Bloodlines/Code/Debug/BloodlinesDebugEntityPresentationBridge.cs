@@ -21,6 +21,9 @@ namespace Bloodlines.Debug
         [SerializeField] private bool presentSettlements = true;
         [SerializeField] private bool presentControlPoints = true;
         [SerializeField] private bool presentResourceNodes = true;
+        [SerializeField] private bool presentProjectiles = true;
+        [SerializeField] private Color projectileColor = new Color(1f, 0.68f, 0.18f, 1f);
+        [SerializeField] private float projectileProxyScale = 0.26f;
         [SerializeField] private bool presentConstructionProgress = true;
         [SerializeField] private Color constructionProgressTrackColor = new Color(0.12f, 0.14f, 0.17f, 1f);
         [SerializeField] private Color constructionProgressFillColor = new Color(0.95f, 0.82f, 0.38f, 1f);
@@ -47,6 +50,7 @@ namespace Bloodlines.Debug
         private EntityQuery settlementQuery;
         private EntityQuery controlPointQuery;
         private EntityQuery resourceNodeQuery;
+        private EntityQuery projectileQuery;
 
         private void LateUpdate()
         {
@@ -84,6 +88,11 @@ namespace Bloodlines.Debug
             if (presentResourceNodes)
             {
                 SyncResourceNodes();
+            }
+
+            if (presentProjectiles)
+            {
+                SyncProjectiles();
             }
 
             RemoveStaleProxies();
@@ -138,6 +147,9 @@ namespace Bloodlines.Debug
                 ComponentType.ReadOnly<PositionComponent>());
             resourceNodeQuery = entityManager.CreateEntityQuery(
                 ComponentType.ReadOnly<ResourceNodeComponent>(),
+                ComponentType.ReadOnly<PositionComponent>());
+            projectileQuery = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<ProjectileComponent>(),
                 ComponentType.ReadOnly<PositionComponent>());
             return true;
         }
@@ -446,6 +458,22 @@ namespace Bloodlines.Debug
                 proxy.transform.position = ToVector3(positions[i].Value) + new Vector3(0f, 0.45f, 0f);
                 proxy.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
                 ApplyColor(proxy, ResolveResourceColor(resourceNodes[i].ResourceId.ToString()));
+            }
+        }
+
+        private void SyncProjectiles()
+        {
+            using var entities = projectileQuery.ToEntityArray(Allocator.Temp);
+            using var positions = projectileQuery.ToComponentDataArray<PositionComponent>(Allocator.Temp);
+
+            for (int i = 0; i < entities.Length; i++)
+            {
+                var entity = entities[i];
+                seenThisFrame.Add(entity);
+                var proxy = GetOrCreateProxy(entity, PrimitiveType.Sphere, "PROJECTILE");
+                proxy.transform.position = ToVector3(positions[i].Value);
+                proxy.transform.localScale = new Vector3(projectileProxyScale, projectileProxyScale, projectileProxyScale);
+                ApplyColor(proxy, projectileColor);
             }
         }
 
