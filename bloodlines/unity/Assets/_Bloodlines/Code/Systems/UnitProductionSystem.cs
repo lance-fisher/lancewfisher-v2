@@ -153,6 +153,11 @@ namespace Bloodlines.Systems
                 StoppingDistance = 0.2f,
                 IsActive = false,
             });
+
+            if (TryResolveProjectileFactory(entityManager, combatDefinitionsEntity, queueItem.UnitId, out var projectileFactory))
+            {
+                ecb.AddComponent(entity, projectileFactory);
+            }
         }
 
         private static Entity FindCombatDefinitionsEntity(EntityManager entityManager)
@@ -195,6 +200,39 @@ namespace Bloodlines.Systems
             }
 
             return default;
+        }
+
+        private static bool TryResolveProjectileFactory(
+            EntityManager entityManager,
+            Entity combatDefinitionsEntity,
+            FixedString64Bytes unitId,
+            out ProjectileFactoryComponent projectileFactory)
+        {
+            if (combatDefinitionsEntity != Entity.Null &&
+                entityManager.Exists(combatDefinitionsEntity) &&
+                entityManager.HasBuffer<UnitCombatDefinitionElement>(combatDefinitionsEntity))
+            {
+                var definitions = entityManager.GetBuffer<UnitCombatDefinitionElement>(combatDefinitionsEntity);
+                for (int i = 0; i < definitions.Length; i++)
+                {
+                    var definition = definitions[i];
+                    if (!definition.UnitId.Equals(unitId) || definition.ProjectileSpeed <= 0f)
+                    {
+                        continue;
+                    }
+
+                    projectileFactory = new ProjectileFactoryComponent
+                    {
+                        ProjectileSpeed = definition.ProjectileSpeed,
+                        ProjectileMaxLifetimeSeconds = math.max(0.1f, definition.ProjectileMaxLifetimeSeconds),
+                        ProjectileArrivalRadius = math.max(0.05f, definition.ProjectileArrivalRadius),
+                    };
+                    return true;
+                }
+            }
+
+            projectileFactory = default;
+            return false;
         }
 
         private static float3 ResolveSpawnPosition(float3 buildingPosition, int spawnSequence)

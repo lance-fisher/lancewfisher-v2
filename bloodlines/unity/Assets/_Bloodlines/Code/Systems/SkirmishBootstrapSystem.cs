@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Bloodlines.Components;
 using Unity.Collections;
 using Unity.Entities;
@@ -201,7 +203,102 @@ namespace Bloodlines.Systems
             });
             entityManager.AddBuffer<FaithExposureElement>(entity);
             entityManager.AddBuffer<HostilityComponent>(entity);
+
+            if (ShouldAttachAIEconomyController(seed))
+            {
+                TryAttachAIEconomyController(entityManager, entity);
+            }
+
             return entity;
+        }
+
+        static bool ShouldAttachAIEconomyController(MapFactionSeedElement seed)
+        {
+            if (seed.Kind == FactionKind.Neutral)
+            {
+                return false;
+            }
+
+            string factionId = seed.FactionId.ToString();
+            if (string.IsNullOrEmpty(factionId) ||
+                string.Equals(factionId, "player", System.StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            if (string.Equals(factionId, "enemy", System.StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        static void TryAttachAIEconomyController(EntityManager entityManager, Entity entity)
+        {
+            var controllerType = Type.GetType("Bloodlines.AI.AIEconomyControllerComponent, Assembly-CSharp");
+            if (controllerType == null)
+            {
+                return;
+            }
+
+            var addComponentDataMethod = ResolveAddComponentDataMethod(controllerType);
+            if (addComponentDataMethod == null)
+            {
+                return;
+            }
+
+            var controller = Activator.CreateInstance(controllerType);
+            if (controller == null)
+            {
+                return;
+            }
+
+            SetPublicField(controllerType, controller, "Enabled", false);
+            SetPublicField(controllerType, controller, "PrimaryGatherResourceId", new FixedString32Bytes("gold"));
+            SetPublicField(controllerType, controller, "TargetWorkerCount", 6);
+            SetPublicField(controllerType, controller, "TargetMilitiaCount", 4);
+            SetPublicField(controllerType, controller, "GatherAssignmentAccumulator", 0f);
+            SetPublicField(controllerType, controller, "GatherAssignmentIntervalSeconds", 2.5f);
+            SetPublicField(controllerType, controller, "ProductionAccumulator", 0f);
+            SetPublicField(controllerType, controller, "ProductionIntervalSeconds", 2.5f);
+            SetPublicField(controllerType, controller, "ConstructionAccumulator", 0f);
+            SetPublicField(controllerType, controller, "ConstructionIntervalSeconds", 5f);
+            SetPublicField(controllerType, controller, "TargetDwellingCount", 2);
+            SetPublicField(controllerType, controller, "TargetFarmCount", 2);
+            SetPublicField(controllerType, controller, "TargetWellCount", 1);
+
+            addComponentDataMethod.Invoke(entityManager, new[] { (object)entity, controller });
+        }
+
+        static MethodInfo ResolveAddComponentDataMethod(Type componentType)
+        {
+            foreach (var method in typeof(EntityManager).GetMethods(BindingFlags.Instance | BindingFlags.Public))
+            {
+                if (!method.IsGenericMethodDefinition || !string.Equals(method.Name, "AddComponentData", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                var parameters = method.GetParameters();
+                if (parameters.Length != 2 || parameters[0].ParameterType != typeof(Entity))
+                {
+                    continue;
+                }
+
+                return method.MakeGenericMethod(componentType);
+            }
+
+            return null;
+        }
+
+        static void SetPublicField(Type componentType, object component, string fieldName, object value)
+        {
+            var field = componentType.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public);
+            if (field != null)
+            {
+                field.SetValue(component, value);
+            }
         }
 
         static void SpawnSettlementEntity(EntityManager entityManager, MapSettlementSeedElement seed)
@@ -376,6 +473,16 @@ namespace Bloodlines.Systems
                 StoppingDistance = 0.2f,
                 IsActive = false,
             });
+
+            if (seed.ProjectileSpeed > 0f)
+            {
+                entityManager.AddComponentData(entity, new ProjectileFactoryComponent
+                {
+                    ProjectileSpeed = seed.ProjectileSpeed,
+                    ProjectileMaxLifetimeSeconds = math.max(0.1f, seed.ProjectileMaxLifetimeSeconds),
+                    ProjectileArrivalRadius = math.max(0.05f, seed.ProjectileArrivalRadius),
+                });
+            }
         }
     }
 }
