@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using System;
 using Bloodlines.Components;
+using Bloodlines.Debug;
 using Bloodlines.Systems;
 using Unity.Collections;
 using Unity.Core;
@@ -79,7 +80,15 @@ namespace Bloodlines.EditorTools
             }
 
             UnityDebug.Log(projectileMessage);
-            message = "Combat smoke validation passed: meleePhase=True, projectilePhase=True.";
+
+            if (!RunAttackOrderPhase(out string attackOrderMessage))
+            {
+                message = attackOrderMessage;
+                return false;
+            }
+
+            UnityDebug.Log(attackOrderMessage);
+            message = "Combat smoke validation passed: meleePhase=True, projectilePhase=True, attackOrderPhase=True.";
             return true;
         }
 
@@ -202,6 +211,133 @@ namespace Bloodlines.EditorTools
             return false;
         }
 
+        private static bool RunAttackOrderPhase(out string message)
+        {
+            using var world = CreateValidationWorld("BloodlinesCombatSmokeValidation_AttackOrders");
+            var entityManager = world.EntityManager;
+
+            CreateFaction(entityManager, "player", "enemy");
+            CreateFaction(entityManager, "enemy", "player");
+
+            Entity playerMilitia = CreateCombatUnit(
+                entityManager,
+                "player",
+                "militia",
+                new float3(0f, 0f, 0f),
+                maxHealth: 12f,
+                attackDamage: 3f,
+                attackRange: 1.5f,
+                attackCooldown: 0.4f,
+                sight: 8f);
+
+            Entity enemyMilitia = CreateCombatUnit(
+                entityManager,
+                "enemy",
+                "militia",
+                new float3(1.2f, 0f, 0f),
+                maxHealth: 6f,
+                attackDamage: 1f,
+                attackRange: 1.5f,
+                attackCooldown: 0.6f,
+                sight: 8f);
+
+            var previousDefaultWorld = World.DefaultGameObjectInjectionWorld;
+            GameObject commandSurfaceObject = null;
+
+            try
+            {
+                World.DefaultGameObjectInjectionWorld = world;
+                commandSurfaceObject = new GameObject("BloodlinesCombatSmokeValidation_CommandSurface");
+                var commandSurface = commandSurfaceObject.AddComponent<BloodlinesDebugCommandSurface>();
+
+                if (!commandSurface.TryDebugSelectAllControlledUnits())
+                {
+                    message = "Combat smoke validation failed: attack-order phase could not select the controlled combat unit.";
+                    return false;
+                }
+
+                if (!commandSurface.TryDebugIssueAttackOrder(enemyMilitia))
+                {
+                    message = "Combat smoke validation failed: attack-order phase could not issue an explicit hostile target order.";
+                    return false;
+                }
+
+                bool sawExplicitTarget = false;
+                bool sawCooldownFire = false;
+                double elapsed = 0d;
+
+                while (elapsed < TimeoutSeconds)
+                {
+                    world.SetTime(new TimeData(elapsed, StepSeconds));
+                    world.Update();
+                    elapsed += StepSeconds;
+
+                    if (entityManager.HasComponent<AttackTargetComponent>(playerMilitia))
+                    {
+                        var attackTarget = entityManager.GetComponentData<AttackTargetComponent>(playerMilitia);
+                        if (attackTarget.TargetEntity == enemyMilitia)
+                        {
+                            sawExplicitTarget = true;
+                        }
+                    }
+
+                    var combat = entityManager.GetComponentData<CombatStatsComponent>(playerMilitia);
+                    if (combat.CooldownRemaining > 0f)
+                    {
+                        sawCooldownFire = true;
+                    }
+
+                    if (!entityManager.HasComponent<DeadTag>(enemyMilitia))
+                    {
+                        continue;
+                    }
+
+                    if (!sawExplicitTarget)
+                    {
+                        message = "Combat smoke validation failed: attack-order phase never locked onto the explicit hostile target.";
+                        return false;
+                    }
+
+                    if (!sawCooldownFire)
+                    {
+                        message = "Combat smoke validation failed: attack-order phase never observed the attacker's cooldown firing.";
+                        return false;
+                    }
+
+                    if (entityManager.HasComponent<AttackTargetComponent>(playerMilitia))
+                    {
+                        message = "Combat smoke validation failed: attack-order phase left a residual AttackTargetComponent on the attacker.";
+                        return false;
+                    }
+
+                    var enemyHealth = entityManager.GetComponentData<HealthComponent>(enemyMilitia);
+                    if (enemyHealth.Current > 0f)
+                    {
+                        message = "Combat smoke validation failed: attack-order phase marked the explicit target dead before health reached zero.";
+                        return false;
+                    }
+
+                    message =
+                        "Combat smoke validation attack-order phase passed: explicitTargetObserved=True, cooldownObserved=True, residualTarget=False, dead=" +
+                        Quote(entityManager.GetComponentData<FactionComponent>(enemyMilitia).FactionId.ToString()) +
+                        ", elapsedSeconds=" + elapsed.ToString("0.###") + ".";
+                    return true;
+                }
+
+                message = "Combat smoke validation failed: timeout waiting for the explicit attack-order phase to resolve.";
+                return false;
+            }
+            finally
+            {
+                if (commandSurfaceObject != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(commandSurfaceObject);
+                }
+
+                World.DefaultGameObjectInjectionWorld = previousDefaultWorld;
+            }
+        }
+
         private static World CreateValidationWorld(string worldName)
         {
             var world = new World(worldName);
@@ -211,6 +347,7 @@ namespace Bloodlines.EditorTools
 
             var endSimulation = world.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>();
             simulationGroup.AddSystemToUpdateList(endSimulation);
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<AttackOrderSystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<AutoAcquireTargetSystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<AttackResolutionSystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<ProjectileMovementSystem>());
