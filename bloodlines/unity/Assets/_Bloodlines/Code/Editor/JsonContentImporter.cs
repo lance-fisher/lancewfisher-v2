@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Bloodlines.Components;
 using Bloodlines.DataDefinitions;
 using UnityEditor;
 using UnityEngine;
@@ -165,6 +166,7 @@ namespace Bloodlines.EditorTools
                 asset.ironmarkBloodPrice = item.ironmarkBloodPrice;
                 asset.bloodProductionLoadDelta = item.bloodProductionLoadDelta;
                 asset.notes = item.notes ?? Array.Empty<string>();
+                asset.separationRadius = ResolveUnitSeparationRadius(item.role, item.siegeClass, item.separationRadius);
                 EditorUtility.SetDirty(asset);
             }
         }
@@ -576,6 +578,7 @@ namespace Bloodlines.EditorTools
             public int ironmarkBloodPrice;
             public float bloodProductionLoadDelta;
             public string[] notes;
+            public float separationRadius;
         }
 
         [Serializable]
@@ -698,6 +701,109 @@ namespace Bloodlines.EditorTools
                 var result = JsonUtility.FromJson<Wrapper<T>>(wrapped);
                 return result != null && result.items != null ? result.items : Array.Empty<T>();
             }
+        }
+
+        private static float ResolveUnitSeparationRadius(string role, string siegeClass, float authoredRadius)
+        {
+            return CombatUnitRuntimeDefaults.ResolveSeparationRadius(
+                ResolveUnitRole(role),
+                ResolveSiegeClass(siegeClass),
+                authoredRadius);
+        }
+
+        private static UnitRole ResolveUnitRole(string role)
+        {
+            if (string.IsNullOrWhiteSpace(role))
+            {
+                return UnitRole.Unknown;
+            }
+
+            if (string.Equals(role, "worker", StringComparison.OrdinalIgnoreCase))
+            {
+                return UnitRole.Worker;
+            }
+
+            if (string.Equals(role, "melee", StringComparison.OrdinalIgnoreCase))
+            {
+                return UnitRole.Melee;
+            }
+
+            if (string.Equals(role, "melee-recon", StringComparison.OrdinalIgnoreCase))
+            {
+                return UnitRole.MeleeRecon;
+            }
+
+            if (string.Equals(role, "ranged", StringComparison.OrdinalIgnoreCase))
+            {
+                return UnitRole.Ranged;
+            }
+
+            if (string.Equals(role, "unique-melee", StringComparison.OrdinalIgnoreCase))
+            {
+                return UnitRole.UniqueMelee;
+            }
+
+            if (string.Equals(role, "light-cavalry", StringComparison.OrdinalIgnoreCase))
+            {
+                return UnitRole.LightCavalry;
+            }
+
+            if (string.Equals(role, "siege-engine", StringComparison.OrdinalIgnoreCase))
+            {
+                return UnitRole.SiegeEngine;
+            }
+
+            if (string.Equals(role, "siege-support", StringComparison.OrdinalIgnoreCase))
+            {
+                return UnitRole.SiegeSupport;
+            }
+
+            if (string.Equals(role, "engineer-specialist", StringComparison.OrdinalIgnoreCase))
+            {
+                return UnitRole.EngineerSpecialist;
+            }
+
+            if (string.Equals(role, "support", StringComparison.OrdinalIgnoreCase))
+            {
+                return UnitRole.Support;
+            }
+
+            return UnitRole.Unknown;
+        }
+
+        private static SiegeClass ResolveSiegeClass(string siegeClass)
+        {
+            if (string.IsNullOrWhiteSpace(siegeClass))
+            {
+                return SiegeClass.None;
+            }
+
+            if (string.Equals(siegeClass, "ram", StringComparison.OrdinalIgnoreCase))
+            {
+                return SiegeClass.Ram;
+            }
+
+            if (string.Equals(siegeClass, "siege-tower", StringComparison.OrdinalIgnoreCase))
+            {
+                return SiegeClass.SiegeTower;
+            }
+
+            if (string.Equals(siegeClass, "trebuchet", StringComparison.OrdinalIgnoreCase))
+            {
+                return SiegeClass.Trebuchet;
+            }
+
+            if (string.Equals(siegeClass, "ballista", StringComparison.OrdinalIgnoreCase))
+            {
+                return SiegeClass.Ballista;
+            }
+
+            if (string.Equals(siegeClass, "mantlet", StringComparison.OrdinalIgnoreCase))
+            {
+                return SiegeClass.Mantlet;
+            }
+
+            return SiegeClass.None;
         }
     }
 }

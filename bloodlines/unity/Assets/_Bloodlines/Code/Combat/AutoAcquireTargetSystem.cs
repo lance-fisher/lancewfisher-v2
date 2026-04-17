@@ -61,6 +61,12 @@ namespace Bloodlines.Systems
                     continue;
                 }
 
+                if (ShouldSuppressAutoAcquire(entityManager, attackerEntity))
+                {
+                    entityManager.SetComponentData(attackerEntity, attackerCombat);
+                    continue;
+                }
+
                 if (entityManager.HasComponent<AttackTargetComponent>(attackerEntity))
                 {
                     entityManager.SetComponentData(attackerEntity, attackerCombat);
@@ -74,7 +80,7 @@ namespace Bloodlines.Systems
                 }
 
                 Entity nearestTarget = Entity.Null;
-                float nearestDistanceSq = attackerCombat.Sight * attackerCombat.Sight;
+                float nearestDistanceSq = ResolveAcquireRadiusSq(entityManager, attackerEntity, attackerCombat);
 
                 for (int j = 0; j < unitEntities.Length; j++)
                 {
@@ -184,6 +190,43 @@ namespace Bloodlines.Systems
         private static bool attackerHealthInvalid(in HealthComponent health, in CombatStatsComponent combat)
         {
             return health.Current <= 0f || combat.AttackDamage <= 0f || combat.AttackRange <= 0f || combat.Sight <= 0f;
+        }
+
+        private static bool ShouldSuppressAutoAcquire(EntityManager entityManager, Entity attackerEntity)
+        {
+            if (!entityManager.HasComponent<CombatStanceComponent>(attackerEntity))
+            {
+                return false;
+            }
+
+            var stance = entityManager.GetComponentData<CombatStanceComponent>(attackerEntity);
+            if (!entityManager.HasComponent<CombatStanceRuntimeComponent>(attackerEntity))
+            {
+                return stance.Stance == CombatStance.RetreatOnLowHealth;
+            }
+
+            var runtime = entityManager.GetComponentData<CombatStanceRuntimeComponent>(attackerEntity);
+            if (runtime.IsRetreating)
+            {
+                return true;
+            }
+
+            return stance.Stance == CombatStance.HoldPosition && runtime.SuspendAutoAcquireUntilMoveStops;
+        }
+
+        private static float ResolveAcquireRadiusSq(
+            EntityManager entityManager,
+            Entity attackerEntity,
+            in CombatStatsComponent combat)
+        {
+            float radius = math.max(0.1f, combat.Sight);
+            if (entityManager.HasComponent<CombatStanceComponent>(attackerEntity) &&
+                entityManager.GetComponentData<CombatStanceComponent>(attackerEntity).Stance == CombatStance.HoldPosition)
+            {
+                radius = math.max(0.1f, combat.AttackRange);
+            }
+
+            return radius * radius;
         }
 
         private static bool IsFactionHostile(

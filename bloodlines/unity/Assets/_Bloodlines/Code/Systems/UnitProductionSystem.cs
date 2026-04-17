@@ -147,6 +147,22 @@ namespace Bloodlines.Systems
                 MaxSpeed = queueItem.MaxSpeed,
             });
             ecb.AddComponent(entity, ResolveCombatStats(entityManager, combatDefinitionsEntity, queueItem.UnitId));
+            ecb.AddComponent(entity, new UnitSeparationComponent
+            {
+                Radius = ResolveSeparationRadius(
+                    entityManager,
+                    combatDefinitionsEntity,
+                    queueItem.UnitId,
+                    queueItem.Role,
+                    queueItem.SiegeClass),
+            });
+            ecb.AddComponent(entity, new CombatStanceComponent
+            {
+                Stance = CombatUnitRuntimeDefaults.ResolveDefaultStance(queueItem.Role),
+                LowHealthRetreatThreshold = CombatUnitRuntimeDefaults.DefaultLowHealthRetreatThreshold,
+            });
+            ecb.AddComponent(entity, new CombatStanceRuntimeComponent());
+            ecb.AddComponent(entity, new RecentImpactComponent());
             ecb.AddComponent(entity, new MoveCommandComponent
             {
                 Destination = spawnPosition,
@@ -233,6 +249,36 @@ namespace Bloodlines.Systems
 
             projectileFactory = default;
             return false;
+        }
+
+        private static float ResolveSeparationRadius(
+            EntityManager entityManager,
+            Entity combatDefinitionsEntity,
+            FixedString64Bytes unitId,
+            UnitRole role,
+            SiegeClass siegeClass)
+        {
+            if (combatDefinitionsEntity != Entity.Null &&
+                entityManager.Exists(combatDefinitionsEntity) &&
+                entityManager.HasBuffer<UnitCombatDefinitionElement>(combatDefinitionsEntity))
+            {
+                var definitions = entityManager.GetBuffer<UnitCombatDefinitionElement>(combatDefinitionsEntity);
+                for (int i = 0; i < definitions.Length; i++)
+                {
+                    var definition = definitions[i];
+                    if (!definition.UnitId.Equals(unitId))
+                    {
+                        continue;
+                    }
+
+                    return CombatUnitRuntimeDefaults.ResolveSeparationRadius(
+                        role,
+                        siegeClass,
+                        definition.SeparationRadius);
+                }
+            }
+
+            return CombatUnitRuntimeDefaults.ResolveSeparationRadius(role, siegeClass);
         }
 
         private static float3 ResolveSpawnPosition(float3 buildingPosition, int spawnSequence)
