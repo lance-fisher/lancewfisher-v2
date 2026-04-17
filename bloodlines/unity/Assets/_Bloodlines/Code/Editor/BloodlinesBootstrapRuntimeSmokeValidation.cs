@@ -1098,7 +1098,10 @@ namespace Bloodlines.EditorTools
                 ", stabilitySurplusLoyaltyLatest=" + state.stabilitySurplusLoyaltyLatest.ToString("0.00") +
                 ", stabilitySurplusObserved=" + state.stabilitySurplusObserved +
                 ", aiMilitaryOrdersIssued=" +
-                (commandSurface.TryDebugGetAIMilitaryOrdersIssued(state.aiFactionId, out int militaryOrders) ? militaryOrders : 0) + ".";
+                (commandSurface.TryDebugGetAIMilitaryOrdersIssued(state.aiFactionId, out int militaryOrders) ? militaryOrders : 0) +
+                (commandSurface.TryDebugGetAIBuildingCounts(state.aiFactionId, out int aiDwellings, out int aiFarms, out int aiWells, out int aiBarracks)
+                    ? (", aiDwellings=" + aiDwellings + ", aiFarms=" + aiFarms + ", aiWells=" + aiWells + ", aiBarracks=" + aiBarracks)
+                    : string.Empty) + ".";
 
             return ProbeResult.Pass(
                 "Bootstrap runtime smoke validation passed for " + BootstrapScenePath +
