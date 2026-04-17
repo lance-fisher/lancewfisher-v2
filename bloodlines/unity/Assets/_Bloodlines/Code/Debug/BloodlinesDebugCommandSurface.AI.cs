@@ -127,6 +127,7 @@ namespace Bloodlines.Debug
             controller.ControlledDwellingCountCached = 0;
             controller.ControlledFarmCountCached = 0;
             controller.ControlledWellCountCached = 0;
+            controller.ControlledBarracksCountCached = 0;
 
             var buildingQuery = entityManager.CreateEntityQuery(
                 ComponentType.ReadOnly<FactionComponent>(),
@@ -163,6 +164,10 @@ namespace Bloodlines.Debug
                     {
                         controller.ControlledWellCountCached++;
                     }
+                    else if (typeId.Equals(new FixedString64Bytes("barracks")))
+                    {
+                        controller.ControlledBarracksCountCached++;
+                    }
                 }
             }
         }
@@ -174,6 +179,10 @@ namespace Bloodlines.Debug
             if (controller.ControlledDwellingCountCached < controller.TargetDwellingCount)
             {
                 targetBuildingId = "dwelling";
+            }
+            else if (controller.ControlledBarracksCountCached < controller.TargetBarracksCount)
+            {
+                targetBuildingId = "barracks";
             }
             else if (controller.ControlledFarmCountCached < controller.TargetFarmCount)
             {
@@ -790,6 +799,48 @@ namespace Bloodlines.Debug
                 controller.GatherAssignmentAccumulator = 0f;
                 controller.ProductionAccumulator = 0f;
                 entityManager.SetComponentData(entities[i], controller);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool TryDebugGetAIBuildingCounts(
+            string factionId,
+            out int dwellings,
+            out int farms,
+            out int wells,
+            out int barracks)
+        {
+            dwellings = 0;
+            farms = 0;
+            wells = 0;
+            barracks = 0;
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<AIEconomyControllerComponent>());
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var controllers = query.ToComponentDataArray<AIEconomyControllerComponent>(Allocator.Temp);
+
+            var key = new FixedString32Bytes(factionId ?? string.Empty);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(key))
+                {
+                    continue;
+                }
+
+                dwellings = controllers[i].ControlledDwellingCountCached;
+                farms = controllers[i].ControlledFarmCountCached;
+                wells = controllers[i].ControlledWellCountCached;
+                barracks = controllers[i].ControlledBarracksCountCached;
                 return true;
             }
 
