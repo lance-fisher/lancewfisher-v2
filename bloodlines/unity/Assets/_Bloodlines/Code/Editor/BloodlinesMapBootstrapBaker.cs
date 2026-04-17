@@ -145,6 +145,13 @@ namespace Bloodlines.EditorTools
                         BlocksPassage = buildingDefinition.blocksPassage,
                         SupportsSiegePreparation = string.Equals(buildingDefinition.id, "siege_workshop", StringComparison.OrdinalIgnoreCase),
                         SupportsSiegeLogistics = string.Equals(buildingDefinition.id, "supply_camp", StringComparison.OrdinalIgnoreCase),
+                        GoldTrickle = buildingDefinition.resourceTrickle?.gold ?? 0f,
+                        FoodTrickle = buildingDefinition.resourceTrickle?.food ?? 0f,
+                        WaterTrickle = buildingDefinition.resourceTrickle?.water ?? 0f,
+                        WoodTrickle = buildingDefinition.resourceTrickle?.wood ?? 0f,
+                        StoneTrickle = buildingDefinition.resourceTrickle?.stone ?? 0f,
+                        IronTrickle = buildingDefinition.resourceTrickle?.iron ?? 0f,
+                        InfluenceTrickle = buildingDefinition.resourceTrickle?.influence ?? 0f,
                     });
                 }
 

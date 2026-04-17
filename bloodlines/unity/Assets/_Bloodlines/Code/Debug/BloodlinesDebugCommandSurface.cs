@@ -1140,6 +1140,24 @@ namespace Bloodlines.Debug
                 entityManager.AddBuffer<ProductionQueueItemElement>(buildingEntity);
             }
 
+            var trickle = buildingDefinition.resourceTrickle;
+            if (trickle != null &&
+                (trickle.gold > 0f || trickle.food > 0f || trickle.water > 0f ||
+                 trickle.wood > 0f || trickle.stone > 0f || trickle.iron > 0f ||
+                 trickle.influence > 0f))
+            {
+                entityManager.AddComponentData(buildingEntity, new ResourceTrickleBuildingComponent
+                {
+                    GoldPerSecond = trickle.gold,
+                    FoodPerSecond = trickle.food,
+                    WaterPerSecond = trickle.water,
+                    WoodPerSecond = trickle.wood,
+                    StonePerSecond = trickle.stone,
+                    IronPerSecond = trickle.iron,
+                    InfluencePerSecond = trickle.influence,
+                });
+            }
+
             message = (buildingDefinition.displayName ?? buildingDefinition.id ?? buildingId) + " construction started.";
             return true;
         }
