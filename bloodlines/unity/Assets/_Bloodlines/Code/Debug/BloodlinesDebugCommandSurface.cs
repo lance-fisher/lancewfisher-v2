@@ -2091,6 +2091,112 @@ namespace Bloodlines.Debug
             return AssignSelectedWorkersToGatherResource(entityManager, resourceId);
         }
 
+        public bool TryDebugForceStarvationCycle(
+            string factionId,
+            bool includeWaterCrisis,
+            out int previousPopulationTotal,
+            out int expectedPopulationTotal)
+        {
+            previousPopulationTotal = 0;
+            expectedPopulationTotal = 0;
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            if (!TryGetRealmCycleConfig(entityManager, out var cfg))
+            {
+                return false;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                typeof(RealmConditionComponent),
+                typeof(PopulationComponent),
+                typeof(ResourceStockpileComponent));
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var realms = query.ToComponentDataArray<RealmConditionComponent>(Allocator.Temp);
+            using var populations = query.ToComponentDataArray<PopulationComponent>(Allocator.Temp);
+            using var stockpiles = query.ToComponentDataArray<ResourceStockpileComponent>(Allocator.Temp);
+
+            var key = new FixedString32Bytes(factionId ?? string.Empty);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(key))
+                {
+                    continue;
+                }
+
+                previousPopulationTotal = populations[i].Total;
+
+                var realm = realms[i];
+                realm.FoodStrainStreak = math.max(realm.FoodStrainStreak, math.max(1, cfg.FoodFamineConsecutiveCycles));
+                if (includeWaterCrisis)
+                {
+                    realm.WaterStrainStreak = math.max(realm.WaterStrainStreak, math.max(1, cfg.WaterCrisisConsecutiveCycles));
+                }
+                realm.LastStarvationResponseCycle = realm.CycleCount;
+                realm.CycleCount += 1;
+                realm.CycleAccumulator = 0f;
+                entityManager.SetComponentData(entities[i], realm);
+
+                var stockpile = stockpiles[i];
+                stockpile.Food = 0f;
+                if (includeWaterCrisis)
+                {
+                    stockpile.Water = 0f;
+                }
+                entityManager.SetComponentData(entities[i], stockpile);
+
+                int totalDecline = math.max(0, cfg.FaminePopulationDeclinePerCycle);
+                if (includeWaterCrisis)
+                {
+                    totalDecline += math.max(0, cfg.WaterCrisisOutmigrationPerCycle);
+                }
+                expectedPopulationTotal = math.max(0, previousPopulationTotal - totalDecline);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool TryDebugGetFactionPopulation(string factionId, out int total, out int available, out int cap)
+        {
+            total = 0;
+            available = 0;
+            cap = 0;
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            if (!TryGetFactionRuntimeSnapshot(entityManager, factionId, out var snapshot))
+            {
+                return false;
+            }
+
+            total = snapshot.Population.Total;
+            available = snapshot.Population.Available;
+            cap = snapshot.Population.Cap;
+            return true;
+        }
+
+        private static bool TryGetRealmCycleConfig(EntityManager entityManager, out RealmCycleConfig cfg)
+        {
+            cfg = default;
+            var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<RealmCycleConfig>());
+            using var data = query.ToComponentDataArray<RealmCycleConfig>(Allocator.Temp);
+            if (data.Length == 0)
+            {
+                return false;
+            }
+
+            cfg = data[0];
+            return true;
+        }
+
         public bool TryDebugGetFactionStockpile(
             string factionId,
             out float gold,

@@ -116,6 +116,8 @@ namespace Bloodlines.EditorTools
                     trickleMinimumFoodGain = 2f,
                     trickleMinimumWaterGain = 2f,
                     trickleTimeoutSeconds = 30f,
+                    starvationIncludeWaterCrisis = true,
+                    starvationTimeoutSeconds = 15f,
                 };
 
                 SaveState(state);
@@ -985,6 +987,12 @@ namespace Bloodlines.EditorTools
                 return trickleGainProbe.Value;
             }
 
+            var starvationProbe = ProbeStarvationResponse(commandSurface, state, diagnostics);
+            if (starvationProbe.HasValue)
+            {
+                return starvationProbe.Value;
+            }
+
             diagnostics =
                 diagnostics.TrimEnd('.') +
                 ", controlledUnits=" + controlledUnitCount +
@@ -1020,7 +1028,13 @@ namespace Bloodlines.EditorTools
                 ", trickleLatestFood=" + state.trickleLatestFood.ToString("0.00") +
                 ", trickleInitialWater=" + state.trickleInitialWater.ToString("0.00") +
                 ", trickleLatestWater=" + state.trickleLatestWater.ToString("0.00") +
-                ", trickleGainObserved=" + state.trickleGainObserved + ".";
+                ", trickleGainObserved=" + state.trickleGainObserved +
+                ", starvationForced=" + state.starvationForced +
+                ", starvationIncludeWaterCrisis=" + state.starvationIncludeWaterCrisis +
+                ", starvationPreviousPopulation=" + state.starvationPreviousPopulationTotal +
+                ", starvationExpectedPopulation=" + state.starvationExpectedPopulationTotal +
+                ", starvationLatestPopulation=" + state.starvationLatestPopulationTotal +
+                ", starvationObserved=" + state.starvationObserved + ".";
 
             return ProbeResult.Pass(
                 "Bootstrap runtime smoke validation passed for " + BootstrapScenePath +
@@ -1088,6 +1102,79 @@ namespace Bloodlines.EditorTools
             }
 
             return count;
+        }
+
+        private static ProbeResult? ProbeStarvationResponse(
+            BloodlinesDebugCommandSurface commandSurface,
+            RuntimeSmokeState state,
+            string diagnostics)
+        {
+            if (state.starvationObserved)
+            {
+                return null;
+            }
+
+            if (!state.starvationForced)
+            {
+                if (!commandSurface.TryDebugForceStarvationCycle(
+                    commandSurface.ControlledFactionId,
+                    state.starvationIncludeWaterCrisis,
+                    out int previousTotal,
+                    out int expectedTotal))
+                {
+                    return ProbeResult.Fail(
+                        "Bootstrap runtime smoke validation failed: command shell could not force starvation cycle for " +
+                        Quote(commandSurface.ControlledFactionId) + ". " + diagnostics);
+                }
+
+                state.starvationForced = true;
+                state.starvationPreviousPopulationTotal = previousTotal;
+                state.starvationExpectedPopulationTotal = expectedTotal;
+                state.starvationLatestPopulationTotal = previousTotal;
+                state.starvationForcedUtcTicks = DateTime.UtcNow.Ticks;
+                SaveState(state);
+                return ProbeResult.NotReady(
+                    "Starvation cycle forced for controlled faction. previousPopulationTotal=" +
+                    previousTotal + ", expectedPopulationTotal=" + expectedTotal + ". " + diagnostics);
+            }
+
+            if (!commandSurface.TryDebugGetFactionPopulation(
+                commandSurface.ControlledFactionId,
+                out int currentTotal,
+                out _,
+                out _))
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: could not read population after forced starvation cycle. " +
+                    diagnostics);
+            }
+
+            state.starvationLatestPopulationTotal = currentTotal;
+
+            if (currentTotal <= state.starvationExpectedPopulationTotal)
+            {
+                state.starvationObserved = true;
+                SaveState(state);
+                return null;
+            }
+
+            double elapsedSeconds = ElapsedSeconds(state.starvationForcedUtcTicks);
+            if (elapsedSeconds >= state.starvationTimeoutSeconds)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: starvation response did not reduce population within " +
+                    state.starvationTimeoutSeconds.ToString("0.0") + "s. previousPopulationTotal=" +
+                    state.starvationPreviousPopulationTotal + ", expectedPopulationTotal=" +
+                    state.starvationExpectedPopulationTotal + ", currentTotal=" + currentTotal +
+                    ". " + diagnostics);
+            }
+
+            return ProbeResult.NotReady(
+                "Waiting for StarvationResponseSystem to reduce population. previousPopulationTotal=" +
+                state.starvationPreviousPopulationTotal + ", expectedPopulationTotal=" +
+                state.starvationExpectedPopulationTotal + ", currentTotal=" + currentTotal +
+                ", elapsedSeconds=" + elapsedSeconds.ToString("0.0") + "/" +
+                state.starvationTimeoutSeconds.ToString("0.0") + ". " + diagnostics);
         }
 
         private static ProbeResult? ProbeResourceTrickleBaseline(
@@ -1902,6 +1989,14 @@ namespace Bloodlines.EditorTools
             public float trickleMinimumWaterGain;
             public float trickleTimeoutSeconds;
             public bool trickleGainObserved;
+            public bool starvationForced;
+            public bool starvationIncludeWaterCrisis;
+            public int starvationPreviousPopulationTotal;
+            public int starvationExpectedPopulationTotal;
+            public int starvationLatestPopulationTotal;
+            public long starvationForcedUtcTicks;
+            public float starvationTimeoutSeconds;
+            public bool starvationObserved;
         }
 
         private readonly struct ProbeResult

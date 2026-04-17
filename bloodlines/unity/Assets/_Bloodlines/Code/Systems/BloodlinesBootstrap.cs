@@ -32,6 +32,10 @@ namespace Bloodlines.Systems
                     LoyaltyYellowFloor = 32f,
                     PopulationGreenCapRatio = 0.75f,
                     PopulationYellowCapRatio = 0.92f,
+                    FoodFamineConsecutiveCycles = 2,
+                    WaterCrisisConsecutiveCycles = 1,
+                    FaminePopulationDeclinePerCycle = 1,
+                    WaterCrisisOutmigrationPerCycle = 1,
                 });
             }
         }
