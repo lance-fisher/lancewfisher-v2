@@ -51,5 +51,11 @@ namespace Bloodlines.Components
         public int ControlledWellCountCached;
         public int ConstructionPlacementsAttempted;
         public int ConstructionPlacementsSucceeded;
+
+        public float MilitaryPostureAccumulator;
+        public float MilitaryPostureIntervalSeconds;
+        public int MilitaryPostureMinimumMilitiaCount;
+        public float MilitaryPostureApproachRadius;
+        public int MilitaryPostureOrdersIssued;
     }
 }

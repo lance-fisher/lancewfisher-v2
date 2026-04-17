@@ -219,6 +219,10 @@ namespace Bloodlines.Systems
                     TargetDwellingCount = 2,
                     TargetFarmCount = 2,
                     TargetWellCount = 1,
+                    MilitaryPostureAccumulator = 0f,
+                    MilitaryPostureIntervalSeconds = 4f,
+                    MilitaryPostureMinimumMilitiaCount = 2,
+                    MilitaryPostureApproachRadius = 2.5f,
                 });
             }
 
