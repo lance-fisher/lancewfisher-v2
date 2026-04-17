@@ -201,7 +201,45 @@ namespace Bloodlines.Systems
             });
             entityManager.AddBuffer<FaithExposureElement>(entity);
             entityManager.AddBuffer<HostilityComponent>(entity);
+
+            if (ShouldAttachAIEconomyController(seed))
+            {
+                entityManager.AddComponentData(entity, new AIEconomyControllerComponent
+                {
+                    Enabled = false,
+                    PrimaryGatherResourceId = new FixedString32Bytes("gold"),
+                    TargetWorkerCount = 6,
+                    TargetMilitiaCount = 4,
+                    GatherAssignmentAccumulator = 0f,
+                    GatherAssignmentIntervalSeconds = 2.5f,
+                    ProductionAccumulator = 0f,
+                    ProductionIntervalSeconds = 2.5f,
+                });
+            }
+
             return entity;
+        }
+
+        static bool ShouldAttachAIEconomyController(MapFactionSeedElement seed)
+        {
+            if (seed.Kind == FactionKind.Neutral)
+            {
+                return false;
+            }
+
+            string factionId = seed.FactionId.ToString();
+            if (string.IsNullOrEmpty(factionId) ||
+                string.Equals(factionId, "player", System.StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            if (string.Equals(factionId, "enemy", System.StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         static void SpawnSettlementEntity(EntityManager entityManager, MapSettlementSeedElement seed)

@@ -120,6 +120,10 @@ namespace Bloodlines.EditorTools
                     starvationTimeoutSeconds = 15f,
                     loyaltyMinimumDeltaMagnitude = 8f,
                     capPressureTimeoutSeconds = 10f,
+                    aiFactionId = "enemy",
+                    aiMinimumGoldDelta = 5f,
+                    aiMinimumUnitDelta = 1,
+                    aiActivityTimeoutSeconds = 35f,
                 };
 
                 SaveState(state);
@@ -324,6 +328,9 @@ namespace Bloodlines.EditorTools
                 state.productionQueued &&
                 !state.productionProgressAdvancementVerified &&
                 unitCount < state.expectedUnitCountAfterProduction;
+            bool aiObservationWindow =
+                state.aiBaselineSampled && !state.aiActivityObserved;
+            bool unitCountFlexibleWindow = midProductionObservationWindow || aiObservationWindow;
             if (midProductionObservationWindow)
             {
                 var midProductionProgressProbe = ProbeProductionProgress(
@@ -339,7 +346,7 @@ namespace Bloodlines.EditorTools
 
             if (factionCount < state.expectedFactionCount ||
                 buildingCount < expectedBuildingCountForCurrentPhase ||
-                (unitCount < expectedUnitCountForCurrentPhase && !midProductionObservationWindow) ||
+                (unitCount < expectedUnitCountForCurrentPhase && !unitCountFlexibleWindow) ||
                 resourceNodeCount < state.expectedResourceNodeCount ||
                 controlPointCount < state.expectedControlPointCount ||
                 settlementCount < state.expectedSettlementCount)
@@ -375,7 +382,7 @@ namespace Bloodlines.EditorTools
                     expectedBuildingCountForCurrentPhase + " but found " + buildingCount + ". " + diagnostics);
             }
 
-            if (unitCount != expectedUnitCountForCurrentPhase && !midProductionObservationWindow)
+            if (unitCount != expectedUnitCountForCurrentPhase && !unitCountFlexibleWindow)
             {
                 return ProbeResult.Fail(
                     "Bootstrap runtime smoke validation failed: unit count mismatch. Expected " +
@@ -927,7 +934,7 @@ namespace Bloodlines.EditorTools
                     diagnostics);
             }
 
-            if (unitCount != state.expectedUnitCountAfterConstructedProduction)
+            if (unitCount != state.expectedUnitCountAfterConstructedProduction && !unitCountFlexibleWindow)
             {
                 return ProbeResult.Fail(
                     "Bootstrap runtime smoke validation failed: post-constructed-production unit count mismatch. Expected " +
@@ -1001,6 +1008,12 @@ namespace Bloodlines.EditorTools
                 return capPressureProbe.Value;
             }
 
+            var aiEconomyProbe = ProbeAIEconomyActivity(commandSurface, state, diagnostics);
+            if (aiEconomyProbe.HasValue)
+            {
+                return aiEconomyProbe.Value;
+            }
+
             diagnostics =
                 diagnostics.TrimEnd('.') +
                 ", controlledUnits=" + controlledUnitCount +
@@ -1052,7 +1065,15 @@ namespace Bloodlines.EditorTools
                 ", capPressureCapAfterSpike=" + state.capPressureCapAfterSpike +
                 ", capPressureLoyaltyBeforeCycle=" + state.capPressureLoyaltyBeforeCycle.ToString("0.00") +
                 ", capPressureLatestLoyalty=" + state.capPressureLatestLoyalty.ToString("0.00") +
-                ", capPressureObserved=" + state.capPressureObserved + ".";
+                ", capPressureObserved=" + state.capPressureObserved +
+                ", aiFaction=" + Quote(state.aiFactionId) +
+                ", aiInitialGold=" + state.aiInitialGold.ToString("0.00") +
+                ", aiLatestGold=" + state.aiLatestGold.ToString("0.00") +
+                ", aiInitialUnitCount=" + state.aiInitialUnitCount +
+                ", aiLatestUnitCount=" + state.aiLatestUnitCount +
+                ", aiGoldGainObserved=" + state.aiGoldGainObserved +
+                ", aiUnitGainObserved=" + state.aiUnitGainObserved +
+                ", aiActivityObserved=" + state.aiActivityObserved + ".";
 
             return ProbeResult.Pass(
                 "Bootstrap runtime smoke validation passed for " + BootstrapScenePath +
@@ -1120,6 +1141,117 @@ namespace Bloodlines.EditorTools
             }
 
             return count;
+        }
+
+        private static ProbeResult? ProbeAIEconomyActivity(
+            BloodlinesDebugCommandSurface commandSurface,
+            RuntimeSmokeState state,
+            string diagnostics)
+        {
+            if (state.aiActivityObserved)
+            {
+                return null;
+            }
+
+            string factionId = string.IsNullOrWhiteSpace(state.aiFactionId) ? "enemy" : state.aiFactionId;
+
+            if (!state.aiBaselineSampled)
+            {
+                if (!commandSurface.TryDebugGetFactionStockpile(
+                    factionId,
+                    out float initialGold,
+                    out _,
+                    out _,
+                    out _,
+                    out _,
+                    out _,
+                    out _))
+                {
+                    return ProbeResult.Fail(
+                        "Bootstrap runtime smoke validation failed: could not sample AI faction " +
+                        Quote(factionId) + " stockpile before AI activity proof. " + diagnostics);
+                }
+
+                if (!commandSurface.TryDebugEnableAIForFaction(factionId, enabled: true))
+                {
+                    return ProbeResult.Fail(
+                        "Bootstrap runtime smoke validation failed: could not enable AI controller for faction " +
+                        Quote(factionId) + ". " + diagnostics);
+                }
+
+                int initialUnitCount = commandSurface.CountFactionUnits(factionId);
+                state.aiBaselineSampled = true;
+                state.aiInitialGold = initialGold;
+                state.aiInitialUnitCount = initialUnitCount;
+                state.aiLatestGold = initialGold;
+                state.aiLatestUnitCount = initialUnitCount;
+                state.aiBaselineUtcTicks = DateTime.UtcNow.Ticks;
+                SaveState(state);
+                return ProbeResult.NotReady(
+                    "AI faction " + Quote(factionId) + " baseline captured: initialGold=" +
+                    initialGold.ToString("0.0") + ", initialUnitCount=" + initialUnitCount + ". " + diagnostics);
+            }
+
+            if (!commandSurface.TryDebugGetFactionStockpile(
+                factionId,
+                out float currentGold,
+                out _,
+                out _,
+                out _,
+                out _,
+                out _,
+                out _))
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: could not read AI faction " +
+                    Quote(factionId) + " stockpile during AI activity proof. " + diagnostics);
+            }
+
+            int currentUnitCount = commandSurface.CountFactionUnits(factionId);
+            state.aiLatestGold = currentGold;
+            state.aiLatestUnitCount = currentUnitCount;
+
+            float goldGain = currentGold - state.aiInitialGold;
+            int unitGain = currentUnitCount - state.aiInitialUnitCount;
+            float requiredGoldGain = Mathf.Max(0.5f, state.aiMinimumGoldDelta);
+            int requiredUnitGain = Mathf.Max(1, state.aiMinimumUnitDelta);
+
+            if (goldGain >= requiredGoldGain)
+            {
+                state.aiGoldGainObserved = true;
+            }
+            if (unitGain >= requiredUnitGain)
+            {
+                state.aiUnitGainObserved = true;
+            }
+
+            if (state.aiGoldGainObserved && state.aiUnitGainObserved)
+            {
+                state.aiActivityObserved = true;
+                SaveState(state);
+                return null;
+            }
+
+            double elapsedSeconds = ElapsedSeconds(state.aiBaselineUtcTicks);
+            if (elapsedSeconds >= state.aiActivityTimeoutSeconds)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: AI economic activity did not reach thresholds within " +
+                    state.aiActivityTimeoutSeconds.ToString("0.0") + "s. faction=" + Quote(factionId) +
+                    ", initialGold=" + state.aiInitialGold.ToString("0.00") + ", currentGold=" + currentGold.ToString("0.00") +
+                    ", goldGain=" + goldGain.ToString("0.00") + "/" + requiredGoldGain.ToString("0.00") +
+                    ", initialUnitCount=" + state.aiInitialUnitCount + ", currentUnitCount=" + currentUnitCount +
+                    ", unitGain=" + unitGain + "/" + requiredUnitGain +
+                    ", aiGoldGainObserved=" + state.aiGoldGainObserved +
+                    ", aiUnitGainObserved=" + state.aiUnitGainObserved + ". " + diagnostics);
+            }
+
+            return ProbeResult.NotReady(
+                "Waiting for AI economy on faction " + Quote(factionId) +
+                ": goldGain=" + goldGain.ToString("0.00") + "/" + requiredGoldGain.ToString("0.00") +
+                ", unitGain=" + unitGain + "/" + requiredUnitGain +
+                ", elapsedSeconds=" + elapsedSeconds.ToString("0.0") + "/" +
+                state.aiActivityTimeoutSeconds.ToString("0.0") + ". " + diagnostics);
         }
 
         private static ProbeResult? ProbeCapPressureResponse(
@@ -2143,6 +2275,19 @@ namespace Bloodlines.EditorTools
             public long capPressureForcedUtcTicks;
             public float capPressureTimeoutSeconds;
             public bool capPressureObserved;
+            public string aiFactionId = "enemy";
+            public bool aiBaselineSampled;
+            public float aiInitialGold;
+            public int aiInitialUnitCount;
+            public float aiLatestGold;
+            public int aiLatestUnitCount;
+            public long aiBaselineUtcTicks;
+            public float aiMinimumGoldDelta;
+            public int aiMinimumUnitDelta;
+            public float aiActivityTimeoutSeconds;
+            public bool aiActivityObserved;
+            public bool aiGoldGainObserved;
+            public bool aiUnitGainObserved;
         }
 
         private readonly struct ProbeResult

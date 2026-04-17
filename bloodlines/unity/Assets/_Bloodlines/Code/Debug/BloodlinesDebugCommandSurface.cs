@@ -20,7 +20,7 @@ namespace Bloodlines.Debug
     /// the first ECS bootstrap shell can exercise credible RTS command rhythm.
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class BloodlinesDebugCommandSurface : MonoBehaviour
+    public sealed partial class BloodlinesDebugCommandSurface : MonoBehaviour
     {
         private const float ConstructionStartHealthFraction = 0.18f;
         private static readonly string[] SupportedConstructionBuildingOrder =
@@ -128,6 +128,7 @@ namespace Bloodlines.Debug
             var entityManager = world.EntityManager;
             PruneSelection(entityManager);
             PruneControlGroups(entityManager);
+            TickAIFactions(entityManager, Time.deltaTime);
 
             var keyboard = Keyboard.current;
             var mouse = Mouse.current;
