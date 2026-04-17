@@ -85,6 +85,10 @@ namespace Bloodlines.EditorTools
                     ProjectileSpeed = ResolveProjectileSpeed(unitDefinition, combatDistanceScale),
                     ProjectileMaxLifetimeSeconds = ResolveProjectileMaxLifetimeSeconds(unitDefinition),
                     ProjectileArrivalRadius = ResolveProjectileArrivalRadius(unitDefinition),
+                    SeparationRadius = CombatUnitRuntimeDefaults.ResolveSeparationRadius(
+                        ResolveUnitRole(unitDefinition.role),
+                        ResolveSiegeClass(unitDefinition.siegeClass),
+                        unitDefinition.separationRadius),
                 });
             }
 
@@ -213,6 +217,10 @@ namespace Bloodlines.EditorTools
                         ProjectileSpeed = ResolveProjectileSpeed(unitDefinition, combatDistanceScale),
                         ProjectileMaxLifetimeSeconds = ResolveProjectileMaxLifetimeSeconds(unitDefinition),
                         ProjectileArrivalRadius = ResolveProjectileArrivalRadius(unitDefinition),
+                        SeparationRadius = CombatUnitRuntimeDefaults.ResolveSeparationRadius(
+                            ResolveUnitRole(unitDefinition.role),
+                            ResolveSiegeClass(unitDefinition.siegeClass),
+                            unitDefinition.separationRadius),
                         Role = ResolveUnitRole(unitDefinition.role),
                         SiegeClass = ResolveSiegeClass(unitDefinition.siegeClass),
                         PopulationCost = unitDefinition.populationCost,

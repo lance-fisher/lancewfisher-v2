@@ -46,5 +46,6 @@ namespace Bloodlines.Components
         public float ProjectileSpeed;
         public float ProjectileMaxLifetimeSeconds;
         public float ProjectileArrivalRadius;
+        public float SeparationRadius;
     }
 }

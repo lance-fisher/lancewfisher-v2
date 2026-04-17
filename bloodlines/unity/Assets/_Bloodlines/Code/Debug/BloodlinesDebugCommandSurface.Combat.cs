@@ -28,15 +28,7 @@ namespace Bloodlines.Debug
 
         public bool TryDebugIssueAttackMove(float3 destination, out int orderedCount)
         {
-            orderedCount = 0;
-
-            if (!TryGetEntityManager(out var entityManager))
-            {
-                return false;
-            }
-
-            orderedCount = IssueAttackMoveOrder(entityManager, destination);
-            return orderedCount > 0;
+            return TryDebugIssueGroupMoveOrder(destination, attackMove: true, out orderedCount);
         }
 
         private bool TryFindNearestHostileForSelection(
