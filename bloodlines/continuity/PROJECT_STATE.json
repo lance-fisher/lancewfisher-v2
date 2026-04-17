@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-16T22:15:53-06:00",
+  "updated_at": "2026-04-17T01:30:00-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -48,7 +48,7 @@
     "version_alignment_decision_pending": false,
     "version_alignment_resolved_session": 10,
     "version_alignment_resolved_option": "B",
-    "note": "Lance authorized Option B (6.3 LTS) in Session 10. ProjectVersion.txt + manifest.json aligned. First open plus JSON content sync are complete. Session 89 added the first ECS movement foundation, the 2026-04-16 bootstrap follow-up added the first MapDefinition-to-ECS authoring/baking bridge plus the first territory-yield ECS system, the next 2026-04-16 continuation added the governed scene-shell generator, first battlefield camera controller, and first debug-only ECS presentation bridge, the following continuation added the first ECS control-point capture foundation, the next continuation recovered the already-present debug command shell into continuity and upgraded multi-unit move issuance to formation-aware slotting, the next continuation added drag-box selection plus a visible selection rectangle to that same first-shell command surface, the next continuation repaired the Unity definition-binding lane by splitting ScriptableObject definitions into dedicated files, recreating all 119 generated definition assets with valid script bindings, and restoring the canonical Bootstrap scene map assignment to ironmark_frontier.asset, the following continuation added batch validation coverage for both canonical scene shells plus a combined validator wrapper, the next continuation made the governed Bootstrap runtime smoke lane green with command-shell validation, the following continuation landed the first governed production slice with building selection, building production UI, command-hall villager training, runtime-smoke verification, scene validation, and JSON sync, the next continuation added refund-safe queue metadata plus governed queue cancel-and-refund verification ahead of final production completion, the next continuation strengthened that governed production verification into a two-deep queue issue with rear-entry cancel-and-refund before surviving front-entry completion, the next continuation added the first governed worker-led construction slice with dwelling placement, ECS build progression, completion-safe component removal, and population-cap verification, the following continuation extended that governed Bootstrap smoke lane into constructed production continuity with worker-led barracks placement, post-completion militia training, a validator timeout uplift to 75 seconds, and corrected phase boundaries for the longer combined proof, the following continuation landed first-shell construction progress observability with a selection-aware construction-progress panel, a world-space construction progress bar on building proxies, a debug-API progress getter, and a governed mid-construction advancement proof that reports constructionProgressInitialRatio, constructionProgressLatestRatio, and constructionProgressAdvancementVerified in the bootstrap runtime smoke artifact, and the latest continuation extended that observability lane into production with a world-space production progress bar on any building with an active queue, a debug-API production progress getter, a governed mid-production queue advancement proof between cancel-and-refund and spawn, and a midProductionObservationWindow bypass on the pre-existing spawn-floor and strict phase-equality gates so live mid-production sampling can run without weakening any other bootstrap count checks. Manifest still pins com.unity.collections 2.5.7 while packages-lock.json and Unity batch logs currently resolve 2.6.5."
+    "note": "Lance authorized Option B (6.3 LTS) in Session 10. ProjectVersion.txt + manifest.json aligned. First open plus JSON content sync are complete. Session 89 added the first ECS movement foundation, the 2026-04-16 bootstrap follow-up added the first MapDefinition-to-ECS authoring/baking bridge plus the first territory-yield ECS system, the next 2026-04-16 continuation added the governed scene-shell generator, first battlefield camera controller, and first debug-only ECS presentation bridge, the following continuation added the first ECS control-point capture foundation, the next continuation recovered the already-present debug command shell into continuity and upgraded multi-unit move issuance to formation-aware slotting, the next continuation added drag-box selection plus a visible selection rectangle to that same first-shell command surface, the next continuation repaired the Unity definition-binding lane by splitting ScriptableObject definitions into dedicated files, recreating all 119 generated definition assets with valid script bindings, and restoring the canonical Bootstrap scene map assignment to ironmark_frontier.asset, the following continuation added batch validation coverage for both canonical scene shells plus a combined validator wrapper, the next continuation made the governed Bootstrap runtime smoke lane green with command-shell validation, the following continuation landed the first governed production slice with building selection, building production UI, command-hall villager training, runtime-smoke verification, scene validation, and JSON sync, the next continuation added refund-safe queue metadata plus governed queue cancel-and-refund verification ahead of final production completion, the next continuation strengthened that governed production verification into a two-deep queue issue with rear-entry cancel-and-refund before surviving front-entry completion, the next continuation added the first governed worker-led construction slice with dwelling placement, ECS build progression, completion-safe component removal, and population-cap verification, the following continuation extended that governed Bootstrap smoke lane into constructed production continuity with worker-led barracks placement, post-completion militia training, a validator timeout uplift to 75 seconds, and corrected phase boundaries for the longer combined proof, the following continuation landed first-shell construction progress observability with a selection-aware construction-progress panel, a world-space construction progress bar on building proxies, a debug-API progress getter, and a governed mid-construction advancement proof that reports constructionProgressInitialRatio, constructionProgressLatestRatio, and constructionProgressAdvancementVerified in the bootstrap runtime smoke artifact, the following continuation extended that observability lane into production with a world-space production progress bar on any building with an active queue, a debug-API production progress getter, a governed mid-production queue advancement proof between cancel-and-refund and spawn, and a midProductionObservationWindow bypass on the pre-existing spawn-floor and strict phase-equality gates so live mid-production sampling can run without weakening any other bootstrap count checks, and the latest continuation landed the canonical RTS primary economy gather-deposit loop with a WorkerGatherComponent phase machine (Idle/Seeking/Gathering/Returning/Depositing), a WorkerGatherSystem that resolves movement, gather tick, drop-off targeting to the nearest owned completed command_hall, and deposit routing into all seven canonical ResourceStockpileComponent fields, debug APIs for gather assignment, faction stockpile inspection, and active-gatherer counting, a governed five-worker gold-gather cycle proof in the bootstrap runtime smoke artifact (gold rising from 45.0 to 55.0), and a StartupTimeoutSeconds bump from 75 to 120 for the longer combined sequence. Manifest still pins com.unity.collections 2.5.7 while packages-lock.json and Unity batch logs currently resolve 2.6.5."
   },
   "toolchain": {
     "architecture": "DOTS / ECS + Burst + Collections + Mathematics",
@@ -313,7 +313,7 @@
       "ControlPointCaptureSystem",
       "ControlPointResourceTrickleSystem"
     ],
-    "status": "first_open_complete_json_sync_complete_movement_bootstrap_territory_yield_scene_shell_control_point_capture_drag_box_selection_bootstrap_scene_map_assignment_runtime_smoke_green_command_shell_validated_construction_progress_observable_with_selection_panel_world_space_bar_and_governed_advancement_proof_and_production_progress_observable_with_world_space_bar_debug_api_and_governed_mid_production_advancement_proof"
+    "status": "first_open_complete_json_sync_complete_movement_bootstrap_territory_yield_scene_shell_control_point_capture_drag_box_selection_bootstrap_scene_map_assignment_runtime_smoke_green_command_shell_validated_construction_progress_observable_with_selection_panel_world_space_bar_and_governed_advancement_proof_production_progress_observable_with_world_space_bar_debug_api_and_governed_mid_production_advancement_proof_and_primary_economy_worker_gather_deposit_loop_green_with_canonical_phase_machine_stockpile_routing_and_governed_gold_gather_cycle_proof"
   },
   "unity_project_ready_when_version_locked": [
     "run_bloodlines_import_sync_json_content",
@@ -346,10 +346,11 @@
     "neutral_power_stage_presence_and_trueborn_return_condition_foundation"
   ],
   "continuation_platform": {
-    "status": "production_ready_execution_packet_and_governed_write_workbench_validated",
+    "status": "production_ready_chat_first_command_deck_and_governed_write_flow_validated",
     "path": "D:\\ProjectsHome\\Bloodlines\\continuation-platform",
     "launch_windows": "D:\\ProjectsHome\\Bloodlines\\continuation-platform\\launch_windows.cmd",
     "local_url": "http://127.0.0.1:8067",
+    "primary_surface": "chat_first_command_deck",
     "runtime": "windows_native_python_3_14",
     "wsl_requirement": "not_required_for_windows_primary_runtime",
     "validated_scan": {
@@ -366,8 +367,14 @@
     },
     "ollama_models_detected": 8,
     "agent_mode_live": "resume_last_good_state",
+    "conversation_mode_live": "agent_console",
     "resume_anchor_selection_mode": "explicit_operator_selection_when_continuity_health_is_attention",
     "operator_qol": [
+      "chat_first_command_deck_default_view",
+      "persistent_local_conversation_thread",
+      "slash_command_local_actions",
+      "conversation_citations_and_action_logs",
+      "conversation_write_draft_staging",
       "persistent_active_view_state",
       "active_view_filtering",
       "quick_jump_controls",
@@ -383,6 +390,7 @@
     "execution_packet_scene_target": "unity/Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity",
     "execution_packet_path": "continuation-platform/state/execution_packet.json",
     "gui_surfaces": [
+      "command_deck",
       "dashboard",
       "execution",
       "agent_workspace",
@@ -405,13 +413,18 @@
       "continuation-platform/state/operations_journal.jsonl",
       "continuation-platform/state/tasks_board.json",
       "continuation-platform/state/handoff_pack_preview.md",
-      "continuation-platform/state/execution_packet.json"
+      "continuation-platform/state/execution_packet.json",
+      "continuation-platform/state/agent_console_session.json",
+      "continuation-platform/state/agent_console_drafts.json"
     ],
     "validation": {
       "python_compileall": "passed",
       "node_app_js_check": "passed",
       "smoke_test": "passed",
+      "http_root": "passed",
       "http_bootstrap": "passed",
+      "http_agent_console": "passed",
+      "http_agent_console_message": "passed",
       "http_change_report": "passed",
       "http_telemetry_drilldown": "passed",
       "http_handoff_builder": "passed",
@@ -424,7 +437,8 @@
       "http_project_file": "passed",
       "http_project_write_preview": "passed",
       "locked_write_refusal": "passed",
-      "governed_project_write_apply": "passed"
+      "governed_project_write_apply": "passed",
+      "natural_language_console_turn": "passed"
     }
   },
   "latest_canon_bible": "18_EXPORTS/BLOODLINES_COMPLETE_DESIGN_BIBLE_v3.4.md",
@@ -433,8 +447,9 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-16-unity-production-progress-observability-and-world-space-bar.md",
-  "latest_continuation_prompt": "03_PROMPTS/CONTINUATION_PROMPT_2026-04-16_SESSION_104.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-16-unity-worker-gather-deposit-primary-loop.md",
+  "latest_continuation_prompt": "03_PROMPTS/CONTINUATION_PROMPT_2026-04-16_SESSION_111.md",
+  "latest_finalization_checklist": "docs/plans/2026-04-16-bloodlines-finalization-execution-checklist.md",
   "latest_state_of_game_report": "docs/BLOODLINES_STATE_OF_GAME_REPORT_2026-04-15_SESSION_87.md",
   "latest_player_guide": "18_EXPORTS/BLOODLINES_PLAYER_GUIDE_FOUNDATIONS.md",
   "latest_project_completion_handoff": "HANDOFF.md",

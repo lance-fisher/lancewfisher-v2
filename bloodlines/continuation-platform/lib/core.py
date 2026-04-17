@@ -98,6 +98,7 @@ class BloodlinesContinuationCore:
         self.doctrine_rules = self._load_json(self.config_dir / "doctrine_rules.json")
         self.source_subset = self._load_json(self.config_dir / "source_subset.json")
         self.tier_gate_hashes = self._load_json(self.config_dir / "tier_gate_hashes.json")
+        self.command_runner_policy = self._load_json(self.config_dir / "command_runner_policy.json")
 
         self.bloodlines_root = Path(self.scan_settings["bloodlines_root"]).resolve()
         self.db_path = self.state_dir / "continuation.sqlite3"

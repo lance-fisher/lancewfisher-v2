@@ -2063,6 +2063,221 @@ namespace Bloodlines.Debug
             return true;
         }
 
+        public int TryDebugAssignSelectedWorkersToGatherResource(string resourceId)
+        {
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return 0;
+            }
+
+            return AssignSelectedWorkersToGatherResource(entityManager, resourceId);
+        }
+
+        public bool TryDebugGetFactionStockpile(
+            string factionId,
+            out float gold,
+            out float wood,
+            out float stone,
+            out float iron,
+            out float food,
+            out float water,
+            out float influence)
+        {
+            gold = wood = stone = iron = food = water = influence = 0f;
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            if (!TryGetFactionRuntimeSnapshot(entityManager, factionId, out var snapshot))
+            {
+                return false;
+            }
+
+            gold = snapshot.Resources.Gold;
+            wood = snapshot.Resources.Wood;
+            stone = snapshot.Resources.Stone;
+            iron = snapshot.Resources.Iron;
+            food = snapshot.Resources.Food;
+            water = snapshot.Resources.Water;
+            influence = snapshot.Resources.Influence;
+            return true;
+        }
+
+        public int GetControlledWorkersWithActiveGatherCount()
+        {
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return 0;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<WorkerGatherComponent>(),
+                ComponentType.ReadOnly<FactionComponent>());
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var gathers = query.ToComponentDataArray<WorkerGatherComponent>(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+
+            int active = 0;
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(controlledFactionId))
+                {
+                    continue;
+                }
+
+                if (gathers[i].Phase != WorkerGatherPhase.Idle)
+                {
+                    active++;
+                }
+            }
+
+            return active;
+        }
+
+        private int AssignSelectedWorkersToGatherResource(EntityManager entityManager, string resourceId)
+        {
+            if (string.IsNullOrWhiteSpace(resourceId))
+            {
+                return 0;
+            }
+
+            int selectedWorkerCount = 0;
+            foreach (var entity in selectedEntities)
+            {
+                if (entityManager.Exists(entity) &&
+                    entityManager.HasComponent<UnitTypeComponent>(entity) &&
+                    entityManager.GetComponentData<UnitTypeComponent>(entity).Role == UnitRole.Worker)
+                {
+                    selectedWorkerCount++;
+                }
+            }
+
+            if (selectedWorkerCount == 0)
+            {
+                if (!TrySelectFirstControlledWorker(entityManager, clearSelectionFirst: true))
+                {
+                    return 0;
+                }
+            }
+
+            if (!TryFindNearestControlledResourceNode(entityManager, resourceId, out var nodeEntity, out var nodePosition))
+            {
+                return 0;
+            }
+
+            int assigned = 0;
+            var resourceIdKey = new FixedString32Bytes(resourceId);
+            foreach (var entity in selectedEntities)
+            {
+                if (!entityManager.Exists(entity) ||
+                    !entityManager.HasComponent<UnitTypeComponent>(entity))
+                {
+                    continue;
+                }
+
+                var unitType = entityManager.GetComponentData<UnitTypeComponent>(entity);
+                if (unitType.Role != UnitRole.Worker)
+                {
+                    continue;
+                }
+
+                string typeIdString = unitType.TypeId.ToString();
+                if (!TryResolveUnitDefinition(typeIdString, out var unitDefinition))
+                {
+                    continue;
+                }
+
+                float capacity = math.max(1f, unitDefinition.carryCapacity > 0 ? unitDefinition.carryCapacity : 10f);
+                float rate = math.max(0.1f, unitDefinition.gatherRate > 0f ? unitDefinition.gatherRate : 1f);
+
+                var gather = new WorkerGatherComponent
+                {
+                    AssignedNode = nodeEntity,
+                    AssignedResourceId = resourceIdKey,
+                    CarryResourceId = default,
+                    CarryAmount = 0f,
+                    CarryCapacity = capacity,
+                    GatherRate = rate,
+                    Phase = WorkerGatherPhase.Seeking,
+                    GatherRadius = 1.25f,
+                    DepositRadius = 1.75f,
+                };
+
+                if (entityManager.HasComponent<WorkerGatherComponent>(entity))
+                {
+                    entityManager.SetComponentData(entity, gather);
+                }
+                else
+                {
+                    entityManager.AddComponentData(entity, gather);
+                }
+
+                assigned++;
+            }
+
+            return assigned;
+        }
+
+        private bool TryFindNearestControlledResourceNode(
+            EntityManager entityManager,
+            string resourceId,
+            out Entity nodeEntity,
+            out float3 nodePosition)
+        {
+            nodeEntity = Entity.Null;
+            nodePosition = default;
+
+            var resourceKey = new FixedString32Bytes(resourceId);
+            float3 reference = default;
+            bool referenceAvailable = false;
+
+            if (selectedEntities.Count > 0 &&
+                entityManager.Exists(selectedEntities[0]) &&
+                entityManager.HasComponent<PositionComponent>(selectedEntities[0]))
+            {
+                reference = entityManager.GetComponentData<PositionComponent>(selectedEntities[0]).Value;
+                referenceAvailable = true;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<ResourceNodeComponent>(),
+                ComponentType.ReadOnly<PositionComponent>());
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var nodes = query.ToComponentDataArray<ResourceNodeComponent>(Allocator.Temp);
+            using var positions = query.ToComponentDataArray<PositionComponent>(Allocator.Temp);
+
+            float bestDistanceSq = float.MaxValue;
+            bool found = false;
+
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!nodes[i].ResourceId.Equals(resourceKey) || nodes[i].Amount <= 0f)
+                {
+                    continue;
+                }
+
+                float distanceSq = referenceAvailable
+                    ? math.distancesq(reference, positions[i].Value)
+                    : 0f;
+                if (distanceSq < bestDistanceSq)
+                {
+                    bestDistanceSq = distanceSq;
+                    nodeEntity = entities[i];
+                    nodePosition = positions[i].Value;
+                    found = true;
+                    if (!referenceAvailable)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return found;
+        }
+
         public bool TryDebugGetSelectedProductionProgress(
             out float progressRatio,
             out float remainingSeconds,

@@ -1,6 +1,6 @@
 # NEXT_SESSION_HANDOFF
 
-Last updated: 2026-04-16 (Session 109: continuation platform execution packet and governed write workbench green with dynamic current-canon ingestion, Unity shipping-lane Execution view, safe project-file load and diff preview, tier-gated canonical project writes with stale-source protection, live HTTP validation, and repaired current Unity recommendation; Session 108: Unity first-shell production progress observability green with world-space production progress bar, debug API progress getter, governed mid-production advancement proof carried into bootstrap runtime smoke artifact, and spawn-floor and equality gates scoped to allow mid-production observation; Session 107: Unity first-shell construction progress observability and UI green with selection-aware progress panel, world-space progress bar, governed mid-construction advancement proof, and refreshed bootstrap runtime smoke artifact; Session 106: owner direction refresh saved with full-canon Unity 6.3 DOTS/ECS delivery, browser freeze, and no-MVP rule; Session 105: project-completion handoff refreshed with completed-vs-remaining summary; Session 104: Unity constructed production continuity green and ready-to-paste next-session prompt added; Session 103: Unity first governed construction slice green; Session 102: Unity two-deep production queue tail-cancel validation green; Session 101: Unity production queue cancel-and-refund slice green; Session 100: Unity first production slice green; continuation platform quality-of-life pass validated with persistent view state, in-view filtering, quick-jump controls, copy actions, toast feedback, and manual anchor clear; graphics lane through Batch 08 with refreshed Unity testbeds and applied batch-review governance; Session 96: Naval world integration; Session 95: Trueborn recognition; Session 94: Rise arc; Session 93: Trueborn City; Sessions 88-92: sovereignty/pact deepening; all prior lanes preserved)
+Last updated: 2026-04-16 (Session 112: Unity worker gather-deposit primary economy loop green with WorkerGatherComponent, WorkerGatherSystem driving Seeking/Gathering/Returning/Depositing phases, nearest-command-hall drop-off targeting, all seven canonical primary resource types routed into ResourceStockpileComponent, debug API for gather assignment and stockpile inspection, governed 5-worker gold-gather cycle proof carried into bootstrap runtime smoke artifact with controlled faction gold rising 45 to 55, startup timeout raised 75 to 120 seconds for the fuller sequence, and the first Git push of Sessions 100-108 + full canonical corpus + continuation platform source to origin lance-fisher/lancewfisher-v2; Session 111: finalization handoff and next-session continuation prompt refreshed so future sessions resume from the live Session 110 command-deck and Unity-shipping state instead of the obsolete Session 104 prompt; Session 110: continuation platform chat-first Command Deck green with persistent offline Bloodlines agent conversation, slash commands, local-model turns, governed write-draft staging and apply flow, live HTTP validation, and `8067` promoted into the main offline continuation surface; Session 109: continuation platform execution packet and governed write workbench green with dynamic current-canon ingestion, Unity shipping-lane Execution view, safe project-file load and diff preview, tier-gated canonical project writes with stale-source protection, live HTTP validation, and repaired current Unity recommendation; Session 108: Unity first-shell production progress observability green with world-space production progress bar, debug API progress getter, governed mid-production advancement proof carried into bootstrap runtime smoke artifact, and spawn-floor and equality gates scoped to allow mid-production observation; Session 107: Unity first-shell construction progress observability and UI green with selection-aware progress panel, world-space progress bar, governed mid-construction advancement proof, and refreshed bootstrap runtime smoke artifact; Session 106: owner direction refresh saved with full-canon Unity 6.3 DOTS/ECS delivery, browser freeze, and no-MVP rule; Session 105: project-completion handoff refreshed with completed-vs-remaining summary; Session 104: Unity constructed production continuity green and ready-to-paste next-session prompt added; Session 103: Unity first governed construction slice green; Session 102: Unity two-deep production queue tail-cancel validation green; Session 101: Unity production queue cancel-and-refund slice green; Session 100: Unity first production slice green; continuation platform quality-of-life pass validated with persistent view state, in-view filtering, quick-jump controls, copy actions, toast feedback, and manual anchor clear; graphics lane through Batch 08 with refreshed Unity testbeds and applied batch-review governance; Session 96: Naval world integration; Session 95: Trueborn recognition; Session 94: Rise arc; Session 93: Trueborn City; Sessions 88-92: sovereignty/pact deepening; all prior lanes preserved)
 Previous author: Claude
 Next recommended action applies to whichever agent (Claude or Codex) runs next.
 
@@ -19,7 +19,7 @@ Next recommended action applies to whichever agent (Claude or Codex) runs next.
 ## Project Completion Snapshot
 
 - The canonical Bloodlines root is stable and continuity-safe.
-- The continuation platform is product-ready for daily offline use, now carries a live Unity execution packet plus governed canonical write workbench, and is no longer the main blocker.
+- The continuation platform is product-ready for daily offline use, now carries a live Unity execution packet plus governed canonical write workbench, and now opens on a true chat-first Command Deck rather than a dashboard-only front page.
 - The browser reference simulation is heavily built, frozen as behavioral spec, and already carries many live dynasty, siege, diplomacy, sovereignty, and naval systems.
 - The Unity lane is green through first-shell battlefield control, production, construction, and constructed `barracks -> militia` continuity.
 - Graphics staging is through Batch 08 and review infrastructure is in place.
@@ -32,6 +32,50 @@ Next recommended action applies to whichever agent (Claude or Codex) runs next.
 - Browser-side unfinished follow-up remains preserved historically as reference material, but future realization of those systems belongs in Unity rather than in new browser feature work.
 - Graphics is still at concept and staging level pending formal review calls and later runtime-ready asset production.
 - Wwise audio integration, Netcode for Entities multiplayer realization, broader UX polish, full QA or balance passes, and stronger end-to-end shipping readiness are still unfinished.
+
+## 2026-04-16 Session 111 Finalization Handoff And Prompt Refresh
+
+- The current ready-to-paste next-session continuation prompt now exists at:
+  - `03_PROMPTS/CONTINUATION_PROMPT_2026-04-16_SESSION_111.md`
+- The current active finalization checklist now exists at:
+  - `docs/plans/2026-04-16-bloodlines-finalization-execution-checklist.md`
+- This is now the authoritative re-entry prompt for future sessions.
+- It supersedes the old Session 104 prompt for active use because it reflects:
+  - the `Command Deck` as the primary offline continuation surface
+  - the `Execution` view as the current grounded Unity lane packet
+  - the current Unity first-shell verification gate
+  - the next finalization priorities after manual verification instead of stopping at another report-only checkpoint
+
+## 2026-04-16 Continuation Platform Command Deck
+
+- `http://127.0.0.1:8067` is now the intended offline Bloodlines agent surface, not only a continuity dashboard.
+- The main screen now opens on `Command Deck`, a persistent local conversation thread with:
+  - natural-language Bloodlines prompts
+  - slash-command local actions
+  - citations and action logs
+  - suggested prompts
+  - governed write-draft staging with apply or dismiss controls
+- New live command set:
+  - `/help`
+  - `/resume`
+  - `/rescan`
+  - `/status`
+  - `/search <query>`
+  - `/read <path>`
+  - `/execution`
+  - `/anchor <candidate|clear>`
+  - `/drafts`
+  - `/apply-draft <id>`
+  - `/dismiss-draft <id>`
+  - `/clear`
+- Natural-language turns now hit the local Ollama inventory through the governed prompt loop in `continuation-platform/lib/core.py`.
+- If the local model returns weak JSON, the platform now falls back to a grounded continuity answer instead of surfacing an empty turn.
+- Conversation-thread write drafts use the same tier gate, stale-source protection, automatic backups, and post-apply rescan behavior as the explicit governed write workbench.
+- Command-deck validation is green:
+  - `python -B -m py_compile continuation-platform/lib/core.py continuation-platform/server.py continuation-platform/tests/smoke_test.py`
+  - `node --check continuation-platform/static/app.js`
+  - `python continuation-platform/tests/smoke_test.py`
+  - live HTTP validation for `/`, `/api/agent-console`, and a natural-language `POST /api/agent-console/message`
 
 ## 2026-04-16 Continuation Platform Execution Packet And Governed Write Workbench
 
@@ -167,10 +211,17 @@ Next recommended action applies to whichever agent (Claude or Codex) runs next.
 
 ## Immediate Next Action Priority
 
-1. Launch the continuation platform from `D:\ProjectsHome\Bloodlines\continuation-platform\launch_windows.cmd`.
-2. If Continuity Health shows `attention`, select the intended resume anchor in the Resume Anchor card, then run `Resume Last Good State`. If the dashboard shows `ready`, run `Resume Last Good State` directly and confirm the anchor plus provenance set before starting new Bloodlines work.
-3. Open the `Execution` view and confirm the live packet still resolves to the Unity shipping lane, `Bootstrap.unity`, the current canonical source spine, and the latest grounded recommendation before starting new work.
-4. Follow the currently grounded project recommendation inside the Unity shipping lane:
+1. Launch the continuation platform from `D:\ProjectsHome\Bloodlines\continuation-platform\launch_windows.cmd` and work from the `Command Deck` main screen at `http://127.0.0.1:8067`.
+2. If a fresh frontier session must be opened, use `03_PROMPTS/CONTINUATION_PROMPT_2026-04-16_SESSION_111.md` as the canonical ready-to-paste resume prompt.
+3. Use `docs/plans/2026-04-16-bloodlines-finalization-execution-checklist.md` as the authoritative ladder for what still remains between the current first-shell state and a genuinely finished Bloodlines production posture.
+4. If Continuity Health shows `attention`, select the intended resume anchor in the Resume Anchor card or use `/anchor <candidate>`, then run `Resume Last Good State` or `/resume`. If the dashboard shows `ready`, run `Resume Last Good State` directly and confirm the anchor plus provenance set before starting new Bloodlines work.
+5. Use the Command Deck first for local orientation:
+   - `/status` for current posture
+   - `/search <query>` for canon retrieval
+   - `/read <path>` for local file loading
+   - natural-language prompts for grounded Bloodlines continuation answers
+6. Open the `Execution` view and confirm the live packet still resolves to the Unity shipping lane, `Bootstrap.unity`, the current canonical source spine, and the latest grounded recommendation before starting new work.
+7. Follow the currently grounded project recommendation inside the Unity shipping lane:
    - run `scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1` if structural shell integrity should be re-confirmed before in-editor work
    - run `scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1` if a governed runtime preflight is needed; it now proves two-deep queue issue, rear-entry queue cancel-and-refund, surviving front-entry `command_hall -> villager` completion, `dwelling` construction completion to `24` population cap, and `barracks -> militia` continuity from a newly completed constructed production building, ending at `11` total buildings, `18` total units, and `8` controlled units. Do not run multiple Unity wrappers in parallel against the same project
    - run `scripts/Invoke-BloodlinesUnitySyncJsonContent.ps1` if the canonical JSON mirror should be refreshed before editor work
@@ -182,8 +233,32 @@ Next recommended action applies to whichever agent (Claude or Codex) runs next.
    - manually verify `barracks` construction completion, post-completion selection, `militia` queue visibility, training completion, and post-training controlled-unit growth even though the governed runtime smoke is already green for that slice
    - verify the new `ControlPointCaptureSystem` by forcing uncontested capture, contested decay, and post-capture uncontested trickle behavior
    - continue directly into broader construction-roster verification, construction progress UI, deeper build-placement UX, broader production-roster verification, production from additional newly completed buildings, or deeper command-state shell work after that first shell is confirmed; do not prioritize attack-move until a real combat lane exists
-5. If continuity files need updating during the next slice, use the governed write workbench from the `Execution` view after the required unlock tier instead of external scratch edits.
-6. When handing work back to Claude Code or Codex, use the Handoff Builder view or `Export Handoff` action so the local continuity delta, doctrine, open work, and canonical pointers are packaged before frontier re-entry.
+8. If continuity files need updating during the next slice, use the governed write workbench or Command Deck draft-apply flow after the required unlock tier instead of external scratch edits.
+9. When handing work back to Claude Code or Codex, use the Handoff Builder view or `Export Handoff` action so the local continuity delta, doctrine, open work, and canonical pointers are packaged before frontier re-entry.
+
+## Unity Lane Status Update (Session 112)
+
+The Unity first-shell now carries the canonical RTS primary economy loop end to end.
+
+- `Components/WorkerGatherComponent.cs` is new: adds `WorkerGatherPhase` (Idle, Seeking, Gathering, Returning, Depositing) and a `WorkerGatherComponent` that stores assigned node, assigned resource id, carry resource id, carry amount, carry capacity, gather rate, phase, gather radius, and deposit radius.
+- `Systems/WorkerGatherSystem.cs` is new: advances every controlled worker each simulation tick through Seeking (move toward node), Gathering (decrement node amount, accrue carry at the unit's canonical gatherRate), Returning (move to the nearest alive, completed, owned `command_hall`), Depositing (accrue carry into the faction's `ResourceStockpileComponent` field matching the carry resource id), then resumes on the same node if it still has resources. Handles all seven canonical primaries: gold, wood, stone, iron, food, water, influence.
+- `Debug/BloodlinesDebugCommandSurface.cs` extended with:
+  - new `TryDebugAssignSelectedWorkersToGatherResource(resourceId)` debug API that filters the current selection to workers, finds the nearest resource node of the given type, and assigns each a fresh `WorkerGatherComponent` populated from the unit's canonical `carryCapacity` and `gatherRate`
+  - new `TryDebugGetFactionStockpile` API exposing all seven primary resource pools for governed sampling
+  - new `GetControlledWorkersWithActiveGatherCount` for diagnostic counts of non-idle gatherers on the controlled faction
+  - new internal `TryFindNearestControlledResourceNode` helper
+- `Editor/BloodlinesBootstrapRuntimeSmokeValidation.cs` extended:
+  - new state fields `gatherResourceId` (default "gold"), `gatherAssigned`, `gatherAssignedWorkerCount`, `gatherInitialFactionGold`, `gatherMinimumDepositAmount` (default 5), `gatherDepositObserved`, `gatherLatestFactionGold`, `gatherAssignedUtcTicks`, `gatherCycleTimeoutSeconds` (default 40)
+  - new `ProbeWorkerGatherCycle` helper runs after constructed `barracks -> militia` completion, snapshots the controlled faction's gold, assigns controlled workers to gather gold, and waits for the stockpile to increase by at least the minimum threshold within the configured cycle timeout
+  - final success diagnostics now carries `gatherResource`, `gatherAssigned`, `gatherAssignedWorkerCount`, `gatherInitialFactionGold`, `gatherLatestFactionGold`, `gatherDepositObserved`
+  - `StartupTimeoutSeconds` raised from 75 to 120 to accommodate the longer governed sequence
+- `unity/Assembly-CSharp.csproj` updated so the dotnet build path picks up the new component and system files without waiting for Unity's generator refresh.
+- `scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1` passed. Success line ends with `gatherResource='gold'`, `gatherAssigned=True`, `gatherAssignedWorkerCount=5`, `gatherInitialFactionGold=45.0`, `gatherLatestFactionGold=55.0`, `gatherDepositObserved=True` alongside preserved production and construction progress fields.
+- `scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1` passed.
+- `node tests/data-validation.mjs` and `node tests/runtime-bridge.mjs` both passed.
+- Sessions 100-108 + full canonical corpus + Unity source + ScriptableObject data + continuation-platform source now pushed to origin `lance-fisher/lancewfisher-v2` master (commits `a72982c`, `087d7b0`, `f3dd374`, `de003c9`, Session 112 commit forthcoming).
+- Detailed handoff for this increment:
+  - `docs/unity/session-handoffs/2026-04-16-unity-worker-gather-deposit-primary-loop.md`
 
 ## Unity Lane Status Update (Session 108)
 
