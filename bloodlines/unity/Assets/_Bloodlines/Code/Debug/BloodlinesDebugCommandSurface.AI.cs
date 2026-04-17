@@ -49,10 +49,12 @@ namespace Bloodlines.Debug
                 controller.GatherAssignmentAccumulator += dt;
                 controller.ProductionAccumulator += dt;
                 controller.ConstructionAccumulator += dt;
+                controller.MilitaryPostureAccumulator += dt;
 
                 float gatherInterval = math.max(0.5f, controller.GatherAssignmentIntervalSeconds);
                 float productionInterval = math.max(0.5f, controller.ProductionIntervalSeconds);
                 float constructionInterval = math.max(0.5f, controller.ConstructionIntervalSeconds);
+                float militaryInterval = math.max(0.5f, controller.MilitaryPostureIntervalSeconds);
 
                 if (controller.GatherAssignmentAccumulator >= gatherInterval)
                 {
@@ -70,6 +72,12 @@ namespace Bloodlines.Debug
                 {
                     controller.ConstructionAccumulator = 0f;
                     AIRunConstructionPlan(entityManager, factionId, ref controller);
+                }
+
+                if (controller.MilitaryPostureAccumulator >= militaryInterval)
+                {
+                    controller.MilitaryPostureAccumulator = 0f;
+                    AIRunMilitaryPosture(entityManager, factionId, ref controller);
                 }
 
                 entityManager.SetComponentData(entities[i], controller);
@@ -220,6 +228,140 @@ namespace Bloodlines.Debug
                     controller.ConstructionPlacementsSucceeded++;
                 }
             }
+        }
+
+        private void AIRunMilitaryPosture(EntityManager entityManager, string factionId, ref AIEconomyControllerComponent controller)
+        {
+            if (controller.ControlledMilitiaCountCached < controller.MilitaryPostureMinimumMilitiaCount)
+            {
+                return;
+            }
+
+            if (!TryFindHostileControlPointAnchor(entityManager, factionId, out float3 anchorPosition))
+            {
+                return;
+            }
+
+            var factionKey = new FixedString32Bytes(factionId);
+            var militiaTypeKey = new FixedString64Bytes("militia");
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<UnitTypeComponent>(),
+                ComponentType.ReadOnly<PositionComponent>(),
+                ComponentType.ReadOnly<HealthComponent>());
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var unitTypes = query.ToComponentDataArray<UnitTypeComponent>(Allocator.Temp);
+            using var positions = query.ToComponentDataArray<PositionComponent>(Allocator.Temp);
+            using var health = query.ToComponentDataArray<HealthComponent>(Allocator.Temp);
+
+            float approachRadius = math.max(0.25f, controller.MilitaryPostureApproachRadius);
+
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(factionKey) ||
+                    !unitTypes[i].TypeId.Equals(militiaTypeKey) ||
+                    health[i].Current <= 0f)
+                {
+                    continue;
+                }
+
+                float distanceSq = math.distancesq(positions[i].Value, anchorPosition);
+                if (distanceSq <= approachRadius * approachRadius)
+                {
+                    continue;
+                }
+
+                if (!entityManager.HasComponent<MoveCommandComponent>(entities[i]))
+                {
+                    continue;
+                }
+
+                var existing = entityManager.GetComponentData<MoveCommandComponent>(entities[i]);
+                if (existing.IsActive &&
+                    math.distancesq(existing.Destination, anchorPosition) <= approachRadius * approachRadius)
+                {
+                    continue;
+                }
+
+                entityManager.SetComponentData(entities[i], new MoveCommandComponent
+                {
+                    Destination = anchorPosition,
+                    StoppingDistance = approachRadius,
+                    IsActive = true,
+                });
+
+                controller.MilitaryPostureOrdersIssued++;
+            }
+        }
+
+        private static bool TryFindHostileControlPointAnchor(
+            EntityManager entityManager,
+            string factionId,
+            out float3 position)
+        {
+            position = default;
+            var factionKey = new FixedString32Bytes(factionId);
+
+            if (!TryGetNearestOwnedCommandHallPosition(entityManager, factionId, out float3 hallPosition))
+            {
+                return false;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<ControlPointComponent>(),
+                ComponentType.ReadOnly<PositionComponent>());
+
+            using var controlPoints = query.ToComponentDataArray<ControlPointComponent>(Allocator.Temp);
+            using var positions = query.ToComponentDataArray<PositionComponent>(Allocator.Temp);
+
+            float bestDistanceSq = float.MaxValue;
+            bool found = false;
+            FixedString32Bytes neutralOwner = default;
+
+            for (int i = 0; i < controlPoints.Length; i++)
+            {
+                var cp = controlPoints[i];
+                if (cp.OwnerFactionId.Equals(factionKey))
+                {
+                    continue;
+                }
+
+                bool isNeutral = cp.OwnerFactionId.Equals(neutralOwner);
+                if (!isNeutral)
+                {
+                    float distanceSq = math.distancesq(hallPosition, positions[i].Value);
+                    if (distanceSq < bestDistanceSq)
+                    {
+                        bestDistanceSq = distanceSq;
+                        position = positions[i].Value;
+                        found = true;
+                    }
+                }
+            }
+
+            if (found)
+            {
+                return true;
+            }
+
+            for (int i = 0; i < controlPoints.Length; i++)
+            {
+                if (!controlPoints[i].OwnerFactionId.Equals(factionKey))
+                {
+                    float distanceSq = math.distancesq(hallPosition, positions[i].Value);
+                    if (distanceSq < bestDistanceSq)
+                    {
+                        bestDistanceSq = distanceSq;
+                        position = positions[i].Value;
+                        found = true;
+                    }
+                }
+            }
+
+            return found;
         }
 
         private static bool TryFindIdleAIWorker(
@@ -648,6 +790,37 @@ namespace Bloodlines.Debug
                 controller.GatherAssignmentAccumulator = 0f;
                 controller.ProductionAccumulator = 0f;
                 entityManager.SetComponentData(entities[i], controller);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool TryDebugGetAIMilitaryOrdersIssued(string factionId, out int ordersIssued)
+        {
+            ordersIssued = 0;
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<AIEconomyControllerComponent>());
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var controllers = query.ToComponentDataArray<AIEconomyControllerComponent>(Allocator.Temp);
+
+            var key = new FixedString32Bytes(factionId ?? string.Empty);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(key))
+                {
+                    continue;
+                }
+
+                ordersIssued = controllers[i].MilitaryPostureOrdersIssued;
                 return true;
             }
 
