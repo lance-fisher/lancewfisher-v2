@@ -20,6 +20,7 @@ namespace Bloodlines.Systems
 
         public void OnUpdate(ref SystemState state)
         {
+            float dt = SystemAPI.Time.DeltaTime;
             var entityManager = state.EntityManager;
             var ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);
@@ -40,9 +41,13 @@ namespace Bloodlines.Systems
             {
                 var attackerEntity = unitEntities[i];
                 var attackerCombat = unitCombatStats[i];
+                attackerCombat.AcquireCooldownRemaining =
+                    math.max(0f, attackerCombat.AcquireCooldownRemaining - dt);
+
                 if (entityManager.HasComponent<DeadTag>(attackerEntity) ||
                     attackerHealthInvalid(unitHealth[i], attackerCombat))
                 {
+                    entityManager.SetComponentData(attackerEntity, attackerCombat);
                     continue;
                 }
 
@@ -52,11 +57,19 @@ namespace Bloodlines.Systems
                         unitFactions[i].FactionId,
                         math.max(0.1f, attackerCombat.AttackRange)))
                 {
+                    entityManager.SetComponentData(attackerEntity, attackerCombat);
                     continue;
                 }
 
                 if (entityManager.HasComponent<AttackTargetComponent>(attackerEntity))
                 {
+                    entityManager.SetComponentData(attackerEntity, attackerCombat);
+                    continue;
+                }
+
+                if (attackerCombat.AcquireCooldownRemaining > 0f)
+                {
+                    entityManager.SetComponentData(attackerEntity, attackerCombat);
                     continue;
                 }
 
@@ -86,6 +99,9 @@ namespace Bloodlines.Systems
 
                 if (nearestTarget == Entity.Null)
                 {
+                    attackerCombat.TargetOutOfSightSeconds = 0f;
+                    attackerCombat.AcquireCooldownRemaining = attackerCombat.ResolveTargetAcquireIntervalSeconds();
+                    entityManager.SetComponentData(attackerEntity, attackerCombat);
                     continue;
                 }
 
@@ -94,6 +110,9 @@ namespace Bloodlines.Systems
                     TargetEntity = nearestTarget,
                     EngagementRange = math.max(0.1f, attackerCombat.AttackRange),
                 });
+                attackerCombat.TargetOutOfSightSeconds = 0f;
+                attackerCombat.AcquireCooldownRemaining = attackerCombat.ResolveTargetAcquireIntervalSeconds();
+                entityManager.SetComponentData(attackerEntity, attackerCombat);
             }
         }
 
