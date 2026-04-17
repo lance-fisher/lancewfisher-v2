@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-17T04:22:45.7233862-06:00",
+  "updated_at": "2026-04-17T04:59:36.9687980-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -812,7 +812,7 @@
     "unit_production_system": "unity/Assets/_Bloodlines/Code/Systems/UnitProductionSystem.cs",
     "construction_system": "unity/Assets/_Bloodlines/Code/Systems/ConstructionSystem.cs",
     "control_point_capture_system": "unity/Assets/_Bloodlines/Code/Systems/ControlPointCaptureSystem.cs",
-    "status": "scene_shells_created_definition_bindings_repaired_bootstrap_scene_canonical_map_assigned_both_canonical_scene_shells_batch_validated_bootstrap_runtime_smoke_green_first_production_slice_green_queue_cancel_and_refund_green_two_deep_queue_tail_cancel_green_first_construction_slice_green_worker_gather_loop_green_first_combat_foundation_green_first_projectile_combat_green_and_attack_orders_attack_move_green"
+    "status": "scene_shells_created_definition_bindings_repaired_bootstrap_scene_canonical_map_assigned_both_canonical_scene_shells_batch_validated_bootstrap_runtime_smoke_green_first_production_slice_green_queue_cancel_and_refund_green_two_deep_queue_tail_cancel_green_first_construction_slice_green_worker_gather_loop_green_first_combat_foundation_green_first_projectile_combat_green_attack_orders_attack_move_green_and_target_acquisition_throttling_sight_cleanup_green"
   },
   "unity_definition_binding_repair": {
     "status": "complete",
@@ -1039,7 +1039,7 @@
     "branch": "codex/unity-attack-move",
     "base_master_head": "548d7804ce55766420d75184385b3bedb739a3ee",
     "original_prompt_master_head": "aed6969b9152c630a67eacbd9f1759361ec28cdb",
-    "head_commit": "7759f84e1c00eeb8a1baf329ac33b38d0e074cbc",
+    "head_commit": "80e9204d47961411a1b6ca65ca3a689453992a2d",
     "components": [
       "unity/Assets/_Bloodlines/Code/Combat/AttackOrderComponent.cs"
     ],
@@ -1078,6 +1078,38 @@
     "validator_path_note": "All governed Unity validations were rerun through the canonical D:\\ProjectsHome\\Bloodlines wrapper scripts under the required serial wrapper lock session 'codex-attack-move' after rebasing onto current master.",
     "session_handoff": "docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md"
   },
+  "unity_target_acquisition_and_sight_loss": {
+    "status": "complete_on_stacked_branch_pending_merge_coordination",
+    "branch": "codex/unity-target-acquisition-los",
+    "stacked_on_branch": "codex/unity-attack-move",
+    "stacked_base_head": "80e9204d47961411a1b6ca65ca3a689453992a2d",
+    "components": [
+      "unity/Assets/_Bloodlines/Code/Combat/CombatStatsComponent.cs"
+    ],
+    "systems": [
+      "unity/Assets/_Bloodlines/Code/Combat/AutoAcquireTargetSystem.cs",
+      "unity/Assets/_Bloodlines/Code/Combat/AttackResolutionSystem.cs"
+    ],
+    "targeting_semantics": {
+      "passive_acquire_throttled": true,
+      "passive_targets_clear_after_sight_grace": true,
+      "stale_chase_stops_on_target_loss": true,
+      "reacquire_cooldown_armed_after_target_loss": true,
+      "explicit_targets_preserve_sight_loss": true
+    },
+    "combat_smoke_validator": "unity/Assets/_Bloodlines/Code/Editor/BloodlinesCombatSmokeValidation.cs",
+    "combat_smoke_wrapper": "scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1",
+    "combat_smoke_log": "artifacts/unity-combat-smoke.log",
+    "combat_smoke_pass_line": "Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True.",
+    "bootstrap_runtime_smoke_preserved_green": true,
+    "bootstrap_runtime_smoke_log": "artifacts/unity-bootstrap-runtime-smoke.log",
+    "scene_shell_validation_preserved_green": true,
+    "bootstrap_scene_log": "artifacts/unity-bootstrap-scene-validate.log",
+    "gameplay_scene_log": "artifacts/unity-gameplay-scene-validate.log",
+    "wrapper_lock_required": true,
+    "wrapper_lock_session": "codex-target-acquisition-los",
+    "session_handoff": "docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md"
+  },
   "preservation_guarantees": [
     "nothing_deleted_without_explicit_authorization",
     "all_existing_canon_preserved_in_numbered_folders",
@@ -1101,6 +1133,7 @@
     "unity_combat_foundation_added_additively",
     "unity_combat_distances_normalized_additively_at_authoring_and_baker_seam",
     "unity_projectile_combat_added_additively",
+    "unity_target_acquisition_throttling_and_sight_cleanup_added_additively",
     "tests_remain_green"
   ]
 }
