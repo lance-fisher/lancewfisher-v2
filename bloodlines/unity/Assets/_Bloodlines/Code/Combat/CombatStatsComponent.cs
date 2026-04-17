@@ -1,5 +1,6 @@
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 
 namespace Bloodlines.Components
 {
@@ -15,6 +16,20 @@ namespace Bloodlines.Components
         public float AttackCooldown;
         public float Sight;
         public float CooldownRemaining;
+        public float TargetAcquireIntervalSeconds;
+        public float AcquireCooldownRemaining;
+        public float TargetSightGraceSeconds;
+        public float TargetOutOfSightSeconds;
+
+        public readonly float ResolveTargetAcquireIntervalSeconds()
+        {
+            return math.max(0.05f, TargetAcquireIntervalSeconds > 0f ? TargetAcquireIntervalSeconds : 0.25f);
+        }
+
+        public readonly float ResolveTargetSightGraceSeconds()
+        {
+            return math.max(0.05f, TargetSightGraceSeconds > 0f ? TargetSightGraceSeconds : 0.35f);
+        }
     }
 
     /// <summary>

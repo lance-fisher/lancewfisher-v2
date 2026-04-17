@@ -48,6 +48,11 @@ namespace Bloodlines.Systems
                     !entityManager.HasComponent<PositionComponent>(attackTarget.TargetEntity) ||
                     !entityManager.HasComponent<FactionComponent>(attackTarget.TargetEntity))
                 {
+                    combat.TargetOutOfSightSeconds = 0f;
+                    combat.AcquireCooldownRemaining = combat.ResolveTargetAcquireIntervalSeconds();
+                    var pursuitCommand = moveCommandRw.ValueRO;
+                    StopTargetPursuit(position.ValueRO.Value, ref pursuitCommand);
+                    moveCommandRw.ValueRW = pursuitCommand;
                     combatRw.ValueRW = combat;
                     ecb.RemoveComponent<AttackTargetComponent>(entity);
                     continue;
@@ -59,13 +64,40 @@ namespace Bloodlines.Systems
                 if (targetHealth.Current <= 0f ||
                     !IsFactionHostile(entityManager, faction.ValueRO.FactionId, targetFaction.FactionId))
                 {
+                    combat.TargetOutOfSightSeconds = 0f;
+                    combat.AcquireCooldownRemaining = combat.ResolveTargetAcquireIntervalSeconds();
+                    var pursuitCommand = moveCommandRw.ValueRO;
+                    StopTargetPursuit(position.ValueRO.Value, ref pursuitCommand);
+                    moveCommandRw.ValueRW = pursuitCommand;
                     combatRw.ValueRW = combat;
                     ecb.RemoveComponent<AttackTargetComponent>(entity);
                     continue;
                 }
 
-                float engagementRange = math.max(0.1f, math.max(attackTarget.EngagementRange, combat.AttackRange));
                 float distanceSq = math.distancesq(position.ValueRO.Value, targetPosition.Value);
+                bool preserveTargetBeyondSight = HasPersistentExplicitTarget(entityManager, entity, attackTarget.TargetEntity);
+                float sightRange = math.max(0.1f, combat.Sight);
+                if (!preserveTargetBeyondSight && distanceSq > sightRange * sightRange)
+                {
+                    combat.TargetOutOfSightSeconds += dt;
+                    if (combat.TargetOutOfSightSeconds > combat.ResolveTargetSightGraceSeconds())
+                    {
+                        combat.TargetOutOfSightSeconds = 0f;
+                        combat.AcquireCooldownRemaining = combat.ResolveTargetAcquireIntervalSeconds();
+                        var pursuitCommand = moveCommandRw.ValueRO;
+                        StopTargetPursuit(position.ValueRO.Value, ref pursuitCommand);
+                        moveCommandRw.ValueRW = pursuitCommand;
+                        combatRw.ValueRW = combat;
+                        ecb.RemoveComponent<AttackTargetComponent>(entity);
+                        continue;
+                    }
+
+                    combatRw.ValueRW = combat;
+                    continue;
+                }
+
+                combat.TargetOutOfSightSeconds = 0f;
+                float engagementRange = math.max(0.1f, math.max(attackTarget.EngagementRange, combat.AttackRange));
                 var moveCommand = moveCommandRw.ValueRO;
 
                 if (distanceSq > engagementRange * engagementRange)
@@ -142,6 +174,29 @@ namespace Bloodlines.Systems
                 ElapsedSeconds = 0f,
                 ArrivalRadius = math.max(0.05f, projectileFactory.ProjectileArrivalRadius),
             });
+        }
+
+        private static bool HasPersistentExplicitTarget(
+            EntityManager entityManager,
+            Entity attackerEntity,
+            Entity targetEntity)
+        {
+            if (!entityManager.HasComponent<AttackOrderComponent>(attackerEntity))
+            {
+                return false;
+            }
+
+            var attackOrder = entityManager.GetComponentData<AttackOrderComponent>(attackerEntity);
+            return attackOrder.IsActive &&
+                !attackOrder.IsAttackMoveActive &&
+                attackOrder.ExplicitTargetEntity == targetEntity;
+        }
+
+        private static void StopTargetPursuit(float3 currentPosition, ref MoveCommandComponent moveCommand)
+        {
+            moveCommand.Destination = currentPosition;
+            moveCommand.StoppingDistance = math.max(0.1f, moveCommand.StoppingDistance);
+            moveCommand.IsActive = false;
         }
 
         private static bool IsFactionHostile(
