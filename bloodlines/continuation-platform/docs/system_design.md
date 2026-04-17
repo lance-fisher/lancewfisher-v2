@@ -13,7 +13,10 @@ Implemented now:
 - Authority-scored source registry
 - SQLite continuity store with FTS5 retrieval
 - Last-good-state resolution
-- One agent mode: `resume_last_good_state`
+- Command Deck main-screen conversation surface with persistent local chat session
+- Slash-command local actions for `/resume`, `/rescan`, `/status`, `/search`, `/read`, `/anchor`, and governed draft handling
+- Local-model conversational turns with citations, tool-use budget, and write-draft staging
+- Resume agent mode: `resume_last_good_state`
 - Unity execution-packet generation from the live handoff and continuity stack
 - Dashboard, Agent Workspace, Execution, Tasks, Memory, Diff Panel, Timeline, Handoff Builder, Telemetry, and Config surfaces
 - Governed project-file load and write preview
@@ -73,14 +76,16 @@ What is reused anyway:
    - execution packet
    - telemetry snapshot
 3. GUI loads dashboard status from `/api/bootstrap`.
-4. Agent Workspace calls `/api/agent/resume`.
-5. Execution view reads the generated Unity execution packet and current write posture.
-6. Resume mode builds a context pack from:
+4. Command Deck loads persistent conversation state from `/api/agent-console`.
+5. Command Deck posts either slash commands or natural-language turns into `/api/agent-console/message`.
+6. Natural-language turns build a context pack from:
    - latest continuity files
    - high-authority registry items
    - retrieved supporting chunks
-7. The server returns grounded next-step output with provenance and confidence.
-8. If the operator unlocks the session, the write workbench can preview and apply real canonical file updates through the same platform.
+7. The local model returns either a final answer, a governed write draft, or one intermediate tool request.
+8. The server executes at most one local tool step per loop turn until the conversation reaches a grounded response.
+9. Execution view reads the generated Unity execution packet and current write posture.
+10. If the operator unlocks the session, the write workbench or staged conversation drafts can apply real canonical file updates through the same platform.
 
 ## Write Posture
 
@@ -94,6 +99,7 @@ Once unlocked, project-artifact writes are no longer preview-only:
 - previews show required tier, current and proposed hashes, and unified diff output
 - applies write the real project file, not a mirror, and create automatic backups under `state/backups/`
 - stale-source protection prevents blind overwrite when the target changed after preview
+- Command Deck draft applies use the same tier gate, stale-source protection, and backup flow as the explicit workbench
 
 ## Failure Strategy
 
