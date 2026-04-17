@@ -1,0 +1,519 @@
+using System;
+using Bloodlines.Components;
+using Bloodlines.DataDefinitions;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Mathematics;
+
+namespace Bloodlines.Debug
+{
+    /// <summary>
+    /// AI economic loop driver. Runs per-frame against every faction entity
+    /// that carries an AIEconomyControllerComponent. Assigns idle workers to
+    /// gather, queues villagers, and queues militia against the same canonical
+    /// rules and costs the player uses. Reuses the existing definition caches
+    /// on the debug command surface so that one source of truth covers both
+    /// player and AI training.
+    ///
+    /// Scope for the first AI slice: economic base. Construction, combat
+    /// orders, expansion, and diplomacy come in later AI slices.
+    /// </summary>
+    public sealed partial class BloodlinesDebugCommandSurface
+    {
+        private void TickAIFactions(EntityManager entityManager, float dt)
+        {
+            if (dt <= 0f)
+            {
+                return;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                typeof(AIEconomyControllerComponent));
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var controllers = query.ToComponentDataArray<AIEconomyControllerComponent>(Allocator.Temp);
+
+            for (int i = 0; i < entities.Length; i++)
+            {
+                var controller = controllers[i];
+                if (!controller.Enabled)
+                {
+                    continue;
+                }
+
+                string factionId = factions[i].FactionId.ToString();
+                RefreshAIStatsCache(entityManager, factionId, ref controller);
+
+                controller.GatherAssignmentAccumulator += dt;
+                controller.ProductionAccumulator += dt;
+
+                float gatherInterval = math.max(0.5f, controller.GatherAssignmentIntervalSeconds);
+                float productionInterval = math.max(0.5f, controller.ProductionIntervalSeconds);
+
+                if (controller.GatherAssignmentAccumulator >= gatherInterval)
+                {
+                    controller.GatherAssignmentAccumulator = 0f;
+                    AIAssignIdleWorkersToGather(entityManager, factionId, ref controller);
+                }
+
+                if (controller.ProductionAccumulator >= productionInterval)
+                {
+                    controller.ProductionAccumulator = 0f;
+                    AIRunProductionPlan(entityManager, factionId, ref controller);
+                }
+
+                entityManager.SetComponentData(entities[i], controller);
+            }
+        }
+
+        private void RefreshAIStatsCache(EntityManager entityManager, string factionId, ref AIEconomyControllerComponent controller)
+        {
+            var factionKey = new FixedString32Bytes(factionId);
+            controller.ControlledWorkerCountCached = 0;
+            controller.ControlledMilitiaCountCached = 0;
+            controller.IdleWorkerCountCached = 0;
+            controller.ProductionQueueCountCached = 0;
+
+            var unitQuery = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<UnitTypeComponent>(),
+                ComponentType.ReadOnly<HealthComponent>());
+            using (var unitEntities = unitQuery.ToEntityArray(Allocator.Temp))
+            using (var unitFactions = unitQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp))
+            using (var unitTypes = unitQuery.ToComponentDataArray<UnitTypeComponent>(Allocator.Temp))
+            using (var unitHealth = unitQuery.ToComponentDataArray<HealthComponent>(Allocator.Temp))
+            {
+                for (int i = 0; i < unitEntities.Length; i++)
+                {
+                    if (!unitFactions[i].FactionId.Equals(factionKey) || unitHealth[i].Current <= 0f)
+                    {
+                        continue;
+                    }
+
+                    if (unitTypes[i].Role == UnitRole.Worker)
+                    {
+                        controller.ControlledWorkerCountCached++;
+                        if (!entityManager.HasComponent<WorkerGatherComponent>(unitEntities[i]) ||
+                            entityManager.GetComponentData<WorkerGatherComponent>(unitEntities[i]).Phase == WorkerGatherPhase.Idle)
+                        {
+                            controller.IdleWorkerCountCached++;
+                        }
+                    }
+                    else if (unitTypes[i].TypeId.Equals(new FixedString64Bytes("militia")))
+                    {
+                        controller.ControlledMilitiaCountCached++;
+                    }
+                }
+            }
+
+            var buildingQuery = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<BuildingTypeComponent>());
+            using (var buildingEntities = buildingQuery.ToEntityArray(Allocator.Temp))
+            using (var buildingFactions = buildingQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp))
+            {
+                for (int i = 0; i < buildingEntities.Length; i++)
+                {
+                    if (!buildingFactions[i].FactionId.Equals(factionKey))
+                    {
+                        continue;
+                    }
+
+                    if (entityManager.HasBuffer<ProductionQueueItemElement>(buildingEntities[i]))
+                    {
+                        controller.ProductionQueueCountCached +=
+                            entityManager.GetBuffer<ProductionQueueItemElement>(buildingEntities[i]).Length;
+                    }
+                }
+            }
+        }
+
+        private void AIAssignIdleWorkersToGather(EntityManager entityManager, string factionId, ref AIEconomyControllerComponent controller)
+        {
+            if (controller.IdleWorkerCountCached <= 0)
+            {
+                return;
+            }
+
+            string resourceId = controller.PrimaryGatherResourceId.Length > 0
+                ? controller.PrimaryGatherResourceId.ToString()
+                : "gold";
+
+            if (!TryFindNearestResourceNodeForFaction(entityManager, factionId, resourceId, out Entity nodeEntity, out _))
+            {
+                return;
+            }
+
+            var factionKey = new FixedString32Bytes(factionId);
+            var resourceKey = new FixedString32Bytes(resourceId);
+
+            var workerQuery = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<UnitTypeComponent>(),
+                ComponentType.ReadOnly<HealthComponent>());
+
+            using var entities = workerQuery.ToEntityArray(Allocator.Temp);
+            using var factions = workerQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var unitTypes = workerQuery.ToComponentDataArray<UnitTypeComponent>(Allocator.Temp);
+            using var health = workerQuery.ToComponentDataArray<HealthComponent>(Allocator.Temp);
+
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(factionKey) ||
+                    unitTypes[i].Role != UnitRole.Worker ||
+                    health[i].Current <= 0f)
+                {
+                    continue;
+                }
+
+                if (entityManager.HasComponent<WorkerGatherComponent>(entities[i]))
+                {
+                    var gather = entityManager.GetComponentData<WorkerGatherComponent>(entities[i]);
+                    if (gather.Phase != WorkerGatherPhase.Idle)
+                    {
+                        continue;
+                    }
+                }
+
+                string typeIdString = unitTypes[i].TypeId.ToString();
+                if (!TryResolveUnitDefinition(typeIdString, out var unitDefinition))
+                {
+                    continue;
+                }
+
+                float capacity = math.max(1f, unitDefinition.carryCapacity > 0 ? unitDefinition.carryCapacity : 10f);
+                float rate = math.max(0.1f, unitDefinition.gatherRate > 0f ? unitDefinition.gatherRate : 1f);
+
+                var newGather = new WorkerGatherComponent
+                {
+                    AssignedNode = nodeEntity,
+                    AssignedResourceId = resourceKey,
+                    CarryResourceId = default,
+                    CarryAmount = 0f,
+                    CarryCapacity = capacity,
+                    GatherRate = rate,
+                    Phase = WorkerGatherPhase.Seeking,
+                    GatherRadius = 1.25f,
+                    DepositRadius = 1.75f,
+                };
+
+                if (entityManager.HasComponent<WorkerGatherComponent>(entities[i]))
+                {
+                    entityManager.SetComponentData(entities[i], newGather);
+                }
+                else
+                {
+                    entityManager.AddComponentData(entities[i], newGather);
+                }
+            }
+        }
+
+        private void AIRunProductionPlan(EntityManager entityManager, string factionId, ref AIEconomyControllerComponent controller)
+        {
+            bool wantsVillager = controller.ControlledWorkerCountCached < controller.TargetWorkerCount;
+            bool wantsMilitia =
+                !wantsVillager &&
+                controller.ControlledWorkerCountCached >= controller.TargetWorkerCount &&
+                controller.ControlledMilitiaCountCached < controller.TargetMilitiaCount;
+
+            if (!wantsVillager && !wantsMilitia)
+            {
+                return;
+            }
+
+            if (!TryGetFactionRuntimeSnapshot(entityManager, factionId, out var factionSnapshot))
+            {
+                return;
+            }
+
+            if (wantsVillager)
+            {
+                AITryQueueUnitAtBuilding(entityManager, "command_hall", "villager", in factionSnapshot);
+            }
+            else if (wantsMilitia)
+            {
+                AITryQueueUnitAtBuilding(entityManager, "barracks", "militia", in factionSnapshot);
+            }
+        }
+
+        private bool AITryQueueUnitAtBuilding(
+            EntityManager entityManager,
+            string buildingTypeId,
+            string unitId,
+            in FactionRuntimeSnapshot factionSnapshot)
+        {
+            if (!TryResolveUnitDefinition(unitId, out var unitDefinition))
+            {
+                return false;
+            }
+
+            if (!CanAffordCost(factionSnapshot.Resources, unitDefinition.cost))
+            {
+                return false;
+            }
+
+            int requiredPop = unitDefinition.populationCost;
+            if (factionSnapshot.Population.Available < requiredPop)
+            {
+                return false;
+            }
+
+            var factionKey = new FixedString32Bytes(factionSnapshot.FactionId);
+            var buildingKey = new FixedString64Bytes(buildingTypeId);
+            var buildingQuery = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<BuildingTypeComponent>(),
+                ComponentType.ReadOnly<HealthComponent>());
+
+            using var entities = buildingQuery.ToEntityArray(Allocator.Temp);
+            using var factions = buildingQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var buildingTypes = buildingQuery.ToComponentDataArray<BuildingTypeComponent>(Allocator.Temp);
+            using var health = buildingQuery.ToComponentDataArray<HealthComponent>(Allocator.Temp);
+
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(factionKey) ||
+                    !buildingTypes[i].TypeId.Equals(buildingKey) ||
+                    health[i].Current <= 0f)
+                {
+                    continue;
+                }
+
+                if (entityManager.HasComponent<ConstructionStateComponent>(entities[i]))
+                {
+                    continue;
+                }
+
+                if (!entityManager.HasBuffer<ProductionQueueItemElement>(entities[i]))
+                {
+                    continue;
+                }
+
+                var queue = entityManager.GetBuffer<ProductionQueueItemElement>(entities[i]);
+                if (queue.Length >= 1)
+                {
+                    return false;
+                }
+
+                var queueItem = BuildAIQueueItem(unitId, unitDefinition);
+                queue.Add(queueItem);
+
+                var resources = factionSnapshot.Resources;
+                SpendCost(ref resources, unitDefinition.cost);
+                entityManager.SetComponentData(factionSnapshot.Entity, resources);
+
+                var population = factionSnapshot.Population;
+                population.Available = math.max(0, population.Available - requiredPop);
+                entityManager.SetComponentData(factionSnapshot.Entity, population);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private static ProductionQueueItemElement BuildAIQueueItem(string unitId, UnitDefinition unitDefinition)
+        {
+            float durationSeconds = GetProductionDurationSeconds(unitDefinition);
+            UnitRole role = ResolveUnitRole(unitDefinition.role);
+            SiegeClass siegeClass = ResolveSiegeClass(unitDefinition.siegeClass);
+
+            return new ProductionQueueItemElement
+            {
+                UnitId = new FixedString64Bytes(unitId),
+                DisplayName = new FixedString64Bytes(string.IsNullOrWhiteSpace(unitDefinition.displayName) ? unitId : unitDefinition.displayName),
+                RemainingSeconds = durationSeconds,
+                TotalSeconds = durationSeconds,
+                PopulationCost = unitDefinition.populationCost,
+                BloodPrice = 0,
+                BloodLoadDelta = 0f,
+                MaxHealth = unitDefinition.health,
+                MaxSpeed = unitDefinition.speed,
+                Role = role,
+                SiegeClass = siegeClass,
+                Stage = unitDefinition.stage,
+                GoldCost = unitDefinition.cost?.gold ?? 0,
+                FoodCost = unitDefinition.cost?.food ?? 0,
+                WaterCost = unitDefinition.cost?.water ?? 0,
+                WoodCost = unitDefinition.cost?.wood ?? 0,
+                StoneCost = unitDefinition.cost?.stone ?? 0,
+                IronCost = unitDefinition.cost?.iron ?? 0,
+                InfluenceCost = unitDefinition.cost?.influence ?? 0,
+            };
+        }
+
+        private static bool TryFindNearestResourceNodeForFaction(
+            EntityManager entityManager,
+            string factionId,
+            string resourceId,
+            out Entity nodeEntity,
+            out float3 nodePosition)
+        {
+            nodeEntity = Entity.Null;
+            nodePosition = default;
+
+            if (!TryGetNearestOwnedCommandHallPosition(entityManager, factionId, out float3 reference))
+            {
+                return false;
+            }
+
+            var resourceKey = new FixedString32Bytes(resourceId);
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<ResourceNodeComponent>(),
+                ComponentType.ReadOnly<PositionComponent>());
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var nodes = query.ToComponentDataArray<ResourceNodeComponent>(Allocator.Temp);
+            using var positions = query.ToComponentDataArray<PositionComponent>(Allocator.Temp);
+
+            float bestDistanceSq = float.MaxValue;
+            bool found = false;
+
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!nodes[i].ResourceId.Equals(resourceKey) || nodes[i].Amount <= 0f)
+                {
+                    continue;
+                }
+
+                float distanceSq = math.distancesq(reference, positions[i].Value);
+                if (distanceSq < bestDistanceSq)
+                {
+                    bestDistanceSq = distanceSq;
+                    nodeEntity = entities[i];
+                    nodePosition = positions[i].Value;
+                    found = true;
+                }
+            }
+
+            return found;
+        }
+
+        private static bool TryGetNearestOwnedCommandHallPosition(
+            EntityManager entityManager,
+            string factionId,
+            out float3 position)
+        {
+            position = default;
+            var factionKey = new FixedString32Bytes(factionId);
+            var buildingKey = new FixedString64Bytes("command_hall");
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<BuildingTypeComponent>(),
+                ComponentType.ReadOnly<PositionComponent>(),
+                ComponentType.ReadOnly<HealthComponent>());
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var buildingTypes = query.ToComponentDataArray<BuildingTypeComponent>(Allocator.Temp);
+            using var positions = query.ToComponentDataArray<PositionComponent>(Allocator.Temp);
+            using var health = query.ToComponentDataArray<HealthComponent>(Allocator.Temp);
+
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(factionKey) ||
+                    !buildingTypes[i].TypeId.Equals(buildingKey) ||
+                    health[i].Current <= 0f)
+                {
+                    continue;
+                }
+
+                if (entityManager.HasComponent<ConstructionStateComponent>(entities[i]))
+                {
+                    continue;
+                }
+
+                position = positions[i].Value;
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool TryDebugGetAIEconomyStats(
+            string factionId,
+            out bool aiEnabled,
+            out int controlledWorkerCount,
+            out int idleWorkerCount,
+            out int controlledMilitiaCount,
+            out int productionQueueCount,
+            out int targetWorkerCount,
+            out int targetMilitiaCount)
+        {
+            aiEnabled = false;
+            controlledWorkerCount = 0;
+            idleWorkerCount = 0;
+            controlledMilitiaCount = 0;
+            productionQueueCount = 0;
+            targetWorkerCount = 0;
+            targetMilitiaCount = 0;
+
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<AIEconomyControllerComponent>());
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var controllers = query.ToComponentDataArray<AIEconomyControllerComponent>(Allocator.Temp);
+
+            var key = new FixedString32Bytes(factionId ?? string.Empty);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(key))
+                {
+                    continue;
+                }
+
+                aiEnabled = controllers[i].Enabled;
+                controlledWorkerCount = controllers[i].ControlledWorkerCountCached;
+                idleWorkerCount = controllers[i].IdleWorkerCountCached;
+                controlledMilitiaCount = controllers[i].ControlledMilitiaCountCached;
+                productionQueueCount = controllers[i].ProductionQueueCountCached;
+                targetWorkerCount = controllers[i].TargetWorkerCount;
+                targetMilitiaCount = controllers[i].TargetMilitiaCount;
+                return true;
+            }
+
+            return false;
+        }
+
+        public int CountFactionUnits(string factionId)
+        {
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return 0;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<UnitTypeComponent>(),
+                ComponentType.ReadOnly<HealthComponent>());
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var health = query.ToComponentDataArray<HealthComponent>(Allocator.Temp);
+
+            var key = new FixedString32Bytes(factionId ?? string.Empty);
+            int count = 0;
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(key) || health[i].Current <= 0f)
+                {
+                    continue;
+                }
+                count++;
+            }
+
+            return count;
+        }
+    }
+}
