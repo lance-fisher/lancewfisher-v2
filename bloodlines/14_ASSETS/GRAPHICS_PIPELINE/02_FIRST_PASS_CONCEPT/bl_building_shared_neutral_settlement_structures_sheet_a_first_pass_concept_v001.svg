@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#ebe0cb"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Neutral Settlement Structures Sheet</text>
+  <text x="64" y="116" fill="#6c5a48" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: neutral hamlets, trade stops, ruins, and non-House civic silhouettes</text>
+
+  <g font-family="Arial, sans-serif" font-size="16" fill="#47392c">
+    <text x="92" y="170">Roadside Hamlet</text>
+    <text x="612" y="170">Trade Post And Caravan Court</text>
+    <text x="1128" y="170">Neutral Watch Hamlet</text>
+    <text x="92" y="572">Ruined Manor Cluster</text>
+    <text x="612" y="572">River Stop And Ferry Yard</text>
+    <text x="1128" y="572">Neutral Market Square</text>
+  </g>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g transform="translate(84 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="40" y="92" width="88" height="54" fill="#9d8467" stroke="#5c4e40" stroke-width="4"/>
+    <polygon points="34,92 84,52 134,92" fill="#7a5a36" stroke="#5c4227" stroke-width="4"/>
+    <rect x="170" y="86" width="104" height="60" fill="#a99376" stroke="#665847" stroke-width="4"/>
+    <polygon points="160,86 222,44 284,86" fill="#8a6940" stroke="#644924" stroke-width="4"/>
+    <rect x="300" y="102" width="52" height="44" fill="#b49c7d" stroke="#6e5d48" stroke-width="4"/>
+    <polygon points="294,102 326,78 358,102" fill="#8f6b40" stroke="#644924" stroke-width="4"/>
+    <rect x="24" y="146" width="350" height="16" fill="#8a755a"/>
+    <path d="M0 162 L64 156 L130 164 L206 158 L286 164 L400 156 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Neutral hamlets should read as low-authority shelter, not House-aligned seats.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Clustered roofs, simple fences, and broad road wear carry the read.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#9d8467"/>
+    <rect x="46" y="266" width="22" height="22" fill="#7a5a36"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8f7757"/>
+  </g>
+
+  <g transform="translate(600 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="34" y="102" width="116" height="44" fill="#a88f71" stroke="#665845" stroke-width="4"/>
+    <rect x="152" y="84" width="114" height="62" fill="#b39a7d" stroke="#6e5c48" stroke-width="4"/>
+    <polygon points="146,84 210,46 272,84" fill="#8a6740" stroke="#644924" stroke-width="4"/>
+    <rect x="284" y="94" width="84" height="52" fill="#90775d" stroke="#5c4e40" stroke-width="4"/>
+    <line x1="208" y1="32" x2="208" y2="84" stroke="#654f33" stroke-width="6"/>
+    <rect x="196" y="28" width="24" height="14" fill="#bf9b4f"/>
+    <rect x="24" y="146" width="344" height="16" fill="#846d50"/>
+    <path d="M0 162 L74 154 L162 164 L262 156 L344 164 L400 158 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Trade posts need open frontage, yard logic, and cargo read before detail.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Keep them prosperous but neutral, without settled House trim language.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#b39a7d"/>
+    <rect x="46" y="266" width="22" height="22" fill="#8a6740"/>
+    <rect x="74" y="266" width="22" height="22" fill="#bf9b4f"/>
+  </g>
+
+  <g transform="translate(1116 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="52" y="98" width="90" height="48" fill="#9a8266" stroke="#5d4f40" stroke-width="4"/>
+    <rect x="152" y="46" width="84" height="100" fill="#85705a" stroke="#564739" stroke-width="4"/>
+    <rect x="170" y="24" width="48" height="22" fill="#85705a"/>
+    <rect x="178" y="72" width="14" height="16" fill="#43362b"/>
+    <rect x="198" y="72" width="14" height="16" fill="#43362b"/>
+    <rect x="256" y="92" width="88" height="54" fill="#a99376" stroke="#665845" stroke-width="4"/>
+    <polygon points="248,92 300,60 350,92" fill="#7d5e39" stroke="#644924" stroke-width="4"/>
+    <path d="M0 162 L80 154 L166 164 L260 156 L356 164 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Watch hamlets need one elevated read and one domestic read in the same silhouette.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">This is frontier caution, not true fortification infrastructure.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#85705a"/>
+    <rect x="46" y="266" width="22" height="22" fill="#9a8266"/>
+    <rect x="74" y="266" width="22" height="22" fill="#7d5e39"/>
+  </g>
+
+  <g transform="translate(84 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="42" y="106" width="94" height="40" fill="#8b7660" stroke="#5c4f40" stroke-width="4"/>
+    <polygon points="36,106 88,70 142,106" fill="#6d5537" stroke="#553e27" stroke-width="4"/>
+    <path d="M166 140 L198 98 L236 134 L264 86 L296 132 L336 110 L366 142" fill="none" stroke="#78624b" stroke-width="16" stroke-linecap="round"/>
+    <rect x="208" y="130" width="60" height="16" fill="#8d7459"/>
+    <circle cx="316" cy="144" r="12" fill="#7b6751"/>
+    <circle cx="352" cy="148" r="8" fill="#7b6751"/>
+    <path d="M0 162 L60 156 L138 164 L214 158 L292 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Ruined neutral seats should preserve function memory without clutter fog.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Broken roofs, partial halls, and rubble mounds are enough for the read.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#78624b"/>
+    <rect x="46" y="266" width="22" height="22" fill="#6d5537"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8f7757"/>
+  </g>
+
+  <g transform="translate(600 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="34" y="118" width="332" height="18" fill="#8e7456"/>
+    <rect x="66" y="98" width="28" height="48" fill="#7d6750" stroke="#5a4c3f" stroke-width="4"/>
+    <rect x="306" y="98" width="28" height="48" fill="#7d6750" stroke="#5a4c3f" stroke-width="4"/>
+    <rect x="146" y="86" width="108" height="60" fill="#b29a7b" stroke="#6e5b48" stroke-width="4"/>
+    <polygon points="140,86 202,48 262,86" fill="#8a6740" stroke="#644924" stroke-width="4"/>
+    <rect x="260" y="102" width="58" height="44" fill="#8f7a61" stroke="#5f5142" stroke-width="4"/>
+    <path d="M0 162 L78 156 L170 164 L248 158 L338 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">River stops need a dock, ferry, or storage read before any banner or trim detail.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Keep crossings broad and practical for RTS route recognition.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#8e7456"/>
+    <rect x="46" y="266" width="22" height="22" fill="#5c7b8c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#b29a7b"/>
+  </g>
+
+  <g transform="translate(1116 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="30" y="108" width="338" height="38" fill="#b09a7b" stroke="#6e5d48" stroke-width="4"/>
+    <rect x="48" y="84" width="42" height="24" fill="#8d6d41"/>
+    <rect x="96" y="76" width="54" height="32" fill="#a97f3f"/>
+    <rect x="158" y="82" width="52" height="26" fill="#8c5b3f"/>
+    <rect x="220" y="74" width="48" height="34" fill="#a38d72"/>
+    <rect x="278" y="82" width="56" height="26" fill="#7c5f48"/>
+    <line x1="198" y1="40" x2="198" y2="108" stroke="#614b31" stroke-width="6"/>
+    <rect x="186" y="36" width="24" height="16" fill="#bf9b4f"/>
+    <path d="M0 162 L86 156 L176 164 L272 158 L360 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Neutral markets need stall rhythm, route frontage, and signal flags without House ownership.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Keep the square readable as commerce, not as a permanent dynastic center.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#b09a7b"/>
+    <rect x="46" y="266" width="22" height="22" fill="#bf9b4f"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8c5b3f"/>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use for neutral settlement, trade-stop, ruin, and river-crossing prompting. Keep these silhouettes distinct from dynastic keeps, House markets, and formal fortifications so map-side recognition stays clear at gameplay height.</text>
+</svg>

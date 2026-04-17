@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#ece0cb"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines House Trim Families Sheet</text>
+  <text x="64" y="116" fill="#6c5a48" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: nine-House accent trims, banner cloth direction, and overlay separation on shared base materials</text>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="176" width="470" height="232" rx="18" fill="#fcf7ef"/>
+    <rect x="564" y="176" width="470" height="232" rx="18" fill="#fcf7ef"/>
+    <rect x="1064" y="176" width="470" height="232" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="430" width="470" height="232" rx="18" fill="#fcf7ef"/>
+    <rect x="564" y="430" width="470" height="232" rx="18" fill="#fcf7ef"/>
+    <rect x="1064" y="430" width="470" height="232" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="684" width="470" height="232" rx="18" fill="#fcf7ef"/>
+    <rect x="564" y="684" width="470" height="232" rx="18" fill="#fcf7ef"/>
+    <rect x="1064" y="684" width="470" height="232" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g font-family="Arial, sans-serif" font-size="18" fill="#3b3026">
+    <text x="92" y="210">Trueborn</text>
+    <text x="592" y="210">Highborne</text>
+    <text x="1092" y="210">Ironmark</text>
+    <text x="92" y="464">Goldgrave</text>
+    <text x="592" y="464">Stonehelm</text>
+    <text x="1092" y="464">Westland</text>
+    <text x="92" y="718">Hartvale</text>
+    <text x="592" y="718">Whitehall</text>
+    <text x="1092" y="718">Oldcrest</text>
+  </g>
+
+  <g transform="translate(88 232)" font-family="Arial, sans-serif">
+    <rect x="0" y="0" width="74" height="74" fill="#b7c4d1"/>
+    <rect x="86" y="0" width="74" height="74" fill="#f0d38c"/>
+    <rect x="186" y="0" width="190" height="92" rx="10" fill="#d5dde4" stroke="#8593a1" stroke-width="4"/>
+    <rect x="210" y="22" width="40" height="44" fill="#b7c4d1"/>
+    <rect x="252" y="30" width="84" height="26" fill="#f0d38c"/>
+    <text x="0" y="126" fill="#3f3328" font-size="15">Pale stone and calm gilded trim. Institutional, not flamboyant.</text>
+  </g>
+
+  <g transform="translate(588 232)" font-family="Arial, sans-serif">
+    <rect x="0" y="0" width="74" height="74" fill="#8a6b2b"/>
+    <rect x="86" y="0" width="74" height="74" fill="#e2bf62"/>
+    <rect x="186" y="0" width="190" height="92" rx="10" fill="#d4ccb8" stroke="#8e7952" stroke-width="4"/>
+    <rect x="208" y="20" width="42" height="48" fill="#8a6b2b"/>
+    <rect x="252" y="28" width="86" height="30" fill="#e2bf62"/>
+    <text x="0" y="126" fill="#3f3328" font-size="15">Gold is controlled and vertical. Refinement, not opulence spam.</text>
+  </g>
+
+  <g transform="translate(1088 232)" font-family="Arial, sans-serif">
+    <rect x="0" y="0" width="74" height="74" fill="#2c3137"/>
+    <rect x="86" y="0" width="74" height="74" fill="#b6441f"/>
+    <rect x="186" y="0" width="190" height="92" rx="10" fill="#6d5842" stroke="#43484e" stroke-width="4"/>
+    <rect x="208" y="20" width="42" height="48" fill="#2c3137"/>
+    <rect x="252" y="28" width="86" height="30" fill="#b6441f"/>
+    <text x="0" y="126" fill="#3f3328" font-size="15">Ember accent stays disciplined. Weight and soot before heraldic flourish.</text>
+  </g>
+
+  <g transform="translate(88 486)" font-family="Arial, sans-serif">
+    <rect x="0" y="0" width="74" height="74" fill="#b78819"/>
+    <rect x="86" y="0" width="74" height="74" fill="#f3d55b"/>
+    <rect x="186" y="0" width="190" height="92" rx="10" fill="#dbc9ad" stroke="#8f7341" stroke-width="4"/>
+    <rect x="208" y="20" width="42" height="48" fill="#b78819"/>
+    <rect x="252" y="28" width="86" height="30" fill="#f3d55b"/>
+    <text x="0" y="126" fill="#3f3328" font-size="15">Prosperity comes through upkeep and trim discipline, not jewel-tone excess.</text>
+  </g>
+
+  <g transform="translate(588 486)" font-family="Arial, sans-serif">
+    <rect x="0" y="0" width="74" height="74" fill="#6a543d"/>
+    <rect x="86" y="0" width="74" height="74" fill="#c0a37a"/>
+    <rect x="186" y="0" width="190" height="92" rx="10" fill="#b9a289" stroke="#79614a" stroke-width="4"/>
+    <rect x="208" y="20" width="42" height="48" fill="#6a543d"/>
+    <rect x="252" y="28" width="86" height="30" fill="#c0a37a"/>
+    <text x="0" y="126" fill="#3f3328" font-size="15">Warm fortress trim and brace weight. Defensive identity without theatricality.</text>
+  </g>
+
+  <g transform="translate(1088 486)" font-family="Arial, sans-serif">
+    <rect x="0" y="0" width="74" height="74" fill="#922a22"/>
+    <rect x="86" y="0" width="74" height="74" fill="#df7143"/>
+    <rect x="186" y="0" width="190" height="92" rx="10" fill="#cab59c" stroke="#7d4a3a" stroke-width="4"/>
+    <rect x="208" y="20" width="42" height="48" fill="#922a22"/>
+    <rect x="252" y="28" width="86" height="30" fill="#df7143"/>
+    <text x="0" y="126" fill="#3f3328" font-size="15">Frontier red should read as travel-worn resolve, not bright parade saturation.</text>
+  </g>
+
+  <g transform="translate(88 740)" font-family="Arial, sans-serif">
+    <rect x="0" y="0" width="74" height="74" fill="#9d5a23"/>
+    <rect x="86" y="0" width="74" height="74" fill="#eb9a42"/>
+    <rect x="186" y="0" width="190" height="92" rx="10" fill="#d4b999" stroke="#8a6235" stroke-width="4"/>
+    <rect x="208" y="20" width="42" height="48" fill="#9d5a23"/>
+    <rect x="252" y="28" width="86" height="30" fill="#eb9a42"/>
+    <text x="0" y="126" fill="#3f3328" font-size="15">Harvest warmth and civic defense. Keep it human and settled, not druidic fantasy.</text>
+  </g>
+
+  <g transform="translate(588 740)" font-family="Arial, sans-serif">
+    <rect x="0" y="0" width="74" height="74" fill="#80705c"/>
+    <rect x="86" y="0" width="74" height="74" fill="#d4c3aa"/>
+    <rect x="186" y="0" width="190" height="92" rx="10" fill="#ddd3c5" stroke="#8b7c68" stroke-width="4"/>
+    <rect x="208" y="20" width="42" height="48" fill="#80705c"/>
+    <rect x="252" y="28" width="86" height="30" fill="#d4c3aa"/>
+    <text x="0" y="126" fill="#3f3328" font-size="15">Official neutrals, dispatch clarity, and seal-like trim. Precise, never flamboyant.</text>
+  </g>
+
+  <g transform="translate(1088 740)" font-family="Arial, sans-serif">
+    <rect x="0" y="0" width="74" height="74" fill="#51565d"/>
+    <rect x="86" y="0" width="74" height="74" fill="#c7c5c0"/>
+    <rect x="186" y="0" width="190" height="92" rx="10" fill="#bbb7b0" stroke="#676d74" stroke-width="4"/>
+    <rect x="208" y="20" width="42" height="48" fill="#51565d"/>
+    <rect x="252" y="28" width="86" height="30" fill="#c7c5c0"/>
+    <text x="0" y="126" fill="#3f3328" font-size="15">Age-worn continuity, repaired lineage layers, and memory-weighted restraint.</text>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use with House identity packs and material boards. These trims are overlays on shared material families, not replacements. Keep House separation strong without pushing the project into costume excess or over-saturated faction coding.</text>
+</svg>

@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: verdant_warden
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:UnitDefinition
+  id: verdant_warden
+  displayName: Verdant Warden
+  stage: 1
+  role: unique-melee
+  siegeClass: 
+  prototypeEnabled: 1
+  populationCost: 1
+  health: 135
+  speed: 62
+  attackDamage: 12
+  attackRange: 18
+  attackCooldown: 1
+  sight: 142
+  projectileSpeed: 0
+  carryCapacity: 0
+  gatherRate: 0
+  buildRate: 0
+  structuralDamageMultiplier: 0
+  antiUnitDamageMultiplier: 0
+  cost:
+    gold: 85
+    food: 15
+    water: 0
+    wood: 35
+    stone: 0
+    iron: 0
+    influence: 0
+  house: hartvale
+  notes:
+  - Canonical Hartvale unique unit with Off 4 / Def 5 profile, now live behind Hartvale
+    house-gated prototype access.
+  - Heavier health pool and armor than Ironmark Axeman reflecting defensive-tendency
+    house identity.
+  - Food cost component reflects Hartvale's pastoral identity. Session 11 added to
+    data, Session 63 enables live prototype training.
+  runtimePrefab: {fileID: 0}
+  icon: {fileID: 0}
+  selectClip: {fileID: 0}
+  deathClip: {fileID: 0}

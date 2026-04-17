@@ -59,15 +59,21 @@
   {
     "id": "stonehelm",
     "name": "Stonehelm",
-    "status": "settled-visual-only",
+    "status": "partially-locked",
     "hairColor": "Brown",
     "primaryColor": "#6a543d",
     "accentColor": "#c0a37a",
+    "societalAdvantage": "Fortification cost discount (canonical 20%)",
+    "mechanics": {
+      "fortificationCostMultiplier": 0.8,
+      "fortificationBuildSpeedMultiplier": 1.2
+    },
     "notes": [
       "Canonically linked to defense and fortification tendencies",
-      "Used as the placeholder enemy house in the first skirmish"
+      "Second playable house in Session 11 via URL flag play.html?house=stonehelm",
+      "Fortification cost discount of 20% and build-speed multiplier of 1.2 reflect the canonical defensive-tendency profile from 04_SYSTEMS/TERRITORY_SYSTEM.md"
     ],
-    "prototypePlayable": false
+    "prototypePlayable": true
   },
   {
     "id": "westland",
@@ -89,11 +95,14 @@
     "hairColor": "Orange",
     "primaryColor": "#9d5a23",
     "accentColor": "#eb9a42",
+    "uniqueUnit": "verdant_warden",
     "notes": [
-      "Verdant Warden is the settled unique unit",
+      "Verdant Warden is the settled unique unit (canonical Off 4 / Def 5)",
+      "Session 11 added verdant_warden to data/units.json with prototypeEnabled: false pending Hartvale playability",
+      "Session 63 enables Hartvale prototype playability and house-gated Verdant Warden access through the live command surface",
       "Broader strategic profile remains pending after 2026-04-07 canon reset"
     ],
-    "prototypePlayable": false
+    "prototypePlayable": true
   },
   {
     "id": "whitehall",

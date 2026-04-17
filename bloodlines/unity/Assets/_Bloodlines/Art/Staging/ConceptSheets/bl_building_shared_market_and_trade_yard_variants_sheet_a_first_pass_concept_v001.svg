@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#ece0cb"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Market And Trade Yard Variants Sheet</text>
+  <text x="64" y="116" fill="#6c5a48" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: trade-facing building families that remain clear at gameplay height through frontage, route logic, and cargo staging</text>
+
+  <g font-family="Arial, sans-serif" font-size="16" fill="#47392c">
+    <text x="92" y="170">Route Market</text>
+    <text x="612" y="170">Exchange Hall</text>
+    <text x="1128" y="170">Riverside Mart</text>
+    <text x="92" y="572">Customs Yard</text>
+    <text x="612" y="572">Counting Court</text>
+    <text x="1128" y="572">Waystation Market</text>
+  </g>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g transform="translate(84 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="34" y="118" width="330" height="18" fill="#a58e71" stroke="#675845" stroke-width="4"/>
+    <rect x="52" y="80" width="56" height="38" fill="#b78443"/>
+    <rect x="124" y="72" width="60" height="46" fill="#9f6f3d"/>
+    <rect x="200" y="82" width="52" height="36" fill="#c89f58"/>
+    <rect x="266" y="72" width="58" height="46" fill="#8f5c3f"/>
+    <rect x="92" y="36" width="34" height="24" fill="#305e86"/>
+    <rect x="238" y="36" width="34" height="24" fill="#8d2030"/>
+    <path d="M0 162 L64 156 L144 164 L232 158 L326 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">Route markets read through stall rhythm and broad frontage rather than roof complexity.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">Keep the trade face open and countable. No clutter walls.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#b78443"/>
+    <rect x="46" y="266" width="22" height="22" fill="#305e86"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8f5c3f"/>
+  </g>
+
+  <g transform="translate(600 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="54" y="88" width="292" height="58" fill="#c6b191" stroke="#7a674f" stroke-width="4"/>
+    <polygon points="40,88 114,42 188,88" fill="#8a673f" stroke="#644924" stroke-width="4"/>
+    <polygon points="182,88 254,42 330,88" fill="#7c5d39" stroke="#604322" stroke-width="4"/>
+    <line x1="200" y1="36" x2="200" y2="88" stroke="#5f4a33" stroke-width="6"/>
+    <rect x="188" y="26" width="24" height="16" fill="#bf9b4f"/>
+    <rect x="82" y="106" width="42" height="40" fill="#6e5847"/>
+    <rect x="276" y="106" width="42" height="40" fill="#6e5847"/>
+    <path d="M0 162 L70 154 L158 164 L238 158 L326 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">Exchange halls should feel civic and prosperous without reading as palaces or temples.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">Signal a commercial hub through hall width, signage, and route-facing entry.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#bf9b4f"/>
+    <rect x="46" y="266" width="22" height="22" fill="#c6b191"/>
+    <rect x="74" y="266" width="22" height="22" fill="#6e5847"/>
+  </g>
+
+  <g transform="translate(1116 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="38" y="120" width="332" height="16" fill="#8f7758"/>
+    <rect x="60" y="86" width="94" height="34" fill="#b28955"/>
+    <rect x="170" y="76" width="96" height="44" fill="#c29c58"/>
+    <rect x="284" y="88" width="58" height="32" fill="#926d41"/>
+    <rect x="40" y="136" width="330" height="14" fill="#607f90"/>
+    <circle cx="90" cy="146" r="6" fill="#ece0cb"/>
+    <circle cx="310" cy="146" r="6" fill="#ece0cb"/>
+    <path d="M0 162 L72 156 L156 164 L238 158 L326 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">Riverside markets need the water line and loading edge to read immediately.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">Do not let quays or boats overwhelm the market function.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#607f90"/>
+    <rect x="46" y="266" width="22" height="22" fill="#c29c58"/>
+    <rect x="74" y="266" width="22" height="22" fill="#926d41"/>
+  </g>
+
+  <g transform="translate(84 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="34" y="120" width="330" height="18" fill="#8f7758"/>
+    <rect x="58" y="70" width="42" height="50" fill="#8b7357" stroke="#5d4f40" stroke-width="4"/>
+    <rect x="300" y="70" width="42" height="50" fill="#8b7357" stroke="#5d4f40" stroke-width="4"/>
+    <line x1="100" y1="86" x2="300" y2="86" stroke="#5b4633" stroke-width="6"/>
+    <line x1="100" y1="104" x2="300" y2="104" stroke="#5b4633" stroke-width="6"/>
+    <rect x="176" y="52" width="48" height="22" fill="#d7c48e" stroke="#7f6c46" stroke-width="3"/>
+    <text x="186" y="68" fill="#5b4633" font-family="Arial, sans-serif" font-size="12">TOLL</text>
+    <path d="M0 162 L64 156 L150 164 L234 158 L322 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">Customs yards should read as controlled throughput, not military checkpoints.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">Barriers, scales, and ledger posts define the lane.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#d7c48e"/>
+    <rect x="46" y="266" width="22" height="22" fill="#8b7357"/>
+    <rect x="74" y="266" width="22" height="22" fill="#5b4633"/>
+  </g>
+
+  <g transform="translate(600 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="60" y="88" width="280" height="58" fill="#b59c7c" stroke="#6f5d49" stroke-width="4"/>
+    <polygon points="48,88 118,44 188,88" fill="#86623d" stroke="#644924" stroke-width="4"/>
+    <polygon points="178,88 246,44 324,88" fill="#7d5c38" stroke="#624723" stroke-width="4"/>
+    <rect x="164" y="104" width="72" height="42" fill="#6e5847"/>
+    <rect x="178" y="58" width="44" height="18" fill="#ece0cb" stroke="#7a674f" stroke-width="3"/>
+    <path d="M0 162 L70 156 L154 164 L238 158 L324 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">Counting courts should feel administrative and trade-literate, not noble-residential.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">Ledger rooms, secure doors, and measured symmetry carry the read.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#ece0cb"/>
+    <rect x="46" y="266" width="22" height="22" fill="#6e5847"/>
+    <rect x="74" y="266" width="22" height="22" fill="#86623d"/>
+  </g>
+
+  <g transform="translate(1116 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="42" y="118" width="316" height="18" fill="#8f7758"/>
+    <rect x="58" y="90" width="48" height="28" fill="#b78443"/>
+    <rect x="122" y="80" width="54" height="38" fill="#c29c58"/>
+    <rect x="194" y="86" width="52" height="32" fill="#8f5c3f"/>
+    <rect x="262" y="78" width="62" height="40" fill="#b0884a"/>
+    <rect x="92" y="42" width="32" height="22" fill="#305e86"/>
+    <rect x="258" y="38" width="32" height="22" fill="#8d2030"/>
+    <path d="M0 162 L72 156 L156 164 L240 158 L324 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="13">Waystation markets should bridge roadside supply and low-density exchange.</text>
+    <text x="18" y="244" fill="#695544" font-family="Arial, sans-serif" font-size="11">Keep the footprint modest and immediately useful at route scale.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#305e86"/>
+    <rect x="46" y="266" width="22" height="22" fill="#c29c58"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8d2030"/>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use for trade-family prompting and settlement-economy lookdev. Keep route direction, frontage, and cargo logic stronger than decorative complexity.</text>
+</svg>

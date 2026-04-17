@@ -1,0 +1,117 @@
+{
+  "schema": "bloodlines.graphics.batch_review_registry.v1",
+  "established": "2026-04-16",
+  "scope": "graphics_lane_batches_01_through_08",
+  "review_matrix": "13_AUDIO_VISUAL/GRAPHICS_PIPELINE/VISUAL_REVIEW_MATRIX_2026-04-16.md",
+  "preview_surface": "14_ASSETS/GRAPHICS_PIPELINE/02_FIRST_PASS_CONCEPT/preview.html",
+  "testbeds": {
+    "visual_readability": "unity/Assets/_Bloodlines/Scenes/Testbeds/VisualReadability/VisualReadability_Testbed.unity",
+    "terrain_lookdev": "unity/Assets/_Bloodlines/Scenes/Testbeds/TerrainLookdev/TerrainLookdev_Testbed.unity",
+    "material_lookdev": "unity/Assets/_Bloodlines/Scenes/Testbeds/MaterialLookdev/MaterialLookdev_Testbed.unity",
+    "icon_legibility": "unity/Assets/_Bloodlines/Scenes/Testbeds/IconLegibility/IconLegibility_Testbed.unity"
+  },
+  "batches": [
+    {
+      "batchId": "batch_01_first_pass_sheets",
+      "reviewOutcome": "placeholder_only",
+      "integrationGate": "not_integration_ready",
+      "issueTags": [],
+      "unityEvidence": [
+        "visual_readability_shared_roster_board_present",
+        "icon_legibility_resource_command_board_present",
+        "icon_legibility_founding_emblems_board_present"
+      ],
+      "nextAction": "directed_review_against_later_house_and_icon_work"
+    },
+    {
+      "batchId": "batch_02_environment_banners_portraits",
+      "reviewOutcome": "placeholder_only",
+      "integrationGate": "not_integration_ready",
+      "issueTags": [],
+      "unityEvidence": [
+        "terrain_lookdev_biome_board_present",
+        "material_lookdev_banner_board_present",
+        "material_lookdev_emblem_board_present",
+        "icon_legibility_banner_board_present"
+      ],
+      "nextAction": "review_banner_and_emblem_contrast_against_later_house_and_covenant_work"
+    },
+    {
+      "batchId": "batch_03_first_house_silhouette_sheets",
+      "reviewOutcome": "placeholder_only",
+      "integrationGate": "not_integration_ready",
+      "issueTags": [],
+      "unityEvidence": [
+        "visual_readability_ironmark_board_present",
+        "visual_readability_stonehelm_board_present",
+        "visual_readability_hartvale_board_present",
+        "visual_readability_trueborn_board_present"
+      ],
+      "nextAction": "review_against_full_nine_house_wall"
+    },
+    {
+      "batchId": "batch_04_fortification_terrain_water_followups",
+      "reviewOutcome": "placeholder_only",
+      "integrationGate": "not_integration_ready",
+      "issueTags": [],
+      "unityEvidence": [
+        "terrain_lookdev_transition_board_present",
+        "terrain_lookdev_resource_ground_board_present",
+        "terrain_lookdev_water_infrastructure_board_present"
+      ],
+      "nextAction": "review_against_construction_and_breach_state_priorities"
+    },
+    {
+      "batchId": "batch_05_remaining_house_silhouette_sheets",
+      "reviewOutcome": "placeholder_only",
+      "integrationGate": "not_integration_ready",
+      "issueTags": [],
+      "unityEvidence": [
+        "visual_readability_full_nine_house_board_wall_present"
+      ],
+      "nextAction": "formal_dynasty_confusion_review_across_all_nine_houses"
+    },
+    {
+      "batchId": "batch_06_neutral_faith_civic_and_material_foundation_boards",
+      "reviewOutcome": "placeholder_only",
+      "integrationGate": "not_integration_ready",
+      "issueTags": [],
+      "unityEvidence": [
+        "material_lookdev_neutral_settlement_board_present",
+        "material_lookdev_faith_structure_board_present",
+        "material_lookdev_civic_support_board_present",
+        "material_lookdev_foundation_board_present",
+        "material_lookdev_house_trim_board_present"
+      ],
+      "nextAction": "review_material_value_control_before_any_placeholder_promotion"
+    },
+    {
+      "batchId": "batch_07_settlement_support_and_water_followups",
+      "reviewOutcome": "placeholder_only",
+      "integrationGate": "not_integration_ready",
+      "issueTags": [],
+      "unityEvidence": [
+        "visual_readability_market_storehouse_granary_board_present",
+        "visual_readability_housing_tiers_board_present",
+        "visual_readability_well_and_water_support_board_present",
+        "visual_readability_dock_ferry_landing_board_present",
+        "visual_readability_covenant_site_progression_board_present"
+      ],
+      "nextAction": "directed_support_structure_role_recognition_review"
+    },
+    {
+      "batchId": "batch_08_settlement_variants_and_covenant_overlays",
+      "reviewOutcome": "placeholder_only",
+      "integrationGate": "not_integration_ready",
+      "issueTags": [],
+      "unityEvidence": [
+        "material_lookdev_house_overlay_support_board_present",
+        "material_lookdev_market_trade_yard_board_present",
+        "material_lookdev_storehouse_granary_variants_board_present",
+        "material_lookdev_housing_cluster_courtyard_board_present",
+        "material_lookdev_covenant_overlay_architecture_board_present"
+      ],
+      "nextAction": "directed_house_overlay_and_covenant_overlay_review"
+    }
+  ]
+}

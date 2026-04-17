@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#eadfcf"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e5" stroke="#2d2620" stroke-width="3"/>
+  <text x="64" y="84" fill="#241f1b" font-family="Georgia, serif" font-size="34">Bloodlines House Highborne Military Silhouettes</text>
+  <text x="64" y="116" fill="#69584a" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Scope: house treatment study, not a roster rewrite</text>
+
+  <g transform="translate(1160 58)">
+    <rect width="344" height="112" rx="16" fill="#efe4d3" stroke="#9c8566" stroke-width="2"/>
+    <text x="18" y="28" fill="#392f28" font-family="Arial, sans-serif" font-size="16">Palette / Material Read</text>
+    <rect x="18" y="42" width="26" height="26" rx="6" fill="#8a6b2b"/>
+    <rect x="52" y="42" width="26" height="26" rx="6" fill="#e2bf62"/>
+    <rect x="86" y="42" width="26" height="26" rx="6" fill="#5f4d39"/>
+    <rect x="120" y="42" width="26" height="26" rx="6" fill="#b8ada0"/>
+    <text x="18" y="92" fill="#5f4d40" font-family="Arial, sans-serif" font-size="13">Warm bronze, disciplined gold, dark court leather, pale cloth restraint. Vertical elegance before ornament.</text>
+  </g>
+
+  <g stroke="#baa489" stroke-width="2">
+    <rect x="64" y="190" width="340" height="322" rx="20" fill="#fbf5eb"/>
+    <rect x="438" y="190" width="340" height="322" rx="20" fill="#fbf5eb"/>
+    <rect x="812" y="190" width="340" height="322" rx="20" fill="#fbf5eb"/>
+    <rect x="1186" y="190" width="340" height="322" rx="20" fill="#fbf5eb"/>
+    <rect x="64" y="548" width="1462" height="404" rx="20" fill="#fbf5eb"/>
+  </g>
+
+  <g font-family="Arial, sans-serif">
+    <text x="90" y="228" fill="#352c26" font-size="18">Noble line levy</text>
+    <text x="464" y="228" fill="#352c26" font-size="18">Polearm guard lane</text>
+    <text x="838" y="228" fill="#352c26" font-size="18">Court archer lane</text>
+    <text x="1212" y="228" fill="#352c26" font-size="18">Command lane</text>
+  </g>
+
+  <g transform="translate(98 252)">
+    <rect width="272" height="176" rx="14" fill="#e8ddcc"/>
+    <circle cx="56" cy="40" r="17" fill="#2a221a"/>
+    <rect x="44" y="56" width="24" height="68" rx="10" fill="#8a6b2b"/>
+    <rect x="34" y="72" width="12" height="42" rx="6" fill="#bba56c"/>
+    <rect x="66" y="72" width="12" height="42" rx="6" fill="#bba56c"/>
+    <rect x="47" y="122" width="8" height="32" rx="4" fill="#2a231d"/>
+    <rect x="57" y="122" width="8" height="32" rx="4" fill="#2a231d"/>
+    <path d="M106 72 L148 58 L168 72 L168 126 L144 140 L106 126 Z" fill="#d9c7a0" stroke="#7c6531" stroke-width="4"/>
+    <text x="188" y="60" fill="#352d28" font-size="15">Slender line read with</text>
+    <text x="188" y="84" fill="#645243" font-size="13">maintained noble kit and</text>
+    <text x="188" y="108" fill="#645243" font-size="13">controlled trim, not parade bulk.</text>
+  </g>
+
+  <g transform="translate(472 252)">
+    <rect width="272" height="176" rx="14" fill="#e8ddcc"/>
+    <circle cx="54" cy="38" r="17" fill="#2a231b"/>
+    <rect x="42" y="54" width="26" height="70" rx="10" fill="#7f6329"/>
+    <rect x="46" y="122" width="8" height="32" rx="4" fill="#2a231d"/>
+    <rect x="56" y="122" width="8" height="32" rx="4" fill="#2a231d"/>
+    <rect x="106" y="34" width="10" height="112" rx="5" fill="#6c5531"/>
+    <path d="M116 36 L164 36 L178 52 L164 70 L116 70 Z" fill="#d8c082" stroke="#7f6329" stroke-width="4"/>
+    <polygon points="164,36 198,52 164,70" fill="#e2bf62"/>
+    <text x="198" y="60" fill="#352d28" font-size="15">Narrow polearm authority,</text>
+    <text x="198" y="84" fill="#645243" font-size="13">crest shapes kept restrained,</text>
+    <text x="198" y="108" fill="#645243" font-size="13">no fantasy filigree overload.</text>
+  </g>
+
+  <g transform="translate(846 252)">
+    <rect width="272" height="176" rx="14" fill="#e8ddcc"/>
+    <circle cx="54" cy="40" r="16" fill="#30271f"/>
+    <rect x="44" y="56" width="22" height="66" rx="9" fill="#8a6b2b"/>
+    <rect x="48" y="120" width="7" height="30" rx="4" fill="#2a231d"/>
+    <rect x="57" y="120" width="7" height="30" rx="4" fill="#2a231d"/>
+    <path d="M114 38 Q86 90 114 144" fill="none" stroke="#6c5531" stroke-width="8"/>
+    <line x1="114" y1="38" x2="114" y2="144" stroke="#d8d0c2" stroke-width="2"/>
+    <line x1="114" y1="92" x2="162" y2="92" stroke="#aa9f91" stroke-width="4"/>
+    <polygon points="162,92 152,86 152,98" fill="#aa9f91"/>
+    <text x="182" y="60" fill="#352d28" font-size="15">Court archer read should feel</text>
+    <text x="182" y="84" fill="#645243" font-size="13">precise and elevated, not light,</text>
+    <text x="182" y="108" fill="#645243" font-size="13">fragile, or theatrical.</text>
+  </g>
+
+  <g transform="translate(1220 252)">
+    <rect width="272" height="176" rx="14" fill="#e8ddcc"/>
+    <circle cx="56" cy="38" r="17" fill="#2a221b"/>
+    <rect x="44" y="54" width="26" height="70" rx="10" fill="#7f6329"/>
+    <path d="M34 66 L44 56 L70 56 L82 66 L82 112 L68 124 L44 124 L34 112 Z" fill="none" stroke="#e2bf62" stroke-width="5"/>
+    <rect x="47" y="122" width="8" height="30" rx="4" fill="#2a231d"/>
+    <rect x="57" y="122" width="8" height="30" rx="4" fill="#2a231d"/>
+    <rect x="106" y="42" width="8" height="100" rx="4" fill="#6c5531"/>
+    <polygon points="114,42 154,54 114,68" fill="#d9c7a0"/>
+    <text x="182" y="60" fill="#352d28" font-size="15">Command reads as court</text>
+    <text x="182" y="84" fill="#645243" font-size="13">authority and lineage, not</text>
+    <text x="182" y="108" fill="#645243" font-size="13">imperial spectacle.</text>
+  </g>
+
+  <g transform="translate(88 574)" font-family="Arial, sans-serif">
+    <text x="0" y="24" fill="#322922" font-size="22">House Read Rules</text>
+    <text x="0" y="62" fill="#5e4d40" font-size="16">1. Highborne must read as refined vertical authority: narrower silhouettes, cleaner posture, and expensive maintenance without fantasy excess.</text>
+    <text x="0" y="92" fill="#5e4d40" font-size="16">2. Gold accents should appear as rank logic, trim, and controlled heraldic focus rather than glitter or parade saturation.</text>
+    <text x="0" y="122" fill="#5e4d40" font-size="16">3. Polearm and archer lanes should feel deliberate and noble, but still practical for an RTS battlefield read.</text>
+
+    <text x="0" y="178" fill="#322922" font-size="22">What To Avoid</text>
+    <text x="0" y="216" fill="#5e4d40" font-size="16">- Do not drift into jeweled fantasy nobility, floating cloth, or cathedral-guard excess.</text>
+    <text x="0" y="246" fill="#5e4d40" font-size="16">- Do not confuse Highborne with Trueborn's silver-blue state authority or Goldgrave's trade-backed mercenary polish.</text>
+    <text x="0" y="276" fill="#5e4d40" font-size="16">- Do not let the silhouette become so thin that it loses line-fighter readability at gameplay height.</text>
+
+    <text x="0" y="332" fill="#322922" font-size="22">Use In Review</text>
+    <text x="0" y="370" fill="#5e4d40" font-size="16">This sheet is a silhouette and material-direction board for future prompting, 3D blockout, icon treatment, and approved staging review.</text>
+    <text x="0" y="400" fill="#5e4d40" font-size="16">It does not declare new canon units beyond the settled Highborne visual treatment lane.</text>
+  </g>
+
+  <text x="64" y="992" fill="#6a5848" font-family="Arial, sans-serif" font-size="15">House-specific silhouette board for governed graphics-lane review. Keep additive to canon and stage only through approved Unity staging surfaces.</text>
+</svg>

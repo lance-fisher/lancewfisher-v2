@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: siege_engineer
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:UnitDefinition
+  id: siege_engineer
+  displayName: Siege Engineer
+  stage: 2
+  role: engineer-specialist
+  siegeClass: 
+  prototypeEnabled: 1
+  populationCost: 1
+  health: 72
+  speed: 56
+  attackDamage: 4
+  attackRange: 18
+  attackCooldown: 1.2
+  sight: 138
+  projectileSpeed: 0
+  carryCapacity: 0
+  gatherRate: 0
+  buildRate: 0
+  structuralDamageMultiplier: 0
+  antiUnitDamageMultiplier: 0
+  cost:
+    gold: 80
+    food: 0
+    water: 0
+    wood: 45
+    stone: 0
+    iron: 25
+    influence: 0
+  house: 
+  notes:
+  - Dedicated siege specialist rather than standard infantry.
+  - Provides breach assessment, engine tending, earthwork support, and repair for
+    nearby siege assets.
+  runtimePrefab: {fileID: 0}
+  icon: {fileID: 0}
+  selectClip: {fileID: 0}
+  deathClip: {fileID: 0}

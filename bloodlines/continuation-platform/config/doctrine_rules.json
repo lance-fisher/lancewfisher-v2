@@ -1,0 +1,60 @@
+{
+  "scope": "Bloodlines only",
+  "rules": [
+    {
+      "id": "bl_scope_fence",
+      "priority": "critical",
+      "rule": "Never ingest non-Bloodlines material into the Bloodlines knowledge graph."
+    },
+    {
+      "id": "bl_preserve_first",
+      "priority": "critical",
+      "rule": "Preserve richer prior Bloodlines material. Do not replace it with thinner summaries."
+    },
+    {
+      "id": "bl_no_mvp_reduction",
+      "priority": "critical",
+      "rule": "Do not reduce Bloodlines to MVP scope or bottlenecked design."
+    },
+    {
+      "id": "bl_full_canon_unity",
+      "priority": "critical",
+      "rule": "Bloodlines ships as the full canonical design-bible realization in Unity 6.3 LTS with DOTS/ECS. Do not reframe the project as a smaller release."
+    },
+    {
+      "id": "bl_browser_frozen_spec",
+      "priority": "critical",
+      "rule": "The browser runtime is frozen as behavioral specification only. Do not add new systems there. Port canon into Unity instead."
+    },
+    {
+      "id": "bl_unity_only_work_target",
+      "priority": "critical",
+      "rule": "The only active Unity work target is unity/ inside the Bloodlines root. Do not work in the Bloodlines URP stub or any alternate Unity surface."
+    },
+    {
+      "id": "bl_no_scope_cut_language",
+      "priority": "critical",
+      "rule": "Do not recommend scope cuts, phased-release reduction, or infeasibility framing. Choose the next concrete Unity implementation step instead."
+    },
+    {
+      "id": "bl_provenance",
+      "priority": "high",
+      "rule": "Every recommendation must surface the files that informed it."
+    },
+    {
+      "id": "bl_continuity",
+      "priority": "high",
+      "rule": "Resume from the last good state rather than restarting from a cold plan."
+    },
+    {
+      "id": "bl_capability_honesty",
+      "priority": "high",
+      "rule": "If the local model is not strong enough, decompose the task or mark it for frontier handoff."
+    },
+    {
+      "id": "bl_write_gate",
+      "priority": "critical",
+      "rule": "Project-artifact writes stay locked until the session unlocks at the required Boss tier."
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+# Claude local session state
+.claude/
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# PID files
+*.pid
+
+# Secrets / credentials
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+credentials.json
+
+# Node / JS
+node_modules/
+npm-debug.log*
+
+# Browser automation caches
+.tmp-edge-cdp*/
+.tmp-edge-profile*/
+.tmp-chrome*/
+
+# Unity generated / cache
+unity/Library/
+unity/Temp/
+unity/Logs/
+unity/obj/
+unity/Build/
+unity/Builds/
+unity/MemoryCaptures/
+unity/UserSettings/
+unity/*.csproj
+unity/*.sln
+unity/Assembly-*.csproj
+unity/*.VC.db
+unity/.vs/
+unity/.vsconfig
+
+# Secondary non-canonical Unity projects
+unity/My project/
+
+# Non-canonical URP stub project at repo root
+/Bloodlines/
+
+# Preserved compatibility / archive copies (large)
+archive_preserved_sources/
+_archive/
+_inventory/
+
+# Governed runtime artifacts (recomputable)
+artifacts/
+
+# Continuation-platform runtime state
+continuation-platform/state/
+continuation-platform/*.log
+continuation-platform/logs/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Python venv
+.venv/
+venv/
+env/
+test-results/

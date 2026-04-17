@@ -1,0 +1,318 @@
+using Bloodlines.Components;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
+
+namespace Bloodlines.Systems
+{
+    /// <summary>
+    /// Converts baked map seed buffers into the first live ECS skirmish shell.
+    /// This is the bridge between the JSON-synced MapDefinition asset and the runtime
+    /// entity world the next scene/bootstrap pass will exercise.
+    /// </summary>
+    [UpdateInGroup(typeof(InitializationSystemGroup))]
+    [UpdateAfter(typeof(BloodlinesBootstrapSystem))]
+    public partial struct SkirmishBootstrapSystem : ISystem
+    {
+        public void OnCreate(ref SystemState state)
+        {
+            state.RequireForUpdate<MapBootstrapPendingTag>();
+        }
+
+        public void OnUpdate(ref SystemState state)
+        {
+            var entityManager = state.EntityManager;
+            var query = SystemAPI.QueryBuilder()
+                .WithAll<MapBootstrapPendingTag, MapBootstrapConfigComponent>()
+                .Build();
+
+            using var bootstrapEntities = query.ToEntityArray(Allocator.Temp);
+            foreach (var bootstrapEntity in bootstrapEntities)
+            {
+                var config = entityManager.GetComponentData<MapBootstrapConfigComponent>(bootstrapEntity);
+                var factionSeeds = default(NativeArray<MapFactionSeedElement>);
+                var settlementSeeds = default(NativeArray<MapSettlementSeedElement>);
+                var controlPointSeeds = default(NativeArray<MapControlPointSeedElement>);
+                var resourceNodeSeeds = default(NativeArray<MapResourceNodeSeedElement>);
+                var buildingSeeds = default(NativeArray<MapBuildingSeedElement>);
+                var unitSeeds = default(NativeArray<MapUnitSeedElement>);
+
+                if (config.SpawnFactions)
+                {
+                    factionSeeds = entityManager.GetBuffer<MapFactionSeedElement>(bootstrapEntity).ToNativeArray(Allocator.Temp);
+                }
+
+                if (config.SpawnSettlements)
+                {
+                    settlementSeeds = entityManager.GetBuffer<MapSettlementSeedElement>(bootstrapEntity).ToNativeArray(Allocator.Temp);
+                }
+
+                if (config.SpawnControlPoints)
+                {
+                    controlPointSeeds = entityManager.GetBuffer<MapControlPointSeedElement>(bootstrapEntity).ToNativeArray(Allocator.Temp);
+                }
+
+                if (config.SpawnResourceNodes)
+                {
+                    resourceNodeSeeds = entityManager.GetBuffer<MapResourceNodeSeedElement>(bootstrapEntity).ToNativeArray(Allocator.Temp);
+                }
+
+                if (config.SpawnBuildings)
+                {
+                    buildingSeeds = entityManager.GetBuffer<MapBuildingSeedElement>(bootstrapEntity).ToNativeArray(Allocator.Temp);
+                }
+
+                if (config.SpawnUnits)
+                {
+                    unitSeeds = entityManager.GetBuffer<MapUnitSeedElement>(bootstrapEntity).ToNativeArray(Allocator.Temp);
+                }
+
+                try
+                {
+                    if (config.SpawnFactions)
+                    {
+                        for (var i = 0; i < factionSeeds.Length; i++)
+                        {
+                            SpawnFactionEntity(entityManager, factionSeeds[i]);
+                        }
+                    }
+
+                    if (config.SpawnSettlements)
+                    {
+                        for (var i = 0; i < settlementSeeds.Length; i++)
+                        {
+                            SpawnSettlementEntity(entityManager, settlementSeeds[i]);
+                        }
+                    }
+
+                    if (config.SpawnControlPoints)
+                    {
+                        for (var i = 0; i < controlPointSeeds.Length; i++)
+                        {
+                            SpawnControlPointEntity(entityManager, controlPointSeeds[i]);
+                        }
+                    }
+
+                    if (config.SpawnResourceNodes)
+                    {
+                        for (var i = 0; i < resourceNodeSeeds.Length; i++)
+                        {
+                            SpawnResourceNodeEntity(entityManager, resourceNodeSeeds[i]);
+                        }
+                    }
+
+                    if (config.SpawnBuildings)
+                    {
+                        for (var i = 0; i < buildingSeeds.Length; i++)
+                        {
+                            SpawnBuildingEntity(entityManager, buildingSeeds[i]);
+                        }
+                    }
+
+                    if (config.SpawnUnits)
+                    {
+                        for (var i = 0; i < unitSeeds.Length; i++)
+                        {
+                            SpawnUnitEntity(entityManager, unitSeeds[i]);
+                        }
+                    }
+
+                    entityManager.RemoveComponent<MapBootstrapPendingTag>(bootstrapEntity);
+                }
+                finally
+                {
+                    if (factionSeeds.IsCreated) factionSeeds.Dispose();
+                    if (settlementSeeds.IsCreated) settlementSeeds.Dispose();
+                    if (controlPointSeeds.IsCreated) controlPointSeeds.Dispose();
+                    if (resourceNodeSeeds.IsCreated) resourceNodeSeeds.Dispose();
+                    if (buildingSeeds.IsCreated) buildingSeeds.Dispose();
+                    if (unitSeeds.IsCreated) unitSeeds.Dispose();
+                }
+            }
+        }
+
+        static void SpawnFactionEntity(EntityManager entityManager, MapFactionSeedElement seed)
+        {
+            var entity = entityManager.CreateEntity();
+            entityManager.AddComponentData(entity, new FactionComponent { FactionId = seed.FactionId });
+            entityManager.AddComponentData(entity, new FactionHouseComponent { HouseId = seed.HouseId });
+            entityManager.AddComponentData(entity, new FactionKindComponent { Kind = seed.Kind });
+            entityManager.AddComponentData(entity, new PopulationComponent
+            {
+                Total = seed.PopulationTotal,
+                Cap = seed.PopulationCap,
+                BaseCap = seed.PopulationCap,
+                CapBonus = 0,
+                Available = math.max(0, seed.PopulationTotal - seed.PopulationReserved),
+                GrowthAccumulator = 0f,
+            });
+            entityManager.AddComponentData(entity, new ResourceStockpileComponent
+            {
+                Gold = seed.Gold,
+                Food = seed.Food,
+                Water = seed.Water,
+                Wood = seed.Wood,
+                Stone = seed.Stone,
+                Iron = seed.Iron,
+                Influence = seed.Influence,
+            });
+            entityManager.AddComponentData(entity, new RealmConditionComponent());
+            entityManager.AddComponentData(entity, new ConvictionComponent { Band = ConvictionBand.Neutral });
+            entityManager.AddComponentData(entity, new FaithStateComponent
+            {
+                SelectedFaith = CovenantId.None,
+                DoctrinePath = DoctrinePath.Unassigned,
+                Intensity = 0f,
+                Level = 0,
+            });
+            entityManager.AddBuffer<FaithExposureElement>(entity);
+        }
+
+        static void SpawnSettlementEntity(EntityManager entityManager, MapSettlementSeedElement seed)
+        {
+            var entity = entityManager.CreateEntity();
+            entityManager.AddComponentData(entity, new FactionComponent { FactionId = seed.FactionId });
+            entityManager.AddComponentData(entity, new PositionComponent { Value = seed.Position });
+            entityManager.AddComponentData(entity, new LocalTransform
+            {
+                Position = seed.Position,
+                Rotation = quaternion.identity,
+                Scale = 1f,
+            });
+            entityManager.AddComponentData(entity, new SettlementComponent
+            {
+                SettlementId = seed.RuntimeId,
+                SettlementClassId = seed.SettlementClassId,
+                FortificationTier = seed.FortificationTier,
+                FortificationCeiling = seed.FortificationCeiling,
+            });
+
+            if (seed.IsPrimaryKeep)
+            {
+                entityManager.AddComponent<PrimaryKeepTag>(entity);
+            }
+        }
+
+        static void SpawnControlPointEntity(EntityManager entityManager, MapControlPointSeedElement seed)
+        {
+            var entity = entityManager.CreateEntity();
+            entityManager.AddComponentData(entity, new PositionComponent { Value = seed.Position });
+            entityManager.AddComponentData(entity, new LocalTransform
+            {
+                Position = seed.Position,
+                Rotation = quaternion.identity,
+                Scale = 1f,
+            });
+            entityManager.AddComponentData(entity, new ControlPointComponent
+            {
+                ControlPointId = seed.RuntimeId,
+                OwnerFactionId = default,
+                CaptureFactionId = default,
+                ContinentId = seed.ContinentId,
+                ControlState = ControlState.Neutral,
+                IsContested = false,
+                Loyalty = 0f,
+                CaptureProgress = 0f,
+                SettlementClassId = seed.SettlementClassId,
+                FortificationTier = 0,
+                RadiusTiles = seed.RadiusTiles,
+                CaptureTimeSeconds = seed.CaptureTimeSeconds,
+                GoldTrickle = seed.GoldTrickle,
+                FoodTrickle = seed.FoodTrickle,
+                WaterTrickle = seed.WaterTrickle,
+                WoodTrickle = seed.WoodTrickle,
+                StoneTrickle = seed.StoneTrickle,
+                IronTrickle = seed.IronTrickle,
+                InfluenceTrickle = seed.InfluenceTrickle,
+            });
+        }
+
+        static void SpawnResourceNodeEntity(EntityManager entityManager, MapResourceNodeSeedElement seed)
+        {
+            var entity = entityManager.CreateEntity();
+            entityManager.AddComponentData(entity, new PositionComponent { Value = seed.Position });
+            entityManager.AddComponentData(entity, new LocalTransform
+            {
+                Position = seed.Position,
+                Rotation = quaternion.identity,
+                Scale = 1f,
+            });
+            entityManager.AddComponentData(entity, new ResourceNodeComponent
+            {
+                ResourceId = seed.ResourceId,
+                Amount = seed.Amount,
+                InitialAmount = seed.Amount,
+            });
+        }
+
+        static void SpawnBuildingEntity(EntityManager entityManager, MapBuildingSeedElement seed)
+        {
+            var entity = entityManager.CreateEntity();
+            entityManager.AddComponentData(entity, new FactionComponent { FactionId = seed.FactionId });
+            entityManager.AddComponentData(entity, new PositionComponent { Value = seed.Position });
+            entityManager.AddComponentData(entity, new LocalTransform
+            {
+                Position = seed.Position,
+                Rotation = quaternion.identity,
+                Scale = 1f,
+            });
+            entityManager.AddComponentData(entity, new HealthComponent
+            {
+                Current = seed.MaxHealth,
+                Max = seed.MaxHealth,
+            });
+            entityManager.AddComponentData(entity, new BuildingTypeComponent
+            {
+                TypeId = seed.TypeId,
+                FortificationRole = seed.FortificationRole,
+                StructuralDamageMultiplier = seed.StructuralDamageMultiplier,
+                PopulationCapBonus = seed.PopulationCapBonus,
+                BlocksPassage = seed.BlocksPassage,
+                SupportsSiegePreparation = seed.SupportsSiegePreparation,
+                SupportsSiegeLogistics = seed.SupportsSiegeLogistics,
+            });
+            entityManager.AddComponentData(entity, new ProductionFacilityComponent
+            {
+                SpawnSequence = 0,
+            });
+            entityManager.AddBuffer<ProductionQueueItemElement>(entity);
+        }
+
+        static void SpawnUnitEntity(EntityManager entityManager, MapUnitSeedElement seed)
+        {
+            var entity = entityManager.CreateEntity();
+            entityManager.AddComponentData(entity, new FactionComponent { FactionId = seed.FactionId });
+            entityManager.AddComponentData(entity, new PositionComponent { Value = seed.Position });
+            entityManager.AddComponentData(entity, new LocalTransform
+            {
+                Position = seed.Position,
+                Rotation = quaternion.identity,
+                Scale = 1f,
+            });
+            entityManager.AddComponentData(entity, new HealthComponent
+            {
+                Current = seed.MaxHealth,
+                Max = seed.MaxHealth,
+            });
+            entityManager.AddComponentData(entity, new UnitTypeComponent
+            {
+                TypeId = seed.TypeId,
+                Role = seed.Role,
+                SiegeClass = seed.SiegeClass,
+                PopulationCost = seed.PopulationCost,
+                Stage = seed.Stage,
+            });
+            entityManager.AddComponentData(entity, new MovementStatsComponent
+            {
+                MaxSpeed = seed.MaxSpeed,
+            });
+            entityManager.AddComponentData(entity, new MoveCommandComponent
+            {
+                Destination = seed.Position,
+                StoppingDistance = 0.2f,
+                IsActive = false,
+            });
+        }
+    }
+}

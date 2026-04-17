@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FSS Brand Wordmark Sampler v4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cormorant+SC:wght@300;400;500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Italiana&family=Prata&family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Marcellus&family=Forum&family=Cinzel:wght@400;500&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --panel: #0d0e11;
+    --border: rgba(255,255,255,0.04);
+    --border-accent: rgba(228, 234, 242, 0.22);
+    --silver: rgba(228, 234, 242, 0.94);
+    --silver-bright: rgba(245, 248, 253, 0.98);
+    --silver-dim: rgba(195, 205, 218, 0.72);
+    --silver-deep: rgba(160, 170, 185, 0.55);
+    --rule: linear-gradient(to right,
+      rgba(228, 234, 242, 0.72) 0%,
+      rgba(228, 234, 242, 0.44) 22%,
+      rgba(228, 234, 242, 0.18) 52%,
+      rgba(228, 234, 242, 0.05) 80%,
+      transparent 100%);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    background: var(--bg);
+    color: rgba(255,255,255,0.82);
+    font-family: 'Inter', sans-serif;
+    margin: 0; padding: 0;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 64px 40px 140px; }
+  .nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 44px;
+  }
+  .back, .switch-link {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .back:hover, .switch-link:hover { color: rgba(255,255,255,0.85); }
+  .switch-link {
+    border: 1px solid rgba(228, 234, 242, 0.18);
+    padding: 8px 14px;
+    border-radius: 2px;
+  }
+  .switch-link:hover { border-color: rgba(228, 234, 242, 0.5); }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 38px;
+    letter-spacing: 0.006em;
+    margin: 0 0 10px;
+    color: rgba(245, 248, 253, 0.96);
+  }
+  .lead {
+    font-size: 13px;
+    color: rgba(228, 234, 242, 0.62);
+    line-height: 1.7;
+    margin: 0 0 64px;
+    max-width: 720px;
+  }
+  .lead em { color: rgba(245, 248, 253, 0.88); font-style: italic; }
+  .lead code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: rgba(228, 234, 242, 0.05);
+    padding: 2px 6px;
+    border-radius: 2px;
+    color: rgba(245, 248, 253, 0.78);
+  }
+
+  .cat-heading {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(228, 234, 242, 0.42);
+    font-weight: 500;
+    margin: 56px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed rgba(228, 234, 242, 0.1);
+  }
+  .cat-heading:first-of-type { margin-top: 0; }
+  .cat-heading-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: rgba(228, 234, 242, 0.45);
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+    margin-left: 16px;
+    font-style: italic;
+  }
+
+  .variant {
+    padding: 60px 56px 48px;
+    margin-bottom: 18px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 1px solid var(--border-accent);
+    border-radius: 2px;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+  .variant:hover { border-left-color: rgba(245, 248, 253, 0.55); }
+  .variant-label {
+    position: absolute;
+    top: 16px;
+    right: 22px;
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(228, 234, 242, 0.32);
+    font-weight: 500;
+  }
+  .variant-meta {
+    margin-top: 32px;
+    padding-top: 18px;
+    border-top: 1px dashed rgba(228, 234, 242, 0.08);
+    font-size: 11px;
+    color: rgba(228, 234, 242, 0.5);
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.75;
+  }
+  .variant-meta strong { color: rgba(245, 248, 253, 0.82); font-weight: 500; }
+  .variant-meta em {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    color: rgba(228, 234, 242, 0.6);
+    font-size: 12px;
+    margin-top: 8px;
+    line-height: 1.6;
+  }
+
+  /* SHARED: composition */
+  .wm { display: inline-flex; flex-direction: column; align-items: stretch; gap: 2px; }
+  .wm-text { display: flex; flex-direction: column; align-items: stretch; gap: 2px; min-width: 0; }
+  .wm-name { margin: 0; line-height: 1.0; color: var(--silver); text-shadow: 0 1px 22px rgba(0,0,0,0.5); }
+  .wm-rule { height: 1px; width: 100%; background: var(--rule); margin: 4px 0 2px; }
+  .wm-entity {
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px;
+    letter-spacing: 0.035em;
+    font-weight: 400;
+    color: var(--silver-dim);
+    line-height: 1.2;
+  }
+
+  /* ============================================================
+     I. MIXED WEIGHT SPLITS — same font, different weights per word
+     ============================================================ */
+
+  /* Y — Light Fisher + Bold Sovereign + Light Systems (middle weight emphasis) */
+  .v-y .wm-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 60px;
+    font-weight: 300;
+    letter-spacing: 0.006em;
+  }
+  .v-y .mid-bold {
+    font-weight: 600;
+    color: var(--silver-bright);
+  }
+
+  /* Z — Bold Fisher + Light italic sovereign systems */
+  .v-z .wm-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 60px;
+    font-weight: 600;
+    letter-spacing: 0.002em;
+    color: var(--silver-bright);
+  }
+  .v-z .light-tail {
+    font-weight: 300;
+    font-style: italic;
+    color: var(--silver);
+    margin-left: 0.18em;
+  }
+
+  /* AA — Light Fisher Sovereign + Bold Systems (last word emphasis) */
+  .v-aa .wm-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 60px;
+    font-weight: 300;
+    letter-spacing: 0.006em;
+  }
+  .v-aa .bold-tail {
+    font-weight: 600;
+    color: var(--silver-bright);
+    margin-left: 0.16em;
+  }
+
+  /* BB — Graduated weight wave: 300 → 400 → 500 */
+  .v-bb .wm-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 60px;
+    letter-spacing: 0.004em;
+  }
+  .v-bb .w300 { font-weight: 300; color: rgba(228, 234, 242, 0.78); }
+  .v-bb .w400 { font-weight: 400; color: rgba(228, 234, 242, 0.88); }
+  .v-bb .w500 { font-weight: 500; color: var(--silver-bright); }
+  .v-bb .w400, .v-bb .w500 { margin-left: 0.16em; }
+
+  /* ============================================================
+     II. MIXED STYLE SPLITS — italic + roman, font hybrids
+     ============================================================ */
+
+  /* CC — Italic Fisher + roman Sovereign Systems */
+  .v-cc .wm-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 62px;
+    font-weight: 400;
+    letter-spacing: 0.004em;
+  }
+  .v-cc .italic-lead {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--silver-bright);
+    margin-right: 0.08em;
+  }
+
+  /* DD — Roman Fisher + italic Sovereign + roman Systems */
+  .v-dd .wm-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 60px;
+    font-weight: 400;
+    letter-spacing: 0.004em;
+  }
+  .v-dd .italic-mid {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--silver-bright);
+    margin: 0 0.06em;
+  }
+
+  /* EE — Serif Fisher + sans tracked caps SOVEREIGN SYSTEMS */
+  .v-ee .wm-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    font-weight: 400;
+    letter-spacing: 0.002em;
+  }
+  .v-ee .sans-tail {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--silver-dim);
+    margin-left: 0.4em;
+    vertical-align: 0.55em;
+  }
+
+  /* FF — Cormorant Fisher + Italiana Sovereign Systems (two-font split) */
+  .v-ff .wm-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    font-weight: 400;
+    letter-spacing: 0.002em;
+  }
+  .v-ff .italiana-tail {
+    font-family: 'Italiana', serif;
+    font-weight: 400;
+    font-size: 64px;
+    color: var(--silver-bright);
+    margin-left: 0.14em;
+    letter-spacing: 0.012em;
+  }
+
+  /* ============================================================
+     III. DECORATIVE SPLITS — separators, ornaments, dividers
+     ============================================================ */
+
+  /* GG — Fisher · Sovereign · Systems (middle dots) */
+  .v-gg .wm-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 58px;
+    font-weight: 400;
+    letter-spacing: 0.002em;
+  }
+  .v-gg .mid-dot {
+    color: rgba(228, 234, 242, 0.42);
+    font-weight: 300;
+    margin: 0 0.32em;
+    vertical-align: 0.08em;
+  }
+
+  /* HH — F · S · S monogram big with periods */
+  .v-hh .v-hh-row { display: flex; align-items: baseline; gap: 26px; }
+  .v-hh-mono {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 96px;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    color: var(--silver-bright);
+    line-height: 0.9;
+    text-shadow: 0 1px 26px rgba(0,0,0,0.55);
+  }
+  .v-hh .v-hh-text { display: flex; flex-direction: column; gap: 3px; padding-bottom: 8px; }
+  .v-hh .v-hh-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--silver);
+    line-height: 1.0;
+  }
+  .v-hh .v-hh-rule {
+    height: 1px;
+    width: 100%;
+    background: var(--rule);
+    margin: 6px 0 3px;
+  }
+  .v-hh .v-hh-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--silver-dim);
+    font-weight: 400;
+  }
+
+  /* II — Fisher ✦ Sovereign ✦ Systems (ornament) */
+  .v-ii .wm-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 54px;
+    font-weight: 400;
+    letter-spacing: 0.004em;
+  }
+  .v-ii .ornament {
+    color: rgba(228, 234, 242, 0.4);
+    font-weight: 400;
+    margin: 0 0.34em;
+    font-size: 0.55em;
+    vertical-align: 0.32em;
+  }
+
+  /* JJ — Fisher | Sovereign | Systems (vertical bars) */
+  .v-jj .wm-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    font-weight: 300;
+    letter-spacing: 0.004em;
+  }
+  .v-jj .pipe {
+    color: rgba(228, 234, 242, 0.32);
+    font-weight: 200;
+    margin: 0 0.32em;
+    font-size: 1.05em;
+    vertical-align: -0.05em;
+  }
+
+  /* ============================================================
+     IV. STACKED HIERARCHIES — multi-line size hierarchies
+     ============================================================ */
+
+  /* KK — Three-line descending: 72 / 48 / 32 */
+  .v-kk .wm-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    color: var(--silver);
+    line-height: 0.92;
+  }
+  .v-kk .stk-1 { display: block; font-size: 76px; font-weight: 300; letter-spacing: 0.002em; }
+  .v-kk .stk-2 { display: block; font-size: 50px; font-weight: 400; letter-spacing: 0.004em; color: var(--silver); margin-top: 4px; }
+  .v-kk .stk-3 { display: block; font-size: 32px; font-weight: 400; letter-spacing: 0.06em; color: var(--silver-dim); margin-top: 6px; text-transform: uppercase; }
+
+  /* LL — Two-line caps: FISHER SOVEREIGN / S Y S T E M S */
+  .v-ll .wm-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    color: var(--silver);
+    line-height: 1.0;
+    text-align: center;
+  }
+  .v-ll .ll-1 { display: block; font-size: 38px; letter-spacing: 0.16em; text-transform: uppercase; }
+  .v-ll .ll-2 { display: block; font-size: 22px; letter-spacing: 0.42em; text-transform: uppercase; color: var(--silver-dim); margin-top: 10px; padding-left: 0.42em; }
+  .v-ll .wm-text { align-items: center; }
+  .v-ll .wm-entity { text-align: center; }
+
+  /* MM — Hero+tag side by side: huge Fisher + small Sovereign Systems beside */
+  .v-mm .v-mm-row { display: flex; align-items: center; gap: 24px; }
+  .v-mm-hero {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 96px;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    color: var(--silver-bright);
+    line-height: 0.85;
+    padding-right: 24px;
+    border-right: 1px solid rgba(228, 234, 242, 0.18);
+    text-shadow: 0 1px 26px rgba(0,0,0,0.55);
+  }
+  .v-mm .v-mm-text { display: flex; flex-direction: column; gap: 4px; }
+  .v-mm-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--silver);
+    line-height: 1.0;
+  }
+  .v-mm-rule {
+    height: 1px;
+    width: 100%;
+    background: var(--rule);
+    margin: 6px 0 3px;
+  }
+  .v-mm-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--silver-dim);
+    font-weight: 400;
+  }
+
+  /* ============================================================
+     V. MONOGRAM + DROP CAP COMPOSITIONS
+     ============================================================ */
+
+  /* NN — Drop cap F + isher Sovereign Systems beside */
+  .v-nn .v-nn-row { display: flex; align-items: baseline; gap: 4px; }
+  .v-nn-drop {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 130px;
+    font-weight: 300;
+    color: var(--silver-bright);
+    line-height: 0.78;
+    text-shadow: 0 1px 26px rgba(0,0,0,0.55);
+    margin-right: 6px;
+  }
+  .v-nn .v-nn-rest {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-bottom: 14px;
+  }
+  .v-nn-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    font-weight: 300;
+    letter-spacing: 0.002em;
+    color: var(--silver);
+    line-height: 0.95;
+  }
+  .v-nn-rule {
+    height: 1px;
+    width: 100%;
+    background: var(--rule);
+    margin: 4px 0 2px;
+  }
+  .v-nn-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--silver-dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* OO — Big outlined F + ISHER SOVEREIGN SYSTEMS small tracked */
+  .v-oo .v-oo-row { display: flex; align-items: center; gap: 22px; }
+  .v-oo-big {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 120px;
+    font-weight: 400;
+    color: transparent;
+    -webkit-text-stroke: 0.8px rgba(245, 248, 253, 0.85);
+    line-height: 0.85;
+    padding-right: 22px;
+    border-right: 1px solid rgba(228, 234, 242, 0.16);
+  }
+  .v-oo .v-oo-text { display: flex; flex-direction: column; gap: 4px; }
+  .v-oo-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--silver);
+    line-height: 1.1;
+  }
+  .v-oo-rule {
+    height: 1px;
+    width: 100%;
+    background: var(--rule);
+    margin: 6px 0 3px;
+  }
+  .v-oo-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--silver-dim);
+  }
+
+  /* ============================================================
+     VI. EDITORIAL MASTHEAD — newspaper / magazine aesthetic
+     ============================================================ */
+
+  /* PP — Newspaper masthead with framing rules + city/year */
+  .v-pp .v-pp-frame {
+    border-top: 1px solid rgba(228, 234, 242, 0.4);
+    border-bottom: 1px solid rgba(228, 234, 242, 0.4);
+    padding: 22px 0 18px;
+    text-align: center;
+  }
+  .v-pp .v-pp-meta-top {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--silver-dim);
+    margin-bottom: 14px;
+    padding: 0 8px;
+  }
+  .v-pp .v-pp-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--silver-bright);
+    line-height: 1.0;
+    margin: 0;
+    text-shadow: 0 1px 22px rgba(0,0,0,0.5);
+  }
+  .v-pp .v-pp-meta-bot {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--silver-dim);
+    margin-top: 14px;
+  }
+  .v-pp .wm-rule { display: none; }
+  .v-pp .wm-entity { text-align: center; margin-top: 12px; }
+
+  /* Mobile */
+  @media (max-width: 720px) {
+    .wrap { padding: 36px 20px 90px; }
+    .variant { padding: 36px 22px 30px; }
+    .nav-row { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .v-y .wm-name, .v-z .wm-name, .v-aa .wm-name, .v-bb .wm-name { font-size: 34px; }
+    .v-cc .wm-name, .v-dd .wm-name { font-size: 36px; }
+    .v-ee .wm-name { font-size: 36px; } .v-ee .sans-tail { font-size: 11px; letter-spacing: 0.18em; }
+    .v-ff .wm-name { font-size: 32px; } .v-ff .italiana-tail { font-size: 36px; }
+    .v-gg .wm-name { font-size: 32px; }
+    .v-hh-mono { font-size: 56px; } .v-hh .v-hh-name { font-size: 16px; }
+    .v-ii .wm-name { font-size: 28px; }
+    .v-jj .wm-name { font-size: 30px; }
+    .v-kk .stk-1 { font-size: 44px; } .v-kk .stk-2 { font-size: 28px; } .v-kk .stk-3 { font-size: 18px; }
+    .v-ll .ll-1 { font-size: 22px; letter-spacing: 0.12em; } .v-ll .ll-2 { font-size: 14px; letter-spacing: 0.32em; }
+    .v-mm-hero { font-size: 56px; } .v-mm-name { font-size: 14px; }
+    .v-nn-drop { font-size: 80px; } .v-nn-name { font-size: 32px; }
+    .v-oo-big { font-size: 70px; } .v-oo-name { font-size: 12px; letter-spacing: 0.24em; }
+    .v-pp .v-pp-name { font-size: 30px; }
+    .v-pp .v-pp-meta-top, .v-pp .v-pp-meta-bot { font-size: 8px; letter-spacing: 0.16em; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="nav-row">
+    <a href="/home.html" class="back">&larr; Back to site</a>
+    <a href="/brand-sampler.html" class="switch-link">&larr; v3 sampler (24 variants)</a>
+  </div>
+
+  <h1>Brand Wordmark Sampler v4</h1>
+  <p class="lead">
+    Sixteen <em>new</em> treatments focused on <em>internal hierarchy</em> &mdash; how the three words relate to each other through weight contrast, style contrast, font contrast, dividers, stacking, drop caps, and editorial composition. The premise: real luxury brands almost never use uniform-weight wordmarks. Tiffany &amp; Co., Tom Ford, Ralph Lauren, The New Yorker &mdash; every one uses internal contrast. Pick a letter (Y&ndash;PP) or tell me which direction to push further.
+  </p>
+
+  <!-- ===================== I. MIXED WEIGHT SPLITS ===================== -->
+  <div class="cat-heading">I. Mixed Weight Splits <span class="cat-heading-sub">&mdash; same font, different weights per word</span></div>
+
+  <div class="variant v-y">
+    <span class="variant-label">Y</span>
+    <div class="wm"><div class="wm-text">
+      <h2 class="wm-name">Fisher <span class="mid-bold">Sovereign</span> Systems</h2>
+      <div class="wm-rule"></div>
+      <div class="wm-entity">Building the Architecture for Independence - LLC</div>
+    </div></div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond</strong> &middot; light 300 + bold 600 middle + light 300 &middot; 60px
+      <em>Weight contrast as hierarchy. The middle word (the conceptual core) carries the visual weight while the bookends recede. Reads as &ldquo;Fisher [SOVEREIGN] Systems&rdquo; &mdash; the pivot is typographic, not semantic.</em>
+    </div>
+  </div>
+
+  <div class="variant v-z">
+    <span class="variant-label">Z</span>
+    <div class="wm"><div class="wm-text">
+      <h2 class="wm-name">Fisher<span class="light-tail">Sovereign Systems</span></h2>
+      <div class="wm-rule"></div>
+      <div class="wm-entity">Building the Architecture for Independence - LLC</div>
+    </div></div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond</strong> &middot; bold 600 lead + light 300 italic tail &middot; 60px
+      <em>Surname-as-imprimatur. &ldquo;Fisher&rdquo; carries the weight, &ldquo;Sovereign Systems&rdquo; reads as the descriptor. Architectural hierarchy where the family name is the primary identity.</em>
+    </div>
+  </div>
+
+  <div class="variant v-aa">
+    <span class="variant-label">AA</span>
+    <div class="wm"><div class="wm-text">
+      <h2 class="wm-name">Fisher Sovereign<span class="bold-tail">Systems</span></h2>
+      <div class="wm-rule"></div>
+      <div class="wm-entity">Building the Architecture for Independence - LLC</div>
+    </div></div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond</strong> &middot; light 300 + bold 600 trailing &middot; 60px
+      <em>Inverse weight emphasis. &ldquo;Fisher Sovereign&rdquo; is light setup, &ldquo;Systems&rdquo; lands as the resolution. Reads as a deliberate punchline.</em>
+    </div>
+  </div>
+
+  <div class="variant v-bb">
+    <span class="variant-label">BB</span>
+    <div class="wm"><div class="wm-text">
+      <h2 class="wm-name"><span class="w300">Fisher</span><span class="w400">Sovereign</span><span class="w500">Systems</span></h2>
+      <div class="wm-rule"></div>
+      <div class="wm-entity">Building the Architecture for Independence - LLC</div>
+    </div></div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond</strong> &middot; weight wave 300 &rarr; 400 &rarr; 500 &middot; 60px
+      <em>Graduated weight crescendo. Each word is slightly heavier than the previous. Reads as building momentum &mdash; the wordmark gains presence as you read it left to right.</em>
+    </div>
+  </div>
+
+  <!-- ===================== II. MIXED STYLE SPLITS ===================== -->
+  <div class="cat-heading">II. Mixed Style Splits <span class="cat-heading-sub">&mdash; italic + roman, font hybrids</span></div>
+
+  <div class="variant v-cc">
+    <span class="variant-label">CC</span>
+    <div class="wm"><div class="wm-text">
+      <h2 class="wm-name"><span class="italic-lead">Fisher</span>Sovereign Systems</h2>
+      <div class="wm-rule"></div>
+      <div class="wm-entity">Building the Architecture for Independence - LLC</div>
+    </div></div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond 400</strong> &middot; italic lead + roman tail &middot; 62px
+      <em>Italic surname as signature. &ldquo;Fisher&rdquo; is hand-written gesture, &ldquo;Sovereign Systems&rdquo; is the printed enterprise. Reads as &ldquo;Fisher (signed) presents Sovereign Systems.&rdquo;</em>
+    </div>
+  </div>
+
+  <div class="variant v-dd">
+    <span class="variant-label">DD</span>
+    <div class="wm"><div class="wm-text">
+      <h2 class="wm-name">Fisher<span class="italic-mid">Sovereign</span>Systems</h2>
+      <div class="wm-rule"></div>
+      <div class="wm-entity">Building the Architecture for Independence - LLC</div>
+    </div></div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond 400</strong> &middot; roman + italic middle + roman &middot; 60px
+      <em>Italic emphasis on the conceptual pivot. &ldquo;Sovereign&rdquo; is voiced &mdash; spoken with weight. The bookend words are descriptive structure.</em>
+    </div>
+  </div>
+
+  <div class="variant v-ee">
+    <span class="variant-label">EE</span>
+    <div class="wm"><div class="wm-text">
+      <h2 class="wm-name">Fisher<span class="sans-tail">SOVEREIGN SYSTEMS</span></h2>
+      <div class="wm-rule"></div>
+      <div class="wm-entity">Building the Architecture for Independence - LLC</div>
+    </div></div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond serif</strong> + <strong>Inter sans tracked caps</strong> &middot; 64px / 16px
+      <em>Serif/sans hybrid. Big serif &ldquo;Fisher&rdquo; is the family identity, small sans tracked caps &ldquo;SOVEREIGN SYSTEMS&rdquo; is the tagline like a magazine subhead. Two-script discipline.</em>
+    </div>
+  </div>
+
+  <div class="variant v-ff">
+    <span class="variant-label">FF</span>
+    <div class="wm"><div class="wm-text">
+      <h2 class="wm-name">Fisher<span class="italiana-tail">Sovereign Systems</span></h2>
+      <div class="wm-rule"></div>
+      <div class="wm-entity">Building the Architecture for Independence - LLC</div>
+    </div></div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond</strong> + <strong>Italiana</strong> &middot; 56px / 64px
+      <em>Two-font split. &ldquo;Fisher&rdquo; in Cormorant body weight, &ldquo;Sovereign Systems&rdquo; in hairline Italiana. Both are serif, but Italiana is impossibly thin &mdash; the contrast is stark and dramatic.</em>
+    </div>
+  </div>
+
+  <!-- ===================== III. DECORATIVE SPLITS ===================== -->
+  <div class="cat-heading">III. Decorative Splits <span class="cat-heading-sub">&mdash; separators, ornaments, dividers</span></div>
+
+  <div class="variant v-gg">
+    <span class="variant-label">GG</span>
+    <div class="wm"><div class="wm-text">
+      <h2 class="wm-name">Fisher<span class="mid-dot">&middot;</span>Sovereign<span class="mid-dot">&middot;</span>Systems</h2>
+      <div class="wm-rule"></div>
+      <div class="wm-entity">Building the Architecture for Independence - LLC</div>
+    </div></div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond 400</strong> &middot; middle-dots between words &middot; 58px
+      <em>Each word is its own unit. The mid-dots create breathing room and elevate each word to equal weight. Classical typography move &mdash; reads as a Latin inscription or ecclesiastical title.</em>
+    </div>
+  </div>
+
+  <div class="variant v-hh">
+    <span class="variant-label">HH</span>
+    <div class="v-hh-row">
+      <div class="v-hh-mono">F&middot;S&middot;S</div>
+      <div class="v-hh-text">
+        <div class="v-hh-name">Fisher Sovereign Systems</div>
+        <div class="v-hh-rule"></div>
+        <div class="v-hh-sub">Architecture for Independence &middot; LLC</div>
+      </div>
+    </div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond 300</strong> &middot; F&middot;S&middot;S monogram 96px + wordmark beside &middot; vertical-baseline composition
+      <em>Dotted monogram as heraldic mark. The F&middot;S&middot;S becomes a logo unit, the full name reads as the legal wordmark. Family-of-brands architecture &mdash; like &ldquo;LVMH&rdquo; or &ldquo;P&amp;O&rdquo; or &ldquo;A.P.C.&rdquo;</em>
+    </div>
+  </div>
+
+  <div class="variant v-ii">
+    <span class="variant-label">II</span>
+    <div class="wm"><div class="wm-text">
+      <h2 class="wm-name">Fisher<span class="ornament">&#10022;</span>Sovereign<span class="ornament">&#10022;</span>Systems</h2>
+      <div class="wm-rule"></div>
+      <div class="wm-entity">Building the Architecture for Independence - LLC</div>
+    </div></div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond 400</strong> &middot; four-pointed star ornaments between words &middot; 54px
+      <em>Heraldic ornaments separate the words like a coat-of-arms motto. Reads as &ldquo;Fisher [&#10022;] Sovereign [&#10022;] Systems&rdquo; &mdash; ceremonial, deliberate, formal.</em>
+    </div>
+  </div>
+
+  <div class="variant v-jj">
+    <span class="variant-label">JJ</span>
+    <div class="wm"><div class="wm-text">
+      <h2 class="wm-name">Fisher<span class="pipe">|</span>Sovereign<span class="pipe">|</span>Systems</h2>
+      <div class="wm-rule"></div>
+      <div class="wm-entity">Building the Architecture for Independence - LLC</div>
+    </div></div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond 300</strong> &middot; vertical pipe dividers between words &middot; 56px
+      <em>Pipe-bar separators feel architectural. Like beam structure or wireframe. Reads as &ldquo;structural&rdquo; rather than &ldquo;ornamental&rdquo; &mdash; technical brand voice.</em>
+    </div>
+  </div>
+
+  <!-- ===================== IV. STACKED HIERARCHIES ===================== -->
+  <div class="cat-heading">IV. Stacked Hierarchies <span class="cat-heading-sub">&mdash; multi-line size hierarchies</span></div>
+
+  <div class="variant v-kk">
+    <span class="variant-label">KK</span>
+    <div class="wm"><div class="wm-text">
+      <h2 class="wm-name">
+        <span class="stk-1">Fisher</span>
+        <span class="stk-2">Sovereign</span>
+        <span class="stk-3">Systems</span>
+      </h2>
+      <div class="wm-rule"></div>
+      <div class="wm-entity">Building the Architecture for Independence - LLC</div>
+    </div></div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond 300/400/400</strong> &middot; descending stack 76 / 50 / 32 px
+      <em>Three-tier visual hierarchy. Each word gets its own line, decreasing in size. &ldquo;Fisher&rdquo; is the brand, &ldquo;Sovereign&rdquo; is the line, &ldquo;Systems&rdquo; is the descriptor. Reads as a layered organization.</em>
+    </div>
+  </div>
+
+  <div class="variant v-ll">
+    <span class="variant-label">LL</span>
+    <div class="wm"><div class="wm-text">
+      <h2 class="wm-name">
+        <span class="ll-1">Fisher Sovereign</span>
+        <span class="ll-2">Systems</span>
+      </h2>
+      <div class="wm-rule"></div>
+      <div class="wm-entity">Building the Architecture for Independence - LLC</div>
+    </div></div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond 400 caps</strong> &middot; two-line stack &middot; 38px / 22px tracked
+      <em>&ldquo;FISHER SOVEREIGN&rdquo; lands on top as the brand identity, &ldquo;SYSTEMS&rdquo; is the descriptor beneath in wide tracking. Symmetric centered composition.</em>
+    </div>
+  </div>
+
+  <div class="variant v-mm">
+    <span class="variant-label">MM</span>
+    <div class="v-mm-row">
+      <div class="v-mm-hero">Fisher</div>
+      <div class="v-mm-text">
+        <div class="v-mm-name">Sovereign Systems</div>
+        <div class="v-mm-rule"></div>
+        <div class="v-mm-sub">Architecture for Independence &middot; LLC</div>
+      </div>
+    </div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond 300</strong> &middot; hero &ldquo;Fisher&rdquo; 96px + tagline composition beside it
+      <em>Hero plus descriptor. Big &ldquo;Fisher&rdquo; is the imprimatur, &ldquo;Sovereign Systems&rdquo; reads as the operating company beneath. Like an old industrial firm masthead.</em>
+    </div>
+  </div>
+
+  <!-- ===================== V. MONOGRAM + DROP CAP ===================== -->
+  <div class="cat-heading">V. Monogram &amp; Drop Cap Compositions <span class="cat-heading-sub">&mdash; oversized initials</span></div>
+
+  <div class="variant v-nn">
+    <span class="variant-label">NN</span>
+    <div class="v-nn-row">
+      <div class="v-nn-drop">F</div>
+      <div class="v-nn-rest">
+        <div class="v-nn-name">isher Sovereign Systems</div>
+        <div class="v-nn-rule"></div>
+        <div class="v-nn-sub">Building the Architecture for Independence - LLC</div>
+      </div>
+    </div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond 300</strong> &middot; drop cap F 130px + rest of wordmark inline
+      <em>Editorial drop cap. Big &ldquo;F&rdquo; reads as a manuscript initial, the rest of the name continues at body size. Reads as the opening of a chapter or essay &mdash; literary, deliberate.</em>
+    </div>
+  </div>
+
+  <div class="variant v-oo">
+    <span class="variant-label">OO</span>
+    <div class="v-oo-row">
+      <div class="v-oo-big">F</div>
+      <div class="v-oo-text">
+        <div class="v-oo-name">Fisher Sovereign Systems</div>
+        <div class="v-oo-rule"></div>
+        <div class="v-oo-sub">Architecture for Independence &middot; LLC</div>
+      </div>
+    </div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond outlined</strong> 120px + tracked caps wordmark beside &middot; hairline 0.8px stroke
+      <em>Hollow drop-letter F as the brand mark + small all-caps wordmark beside. The big F is architectural, the wordmark is the legal entity. Two-tier identity composition.</em>
+    </div>
+  </div>
+
+  <!-- ===================== VI. EDITORIAL MASTHEAD ===================== -->
+  <div class="cat-heading">VI. Editorial Masthead <span class="cat-heading-sub">&mdash; newspaper / magazine composition</span></div>
+
+  <div class="variant v-pp">
+    <span class="variant-label">PP</span>
+    <div class="wm"><div class="wm-text">
+      <div class="v-pp-frame">
+        <div class="v-pp-meta-top">
+          <span>Vol. I</span>
+          <span>Est. 2025</span>
+        </div>
+        <h2 class="v-pp-name">Fisher Sovereign Systems</h2>
+        <div class="v-pp-meta-bot">Building the Architecture for Independence &middot; Colorado</div>
+      </div>
+      <div class="wm-rule"></div>
+      <div class="wm-entity">Limited Liability Company</div>
+    </div></div>
+    <div class="variant-meta">
+      <strong>Cormorant Garamond 400</strong> &middot; framed by horizontal rules + meta lines top/bottom &middot; 56px
+      <em>Newspaper masthead composition. &ldquo;Vol. I &middot; Est. 2025&rdquo; flanks the top, &ldquo;Building the Architecture for Independence &middot; Colorado&rdquo; runs beneath. Reads as &ldquo;The Fisher Sovereign Times&rdquo; &mdash; journal, periodical, institutional press.</em>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

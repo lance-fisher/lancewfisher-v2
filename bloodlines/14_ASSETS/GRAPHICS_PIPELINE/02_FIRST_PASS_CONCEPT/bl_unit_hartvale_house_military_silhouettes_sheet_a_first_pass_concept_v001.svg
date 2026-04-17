@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#ead9c2"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7efe2" stroke="#3a2d21" stroke-width="3"/>
+  <text x="64" y="84" fill="#2b2118" font-family="Georgia, serif" font-size="34">Bloodlines House Hartvale Military Silhouettes</text>
+  <text x="64" y="116" fill="#71573f" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Scope: agrarian defense identity and Verdant Warden support lane</text>
+
+  <g transform="translate(1160 58)">
+    <rect width="344" height="110" rx="16" fill="#efe3d2" stroke="#987655" stroke-width="2"/>
+    <text x="18" y="28" fill="#4a3524" font-family="Arial, sans-serif" font-size="16">Palette / Material Read</text>
+    <rect x="18" y="42" width="26" height="26" rx="6" fill="#9d5a23"/>
+    <rect x="52" y="42" width="26" height="26" rx="6" fill="#eb9a42"/>
+    <rect x="86" y="42" width="26" height="26" rx="6" fill="#8c2f24"/>
+    <rect x="120" y="42" width="26" height="26" rx="6" fill="#d7b162"/>
+    <text x="18" y="92" fill="#70543c" font-family="Arial, sans-serif" font-size="13">Harvest warmth, rope, hardwood, tile, grain cloth. Defense should feel prosperous, managed, and grounded.</text>
+  </g>
+
+  <g stroke="#c3a683" stroke-width="2">
+    <rect x="64" y="190" width="340" height="322" rx="20" fill="#fdf7ee"/>
+    <rect x="438" y="190" width="340" height="322" rx="20" fill="#fdf7ee"/>
+    <rect x="812" y="190" width="340" height="322" rx="20" fill="#fdf7ee"/>
+    <rect x="1186" y="190" width="340" height="322" rx="20" fill="#fdf7ee"/>
+    <rect x="64" y="548" width="1462" height="404" rx="20" fill="#fdf7ee"/>
+  </g>
+
+  <g font-family="Arial, sans-serif">
+    <text x="90" y="228" fill="#4b3625" font-size="18">Field levy lane</text>
+    <text x="464" y="228" fill="#4b3625" font-size="18">Verdant Warden lane</text>
+    <text x="838" y="228" fill="#4b3625" font-size="18">Harvest bow lane</text>
+    <text x="1212" y="228" fill="#4b3625" font-size="18">Steward command lane</text>
+  </g>
+
+  <g transform="translate(94 252)">
+    <rect width="280" height="176" rx="14" fill="#ebdcc8"/>
+    <circle cx="56" cy="42" r="18" fill="#6f4728"/>
+    <rect x="42" y="60" width="28" height="60" rx="10" fill="#9d5a23"/>
+    <rect x="28" y="72" width="14" height="38" rx="6" fill="#d9a65e"/>
+    <rect x="70" y="72" width="14" height="38" rx="6" fill="#d9a65e"/>
+    <rect x="46" y="118" width="10" height="32" rx="5" fill="#5f412c"/>
+    <rect x="60" y="118" width="10" height="32" rx="5" fill="#5f412c"/>
+    <path d="M108 68 L144 56 L176 74 L176 124 L140 142 L108 126 Z" fill="#8c2f24" stroke="#5b241d" stroke-width="4"/>
+    <line x1="96" y1="74" x2="112" y2="122" stroke="#8a643b" stroke-width="8"/>
+    <text x="192" y="58" fill="#4b3726" font-size="15">Levy reads as defended</text>
+    <text x="192" y="82" fill="#70543c" font-size="13">settlement labor, not a</text>
+    <text x="192" y="106" fill="#70543c" font-size="13">starved frontier host.</text>
+    <rect x="192" y="130" width="20" height="20" fill="#9d5a23"/>
+    <rect x="218" y="130" width="20" height="20" fill="#8c2f24"/>
+    <rect x="244" y="130" width="20" height="20" fill="#d7b162"/>
+  </g>
+
+  <g transform="translate(468 252)">
+    <rect width="280" height="176" rx="14" fill="#ebdcc8"/>
+    <circle cx="56" cy="40" r="18" fill="#70482a"/>
+    <rect x="42" y="58" width="28" height="62" rx="10" fill="#8f6d46"/>
+    <path d="M94 62 L126 48 L150 62 L150 124 L122 138 L94 124 Z" fill="#9f7441" stroke="#634726" stroke-width="4"/>
+    <rect x="154" y="30" width="8" height="108" rx="4" fill="#7d5d34"/>
+    <polygon points="158,22 150,36 166,36" fill="#d7b162"/>
+    <path d="M54 70 Q112 42 182 88" fill="none" stroke="#55743a" stroke-width="8"/>
+    <text x="192" y="58" fill="#4b3726" font-size="15">The unique lane adds calm</text>
+    <text x="192" y="82" fill="#70543c" font-size="13">green support, but stays</text>
+    <text x="192" y="106" fill="#70543c" font-size="13">rural and civic, not wild.</text>
+    <rect x="192" y="130" width="20" height="20" fill="#9d5a23"/>
+    <rect x="218" y="130" width="20" height="20" fill="#55743a"/>
+    <rect x="244" y="130" width="20" height="20" fill="#d7b162"/>
+  </g>
+
+  <g transform="translate(842 252)">
+    <rect width="280" height="176" rx="14" fill="#ebdcc8"/>
+    <circle cx="56" cy="40" r="17" fill="#785131"/>
+    <rect x="44" y="58" width="24" height="60" rx="9" fill="#9e6731"/>
+    <rect x="30" y="72" width="14" height="38" rx="6" fill="#d7b162"/>
+    <rect x="68" y="72" width="14" height="38" rx="6" fill="#d7b162"/>
+    <rect x="48" y="116" width="8" height="28" rx="4" fill="#5f412d"/>
+    <rect x="60" y="116" width="8" height="28" rx="4" fill="#5f412d"/>
+    <path d="M118 40 Q86 90 118 142" fill="none" stroke="#956a3a" stroke-width="8"/>
+    <line x1="118" y1="40" x2="118" y2="142" stroke="#ece2cf" stroke-width="2"/>
+    <line x1="118" y1="92" x2="164" y2="92" stroke="#7a5730" stroke-width="4"/>
+    <polygon points="164,92 154,86 154,98" fill="#7a5730"/>
+    <text x="182" y="58" fill="#4b3726" font-size="15">Warm, clean, and legible.</text>
+    <text x="182" y="82" fill="#70543c" font-size="13">No mercenary gloss or</text>
+    <text x="182" y="106" fill="#70543c" font-size="13">court luxury.</text>
+    <rect x="182" y="130" width="20" height="20" fill="#9d5a23"/>
+    <rect x="208" y="130" width="20" height="20" fill="#eb9a42"/>
+    <rect x="234" y="130" width="20" height="20" fill="#8c2f24"/>
+  </g>
+
+  <g transform="translate(1216 252)">
+    <rect width="280" height="176" rx="14" fill="#ebdcc8"/>
+    <circle cx="58" cy="38" r="18" fill="#71472a"/>
+    <rect x="44" y="56" width="30" height="66" rx="10" fill="#9a602c"/>
+    <path d="M34 68 L44 56 L74 56 L86 68 L86 112 L74 124 L44 124 L34 112 Z" fill="none" stroke="#d7b162" stroke-width="6"/>
+    <rect x="48" y="122" width="10" height="30" rx="4" fill="#5e412d"/>
+    <rect x="62" y="122" width="10" height="30" rx="4" fill="#5e412d"/>
+    <line x1="106" y1="44" x2="106" y2="144" stroke="#7a5732" stroke-width="10"/>
+    <polygon points="106,44 146,56 106,68" fill="#8c2f24"/>
+    <text x="174" y="58" fill="#4b3726" font-size="15">Command is land stewardship,</text>
+    <text x="174" y="82" fill="#70543c" font-size="13">storehouse authority, and</text>
+    <text x="174" y="106" fill="#70543c" font-size="13">settlement defense.</text>
+    <rect x="174" y="130" width="20" height="20" fill="#9d5a23"/>
+    <rect x="200" y="130" width="20" height="20" fill="#8c2f24"/>
+    <rect x="226" y="130" width="20" height="20" fill="#d7b162"/>
+  </g>
+
+  <g transform="translate(88 574)" font-family="Arial, sans-serif">
+    <text x="0" y="24" fill="#4b3524" font-size="22">House Read Rules</text>
+    <text x="0" y="62" fill="#71553d" font-size="16">1. Hartvale should read as defended abundance: warm civility, protected agriculture, and healthier cloth color than harsher frontier houses.</text>
+    <text x="0" y="92" fill="#71553d" font-size="16">2. Verdant Warden visuals may carry restrained green support notes, but must not drift into untamed-faith or forest-spirit fantasy language.</text>
+    <text x="0" y="122" fill="#71553d" font-size="16">3. Military silhouettes stay honest for RTS scale: polearm, shield, banner, and bow reads must survive before trim detail.</text>
+
+    <text x="0" y="178" fill="#4b3524" font-size="22">What To Avoid</text>
+    <text x="0" y="216" fill="#71553d" font-size="16">- Do not make Hartvale look like a merchant-city house or a bright fantasy woodland faction.</text>
+    <text x="0" y="246" fill="#71553d" font-size="16">- Do not overuse green; harvest gold, warm orange, rope, and barn-red remain the primary read.</text>
+    <text x="0" y="276" fill="#71553d" font-size="16">- Do not separate civic identity from military identity; the lane should feel like the realm defending its own fields.</text>
+
+    <text x="0" y="332" fill="#4b3524" font-size="22">Use In Review</text>
+    <text x="0" y="370" fill="#71553d" font-size="16">This sheet supports Hartvale prompt conditioning, unit-pass silhouette review, and future settlement-defense art direction.</text>
+    <text x="0" y="400" fill="#71553d" font-size="16">It remains additive to the current Hartvale canon and unique-unit lane already present in project materials.</text>
+  </g>
+
+  <text x="64" y="992" fill="#7b5d43" font-family="Arial, sans-serif" font-size="15">House-specific silhouette board for governed graphics-lane review. Preserve Hartvale's defended agrarian identity and clear Verdant Warden separation.</text>
+</svg>

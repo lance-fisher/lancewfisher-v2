@@ -1,0 +1,13 @@
+{
+  "bloodlines_root": "D:\\ProjectsHome\\Bloodlines",
+  "platform_root": "D:\\ProjectsHome\\Bloodlines\\continuation-platform",
+  "scan_scope_policy": "bloodlines_only",
+  "full_tree_source_map": true,
+  "subset_ingest_policy": "canonical_subset_only",
+  "checkpoint_granularity": "per_file",
+  "rescan_mode": "manual_or_startup",
+  "max_chunk_chars": 1200,
+  "target_chunk_chars": 850,
+  "chunk_overlap_chars": 160,
+  "max_agent_context_chunks": 8
+}

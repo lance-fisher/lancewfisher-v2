@@ -1,0 +1,41 @@
+{
+  "cycleSeconds": 90,
+  "thresholds": {
+    "foodStrainRatio": 1.0,
+    "foodFamineConsecutiveCycles": 2,
+    "waterStrainRatio": 1.0,
+    "waterCrisisConsecutiveCycles": 1,
+    "populationCapPressureRatio": 0.95
+  },
+  "effects": {
+    "famine": {
+      "populationDeclinePerCycle": 1,
+      "loyaltyDeltaPerCycle": -4,
+      "unitMoraleMultiplier": 0.9
+    },
+    "waterCrisis": {
+      "outmigrationPerCycle": 1,
+      "loyaltyDeltaPerCycle": -6,
+      "territoryAgricultureMultiplier": 0.7
+    },
+    "stabilitySurplus": {
+      "foodRatio": 1.75,
+      "waterRatio": 1.75,
+      "loyaltyDeltaPerCycle": 1,
+      "maxLoyaltyToApply": 95
+    },
+    "capPressure": {
+      "loyaltyDeltaPerCycle": -1
+    }
+  },
+  "legibility": {
+    "foodGreenRatio": 1.35,
+    "foodYellowRatio": 1.05,
+    "waterGreenRatio": 1.35,
+    "waterYellowRatio": 1.05,
+    "populationGreenCapRatio": 0.75,
+    "populationYellowCapRatio": 0.92,
+    "loyaltyGreenFloor": 62,
+    "loyaltyYellowFloor": 32
+  }
+}

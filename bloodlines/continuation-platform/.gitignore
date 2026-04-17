@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+state/*.sqlite3
+state/*.db
+state/*.pid
+state/source_map.json
+state/canonical_source_registry.json
+state/discovered_source_registry.json
+state/model_inventory.json
+state/resume_state.json
+state/telemetry.json
+state/operations_journal.jsonl
+state/scan_checkpoints.json
+state/last_agent_result.json
+state/handoff_pack_preview.md
+state/tasks_board.json
+state/backups/

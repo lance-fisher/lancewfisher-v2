@@ -1,0 +1,209 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#efe4cf"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines House Banner System Sheet</text>
+  <text x="64" y="116" fill="#6e5a46" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: canonical House color direction, command hierarchy, and cloth readability without settling open heraldic marks</text>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="170" width="440" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="170" width="440" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="170" width="440" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="436" width="440" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="436" width="440" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="436" width="440" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="702" width="440" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="702" width="440" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="702" width="440" height="250" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g font-family="Arial, sans-serif">
+    <text x="82" y="202" fill="#47392c" font-size="16">Trueborn</text>
+    <text x="82" y="222" fill="#6a5845" font-size="13">silver primary | gold accent | institutional gravity</text>
+    <text x="598" y="202" fill="#47392c" font-size="16">Highborne</text>
+    <text x="598" y="222" fill="#6a5845" font-size="13">dark gold primary | warm gold accent | inherited nobility</text>
+    <text x="1114" y="202" fill="#47392c" font-size="16">Ironmark</text>
+    <text x="1114" y="222" fill="#6a5845" font-size="13">charcoal primary | ember accent | forge banner logic</text>
+    <text x="82" y="468" fill="#47392c" font-size="16">Goldgrave</text>
+    <text x="82" y="488" fill="#6a5845" font-size="13">merchant gold primary | bright accent | route signage feel</text>
+    <text x="598" y="468" fill="#47392c" font-size="16">Stonehelm</text>
+    <text x="598" y="488" fill="#6a5845" font-size="13">earth-brown primary | sand accent | fortified cloth mass</text>
+    <text x="1114" y="468" fill="#47392c" font-size="16">Westland</text>
+    <text x="1114" y="488" fill="#6a5845" font-size="13">frontier red primary | hot accent | wind-cut travel cloth</text>
+    <text x="82" y="734" fill="#47392c" font-size="16">Hartvale</text>
+    <text x="82" y="754" fill="#6a5845" font-size="13">harvest orange primary | bright accent | agrarian command cloth</text>
+    <text x="598" y="734" fill="#47392c" font-size="16">Whitehall</text>
+    <text x="598" y="754" fill="#6a5845" font-size="13">taupe primary | parchment accent | office and relay clarity</text>
+    <text x="1114" y="734" fill="#47392c" font-size="16">Oldcrest</text>
+    <text x="1114" y="754" fill="#6a5845" font-size="13">gray primary | pale accent | age-layered but still authoritative</text>
+  </g>
+
+  <!-- Row 1 -->
+  <g transform="translate(82 240)">
+    <line x1="24" y1="0" x2="24" y2="138" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="30" y="0" width="42" height="94" fill="#b7c4d1"/>
+    <rect x="46" y="0" width="10" height="94" fill="#f0d38c"/>
+    <polygon points="30,94 72,94 51,130" fill="#b7c4d1"/>
+    <line x1="146" y1="16" x2="146" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="152" y="16" width="34" height="72" fill="#b7c4d1"/>
+    <rect x="152" y="40" width="34" height="8" fill="#f0d38c"/>
+    <polygon points="152,88 186,88 169,112" fill="#b7c4d1"/>
+    <line x1="252" y1="28" x2="252" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="258" y="28" width="28" height="52" fill="#b7c4d1"/>
+    <rect x="266" y="28" width="12" height="52" fill="#f0d38c"/>
+    <polygon points="258,80 286,80 272,100" fill="#b7c4d1"/>
+  </g>
+
+  <g transform="translate(598 240)">
+    <line x1="24" y1="0" x2="24" y2="138" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="30" y="0" width="42" height="94" fill="#8a6b2b"/>
+    <rect x="40" y="0" width="22" height="94" fill="#e2bf62"/>
+    <polygon points="30,94 72,94 51,130" fill="#8a6b2b"/>
+    <line x1="146" y1="16" x2="146" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="152" y="16" width="34" height="72" fill="#8a6b2b"/>
+    <rect x="152" y="44" width="34" height="10" fill="#e2bf62"/>
+    <polygon points="152,88 186,88 169,112" fill="#8a6b2b"/>
+    <line x1="252" y1="28" x2="252" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="258" y="28" width="28" height="52" fill="#8a6b2b"/>
+    <rect x="264" y="28" width="16" height="52" fill="#e2bf62"/>
+    <polygon points="258,80 286,80 272,100" fill="#8a6b2b"/>
+  </g>
+
+  <g transform="translate(1114 240)">
+    <line x1="24" y1="0" x2="24" y2="138" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="30" y="0" width="42" height="94" fill="#2c3137"/>
+    <rect x="46" y="0" width="10" height="94" fill="#b6441f"/>
+    <polygon points="30,94 72,94 51,130" fill="#2c3137"/>
+    <line x1="146" y1="16" x2="146" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="152" y="16" width="34" height="72" fill="#2c3137"/>
+    <rect x="152" y="40" width="34" height="8" fill="#b6441f"/>
+    <polygon points="152,88 186,88 169,112" fill="#2c3137"/>
+    <line x1="252" y1="28" x2="252" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="258" y="28" width="28" height="52" fill="#2c3137"/>
+    <rect x="266" y="28" width="12" height="52" fill="#b6441f"/>
+    <polygon points="258,80 286,80 272,100" fill="#2c3137"/>
+  </g>
+
+  <!-- Row 2 -->
+  <g transform="translate(82 506)">
+    <line x1="24" y1="0" x2="24" y2="138" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="30" y="0" width="42" height="94" fill="#b78819"/>
+    <rect x="40" y="0" width="22" height="94" fill="#f3d55b"/>
+    <polygon points="30,94 72,94 51,130" fill="#b78819"/>
+    <line x1="146" y1="16" x2="146" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="152" y="16" width="34" height="72" fill="#b78819"/>
+    <rect x="152" y="40" width="34" height="8" fill="#f3d55b"/>
+    <polygon points="152,88 186,88 169,112" fill="#b78819"/>
+    <line x1="252" y1="28" x2="252" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="258" y="28" width="28" height="52" fill="#b78819"/>
+    <rect x="264" y="28" width="16" height="52" fill="#f3d55b"/>
+    <polygon points="258,80 286,80 272,100" fill="#b78819"/>
+  </g>
+
+  <g transform="translate(598 506)">
+    <line x1="24" y1="0" x2="24" y2="138" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="30" y="0" width="42" height="94" fill="#6a543d"/>
+    <rect x="46" y="0" width="10" height="94" fill="#c0a37a"/>
+    <polygon points="30,94 72,94 51,130" fill="#6a543d"/>
+    <line x1="146" y1="16" x2="146" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="152" y="16" width="34" height="72" fill="#6a543d"/>
+    <rect x="152" y="40" width="34" height="8" fill="#c0a37a"/>
+    <polygon points="152,88 186,88 169,112" fill="#6a543d"/>
+    <line x1="252" y1="28" x2="252" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="258" y="28" width="28" height="52" fill="#6a543d"/>
+    <rect x="266" y="28" width="12" height="52" fill="#c0a37a"/>
+    <polygon points="258,80 286,80 272,100" fill="#6a543d"/>
+  </g>
+
+  <g transform="translate(1114 506)">
+    <line x1="24" y1="0" x2="24" y2="138" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="30" y="0" width="42" height="94" fill="#922a22"/>
+    <rect x="40" y="0" width="22" height="94" fill="#df7143"/>
+    <polygon points="30,94 72,82 72,106 51,130" fill="#922a22"/>
+    <line x1="146" y1="16" x2="146" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="152" y="16" width="34" height="72" fill="#922a22"/>
+    <rect x="152" y="44" width="34" height="10" fill="#df7143"/>
+    <polygon points="152,88 186,78 186,96 169,112" fill="#922a22"/>
+    <line x1="252" y1="28" x2="252" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="258" y="28" width="28" height="52" fill="#922a22"/>
+    <rect x="264" y="28" width="16" height="52" fill="#df7143"/>
+    <polygon points="258,80 286,72 286,88 272,100" fill="#922a22"/>
+  </g>
+
+  <!-- Row 3 -->
+  <g transform="translate(82 772)">
+    <line x1="24" y1="0" x2="24" y2="138" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="30" y="0" width="42" height="94" fill="#9d5a23"/>
+    <rect x="40" y="0" width="22" height="94" fill="#eb9a42"/>
+    <polygon points="30,94 72,94 51,130" fill="#9d5a23"/>
+    <line x1="146" y1="16" x2="146" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="152" y="16" width="34" height="72" fill="#9d5a23"/>
+    <rect x="152" y="40" width="34" height="8" fill="#eb9a42"/>
+    <polygon points="152,88 186,88 169,112" fill="#9d5a23"/>
+    <line x1="252" y1="28" x2="252" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="258" y="28" width="28" height="52" fill="#9d5a23"/>
+    <rect x="264" y="28" width="16" height="52" fill="#eb9a42"/>
+    <polygon points="258,80 286,80 272,100" fill="#9d5a23"/>
+  </g>
+
+  <g transform="translate(598 772)">
+    <line x1="24" y1="0" x2="24" y2="138" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="30" y="0" width="42" height="94" fill="#80705c"/>
+    <rect x="40" y="0" width="22" height="94" fill="#d4c3aa"/>
+    <polygon points="30,94 72,94 51,130" fill="#80705c"/>
+    <line x1="146" y1="16" x2="146" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="152" y="16" width="34" height="72" fill="#80705c"/>
+    <rect x="152" y="44" width="34" height="10" fill="#d4c3aa"/>
+    <polygon points="152,88 186,88 169,112" fill="#80705c"/>
+    <line x1="252" y1="28" x2="252" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="258" y="28" width="28" height="52" fill="#80705c"/>
+    <rect x="264" y="28" width="16" height="52" fill="#d4c3aa"/>
+    <polygon points="258,80 286,80 272,100" fill="#80705c"/>
+  </g>
+
+  <g transform="translate(1114 772)">
+    <line x1="24" y1="0" x2="24" y2="138" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="30" y="0" width="42" height="94" fill="#51565d"/>
+    <rect x="40" y="0" width="22" height="94" fill="#c7c5c0"/>
+    <polygon points="30,94 72,94 51,130" fill="#51565d"/>
+    <line x1="146" y1="16" x2="146" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="152" y="16" width="34" height="72" fill="#51565d"/>
+    <rect x="152" y="40" width="34" height="8" fill="#c7c5c0"/>
+    <polygon points="152,88 186,88 169,112" fill="#51565d"/>
+    <line x1="252" y1="28" x2="252" y2="136" stroke="#6f5d47" stroke-width="6"/>
+    <rect x="258" y="28" width="28" height="52" fill="#51565d"/>
+    <rect x="264" y="28" width="16" height="52" fill="#c7c5c0"/>
+    <polygon points="258,80 286,80 272,100" fill="#51565d"/>
+  </g>
+
+  <g font-family="Arial, sans-serif" font-size="13" fill="#695544">
+    <text x="416" y="284">Command</text>
+    <text x="416" y="308">Field</text>
+    <text x="416" y="332">Signal</text>
+    <text x="932" y="284">Command</text>
+    <text x="932" y="308">Field</text>
+    <text x="932" y="332">Signal</text>
+    <text x="1448" y="284">Command</text>
+    <text x="1448" y="308">Field</text>
+    <text x="1448" y="332">Signal</text>
+    <text x="416" y="550">Command</text>
+    <text x="416" y="574">Field</text>
+    <text x="416" y="598">Signal</text>
+    <text x="932" y="550">Command</text>
+    <text x="932" y="574">Field</text>
+    <text x="932" y="598">Signal</text>
+    <text x="1448" y="550">Command</text>
+    <text x="1448" y="574">Field</text>
+    <text x="1448" y="598">Signal</text>
+    <text x="416" y="816">Command</text>
+    <text x="416" y="840">Field</text>
+    <text x="416" y="864">Signal</text>
+    <text x="932" y="816">Command</text>
+    <text x="932" y="840">Field</text>
+    <text x="932" y="864">Signal</text>
+    <text x="1448" y="816">Command</text>
+    <text x="1448" y="840">Field</text>
+    <text x="1448" y="864">Signal</text>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use with: House visual identity packs and review tags. Banner geometry is ready for command hierarchy testing; emblem fields remain open where canon marks are not yet settled.</text>
+</svg>

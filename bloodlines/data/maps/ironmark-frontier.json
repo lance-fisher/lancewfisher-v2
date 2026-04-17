@@ -10,21 +10,33 @@
     { "type": "forest", "x": 55, "y": 31, "w": 10, "h": 10 },
     { "type": "highland", "x": 20, "y": 8, "w": 10, "h": 6 },
     { "type": "highland", "x": 42, "y": 26, "w": 10, "h": 8 },
-    { "type": "river", "x": 31, "y": 0, "w": 4, "h": 48 }
+    { "type": "river", "x": 31, "y": 0, "w": 4, "h": 48 },
+    { "type": "water", "x": 0, "y": 36, "w": 8, "h": 12, "isCoastal": true },
+    { "type": "water", "x": 64, "y": 0, "w": 8, "h": 10, "isCoastal": true },
+    { "type": "water", "x": 38, "y": 40, "w": 16, "h": 2, "continentDivide": "south" },
+    { "type": "water", "x": 38, "y": 42, "w": 2, "h": 6, "continentDivide": "south" },
+    { "type": "water", "x": 52, "y": 42, "w": 2, "h": 6, "continentDivide": "south" }
   ],
   "resourceNodes": [
     { "id": "player-gold-1", "type": "gold", "x": 15.5, "y": 12.5, "amount": 3000 },
     { "id": "player-wood-1", "type": "wood", "x": 9.5, "y": 16.5, "amount": 2600 },
+    { "id": "player-stone-1", "type": "stone", "x": 13.5, "y": 9.5, "amount": 2400 },
+    { "id": "player-iron-1", "type": "iron", "x": 7.5, "y": 14.5, "amount": 1800 },
     { "id": "enemy-gold-1", "type": "gold", "x": 56.5, "y": 34.5, "amount": 3000 },
     { "id": "enemy-wood-1", "type": "wood", "x": 60.5, "y": 29.5, "amount": 2600 },
+    { "id": "enemy-stone-1", "type": "stone", "x": 58.5, "y": 37.5, "amount": 2400 },
+    { "id": "enemy-iron-1", "type": "iron", "x": 62.5, "y": 32.5, "amount": 1800 },
     { "id": "center-gold-1", "type": "gold", "x": 35.5, "y": 22.5, "amount": 4500 },
     { "id": "center-wood-1", "type": "wood", "x": 27.5, "y": 22.5, "amount": 3200 },
-    { "id": "center-wood-2", "type": "wood", "x": 43.5, "y": 22.5, "amount": 3200 }
+    { "id": "center-wood-2", "type": "wood", "x": 43.5, "y": 22.5, "amount": 3200 },
+    { "id": "center-stone-1", "type": "stone", "x": 34.5, "y": 14.5, "amount": 1600 },
+    { "id": "center-stone-2", "type": "stone", "x": 38.5, "y": 30.5, "amount": 1600 }
   ],
   "controlPoints": [
     {
       "id": "oakwatch_march",
       "name": "Oakwatch March",
+      "settlementClass": "border_settlement",
       "x": 26.5,
       "y": 19.5,
       "radiusTiles": 3.1,
@@ -37,6 +49,7 @@
     {
       "id": "rivergate_ford",
       "name": "Rivergate Ford",
+      "settlementClass": "trade_town",
       "x": 35.5,
       "y": 22.5,
       "radiusTiles": 3.3,
@@ -49,14 +62,51 @@
     {
       "id": "stonefield_watch",
       "name": "Stonefield Watch",
+      "settlementClass": "military_fort",
       "x": 45.5,
       "y": 27.5,
       "radiusTiles": 3.1,
       "captureTime": 9,
+      "continentId": "home",
       "resourceTrickle": {
         "wood": 0.2,
         "influence": 0.08
       }
+    },
+    {
+      "id": "cliffsong_outpost",
+      "name": "Cliffsong Outpost",
+      "settlementClass": "border_settlement",
+      "x": 45.5,
+      "y": 45.0,
+      "radiusTiles": 3.0,
+      "captureTime": 12,
+      "continentId": "south",
+      "resourceTrickle": {
+        "gold": 0.20,
+        "food": 0.18,
+        "influence": 0.16
+      }
+    }
+  ],
+  "settlements": [
+    {
+      "id": "ironmark_seat",
+      "name": "Ironmark Seat",
+      "factionId": "player",
+      "settlementClass": "primary_dynastic_keep",
+      "anchorBuildingId": "player-hall",
+      "x": 9.5,
+      "y": 9.5
+    },
+    {
+      "id": "stonehelm_seat",
+      "name": "Stonehelm Seat",
+      "factionId": "enemy",
+      "settlementClass": "primary_dynastic_keep",
+      "anchorBuildingId": "enemy-hall",
+      "x": 58.5,
+      "y": 34.5
     }
   ],
   "sacredSites": [
@@ -108,7 +158,7 @@
         "wood": 220,
         "food": 16,
         "water": 16,
-        "stone": 0,
+        "stone": 40,
         "iron": 0,
         "influence": 0
       },
@@ -143,7 +193,7 @@
         "wood": 210,
         "food": 14,
         "water": 14,
-        "stone": 0,
+        "stone": 40,
         "iron": 0,
         "influence": 0
       },

@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: siege_workshop
+  m_EditorClassIdentifier: Assembly-CSharp:Bloodlines.DataDefinitions:BuildingDefinition
+  id: siege_workshop
+  displayName: Siege Workshop
+  prototypeEnabled: 1
+  footprint:
+    w: 3
+    h: 3
+  health: 980
+  buildTime: 22
+  populationCapBonus: 0
+  dropoffResources: []
+  trainableUnits:
+  - ram
+  - siege_tower
+  - trebuchet
+  - ballista
+  - mantlet
+  - siege_engineer
+  - supply_wagon
+  cost:
+    gold: 120
+    food: 0
+    water: 0
+    wood: 140
+    stone: 90
+    iron: 35
+    influence: 0
+  resourceTrickle:
+    gold: 0
+    food: 0
+    water: 0
+    wood: 0
+    stone: 0
+    iron: 0
+    influence: 0
+  fortificationRole: 
+  fortificationTierContribution: 0
+  structuralDamageMultiplier: 0
+  armor: 0
+  blocksPassage: 0
+  sightBonusRadius: 0
+  auraAttackMultiplier: 0
+  auraRadius: 0
+  smeltingFuelResource: 
+  smeltingFuelRatio: 0
+  runtimePrefab: {fileID: 0}
+  icon: {fileID: 0}

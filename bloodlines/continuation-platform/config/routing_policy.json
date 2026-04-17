@@ -1,0 +1,38 @@
+{
+  "runtime": "windows_native_python",
+  "ollama_base_url": "http://127.0.0.1:11434",
+  "task_routing": {
+    "retrieval": {
+      "primary_model": "qwen-local:latest",
+      "fallback_model": "qwen2.5:latest",
+      "reason": "Fastest local general model with the largest installed context window."
+    },
+    "classification": {
+      "primary_model": "qwen-local:latest",
+      "fallback_model": "qwen2.5:latest",
+      "reason": "Cheap triage and continuity compression."
+    },
+    "summarization": {
+      "primary_model": "qwen2.5:latest",
+      "fallback_model": "llama3.1:latest",
+      "reason": "Balanced general summarization without tying up the coding model."
+    },
+    "generation": {
+      "primary_model": "qwen2.5-coder:14b",
+      "fallback_model": "qwen2.5:14b-instruct",
+      "reason": "Strongest installed local model for implementation-sensitive continuation work."
+    },
+    "design_continuation": {
+      "primary_model": "qwen2.5:14b-instruct",
+      "fallback_model": "qwen2.5-coder:14b",
+      "reason": "Better fit for doctrinal and design continuation than the coding-tuned model."
+    }
+  },
+  "optional_bridges": {
+    "openclaw": {
+      "enabled": true,
+      "mode": "optional_local_bridge",
+      "notes": "Kept as-is. The platform may call its local endpoint later, but does not depend on it for startup."
+    }
+  }
+}

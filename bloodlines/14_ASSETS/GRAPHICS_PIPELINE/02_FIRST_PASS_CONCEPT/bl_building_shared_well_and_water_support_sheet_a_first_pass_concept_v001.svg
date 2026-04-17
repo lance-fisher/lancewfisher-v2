@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#ece0cb"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Well And Water Support Sheet</text>
+  <text x="64" y="116" fill="#6c5a48" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: wells, cisterns, aqueduct support, and civic water infrastructure</text>
+
+  <g font-family="Arial, sans-serif" font-size="16" fill="#47392c">
+    <text x="92" y="170">Village Well</text>
+    <text x="612" y="170">Covered Cistern</text>
+    <text x="1128" y="170">Trough Court</text>
+    <text x="92" y="572">Aqueduct Intake</text>
+    <text x="612" y="572">Reservoir Tower</text>
+    <text x="1128" y="572">Civic Basin</text>
+  </g>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g transform="translate(84 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <circle cx="152" cy="122" r="34" fill="#6a5f52" stroke="#4e4236" stroke-width="6"/>
+    <circle cx="152" cy="122" r="22" fill="#5c7b8c"/>
+    <line x1="120" y1="90" x2="120" y2="44" stroke="#745a38" stroke-width="6"/>
+    <line x1="184" y1="90" x2="184" y2="44" stroke="#745a38" stroke-width="6"/>
+    <line x1="120" y1="44" x2="184" y2="44" stroke="#745a38" stroke-width="6"/>
+    <path d="M0 162 L64 156 L136 164 L220 158 L302 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Village wells must read instantly from their circular draw point and surrounding footpath wear.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Keep them broad and civic, not decorative fountain pieces.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#6a5f52"/>
+    <rect x="46" y="266" width="22" height="22" fill="#5c7b8c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#745a38"/>
+  </g>
+
+  <g transform="translate(600 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="116" y="84" width="136" height="62" fill="#a28b6f" stroke="#675845" stroke-width="4"/>
+    <polygon points="106,84 184,34 262,84" fill="#86633d" stroke="#644923" stroke-width="4"/>
+    <rect x="170" y="100" width="26" height="46" fill="#5c7b8c"/>
+    <path d="M0 162 L64 156 L146 164 L224 158 L304 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Covered cisterns should feel protected and infrastructural, not like minor temples.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Roof mass and protected basin read matter more than ornament.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#a28b6f"/>
+    <rect x="46" y="266" width="22" height="22" fill="#86633d"/>
+    <rect x="74" y="266" width="22" height="22" fill="#5c7b8c"/>
+  </g>
+
+  <g transform="translate(1116 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="78" y="114" width="206" height="24" fill="#9f886c" stroke="#655544" stroke-width="4"/>
+    <rect x="108" y="104" width="30" height="40" fill="#7c6751" stroke="#56483c" stroke-width="4"/>
+    <rect x="224" y="104" width="30" height="40" fill="#7c6751" stroke="#56483c" stroke-width="4"/>
+    <rect x="138" y="118" width="86" height="14" fill="#5c7b8c"/>
+    <path d="M0 162 L68 156 L148 164 L230 158 L314 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Trough courts are shared support nodes and should read as utility at a glance.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Good for worker, livestock, and civic-footfall zones.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#9f886c"/>
+    <rect x="46" y="266" width="22" height="22" fill="#5c7b8c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#7c6751"/>
+  </g>
+
+  <g transform="translate(84 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="36" y="102" width="90" height="44" fill="#8f7759" stroke="#5d4f40" stroke-width="4"/>
+    <rect x="138" y="72" width="50" height="74" fill="#9d866a" stroke="#645544" stroke-width="4"/>
+    <rect x="200" y="58" width="140" height="18" fill="#9d866a" stroke="#655544" stroke-width="4"/>
+    <path d="M0 162 L70 156 L144 164 L224 158 L316 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Aqueduct intakes need a strong water-source read and structural support logic.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Keep them broad, engineered, and grounded.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#9d866a"/>
+    <rect x="46" y="266" width="22" height="22" fill="#5c7b8c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8f7759"/>
+  </g>
+
+  <g transform="translate(600 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="152" y="36" width="74" height="110" fill="#8b745b" stroke="#5c4f40" stroke-width="4"/>
+    <rect x="164" y="52" width="50" height="36" fill="#5c7b8c"/>
+    <polygon points="144,36 190,10 236,36" fill="#765836" stroke="#5a4122" stroke-width="4"/>
+    <path d="M0 162 L72 156 L152 164 L232 158 L322 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Reservoir towers should read as elevated reserve and distribution, not military towers.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">The water mass and civic frame need to stay obvious.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#8b745b"/>
+    <rect x="46" y="266" width="22" height="22" fill="#5c7b8c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#765836"/>
+  </g>
+
+  <g transform="translate(1116 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="102" y="112" width="188" height="22" fill="#b19a7b" stroke="#6e5d48" stroke-width="4"/>
+    <ellipse cx="196" cy="122" rx="44" ry="14" fill="#5c7b8c"/>
+    <line x1="196" y1="56" x2="196" y2="108" stroke="#6f5737" stroke-width="6"/>
+    <rect x="182" y="50" width="28" height="16" fill="#bf9b4f"/>
+    <path d="M0 162 L72 156 L154 164 L236 158 L322 166 L400 160 L400 190 L0 190 Z" fill="#8f7757"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Civic basins are public order and water-presence reads, not ornamental plaza clutter.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Keep the basin shape broad enough to survive gameplay height.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#b19a7b"/>
+    <rect x="46" y="266" width="22" height="22" fill="#5c7b8c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#bf9b4f"/>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use for water-support prompting, civic-support family cohesion, and settlement-readability planning. Water structures should feel indispensable and infrastructural without drifting into decorative fantasy fountains or overly magical faith reads.</text>
+</svg>

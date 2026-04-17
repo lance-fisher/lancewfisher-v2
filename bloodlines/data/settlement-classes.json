@@ -1,0 +1,38 @@
+[
+  {
+    "id": "border_settlement",
+    "name": "Border Settlement",
+    "defensiveCeiling": 1,
+    "description": "Warning and delay. Stockade, watch tower, local militia. Expected to warn and retreat. Loss under serious assault is normal."
+  },
+  {
+    "id": "military_fort",
+    "name": "Military Fort",
+    "defensiveCeiling": 2,
+    "description": "Holds against raids and modest sieges. Walls, rotating garrison, engineer assignment, supply for medium-term siege."
+  },
+  {
+    "id": "trade_town",
+    "name": "Trade Town",
+    "defensiveCeiling": 2,
+    "description": "Protects economic core. Gates, walls, civic guard, reserve mustering. Economic value exceeds defensive scaling."
+  },
+  {
+    "id": "regional_stronghold",
+    "name": "Regional Stronghold",
+    "defensiveCeiling": 3,
+    "description": "Forces a real siege. Layered defenses, inner ring, dedicated garrison, significant supply, tower networks, signal chains."
+  },
+  {
+    "id": "primary_dynastic_keep",
+    "name": "Primary Dynastic Keep",
+    "defensiveCeiling": 4,
+    "description": "Bloodline seat. Full layered fortification, apex garrison, commander presence, faith infrastructure, succession line."
+  },
+  {
+    "id": "fortress_citadel",
+    "name": "Fortress-Citadel",
+    "defensiveCeiling": 5,
+    "description": "The hardest target in the realm. Actively-invested primary keep with every leverage form maxed."
+  }
+]

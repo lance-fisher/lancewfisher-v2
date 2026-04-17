@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#dde3e8"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f4f6f8" stroke="#38424d" stroke-width="3"/>
+  <text x="64" y="84" fill="#25303a" font-family="Georgia, serif" font-size="34">Bloodlines House Trueborn Military Silhouettes</text>
+  <text x="64" y="116" fill="#5c6975" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Scope: settled-visual-only contrast house for administrative nobility and restrained authority</text>
+
+  <g transform="translate(1128 58)">
+    <rect width="376" height="110" rx="16" fill="#e8edf1" stroke="#95a1aa" stroke-width="2"/>
+    <text x="18" y="28" fill="#384450" font-family="Arial, sans-serif" font-size="16">Palette / Material Read</text>
+    <rect x="18" y="42" width="26" height="26" rx="6" fill="#b7c4d1"/>
+    <rect x="52" y="42" width="26" height="26" rx="6" fill="#f0d38c"/>
+    <rect x="86" y="42" width="26" height="26" rx="6" fill="#7f8f9e"/>
+    <rect x="120" y="42" width="26" height="26" rx="6" fill="#efe8da"/>
+    <text x="18" y="92" fill="#5e6b76" font-family="Arial, sans-serif" font-size="13">Weathered silver, pale stone, restrained gold, ash-blue neutrals. Authority through order, not indulgence.</text>
+  </g>
+
+  <g stroke="#bcc6ce" stroke-width="2">
+    <rect x="64" y="190" width="340" height="322" rx="20" fill="#fbfdff"/>
+    <rect x="438" y="190" width="340" height="322" rx="20" fill="#fbfdff"/>
+    <rect x="812" y="190" width="340" height="322" rx="20" fill="#fbfdff"/>
+    <rect x="1186" y="190" width="340" height="322" rx="20" fill="#fbfdff"/>
+    <rect x="64" y="548" width="1462" height="404" rx="20" fill="#fbfdff"/>
+  </g>
+
+  <g font-family="Arial, sans-serif">
+    <text x="90" y="228" fill="#37434d" font-size="18">Court levy lane</text>
+    <text x="464" y="228" fill="#37434d" font-size="18">Seal guard lane</text>
+    <text x="838" y="228" fill="#37434d" font-size="18">Escort bow lane</text>
+    <text x="1212" y="228" fill="#37434d" font-size="18">Marshal command lane</text>
+  </g>
+
+  <g transform="translate(94 252)">
+    <rect width="280" height="176" rx="14" fill="#e8edf1"/>
+    <circle cx="56" cy="42" r="18" fill="#7f8f9e"/>
+    <rect x="42" y="60" width="28" height="60" rx="10" fill="#b7c4d1"/>
+    <rect x="28" y="72" width="14" height="38" rx="6" fill="#dce4ea"/>
+    <rect x="70" y="72" width="14" height="38" rx="6" fill="#dce4ea"/>
+    <rect x="46" y="118" width="10" height="32" rx="5" fill="#5c6975"/>
+    <rect x="60" y="118" width="10" height="32" rx="5" fill="#5c6975"/>
+    <path d="M108 66 L144 54 L174 72 L174 122 L140 138 L108 124 Z" fill="#d7dee4" stroke="#82909b" stroke-width="4"/>
+    <line x1="94" y1="70" x2="108" y2="120" stroke="#9a8b72" stroke-width="8"/>
+    <text x="190" y="58" fill="#37434d" font-size="15">Clean levy silhouette with</text>
+    <text x="190" y="82" fill="#60707d" font-size="13">institutional polish, not</text>
+    <text x="190" y="106" fill="#60707d" font-size="13">merchant brightness.</text>
+    <rect x="190" y="130" width="20" height="20" fill="#b7c4d1"/>
+    <rect x="216" y="130" width="20" height="20" fill="#f0d38c"/>
+    <rect x="242" y="130" width="20" height="20" fill="#7f8f9e"/>
+  </g>
+
+  <g transform="translate(468 252)">
+    <rect width="280" height="176" rx="14" fill="#e8edf1"/>
+    <circle cx="56" cy="40" r="18" fill="#81919e"/>
+    <rect x="42" y="58" width="28" height="62" rx="10" fill="#9dacb8"/>
+    <rect x="28" y="72" width="14" height="40" rx="6" fill="#c9d3db"/>
+    <rect x="70" y="72" width="14" height="40" rx="6" fill="#c9d3db"/>
+    <rect x="46" y="120" width="10" height="30" rx="5" fill="#5e6974"/>
+    <rect x="60" y="120" width="10" height="30" rx="5" fill="#5e6974"/>
+    <path d="M108 60 L158 48 L194 72 L194 126 L152 146 L108 126 Z" fill="#c3cdd6" stroke="#7f8d98" stroke-width="4"/>
+    <rect x="96" y="34" width="8" height="102" rx="4" fill="#f0d38c"/>
+    <polygon points="100,24 92,36 108,36" fill="#fff1c7"/>
+    <text x="208" y="58" fill="#37434d" font-size="15">Disciplined guard line with</text>
+    <text x="208" y="82" fill="#60707d" font-size="13">seal-work clarity and</text>
+    <text x="208" y="106" fill="#60707d" font-size="13">minimal ceremony.</text>
+    <rect x="208" y="130" width="20" height="20" fill="#b7c4d1"/>
+    <rect x="234" y="130" width="20" height="20" fill="#f0d38c"/>
+  </g>
+
+  <g transform="translate(842 252)">
+    <rect width="280" height="176" rx="14" fill="#e8edf1"/>
+    <circle cx="56" cy="40" r="17" fill="#8294a2"/>
+    <rect x="44" y="58" width="24" height="60" rx="9" fill="#b4c0ca"/>
+    <rect x="30" y="72" width="14" height="38" rx="6" fill="#dce4ea"/>
+    <rect x="68" y="72" width="14" height="38" rx="6" fill="#dce4ea"/>
+    <rect x="48" y="116" width="8" height="28" rx="4" fill="#61707c"/>
+    <rect x="60" y="116" width="8" height="28" rx="4" fill="#61707c"/>
+    <path d="M118 40 Q86 90 118 142" fill="none" stroke="#a08e74" stroke-width="8"/>
+    <line x1="118" y1="40" x2="118" y2="142" stroke="#f4f0e8" stroke-width="2"/>
+    <line x1="118" y1="92" x2="164" y2="92" stroke="#8a97a3" stroke-width="4"/>
+    <polygon points="164,92 154,86 154,98" fill="#8a97a3"/>
+    <text x="182" y="58" fill="#37434d" font-size="15">Ranged lane stays orderly,</text>
+    <text x="182" y="82" fill="#60707d" font-size="13">escort-focused, and free of</text>
+    <text x="182" y="106" fill="#60707d" font-size="13">forest or mercenary cues.</text>
+    <rect x="182" y="130" width="20" height="20" fill="#b7c4d1"/>
+    <rect x="208" y="130" width="20" height="20" fill="#f0d38c"/>
+    <rect x="234" y="130" width="20" height="20" fill="#7f8f9e"/>
+  </g>
+
+  <g transform="translate(1216 252)">
+    <rect width="280" height="176" rx="14" fill="#e8edf1"/>
+    <circle cx="58" cy="38" r="18" fill="#81909d"/>
+    <rect x="44" y="56" width="30" height="66" rx="10" fill="#b8c4ce"/>
+    <path d="M34 68 L44 56 L74 56 L86 68 L86 114 L74 126 L44 126 L34 114 Z" fill="none" stroke="#f0d38c" stroke-width="6"/>
+    <rect x="48" y="122" width="10" height="30" rx="4" fill="#61707c"/>
+    <rect x="62" y="122" width="10" height="30" rx="4" fill="#61707c"/>
+    <line x1="108" y1="42" x2="108" y2="144" stroke="#8a97a3" stroke-width="10"/>
+    <polygon points="108,42 152,56 108,70" fill="#f0d38c"/>
+    <text x="178" y="58" fill="#37434d" font-size="15">Marshal read is measured</text>
+    <text x="178" y="82" fill="#60707d" font-size="13">authority and seal-bearing</text>
+    <text x="178" y="106" fill="#60707d" font-size="13">command, not spectacle.</text>
+    <rect x="178" y="130" width="20" height="20" fill="#b7c4d1"/>
+    <rect x="204" y="130" width="20" height="20" fill="#f0d38c"/>
+    <rect x="230" y="130" width="20" height="20" fill="#7f8f9e"/>
+  </g>
+
+  <g transform="translate(88 574)" font-family="Arial, sans-serif">
+    <text x="0" y="24" fill="#38444f" font-size="22">House Read Rules</text>
+    <text x="0" y="62" fill="#5f6d79" font-size="16">1. Trueborn should read as administrative legitimacy and established order: pale stone, silver-blue discipline, restrained gold, and clear office hierarchy.</text>
+    <text x="0" y="92" fill="#5f6d79" font-size="16">2. The contrast value is composure. Silhouettes remain practical and battlefield-readable, but cleaner and more balanced than the frontier or industrial houses.</text>
+    <text x="0" y="122" fill="#5f6d79" font-size="16">3. Command treatment gains seal and sash logic rather than larger weapons or aggressive ornament.</text>
+
+    <text x="0" y="178" fill="#38444f" font-size="22">What To Avoid</text>
+    <text x="0" y="216" fill="#5f6d79" font-size="16">- Do not drift into Highborne luxury, Whitehall bureaucracy, or paladin-fantasy silver spectacle.</text>
+    <text x="0" y="246" fill="#5f6d79" font-size="16">- Do not use saturated blue or bright gold as loud faction colors; restraint is part of the read.</text>
+    <text x="0" y="276" fill="#5f6d79" font-size="16">- Do not let cloth flourish overpower the practical soldier read at RTS camera height.</text>
+
+    <text x="0" y="332" fill="#38444f" font-size="22">Use In Review</text>
+    <text x="0" y="370" fill="#5f6d79" font-size="16">This sheet provides a settled-visual-only contrast house for comparison against Ironmark, Stonehelm, and Hartvale treatment boards.</text>
+    <text x="0" y="400" fill="#5f6d79" font-size="16">It remains additive and does not settle a new gameplay roster or new Trueborn strategic lane.</text>
+  </g>
+
+  <text x="64" y="992" fill="#64727d" font-family="Arial, sans-serif" font-size="15">House-specific silhouette board for governed graphics-lane review. Preserve Trueborn's calm administrative authority and silver-blue battlefield composure.</text>
+</svg>

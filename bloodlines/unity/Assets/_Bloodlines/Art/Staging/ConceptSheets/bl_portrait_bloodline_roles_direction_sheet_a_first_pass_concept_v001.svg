@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#efe4cf"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Bloodline Roles Portrait Direction Sheet</text>
+  <text x="64" y="116" fill="#6e5a46" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: role-first portrait read, authority cues, and grounded dynasty presentation</text>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="170" width="440" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="170" width="440" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="170" width="440" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="436" width="440" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="436" width="440" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="436" width="440" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="702" width="440" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="702" width="440" height="250" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="702" width="440" height="250" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g font-family="Arial, sans-serif">
+    <text x="86" y="202" fill="#47392c" font-size="16">Head Of Bloodline</text>
+    <text x="602" y="202" fill="#47392c" font-size="16">Heir Designate</text>
+    <text x="1118" y="202" fill="#47392c" font-size="16">Commander</text>
+    <text x="86" y="468" fill="#47392c" font-size="16">Governor</text>
+    <text x="602" y="468" fill="#47392c" font-size="16">Diplomat</text>
+    <text x="1118" y="468" fill="#47392c" font-size="16">Ideological Leader</text>
+    <text x="86" y="734" fill="#47392c" font-size="16">Merchant</text>
+    <text x="602" y="734" fill="#47392c" font-size="16">Sorcerer</text>
+    <text x="1118" y="734" fill="#47392c" font-size="16">Spymaster</text>
+  </g>
+
+  <!-- Row 1 portraits -->
+  <g transform="translate(86 218)">
+    <circle cx="88" cy="74" r="32" fill="#6a4e37"/>
+    <path d="M44 196 C52 140 82 120 118 120 C156 120 186 144 194 196" fill="#5f4d3c"/>
+    <path d="M58 134 L138 134 L148 172 L48 172 Z" fill="#8d7152"/>
+    <path d="M64 122 L88 98 L112 122 L136 98 L160 122" fill="none" stroke="#d1b47a" stroke-width="8" stroke-linecap="round"/>
+    <text x="232" y="74" fill="#3f3328" font-size="15">Highest authority portrait.</text>
+    <text x="232" y="98" fill="#695544" font-size="13">Use mantle, sealwork, and calm posture.</text>
+    <text x="232" y="122" fill="#695544" font-size="13">Avoid fantasy crowns or over-ornament.</text>
+  </g>
+
+  <g transform="translate(602 218)">
+    <circle cx="88" cy="74" r="32" fill="#6d533b"/>
+    <path d="M44 196 C52 142 80 122 118 122 C156 122 184 146 192 196" fill="#6c5946"/>
+    <path d="M56 138 L138 138 L146 176 L48 176 Z" fill="#94765a"/>
+    <path d="M70 114 L88 100 L106 114" fill="none" stroke="#c9ab74" stroke-width="6" stroke-linecap="round"/>
+    <text x="232" y="74" fill="#3f3328" font-size="15">Younger authority with visible succession read.</text>
+    <text x="232" y="98" fill="#695544" font-size="13">Less mass than the House head, more tension in posture.</text>
+    <text x="232" y="122" fill="#695544" font-size="13">Use heir sash or collar cue rather than a duplicate crown.</text>
+  </g>
+
+  <g transform="translate(1118 218)">
+    <circle cx="88" cy="74" r="32" fill="#514139"/>
+    <path d="M44 196 C52 138 84 118 120 118 C156 118 186 140 196 196" fill="#525960"/>
+    <path d="M54 138 L144 138 L156 178 L42 178 Z" fill="#69737a"/>
+    <path d="M36 150 L62 126 L92 158" fill="none" stroke="#b8bfc7" stroke-width="8" stroke-linecap="round"/>
+    <text x="232" y="74" fill="#3f3328" font-size="15">Command portraits lean martial first.</text>
+    <text x="232" y="98" fill="#695544" font-size="13">Helm off or partially off, armor still readable.</text>
+    <text x="232" y="122" fill="#695544" font-size="13">Keep tactical realism above heroic glamor.</text>
+  </g>
+
+  <!-- Row 2 portraits -->
+  <g transform="translate(86 484)">
+    <circle cx="88" cy="74" r="32" fill="#6b523c"/>
+    <path d="M44 196 C52 142 82 122 120 122 C158 122 184 144 194 196" fill="#75624e"/>
+    <path d="M58 138 L138 138 L152 188 L44 188 Z" fill="#907458"/>
+    <rect x="132" y="128" width="18" height="62" fill="#dbc8ab"/>
+    <text x="232" y="74" fill="#3f3328" font-size="15">Administrative stewardship with local authority.</text>
+    <text x="232" y="98" fill="#695544" font-size="13">Ledger rod, writ tube, or survey tool can carry the role.</text>
+    <text x="232" y="122" fill="#695544" font-size="13">This is civil power, not court decoration.</text>
+  </g>
+
+  <g transform="translate(602 484)">
+    <circle cx="88" cy="74" r="32" fill="#6d543d"/>
+    <path d="M44 196 C52 144 80 122 118 122 C156 122 182 142 194 196" fill="#6f655d"/>
+    <path d="M58 138 L138 138 L150 180 L44 180 Z" fill="#8a7a67"/>
+    <path d="M144 140 L174 110 L198 136" fill="none" stroke="#d7c08c" stroke-width="8" stroke-linecap="round"/>
+    <text x="232" y="74" fill="#3f3328" font-size="15">Refined but restrained court-facing portrait lane.</text>
+    <text x="232" y="98" fill="#695544" font-size="13">Seal ribbon, letter case, or envoy clasp works well.</text>
+    <text x="232" y="122" fill="#695544" font-size="13">Avoid turning diplomacy into luxury fantasy costume.</text>
+  </g>
+
+  <g transform="translate(1118 484)">
+    <circle cx="88" cy="74" r="32" fill="#5f4735"/>
+    <path d="M44 196 C52 142 82 118 122 118 C160 118 186 142 194 196" fill="#645345"/>
+    <path d="M52 138 L142 138 L154 188 L44 188 Z" fill="#8b7458"/>
+    <circle cx="154" cy="128" r="14" fill="#d1b47a"/>
+    <text x="232" y="74" fill="#3f3328" font-size="15">Faith-facing authority without mystical excess.</text>
+    <text x="232" y="98" fill="#695544" font-size="13">Icon, seal-disc, or lit text can carry conviction.</text>
+    <text x="232" y="122" fill="#695544" font-size="13">Ground the role in institutions, not magic spectacle.</text>
+  </g>
+
+  <!-- Row 3 portraits -->
+  <g transform="translate(86 750)">
+    <circle cx="88" cy="74" r="32" fill="#6a4f37"/>
+    <path d="M44 196 C52 144 80 122 118 122 C154 122 184 142 194 196" fill="#6c5a49"/>
+    <path d="M54 138 L140 138 L150 180 L46 180 Z" fill="#957653"/>
+    <rect x="140" y="132" width="32" height="22" rx="6" fill="#b89143"/>
+    <text x="232" y="74" fill="#3f3328" font-size="15">Trade authority comes from tools and textiles, not greed caricature.</text>
+    <text x="232" y="98" fill="#695544" font-size="13">Coin box, account case, or route clasp works as identifier.</text>
+    <text x="232" y="122" fill="#695544" font-size="13">Keep the portrait grounded in logistics and status.</text>
+  </g>
+
+  <g transform="translate(602 750)">
+    <circle cx="88" cy="74" r="32" fill="#55433c"/>
+    <path d="M44 196 C52 138 80 118 118 118 C160 118 188 138 196 196" fill="#5b525b"/>
+    <path d="M50 138 L146 138 L156 192 L40 192 Z" fill="#75696f"/>
+    <circle cx="156" cy="128" r="10" fill="#c8c3ba"/>
+    <text x="232" y="74" fill="#3f3328" font-size="15">Mystic lane stays austere, human, and dangerous.</text>
+    <text x="232" y="98" fill="#695544" font-size="13">Use relic, seal-stone, or ritual pendant instead of glowing FX.</text>
+    <text x="232" y="122" fill="#695544" font-size="13">Bloodlines should never drift into anime-caster spectacle.</text>
+  </g>
+
+  <g transform="translate(1118 750)">
+    <circle cx="88" cy="74" r="32" fill="#524139"/>
+    <path d="M44 196 C52 142 80 122 118 122 C156 122 182 142 192 196" fill="#4d4742"/>
+    <path d="M58 138 L136 138 L148 182 L46 182 Z" fill="#64605c"/>
+    <path d="M150 136 L178 120 L170 156" fill="none" stroke="#b5a58d" stroke-width="8" stroke-linecap="round"/>
+    <text x="232" y="74" fill="#3f3328" font-size="15">Covert role reads through restraint and concealment.</text>
+    <text x="232" y="98" fill="#695544" font-size="13">Hood edge, folded message, or hidden blade is enough.</text>
+    <text x="232" y="122" fill="#695544" font-size="13">Avoid turning the portrait into fantasy assassin cosplay.</text>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use with: bloodline roles data, House identity packs, and portrait-direction review tags. Portrait direction is role-first and House-adaptable; it does not settle individual named-character appearances.</text>
+</svg>

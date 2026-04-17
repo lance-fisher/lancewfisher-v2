@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#e7ddcf"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f6efe4" stroke="#2d2621" stroke-width="3"/>
+  <text x="64" y="84" fill="#241f1b" font-family="Georgia, serif" font-size="34">Bloodlines House Whitehall Military Silhouettes</text>
+  <text x="64" y="116" fill="#69584a" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Scope: house treatment study, not a roster rewrite</text>
+
+  <g transform="translate(1160 58)">
+    <rect width="344" height="112" rx="16" fill="#ede3d7" stroke="#98846e" stroke-width="2"/>
+    <text x="18" y="28" fill="#392f28" font-family="Arial, sans-serif" font-size="16">Palette / Material Read</text>
+    <rect x="18" y="42" width="26" height="26" rx="6" fill="#80705c"/>
+    <rect x="52" y="42" width="26" height="26" rx="6" fill="#d4c3aa"/>
+    <rect x="86" y="42" width="26" height="26" rx="6" fill="#5e564d"/>
+    <rect x="120" y="42" width="26" height="26" rx="6" fill="#b9b3aa"/>
+    <text x="18" y="92" fill="#5f4d40" font-family="Arial, sans-serif" font-size="13">Taupe authority, parchment accent, office leather, restrained steel. Administrative order before dynastic drama.</text>
+  </g>
+
+  <g stroke="#b8a38a" stroke-width="2">
+    <rect x="64" y="190" width="340" height="322" rx="20" fill="#fbf5eb"/>
+    <rect x="438" y="190" width="340" height="322" rx="20" fill="#fbf5eb"/>
+    <rect x="812" y="190" width="340" height="322" rx="20" fill="#fbf5eb"/>
+    <rect x="1186" y="190" width="340" height="322" rx="20" fill="#fbf5eb"/>
+    <rect x="64" y="548" width="1462" height="404" rx="20" fill="#fbf5eb"/>
+  </g>
+
+  <g font-family="Arial, sans-serif">
+    <text x="90" y="228" fill="#352c26" font-size="18">Official escort line</text>
+    <text x="464" y="228" fill="#352c26" font-size="18">Seal guard lane</text>
+    <text x="838" y="228" fill="#352c26" font-size="18">Watch messenger lane</text>
+    <text x="1212" y="228" fill="#352c26" font-size="18">Council command lane</text>
+  </g>
+
+  <g transform="translate(98 252)">
+    <rect width="272" height="176" rx="14" fill="#e6ddd0"/>
+    <circle cx="56" cy="40" r="17" fill="#2a231d"/>
+    <rect x="44" y="56" width="24" height="66" rx="10" fill="#80705c"/>
+    <rect x="34" y="72" width="12" height="40" rx="6" fill="#c2b39d"/>
+    <rect x="66" y="72" width="12" height="40" rx="6" fill="#c2b39d"/>
+    <rect x="47" y="122" width="8" height="30" rx="4" fill="#29231d"/>
+    <rect x="57" y="122" width="8" height="30" rx="4" fill="#29231d"/>
+    <path d="M108 72 L148 60 L170 74 L170 124 L146 138 L108 124 Z" fill="#d7c8b1" stroke="#7f705e" stroke-width="4"/>
+    <text x="188" y="60" fill="#352d28" font-size="15">Escort lane should feel official,</text>
+    <text x="188" y="84" fill="#645243" font-size="13">composed, and procedural rather</text>
+    <text x="188" y="108" fill="#645243" font-size="13">than royal or mercantile.</text>
+  </g>
+
+  <g transform="translate(472 252)">
+    <rect width="272" height="176" rx="14" fill="#e6ddd0"/>
+    <circle cx="54" cy="38" r="17" fill="#2a231d"/>
+    <rect x="42" y="54" width="26" height="68" rx="10" fill="#7b6c58"/>
+    <path d="M34 66 L44 56 L70 56 L82 66 L82 112 L68 124 L44 124 L34 112 Z" fill="none" stroke="#d4c3aa" stroke-width="5"/>
+    <rect x="106" y="44" width="10" height="98" rx="5" fill="#5e564d"/>
+    <path d="M116 48 L164 48 L178 62 L164 78 L116 78 Z" fill="#cfc1ac" stroke="#7f705e" stroke-width="4"/>
+    <text x="198" y="60" fill="#352d28" font-size="15">Seal guard read should be</text>
+    <text x="198" y="84" fill="#645243" font-size="13">ordered and official, with rank</text>
+    <text x="198" y="108" fill="#645243" font-size="13">logic rather than highborn flair.</text>
+  </g>
+
+  <g transform="translate(846 252)">
+    <rect width="272" height="176" rx="14" fill="#e6ddd0"/>
+    <circle cx="54" cy="40" r="16" fill="#30271f"/>
+    <rect x="44" y="56" width="22" height="64" rx="9" fill="#80705c"/>
+    <rect x="48" y="120" width="7" height="28" rx="4" fill="#29231d"/>
+    <rect x="57" y="120" width="7" height="28" rx="4" fill="#29231d"/>
+    <rect x="102" y="60" width="18" height="56" rx="4" fill="#5e564d"/>
+    <line x1="120" y1="86" x2="160" y2="86" stroke="#b9b3aa" stroke-width="5"/>
+    <polygon points="160,86 150,80 150,92" fill="#b9b3aa"/>
+    <text x="182" y="60" fill="#352d28" font-size="15">Watch and courier support should</text>
+    <text x="182" y="84" fill="#645243" font-size="13">feel administrative and alert, not</text>
+    <text x="182" y="108" fill="#645243" font-size="13">ceremonial or rural.</text>
+  </g>
+
+  <g transform="translate(1220 252)">
+    <rect width="272" height="176" rx="14" fill="#e6ddd0"/>
+    <circle cx="56" cy="38" r="17" fill="#2a231d"/>
+    <rect x="44" y="54" width="28" height="68" rx="10" fill="#7b6c58"/>
+    <rect x="47" y="122" width="8" height="30" rx="4" fill="#29231d"/>
+    <rect x="59" y="122" width="8" height="30" rx="4" fill="#29231d"/>
+    <rect x="106" y="42" width="8" height="100" rx="4" fill="#5e564d"/>
+    <polygon points="114,42 154,54 114,68" fill="#d4c3aa"/>
+    <text x="182" y="60" fill="#352d28" font-size="15">Command lane should project</text>
+    <text x="182" y="84" fill="#645243" font-size="13">civil authority and paperwork-</text>
+    <text x="182" y="108" fill="#645243" font-size="13">backed order, not central royalty.</text>
+  </g>
+
+  <g transform="translate(88 574)" font-family="Arial, sans-serif">
+    <text x="0" y="24" fill="#322922" font-size="22">House Read Rules</text>
+    <text x="0" y="62" fill="#5e4d40" font-size="16">1. Whitehall should read as administrative force: composed silhouettes, measured ornament, and procedural authority instead of aristocratic splendor.</text>
+    <text x="0" y="92" fill="#5e4d40" font-size="16">2. Parchment accents and seal logic should support the read, but never swamp battlefield silhouette clarity.</text>
+    <text x="0" y="122" fill="#5e4d40" font-size="16">3. Escort, watch, and command lanes should feel coordinated and civic, tied to halls, offices, and diplomacy.</text>
+
+    <text x="0" y="178" fill="#322922" font-size="22">What To Avoid</text>
+    <text x="0" y="216" fill="#5e4d40" font-size="16">- Do not turn Whitehall into generic monastery guards, polished nobles, or faceless bureaucratic science fiction.</text>
+    <text x="0" y="246" fill="#5e4d40" font-size="16">- Do not confuse the lane with Trueborn state prestige, Highborne noble verticality, or Goldgrave trade security.</text>
+    <text x="0" y="276" fill="#5e4d40" font-size="16">- Do not overfill the silhouette with documents, seals, or ornamental panels that break RTS clarity.</text>
+
+    <text x="0" y="332" fill="#322922" font-size="22">Use In Review</text>
+    <text x="0" y="370" fill="#5e4d40" font-size="16">This sheet is a silhouette and material-direction board for future prompting, 3D blockout, icon treatment, and approved staging review.</text>
+    <text x="0" y="400" fill="#5e4d40" font-size="16">It does not declare new canon units beyond the settled Whitehall visual treatment lane.</text>
+  </g>
+
+  <text x="64" y="992" fill="#6a5848" font-family="Arial, sans-serif" font-size="15">House-specific silhouette board for governed graphics-lane review. Keep additive to canon and stage only through approved Unity staging surfaces.</text>
+</svg>

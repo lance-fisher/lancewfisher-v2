@@ -33,6 +33,10 @@ a {
   font: inherit;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 .prototype-shell {
   min-height: 100vh;
 }
@@ -183,7 +187,7 @@ a {
 }
 
 .resource-pill {
-  min-width: 120px;
+  min-width: 108px;
   padding: 10px 12px;
   border: 1px solid rgba(211, 166, 90, 0.18);
   background: rgba(52, 45, 38, 0.86);
@@ -201,6 +205,85 @@ a {
   display: block;
   font-size: 1.02rem;
   margin-top: 4px;
+}
+
+.realm-condition-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(22, 18, 15, 0.94);
+}
+
+.realm-cycle-meta {
+  min-width: 180px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+}
+
+.pressure-pill {
+  min-width: 116px;
+  padding: 10px 12px;
+  border: 1px solid rgba(211, 166, 90, 0.18);
+  background: rgba(44, 37, 31, 0.92);
+}
+
+.pressure-pill.green {
+  border-color: rgba(136, 192, 139, 0.38);
+}
+
+.pressure-pill.yellow {
+  border-color: rgba(211, 166, 90, 0.38);
+}
+
+.pressure-pill.red {
+  border-color: rgba(217, 119, 99, 0.42);
+}
+
+.pressure-label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.pressure-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+  font-size: 0.95rem;
+}
+
+.pressure-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.pressure-pill.green .pressure-dot {
+  background: var(--success);
+}
+
+.pressure-pill.yellow .pressure-dot {
+  background: var(--gold);
+}
+
+.pressure-pill.red .pressure-dot {
+  background: var(--danger);
+}
+
+.pressure-meta {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
 }
 
 .hud-actions {
@@ -323,6 +406,13 @@ a {
   min-height: 76px;
 }
 
+.action-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
+  transform: none;
+  border-color: rgba(211, 166, 90, 0.12);
+}
+
 .action-btn strong {
   display: block;
   margin-bottom: 6px;
@@ -412,5 +502,9 @@ a {
 
   .message-log {
     width: calc(100% - 32px);
+  }
+
+  .realm-condition-bar {
+    padding: 12px 16px 16px;
   }
 }

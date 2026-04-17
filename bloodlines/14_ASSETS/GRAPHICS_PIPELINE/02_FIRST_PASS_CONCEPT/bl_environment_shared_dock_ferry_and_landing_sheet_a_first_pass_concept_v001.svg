@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040">
+  <rect width="1600" height="1040" fill="#ece0cb"/>
+  <rect x="28" y="28" width="1544" height="984" rx="24" fill="#f7f0e3" stroke="#372d22" stroke-width="3"/>
+  <text x="64" y="84" fill="#2c241d" font-family="Georgia, serif" font-size="34">Bloodlines Dock, Ferry, And Landing Sheet</text>
+  <text x="64" y="116" fill="#6c5a48" font-family="Arial, sans-serif" font-size="18">Stage: first_pass_concept | Review: placeholder_only | Focus: river crossings, loading points, and grounded water-edge logistics</text>
+
+  <g font-family="Arial, sans-serif" font-size="16" fill="#47392c">
+    <text x="92" y="170">River Dock</text>
+    <text x="612" y="170">Ferry Landing</text>
+    <text x="1128" y="170">Timber Pier</text>
+    <text x="92" y="572">Cargo Wharf</text>
+    <text x="612" y="572">Fortified Crossing</text>
+    <text x="1128" y="572">Boat Yard</text>
+  </g>
+
+  <g stroke="#b8a58d" stroke-width="2">
+    <rect x="64" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="186" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="64" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="580" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+    <rect x="1096" y="588" width="440" height="334" rx="18" fill="#fcf7ef"/>
+  </g>
+
+  <g transform="translate(84 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="36" y="120" width="208" height="14" fill="#8b6d46" stroke="#5d4324" stroke-width="4"/>
+    <rect x="72" y="82" width="74" height="38" fill="#a59073" stroke="#685845" stroke-width="4"/>
+    <rect x="248" y="102" width="54" height="18" fill="#8e7559" stroke="#5f5142" stroke-width="4"/>
+    <rect x="0" y="134" width="400" height="56" fill="#5c7b8c"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">River docks need a clear loading edge and water contact before any settlement detail.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Keep the platform broad enough to read at gameplay height.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#8b6d46"/>
+    <rect x="46" y="266" width="22" height="22" fill="#5c7b8c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#a59073"/>
+  </g>
+
+  <g transform="translate(600 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="48" y="118" width="140" height="16" fill="#8a6c46" stroke="#5d4324" stroke-width="4"/>
+    <rect x="220" y="94" width="102" height="26" rx="8" fill="#a89377" stroke="#675846" stroke-width="4"/>
+    <rect x="0" y="134" width="400" height="56" fill="#5c7b8c"/>
+    <line x1="116" y1="118" x2="270" y2="108" stroke="#6f5737" stroke-width="6"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Ferry landings should read as controlled crossing points, not harbor scenes.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">The crossing vector matters more than boat detail.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#a89377"/>
+    <rect x="46" y="266" width="22" height="22" fill="#5c7b8c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8a6c46"/>
+  </g>
+
+  <g transform="translate(1116 204)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="42" y="122" width="242" height="12" fill="#7d603b" stroke="#5a4021" stroke-width="4"/>
+    <rect x="0" y="134" width="400" height="56" fill="#5c7b8c"/>
+    <rect x="294" y="88" width="52" height="34" fill="#a48d71" stroke="#685846" stroke-width="4"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Timber piers are lighter water-support reads for secondary edges and small settlements.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Do not scale them into seafront docks or naval bases.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#7d603b"/>
+    <rect x="46" y="266" width="22" height="22" fill="#5c7b8c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#a48d71"/>
+  </g>
+
+  <g transform="translate(84 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="30" y="112" width="222" height="22" fill="#8d7048" stroke="#5f4525" stroke-width="4"/>
+    <rect x="266" y="84" width="62" height="50" fill="#a58f73" stroke="#695845" stroke-width="4"/>
+    <rect x="0" y="134" width="400" height="56" fill="#5c7b8c"/>
+    <circle cx="118" cy="144" r="14" fill="#6c5948"/>
+    <circle cx="154" cy="148" r="10" fill="#6c5948"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Cargo wharves combine route-facing storage and water contact for trade readability.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">They should still stay broad and practical, not clutter-heavy.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#8d7048"/>
+    <rect x="46" y="266" width="22" height="22" fill="#5c7b8c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#6c5948"/>
+  </g>
+
+  <g transform="translate(600 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="46" y="102" width="184" height="20" fill="#8a7156" stroke="#5e5040" stroke-width="4"/>
+    <rect x="236" y="68" width="82" height="66" fill="#8f785f" stroke="#5f5142" stroke-width="4"/>
+    <rect x="0" y="134" width="400" height="56" fill="#5c7b8c"/>
+    <rect x="96" y="86" width="20" height="48" fill="#6f5737"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Fortified crossings should signal choke-point control without becoming full keeps.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">Bridgehead logic and guarded threshold are the main reads.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#8f785f"/>
+    <rect x="46" y="266" width="22" height="22" fill="#5c7b8c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#8a7156"/>
+  </g>
+
+  <g transform="translate(1116 606)">
+    <rect width="400" height="190" rx="14" fill="#ddd2c0"/>
+    <rect x="62" y="118" width="120" height="16" fill="#8b6d46" stroke="#5e4323" stroke-width="4"/>
+    <path d="M182 118 L232 92 L290 118" fill="none" stroke="#7c5f3a" stroke-width="8" stroke-linecap="round"/>
+    <rect x="0" y="134" width="400" height="56" fill="#5c7b8c"/>
+    <text x="18" y="222" fill="#3f3328" font-family="Arial, sans-serif" font-size="15">Boat yards should support maintenance and loading reads, not introduce naval-feature drift.</text>
+    <text x="18" y="246" fill="#695544" font-family="Arial, sans-serif" font-size="13">A hull frame and work platform are enough for the family read.</text>
+    <rect x="18" y="266" width="22" height="22" fill="#8b6d46"/>
+    <rect x="46" y="266" width="22" height="22" fill="#5c7b8c"/>
+    <rect x="74" y="266" width="22" height="22" fill="#7c5f3a"/>
+  </g>
+
+  <text x="64" y="996" fill="#6a5845" font-family="Arial, sans-serif" font-size="15">Use for river-edge logistics prompting, crossing-read tests, and neutral or dynastic water-support follow-ups. These are grounded medieval river assets, not seaborne naval bases or cinematic harbor sets.</text>
+</svg>
