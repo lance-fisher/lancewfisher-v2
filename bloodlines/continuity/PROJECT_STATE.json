@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-17T07:45:00-06:00",
+  "updated_at": "2026-04-17T03:09:06-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -457,8 +457,8 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-17-unity-combat-foundation.md",
-  "latest_unity_combat_handoff": "docs/unity/session-handoffs/2026-04-17-unity-combat-foundation.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md",
+  "latest_unity_combat_handoff": "docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md",
   "latest_unity_economy_handoff": "docs/unity/session-handoffs/2026-04-17-unity-cap-pressure-response.md",
   "latest_continuation_prompt": "03_PROMPTS/CONTINUATION_PROMPT_2026-04-16_SESSION_111.md",
   "latest_finalization_checklist": "docs/plans/2026-04-16-bloodlines-finalization-execution-checklist.md",
@@ -799,7 +799,7 @@
     "unit_production_system": "unity/Assets/_Bloodlines/Code/Systems/UnitProductionSystem.cs",
     "construction_system": "unity/Assets/_Bloodlines/Code/Systems/ConstructionSystem.cs",
     "control_point_capture_system": "unity/Assets/_Bloodlines/Code/Systems/ControlPointCaptureSystem.cs",
-    "status": "scene_shells_created_definition_bindings_repaired_bootstrap_scene_canonical_map_assigned_both_canonical_scene_shells_batch_validated_bootstrap_runtime_smoke_green_first_production_slice_green_queue_cancel_and_refund_green_two_deep_queue_tail_cancel_green_first_construction_slice_green_worker_gather_loop_green_first_combat_foundation_green_and_first_projectile_combat_green"
+    "status": "scene_shells_created_definition_bindings_repaired_bootstrap_scene_canonical_map_assigned_both_canonical_scene_shells_batch_validated_bootstrap_runtime_smoke_green_first_production_slice_green_queue_cancel_and_refund_green_two_deep_queue_tail_cancel_green_first_construction_slice_green_worker_gather_loop_green_first_combat_foundation_green_first_projectile_combat_green_and_attack_orders_attack_move_green"
   },
   "unity_definition_binding_repair": {
     "status": "complete",
@@ -1020,6 +1020,40 @@
     "gameplay_scene_log": "artifacts/unity-gameplay-scene-validate.log",
     "ai_attachment_compatibility_note": "SkirmishBootstrapSystem now attaches the AI economy controller reflectively when the Claude-lane component exists so projectile work remains buildable on current master without claiming Code/AI ownership.",
     "session_handoff": "docs/unity/session-handoffs/2026-04-17-unity-projectile-combat.md"
+  },
+  "unity_attack_orders_and_attack_move": {
+    "status": "complete_on_branch_pending_merge_coordination",
+    "branch": "codex/unity-attack-orders-attack-move",
+    "base_master_head": "aed6969b9152c630a67eacbd9f1759361ec28cdb",
+    "components": [
+      "unity/Assets/_Bloodlines/Code/Combat/AttackOrderComponent.cs"
+    ],
+    "systems": [
+      "unity/Assets/_Bloodlines/Code/Combat/AttackOrderSystem.cs"
+    ],
+    "order_semantics": {
+      "explicit_target_preferred_over_auto_acquire": true,
+      "explicit_orders_stop_on_sight_loss": true,
+      "attack_move_resumes_destination_after_local_engagement": true
+    },
+    "debug_bindings": {
+      "explicit_attack_order": "right_click_hostile_unit_for_selected_combat_units",
+      "attack_move_mode": "A_then_right_click_ground",
+      "cancel_attack_move_mode": "Escape"
+    },
+    "debug_command_surface_partial": "unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AttackOrders.cs",
+    "combat_smoke_validator": "unity/Assets/_Bloodlines/Code/Editor/BloodlinesCombatSmokeValidation.cs",
+    "combat_smoke_wrapper": "scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1",
+    "combat_smoke_log": "artifacts/unity-combat-smoke.log",
+    "combat_smoke_pass_line": "Combat smoke validation passed: meleePhase=True, projectilePhase=True, attackOrderPhase=True.",
+    "bootstrap_runtime_smoke_preserved_green": true,
+    "bootstrap_runtime_smoke_log": "artifacts/unity-bootstrap-runtime-smoke.log",
+    "scene_shell_validation_preserved_green": true,
+    "bootstrap_scene_log": "artifacts/unity-bootstrap-scene-validate.log",
+    "gameplay_scene_log": "artifacts/unity-gameplay-scene-validate.log",
+    "wrapper_lock_required": true,
+    "validator_path_note": "Checked-in bootstrap runtime smoke and canonical scene-shell wrappers remain pinned to D:\\ProjectsHome\\Bloodlines, so the same batch execute methods were rerun through clone-local temporary wrapper scripts in the clean D:\\ao\\bloodlines worktree to avoid colliding with the dirty canonical checkout during the concurrent Claude lane.",
+    "session_handoff": "docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md"
   },
   "preservation_guarantees": [
     "nothing_deleted_without_explicit_authorization",
