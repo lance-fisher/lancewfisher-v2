@@ -1,5 +1,65 @@
 # Session Handoff - 2026-04-16 18:06 MDT
 
+## Session 111 Update
+
+### Task
+Create the current canonical handoff and ready-to-paste next-session prompt so future work resumes from the live Session 110 command-deck and Unity-shipping state instead of the obsolete Session 104 prompt.
+
+### Status
+- [x] Complete
+- [ ] In Progress - ~0% done
+- [ ] Blocked
+
+### Completed This Session
+- `03_PROMPTS/CONTINUATION_PROMPT_2026-04-16_SESSION_111.md` - added as the new current ready-to-paste continuation prompt.
+- `docs/plans/2026-04-16-bloodlines-finalization-execution-checklist.md` - added as the explicit finalization ladder for what still remains beyond the current Unity first shell.
+- `CURRENT_PROJECT_STATE.md`, `NEXT_SESSION_HANDOFF.md`, `HANDOFF.md`, and `continuity/PROJECT_STATE.json` - updated so the new prompt becomes the authoritative re-entry surface and the Session 110 command-deck state remains the active continuation baseline.
+
+### Verification
+- `Get-Content D:\ProjectsHome\Bloodlines\03_PROMPTS\CONTINUATION_PROMPT_2026-04-16_SESSION_111.md`
+- `Get-Content D:\ProjectsHome\Bloodlines\docs\plans\2026-04-16-bloodlines-finalization-execution-checklist.md`
+- `Get-Content D:\ProjectsHome\Bloodlines\NEXT_SESSION_HANDOFF.md`
+- `Get-Content D:\ProjectsHome\Bloodlines\HANDOFF.md`
+- parse `D:\ProjectsHome\Bloodlines\continuity\PROJECT_STATE.json`
+
+### Next Action
+- Use `D:\ProjectsHome\Bloodlines\03_PROMPTS\CONTINUATION_PROMPT_2026-04-16_SESSION_111.md` for the next frontier session.
+- Use `D:\ProjectsHome\Bloodlines\docs\plans\2026-04-16-bloodlines-finalization-execution-checklist.md` as the execution ladder for what still remains.
+- Then launch `D:\ProjectsHome\Bloodlines\continuation-platform\launch_windows.cmd`, confirm `Command Deck`, confirm `Execution`, and continue the Unity finalization lane.
+
+## Session 110 Update
+
+### Task
+Move the continuation platform from an execution-packet dashboard into the true offline Bloodlines agent surface with a Codex/Claude-style back-and-forth command interface on the main screen.
+
+### Status
+- [x] Complete
+- [ ] In Progress - ~0% done
+- [ ] Blocked
+
+### Completed This Session
+- `continuation-platform/lib/core.py` - extended with a persistent local Command Deck session, slash-command local actions, local-model conversational turns, governed write-draft staging, draft apply or dismiss flow, and fallback continuity messaging for weak model JSON.
+- `continuation-platform/server.py` - added `GET /api/agent-console`, `POST /api/agent-console/message`, `POST /api/agent-console/reset`, `POST /api/agent-console/apply-draft`, and `POST /api/agent-console/dismiss-draft`.
+- `continuation-platform/static/index.html`, `continuation-platform/static/app.js`, and `continuation-platform/static/styles.css` - rebuilt the main screen around the new chat-first `Command Deck` while preserving the deeper operational views.
+- `continuation-platform/tests/smoke_test.py` - extended to prove Command Deck state, `/help`, `/search`, and `/read` behavior in addition to the existing governed write and execution checks.
+- `continuation-platform/README.md` and `continuation-platform/docs/system_design.md` - updated so platform docs now describe the Command Deck as the primary offline continuation loop.
+- `CURRENT_PROJECT_STATE.md`, `NEXT_SESSION_HANDOFF.md`, `HANDOFF.md`, and `continuity/PROJECT_STATE.json` - synchronized so future sessions treat `http://127.0.0.1:8067` as the real offline Bloodlines continuation surface.
+
+### Verification
+- `python -B -m py_compile D:\ProjectsHome\Bloodlines\continuation-platform\lib\core.py D:\ProjectsHome\Bloodlines\continuation-platform\server.py D:\ProjectsHome\Bloodlines\continuation-platform\tests\smoke_test.py`
+- `node --check D:\ProjectsHome\Bloodlines\continuation-platform\static\app.js`
+- `python D:\ProjectsHome\Bloodlines\continuation-platform\tests\smoke_test.py`
+- Live HTTP validation passed for:
+  - `GET /`
+  - `GET /api/agent-console`
+  - natural-language `POST /api/agent-console/message`
+
+### Next Action
+- Launch `D:\ProjectsHome\Bloodlines\continuation-platform\launch_windows.cmd`.
+- Work from the `Command Deck` first for `/status`, `/resume`, `/search`, `/read`, and natural-language continuation prompts.
+- Open `Execution` once the current continuation context is confirmed.
+- Continue the Unity Play Mode verification lane from the grounded execution packet.
+
 ## Session 109 Update
 
 ### Task

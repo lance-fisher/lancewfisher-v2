@@ -26,7 +26,7 @@ namespace Bloodlines.EditorTools
         private const string StateKey = "Bloodlines.EditorTools.BootstrapRuntimeSmokeValidation.State";
         private const string StartupTimeoutUtcTicksKey = "Bloodlines.EditorTools.BootstrapRuntimeSmokeValidation.TimeoutUtcTicks";
         private const string WarmupSeconds = "1.5";
-        private const double StartupTimeoutSeconds = 75d;
+        private const double StartupTimeoutSeconds = 120d;
         private const double ProbeLogIntervalSeconds = 5d;
 
         static BloodlinesBootstrapRuntimeSmokeValidation()
@@ -110,6 +110,9 @@ namespace Bloodlines.EditorTools
                     productionProgressAdvancementWaitSeconds = 1.25f,
                     constructedProductionBuildingTypeId = "barracks",
                     constructedProductionUnitId = "militia",
+                    gatherResourceId = "gold",
+                    gatherMinimumDepositAmount = 5f,
+                    gatherCycleTimeoutSeconds = 40f,
                 };
 
                 SaveState(state);
@@ -961,6 +964,12 @@ namespace Bloodlines.EditorTools
                     controlledUnitCount + " but found " + commandSelectionCount + ". " + diagnostics);
             }
 
+            var gatherProbe = ProbeWorkerGatherCycle(commandSurface, state, diagnostics);
+            if (gatherProbe.HasValue)
+            {
+                return gatherProbe.Value;
+            }
+
             diagnostics =
                 diagnostics.TrimEnd('.') +
                 ", controlledUnits=" + controlledUnitCount +
@@ -985,7 +994,13 @@ namespace Bloodlines.EditorTools
                 ", constructedProductionBuildingType=" + Quote(state.constructedProductionBuildingTypeId) +
                 ", constructedProductionSites=" + controlledConstructedProductionSiteCount +
                 ", constructedProductionQueued=" + state.constructedProductionQueued +
-                ", constructedProductionUnitType=" + Quote(state.constructedProductionUnitId) + ".";
+                ", constructedProductionUnitType=" + Quote(state.constructedProductionUnitId) +
+                ", gatherResource=" + Quote(state.gatherResourceId) +
+                ", gatherAssigned=" + state.gatherAssigned +
+                ", gatherAssignedWorkerCount=" + state.gatherAssignedWorkerCount +
+                ", gatherInitialFactionGold=" + state.gatherInitialFactionGold.ToString("0.0") +
+                ", gatherLatestFactionGold=" + state.gatherLatestFactionGold.ToString("0.0") +
+                ", gatherDepositObserved=" + state.gatherDepositObserved + ".";
 
             return ProbeResult.Pass(
                 "Bootstrap runtime smoke validation passed for " + BootstrapScenePath +
@@ -1053,6 +1068,93 @@ namespace Bloodlines.EditorTools
             }
 
             return count;
+        }
+
+        private static ProbeResult? ProbeWorkerGatherCycle(
+            BloodlinesDebugCommandSurface commandSurface,
+            RuntimeSmokeState state,
+            string diagnostics)
+        {
+            if (!state.gatherAssigned)
+            {
+                if (!commandSurface.TryDebugGetFactionStockpile(
+                    commandSurface.ControlledFactionId,
+                    out float initialGold,
+                    out _, out _, out _, out _, out _, out _))
+                {
+                    return ProbeResult.Fail(
+                        "Bootstrap runtime smoke validation failed: could not read controlled faction stockpile before gather assignment. " +
+                        diagnostics);
+                }
+
+                int assigned = commandSurface.TryDebugAssignSelectedWorkersToGatherResource(state.gatherResourceId);
+                if (assigned <= 0)
+                {
+                    return ProbeResult.Fail(
+                        "Bootstrap runtime smoke validation failed: command shell could not assign any controlled workers to gather '" +
+                        state.gatherResourceId + "'. " + diagnostics);
+                }
+
+                state.gatherAssigned = true;
+                state.gatherAssignedWorkerCount = assigned;
+                state.gatherInitialFactionGold = initialGold;
+                state.gatherLatestFactionGold = initialGold;
+                state.gatherAssignedUtcTicks = DateTime.UtcNow.Ticks;
+                SaveState(state);
+                return ProbeResult.NotReady(
+                    "Worker gather cycle assigned: workerCount=" + assigned +
+                    ", resource=" + Quote(state.gatherResourceId) +
+                    ", initialFactionGold=" + initialGold.ToString("0.0") + ". " + diagnostics);
+            }
+
+            if (!commandSurface.TryDebugGetFactionStockpile(
+                commandSurface.ControlledFactionId,
+                out float currentGold,
+                out _, out _, out _, out _, out _, out _))
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: could not read controlled faction stockpile during gather wait. " +
+                    diagnostics);
+            }
+
+            state.gatherLatestFactionGold = currentGold;
+
+            if (state.gatherDepositObserved)
+            {
+                return null;
+            }
+
+            int activeGatherers = commandSurface.GetControlledWorkersWithActiveGatherCount();
+            float depositDelta = currentGold - state.gatherInitialFactionGold;
+            float requiredDeposit = Mathf.Max(0.5f, state.gatherMinimumDepositAmount);
+
+            if (depositDelta >= requiredDeposit)
+            {
+                state.gatherDepositObserved = true;
+                SaveState(state);
+                return null;
+            }
+
+            double elapsedSeconds = ElapsedSeconds(state.gatherAssignedUtcTicks);
+            if (elapsedSeconds >= state.gatherCycleTimeoutSeconds)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: worker gather cycle did not deposit expected resources within " +
+                    state.gatherCycleTimeoutSeconds.ToString("0.0") + "s. initialGold=" +
+                    state.gatherInitialFactionGold.ToString("0.0") + ", currentGold=" +
+                    currentGold.ToString("0.0") + ", delta=" + depositDelta.ToString("0.00") +
+                    ", activeGatherers=" + activeGatherers + ", requiredDeposit=" +
+                    requiredDeposit.ToString("0.0") + ". " + diagnostics);
+            }
+
+            return ProbeResult.NotReady(
+                "Waiting for worker gather deposit. initialGold=" +
+                state.gatherInitialFactionGold.ToString("0.0") + ", currentGold=" +
+                currentGold.ToString("0.0") + ", delta=" + depositDelta.ToString("0.00") +
+                ", activeGatherers=" + activeGatherers + ", requiredDeposit=" +
+                requiredDeposit.ToString("0.0") + ", elapsedSeconds=" +
+                elapsedSeconds.ToString("0.0") + "/" + state.gatherCycleTimeoutSeconds.ToString("0.0") + ". " +
+                diagnostics);
         }
 
         private static ProbeResult? ProbeProductionProgress(
@@ -1660,6 +1762,15 @@ namespace Bloodlines.EditorTools
             public int expectedProxyMinimumAfterConstructedProduction;
             public string constructedProductionBuildingTypeId = "barracks";
             public string constructedProductionUnitId = "militia";
+            public string gatherResourceId = "gold";
+            public bool gatherAssigned;
+            public int gatherAssignedWorkerCount;
+            public float gatherInitialFactionGold;
+            public float gatherMinimumDepositAmount;
+            public bool gatherDepositObserved;
+            public float gatherLatestFactionGold;
+            public long gatherAssignedUtcTicks;
+            public float gatherCycleTimeoutSeconds;
         }
 
         private readonly struct ProbeResult
