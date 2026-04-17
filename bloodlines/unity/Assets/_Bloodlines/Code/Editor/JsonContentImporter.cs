@@ -185,7 +185,7 @@ namespace Bloodlines.EditorTools
                 asset.dropoffResources = item.dropoffResources ?? Array.Empty<string>();
                 asset.trainableUnits = item.trainableUnits ?? Array.Empty<string>();
                 asset.cost = item.cost ?? new ResourceAmountFields();
-                asset.resourceTrickle = item.resourceTrickle ?? new ResourceAmountFields();
+                asset.resourceTrickle = item.resourceTrickle ?? new ResourceTrickleFields();
                 asset.fortificationRole = item.fortificationRole;
                 asset.fortificationTierContribution = item.fortificationTierContribution;
                 asset.structuralDamageMultiplier = item.structuralDamageMultiplier;
@@ -591,7 +591,7 @@ namespace Bloodlines.EditorTools
             public string[] dropoffResources;
             public string[] trainableUnits;
             public ResourceAmountFields cost;
-            public ResourceAmountFields resourceTrickle;
+            public ResourceTrickleFields resourceTrickle;
             public string fortificationRole;
             public int fortificationTierContribution;
             public float structuralDamageMultiplier;

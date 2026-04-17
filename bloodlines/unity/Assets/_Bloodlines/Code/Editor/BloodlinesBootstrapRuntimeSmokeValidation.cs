@@ -113,6 +113,9 @@ namespace Bloodlines.EditorTools
                     gatherResourceId = "gold",
                     gatherMinimumDepositAmount = 5f,
                     gatherCycleTimeoutSeconds = 40f,
+                    trickleMinimumFoodGain = 2f,
+                    trickleMinimumWaterGain = 2f,
+                    trickleTimeoutSeconds = 30f,
                 };
 
                 SaveState(state);
@@ -964,10 +967,22 @@ namespace Bloodlines.EditorTools
                     controlledUnitCount + " but found " + commandSelectionCount + ". " + diagnostics);
             }
 
+            var trickleBaselineProbe = ProbeResourceTrickleBaseline(commandSurface, state, diagnostics);
+            if (trickleBaselineProbe.HasValue)
+            {
+                return trickleBaselineProbe.Value;
+            }
+
             var gatherProbe = ProbeWorkerGatherCycle(commandSurface, state, diagnostics);
             if (gatherProbe.HasValue)
             {
                 return gatherProbe.Value;
+            }
+
+            var trickleGainProbe = ProbeResourceTrickleGain(commandSurface, state, diagnostics);
+            if (trickleGainProbe.HasValue)
+            {
+                return trickleGainProbe.Value;
             }
 
             diagnostics =
@@ -1000,7 +1015,12 @@ namespace Bloodlines.EditorTools
                 ", gatherAssignedWorkerCount=" + state.gatherAssignedWorkerCount +
                 ", gatherInitialFactionGold=" + state.gatherInitialFactionGold.ToString("0.0") +
                 ", gatherLatestFactionGold=" + state.gatherLatestFactionGold.ToString("0.0") +
-                ", gatherDepositObserved=" + state.gatherDepositObserved + ".";
+                ", gatherDepositObserved=" + state.gatherDepositObserved +
+                ", trickleInitialFood=" + state.trickleInitialFood.ToString("0.00") +
+                ", trickleLatestFood=" + state.trickleLatestFood.ToString("0.00") +
+                ", trickleInitialWater=" + state.trickleInitialWater.ToString("0.00") +
+                ", trickleLatestWater=" + state.trickleLatestWater.ToString("0.00") +
+                ", trickleGainObserved=" + state.trickleGainObserved + ".";
 
             return ProbeResult.Pass(
                 "Bootstrap runtime smoke validation passed for " + BootstrapScenePath +
@@ -1068,6 +1088,107 @@ namespace Bloodlines.EditorTools
             }
 
             return count;
+        }
+
+        private static ProbeResult? ProbeResourceTrickleBaseline(
+            BloodlinesDebugCommandSurface commandSurface,
+            RuntimeSmokeState state,
+            string diagnostics)
+        {
+            if (state.trickleBaselineSampled)
+            {
+                return null;
+            }
+
+            if (!commandSurface.TryDebugGetFactionStockpile(
+                commandSurface.ControlledFactionId,
+                out _,
+                out _,
+                out _,
+                out _,
+                out float initialFood,
+                out float initialWater,
+                out _))
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: could not sample controlled faction food and water baseline before trickle proof. " +
+                    diagnostics);
+            }
+
+            state.trickleBaselineSampled = true;
+            state.trickleInitialFood = initialFood;
+            state.trickleInitialWater = initialWater;
+            state.trickleSampledUtcTicks = DateTime.UtcNow.Ticks;
+            SaveState(state);
+            return null;
+        }
+
+        private static ProbeResult? ProbeResourceTrickleGain(
+            BloodlinesDebugCommandSurface commandSurface,
+            RuntimeSmokeState state,
+            string diagnostics)
+        {
+            if (!state.trickleBaselineSampled)
+            {
+                return null;
+            }
+
+            if (state.trickleGainObserved)
+            {
+                return null;
+            }
+
+            if (!commandSurface.TryDebugGetFactionStockpile(
+                commandSurface.ControlledFactionId,
+                out _,
+                out _,
+                out _,
+                out _,
+                out float currentFood,
+                out float currentWater,
+                out _))
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: could not sample controlled faction food and water during trickle verification. " +
+                    diagnostics);
+            }
+
+            state.trickleLatestFood = currentFood;
+            state.trickleLatestWater = currentWater;
+
+            float foodGain = currentFood - state.trickleInitialFood;
+            float waterGain = currentWater - state.trickleInitialWater;
+            float requiredFoodGain = Mathf.Max(0.25f, state.trickleMinimumFoodGain);
+            float requiredWaterGain = Mathf.Max(0.25f, state.trickleMinimumWaterGain);
+
+            if (foodGain >= requiredFoodGain && waterGain >= requiredWaterGain)
+            {
+                state.trickleGainObserved = true;
+                SaveState(state);
+                return null;
+            }
+
+            double elapsedSeconds = ElapsedSeconds(state.trickleSampledUtcTicks);
+            if (elapsedSeconds >= state.trickleTimeoutSeconds)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: building resource trickle did not raise food and water above minimum gains within " +
+                    state.trickleTimeoutSeconds.ToString("0.0") + "s. initialFood=" +
+                    state.trickleInitialFood.ToString("0.00") + ", currentFood=" + currentFood.ToString("0.00") +
+                    ", foodGain=" + foodGain.ToString("0.00") + ", requiredFoodGain=" + requiredFoodGain.ToString("0.00") +
+                    ", initialWater=" + state.trickleInitialWater.ToString("0.00") + ", currentWater=" + currentWater.ToString("0.00") +
+                    ", waterGain=" + waterGain.ToString("0.00") + ", requiredWaterGain=" + requiredWaterGain.ToString("0.00") +
+                    ". " + diagnostics);
+            }
+
+            return ProbeResult.NotReady(
+                "Waiting for building resource trickle to raise food and water. initialFood=" +
+                state.trickleInitialFood.ToString("0.00") + ", currentFood=" + currentFood.ToString("0.00") +
+                ", foodGain=" + foodGain.ToString("0.00") + "/" + requiredFoodGain.ToString("0.00") +
+                ", initialWater=" + state.trickleInitialWater.ToString("0.00") + ", currentWater=" + currentWater.ToString("0.00") +
+                ", waterGain=" + waterGain.ToString("0.00") + "/" + requiredWaterGain.ToString("0.00") +
+                ", elapsedSeconds=" + elapsedSeconds.ToString("0.0") + "/" + state.trickleTimeoutSeconds.ToString("0.0") +
+                ". " + diagnostics);
         }
 
         private static ProbeResult? ProbeWorkerGatherCycle(
@@ -1771,6 +1892,16 @@ namespace Bloodlines.EditorTools
             public float gatherLatestFactionGold;
             public long gatherAssignedUtcTicks;
             public float gatherCycleTimeoutSeconds;
+            public bool trickleBaselineSampled;
+            public float trickleInitialFood;
+            public float trickleInitialWater;
+            public long trickleSampledUtcTicks;
+            public float trickleLatestFood;
+            public float trickleLatestWater;
+            public float trickleMinimumFoodGain;
+            public float trickleMinimumWaterGain;
+            public float trickleTimeoutSeconds;
+            public bool trickleGainObserved;
         }
 
         private readonly struct ProbeResult
