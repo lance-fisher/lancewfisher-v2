@@ -1,92 +1,190 @@
-# Concurrent Session Contract for Bloodlines Unity Work
+# Bloodlines Unity Concurrent Session Contract
 
-This file is the coordination protocol for concurrent Claude and Codex sessions
-operating on the Bloodlines Unity project. Keep it authoritative; edit only
-when the protocol itself changes.
+## Contract Metadata
 
-## Lane Ownership
+- Revision: 1
+- Last Updated: 2026-04-17
+- Last Updated By: claude-governance-2026-04-17
+- Supersedes: revision 0 (pre-schema document)
 
-| Session | Branch | Lane | Exclusive File Scope |
-|---|---|---|---|
-| Codex  | `codex/unity-combat-foundation`   | Combat foundation   | `unity/Assets/_Bloodlines/Code/Combat/**`, `unity/Assets/_Bloodlines/Code/Editor/BloodlinesCombatSmokeValidation.cs`, `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`, `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Combat.cs` |
-| Claude | `claude/unity-food-water-economy` | Food/water economy  | `unity/Assets/_Bloodlines/Code/Economy/**`, `unity/Assets/_Bloodlines/Code/Components/FoodWaterConsumptionComponent.cs`, `unity/Assets/_Bloodlines/Code/Components/ResourceProductionBuildingComponent.cs`, `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBootstrapRuntimeSmokeValidation.cs` |
+## Purpose
 
-Shared-but-surgical files (either session may edit, but keep edits narrow and
-additive; rebase/merge carefully at hand-off):
+This document is the single source of truth for Unity lane ownership, file-scope boundaries, shared-file rules, and forbidden paths across all concurrent Claude and Codex sessions working on the Bloodlines Unity project. Prompts and session handoffs do not hardcode lane data; they point here. Any session that needs to know what it may touch, what branches are in flight, or what the canonical validation gate is must read this document first. The contract is maintained across revisions so each bump constitutes an auditable record of how the concurrent session structure has evolved.
+
+## Active Lanes
+
+### Lane: economy-and-ai
+
+- Status: retired
+- Branch Prefix: `claude/unity-food-water-economy`, `claude/unity-enemy-ai-economic-base`
+- Owner Agent: claude-code
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Economy/**`
+  - `unity/Assets/_Bloodlines/Code/AI/**`
+  - `unity/Assets/_Bloodlines/Code/Components/FactionLoyaltyComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AI.cs`
+- Owned Scripts:
+  - None dedicated. The bootstrap runtime smoke (`scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1`) serves as the verification surface for this lane's work; it is a shared file governed by narrow-modification rules in the Shared Files section.
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-17-unity-building-resource-trickle-and-concurrent-session-contract.md`
+  - `docs/unity/session-handoffs/2026-04-17-unity-starvation-response-and-famine-water-crisis.md`
+  - `docs/unity/session-handoffs/2026-04-17-unity-faction-loyalty-and-famine-water-crisis-delta.md`
+  - `docs/unity/session-handoffs/2026-04-17-unity-cap-pressure-response.md`
+  - `docs/unity/session-handoffs/2026-04-17-unity-stability-surplus-loyalty-restoration.md`
+  - `docs/unity/session-handoffs/2026-04-17-unity-loyalty-density-hud-readout.md`
+  - `docs/unity/session-handoffs/2026-04-17-unity-enemy-ai-economic-base.md`
+  - `docs/unity/session-handoffs/2026-04-17-unity-enemy-ai-construction-pass.md`
+  - `docs/unity/session-handoffs/2026-04-17-unity-enemy-ai-militia-posture.md`
+- Current Branch In Flight: none (merged into master via `aed6969` on 2026-04-17, Sessions 120-124)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-17-unity-enemy-ai-militia-posture.md`
+
+### Lane: combat-and-projectile
+
+- Status: retired
+- Branch Prefix: `codex/unity-combat-foundation`, `codex/unity-projectile-combat`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Combat/**`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesCombatSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-17-unity-combat-foundation.md`
+  - `docs/unity/session-handoffs/2026-04-17-unity-projectile-combat.md`
+- Current Branch In Flight: none (`codex/unity-combat-foundation` merged at `a8dd553`; `codex/unity-projectile-combat` merged at `2ee8096`)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-17-unity-projectile-combat.md`
+
+### Lane: graphics-infrastructure
+
+- Status: active
+- Branch Prefix: `claude/unity-graphics-infrastructure`
+- Owner Agent: claude-code
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Rendering/**`
+  - `unity/Assets/_Bloodlines/Shaders/**`
+  - `unity/Assets/_Bloodlines/Code/Components/FactionTintComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Definitions/BuildingVisualDefinition.cs`
+  - `unity/Assets/_Bloodlines/Code/Definitions/UnitVisualDefinition.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlaceholderMeshGenerator.cs`
+- Owned Scripts:
+  - None yet defined. A dedicated graphics validation wrapper should be added as part of the first substantive implementation commit on this lane.
+- Lane Authority Documents:
+  - `docs/unity/VISUAL_ASSET_PIPELINE_2026-04-15.md`
+  - `docs/unity/BLOODLINES_UNITY_6_3_VISUAL_IMPLEMENTATION_GUIDE_2026-04-16.md`
+  - `docs/unity/BLOODLINES_VISUAL_TESTBED_PLAN_2026-04-16.md`
+- Current Branch In Flight: `claude/unity-graphics-infrastructure`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-17-governance-contract-source-of-truth.md`
+
+### Lane: combat-attack-move
+
+- Status: paused
+- Branch Prefix: `codex/unity-attack-move`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Combat/**` (extends the combat-and-projectile foundation)
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesCombatSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`
+- Lane Authority Documents:
+  - `docs/unity/CODEX_NEXT_PROMPT_ATTACK_MOVE.md`
+- Current Branch In Flight: none (prompt ready at the authority document above; branch not yet started)
+- Last Slice Handoff: none
+
+## Shared Files (Narrow Modification Rights for All Lanes)
+
+The following files may be edited by any lane, but only via narrow, additive changes. No lane may rewrite, restructure, or behaviorally alter these files outside of its own seam.
 
 - `unity/Assets/_Bloodlines/Code/Authoring/BloodlinesMapBootstrapAuthoring.cs`
+  Rule: add new field readings from definition assets and seed payloads only. No behavioral rewrites. No moving or removing existing authoring logic.
+
 - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMapBootstrapBaker.cs`
+  Rule: add new component baking calls for new seed element fields only. No behavioral rewrites. No removing existing baking logic.
+
+- `unity/Assets/_Bloodlines/Code/Components/MapBootstrapComponents.cs`
+  Rule: add new fields to seed element structs only. No removing or renaming existing fields. No restructuring the seed element layout.
+
 - `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs`
+  Rule: add new component attachments in `SpawnFactionEntity` and adjacent spawn helpers only. No behavioral rewrites. No removing or reordering existing spawn logic.
+
 - `unity/Assets/_Bloodlines/Code/Systems/UnitProductionSystem.cs`
+  Rule: add new component attachments on produced-unit spawn only. No behavioral rewrites. No removing existing component wiring.
+
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugEntityPresentationBridge.cs`
+  Rule: narrow fallback-check additions and new entity proxy types only. No rewrite. No behavioral change to existing proxy types. Both the combat lane and the economy/AI lane depend on this file.
+
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.cs`
+  Rule: add new debug API methods and HUD readout segments only. Do not remove or rename existing methods. Do not reorder the partial class split. When adding a substantial new command surface area, use a new partial file (e.g. `BloodlinesDebugCommandSurface.AI.cs`, `BloodlinesDebugCommandSurface.Combat.cs`).
+
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBootstrapRuntimeSmokeValidation.cs`
+  Rule: narrow additions only. New fields in `RuntimeSmokeState`, new probe phases appended after existing phases, new diagnostic output fields. Do not remove or reorder existing probe phases. Do not change the success-line format of prior probes. All existing probes must remain green after each addition.
+
 - `unity/Assets/_Bloodlines/Code/Editor/JsonContentImporter.cs`
+  Rule: add new field mappings in importer record types only. No removing existing field mappings. No changing existing import logic.
+
 - `unity/Assembly-CSharp.csproj`
-- Continuity files (`CURRENT_PROJECT_STATE.md`, `NEXT_SESSION_HANDOFF.md`,
-  `continuity/PROJECT_STATE.json`) — update only at end of slice, rebase first.
+  Rule: add new `<Compile Include="..." />` entries for new `.cs` files only. Do not remove existing references. Do not change project structure, target framework, or preprocessor defines.
 
-## Unity Wrapper Lock
+- `unity/Assembly-CSharp-Editor.csproj`
+  Rule: same as `Assembly-CSharp.csproj`. New editor-script registrations only.
 
-Unity batch mode holds a project lock. Only one session may run
-`scripts\Invoke-BloodlinesUnity*.ps1` or any Unity.exe invocation at a time.
+## Forbidden Paths (All Lanes)
 
-Lock file path: `D:\ProjectsHome\Bloodlines\.unity-wrapper-lock`
+No lane may touch the following paths without explicit per-slice authorization from Lance. Each use requires a named justification in the slice handoff.
 
-Lock file format (UTF-8, no BOM):
+- `unity/Assets/_Bloodlines/Scenes/**` - Unity scene files (`.unity`). Structural scene changes may only occur via the governed scene shell tools (`scripts/Invoke-BloodlinesUnityCreateGameplaySceneShells.ps1`, etc.) with explicit authorization.
+- `unity/ProjectSettings/**` - Unity project-wide settings. Changes affect all lanes and require explicit authorization.
+- `unity/Packages/manifest.json`, `unity/Packages/packages-lock.json` - Package manifest changes require explicit authorization and justification for the new package.
+- `src/**`, `play.html` - Browser runtime source. Frozen as behavioral specification. No new systems; only bug fixes and parity-instrumentation explicitly authorized.
+- `data/*.json` - Canonical game-data files. These drive the JSON import pipeline. Changes require explicit authorization and re-import verification.
+- `archive_preserved_sources/**`, `19_ARCHIVE/**`, `governance/**` - Preservation zones. Read-only without explicit authorization.
 
-```
-<session-name> <iso-utc-timestamp> <wrapper-script-path>
-```
+## State Documents (Append-Only At End Of Slice)
 
-Protocol:
+The following files are immutable mid-slice and append-only at end-of-slice (after rebase, before push):
 
-1. Before running any Unity wrapper, check if the lock file exists.
-2. If it exists and its timestamp is less than 15 minutes old, and its
-   `<session-name>` is not yours, wait. Poll every 30 seconds up to 10 minutes.
-3. If it exists and its timestamp is older than 15 minutes, it is stale.
-   Reclaim it by overwriting with your own session name and current timestamp.
-4. If absent, create it with your session name, current ISO UTC timestamp,
-   and the wrapper path you are about to run.
-5. Run the wrapper.
-6. On success or failure, delete the lock file.
+- `CURRENT_PROJECT_STATE.md`
+- `NEXT_SESSION_HANDOFF.md`
+- `continuity/PROJECT_STATE.json`
 
-Do not run multiple Unity wrappers in parallel. Do not skip the lock.
+Update these only after all validation gates are green. Never overwrite another lane's entries. Always rebase before updating to avoid divergent state.
 
-## Branch and Merge Discipline
+## Branch Discipline
 
-- Both sessions base their work on current `master`.
-- Both commit on their own branch.
-- Neither pushes to master directly.
-- Before pushing, rebase onto `origin/master` to keep merges linear.
-- Merges to master are human-coordinated. Neither session auto-merges the other.
+Every lane works on its own named branch following the prefix documented in the lane's subsection above. Before pushing, rebase the lane branch onto `origin/master` to keep the merge history linear. Push to the lane branch only. Never push directly to `master`. Merges to `master` are human-coordinated by Lance; neither agent auto-merges the other's branch. If two lanes have diverged significantly at merge time, produce a coordination note in a merge plan document before merging.
 
-## Validation Gates
+## Wrapper Lock
 
-Each slice is considered done only when all of these are green for the
-session's branch:
+Every Unity batch invocation must go through `scripts/Invoke-BloodlinesUnityWrapperWithLock.ps1` with `-Session <lane-identifier>` matching the lane name. The lock file lives at `.unity-wrapper-lock` in the repo root. Before invoking any Unity wrapper: check whether the lock file exists; if it does and its timestamp is less than 15 minutes old and its session name is not yours, poll every 30 seconds up to 10 minutes. If the lock is older than 15 minutes, reclaim it by overwriting with your session name and current ISO UTC timestamp. Never run two Unity wrapper scripts in parallel from the same session. Delete the lock file after the wrapper completes (success or failure).
 
-1. `dotnet build unity/Assembly-CSharp.csproj -nologo` — 0 errors.
-2. `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo` — 0 errors.
-3. `scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1` —
-   still green (no lane may break the shared first shell).
-4. The lane's own smoke validator:
-   - Combat lane: `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`
-   - Economy lane: bootstrap smoke covers this.
-5. `scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1`.
-6. `node tests/data-validation.mjs`.
-7. `node tests/runtime-bridge.mjs`.
+## Validation Gate (Canonical Order)
 
-## Handoff Discipline
+Every slice must pass all of the following before handoff. Run them serially because Unity holds a project lock.
 
-- Each session writes its own per-slice handoff at
-  `docs/unity/session-handoffs/<YYYY-MM-DD>-unity-<lane>-<slice>.md`.
-- Do not collide filenames.
-- Update `CURRENT_PROJECT_STATE.md`, `NEXT_SESSION_HANDOFF.md`, and
-  `continuity/PROJECT_STATE.json` only at the end of a slice, after rebasing,
-  and only append — never overwrite the other session's entries.
+1. `dotnet build unity/Assembly-CSharp.csproj -nologo` -- must exit 0 with 0 errors.
+2. `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo` -- must exit 0 with 0 errors.
+3. `scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1` -- must remain green; success line must carry all prior proof fields.
+4. `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1` -- must remain green for both melee and projectile phases. All lanes are responsible for not breaking the combat smoke.
+5. `scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1` -- both Bootstrap and Gameplay scene shells must validate.
+6. `node tests/data-validation.mjs` -- must exit 0.
+7. `node tests/runtime-bridge.mjs` -- must exit 0.
+8. `scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1` -- must exit 0; confirms this contract is not older than the newest session handoff.
 
-## Non-Negotiables (unchanged from root governance)
+## Staleness Rule
 
-- Full canonical depth. No MVP. No phased release.
-- Browser runtime is frozen behavioral spec; do not extend.
-- No secrets or `.env` committed.
-- No `git push --force`; no rewriting pushed commits.
-- No skipping hooks with `--no-verify`.
+Any resume session that detects the Last Updated date of this document is older than the date of the latest file under `docs/unity/session-handoffs/` must STOP and surface the staleness before doing any other work. The correct action is to bump the Revision, set Last Updated to today, set Last Updated By to the current session identifier, and amend the affected lane subsections to reflect current reality. The `scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1` script automates this check and is part of the canonical validation gate. The contract revision must be bumped whenever a lane is created, renamed, retired, or has its owned paths changed.
+
+## Reconciliation Notes
+
+The following discrepancies were found between the pre-schema contract (revision 0), the per-slice handoffs, and `NEXT_SESSION_HANDOFF.md`. They are recorded for one revision cycle and will be cleared on the next revision if resolved.
+
+1. **Economy branch name mismatch.** The pre-schema contract named the Claude economy branch `claude/unity-food-water-economy`. The actual branches used were `claude/unity-food-water-economy` (Sessions 113-116) and `claude/unity-enemy-ai-economic-base` (Sessions 120-124). Both are now merged. The lane is documented here as `economy-and-ai` to reflect the full scope it grew to cover.
+
+2. **AI paths absent from pre-schema contract.** The pre-schema contract did not list `Code/AI/**` or `BloodlinesDebugCommandSurface.AI.cs` as Claude-owned. Per the Session 120-121 handoffs, Claude created `AIEconomyControllerComponent.cs` under `Code/AI/` and the partial class file `BloodlinesDebugCommandSurface.AI.cs` under `Code/Debug/`. These are now retroactively documented under the retired economy-and-ai lane.
+
+3. **Two Codex combat branches not distinguished.** The pre-schema contract described a single combat-foundation lane on `codex/unity-combat-foundation`. In practice two branches were used: `codex/unity-combat-foundation` (merged) and `codex/unity-projectile-combat` (merged). Both are now documented under the retired combat-and-projectile lane.
+
+4. **Combat smoke gate was lane-specific, not universal.** The pre-schema contract listed the combat smoke validator as optional for the economy lane. Per the handoff record, every economy-lane slice preserved the combat smoke as green once it existed. The canonical gate now mandates it for all lanes.
+
+5. **`BloodlinesBootstrapRuntimeSmokeValidation.cs` ownership ambiguity.** The pre-schema contract listed this file as exclusively owned by the economy lane. Per the Session 113+ handoff record, all lane slices must keep it green and may add narrow diagnostic phases when their new systems require proof. It is now documented as a shared file, not exclusively owned.
+
+6. **`BloodlinesDebugCommandSurface.cs` absent from shared-file list.** This file was implicitly economy-lane-owned in the pre-schema contract. The combat-attack-move lane will need to add debug command APIs for attack orders. It is now documented as a shared file with narrow-modification rules. No conflict has occurred yet.
