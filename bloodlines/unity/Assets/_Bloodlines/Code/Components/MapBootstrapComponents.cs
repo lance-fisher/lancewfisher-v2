@@ -55,6 +55,13 @@ namespace Bloodlines.Components
         public bool BlocksPassage;
         public bool SupportsSiegePreparation;
         public bool SupportsSiegeLogistics;
+        public float GoldTrickle;
+        public float FoodTrickle;
+        public float WaterTrickle;
+        public float WoodTrickle;
+        public float StoneTrickle;
+        public float IronTrickle;
+        public float InfluenceTrickle;
     }
 
     public struct MapUnitSeedElement : IBufferElementData

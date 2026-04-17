@@ -16,7 +16,7 @@ namespace Bloodlines.DataDefinitions
         public string[] dropoffResources;
         public string[] trainableUnits;
         public ResourceAmountFields cost;
-        public ResourceAmountFields resourceTrickle;
+        public ResourceTrickleFields resourceTrickle;
 
         [Header("Fortification Canon (2026-04-14)")]
         public string fortificationRole;
