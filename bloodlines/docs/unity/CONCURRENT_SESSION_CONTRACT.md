@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 8
+- Revision: 9
 - Last Updated: 2026-04-17
 - Last Updated By: codex-fortification-siege-2026-04-17
-- Supersedes: revision 7 (dual-clock-match-progression lane retired into master; fortification-siege-imminent-engagement lane claimed by Codex)
+- Supersedes: revision 8 (fortification-siege-imminent-engagement lane remains active after sub-slice 1; fortification tier + reserves handoff landed)
 
 ## Purpose
 
@@ -242,9 +242,9 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`
 - Lane Authority Documents:
-  - none yet (first slice in progress)
+  - `docs/unity/session-handoffs/2026-04-17-unity-fortification-siege-fortification-tier-and-reserves.md`
 - Current Branch In Flight: `codex/unity-fortification-siege`
-- Last Slice Handoff: none yet
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-17-unity-fortification-siege-fortification-tier-and-reserves.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 

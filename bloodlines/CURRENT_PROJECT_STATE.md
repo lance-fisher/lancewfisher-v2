@@ -1683,3 +1683,39 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Claude or Lance should merge `codex/unity-attack-move` first.
 - After that, rebase or merge `codex/unity-target-acquisition-los` onto the refreshed `master` tip.
 - Do not widen the stacked target-acquisition branch into death presentation, renown or conviction kill hooks, or shared presentation work without a fresh contract lane assignment.
+
+### 2026-04-17 Unity Fortification Tier And Reserves (Fortification Lane Sub-slice 1)
+
+- The first fortification lane sub-slice is now complete on `codex/unity-fortification-siege`.
+- `unity/Assets/_Bloodlines/Code/Fortification/FortificationCanon.cs` now ports the browser fortification and siege constants block from `src/game/core/simulation.js:189-238`.
+- `unity/Assets/_Bloodlines/Code/Components/FortificationComponent.cs` now carries settlement fortification tier / radius state plus a neutral faith-ward seam matching the browser ward-profile shape.
+- `unity/Assets/_Bloodlines/Code/Components/FortificationReserveComponent.cs` now carries reserve muster / heal / threshold state and reserve-pool observability counts.
+- `unity/Assets/_Bloodlines/Code/Fortification/AdvanceFortificationTierSystem.cs` now resolves fortification tier from completed linked fortification-contributing buildings and syncs the result onto `SettlementComponent`.
+- `unity/Assets/_Bloodlines/Code/Fortification/FortificationReserveSystem.cs` now handles low-health retreat, triage healing, recovery-to-ready, and reserve muster-forward behavior for linked defenders in isolated ECS validation worlds.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Fortification.cs` now exposes governed tier, reserve-count, and force-muster debug APIs.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationSmokeValidation.cs` plus `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1` now prove four phases: tier-0 baseline, tier advance, reserve muster after retreat, and reserve recovery back to ready.
+- The full canonical validation gate was rerun green on this lane tip:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`
+  - wrapper-locked bootstrap runtime smoke
+  - wrapper-locked combat smoke
+  - wrapper-locked graphics runtime validation
+  - wrapper-locked canonical scene-shell validation
+  - wrapper-locked conviction, dynasty, faith, and fortification smokes
+  - `node tests/data-validation.mjs`
+  - `node tests/runtime-bridge.mjs`
+  - `scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1`
+- The per-slice handoff now lives at `docs/unity/session-handoffs/2026-04-17-unity-fortification-siege-fortification-tier-and-reserves.md`.
+- The concurrent-session contract is now revision 5 with the fortification lane still active and its first slice handoff recorded explicitly.
+
+### Immediate Next Direction Override (Fortification Lane)
+
+- Stay on `codex/unity-fortification-siege` for sub-slice 2 rather than opening a second fortification branch.
+- Next implementation target is siege supply logistics only:
+  - `SiegeStateComponent`
+  - `SiegeSupplyLogisticsComponent`
+  - field-water strain / critical / attrition logic
+  - governed siege smoke validation and wrapper
+- Keep all fortification / siege validation in isolated ECS worlds until the later bootstrap-integration slice.
+- Do not wire fortification faith-ward multipliers into combat yet. The seam exists; multiplier application remains deferred.
+- Re-check `git branch --show-current` before any future commit or continuity edit. Branch drift was observed during wrapper execution in this Codex session.
