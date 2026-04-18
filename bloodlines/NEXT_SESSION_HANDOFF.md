@@ -1500,3 +1500,52 @@ Lane: `dual-clock-match-progression`, Branch: `claude/unity-match-progression`
 
 ### Next Lane Action
 Retire dual-clock-match-progression lane to master once sub-slice 3 is merged. Future extension points: wiring `declareInWorldTime` at dynasty operations, marriage events, and holy war sites; replacing `sustainedWarActive` proxy with real siege engine count once Codex fortification-siege lane is merged.
+
+## Session 128 Unity Fortification Tier And Reserves
+
+- Status: green on `codex/unity-fortification-siege`; contract lane `fortification-siege-imminent-engagement` remains active in contract Revision 9.
+- Delivered:
+  - `FortificationCanon.cs` direct port of the browser fortification / siege constants block
+  - `FortificationComponent.cs` fortification tier / radius state plus neutral fortification faith-ward seam
+  - `FortificationReserveComponent.cs` reserve threshold / heal / count state
+  - `AdvanceFortificationTierSystem.cs` deterministic fortification-tier advancement from completed linked buildings
+  - `FortificationReserveSystem.cs` retreat, triage heal, recovery, and muster-forward reserve cycling
+  - `BloodlinesDebugCommandSurface.Fortification.cs` with tier, reserve-count, and force-muster APIs
+  - `BloodlinesFortificationSmokeValidation.cs` and `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1`
+- Validation status:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo` green
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo` green
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1` green
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1` green
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityGraphicsRuntimeValidation.ps1` green
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1` green
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityConvictionSmokeValidation.ps1` green
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityDynastySmokeValidation.ps1` green
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityFaithSmokeValidation.ps1` green
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1` green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - `scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1` green on the fortification branch
+- Handoff doc: `docs/unity/session-handoffs/2026-04-17-unity-fortification-siege-fortification-tier-and-reserves.md`
+
+## Next Session Instruction (Session 128)
+
+- Resume on `codex/unity-fortification-siege`.
+- Proceed directly to sub-slice 2: siege supply logistics.
+- Read the same browser reference cluster again before coding:
+  - `src/game/core/simulation.js` `tickSiegeSupportLogistics`
+  - `src/game/core/simulation.js` `getFactionSiegeState`
+  - field-water / unsupplied constants from the fortification canon block
+- Add only the lane-owned siege files:
+  - `unity/Assets/_Bloodlines/Code/Components/SiegeStateComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Components/SiegeSupplyLogisticsComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Siege/**`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Siege.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSiegeSmokeValidation.cs`
+  - `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`
+- Keep scope discipline:
+  - no bootstrap-scene spawn-flow integration yet
+  - no combat-file edits
+  - no scout raid / logistics interdiction / convoy harassment Tier 2 work
+  - no fortification faith-ward multiplier application yet
+- Before any commit or continuity update, verify `git branch --show-current`. This session observed repeated branch drift during Unity wrapper runs, including drift onto `master` and sibling Claude branches.
