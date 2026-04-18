@@ -1473,3 +1473,30 @@ Lane: `dual-clock-match-progression`, Branch: `claude/unity-match-progression`
 
 ### Next Action (Sub-Slice 2)
 Wire the declaration seam: implement `DualClockDeclarationSystem` that lets in-world events declare time jumps via a `DeclareInWorldTimeRequest` buffer element (browser: `declareInWorldTime` at 13800). Port `rivalContactActive`, `sustainedWarActive`, `contestedBorder` signals by querying ControlPoint proximity between player and enemy factions. Update stage 4 requirements from placeholder false to live signals.
+
+## Dual-Clock + Match-Progression Lane: Sub-Slice 3 Complete (2026-04-17)
+
+### Slice
+Lane: `dual-clock-match-progression`, Branch: `claude/unity-match-progression`
+
+### Work Completed
+- `unity/Assets/_Bloodlines/Code/Time/DualClockDeclarationBridgeSystem.cs` -- observes CP ownership changes, fires 14-day declaration on each capture (browser: declareInWorldTime:8155)
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBootstrapRuntimeSmokeValidation.cs` -- narrow additions: `matchProgressionChecked` field, `ProbeMatchProgressionIntegrity` method (asserts DualClock and MatchProgression singletons present + sane), `matchProgressionChecked=True` in pass-line diagnostics
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors, 0 warnings
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- data-validation.mjs: passed
+- runtime-bridge.mjs: passed
+- contract staleness check: PASSED revision=6
+
+### Lane Status After Sub-Slice 3
+- DualClockComponent singleton: ticks each frame, holds DeclarationCount
+- DeclareInWorldTimeRequest buffer: any system can push time jumps
+- DualClockDeclarationSystem: processes buffer each frame
+- DualClockDeclarationBridgeSystem: fires capture events -> 14 in-world days per capture
+- MatchProgressionEvaluationSystem: stages 1-3 fully live; stage 4 live via contestedBorder + unit proximity; stage 5 pending world-pressure port
+- BootstrapRuntimeSmoke: matchProgressionChecked=True probe confirms singletons always present in live bootstrap world
+
+### Next Lane Action
+Retire dual-clock-match-progression lane to master once sub-slice 3 is merged. Future extension points: wiring `declareInWorldTime` at dynasty operations, marriage events, and holy war sites; replacing `sustainedWarActive` proxy with real siege engine count once Codex fortification-siege lane is merged.

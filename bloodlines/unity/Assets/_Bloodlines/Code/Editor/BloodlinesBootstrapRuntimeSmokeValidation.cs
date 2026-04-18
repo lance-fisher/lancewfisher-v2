@@ -4,6 +4,7 @@ using Bloodlines.Authoring;
 using Bloodlines.Components;
 using Bloodlines.DataDefinitions;
 using Bloodlines.Debug;
+using Bloodlines.GameTime;
 using Bloodlines.SaveLoad;
 using Unity.Collections;
 using Unity.Entities;
@@ -1037,6 +1038,12 @@ namespace Bloodlines.EditorTools
                 return snapshotIntegrityProbe.Value;
             }
 
+            var matchProgressionProbe = ProbeMatchProgressionIntegrity(commandSurface, state, diagnostics);
+            if (matchProgressionProbe.HasValue)
+            {
+                return matchProgressionProbe.Value;
+            }
+
             diagnostics =
                 diagnostics.TrimEnd('.') +
                 ", controlledUnits=" + controlledUnitCount +
@@ -1105,6 +1112,7 @@ namespace Bloodlines.EditorTools
                 ", stabilitySurplusLoyaltyLatest=" + state.stabilitySurplusLoyaltyLatest.ToString("0.00") +
                 ", stabilitySurplusObserved=" + state.stabilitySurplusObserved +
                 ", snapshotIntegrityChecked=" + state.snapshotIntegrityChecked +
+                ", matchProgressionChecked=" + state.matchProgressionChecked +
                 ", aiMilitaryOrdersIssued=" +
                 (commandSurface.TryDebugGetAIMilitaryOrdersIssued(state.aiFactionId, out int militaryOrders) ? militaryOrders : 0) +
                 (commandSurface.TryDebugGetAIBuildingCounts(state.aiFactionId, out int aiDwellings, out int aiFarms, out int aiWells, out int aiBarracks)
@@ -1223,6 +1231,56 @@ namespace Bloodlines.EditorTools
             }
 
             state.snapshotIntegrityChecked = true;
+            SaveState(state);
+            return null;
+        }
+
+        // Probe: assert the DualClock and MatchProgression singletons are present and sane
+        // after the full bootstrap world has been running for multiple update ticks.
+        // Browser equivalent: state.dualClock and state.matchProgression always-present invariants.
+        private static ProbeResult? ProbeMatchProgressionIntegrity(
+            BloodlinesDebugCommandSurface commandSurface,
+            RuntimeSmokeState state,
+            string diagnostics)
+        {
+            if (state.matchProgressionChecked) return null;
+
+            if (!BloodlinesDebugCommandSurface.TryDebugGetDualClock(out var clock))
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: TryDebugGetDualClock returned false -- " +
+                    "DualClockComponent singleton not present in bootstrap world. " + diagnostics);
+            }
+
+            if (clock.DaysPerRealSecond <= 0f)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: DualClock.DaysPerRealSecond=" +
+                    clock.DaysPerRealSecond + " is not positive. " + diagnostics);
+            }
+
+            if (!BloodlinesDebugCommandSurface.TryDebugGetMatchProgression(out var mp))
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: TryDebugGetMatchProgression returned false -- " +
+                    "MatchProgressionComponent singleton not present in bootstrap world. " + diagnostics);
+            }
+
+            if (mp.StageNumber < 1 || mp.StageNumber > 5)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: MatchProgression.StageNumber=" +
+                    mp.StageNumber + " out of valid range [1,5]. " + diagnostics);
+            }
+
+            if (mp.StageReadiness < 0f || mp.StageReadiness > 1f)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: MatchProgression.StageReadiness=" +
+                    mp.StageReadiness.ToString("0.00") + " out of [0,1]. " + diagnostics);
+            }
+
+            state.matchProgressionChecked = true;
             SaveState(state);
             return null;
         }
@@ -2538,6 +2596,7 @@ namespace Bloodlines.EditorTools
             public float stabilitySurplusTimeoutSeconds;
             public bool stabilitySurplusObserved;
             public bool snapshotIntegrityChecked;
+            public bool matchProgressionChecked;
         }
 
         private readonly struct ProbeResult
