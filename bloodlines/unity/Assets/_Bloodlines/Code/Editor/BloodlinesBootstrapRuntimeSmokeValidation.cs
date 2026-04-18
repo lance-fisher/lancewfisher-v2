@@ -1044,6 +1044,12 @@ namespace Bloodlines.EditorTools
                 return matchProgressionProbe.Value;
             }
 
+            var worldPressureProbe = ProbeWorldPressureIntegrity(state, diagnostics);
+            if (worldPressureProbe.HasValue)
+            {
+                return worldPressureProbe.Value;
+            }
+
             diagnostics =
                 diagnostics.TrimEnd('.') +
                 ", controlledUnits=" + controlledUnitCount +
@@ -1113,6 +1119,7 @@ namespace Bloodlines.EditorTools
                 ", stabilitySurplusObserved=" + state.stabilitySurplusObserved +
                 ", snapshotIntegrityChecked=" + state.snapshotIntegrityChecked +
                 ", matchProgressionChecked=" + state.matchProgressionChecked +
+                ", worldPressureChecked=" + state.worldPressureChecked +
                 ", aiMilitaryOrdersIssued=" +
                 (commandSurface.TryDebugGetAIMilitaryOrdersIssued(state.aiFactionId, out int militaryOrders) ? militaryOrders : 0) +
                 (commandSurface.TryDebugGetAIBuildingCounts(state.aiFactionId, out int aiDwellings, out int aiFarms, out int aiWells, out int aiBarracks)
@@ -1281,6 +1288,58 @@ namespace Bloodlines.EditorTools
             }
 
             state.matchProgressionChecked = true;
+            SaveState(state);
+            return null;
+        }
+
+        private static ProbeResult? ProbeWorldPressureIntegrity(
+            RuntimeSmokeState state,
+            string diagnostics)
+        {
+            if (state.worldPressureChecked) return null;
+
+            // WorldPressureCycleTracker singleton must be present (created by WorldPressureEscalationSystem.OnCreate).
+            if (!BloodlinesDebugCommandSurface.TryDebugGetWorldPressureCycleTracker(out var tracker))
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: TryDebugGetWorldPressureCycleTracker returned false -- " +
+                    "WorldPressureCycleTrackerComponent singleton not present. " + diagnostics);
+            }
+
+            if (tracker.CycleSeconds <= 0f)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: WorldPressureCycleTracker.CycleSeconds=" +
+                    tracker.CycleSeconds + " is not positive. " + diagnostics);
+            }
+
+            // All kingdom factions with WorldPressureComponent must have Level in [0,3].
+            var world = UnityEngine.GameObject.FindObjectOfType<UnityEngine.MonoBehaviour>()?.gameObject.scene.IsValid() ?? false
+                ? Unity.Entities.World.DefaultGameObjectInjectionWorld
+                : Unity.Entities.World.DefaultGameObjectInjectionWorld;
+            if (world != null)
+            {
+                var em = world.EntityManager;
+                var q = em.CreateEntityQuery(
+                    Unity.Entities.ComponentType.ReadOnly<Bloodlines.Components.WorldPressureComponent>());
+                if (!q.IsEmpty)
+                {
+                    using var wpData = q.ToComponentDataArray<Bloodlines.Components.WorldPressureComponent>(Unity.Collections.Allocator.Temp);
+                    for (int i = 0; i < wpData.Length; i++)
+                    {
+                        if (wpData[i].Level < 0 || wpData[i].Level > 3)
+                        {
+                            q.Dispose();
+                            return ProbeResult.Fail(
+                                "Bootstrap runtime smoke validation failed: WorldPressureComponent.Level=" +
+                                wpData[i].Level + " out of valid range [0,3]. " + diagnostics);
+                        }
+                    }
+                }
+                q.Dispose();
+            }
+
+            state.worldPressureChecked = true;
             SaveState(state);
             return null;
         }
@@ -2597,6 +2656,7 @@ namespace Bloodlines.EditorTools
             public bool stabilitySurplusObserved;
             public bool snapshotIntegrityChecked;
             public bool matchProgressionChecked;
+            public bool worldPressureChecked;
         }
 
         private readonly struct ProbeResult
