@@ -1222,6 +1222,15 @@
       "description": "WorldPressureEscalationSystem ported from simulation.js updateWorldPressureEscalation/applyWorldPressureConsequences. Score/Streak/Level/consequences per faction; 90s cycle gating; dominant-leader check; stage 5 convergence wired into MatchProgressionEvaluationSystem. 4-phase smoke green. Contract rev 8->9.",
       "handoff": "docs/unity/session-handoffs/2026-04-18-unity-world-pressure-escalation.md",
       "validation_gates": "all 8 green"
+    },
+    {
+      "lane": "ai-strategic-layer",
+      "date": "2026-04-18",
+      "branch": "codex/unity-fortification-siege",
+      "status": "active",
+      "description": "EnemyAIStrategySystem ISystem: territory expansion, scout/harass dispatch, world-pressure posture conditioning (Expand/Consolidate/Defend), reinforcement routing. AIStrategyComponent + AIStrategicPosture. SkirmishBootstrapSystem seeds component on non-player Kingdom factions. Debug surface slimmed to TryDebugGetAIStrategy. 4-phase smoke PASS. Contract rev 9->10.",
+      "handoff": "docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-1.md",
+      "validation_gates": "all 8 green"
     }
   ]
 }

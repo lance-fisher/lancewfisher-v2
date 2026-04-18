@@ -2,9 +2,9 @@
 
 ## Contract Metadata
 
-- Revision: 9
+- Revision: 10
 - Last Updated: 2026-04-18
-- Last Updated By: claude-world-pressure-2026-04-18
+- Last Updated By: claude-ai-strategic-layer-2026-04-18
 - Supersedes: revision 2 (Tier 1 migration plan now authoritative; Tier 1 Conviction, Dynasty, Faith slices merged; group-movement slice merged with all 8 combat phases; continuity prompt v2 published)
 
 ## Purpose
@@ -245,6 +245,29 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - Current Branch In Flight: none (merged into master)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-world-pressure-escalation.md`
 
+### Lane: ai-strategic-layer
+
+- Status: active
+- Branch Prefix: `codex/unity-fortification-siege` (current branch; sub-slice 1 carried on this branch)
+- Owner Agent: claude-code
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/AI/AIStrategyComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/AI/EnemyAIStrategySystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIStrategySmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AIStrategy.cs`
+  - `scripts/Invoke-BloodlinesUnityAIStrategySmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs` -- `AIStrategyComponent` seeded on non-player Kingdom faction entities alongside `AIEconomyControllerComponent`
+  - `unity/Assembly-CSharp.csproj` -- `AIStrategyComponent.cs`, `EnemyAIStrategySystem.cs` registered
+  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs` registered
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-1.md`
+- Browser Reference:
+  - `src/game/core/ai.js` `pickTerritoryTarget` (~747), `pickScoutHarassTarget` (~412), `getWorldPressureRaidTarget` (~817)
+  - Sub-slices pending: supply chain/convoy management (~1100), siege staging, dynasty-aware covert ops (~2681)
+- Current Branch In Flight: `codex/unity-fortification-siege`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-1.md`
+
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
@@ -256,12 +279,6 @@ Forward work is prioritized in the browser-to-Unity migration plan at `docs/plan
 - Browser Reference: `src/game/core/simulation.js` `advanceFortificationTier`, `tickFortificationReserves`, `tickSiegeSupportLogistics`, `tickImminentEngagementWarnings`.
 - Canon: `04_SYSTEMS/TERRITORY_SYSTEM.md`, `governance/DEFENSIVE_FORTIFICATION_DOCTRINE.md`.
 
-### Next Lane Candidate: ai-strategic-layer-port
-
-- Suggested Branch: `claude/unity-ai-strategic-layer` or `codex/unity-ai-strategic-layer`.
-- Target Paths: `unity/Assets/_Bloodlines/Code/AI/**` (extensive additions).
-- Browser Reference: `src/game/core/ai.js` (3,141 LOC full strategic brain).
-- Scope: port in per-stage slices. Each sub-slice gets its own handoff.
 
 ## Shared Files (Narrow Modification Rights for All Lanes)
 
