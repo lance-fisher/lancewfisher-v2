@@ -1,5 +1,8 @@
-# Claude local session state
-.claude/
+# Claude local session state (session counters, hook flags, local state)
+.claude/*
+# Skills are project assets; exception allows future additions without force-add
+!.claude/skills
+!.claude/skills/**
 
 # Python bytecode
 __pycache__/
