@@ -2,7 +2,7 @@
 
 ## Contract Metadata
 
-- Revision: 6
+- Revision: 7
 - Last Updated: 2026-04-17
 - Last Updated By: claude-match-progression-2026-04-17
 - Supersedes: revision 2 (Tier 1 migration plan now authoritative; Tier 1 Conviction, Dynasty, Faith slices merged; group-movement slice merged with all 8 combat phases; continuity prompt v2 published)
@@ -201,7 +201,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: dual-clock-match-progression
 
-- Status: active
+- Status: retired (all 3 sub-slices merged into master on 2026-04-17)
 - Branch Prefix: `claude/unity-match-progression`
 - Owner Agent: claude-code
 - Owned Paths (exclusive):
