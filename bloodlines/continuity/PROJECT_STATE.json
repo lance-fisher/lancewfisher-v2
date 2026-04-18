@@ -474,7 +474,9 @@
     "last_updated_by": "claude-save-load-snapshot-2026-04-17",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
     "active_lanes": [],
-    "paused_lanes": ["combat-group-movement-and-stances"],
+    "paused_lanes": [
+      "combat-group-movement-and-stances"
+    ],
     "retired_lanes": [
       "economy-and-ai",
       "combat-and-projectile",
@@ -1210,5 +1212,16 @@
     "unity_group_movement_separation_and_stances_added_additively",
     "governed_unity_wrappers_wait_for_explicit_log_outcomes_under_harness",
     "tests_remain_green"
+  ],
+  "unity_lanes": [
+    {
+      "lane": "world-pressure-escalation",
+      "date": "2026-04-18",
+      "branch": "claude/unity-world-pressure",
+      "status": "retired",
+      "description": "WorldPressureEscalationSystem ported from simulation.js updateWorldPressureEscalation/applyWorldPressureConsequences. Score/Streak/Level/consequences per faction; 90s cycle gating; dominant-leader check; stage 5 convergence wired into MatchProgressionEvaluationSystem. 4-phase smoke green. Contract rev 8->9.",
+      "handoff": "docs/unity/session-handoffs/2026-04-18-unity-world-pressure-escalation.md",
+      "validation_gates": "all 8 green"
+    }
   ]
 }
