@@ -1683,3 +1683,16 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Claude or Lance should merge `codex/unity-attack-move` first.
 - After that, rebase or merge `codex/unity-target-acquisition-los` onto the refreshed `master` tip.
 - Do not widen the stacked target-acquisition branch into death presentation, renown or conviction kill hooks, or shared presentation work without a fresh contract lane assignment.
+
+### 2026-04-18 Unity World Pressure Escalation (Session 128)
+
+- `WorldPressureEscalationSystem` ported from `updateWorldPressureEscalation` / `applyWorldPressureConsequences` (simulation.js:13709, 13695) into Unity ECS on branch `claude/unity-world-pressure`.
+- `WorldPressureComponent` (per-faction: Score, Streak, Level, Label, Targeted, TerritoryExpansionScore, GreatReckoningScore) and `WorldPressureCycleTrackerComponent` (singleton, 90s canonical cycle) live in `unity/Assets/_Bloodlines/Code/WorldPressure/`.
+- Score/Targeted update every frame for HUD accuracy; Streak/Level/consequences gate behind 90-second `WorldPressureCycleTrackerComponent` accumulator. Dominant-leader check: score >= 4 AND strictly highest.
+- Score sources ported: territoryExpansion = max(0, territories - 2), greatReckoning = 4 when GR target. Remaining sources deferred to later systems (divineRight, offHomeHoldings, holyWar, captives, hostileOps, darkExtremes).
+- ApplyConsequences: lowest-loyalty CP loses [level] loyalty per cycle; DynastyStateComponent.Legitimacy -= (level - 1) when level >= 2.
+- `MatchProgressionEvaluationSystem` stage 5 convergence now includes `playerWorldPressureConvergence` (Targeted && Level >= 3).
+- `BloodlinesBootstrapRuntimeSmokeValidation` now includes `ProbeWorldPressureIntegrity` and reports `worldPressureChecked` in its diagnostics line.
+- 4-phase smoke validator added: Phase 1 (tracker defaults), Phase 2 (score/expansion, no dominant), Phase 3 (dominant leader streak to Level 3), Phase 4 (loyalty drain consequence). All phases green.
+- All 8 required gates green; contract bumped revision 8 -> 9, world-pressure-escalation lane retired.
+- The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-18-unity-world-pressure-escalation.md`.
