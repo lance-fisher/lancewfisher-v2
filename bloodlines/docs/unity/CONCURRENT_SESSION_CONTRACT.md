@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 13
+- Revision: 14
 - Last Updated: 2026-04-18
-- Last Updated By: claude-merge-fortification-siege-2026-04-18
-- Supersedes: revision 12 (fortification-siege sub-slices 1+2 merged: fortification-tier/reserves, siege-support/field-water; tier2-batch-dynasty, victory-conditions, and ai-strategic-layer sub-slice 1 all landed on master from codex/unity-fortification-siege)
+- Last Updated By: claude-ai-strategic-pressure-2026-04-18
+- Supersedes: revision 13 (ai-strategic-layer sub-slice 2 landed: AIStrategicPressureSystem ports timer clamp/floor block from ai.js lines 1127-1241; tier2-batch-dynasty and victory-conditions lanes retired)
 
 ## Purpose
 
@@ -248,30 +248,35 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: ai-strategic-layer
 
 - Status: active
-- Branch Prefix: `codex/unity-fortification-siege` (current branch; sub-slice 1 carried on this branch)
+- Branch Prefix: `claude/unity-ai-strategic-pressure` (sub-slice 2); future sub-slices on new branches
 - Owner Agent: claude-code
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/AI/AIStrategyComponent.cs`
   - `unity/Assets/_Bloodlines/Code/AI/EnemyAIStrategySystem.cs`
+  - `unity/Assets/_Bloodlines/Code/AI/AIStrategicPressureSystem.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIStrategySmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIStrategicPressureSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AIStrategy.cs`
   - `scripts/Invoke-BloodlinesUnityAIStrategySmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityAIStrategicPressureSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs` -- `AIStrategyComponent` seeded on non-player Kingdom faction entities alongside `AIEconomyControllerComponent`
-  - `unity/Assembly-CSharp.csproj` -- `AIStrategyComponent.cs`, `EnemyAIStrategySystem.cs` registered
-  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs` registered
+  - `unity/Assembly-CSharp.csproj` -- `AIStrategyComponent.cs`, `EnemyAIStrategySystem.cs`, `AIStrategicPressureSystem.cs` registered
+  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs`, `BloodlinesAIStrategicPressureSmokeValidation.cs` registered
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-1.md`
+  - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-2-pressure.md`
 - Browser Reference:
-  - `src/game/core/ai.js` `pickTerritoryTarget` (~747), `pickScoutHarassTarget` (~412), `getWorldPressureRaidTarget` (~817)
+  - Sub-slice 1: `src/game/core/ai.js` `pickTerritoryTarget` (~747), `pickScoutHarassTarget` (~412), `getWorldPressureRaidTarget` (~817)
+  - Sub-slice 2: `src/game/core/ai.js` timer clamp/floor block lines 1127-1241
   - Sub-slices pending: supply chain/convoy management (~1100), siege staging, dynasty-aware covert ops (~2681)
-- Current Branch In Flight: `codex/unity-fortification-siege`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-1.md`
+- Current Branch In Flight: `claude/unity-ai-strategic-pressure`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-2-pressure.md`
 
 ### Lane: victory-conditions
 
-- Status: active
-- Branch Prefix: `codex/unity-fortification-siege` (current branch; carried alongside ai-strategic-layer and tier2-batch-dynasty)
+- Status: retired (all 3 conditions merged to master 2026-04-18 via codex/unity-fortification-siege)
+- Branch Prefix: `codex/unity-fortification-siege` (merged)
 - Owner Agent: claude-code
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/Victory/**`
@@ -288,8 +293,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: tier2-batch-dynasty-systems
 
-- Status: active
-- Branch Prefix: `codex/unity-fortification-siege` (current branch; carried on this branch alongside ai-strategic-layer sub-slice 1)
+- Status: retired (all 5 systems merged to master 2026-04-18 via codex/unity-fortification-siege)
+- Branch Prefix: `codex/unity-fortification-siege` (merged)
 - Owner Agent: claude-code
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageComponents.cs`

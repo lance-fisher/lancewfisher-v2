@@ -49,5 +49,21 @@ namespace Bloodlines.Components
         public float ReinforcementAccumulator;
         public float ReinforcementIntervalSeconds; // canonical default 10s
         public int ReinforcementOrdersIssued;
+
+        // --- strategic timers (ai.js updateEnemyAi countdown timers, lines 960-963) ---
+        // Each counts down each frame; action fires when <= 0 and timer resets.
+        public float AttackTimer;           // canonical initial 20s
+        public float TerritoryTimer;        // canonical initial 12s
+        public float RaidTimer;             // canonical initial 18s
+        public float MarriageProposalTimer; // canonical initial 90s
+        public float HolyWarTimer;          // canonical initial 95s
+        public float AssassinationTimer;    // canonical initial 80s
+        public float MissionaryTimer;       // canonical initial 70s
+
+        // --- match stage gates (ai.js lines 1103-1107) ---
+        // RivalryUnlocked: stage >= 2 or rivalry pressure override is active.
+        // RaidPressureUnlocked: stage >= 3 or raidPressureOverride is active.
+        public bool RivalryUnlocked;
+        public bool RaidPressureUnlocked;
     }
 }
