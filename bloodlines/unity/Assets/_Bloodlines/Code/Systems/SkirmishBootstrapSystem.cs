@@ -225,6 +225,14 @@ namespace Bloodlines.Systems
                     MilitaryPostureMinimumMilitiaCount = 2,
                     MilitaryPostureApproachRadius = 2.5f,
                 });
+                entityManager.AddComponentData(entity, new AIStrategyComponent
+                {
+                    ExpansionIntervalSeconds             = 8f,
+                    ScoutHarassIntervalSeconds           = 12f,
+                    WorldPressureResponseIntervalSeconds = 15f,
+                    ReinforcementIntervalSeconds         = 10f,
+                    CurrentPosture                       = AIStrategicPosture.Expand,
+                });
             }
 
             return entity;
