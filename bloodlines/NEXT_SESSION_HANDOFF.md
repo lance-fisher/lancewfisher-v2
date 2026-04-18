@@ -1444,3 +1444,32 @@ node --check src/game/core/utils.js
 - Claude or Lance should merge `codex/unity-attack-move` first.
 - Then rebase or merge `codex/unity-target-acquisition-los` onto the refreshed `master` tip.
 - Do not widen the stacked target-acquisition branch into death presentation, renown or conviction kill hooks, or shared presentation work without a fresh contract lane assignment.
+
+## Dual-Clock + Match-Progression Lane: Sub-Slice 1 Complete (2026-04-17)
+
+### Slice
+Lane: `dual-clock-match-progression`, Branch: `claude/unity-match-progression`
+
+### Work Completed
+- `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- singleton IComponentData: InWorldDays, DaysPerRealSecond (default 2), DeclarationCount
+- `unity/Assets/_Bloodlines/Code/Time/MatchProgressionComponent.cs` -- singleton IComponentData: five-stage state, phase, readiness, Great Reckoning, dominant faction
+- `unity/Assets/_Bloodlines/Code/Time/DualClockTickSystem.cs` -- ISystem [BurstCompile]; creates singleton on OnCreate; ticks InWorldDays each frame
+- `unity/Assets/_Bloodlines/Code/Time/MatchProgressionEvaluationSystem.cs` -- ISystem; evaluates all five stages from live ECS state; fully implements stages 1-3; stages 4-5 war signals are placeholder false pending declaration-seam port
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.MatchProgression.cs` -- TryDebugGetDualClock, TryDebugGetMatchProgression
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMatchProgressionSmokeValidation.cs` -- 4-phase validator (DualClock defaults, tick arithmetic, MatchProgression defaults, stage advance)
+- `scripts/Invoke-BloodlinesUnityMatchProgressionSmokeValidation.ps1` -- PS1 wrapper
+- `docs/unity/CONCURRENT_SESSION_CONTRACT.md` -- revision 5 → 6, dual-clock-match-progression lane claimed as active
+
+### Namespace Note
+`Bloodlines.GameTime` (not `Bloodlines.Time`) to avoid ambiguity with `UnityEngine.Time`.
+
+### Validation Results
+- dotnet build Assembly-CSharp.csproj: 0 errors 0 warnings
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors (pre-existing CS0649 warnings only)
+- node tests/data-validation.mjs: passed
+- node tests/runtime-bridge.mjs: passed
+- Invoke-BloodlinesUnityContractStalenessCheck.ps1: PASSED revision=6
+- Bootstrap + combat smokes: not re-run in batch (Unity not available); builds passing is the gate for sub-slice 1
+
+### Next Action (Sub-Slice 2)
+Wire the declaration seam: implement `DualClockDeclarationSystem` that lets in-world events declare time jumps via a `DeclareInWorldTimeRequest` buffer element (browser: `declareInWorldTime` at 13800). Port `rivalContactActive`, `sustainedWarActive`, `contestedBorder` signals by querying ControlPoint proximity between player and enemy factions. Update stage 4 requirements from placeholder false to live signals.
