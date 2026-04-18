@@ -21,7 +21,7 @@ namespace Bloodlines.Systems
     ///     [Stage 4 war signals remain false until the declaration-seam sub-slice is ported.]
     ///   Stage 5 (final_convergence) -- convergence active OR dominant share >= 0.75,
     ///     highest faith level >= 5, in-world years >= 12.
-    ///     [Convergence flag remains false until world-pressure port.]
+    ///     Convergence active = player WorldPressureComponent.Targeted && Level >= 3.
     ///
     /// Great Reckoning: triggers when dominant kingdom holds >= 70% of all kingdom
     /// territories. Releases when share falls below 66%.
@@ -204,6 +204,23 @@ namespace Bloodlines.Systems
                 if (militaryFactions[i].FactionId == playerFactionId) playerMilitaryCount++;
             militaryFactions.Dispose();
 
+            // --- Stage 5 world-pressure convergence signal (browser getWorldPressureConvergenceProfile) ---
+            // Active when the player faction has Targeted=true and Level >= 3.
+            bool playerWorldPressureConvergence = false;
+            {
+                var wpQ = em.CreateEntityQuery(
+                    ComponentType.ReadOnly<FactionComponent>(),
+                    ComponentType.ReadOnly<WorldPressureComponent>());
+                var wpFactions = wpQ.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+                var wpComps = wpQ.ToComponentDataArray<WorldPressureComponent>(Allocator.Temp);
+                wpQ.Dispose();
+                for (int i = 0; i < wpFactions.Length; i++)
+                    if (wpFactions[i].FactionId == playerFactionId && wpComps[i].Targeted && wpComps[i].Level >= 3)
+                        playerWorldPressureConvergence = true;
+                wpFactions.Dispose();
+                wpComps.Dispose();
+            }
+
             // --- Stage 4 rival contact signals (browser getRivalContactProfile) ---
             // directFrontContact: player unit within 220 units of any enemy unit.
             // contestedBorder: any CP owned by one faction and being captured by the other.
@@ -288,8 +305,8 @@ namespace Bloodlines.Systems
             bool stageFourReady = stageThreeReady && stageFourRivalContact &&
                                   stageFourContestedBorder && stageFourSustainedWar;
 
-            // Stage 5: dominant share >= 0.75 OR highest faith >= 5, years >= 12.
-            bool stageFiveConvergence = dominantTerritoryShare >= 0.75f || highestFaithLevel >= 5;
+            // Stage 5: dominant share >= 0.75 OR highest faith >= 5 OR world pressure convergence active.
+            bool stageFiveConvergence = dominantTerritoryShare >= 0.75f || highestFaithLevel >= 5 || playerWorldPressureConvergence;
             bool stageFiveYears = inWorldYears >= 12f;
             bool stageFiveReady = stageFourReady && stageFiveConvergence && stageFiveYears;
 

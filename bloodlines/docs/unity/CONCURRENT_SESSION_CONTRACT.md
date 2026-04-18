@@ -2,9 +2,9 @@
 
 ## Contract Metadata
 
-- Revision: 7
-- Last Updated: 2026-04-17
-- Last Updated By: claude-match-progression-2026-04-17
+- Revision: 9
+- Last Updated: 2026-04-18
+- Last Updated By: claude-world-pressure-2026-04-18
 - Supersedes: revision 2 (Tier 1 migration plan now authoritative; Tier 1 Conviction, Dynasty, Faith slices merged; group-movement slice merged with all 8 combat phases; continuity prompt v2 published)
 
 ## Purpose
@@ -220,6 +220,30 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `DUAL_CLOCK_DEFAULT_DAYS_PER_REAL_SECOND = 2`
 - Current Branch In Flight: `claude/unity-match-progression`
 - Last Slice Handoff: none yet
+
+### Lane: world-pressure-escalation
+
+- Status: retired
+- Branch Prefix: `claude/unity-world-pressure`
+- Owner Agent: claude-code
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/**`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesWorldPressureSmokeValidation.cs`
+  - `scripts/Invoke-BloodlinesUnityWorldPressureSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Time/MatchProgressionEvaluationSystem.cs` -- stage 5 convergence signal: `|| playerWorldPressureConvergence` added (WorldPressureComponent.Targeted && Level >= 3)
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBootstrapRuntimeSmokeValidation.cs` -- ProbeWorldPressureIntegrity probe added after matchProgressionChecked phase; worldPressureChecked field added
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.WorldPressure.cs` -- new partial class file (TryDebugGetWorldPressure, TryDebugGetWorldPressureCycleTracker)
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-18-unity-world-pressure-escalation.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `updateWorldPressureEscalation` (13709), `calculateWorldPressureScore` (13225), `applyWorldPressureConsequences` (13695), `getWorldPressureSourceBreakdown` (13162), `getWorldPressureConvergenceProfile` (13272)
+  - Score sources ported: territoryExpansion = max(0, territories - 2), greatReckoning = 4 when GR target
+  - Score sources reserved for later: divineRightDeclaration, territorialGovernanceRecognition, offHomeHoldings, holyWar, captives, hostileOperations, darkExtremes
+  - Dominant leader: score >= 4 and strictly highest; streak thresholds: 1/3/6 for levels 1/2/3
+  - GREAT_RECKONING_PRESSURE_SCORE = 4 (simulation.js:406)
+- Current Branch In Flight: none (merged into master)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-world-pressure-escalation.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 

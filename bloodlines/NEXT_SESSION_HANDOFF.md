@@ -1500,3 +1500,34 @@ Lane: `dual-clock-match-progression`, Branch: `claude/unity-match-progression`
 
 ### Next Lane Action
 Retire dual-clock-match-progression lane to master once sub-slice 3 is merged. Future extension points: wiring `declareInWorldTime` at dynasty operations, marriage events, and holy war sites; replacing `sustainedWarActive` proxy with real siege engine count once Codex fortification-siege lane is merged.
+
+---
+
+## 2026-04-18 World Pressure Escalation Lane (Session 128)
+
+### Status: COMPLETE and MERGED to master
+
+### What Was Done
+- Ported `updateWorldPressureEscalation` / `applyWorldPressureConsequences` (simulation.js:13709, 13695) into Unity ECS.
+- `WorldPressureEscalationSystem` in `unity/Assets/_Bloodlines/Code/WorldPressure/` runs in SimulationSystemGroup before MatchProgressionEvaluationSystem.
+- Score sources active: territoryExpansion (max(0, territories-2)), greatReckoning (4 when GR target).
+- Stage 5 convergence now live: MatchProgressionEvaluationSystem includes `playerWorldPressureConvergence` (Targeted && Level >= 3).
+- Bootstrap smoke now probes WorldPressure integrity (`worldPressureChecked=True`).
+- 4-phase smoke validator all green; contract revision 8 -> 9, lane retired.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS (worldPressureChecked=True)
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- data-validation.mjs: passed
+- runtime-bridge.mjs: passed
+- Contract staleness check: PASSED revision=9
+- World pressure smoke: Phase 1-4 PASS
+
+### Next Unclaimed Tier 1 Lanes
+See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" section. Top candidates:
+1. fortification-siege-imminent-engagement (Codex has claimed `codex/unity-fortification-siege`)
+2. ai-strategic-layer-port
+3. victory-conditions-system
