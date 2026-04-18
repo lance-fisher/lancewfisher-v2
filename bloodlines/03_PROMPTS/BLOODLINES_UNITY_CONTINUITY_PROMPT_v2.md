@@ -7,9 +7,19 @@ Canonical location: `D:\ProjectsHome\Bloodlines\03_PROMPTS\BLOODLINES_UNITY_CONT
 
 Paste the body below into a new session. Do not modify it mid-paste. Do not edit it for brevity. The prompt is a specification, not a draft.
 
+This prompt is dual-agent: it applies to both Claude Code and Codex sessions. Passages that differ by agent are explicitly labeled. Everything else is shared discipline.
+
 ---
 
 Continuing Bloodlines Unity development. This is a resume, not a fresh start. Do not re-explain the project. Do not re-debate the approach. Do not re-litigate scope. The vision is locked.
+
+## AGENT IDENTIFICATION (first action)
+
+Identify which agent you are.
+
+- **If you are Claude Code:** read `D:\ProjectsHome\Bloodlines\CLAUDE.md` and the ambient `.claude/rules/*.md` as you would normally. Your lane claims use the `claude/unity-*` branch prefix. Your wrapper-lock `-Session` identifier uses `claude-<lane>-<date>`.
+- **If you are Codex:** read `D:\ProjectsHome\Bloodlines\AGENTS.md` first for canonical root and preservation rules, then this prompt. Your lane claims use the `codex/unity-*` branch prefix. Your wrapper-lock `-Session` identifier uses `codex-<lane>-<date>`.
+- **Both agents** share the same contract, migration plan, validation gate, and Definition of Done. Neither agent may claim a lane currently owned by the other per `docs\unity\CONCURRENT_SESSION_CONTRACT.md`. If two agents are running concurrently, each claims exactly one lane on its own prefix and commits only to that branch.
 
 ## VISION RECONFIRMATION, NON-NEGOTIABLE
 
@@ -47,7 +57,7 @@ The browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-m
 
 ## BRANCH DISCIPLINE (critical, read before every commit)
 
-The continuation platform has been observed silently moving `HEAD` to a sibling branch mid-session (typically `codex/unity-group-movement-and-stances` due to a shared worktree). To protect against this:
+Some session environments (observed in practice in Claude Code sessions that ride the continuation platform, due to a shared worktree with a sibling branch) may silently move `HEAD` to a different branch mid-session. Codex CLI sessions have not been observed to do this, but the defensive posture is cheap and correct either way:
 
 - Before every commit, confirm `git branch --show-current` matches the lane branch you intend to advance.
 - If `HEAD` has drifted to an unexpected branch, do NOT commit on that branch. Instead: cherry-pick your change onto the correct branch (`git checkout <correct-branch> && git cherry-pick <commit-sha>`), then reset the drifted branch to its origin tip if it was pushed.
@@ -213,7 +223,7 @@ Each item above must have a Unity implementation, a governed validator, and a br
 - **Unity exits -1 after some phases pass.** Internal validator deadline hit. Bump `StartupTimeoutSeconds` in the affected validator file.
 - **Unity build reports "could not find BloodlinesMapBootstrapAuthoring" despite scene being intact.** Library cache is stale against the current asmdef. Delete `unity/Library/Bee` and `unity/Library/ScriptAssemblies`, retry.
 - **Assembly-CSharp.csproj build reports missing `.editorconfig` or `.nuget.g.targets`.** Unity regenerates these during its own build. The csproj files are gitignored. This failure mode is a dotnet-only artifact and does not affect Unity batch validation.
-- **Git HEAD keeps switching to a sibling branch.** The continuation platform is auto-switching. Before every commit verify `git branch --show-current`; if drifted, cherry-pick your commit onto the correct branch.
+- **Git HEAD keeps switching to a sibling branch.** Observed in Claude Code sessions riding the continuation platform. Before every commit verify `git branch --show-current`; if drifted, cherry-pick your commit onto the correct branch. Codex CLI sessions are not known to exhibit this, but still verify.
 - **Merge conflict in NEXT_SESSION_HANDOFF.md or PROJECT_STATE.json.** These are append-only end-of-slice artifacts. Resolve by keeping both sides additively. Never drop another lane's entry.
 - **Contract staleness check fails.** Some lane was modified or a new handoff landed with a date newer than the contract's Last Updated. Bump Revision, set Last Updated to today, set Last Updated By to your session identifier, amend affected lane subsections, re-run the check.
 - **`dotnet build` hangs or freezes.** Kill all `dotnet.exe`, `Unity.exe`, `bee_backend.exe` processes.
