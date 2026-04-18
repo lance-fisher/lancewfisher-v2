@@ -72,20 +72,26 @@ Bloodlines has no imposed small-scope ceiling. The design should not be flattene
 
 ## Owner Direction Override
 
-The active non-negotiable owner direction is recorded here:
+The active non-negotiable owner direction is recorded in these files, read in order:
 
-- `governance/OWNER_DIRECTION_2026-04-16_FULL_CANON_UNITY.md`
+- `governance/OWNER_DIRECTION_2026-04-16_FULL_CANON_UNITY.md` (full canonical Unity delivery, no MVP, no scope cuts on gameplay)
+- `governance/OWNER_DIRECTION_2026-04-17_FIDELITY_AND_STRATEGY_DEPTH.md` (graphics fidelity clamped to Zero Hour / Warcraft III era, strategy depth and replayability are the product quality metric)
 
-That direction supersedes any older Bloodlines prompt, handoff, plan, or roadmap that assumes MVP framing, phased release, or scope reduction.
+Together these supersede any older Bloodlines prompt, handoff, plan, or roadmap that assumes MVP framing, phased release, scope reduction on gameplay, AAA art fidelity, PBR material authoring, HDRP rendering, or ray tracing as a shipping requirement.
 
 The governing implications are:
 
-- Bloodlines ships as the full canonical realization of the design bible
+- Bloodlines ships as the full canonical realization of the design bible at the mechanical level
+- The product quality metric is strategy depth, balance, replayability, and multiple viable playstyles across the canonical victory paths in `data/victory-conditions.json`
 - Unity 6.3 LTS with DOTS / ECS is the shipping engine
 - `unity/` is the only active Unity work target
 - the browser runtime is frozen as a behavioral specification and must not receive new systems
-- Wwise audio polish and Netcode for Entities multiplayer remain in scope unless Lance removes them later
-- if older documents recommend reducing scope or building a smaller release first, treat that guidance as stale
+- Graphics fidelity ceiling is Zero Hour (2003) / Warcraft III (2002). URP Forward only, diffuse + simple specular, hand-painted textures, low-poly meshes, simple skeletal animation, basic VFX, simple lighting. No PBR, HDRP, ray tracing, or AAA animation.
+- Audio fidelity matches the graphics era. Wwise integration is in scope.
+- UX matches the era: information-dense, readable, no reliance on external wikis for canonical mechanics.
+- Netcode for Entities multiplayer remains in scope unless Lance removes it later.
+- If older documents say "full commercial polish" or "AAA art" interpret that as "full polish at the Zero Hour / Warcraft III era ceiling."
+- If older documents recommend reducing gameplay scope or building a smaller gameplay release first, treat that guidance as stale.
 
 ## Current Direction
 
@@ -93,8 +99,9 @@ The governing implications are:
 - Dynasty consequence cascade is live in the browser specification.
 - Fortification and siege doctrine are canonically locked and remain targets for Unity realization.
 - Unity continuation is the active shipping lane.
-- Full commercial polish remains in scope for art, audio, UX, onboarding, tutorials, campaign, lobby, HUD, and in-game panels.
-- The project is both a preserved archive and an active implementation workspace, but new implementation direction now points at full-canon Unity delivery only.
+- Full polish at the Zero Hour / Warcraft III fidelity ceiling remains in scope for art, audio, UX, onboarding, tutorials, campaign, lobby, HUD, and in-game panels. AAA-fidelity instincts are out of scope.
+- Strategy depth, balance, replayability, and multiple viable playstyles (canonical victory paths in `data/victory-conditions.json`) are the primary product quality gates.
+- The project is both a preserved archive and an active implementation workspace, but new implementation direction now points at full-canon Unity gameplay delivery at Zero Hour-era presentation fidelity.
 
 ## Unity Slice Completion Protocol
 
