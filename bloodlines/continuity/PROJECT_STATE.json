@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-17T20:18:20.1139290-06:00",
+  "updated_at": "2026-04-18T01:28:48.2425250-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -457,7 +457,7 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-17-unity-fortification-siege-fortification-tier-and-reserves.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md",
   "latest_unity_graphics_handoff": "docs/unity/session-handoffs/2026-04-17-unity-graphics-infrastructure-foundation.md",
   "latest_unity_combat_handoff": "docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md",
   "latest_unity_attack_move_handoff": "docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md",
@@ -465,14 +465,14 @@
   "latest_unity_conviction_handoff": "docs/unity/session-handoffs/2026-04-17-unity-conviction-scoring-and-bands.md",
   "latest_unity_dynasty_handoff": "docs/unity/session-handoffs/2026-04-17-unity-dynasty-core.md",
   "latest_unity_faith_handoff": "docs/unity/session-handoffs/2026-04-17-unity-faith-commitment-and-intensity.md",
-  "latest_unity_fortification_handoff": "docs/unity/session-handoffs/2026-04-17-unity-fortification-siege-fortification-tier-and-reserves.md",
+  "latest_unity_fortification_handoff": "docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md",
   "latest_governance_handoff": "docs/unity/session-handoffs/2026-04-17-governance-contract-source-of-truth.md",
   "latest_browser_to_unity_migration_plan": "docs/plans/2026-04-17-browser-to-unity-migration-plan.md",
   "concurrent_session_contract": {
     "path": "docs/unity/CONCURRENT_SESSION_CONTRACT.md",
-    "revision": 9,
-    "last_updated": "2026-04-17",
-    "last_updated_by": "codex-fortification-siege-2026-04-17",
+    "revision": 10,
+    "last_updated": "2026-04-18",
+    "last_updated_by": "codex-fortification-siege-2026-04-18",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
     "active_lanes": [
       "fortification-siege-imminent-engagement"
@@ -1186,6 +1186,67 @@
     ],
     "session_handoff": "docs/unity/session-handoffs/2026-04-17-unity-group-movement-and-stances.md"
   },
+  "unity_fortification_siege_support_and_field_water": {
+    "status": "complete_on_branch_pending_merge_coordination",
+    "branch": "codex/unity-fortification-siege",
+    "prompt_rebase_target_origin_master_at_start": "1ed66068a246bbe6e8aff8cf93455ac3df0383f8",
+    "slice": "sub_slice_2_siege_support_and_field_water",
+    "components": [
+      "unity/Assets/_Bloodlines/Code/Components/SiegeSupportComponent.cs",
+      "unity/Assets/_Bloodlines/Code/Components/FieldWaterComponent.cs",
+      "unity/Assets/_Bloodlines/Code/Components/SiegeSupplyTrainComponent.cs"
+    ],
+    "systems": [
+      "unity/Assets/_Bloodlines/Code/Siege/SiegeComponentInitializationSystem.cs",
+      "unity/Assets/_Bloodlines/Code/Siege/SiegeSupportRefreshSystem.cs",
+      "unity/Assets/_Bloodlines/Code/Siege/FieldWaterSupportScanSystem.cs",
+      "unity/Assets/_Bloodlines/Code/Siege/FieldWaterStrainSystem.cs"
+    ],
+    "canon_surfaces": [
+      "unity/Assets/_Bloodlines/Code/Siege/SiegeSupportCanon.cs",
+      "unity/Assets/_Bloodlines/Code/Siege/FieldWaterCanon.cs"
+    ],
+    "debug_command_surface_partials": [
+      "unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Siege.cs"
+    ],
+    "siege_smoke_validator": "unity/Assets/_Bloodlines/Code/Editor/BloodlinesSiegeSmokeValidation.cs",
+    "siege_smoke_wrapper": "scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1",
+    "siege_smoke_log": "artifacts/unity-siege-smoke.log",
+    "siege_smoke_pass_line": "Siege smoke validation passed: baselinePhase=True, strainPhase=True, recoveryPhase=True, supportPhase=True. Baseline: strain=0, attrition=False, supportRefreshCount=0. Strain: status=Strained, strain=6.25, attackMultiplier=0.88, speedMultiplier=0.90. Recovery: supported=True, strain=3.88, supportRefreshCount=51. Support: engineerSupport=True, supplySupport=True, refreshCount=3, suppliedUntil=11.20.",
+    "fortification_smoke_preserved_green": true,
+    "fortification_smoke_log": "artifacts/unity-fortification-smoke.log",
+    "fortification_smoke_pass_line": "Fortification smoke validation passed: baselinePhase=True, tierAdvancePhase=True, reserveMusterPhase=True, reserveRecoveryPhase=True. Baseline: tier=0, ceiling=3. TierAdvance: tier=1, ceiling=3, contributionApplied=1. ReserveMuster: retreatDuty=Fallback, reserveDuty=Muster, committed=1. ReserveRecovery: duty=Ready, healthRatio=0.95, readyReserveCount=1.",
+    "bootstrap_runtime_smoke_preserved_green": true,
+    "bootstrap_runtime_smoke_log": "artifacts/unity-bootstrap-runtime-smoke.log",
+    "combat_smoke_preserved_green": true,
+    "combat_smoke_log": "artifacts/unity-combat-smoke.log",
+    "scene_shell_validation_preserved_green": true,
+    "bootstrap_scene_log": "artifacts/unity-bootstrap-scene-validate.log",
+    "gameplay_scene_log": "artifacts/unity-gameplay-scene-validate.log",
+    "data_validation_preserved_green": true,
+    "runtime_bridge_preserved_green": true,
+    "wrapper_lock_required": true,
+    "wrapper_lock_session": "codex-fortification-siege-2026-04-18",
+    "browser_references": [
+      "src/game/core/simulation.js:213-241",
+      "src/game/core/simulation.js:2824",
+      "src/game/core/simulation.js:12437",
+      "src/game/core/simulation.js:12565"
+    ],
+    "canon_references": [
+      "04_SYSTEMS/TERRITORY_SYSTEM.md",
+      "01_CANON/DEFENSIVE_FORTIFICATION_DOCTRINE.md"
+    ],
+    "behavioral_parity_targets_confirmed": [
+      "siege_support_refresh_every_1_25_seconds",
+      "field_water_support_from_mobile_water_or_settlement_with_14_second_linger",
+      "strain_accumulates_outside_support_and_recovers_inside_support",
+      "strain_and_critical_thresholds_apply_canonical_attack_and_speed_multipliers",
+      "critical_strain_drives_attrition_desertion_and_commander_buffering",
+      "water_transfer_charges_every_4_seconds_only_when_support_stock_exists"
+    ],
+    "session_handoff": "docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md"
+  },
   "preservation_guarantees": [
     "nothing_deleted_without_explicit_authorization",
     "all_existing_canon_preserved_in_numbered_folders",
@@ -1211,6 +1272,7 @@
     "unity_projectile_combat_added_additively",
     "unity_target_acquisition_throttling_and_sight_cleanup_added_additively",
     "unity_group_movement_separation_and_stances_added_additively",
+    "unity_fortification_siege_support_and_field_water_added_additively",
     "governed_unity_wrappers_wait_for_explicit_log_outcomes_under_harness",
     "tests_remain_green"
   ]

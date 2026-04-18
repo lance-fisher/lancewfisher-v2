@@ -1719,3 +1719,39 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Keep all fortification / siege validation in isolated ECS worlds until the later bootstrap-integration slice.
 - Do not wire fortification faith-ward multipliers into combat yet. The seam exists; multiplier application remains deferred.
 - Re-check `git branch --show-current` before any future commit or continuity edit. Branch drift was observed during wrapper execution in this Codex session.
+
+### 2026-04-18 Unity Siege Support And Field Water (Fortification Lane Sub-slice 2)
+
+- The second fortification lane sub-slice is now complete on `codex/unity-fortification-siege`.
+- `unity/Assets/_Bloodlines/Code/Siege/SiegeSupportCanon.cs` and `unity/Assets/_Bloodlines/Code/Siege/FieldWaterCanon.cs` now port the browser siege-support and field-water constants into governed Unity canon surfaces without retuning the canonical numbers.
+- New runtime state now exists in:
+  - `unity/Assets/_Bloodlines/Code/Components/SiegeSupportComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Components/FieldWaterComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Components/SiegeSupplyTrainComponent.cs`
+- New siege systems now exist in:
+  - `unity/Assets/_Bloodlines/Code/Siege/SiegeComponentInitializationSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Siege/SiegeSupportRefreshSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Siege/FieldWaterSupportScanSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Siege/FieldWaterStrainSystem.cs`
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Siege.cs` now exposes governed read surfaces for siege support, field-water state, and faction stockpiles.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSiegeSmokeValidation.cs` plus `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1` now prove four isolated ECS phases: baseline, strain, recovery, and siege-support cadence.
+- The canonical validation gate is now explicitly tracked as 10 steps in `docs/unity/CONCURRENT_SESSION_CONTRACT.md`:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`
+  - bootstrap runtime smoke
+  - combat smoke
+  - canonical scene-shell validation
+  - fortification smoke
+  - siege smoke
+  - `node tests/data-validation.mjs`
+  - `node tests/runtime-bridge.mjs`
+  - `scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1`
+- The per-slice handoff now lives at `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md`.
+- The concurrent-session contract is now revision 10. It keeps the fortification lane active on the rebased branch and preserves Claude's dual-clock lane as already retired into current `origin/master`, not as an active collision surface.
+
+### Immediate Next Direction Override (Fortification Lane)
+
+- Stay on `codex/unity-fortification-siege` for sub-slice 3.
+- Next implementation target is imminent-engagement warning response only.
+- Keep bootstrap runtime smoke integration, siege operation lifecycle, and HUD strain readouts out of scope for the next pass unless Lance changes scope.
+- Preserve the additive runtime-attachment seam in `unity/Assets/_Bloodlines/Code/Siege/SiegeComponentInitializationSystem.cs` rather than widening into shared bootstrap files early.
