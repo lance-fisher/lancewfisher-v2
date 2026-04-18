@@ -22,9 +22,10 @@ namespace Bloodlines.Components
     /// </summary>
     public enum FactionKind : byte
     {
-        Kingdom = 0,
-        Tribes = 1,
-        Neutral = 2,
+        Kingdom    = 0,
+        Tribes     = 1,
+        Neutral    = 2,
+        MinorHouse = 3,
     }
 
     /// <summary>
