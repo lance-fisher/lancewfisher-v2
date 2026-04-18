@@ -1549,3 +1549,36 @@ Retire dual-clock-match-progression lane to master once sub-slice 3 is merged. F
   - no scout raid / logistics interdiction / convoy harassment Tier 2 work
   - no fortification faith-ward multiplier application yet
 - Before any commit or continuity update, verify `git branch --show-current`. This session observed repeated branch drift during Unity wrapper runs, including drift onto `master` and sibling Claude branches.
+
+## Session 129 Unity Siege Support And Field Water
+
+- Status: green on `codex/unity-fortification-siege`; contract lane `fortification-siege-imminent-engagement` remains active in contract Revision 10.
+- Delivered:
+  - `SiegeSupportCanon.cs` and `FieldWaterCanon.cs` for the canonical siege-support and field-water constants
+  - `SiegeSupportComponent.cs`, `FieldWaterComponent.cs`, and `SiegeSupplyTrainComponent.cs`
+  - `SiegeComponentInitializationSystem.cs`, `SiegeSupportRefreshSystem.cs`, `FieldWaterSupportScanSystem.cs`, and `FieldWaterStrainSystem.cs`
+  - `BloodlinesDebugCommandSurface.Siege.cs`
+  - `BloodlinesSiegeSmokeValidation.cs` and `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`
+- Validation status:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo` green
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo` green
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1` green
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1` green
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1` green
+  - wrapper-locked `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1` green
+  - wrapper-locked `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1` green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - `scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1` green
+- Handoff doc: `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md`
+
+## Next Session Instruction (Session 129)
+
+- Resume on `codex/unity-fortification-siege`.
+- Proceed directly to sub-slice 3: imminent-engagement warnings only.
+- Keep scope discipline:
+  - no bootstrap runtime smoke integration yet
+  - no siege-operation lifecycle work yet
+  - no siege or field-water HUD work
+  - no combat-file edits unless a later contract revision explicitly opens a shared seam
+- Re-check `git branch --show-current` before any continuity update or commit. This lane already observed wrapper-driven branch drift, and the rebase for sub-slice 2 proved that upstream can advance mid-slice.

@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 9
-- Last Updated: 2026-04-17
-- Last Updated By: codex-fortification-siege-2026-04-17
-- Supersedes: revision 8 (fortification-siege-imminent-engagement lane remains active after sub-slice 1; fortification tier + reserves handoff landed)
+- Revision: 10
+- Last Updated: 2026-04-18
+- Last Updated By: codex-fortification-siege-2026-04-18
+- Supersedes: revision 9 (fortification-siege lane advanced through sub-slice 2; siege support and field-water handoff landed on top of the rebased post-match-progression master)
 
 ## Purpose
 
@@ -231,9 +231,9 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Siege/**`
   - `unity/Assets/_Bloodlines/Code/Components/FortificationComponent.cs`
   - `unity/Assets/_Bloodlines/Code/Components/FortificationReserveComponent.cs`
-  - `unity/Assets/_Bloodlines/Code/Components/SiegeStateComponent.cs`
-  - `unity/Assets/_Bloodlines/Code/Components/SiegeSupplyLogisticsComponent.cs`
-  - `unity/Assets/_Bloodlines/Code/Components/ImminentEngagementComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Components/SiegeSupportComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Components/FieldWaterComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Components/SiegeSupplyTrainComponent.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Fortification.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Siege.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationSmokeValidation.cs`
@@ -243,13 +243,13 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-17-unity-fortification-siege-fortification-tier-and-reserves.md`
+  - `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md`
 - Current Branch In Flight: `codex/unity-fortification-siege`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-17-unity-fortification-siege-fortification-tier-and-reserves.md`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
-
 
 ### Next Lane Candidate: ai-strategic-layer-port
 
@@ -331,11 +331,13 @@ Every slice must pass all of the following before handoff. Run them serially bec
 1. `dotnet build unity/Assembly-CSharp.csproj -nologo` -- must exit 0 with 0 errors.
 2. `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo` -- must exit 0 with 0 errors.
 3. `scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1` -- must remain green; success line must carry all prior proof fields.
-4. `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1` -- must remain green for both melee and projectile phases. All lanes are responsible for not breaking the combat smoke.
+4. `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1` -- must remain green for all currently-governed combat phases. All lanes are responsible for not breaking the combat smoke.
 5. `scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1` -- both Bootstrap and Gameplay scene shells must validate.
-6. `node tests/data-validation.mjs` -- must exit 0.
-7. `node tests/runtime-bridge.mjs` -- must exit 0.
-8. `scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1` -- must exit 0; confirms this contract is not older than the newest session handoff.
+6. `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1` -- must remain green for fortification tier and reserve-duty proof phases.
+7. `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1` -- must remain green for baseline, strain, recovery, and siege-support proof phases.
+8. `node tests/data-validation.mjs` -- must exit 0.
+9. `node tests/runtime-bridge.mjs` -- must exit 0.
+10. `scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1` -- must exit 0; confirms this contract is not older than the newest session handoff.
 
 ## Staleness Rule
 
