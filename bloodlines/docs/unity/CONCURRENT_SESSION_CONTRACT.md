@@ -2,9 +2,9 @@
 
 ## Contract Metadata
 
-- Revision: 5
+- Revision: 6
 - Last Updated: 2026-04-17
-- Last Updated By: claude-save-load-snapshot-2026-04-17
+- Last Updated By: claude-match-progression-2026-04-17
 - Supersedes: revision 2 (Tier 1 migration plan now authoritative; Tier 1 Conviction, Dynasty, Faith slices merged; group-movement slice merged with all 8 combat phases; continuity prompt v2 published)
 
 ## Purpose
@@ -199,6 +199,28 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-17-unity-group-movement-and-stances.md`
 - Current Branch In Flight: none
 
+### Lane: dual-clock-match-progression
+
+- Status: active
+- Branch Prefix: `claude/unity-match-progression`
+- Owner Agent: claude-code
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Time/**`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMatchProgressionSmokeValidation.cs`
+  - `scripts/Invoke-BloodlinesUnityMatchProgressionSmokeValidation.ps1`
+- Shared-File Narrow Edits Planned:
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBootstrapRuntimeSmokeValidation.cs` -- match-progression probe to be added after save-load integrity phase (sub-slice 2 or 3)
+  - `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs` -- seed DualClockComponent + MatchProgressionComponent singletons (sub-slice 1)
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-17-unity-dual-clock-match-progression.md` (written at slice close)
+- Browser Reference:
+  - `src/game/core/simulation.js` `tickDualClock` (13795), `updateMatchProgressionState` (13557), `computeMatchProgressionState` (13426), `getMatchProgressionSnapshot` (13650), `declareInWorldTime` (13800)
+  - Stage definitions: `founding` (1), `expansion_identity` (2), `encounter_establishment` (3), `war_turning_of_tides` (4), `final_convergence` (5)
+  - Phase labels: emergence, commitment, resolution
+  - `DUAL_CLOCK_DEFAULT_DAYS_PER_REAL_SECOND = 2`
+- Current Branch In Flight: `claude/unity-match-progression`
+- Last Slice Handoff: none yet
+
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
@@ -209,13 +231,6 @@ Forward work is prioritized in the browser-to-Unity migration plan at `docs/plan
 - Target Paths: `unity/Assets/_Bloodlines/Code/Fortification/**`, `unity/Assets/_Bloodlines/Code/Siege/**`, new Fortification/Siege/ImminentEngagement components.
 - Browser Reference: `src/game/core/simulation.js` `advanceFortificationTier`, `tickFortificationReserves`, `tickSiegeSupportLogistics`, `tickImminentEngagementWarnings`.
 - Canon: `04_SYSTEMS/TERRITORY_SYSTEM.md`, `governance/DEFENSIVE_FORTIFICATION_DOCTRINE.md`.
-
-### Next Lane Candidate: dual-clock-match-progression
-
-- Suggested Branch: `claude/unity-dual-clock` or `codex/unity-dual-clock`.
-- Target Paths: `unity/Assets/_Bloodlines/Code/Time/**`, `unity/Assets/_Bloodlines/Code/Components/DualClockComponent.cs`, `unity/Assets/_Bloodlines/Code/Components/MatchProgressionComponent.cs`.
-- Browser Reference: `src/game/core/simulation.js` `tickDualClock`, `updateMatchProgressionState`, `computeMatchProgressionState`, `getMatchProgressionSnapshot`, `declareInWorldTime`.
-- Canon: `02_SESSION_INGESTIONS/SESSION_2026-04-15_match-structure-time-system-multiplayer-doctrine*.md`.
 
 ### Next Lane Candidate: ai-strategic-layer-port
 
