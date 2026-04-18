@@ -2,9 +2,9 @@
 
 ## Contract Metadata
 
-- Revision: 3
+- Revision: 4
 - Last Updated: 2026-04-17
-- Last Updated By: claude-continuity-refresh-2026-04-17
+- Last Updated By: claude-save-load-snapshot-2026-04-17
 - Supersedes: revision 2 (Tier 1 migration plan now authoritative; Tier 1 Conviction, Dynasty, Faith slices merged; group-movement slice merged with all 8 combat phases; continuity prompt v2 published)
 
 ## Purpose
@@ -74,6 +74,26 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/BLOODLINES_VISUAL_TESTBED_PLAN_2026-04-16.md`
 - Current Branch In Flight: `claude/unity-graphics-infrastructure`
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-17-governance-contract-source-of-truth.md`
+
+### Lane: state-snapshot-restore
+
+- Status: active
+- Branch Prefix: `claude/unity-save-load-snapshot`
+- Owner Agent: claude-code
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/SaveLoad/**` (new folder)
+  - `unity/Assets/_Bloodlines/Code/Components/SnapshotVersionComponent.cs` (new)
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.SaveLoad.cs` (new partial)
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSaveLoadSmokeValidation.cs` (new)
+  - `scripts/Invoke-BloodlinesUnitySaveLoadSmokeValidation.ps1` (new)
+- Shared-File Narrow Edits Authorized:
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBootstrapRuntimeSmokeValidation.cs` — additive snapshot-integrity probe appended after the existing `stabilitySurplus` phase in sub-slice 3 only. No removal or reorder of existing probes. No change to existing probe success-line format.
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-17-unity-save-load-snapshot-sub-slice-1.md` (will be created)
+  - `docs/unity/session-handoffs/2026-04-17-unity-save-load-snapshot-sub-slice-2.md` (will be created)
+  - `docs/unity/session-handoffs/2026-04-17-unity-save-load-snapshot-sub-slice-3.md` (will be created)
+- Browser Reference: `src/game/core/simulation.js` `exportStateSnapshot`, `restoreStateSnapshot`
+- Next Action: Begin sub-slice 1 (BloodlinesSnapshotPayload capture, SnapshotVersionComponent, smoke phases 1-3).
 
 ### Lane: combat-attack-move
 
@@ -184,13 +204,6 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
-
-### Next Lane Candidate: state-snapshot-restore
-
-- Suggested Branch: `claude/unity-save-load-snapshot` or `codex/unity-save-load-snapshot`.
-- Target Paths: `unity/Assets/_Bloodlines/Code/SaveLoad/**`, `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSaveLoadSmokeValidation.cs`, `scripts/Invoke-BloodlinesUnitySaveLoadSmokeValidation.ps1`.
-- Browser Reference: `src/game/core/simulation.js` `exportStateSnapshot`, `restoreStateSnapshot`.
-- Scope: round-trip all live ECS state (factions, loyalty, resources, realm conditions, conviction, dynasty + members + fallen ledger, faith + exposure, combat state, units, buildings, control points). Snapshot twice across a 30-second tick, clear world, restore, deep-equal compare.
 
 ### Next Lane Candidate: fortification-siege-imminent-engagement
 
