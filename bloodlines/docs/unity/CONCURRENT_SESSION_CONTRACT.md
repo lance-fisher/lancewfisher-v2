@@ -2,9 +2,9 @@
 
 ## Contract Metadata
 
-- Revision: 10
+- Revision: 11
 - Last Updated: 2026-04-18
-- Last Updated By: claude-ai-strategic-layer-2026-04-18
+- Last Updated By: claude-tier2-batch-dynasty-2026-04-18
 - Supersedes: revision 2 (Tier 1 migration plan now authoritative; Tier 1 Conviction, Dynasty, Faith slices merged; group-movement slice merged with all 8 combat phases; continuity prompt v2 published)
 
 ## Purpose
@@ -267,6 +267,34 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - Sub-slices pending: supply chain/convoy management (~1100), siege staging, dynasty-aware covert ops (~2681)
 - Current Branch In Flight: `codex/unity-fortification-siege`
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-1.md`
+
+### Lane: tier2-batch-dynasty-systems
+
+- Status: active
+- Branch Prefix: `codex/unity-fortification-siege` (current branch; carried on this branch alongside ai-strategic-layer sub-slice 1)
+- Owner Agent: claude-code
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageComponents.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/RenownAwardRequestComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/RenownAwardSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageProposalExpirationSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageGestationSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/LesserHouseLoyaltyDriftSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/MinorHouseLevySystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesTier2BatchSmokeValidation.cs`
+  - `scripts/Invoke-BloodlinesUnityTier2BatchSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- `MinorHouse = 3` added to `FactionKind` enum
+  - `unity/Assembly-CSharp.csproj` -- all 7 Dynasties files registered
+  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesTier2BatchSmokeValidation.cs` registered
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-18-unity-tier2-batch-dynasty-systems.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `tickLesserHouseLoyaltyDrift` (~6631), `spawnDefectedMinorFaction` (~6851), `tickMarriageProposalExpiration` (~7274), `proposeMarriage` (~7340), `acceptMarriage` (~7388), `tickMarriageGestation` (~7496), `tickMinorHouseTerritorialLevies` (~7060)
+  - Base daily loyalty delta = -0.5 (BaseDailyDelta in LesserHouseLoyaltyDriftSystem)
+  - MARRIAGE_PROPOSAL_EXPIRATION_IN_WORLD_DAYS = 30, MARRIAGE_GESTATION_IN_WORLD_DAYS = 60
+- Current Branch In Flight: `codex/unity-fortification-siege`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-tier2-batch-dynasty-systems.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
