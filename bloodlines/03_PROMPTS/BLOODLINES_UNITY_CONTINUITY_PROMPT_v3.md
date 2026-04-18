@@ -9,7 +9,7 @@ Paste the body below into a new session. Do not modify it mid-paste. Do not edit
 
 This prompt is dual-agent: it applies to both Claude Code and Codex sessions. Passages that differ by agent are explicitly labeled. Everything else is shared discipline.
 
-Material change in v3: the Graphics Fidelity Target is now explicitly clamped to Generals Zero Hour (2003) / Warcraft III (2002) era polish. AAA-fidelity instincts (PBR, HDRP, ray tracing, AAA animation) are out of scope. The product is a deep strategy RTS; graphics serve readability and faction legibility, not visual spectacle.
+Material change in v3: the Graphics Fidelity Target is now explicitly clamped to Generals Zero Hour (2003) / Warcraft III (2002) era polish. AAA-fidelity instincts (PBR, HDRP, ray tracing, AAA animation) are out of scope. The product is a deep strategy RTS where success is driven by strategy depth, balance, replayability, and multiple viable playstyles across the canonical victory paths in `data/victory-conditions.json`; graphics serve readability and faction legibility, not visual spectacle. The authoritative owner direction for this clamp lives at `governance/OWNER_DIRECTION_2026-04-17_FIDELITY_AND_STRATEGY_DEPTH.md` and amends the prior full-canon direction at `governance/OWNER_DIRECTION_2026-04-16_FULL_CANON_UNITY.md`.
 
 ---
 
