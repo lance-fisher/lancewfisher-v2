@@ -4,6 +4,7 @@ using Bloodlines.Authoring;
 using Bloodlines.Components;
 using Bloodlines.DataDefinitions;
 using Bloodlines.Debug;
+using Bloodlines.SaveLoad;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEditor;
@@ -1030,6 +1031,12 @@ namespace Bloodlines.EditorTools
                 return stabilitySurplusProbe.Value;
             }
 
+            var snapshotIntegrityProbe = ProbeSnapshotIntegrity(commandSurface, state, diagnostics);
+            if (snapshotIntegrityProbe.HasValue)
+            {
+                return snapshotIntegrityProbe.Value;
+            }
+
             diagnostics =
                 diagnostics.TrimEnd('.') +
                 ", controlledUnits=" + controlledUnitCount +
@@ -1097,6 +1104,7 @@ namespace Bloodlines.EditorTools
                 ", stabilitySurplusLoyaltyBefore=" + state.stabilitySurplusLoyaltyBefore.ToString("0.00") +
                 ", stabilitySurplusLoyaltyLatest=" + state.stabilitySurplusLoyaltyLatest.ToString("0.00") +
                 ", stabilitySurplusObserved=" + state.stabilitySurplusObserved +
+                ", snapshotIntegrityChecked=" + state.snapshotIntegrityChecked +
                 ", aiMilitaryOrdersIssued=" +
                 (commandSurface.TryDebugGetAIMilitaryOrdersIssued(state.aiFactionId, out int militaryOrders) ? militaryOrders : 0) +
                 (commandSurface.TryDebugGetAIBuildingCounts(state.aiFactionId, out int aiDwellings, out int aiFarms, out int aiWells, out int aiBarracks)
@@ -1169,6 +1177,54 @@ namespace Bloodlines.EditorTools
             }
 
             return count;
+        }
+
+        // Probe: capture a snapshot from the live bootstrap world after stabilitySurplus completes.
+        // Asserts the payload has at least one faction with conviction and realm condition data,
+        // confirming BloodlinesSnapshotWriter.Capture works against the full running simulation.
+        private static ProbeResult? ProbeSnapshotIntegrity(
+            BloodlinesDebugCommandSurface commandSurface,
+            RuntimeSmokeState state,
+            string diagnostics)
+        {
+            if (state.snapshotIntegrityChecked)
+            {
+                return null;
+            }
+
+            if (!commandSurface.TryDebugGetSnapshotPayload(out var payload))
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: TryDebugGetSnapshotPayload returned false. " +
+                    diagnostics);
+            }
+
+            if (payload == null || payload.FactionSnapshots.Count == 0)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: snapshot-integrity probe captured empty faction list. " +
+                    "factionCount=" + (payload == null ? "null" : payload.FactionSnapshots.Count.ToString()) + ". " +
+                    diagnostics);
+            }
+
+            if (payload.RealmConditionSnapshots.Count == 0)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: snapshot-integrity probe captured no RealmConditionSnapshots. " +
+                    "This means RealmConditionComponent is not present on live faction entities. " +
+                    "factionCount=" + payload.FactionSnapshots.Count + ". " + diagnostics);
+            }
+
+            if (payload.ConvictionSnapshots.Count == 0)
+            {
+                return ProbeResult.Fail(
+                    "Bootstrap runtime smoke validation failed: snapshot-integrity probe captured no ConvictionSnapshots. " +
+                    "factionCount=" + payload.FactionSnapshots.Count + ". " + diagnostics);
+            }
+
+            state.snapshotIntegrityChecked = true;
+            SaveState(state);
+            return null;
         }
 
         private static ProbeResult? ProbeStabilitySurplusResponse(
@@ -2481,6 +2537,7 @@ namespace Bloodlines.EditorTools
             public long stabilitySurplusForcedUtcTicks;
             public float stabilitySurplusTimeoutSeconds;
             public bool stabilitySurplusObserved;
+            public bool snapshotIntegrityChecked;
         }
 
         private readonly struct ProbeResult
