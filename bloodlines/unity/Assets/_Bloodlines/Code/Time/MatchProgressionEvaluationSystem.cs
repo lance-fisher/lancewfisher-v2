@@ -2,6 +2,7 @@ using Bloodlines.Components;
 using Bloodlines.GameTime;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 
 namespace Bloodlines.Systems
 {
@@ -203,6 +204,69 @@ namespace Bloodlines.Systems
                 if (militaryFactions[i].FactionId == playerFactionId) playerMilitaryCount++;
             militaryFactions.Dispose();
 
+            // --- Stage 4 rival contact signals (browser getRivalContactProfile) ---
+            // directFrontContact: player unit within 220 units of any enemy unit.
+            // contestedBorder: any CP owned by one faction and being captured by the other.
+            // sustainedWarActive: contestedBorder active AND in-world years >= 1 (proxy;
+            //   browser checks active siege engines + holy wars + dynasty ops -- those
+            //   systems port in later slices; this proxy is removed when siege is live).
+
+            bool stageFourRivalContact;
+            bool stageFourContestedBorder;
+            bool stageFourSustainedWar;
+            {
+                var enemyFactionId = new FixedString32Bytes("enemy");
+                const float ContactDistanceSq = 220f * 220f;
+
+                // directFrontContact: O(n*m) position scan, acceptable for <=200 units.
+                var unitQuery = em.CreateEntityQuery(
+                    ComponentType.ReadOnly<FactionComponent>(),
+                    ComponentType.ReadOnly<PositionComponent>(),
+                    ComponentType.ReadOnly<MovementStatsComponent>(),
+                    ComponentType.Exclude<DeadTag>());
+                var unitFactions = unitQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+                var unitPositions = unitQuery.ToComponentDataArray<PositionComponent>(Allocator.Temp);
+                unitQuery.Dispose();
+
+                bool directFrontContact = false;
+                for (int i = 0; i < unitFactions.Length && !directFrontContact; i++)
+                {
+                    if (unitFactions[i].FactionId != playerFactionId) continue;
+                    for (int j = 0; j < unitFactions.Length && !directFrontContact; j++)
+                    {
+                        if (unitFactions[j].FactionId != enemyFactionId) continue;
+                        float distSq = math.distancesq(unitPositions[i].Value, unitPositions[j].Value);
+                        if (distSq <= ContactDistanceSq) directFrontContact = true;
+                    }
+                }
+                unitFactions.Dispose();
+                unitPositions.Dispose();
+
+                // contestedBorder: CP owned by player being captured by enemy, or vice versa.
+                var cpContestedQuery = em.CreateEntityQuery(ComponentType.ReadOnly<ControlPointComponent>());
+                var cpContestedData = cpContestedQuery.ToComponentDataArray<ControlPointComponent>(Allocator.Temp);
+                cpContestedQuery.Dispose();
+
+                bool contestedBorderFound = false;
+                for (int i = 0; i < cpContestedData.Length; i++)
+                {
+                    var cp = cpContestedData[i];
+                    if ((cp.OwnerFactionId == playerFactionId && cp.CaptureFactionId == enemyFactionId) ||
+                        (cp.OwnerFactionId == enemyFactionId && cp.CaptureFactionId == playerFactionId))
+                    {
+                        contestedBorderFound = true;
+                        break;
+                    }
+                }
+                cpContestedData.Dispose();
+
+                stageFourRivalContact = directFrontContact || contestedBorderFound;
+                stageFourContestedBorder = contestedBorderFound;
+                // sustainedWarActive proxy: contested border present AND enough in-world time
+                // has elapsed to represent a prolonged conflict (>= 1 in-world year).
+                stageFourSustainedWar = contestedBorderFound && inWorldYears >= 1f;
+            }
+
             // --- Stage requirement evaluation (browser computeMatchProgressionState) ---
 
             // Stage 2: food stable, water stable, defended seat, 4+ buildings.
@@ -220,10 +284,7 @@ namespace Bloodlines.Systems
             bool stageThreeReady = stageTwoReady && stageThreeFaithCommitted &&
                                    stageThreeExpanded && stageThreeArmed;
 
-            // Stage 4: war signals -- placeholder false until declaration-seam port.
-            bool stageFourRivalContact = false;
-            bool stageFourContestedBorder = false;
-            bool stageFourSustainedWar = false;
+            // Stage 4: rival contact + contested border + sustained war.
             bool stageFourReady = stageThreeReady && stageFourRivalContact &&
                                   stageFourContestedBorder && stageFourSustainedWar;
 
