@@ -1697,3 +1697,39 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - 4-phase smoke validator added: Phase 1 (tracker defaults), Phase 2 (score/expansion, no dominant), Phase 3 (dominant leader streak to Level 3), Phase 4 (loyalty drain consequence). All phases green.
 - All 8 required gates green; contract bumped revision 8 -> 9, world-pressure-escalation lane retired.
 - The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-18-unity-world-pressure-escalation.md`.
+
+### 2026-04-17 Unity Fortification Tier And Reserves (Fortification Lane Sub-slice 1, Codex)
+
+- The first fortification lane sub-slice is now complete on `codex/unity-fortification-siege`; merged to master 2026-04-18.
+- `unity/Assets/_Bloodlines/Code/Fortification/FortificationCanon.cs` now ports the browser fortification and siege constants block from `src/game/core/simulation.js:189-238`.
+- `unity/Assets/_Bloodlines/Code/Components/FortificationComponent.cs` now carries settlement fortification tier / radius state plus a neutral faith-ward seam matching the browser ward-profile shape.
+- `unity/Assets/_Bloodlines/Code/Components/FortificationReserveComponent.cs` now carries reserve muster / heal / threshold state and reserve-pool observability counts.
+- `unity/Assets/_Bloodlines/Code/Fortification/AdvanceFortificationTierSystem.cs` now resolves fortification tier from completed linked fortification-contributing buildings and syncs the result onto `SettlementComponent`.
+- `unity/Assets/_Bloodlines/Code/Fortification/FortificationReserveSystem.cs` now handles low-health retreat, triage healing, recovery-to-ready, and reserve muster-forward behavior for linked defenders in isolated ECS validation worlds.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Fortification.cs` now exposes governed tier, reserve-count, and force-muster debug APIs.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationSmokeValidation.cs` plus `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1` now prove four phases: tier-0 baseline, tier advance, reserve muster after retreat, and reserve recovery back to ready.
+- The per-slice handoff now lives at `docs/unity/session-handoffs/2026-04-17-unity-fortification-siege-fortification-tier-and-reserves.md`.
+
+### 2026-04-18 Unity Siege Support And Field Water (Fortification Lane Sub-slice 2, Codex)
+
+- The second fortification lane sub-slice is now complete on `codex/unity-fortification-siege`; merged to master 2026-04-18.
+- `unity/Assets/_Bloodlines/Code/Siege/SiegeSupportCanon.cs` and `unity/Assets/_Bloodlines/Code/Siege/FieldWaterCanon.cs` now port the browser siege-support and field-water constants into governed Unity canon surfaces without retuning the canonical numbers.
+- New runtime state now exists in:
+  - `unity/Assets/_Bloodlines/Code/Components/SiegeSupportComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Components/FieldWaterComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Components/SiegeSupplyTrainComponent.cs`
+- New siege systems now exist in:
+  - `unity/Assets/_Bloodlines/Code/Siege/SiegeComponentInitializationSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Siege/SiegeSupportRefreshSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Siege/FieldWaterSupportScanSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Siege/FieldWaterStrainSystem.cs`
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Siege.cs` now exposes governed read surfaces for siege support, field-water state, and faction stockpiles.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSiegeSmokeValidation.cs` plus `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1` now prove four isolated ECS phases: baseline, strain, recovery, and siege-support cadence.
+- The per-slice handoff now lives at `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md`.
+
+### Immediate Next Direction (Post-merge, 2026-04-18)
+
+- Sub-slice 3 (imminent-engagement warnings) is the remaining work on `codex/unity-fortification-siege`.
+- Next implementation target: `tickImminentEngagementWarnings` from `src/game/core/simulation.js`.
+- Keep bootstrap runtime smoke integration, siege operation lifecycle, and HUD strain readouts out of scope for the next pass unless Lance changes scope.
+- Re-check `git branch --show-current` before any future commit or continuity edit. Branch drift was observed during wrapper execution in prior Codex sessions.

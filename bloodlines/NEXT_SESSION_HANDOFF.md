@@ -1530,6 +1530,38 @@ Retire dual-clock-match-progression lane to master once sub-slice 3 is merged. F
 
 ### Next Unclaimed Tier 1 Lanes
 See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" section. Top candidates:
-1. fortification-siege-imminent-engagement (Codex has claimed `codex/unity-fortification-siege`)
-2. ai-strategic-layer-port
-3. victory-conditions-system
+1. fortification-siege-sub-slice-3-imminent-engagement-warnings (continuing `codex/unity-fortification-siege`)
+2. ai-strategic-layer-sub-slice-2-supply-chain
+
+---
+
+## Session 128 Unity Fortification Tier And Reserves (Codex)
+
+- Status: green on `codex/unity-fortification-siege`; merged to master 2026-04-18.
+- Delivered:
+  - `FortificationCanon.cs` direct port of the browser fortification / siege constants block
+  - `FortificationComponent.cs` fortification tier / radius state plus neutral fortification faith-ward seam
+  - `FortificationReserveComponent.cs` reserve threshold / heal / count state
+  - `AdvanceFortificationTierSystem.cs` deterministic fortification-tier advancement from completed linked buildings
+  - `FortificationReserveSystem.cs` retreat, triage heal, recovery, and muster-forward reserve cycling
+  - `BloodlinesDebugCommandSurface.Fortification.cs` with tier, reserve-count, and force-muster APIs
+  - `BloodlinesFortificationSmokeValidation.cs` and `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1`
+- Handoff doc: `docs/unity/session-handoffs/2026-04-17-unity-fortification-siege-fortification-tier-and-reserves.md`
+
+## Session 129 Unity Siege Support And Field Water (Codex)
+
+- Status: green on `codex/unity-fortification-siege`; merged to master 2026-04-18.
+- Delivered:
+  - `SiegeSupportCanon.cs` and `FieldWaterCanon.cs` for the canonical siege-support and field-water constants
+  - `SiegeSupportComponent.cs`, `FieldWaterComponent.cs`, and `SiegeSupplyTrainComponent.cs`
+  - `SiegeComponentInitializationSystem.cs`, `SiegeSupportRefreshSystem.cs`, `FieldWaterSupportScanSystem.cs`, and `FieldWaterStrainSystem.cs`
+  - `BloodlinesDebugCommandSurface.Siege.cs`
+  - `BloodlinesSiegeSmokeValidation.cs` and `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`
+- Handoff doc: `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md`
+
+## Next Sub-Slice Instruction (Session 130 merge complete)
+
+- Sub-slice 3 (imminent-engagement warnings) is the remaining work on `codex/unity-fortification-siege`.
+- Target browser reference: `src/game/core/simulation.js` `tickImminentEngagementWarnings`.
+- Keep scope discipline: no bootstrap runtime smoke integration, no siege-operation lifecycle, no combat-file edits.
+- Re-check `git branch --show-current` before any continuity update or commit.
