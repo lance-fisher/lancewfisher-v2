@@ -2,9 +2,9 @@
 
 ## Contract Metadata
 
-- Revision: 11
+- Revision: 12
 - Last Updated: 2026-04-18
-- Last Updated By: claude-tier2-batch-dynasty-2026-04-18
+- Last Updated By: claude-victory-conditions-2026-04-18
 - Supersedes: revision 2 (Tier 1 migration plan now authoritative; Tier 1 Conviction, Dynasty, Faith slices merged; group-movement slice merged with all 8 combat phases; continuity prompt v2 published)
 
 ## Purpose
@@ -267,6 +267,24 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - Sub-slices pending: supply chain/convoy management (~1100), siege staging, dynasty-aware covert ops (~2681)
 - Current Branch In Flight: `codex/unity-fortification-siege`
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-1.md`
+
+### Lane: victory-conditions
+
+- Status: active
+- Branch Prefix: `codex/unity-fortification-siege` (current branch; carried alongside ai-strategic-layer and tier2-batch-dynasty)
+- Owner Agent: claude-code
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Victory/**`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesVictoryConditionsSmokeValidation.cs`
+  - `scripts/Invoke-BloodlinesUnityVictoryConditionsSmokeValidation.ps1`
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-18-unity-victory-conditions.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` command hall fall (~7821), territorial governance recognition (~1661), divine right declaration completion (~10738)
+  - Constants: TERRITORIAL_GOVERNANCE_VICTORY_LOYALTY_THRESHOLD=90, TERRITORIAL_GOVERNANCE_VICTORY_SECONDS=120, DIVINE_RIGHT_INTENSITY_THRESHOLD=80, faith Level 5 required
+  - VictoryConditionIds: CommandHallFall (1), TerritorialGovernance (2), DivinRight (3)
+- Current Branch In Flight: `codex/unity-fortification-siege`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-victory-conditions.md`
 
 ### Lane: tier2-batch-dynasty-systems
 
