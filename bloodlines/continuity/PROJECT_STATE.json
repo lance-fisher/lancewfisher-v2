@@ -471,7 +471,7 @@
     "path": "docs/unity/CONCURRENT_SESSION_CONTRACT.md",
     "revision": 3,
     "last_updated": "2026-04-17",
-    "last_updated_by": "claude-continuity-refresh-2026-04-17",
+    "last_updated_by": "claude-save-load-snapshot-2026-04-17",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
     "active_lanes": [],
     "paused_lanes": ["combat-group-movement-and-stances"],
@@ -484,10 +484,10 @@
       "ai-barracks-observability",
       "conviction-scoring",
       "dynasty-core",
-      "faith-commitment"
+      "faith-commitment",
+      "state-snapshot-restore"
     ],
     "next_unblocked_tier_1_lanes": [
-      "state-snapshot-restore",
       "fortification-siege-imminent-engagement",
       "dual-clock-match-progression",
       "ai-strategic-layer-port"

@@ -2,7 +2,7 @@
 
 ## Contract Metadata
 
-- Revision: 4
+- Revision: 5
 - Last Updated: 2026-04-17
 - Last Updated By: claude-save-load-snapshot-2026-04-17
 - Supersedes: revision 2 (Tier 1 migration plan now authoritative; Tier 1 Conviction, Dynasty, Faith slices merged; group-movement slice merged with all 8 combat phases; continuity prompt v2 published)
@@ -77,23 +77,21 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: state-snapshot-restore
 
-- Status: active
+- Status: retired (all 3 sub-slices merged into master on 2026-04-17)
 - Branch Prefix: `claude/unity-save-load-snapshot`
 - Owner Agent: claude-code
 - Owned Paths (exclusive):
-  - `unity/Assets/_Bloodlines/Code/SaveLoad/**` (new folder)
-  - `unity/Assets/_Bloodlines/Code/Components/SnapshotVersionComponent.cs` (new)
-  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.SaveLoad.cs` (new partial)
-  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSaveLoadSmokeValidation.cs` (new)
-  - `scripts/Invoke-BloodlinesUnitySaveLoadSmokeValidation.ps1` (new)
-- Shared-File Narrow Edits Authorized:
-  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBootstrapRuntimeSmokeValidation.cs` — additive snapshot-integrity probe appended after the existing `stabilitySurplus` phase in sub-slice 3 only. No removal or reorder of existing probes. No change to existing probe success-line format.
+  - `unity/Assets/_Bloodlines/Code/SaveLoad/**`
+  - `unity/Assets/_Bloodlines/Code/Components/SnapshotVersionComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.SaveLoad.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSaveLoadSmokeValidation.cs`
+  - `scripts/Invoke-BloodlinesUnitySaveLoadSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBootstrapRuntimeSmokeValidation.cs` -- ProbeSnapshotIntegrity probe added after stabilitySurplus phase (sub-slice 3). snapshotIntegrityChecked=True in pass line.
 - Lane Authority Documents:
-  - `docs/unity/session-handoffs/2026-04-17-unity-save-load-snapshot-sub-slice-1.md` (will be created)
-  - `docs/unity/session-handoffs/2026-04-17-unity-save-load-snapshot-sub-slice-2.md` (will be created)
-  - `docs/unity/session-handoffs/2026-04-17-unity-save-load-snapshot-sub-slice-3.md` (will be created)
-- Browser Reference: `src/game/core/simulation.js` `exportStateSnapshot`, `restoreStateSnapshot`
-- Next Action: Begin sub-slice 1 (BloodlinesSnapshotPayload capture, SnapshotVersionComponent, smoke phases 1-3).
+  - `docs/unity/session-handoffs/2026-04-17-unity-save-load-snapshot.md`
+- Browser Reference: `src/game/core/simulation.js` `exportStateSnapshot` (13822), `restoreStateSnapshot` (13989)
+- Current Branch In Flight: none (merged into master 2026-04-17)
 
 ### Lane: combat-attack-move
 
