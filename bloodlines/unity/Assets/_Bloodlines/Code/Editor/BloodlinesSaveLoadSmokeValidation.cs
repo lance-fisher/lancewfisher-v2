@@ -81,9 +81,29 @@ namespace Bloodlines.EditorTools
                 return false;
             }
 
+            if (!RunRoundTripDeepEqualPhase(out string roundTripMsg))
+            {
+                message = roundTripMsg;
+                return false;
+            }
+
+            if (!RunConvictionBandAfterRestorePhase(out string convMsg))
+            {
+                message = convMsg;
+                return false;
+            }
+
+            if (!RunDynastyMembersAfterRestorePhase(out string dynastyMsg))
+            {
+                message = dynastyMsg;
+                return false;
+            }
+
             message =
-                "Save-load smoke validation passed: emptyWorldPhase=True, singleFactionPhase=True, fullFactionPhase=True. " +
-                emptyMsg + " " + singleMsg + " " + fullMsg;
+                "Save-load smoke validation passed: emptyWorldPhase=True, singleFactionPhase=True, " +
+                "fullFactionPhase=True, roundTripPhase=True, convictionRestorePhase=True, dynastyRestorePhase=True. " +
+                emptyMsg + " " + singleMsg + " " + fullMsg + " " +
+                roundTripMsg + " " + convMsg + " " + dynastyMsg;
             return true;
         }
 
@@ -276,6 +296,134 @@ namespace Bloodlines.EditorTools
                 ", fallen=" + payload.FallenLedgerSnapshots.Count +
                 ", faith=OldLight@40" +
                 ", exposure=" + payload.FaithExposureSnapshots.Count + ".";
+            return true;
+        }
+
+        // Phase 4: round-trip deep-equal. Capture a full faction, restore into a fresh world,
+        // capture again, and verify every snapshot list count matches.
+        private static bool RunRoundTripDeepEqualPhase(out string message)
+        {
+            BloodlinesSnapshotPayload source;
+            using (var sourceWorld = CreateValidationWorld("BloodlinesSaveLoadSmoke_RoundTripSource"))
+            {
+                var em = sourceWorld.EntityManager;
+                CreateFullFaction(em, "player");
+                BloodlinesSnapshotWriter.Capture(em, out source);
+            }
+
+            using var restoreWorld = CreateValidationWorld("BloodlinesSaveLoadSmoke_RoundTripRestore");
+            var rem = restoreWorld.EntityManager;
+
+            if (!BloodlinesSnapshotRestorer.Apply(rem, source, out var applyError))
+            {
+                message = "Save-load smoke failed: round-trip restore returned error: " + applyError;
+                return false;
+            }
+
+            BloodlinesSnapshotWriter.Capture(rem, out var restored);
+
+            if (restored.FactionSnapshots.Count != source.FactionSnapshots.Count ||
+                restored.ConvictionSnapshots.Count != source.ConvictionSnapshots.Count ||
+                restored.DynastyStateSnapshots.Count != source.DynastyStateSnapshots.Count ||
+                restored.DynastyMemberSnapshots.Count != source.DynastyMemberSnapshots.Count ||
+                restored.FallenLedgerSnapshots.Count != source.FallenLedgerSnapshots.Count ||
+                restored.FaithStateSnapshots.Count != source.FaithStateSnapshots.Count ||
+                restored.FaithExposureSnapshots.Count != source.FaithExposureSnapshots.Count)
+            {
+                message =
+                    "Save-load smoke failed: round-trip list count mismatch. " +
+                    "factions: " + source.FactionSnapshots.Count + "->" + restored.FactionSnapshots.Count +
+                    ", conviction: " + source.ConvictionSnapshots.Count + "->" + restored.ConvictionSnapshots.Count +
+                    ", dynastyState: " + source.DynastyStateSnapshots.Count + "->" + restored.DynastyStateSnapshots.Count +
+                    ", members: " + source.DynastyMemberSnapshots.Count + "->" + restored.DynastyMemberSnapshots.Count +
+                    ", fallen: " + source.FallenLedgerSnapshots.Count + "->" + restored.FallenLedgerSnapshots.Count +
+                    ", faith: " + source.FaithStateSnapshots.Count + "->" + restored.FaithStateSnapshots.Count +
+                    ", exposure: " + source.FaithExposureSnapshots.Count + "->" + restored.FaithExposureSnapshots.Count + ".";
+                return false;
+            }
+
+            message =
+                "RoundTrip: factions=" + restored.FactionSnapshots.Count +
+                ", members=" + restored.DynastyMemberSnapshots.Count +
+                ", fallen=" + restored.FallenLedgerSnapshots.Count +
+                ", exposure=" + restored.FaithExposureSnapshots.Count + ".";
+            return true;
+        }
+
+        // Phase 5: conviction band correct after restore.
+        private static bool RunConvictionBandAfterRestorePhase(out string message)
+        {
+            BloodlinesSnapshotPayload source;
+            using (var sourceWorld = CreateValidationWorld("BloodlinesSaveLoadSmoke_ConvSource"))
+            {
+                var em = sourceWorld.EntityManager;
+                CreateFullFaction(em, "player");
+                BloodlinesSnapshotWriter.Capture(em, out source);
+            }
+
+            using var restoreWorld = CreateValidationWorld("BloodlinesSaveLoadSmoke_ConvRestore");
+            var rem = restoreWorld.EntityManager;
+            BloodlinesSnapshotRestorer.Apply(rem, source, out _);
+            BloodlinesSnapshotWriter.Capture(rem, out var restored);
+
+            if (restored.ConvictionSnapshots.Count != 1 ||
+                restored.ConvictionSnapshots[0].Band != ConvictionBand.Cruel ||
+                restored.ConvictionSnapshots[0].Ruthlessness != 10f)
+            {
+                message =
+                    "Save-load smoke failed: conviction band/ruthlessness incorrect after restore. " +
+                    "count=" + restored.ConvictionSnapshots.Count +
+                    ", band=" + (restored.ConvictionSnapshots.Count > 0
+                        ? restored.ConvictionSnapshots[0].Band.ToString()
+                        : "N/A") +
+                    ", ruthlessness=" + (restored.ConvictionSnapshots.Count > 0
+                        ? restored.ConvictionSnapshots[0].Ruthlessness.ToString()
+                        : "N/A") + ".";
+                return false;
+            }
+
+            message = "ConvictionRestore: band=Cruel, ruthlessness=10.";
+            return true;
+        }
+
+        // Phase 6: dynasty member count and legitimacy correct after restore.
+        private static bool RunDynastyMembersAfterRestorePhase(out string message)
+        {
+            BloodlinesSnapshotPayload source;
+            using (var sourceWorld = CreateValidationWorld("BloodlinesSaveLoadSmoke_DynastySource"))
+            {
+                var em = sourceWorld.EntityManager;
+                CreateFullFaction(em, "player");
+                BloodlinesSnapshotWriter.Capture(em, out source);
+            }
+
+            using var restoreWorld = CreateValidationWorld("BloodlinesSaveLoadSmoke_DynastyRestore");
+            var rem = restoreWorld.EntityManager;
+            BloodlinesSnapshotRestorer.Apply(rem, source, out _);
+            BloodlinesSnapshotWriter.Capture(rem, out var restored);
+
+            if (restored.DynastyMemberSnapshots.Count != DynastyTemplates.Canonical.Length)
+            {
+                message =
+                    "Save-load smoke failed: dynasty member count wrong after restore. expected=" +
+                    DynastyTemplates.Canonical.Length + ", got=" + restored.DynastyMemberSnapshots.Count + ".";
+                return false;
+            }
+
+            if (restored.DynastyStateSnapshots.Count != 1 ||
+                restored.DynastyStateSnapshots[0].Legitimacy != 85f)
+            {
+                message =
+                    "Save-load smoke failed: dynasty legitimacy wrong after restore. expected=85, got=" +
+                    (restored.DynastyStateSnapshots.Count > 0
+                        ? restored.DynastyStateSnapshots[0].Legitimacy.ToString()
+                        : "N/A") + ".";
+                return false;
+            }
+
+            message =
+                "DynastyRestore: members=" + restored.DynastyMemberSnapshots.Count +
+                ", legitimacy=" + restored.DynastyStateSnapshots[0].Legitimacy + ".";
             return true;
         }
 
