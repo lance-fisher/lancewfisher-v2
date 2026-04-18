@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 7
+- Revision: 8
 - Last Updated: 2026-04-17
-- Last Updated By: claude-match-progression-2026-04-17
-- Supersedes: revision 2 (Tier 1 migration plan now authoritative; Tier 1 Conviction, Dynasty, Faith slices merged; group-movement slice merged with all 8 combat phases; continuity prompt v2 published)
+- Last Updated By: codex-fortification-siege-2026-04-17
+- Supersedes: revision 7 (dual-clock-match-progression lane retired into master; fortification-siege-imminent-engagement lane claimed by Codex)
 
 ## Purpose
 
@@ -221,16 +221,35 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - Current Branch In Flight: `claude/unity-match-progression`
 - Last Slice Handoff: none yet
 
+### Lane: fortification-siege-imminent-engagement
+
+- Status: active
+- Branch Prefix: `codex/unity-fortification-siege`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Fortification/**`
+  - `unity/Assets/_Bloodlines/Code/Siege/**`
+  - `unity/Assets/_Bloodlines/Code/Components/FortificationComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Components/FortificationReserveComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Components/SiegeStateComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Components/SiegeSupplyLogisticsComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Components/ImminentEngagementComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Fortification.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Siege.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSiegeSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`
+- Lane Authority Documents:
+  - none yet (first slice in progress)
+- Current Branch In Flight: `codex/unity-fortification-siege`
+- Last Slice Handoff: none yet
+
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-### Next Lane Candidate: fortification-siege-imminent-engagement
-
-- Suggested Branch: `claude/unity-fortification-siege` or `codex/unity-fortification-siege`.
-- Target Paths: `unity/Assets/_Bloodlines/Code/Fortification/**`, `unity/Assets/_Bloodlines/Code/Siege/**`, new Fortification/Siege/ImminentEngagement components.
-- Browser Reference: `src/game/core/simulation.js` `advanceFortificationTier`, `tickFortificationReserves`, `tickSiegeSupportLogistics`, `tickImminentEngagementWarnings`.
-- Canon: `04_SYSTEMS/TERRITORY_SYSTEM.md`, `governance/DEFENSIVE_FORTIFICATION_DOCTRINE.md`.
 
 ### Next Lane Candidate: ai-strategic-layer-port
 
