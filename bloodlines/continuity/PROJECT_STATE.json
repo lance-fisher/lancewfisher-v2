@@ -457,7 +457,7 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-18-unity-tier2-batch-dynasty-systems.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-18-unity-victory-conditions.md",
   "latest_unity_graphics_handoff": "docs/unity/session-handoffs/2026-04-17-unity-graphics-infrastructure-foundation.md",
   "latest_unity_combat_handoff": "docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md",
   "latest_unity_attack_move_handoff": "docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md",
@@ -469,13 +469,14 @@
   "latest_browser_to_unity_migration_plan": "docs/plans/2026-04-17-browser-to-unity-migration-plan.md",
   "concurrent_session_contract": {
     "path": "docs/unity/CONCURRENT_SESSION_CONTRACT.md",
-    "revision": 11,
+    "revision": 12,
     "last_updated": "2026-04-18",
-    "last_updated_by": "claude-tier2-batch-dynasty-2026-04-18",
+    "last_updated_by": "claude-victory-conditions-2026-04-18",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
     "active_lanes": [
       "ai-strategic-layer",
-      "tier2-batch-dynasty-systems"
+      "tier2-batch-dynasty-systems",
+      "victory-conditions"
     ],
     "paused_lanes": [],
     "retired_lanes": [
