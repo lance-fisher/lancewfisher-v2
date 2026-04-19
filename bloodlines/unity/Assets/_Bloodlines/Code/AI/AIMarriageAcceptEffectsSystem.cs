@@ -47,14 +47,23 @@ namespace Bloodlines.AI
     ///     the browser recordConvictionEvent("stewardship", -penalty) call
     ///     (simulation.js:6238-6244).
     ///
-    /// Deferred to later slices:
-    ///   - Narrative message push (no message component / UI surface wired up
-    ///     for message pushes from AI systems yet).
+    /// Sub-slice 17 addition:
+    ///   Narrative message push. After effects are applied, call
+    ///     NarrativeMessageBridge.Push with the browser-parity ceremonial
+    ///     line: "<headMemberTitle> of <headFactionId> weds
+    ///     <spouseMemberTitle> of <spouseFactionId> <approvalText>." where
+    ///     approvalText varies by authority mode. Tone is Good when the
+    ///     head (source) faction is "player", else Info. Unity has no
+    ///     faction display-name lookup yet, so FactionId is used where
+    ///     the browser uses getFactionDisplayName; when a display-name
+    ///     component lands in a later slice the substitution point is
+    ///     isolated in BuildMarriageAcceptMessage.
     ///
     /// Browser reference: simulation.js acceptMarriage (~7388-7469), specifically
     /// the block starting at the legitimacy +2 increment and the hostileTo filter.
-    /// Authority cost source: simulation.js applyMarriageGovernanceLegitimacyCost
-    /// (~6232) and getMarriageAcceptanceTerms (~6327).
+    /// Narrative push at simulation.js:7463. Authority cost source: simulation.js
+    /// applyMarriageGovernanceLegitimacyCost (~6232) and
+    /// getMarriageAcceptanceTerms (~6327).
     /// </summary>
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(AIMarriageInboxAcceptSystem))]
@@ -115,6 +124,14 @@ namespace Bloodlines.AI
                 // reflects the wedding ceremony. DualClockDeclarationSystem
                 // drains the buffer and applies the jump.
                 EnqueueMarriageTimeDeclaration(em, marriage.MarriageId);
+
+                // Narrative push (sub-slice 17). Browser pushMessage at
+                // simulation.js:7463 composes the ceremonial line with an
+                // approvalText suffix derived from targetAuthority. Unity
+                // reads the authority mode + cost from
+                // MarriageAcceptanceTermsComponent attached by
+                // AIMarriageInboxAcceptSystem.
+                PushMarriageAcceptMessage(em, marriageEntity, marriage);
 
                 // Remove the tag so effects apply exactly once. The
                 // MarriageAcceptanceTermsComponent remains on the marriage
@@ -233,6 +250,119 @@ namespace Bloodlines.AI
                 DaysDelta = MarriageAcceptInWorldDayJump,
                 Reason    = reason,
             });
+        }
+
+        // ------------------------------------------------------------------ narrative push
+
+        private static void PushMarriageAcceptMessage(
+            EntityManager em,
+            Entity marriageEntity,
+            MarriageComponent marriage)
+        {
+            // Look up member titles via the dynasty member buffer on each
+            // faction entity. Falls back to the member id when no matching
+            // DynastyMemberComponent entity exists (synthetic test fixtures
+            // do not always seed full rosters).
+            var headTitle   = ResolveMemberTitle(em, marriage.HeadFactionId,   marriage.HeadMemberId);
+            var spouseTitle = ResolveMemberTitle(em, marriage.SpouseFactionId, marriage.SpouseMemberId);
+
+            // Authority suffix matches the browser approvalText ternary at
+            // simulation.js:7460-7462. Unity lacks authority title strings
+            // so the suffix uses canonical role words: "head", "heir",
+            // "envoy". HeadDirect costs 0, HeirRegency 1, EnvoyRegency 2.
+            var authorityMode = MarriageAuthorityMode.HeadDirect;
+            float cost = 0f;
+            if (em.HasComponent<MarriageAcceptanceTermsComponent>(marriageEntity))
+            {
+                var terms = em.GetComponentData<MarriageAcceptanceTermsComponent>(marriageEntity);
+                authorityMode = terms.AuthorityMode;
+                cost = terms.LegitimacyCost;
+            }
+
+            var message = BuildMarriageAcceptMessage(
+                headTitle, marriage.HeadFactionId,
+                spouseTitle, marriage.SpouseFactionId,
+                authorityMode, cost);
+
+            // Browser tone at simulation.js:7466 is the constant "good". Per
+            // sub-slice 17's tone-routing rule, player as the head (source)
+            // promotes to Good, else Info, so routine AI-to-AI marriages do
+            // not drown the HUD feed in Good-toned notifications.
+            var tone = marriage.HeadFactionId.Equals(new FixedString32Bytes("player"))
+                ? NarrativeMessageTone.Good
+                : NarrativeMessageTone.Info;
+
+            NarrativeMessageBridge.Push(em, message, tone);
+        }
+
+        private static FixedString128Bytes BuildMarriageAcceptMessage(
+            FixedString64Bytes headTitle, FixedString32Bytes headFactionId,
+            FixedString64Bytes spouseTitle, FixedString32Bytes spouseFactionId,
+            MarriageAuthorityMode authorityMode, float cost)
+        {
+            var msg = new FixedString128Bytes();
+            msg.Append(headTitle);
+            msg.Append((FixedString32Bytes)" of ");
+            msg.Append(headFactionId);
+            msg.Append((FixedString32Bytes)" weds ");
+            msg.Append(spouseTitle);
+            msg.Append((FixedString32Bytes)" of ");
+            msg.Append(spouseFactionId);
+            msg.Append((FixedString32Bytes)" ");
+            AppendApprovalSuffix(ref msg, authorityMode, cost);
+            msg.Append((FixedString32Bytes)".");
+            return msg;
+        }
+
+        private static void AppendApprovalSuffix(
+            ref FixedString128Bytes msg, MarriageAuthorityMode mode, float cost)
+        {
+            switch (mode)
+            {
+                case MarriageAuthorityMode.HeadDirect:
+                    msg.Append((FixedString32Bytes)"under head approval");
+                    break;
+                case MarriageAuthorityMode.HeirRegency:
+                    msg.Append((FixedString64Bytes)"under heir regency (legitimacy -");
+                    msg.Append((int)cost);
+                    msg.Append((FixedString32Bytes)")");
+                    break;
+                case MarriageAuthorityMode.EnvoyRegency:
+                    msg.Append((FixedString64Bytes)"under envoy regency (legitimacy -");
+                    msg.Append((int)cost);
+                    msg.Append((FixedString32Bytes)")");
+                    break;
+                default:
+                    msg.Append((FixedString32Bytes)"under household approval");
+                    break;
+            }
+        }
+
+        private static FixedString64Bytes ResolveMemberTitle(
+            EntityManager em,
+            FixedString32Bytes factionId,
+            FixedString64Bytes memberId)
+        {
+            var factionEntity = FindFactionEntity(em, factionId);
+            if (factionEntity != Entity.Null && em.HasBuffer<DynastyMemberRef>(factionEntity))
+            {
+                var buffer = em.GetBuffer<DynastyMemberRef>(factionEntity);
+                for (int k = 0; k < buffer.Length; k++)
+                {
+                    var memberEntity = buffer[k].Member;
+                    if (memberEntity == Entity.Null) continue;
+                    if (!em.HasComponent<DynastyMemberComponent>(memberEntity)) continue;
+                    var member = em.GetComponentData<DynastyMemberComponent>(memberEntity);
+                    if (member.MemberId.Equals(memberId)) return member.Title;
+                }
+            }
+            // Fallback: use the memberId itself as a title stand-in when no
+            // roster is available or the member cannot be located. Smoke
+            // fixtures without full dynasty seeding still produce a readable
+            // message. Direct FixedString64Bytes assignment preserves the
+            // UTF-8 bytes as-is (byte-by-byte Append promotes through the
+            // integer overload and serialises each byte as a decimal).
+            return memberId;
         }
 
         // ------------------------------------------------------------------ faction lookup

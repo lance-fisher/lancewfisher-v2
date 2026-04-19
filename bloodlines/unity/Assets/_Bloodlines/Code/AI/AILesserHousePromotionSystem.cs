@@ -60,6 +60,13 @@ namespace Bloodlines.AI
     /// LESSER_HOUSE_LEGITIMACY_BONUS = 3,
     /// LESSER_HOUSE_INITIAL_LOYALTY = 75, qualifying paths set).
     ///
+    /// Sub-slice 17 addition:
+    ///   Narrative message push. After the mechanical effects are applied,
+    ///     call NarrativeMessageBridge.Push with the browser-parity founding
+    ///     line: "<factionId> founds <lesserHouseName>, honoring
+    ///     <founderTitle>." Tone is Good when the faction is "player", else
+    ///     Info (matches browser simulation.js:7251-7255).
+    ///
     /// Deferred to later slices:
     ///   - Per-member FoundedLesserHouseId field on DynastyMemberComponent
     ///     (cross-reference is the workaround for now).
@@ -67,7 +74,6 @@ namespace Bloodlines.AI
     ///   - Marital anchor and world-pressure cadet instability profiles
     ///     (browser computes these inline; Unity will layer them when the
     ///     marital-anchor and cadet world-pressure systems land).
-    ///   - Narrative pushMessage (waits on the AI-to-UI message bridge).
     /// </summary>
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(AICovertOpsSystem))]
@@ -196,6 +202,38 @@ namespace Bloodlines.AI
                     StewardshipBonus);
                 em.SetComponentData(factionEntity, conviction);
             }
+
+            // Narrative push (sub-slice 17). Browser pushMessage at
+            // simulation.js:7251-7255.
+            PushPromotionMessage(em, factionEntity, founderTitle);
+        }
+
+        private static void PushPromotionMessage(
+            EntityManager em,
+            Entity factionEntity,
+            FixedString64Bytes founderTitle)
+        {
+            if (!em.HasComponent<FactionComponent>(factionEntity)) return;
+            var factionId = em.GetComponentData<FactionComponent>(factionEntity).FactionId;
+
+            // The new lesser-house element is the last entry just appended.
+            var lesserHouseBuffer = em.GetBuffer<LesserHouseElement>(factionEntity);
+            if (lesserHouseBuffer.Length == 0) return;
+            var lesserHouseName = lesserHouseBuffer[lesserHouseBuffer.Length - 1].HouseName;
+
+            var message = new FixedString128Bytes();
+            message.Append(factionId);
+            message.Append((FixedString32Bytes)" founds ");
+            message.Append(lesserHouseName);
+            message.Append((FixedString32Bytes)", honoring ");
+            message.Append(founderTitle);
+            message.Append((FixedString32Bytes)".");
+
+            var tone = factionId.Equals(new FixedString32Bytes("player"))
+                ? NarrativeMessageTone.Good
+                : NarrativeMessageTone.Info;
+
+            NarrativeMessageBridge.Push(em, message, tone);
         }
 
         // ------------------------------------------------------------------ helpers
