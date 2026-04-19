@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 16
-- Last Updated: 2026-04-18
-- Last Updated By: claude-ai-worker-gather-2026-04-18
-- Supersedes: revision 15 (ai-strategic-layer sub-slice 4 landed: AIWorkerGatherSystem ports ai.js idle worker dispatch loop lines 1243-1251; WorkerGatherIntervalSeconds + PlayerKeepFortified flags added to AIStrategyComponent; BloodlinesAIWorkerGatherSmokeValidation added)
+- Revision: 17
+- Last Updated: 2026-04-19
+- Last Updated By: claude-ai-siege-staging-2026-04-19
+- Supersedes: revision 16 (ai-strategic-layer sub-slice 5 landed: AISiegeOrchestrationSystem + AISiegeOrchestrationComponent port ai.js attackTimer<=0 siege staging decision tree ~lines 1825-2090; SiegeOrchestrationPhase 16-branch enum; BloodlinesAISiegeOrchestrationSmokeValidation 6-phase validator added)
 
 ## Purpose
 
@@ -248,38 +248,45 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: ai-strategic-layer
 
 - Status: active
-- Branch Prefix: `claude/unity-ai-worker-gather` (sub-slice 4); future sub-slices on new branches
+- Branch Prefix: `claude/unity-ai-siege-staging` (sub-slice 5); future sub-slices on new branches
 - Owner Agent: claude-code
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/AI/AIStrategyComponent.cs`
   - `unity/Assets/_Bloodlines/Code/AI/EnemyAIStrategySystem.cs`
   - `unity/Assets/_Bloodlines/Code/AI/AIStrategicPressureSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/AI/AIWorkerGatherSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/AI/AISiegeOrchestrationComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/AI/AISiegeOrchestrationSystem.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIStrategySmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIStrategicPressureSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIGovernancePressureSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIWorkerGatherSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAISiegeOrchestrationSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AIStrategy.cs`
   - `scripts/Invoke-BloodlinesUnityAIStrategySmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAIStrategicPressureSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAIGovernancePressureSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAIWorkerGatherSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityAISiegeOrchestrationSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs` -- `AIStrategyComponent` seeded on non-player Kingdom faction entities alongside `AIEconomyControllerComponent`
-  - `unity/Assembly-CSharp.csproj` -- `AIStrategyComponent.cs`, `EnemyAIStrategySystem.cs`, `AIStrategicPressureSystem.cs`, `AIWorkerGatherSystem.cs` registered
-  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs`, `BloodlinesAIStrategicPressureSmokeValidation.cs`, `BloodlinesAIGovernancePressureSmokeValidation.cs`, `BloodlinesAIWorkerGatherSmokeValidation.cs` registered
+  - `unity/Assembly-CSharp.csproj` -- `AIStrategyComponent.cs`, `EnemyAIStrategySystem.cs`, `AIStrategicPressureSystem.cs`, `AIWorkerGatherSystem.cs`, `AISiegeOrchestrationComponent.cs`, `AISiegeOrchestrationSystem.cs` registered
+  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs`, `BloodlinesAIStrategicPressureSmokeValidation.cs`, `BloodlinesAIGovernancePressureSmokeValidation.cs`, `BloodlinesAIWorkerGatherSmokeValidation.cs`, `BloodlinesAISiegeOrchestrationSmokeValidation.cs` registered
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-1.md`
   - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-2-pressure.md`
   - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-3-governance.md`
   - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-4-worker-gather.md`
+  - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-5-siege-staging.md`
 - Browser Reference:
   - Sub-slice 1: `src/game/core/ai.js` `pickTerritoryTarget` (~747), `pickScoutHarassTarget` (~412), `getWorldPressureRaidTarget` (~817)
   - Sub-slice 2: `src/game/core/ai.js` timer clamp/floor block lines 1127-1241
   - Sub-slice 3: `src/game/core/ai.js` governance/event-context timer clamp block lines 1129-1215
   - Sub-slice 4: `src/game/core/ai.js` idle worker dispatch loop lines 1243-1251, getEnemyGatherPriorities (885-922), chooseGatherNode (924-933)
-  - Sub-slices pending: siege staging, dynasty-aware covert ops (~2681)
-- Current Branch In Flight: `claude/unity-ai-worker-gather`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-4-worker-gather.md`
+  - Sub-slice 5: `src/game/core/ai.js` attackTimer<=0 siege staging decision tree ~lines 1825-2090, areSiegeLinesFormed (947), getSiegeStagePoint (935), isReliefArmyApproaching (727)
+  - Sub-slices pending: dynasty-aware covert ops (~2681)
+- Current Branch In Flight: `claude/unity-ai-siege-staging`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-5-siege-staging.md`
 
 ### Lane: victory-conditions
 
@@ -361,10 +368,8 @@ Note: `fortification-siege-sub-slice-3-imminent-engagement-warnings` is currentl
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 
-- Suggested Branch: new branch `claude/unity-ai-siege-staging`.
-- Target Paths: `unity/Assets/_Bloodlines/Code/AI/**` (additive only, owned by ai-strategic-layer lane).
-- Browser Reference: `src/game/core/ai.js` siege staging dispatch block; pairs with the fortification/siege system already landed.
-- Scope: port the AI siege-staging logic as the next sub-slice on the ai-strategic-layer lane. Add a smoke validator following the same pattern as prior sub-slices. Add a PowerShell runner script. Register new files in `Assembly-CSharp.csproj` and `Assembly-CSharp-Editor.csproj`.
+- Status: ACTIVE on branch `claude/unity-ai-siege-staging` (do not claim).
+- Browser Reference: `src/game/core/ai.js` attackTimer<=0 siege staging decision tree ~lines 1825-2090.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-6-dynasty-covert-ops
 

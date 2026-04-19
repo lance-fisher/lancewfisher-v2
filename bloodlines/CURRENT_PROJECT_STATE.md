@@ -1763,3 +1763,13 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - `BloodlinesAIWorkerGatherSmokeValidation` 4-phase validator all green: Phase 1 idle->Seeking with gold node; Phase 2 all depleted stays Idle; Phase 3 Gathering not re-dispatched; Phase 4 two workers spread across gold and wood.
 - All 10 validation gates green; contract bumped revision 15 -> 16.
 - The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-4-worker-gather.md`.
+
+### 2026-04-19 Unity AI Strategic Layer Sub-Slice 5: Siege Staging Orchestration
+
+- `AISiegeOrchestrationSystem` + `AISiegeOrchestrationComponent` ported from ai.js attackTimer<=0 siege staging decision tree (lines ~1825-2090) on branch `claude/unity-ai-siege-staging`.
+- `SiegeOrchestrationPhase` 17-value enum mirrors exact branch priority order from ai.js: Inactive, FieldWaterRetreat, SiegeRefusal, AwaitingEngineers, AwaitingSupplyCamp, AwaitingSupplyLine, SupplyInterdicted, SupplyRecoveringUnscreened, SupplyRecoveringScreened, AwaitingResupply, AwaitingEscort, StagingLines, ReliefHold, PostRepulse, RepeatedAssault, SupplyCollapse, Assaulting.
+- `AISiegeOrchestrationComponent` holds all readiness/context flags: siege engine presence, engineering readiness, supply camp/line/supply collapse, field water crisis trio, escort threshold, formal siege line formation, relief army detection, cohesion penalty/post-repulse state.
+- Pure state machine: reads `PlayerKeepFortified` from `AIStrategyComponent`, evaluates priority tree, writes `Phase`. Movement commands deferred to movement/combat systems.
+- `BloodlinesAISiegeOrchestrationSmokeValidation` 6-phase validator all green: Phase 1 Inactive (keep not fortified); Phase 2 FieldWaterRetreat highest priority override; Phase 3 SiegeRefusal; Phase 4 StagingLines; Phase 5 Assaulting; Phase 6 PostRepulse cohesion penalty.
+- All 10 validation gates green; contract bumped revision 16 -> 17.
+- The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-5-siege-staging.md`.
