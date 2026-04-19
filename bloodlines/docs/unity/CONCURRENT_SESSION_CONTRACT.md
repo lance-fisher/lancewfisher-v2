@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 27
+- Revision: 28
 - Last Updated: 2026-04-19
-- Last Updated By: codex-fortification-siege-camp-supply-interdiction-2026-04-19
-- Supersedes: revision 26 (fortification-siege sub-slice 4 landed on top of the rev-26 master base; SiegeSupplyCampComponent, SiegeSupplyInterdictionCanon, and SiegeSupplyInterdictionSystem port the browser convoy-interdiction seam; camps now lose stockpile under raid pressure, wagons enter interdicted and recovering states, convoy escort screening feeds AISiegeOrchestrationComponent supply phases, and BloodlinesSiegeSupplyInterdictionSmokeValidation covers the new logistics path)
+- Last Updated By: claude-ai-lesser-house-promotion-2026-04-19
+- Supersedes: revision 27 (ai-strategic-layer sub-slice 13 landed: AILesserHousePromotionSystem ports ai.js tryAiPromoteLesserHouse (~2784-2801) plus the mechanical core of simulation.js promoteMemberToLesserHouse (~7184-7258); consumes AICovertOpsComponent.LastFiredOp == LesserHousePromotion from sub-slice 6; gates on dynasty legitimacy < 90 and lesser-house buffer count < 3; eligibility walks DynastyMemberRef buffer for Active/Ruling non-head members on Governance/MilitaryCommand/CovertOperations paths with Renown >= 30 who are not already founders of an existing LesserHouseElement; on success appends a new LesserHouseElement at Loyalty=75 so LesserHouseLoyaltyDriftSystem picks it up next in-world day, applies legitimacy +3 clamped to 100, and records a Stewardship +2 conviction event via ConvictionScoring.ApplyEvent; one-shot dispatch consumption matches sub-slices 8/9/12 pattern; deferred: per-member FoundedLesserHouseId field, promotion-history gate, marital-anchor + cadet world-pressure profiles, narrative pushMessage. BloodlinesAILesserHousePromotionSmokeValidation 6-phase validator covers successful promotion, legitimacy >= 90 block, lesser-house cap (3) block, head-of-bloodline rejection, non-qualifying-path rejection, and near-ceiling promotion arithmetic)
 
 ## Purpose
 
@@ -248,7 +248,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: ai-strategic-layer
 
 - Status: active
-- Branch Prefix: `claude/unity-ai-marriage-acceptance-terms` (sub-slice 12); prior claude/unity-ai-marriage-accept-effects (11), claude/unity-ai-marriage-strategic-profile (10), claude/unity-ai-marriage-inbox-accept (9), codex/unity-ai-command-dispatch (8) also landed; future sub-slices on new branches
+- Branch Prefix: `claude/unity-ai-lesser-house-promotion` (sub-slice 13); prior claude/unity-ai-marriage-acceptance-terms (12), claude/unity-ai-marriage-accept-effects (11), claude/unity-ai-marriage-strategic-profile (10), claude/unity-ai-marriage-inbox-accept (9), codex/unity-ai-command-dispatch (8) also landed; future sub-slices on new branches
 - Owner Agent: claude-code
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/AI/AIStrategyComponent.cs`
@@ -268,6 +268,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/AI/AIMarriageAcceptEffectsSystem.cs`
   - `unity/Assets/_Bloodlines/Code/AI/MarriageAcceptanceTermsComponent.cs`
   - `unity/Assets/_Bloodlines/Code/AI/MarriageAuthorityEvaluator.cs`
+  - `unity/Assets/_Bloodlines/Code/AI/AILesserHousePromotionSystem.cs`
   - `unity/Assets/_Bloodlines/Code/AI/AIWorkerCommandSystem.cs`
   - `unity/Assets/_Bloodlines/Code/AI/AITerritoryDispatchSystem.cs`
   - `unity/Assets/_Bloodlines/Code/Components/WorkerGatherOrderComponent.cs`
@@ -283,6 +284,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIMarriageStrategicProfileSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIMarriageAcceptEffectsSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIMarriageAcceptanceTermsSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAILesserHousePromotionSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAICommandDispatchSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AIStrategy.cs`
   - `scripts/Invoke-BloodlinesUnityAIStrategySmokeValidation.ps1`
@@ -297,11 +299,12 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnityAIMarriageStrategicProfileSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAIMarriageAcceptEffectsSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAIMarriageAcceptanceTermsSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityAILesserHousePromotionSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAICommandDispatchSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs` -- `AIStrategyComponent` seeded on non-player Kingdom faction entities alongside `AIEconomyControllerComponent`
-  - `unity/Assembly-CSharp.csproj` -- `AIStrategyComponent.cs`, `EnemyAIStrategySystem.cs`, `AIStrategicPressureSystem.cs`, `AIWorkerGatherSystem.cs`, `AISiegeOrchestrationComponent.cs`, `AISiegeOrchestrationSystem.cs`, `AICovertOpsComponent.cs`, `AICovertOpsSystem.cs`, `AIBuildOrderComponent.cs`, `AIBuildOrderSystem.cs`, `AIMarriageProposalExecutionSystem.cs`, `AIMarriageInboxAcceptSystem.cs`, `AIMarriageStrategicProfileSystem.cs`, `MarriageAcceptEffectsPendingTag.cs`, `AIMarriageAcceptEffectsSystem.cs`, `MarriageAcceptanceTermsComponent.cs`, `MarriageAuthorityEvaluator.cs`, `AIWorkerCommandSystem.cs`, `AITerritoryDispatchSystem.cs`, `WorkerGatherOrderComponent.cs` registered
-  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs`, `BloodlinesAIStrategicPressureSmokeValidation.cs`, `BloodlinesAIGovernancePressureSmokeValidation.cs`, `BloodlinesAIWorkerGatherSmokeValidation.cs`, `BloodlinesAISiegeOrchestrationSmokeValidation.cs`, `BloodlinesAICovertOpsSmokeValidation.cs`, `BloodlinesAIBuildOrderSmokeValidation.cs`, `BloodlinesAIMarriageProposalExecutionSmokeValidation.cs`, `BloodlinesAIMarriageInboxAcceptSmokeValidation.cs`, `BloodlinesAIMarriageStrategicProfileSmokeValidation.cs`, `BloodlinesAIMarriageAcceptEffectsSmokeValidation.cs`, `BloodlinesAIMarriageAcceptanceTermsSmokeValidation.cs`, `BloodlinesAICommandDispatchSmokeValidation.cs` registered
+  - `unity/Assembly-CSharp.csproj` -- `AIStrategyComponent.cs`, `EnemyAIStrategySystem.cs`, `AIStrategicPressureSystem.cs`, `AIWorkerGatherSystem.cs`, `AISiegeOrchestrationComponent.cs`, `AISiegeOrchestrationSystem.cs`, `AICovertOpsComponent.cs`, `AICovertOpsSystem.cs`, `AIBuildOrderComponent.cs`, `AIBuildOrderSystem.cs`, `AIMarriageProposalExecutionSystem.cs`, `AIMarriageInboxAcceptSystem.cs`, `AIMarriageStrategicProfileSystem.cs`, `MarriageAcceptEffectsPendingTag.cs`, `AIMarriageAcceptEffectsSystem.cs`, `MarriageAcceptanceTermsComponent.cs`, `MarriageAuthorityEvaluator.cs`, `AILesserHousePromotionSystem.cs`, `AIWorkerCommandSystem.cs`, `AITerritoryDispatchSystem.cs`, `WorkerGatherOrderComponent.cs` registered
+  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs`, `BloodlinesAIStrategicPressureSmokeValidation.cs`, `BloodlinesAIGovernancePressureSmokeValidation.cs`, `BloodlinesAIWorkerGatherSmokeValidation.cs`, `BloodlinesAISiegeOrchestrationSmokeValidation.cs`, `BloodlinesAICovertOpsSmokeValidation.cs`, `BloodlinesAIBuildOrderSmokeValidation.cs`, `BloodlinesAIMarriageProposalExecutionSmokeValidation.cs`, `BloodlinesAIMarriageInboxAcceptSmokeValidation.cs`, `BloodlinesAIMarriageStrategicProfileSmokeValidation.cs`, `BloodlinesAIMarriageAcceptEffectsSmokeValidation.cs`, `BloodlinesAIMarriageAcceptanceTermsSmokeValidation.cs`, `BloodlinesAILesserHousePromotionSmokeValidation.cs`, `BloodlinesAICommandDispatchSmokeValidation.cs` registered
   - `unity/Assets/_Bloodlines/Code/Systems/WorkerGatherSystem.cs` -- workers now must travel inside `GatherRadius` before harvesting; `AIWorkerCommandSystem` may flip `Seeking -> Gathering` immediately but harvest does not start until arrival
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageComponents.cs` -- read `MarriageComponent` (already-married gate) and `MarriageProposalComponent` / `MarriageProposalStatus` (already-pending gate, proposal creation, accept flip). Sub-slice 8 creates new `MarriageProposalComponent` entities; sub-slice 9 creates new `MarriageComponent` entities and mutates existing `MarriageProposalComponent.Status` pending->accepted. Does not modify existing dynasty system code.
@@ -314,6 +317,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Conviction/ConvictionScoring.cs` -- call `ConvictionScoring.ApplyEvent(ref conviction, ConvictionBucket.Oathkeeping, +2f)` on both factions' `ConvictionComponent` when a marriage is accepted (sub-slice 11). The helper refreshes score and band in place.
   - `unity/Assets/_Bloodlines/Code/Time/DeclareInWorldTimeRequest.cs` -- push a 30-day request onto the DualClock singleton buffer when a marriage is accepted (sub-slice 11). `DualClockDeclarationSystem` drains the buffer.
   - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- read `InWorldDays` for proposal and marriage timestamping.
+  - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageComponents.cs` -- write to `LesserHouseElement` buffer on the AI faction (sub-slice 13). The buffer element struct itself is not modified; new entries seeded by `AILesserHousePromotionSystem` carry FounderMemberId for cross-reference deduplication and `LastDriftAppliedInWorldDays` so the existing `LesserHouseLoyaltyDriftSystem` (tier2-batch lane, retired) picks them up next in-world day.
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-1.md`
   - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-2-pressure.md`
@@ -328,6 +332,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-10-marriage-strategic-profile.md`
   - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-11-marriage-accept-effects.md`
   - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-12-marriage-acceptance-terms.md`
+  - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-13-lesser-house-promotion.md`
 - Browser Reference:
   - Sub-slice 1: `src/game/core/ai.js` `pickTerritoryTarget` (~747), `pickScoutHarassTarget` (~412), `getWorldPressureRaidTarget` (~817)
   - Sub-slice 2: `src/game/core/ai.js` timer clamp/floor block lines 1127-1241
@@ -342,9 +347,10 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - Sub-slice 10: `src/game/core/ai.js` `getAiMarriageStrategicProfile` (~2803-2839); simplified port of `simulation.js getMarriageFaithCompatibilityProfile` (~596-730) using SelectedFaith+DoctrinePath equality rather than covenantName grouping (Unity has no covenant-name covariance yet); populates `AICovertOpsComponent.MarriageProposalGateMet` and `MarriageInboxAcceptGate` so sub-slices 6/8/9 gate on browser-accurate 4-signal strategic profile
   - Sub-slice 11: `src/game/core/simulation.js` `acceptMarriage` (~7388-7469) post-record effects block; ports legitimacy +2 clamped to 100 both sides, hostility drop both ways, oathkeeping conviction +2 both sides via `ConvictionScoring.ApplyEvent`, and 30-day `DeclareInWorldTimeRequest` jump via the existing DualClock request buffer; uses new `MarriageAcceptEffectsPendingTag` attached in sub-slice 9 at primary marriage creation for one-shot application
   - Sub-slice 12: `src/game/core/simulation.js` `getMarriageAcceptanceTerms` (~6327), `applyMarriageGovernanceLegitimacyCost` (~6232), `getMarriageAuthorityProfile` (~6134), and `MARRIAGE_REGENCY_LEGITIMACY_COSTS` (~6091); `acceptMarriage` cost-before-bonus order at simulation.js:7449 (cost) vs simulation.js:7458 (legitimacy +2); ports head-direct (cost 0) / heir-regency (cost 1) / envoy-regency (cost 2) and the no-authority rejection; Stewardship -cost conviction event via the same `ConvictionScoring.ApplyEvent` helper used by oathkeeping
-  - Sub-slices pending: narrative message push (no AI->UI message component yet)
-- Current Branch In Flight: `claude/unity-ai-marriage-acceptance-terms`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-12-marriage-acceptance-terms.md`
+  - Sub-slice 13: `src/game/core/ai.js` `tryAiPromoteLesserHouse` (~2784-2801) plus updateEnemyAi dispatch hook (~2674-2677); simulation-side sink `promoteMemberToLesserHouse` (~7184-7258) ported at the mechanical level Unity tracks; constants block at simulation.js (~6444-6457): LESSER_HOUSE_RENOWN_THRESHOLD = 30, LESSER_HOUSE_MIN_PROMOTIONS = 1 (deferred), LESSER_HOUSE_LEGITIMACY_BONUS = 3, LESSER_HOUSE_INITIAL_LOYALTY = 75, LESSER_HOUSE_QUALIFYING_PATHS = {Governance, MilitaryCommand, CovertOperations}; `memberIsLesserHouseCandidate` (~6469-6479) gates ported (renown, role, status, path; foundedLesserHouseId replaced by cross-reference of LesserHouseElement.FounderMemberId since DynastyMemberComponent has no foundedLesserHouseId field); strategic gates: legitimacy &lt; 90, lesser-house buffer count &lt; 3
+  - Sub-slices pending: narrative message push (no AI->UI message component yet); per-member FoundedLesserHouseId on DynastyMemberComponent (cross-reference workaround in place); promotion-history gate; marital-anchor and cadet world-pressure profiles on lesser houses; and dispatch-execution sub-slices for assassination, missionary, holy war, divine right, captive recovery, and pact proposal CovertOpKind values
+- Current Branch In Flight: `claude/unity-ai-lesser-house-promotion`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-13-lesser-house-promotion.md`
 
 ### Lane: victory-conditions
 
@@ -472,12 +478,24 @@ Note: `fortification-siege-sub-slice-4-siege-camp-supply-interdiction` is implem
 - Status: DONE (landed via `claude/unity-ai-marriage-acceptance-terms`; see sub-slice 12 handoff).
 - Browser Reference: `src/game/core/simulation.js` `getMarriageAcceptanceTerms` (~6327), `applyMarriageGovernanceLegitimacyCost` (~6232), `getMarriageAuthorityProfile` (~6134), `MARRIAGE_REGENCY_LEGITIMACY_COSTS` (~6091).
 
-### Next Lane Candidate: ai-strategic-layer-sub-slice-13-narrative-message-bridge
+### Next Lane Candidate: ai-strategic-layer-sub-slice-13-lesser-house-promotion
+
+- Status: DONE (landed via `claude/unity-ai-lesser-house-promotion`; see sub-slice 13 handoff).
+- Browser Reference: `src/game/core/ai.js` `tryAiPromoteLesserHouse` (~2784-2801), `src/game/core/simulation.js` `promoteMemberToLesserHouse` (~7184-7258), `memberIsLesserHouseCandidate` (~6469-6479), constants block (~6444-6457).
+
+### Next Lane Candidate: ai-strategic-layer-sub-slice-14-narrative-message-bridge
 
 - Suggested Branch: new branch `claude/unity-ai-narrative-message-bridge` (or similar) once an AI-to-UI message surface is in scope.
-- Target Paths: TBD; needs a message component or buffer on the player faction (or a singleton) that AI systems can push narrative entries onto. Sub-slices 11 and 12 both deferred this because no Unity message bridge exists yet.
-- Browser Reference: `src/game/core/simulation.js` `pushMessage` (search), called from `acceptMarriage` (~7463) with the `${sourceMember.title} of ${source.displayName} weds ...` ceremonial line including the authority approval text from sub-slice 12.
-- Scope: design and add a minimal AI-to-UI narrative message channel (component or buffer), then push the marriage-accept and marriage-acceptance-terms ceremonial messages via that channel. Likely paired with a dedicated lane that also covers other AI-pushed narrative pushes (proposal sent, expiration, child birth, etc.) so the channel is not single-purpose.
+- Target Paths: TBD; needs a message component or buffer on the player faction (or a singleton) that AI systems can push narrative entries onto. Sub-slices 11, 12, and 13 all deferred this because no Unity message bridge exists yet.
+- Browser Reference: `src/game/core/simulation.js` `pushMessage` (search), called from `acceptMarriage` (~7463), `promoteMemberToLesserHouse` (~7251), and many other AI paths.
+- Scope: design and add a minimal AI-to-UI narrative message channel (component or buffer), then push the marriage-accept, marriage-acceptance-terms, and lesser-house-founded ceremonial messages via that channel. Likely paired with a dedicated lane that also covers other AI-pushed narrative pushes (proposal sent, expiration, child birth, etc.) so the channel is not single-purpose.
+
+### Next Lane Candidate: ai-strategic-layer-sub-slice-15-pact-proposal-execution
+
+- Suggested Branch: new branch `claude/unity-ai-pact-proposal-execution`.
+- Target Paths: `unity/Assets/_Bloodlines/Code/AI/**` (additive, owned by ai-strategic-layer lane); a new `PactProposalComponent` likely needed; reads across Dynasty / Faction state for gating.
+- Browser Reference: `src/game/core/ai.js` updateEnemyAi pact proposal block (~2643-2665) plus the simulation-side `proposeNonAggressionPact` sink (search). Mirrors the marriage proposal pattern from sub-slice 8.
+- Scope: consume `AICovertOpsComponent.LastFiredOp == PactProposal` from sub-slice 6 and create a `PactProposalComponent` entity with proposal metadata. Add expiration and accept paths in subsequent sub-slices following the marriage-proposal lifecycle (sub-slices 8/9/11/12).
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-8-command-dispatch
 

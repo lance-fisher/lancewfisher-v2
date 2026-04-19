@@ -2036,3 +2036,35 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 ### Gate Results
 - N/A. Governance-only edits. No code changed. No validator run required.
 - Contract revision unchanged (the contract tracks Unity lane scope, not owner direction).
+
+## AI Strategic Layer Sub-Slice 13: Lesser-House Promotion Execution (Claude, 2026-04-19)
+
+### Status: COMPLETE on branch claude/unity-ai-lesser-house-promotion
+
+### What Was Done
+- New `AILesserHousePromotionSystem` ports ai.js `tryAiPromoteLesserHouse` (~2784-2801) plus the mechanical core of simulation.js `promoteMemberToLesserHouse` (~7184-7258). Sub-slice 6 already dispatched `CovertOpKind.LesserHousePromotion` into AICovertOpsComponent; sub-slice 13 consumes it and executes the founding effect.
+- Strategic gates ported: faction `DynastyStateComponent.Legitimacy < 90` (consolidation ceiling), `LesserHouseElement` buffer count `< 3` (cap), `DynastyMemberRef` buffer present.
+- Eligibility gates (browser memberIsLesserHouseCandidate parity): `Status == Active || Ruling`, `Role != HeadOfBloodline`, `Path` is `Governance`, `MilitaryCommand`, or `CovertOperations`, `Renown >= 30`, MemberId not already a `FounderMemberId` of an existing LesserHouseElement on this faction. The browser's `member.foundedLesserHouseId` field is replaced by cross-referencing the buffer.
+- On success: append new `LesserHouseElement` at Loyalty=75, +3 dynasty legitimacy clamped to 100, +2 Stewardship conviction event via `ConvictionScoring.ApplyEvent`. Dispatch unconditionally cleared (one-shot pattern from sub-slices 8/9/12). New buffer entry initialized with `LastDriftAppliedInWorldDays = currentInWorldDays` so the existing `LesserHouseLoyaltyDriftSystem` picks it up at the next in-world day boundary.
+- Cross-lane reads only (DynastyMemberRef, DynastyMemberComponent fields). Cross-lane mutations: DynastyState.Legitimacy clamp, LesserHouseElement append, Conviction.Stewardship via existing helper.
+- Deferred: per-member FoundedLesserHouseId field on DynastyMemberComponent; promotion-history gate; marital-anchor + cadet world-pressure profiles; narrative pushMessage (still waits on AI->UI message bridge).
+- 6-phase dedicated smoke validator all green. Contract revision 27 -> 28.
+- csproj refresh note: the local csproj was missing Codex's sub-slice 4 files (SiegeSupplyCampComponent, SiegeSupplyInterdictionCanon, SiegeSupplyInterdictionSystem, BloodlinesSiegeSupplyInterdictionSmokeValidation). Both csproj files updated; csproj is gitignored and not committed.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- Fortification smoke: PASS
+- Siege smoke: exit 0
+- AI lesser house promotion smoke (sub-slice 13): all 6 phases PASS
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED at revision 28
+
+### Next Unclaimed Lanes
+1. ai-strategic-layer-sub-slice-14-narrative-message-bridge (designs an AI->UI message channel; deferred since sub-slices 11, 12, 13).
+2. ai-strategic-layer-sub-slice-15-pact-proposal-execution (mirrors marriage-proposal pattern from sub-slice 8; ports `proposeNonAggressionPact` from ai.js ~2643-2665).
+3. fortification-siege wall-segment destruction resolution (Codex owns; recommended next Codex slice per sub-slice 4 handoff).
