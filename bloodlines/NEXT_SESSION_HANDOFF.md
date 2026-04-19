@@ -2269,3 +2269,35 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 1. Breach HUD / legibility summary on the fortification debug surface so the new assault-pressure state is readable per settlement without inspecting unit telemetry.
 2. Coordinated breach-aware pathing / exploitation after pathing ownership is explicitly claimed or split in the contract.
 3. Breach sealing, assault failure, or recovery follow-up so defenders can contest the new exploit window over time instead of only suffering the static bonus.
+## AI Strategic Layer Sub-Slice 18: Dynasty Operations Foundation (Claude, 2026-04-19)
+
+### Status: COMPLETE on branch claude/unity-ai-dynasty-operations-foundation (branched from origin/master dfec72f5, rebased onto origin/master a2f5e6cd after Codex fortification sub-slice 6 breach assault pressure landed at revision 34)
+
+### What Was Done
+- New `DynastyOperationComponent` + `DynastyOperationLimits` port the canonical dynasty-operation foundation that every browser dispatch site in simulation.js shares: `DYNASTY_OPERATION_ACTIVE_LIMIT = 6` (line 17) plus the seven dispatch sites (missionary ~10523, holy war ~10565, counter-intelligence ~10837, espionage ~10876, assassination ~10912, sabotage ~10952, captive rescue/ransom ~2566-2608 in ai.js) that gate on `(operations.active ?? []).length >= DYNASTY_OPERATION_ACTIVE_LIMIT`.
+- `DynastyOperationComponent` carries one entity per active operation with OperationId (FixedString64Bytes), SourceFactionId (FixedString32Bytes), OperationKind (new `DynastyOperationKind` enum: None, Missionary, HolyWar, DivineRight, CaptiveRescue, CaptiveRansom, LesserHousePromotion), StartedAtInWorldDays (stamped from DualClock), TargetFactionId (default when N/A), TargetMemberId (default when N/A), Active (false retains for audit without consuming capacity).
+- `DynastyOperationLimits` static helper exposes the cap constant, `HasCapacity(em, factionId)` (strict < cap, skips inactive), `CountActiveForFaction(em, factionId)`, and `BeginOperation(em, operationId, sourceFactionId, kind, targetFactionId, targetMemberId)` (creates entity with Active=true + DualClock-stamped StartedAtInWorldDays).
+- Deliberate departure from browser silent-trim: Unity keeps the cap gate strict at the call site because entity-per-operation cannot silently drop entries without orphaning per-kind data, and silent drop masks over-cap bugs at the producer.
+- No system ships in this slice. The foundation ships standalone so each later dispatch slice (missionary, holy war, divine right, captive rescue, captive ransom) attaches its own per-kind component struct to the entity created by BeginOperation. LesserHousePromotion reserved in enum for completeness since browser `promoteMemberToLesserHouse` does not route through `getDynastyOperationsState`.
+- Cross-lane reads only: `DualClockComponent.InWorldDays` (dual-clock-match-progression, retired). No mutations.
+- `BloodlinesDynastyOperationsSmokeValidation` 5-phase validator all green.
+- Contract revision 34 -> 35.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- Fortification smoke: PASS
+- Siege smoke: exit 0 (now includes Codex's breach-pressure system on the rebased base; no regression)
+- Dynasty operations smoke (sub-slice 18): all 5 phases PASS
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED at revision 35
+
+### Next Unclaimed Lanes
+1. ai-strategic-layer-sub-slice-19-captive-member-state (port faction.captives array + CapturedMemberRecord shape as a Unity buffer on the faction entity; together with sub-slice 18 unblocks captive rescue/ransom execution slices).
+2. ai-strategic-layer missionary execution (first consumer of the dynasty operations foundation; port `startMissionaryOperation` at simulation.js:10523 with per-kind resolveAt, operatorId, sourceFaithId, exposureGain, loyaltyPressure fields on a new DynastyOperationMissionaryComponent struct attached to the entity created by BeginOperation).
+3. ai-strategic-layer narrative TTL eviction system (walks the NarrativeMessageElement buffer each tick and removes entries whose CreatedAtInWorldDays + Ttl is past current; small self-contained slice that bounds the buffer before a UI consumer lands).
+4. fortification-siege follow-up: breach HUD / legibility summary on the fortification debug surface; breach-aware pathing after pathing ownership is split; breach sealing / assault failure / recovery follow-up (per Codex sub-slice 6 handoff recommendations).
