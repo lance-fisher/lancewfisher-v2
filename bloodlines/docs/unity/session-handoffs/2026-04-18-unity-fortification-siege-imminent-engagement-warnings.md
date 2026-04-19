@@ -115,3 +115,47 @@ shared wrapper files were committed for that temporary adaptation.
    contract and continuity state.
 3. Do not widen this branch into bootstrap integration, siege lifecycle,
    sortie execution, or unrelated AI work before merge coordination completes.
+
+## Post-Rebase Update (Revision 23)
+
+This branch was rebased onto `origin/master`
+`73a6f5435c047c303c256a822b5f785f0199d277` after the revision-22
+`codex/unity-ai-command-dispatch` merge landed on `master`.
+
+Contract and ownership state on the rebased head:
+
+- contract advanced `22 -> 23` under
+  `codex-fortification-siege-imminent-engagement-2026-04-19`
+- revision-22 ai-strategic-layer ownership and Claude sub-slices 7-9 stayed
+  intact as the master-side base
+- fortification lane metadata now explicitly includes
+  `ImminentEngagementComponent.cs`,
+  `BloodlinesImminentEngagementSmokeValidation.cs`, and
+  `Invoke-BloodlinesUnityImminentEngagementSmokeValidation.ps1`
+
+Rebased validation rerun is fully green on `D:\BLFS\bloodlines`:
+
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS
+- bootstrap runtime smoke: PASS via
+  `artifacts/unity-bootstrap-runtime-smoke.log`
+- combat smoke: PASS via `artifacts/unity-combat-smoke.log`
+- Bootstrap scene shell: PASS via
+  `artifacts/unity-bootstrap-scene-batch-rev23.log`
+- Gameplay scene shell: PASS via
+  `artifacts/unity-gameplay-scene-batch-rev23.log`
+- fortification smoke: PASS via `artifacts/unity-fortification-smoke.log`
+- siege smoke: PASS via `artifacts/unity-siege-smoke.log`
+- imminent engagement smoke: PASS via
+  `artifacts/unity-imminent-engagement-smoke.log`
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- `scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1`: PASS at
+  revision `23`
+
+Current readiness after the rebase rerun:
+
+- branch: `codex/unity-fortification-siege`
+- contract revision at close: `23`
+- branch status: rebased green on the revision-22 master base and ready for
+  force-with-lease push plus merge-to-master coordination

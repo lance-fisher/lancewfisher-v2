@@ -1856,3 +1856,31 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
   3. Rebase `codex/unity-fortification-siege` onto the new revision-22 master base,
      bump the contract to 23, rerun the full gate chain plus imminent-engagement
      smoke, and merge that lane next.
+
+## 2026-04-19 Codex Fortification Siege Rebase To Revision 23
+
+- Status: rebased green on `codex/unity-fortification-siege`.
+- Base: `origin/master` `73a6f5435c047c303c256a822b5f785f0199d277`
+  (revision 22 with Codex command-dispatch already merged).
+- Contract updated `22 -> 23` under
+  `codex-fortification-siege-imminent-engagement-2026-04-19`.
+- Validation on `D:\BLFS\bloodlines` is fully green:
+  - both `dotnet build` gates PASS
+  - bootstrap runtime smoke PASS via `artifacts/unity-bootstrap-runtime-smoke.log`
+  - combat smoke PASS via `artifacts/unity-combat-smoke.log`
+  - Bootstrap and Gameplay scene shells PASS via
+    `artifacts/unity-bootstrap-scene-batch-rev23.log` and
+    `artifacts/unity-gameplay-scene-batch-rev23.log`
+  - fortification smoke PASS via `artifacts/unity-fortification-smoke.log`
+  - siege smoke PASS via `artifacts/unity-siege-smoke.log`
+  - imminent engagement smoke PASS via
+    `artifacts/unity-imminent-engagement-smoke.log`
+  - `node tests/data-validation.mjs` PASS
+  - `node tests/runtime-bridge.mjs` PASS
+  - contract staleness check PASS at revision 23
+- Branch authority handoff:
+  `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-imminent-engagement-warnings.md`
+- Next action:
+  1. Force-push `codex/unity-fortification-siege`.
+  2. Merge it to `master` and push `master`.
+  3. Start the next ai-strategic-layer lane from revision 23 on a new Claude branch.

@@ -1887,3 +1887,32 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   `[UpdateAfter(typeof(AICovertOpsSystem))]`.
 - Rebasing produced branch head `34b8d694c4726345a63ce1577d63e34d4bdce5e1`; the
   slice is ready for force-with-lease push and merge to `master`.
+
+### 2026-04-19 Unity Fortification Siege Sub-Slice 3 Rebase To Revision 23
+
+- `codex/unity-fortification-siege` is now rebased onto `origin/master`
+  `73a6f5435c047c303c256a822b5f785f0199d277`, which already includes the
+  revision-22 Codex command-dispatch merge.
+- `docs/unity/CONCURRENT_SESSION_CONTRACT.md` advanced from revision 22 to 23
+  under `codex-fortification-siege-imminent-engagement-2026-04-19`, preserving
+  the rev-22 ai-strategic-layer base and adding the imminent-engagement
+  component, smoke validator, and wrapper ownership to the fortification lane.
+- Full validation is green on `D:\BLFS\bloodlines`:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`
+  - bootstrap runtime smoke PASS via `artifacts/unity-bootstrap-runtime-smoke.log`
+  - combat smoke PASS via `artifacts/unity-combat-smoke.log`
+  - Bootstrap scene shell PASS via `artifacts/unity-bootstrap-scene-batch-rev23.log`
+  - Gameplay scene shell PASS via `artifacts/unity-gameplay-scene-batch-rev23.log`
+  - fortification smoke PASS via `artifacts/unity-fortification-smoke.log`
+  - siege smoke PASS via `artifacts/unity-siege-smoke.log`
+  - imminent engagement smoke PASS via `artifacts/unity-imminent-engagement-smoke.log`
+  - `node tests/data-validation.mjs` PASS
+  - `node tests/runtime-bridge.mjs` PASS
+  - contract staleness check PASS at revision 23
+- The authoritative handoff for this rebased slice is now
+  `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-imminent-engagement-warnings.md`.
+- Next action on this branch is operational, not implementation:
+  force-push `codex/unity-fortification-siege`, merge it to `master`, then push
+  `master` so the next Claude ai-strategic-layer session can start from
+  revision 23.
