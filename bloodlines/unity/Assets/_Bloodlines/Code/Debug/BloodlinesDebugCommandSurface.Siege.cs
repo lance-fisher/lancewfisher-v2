@@ -39,6 +39,34 @@ namespace Bloodlines.Debug
             return true;
         }
 
+        public bool TryDebugGetSiegeSupplyTrainState(Entity unitEntity, out SiegeSupplyTrainComponent supplyTrain)
+        {
+            supplyTrain = default;
+            if (!TryGetEntityManager(out var entityManager) ||
+                !entityManager.Exists(unitEntity) ||
+                !entityManager.HasComponent<SiegeSupplyTrainComponent>(unitEntity))
+            {
+                return false;
+            }
+
+            supplyTrain = entityManager.GetComponentData<SiegeSupplyTrainComponent>(unitEntity);
+            return true;
+        }
+
+        public bool TryDebugGetSiegeSupplyCampState(Entity buildingEntity, out Bloodlines.Siege.SiegeSupplyCampComponent supplyCamp)
+        {
+            supplyCamp = default;
+            if (!TryGetEntityManager(out var entityManager) ||
+                !entityManager.Exists(buildingEntity) ||
+                !entityManager.HasComponent<Bloodlines.Siege.SiegeSupplyCampComponent>(buildingEntity))
+            {
+                return false;
+            }
+
+            supplyCamp = entityManager.GetComponentData<Bloodlines.Siege.SiegeSupplyCampComponent>(buildingEntity);
+            return true;
+        }
+
         public bool TryDebugGetFactionStockpile(
             FixedString32Bytes factionId,
             out ResourceStockpileComponent stockpile)

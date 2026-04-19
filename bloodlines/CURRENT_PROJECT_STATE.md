@@ -1961,3 +1961,27 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Sub-slice 11 regression smoke (`Invoke-BloodlinesUnityAIMarriageAcceptEffectsSmokeValidation.ps1`) re-run: all 6 phases PASS. Backward-compat default keeps the synthetic fixtures aligned with the original sub-slice 11 expectations.
 - All 10 validation gates green. Contract bumped revision 25 -> 26.
 - The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-12-marriage-acceptance-terms.md`.
+
+### 2026-04-19 Unity Fortification Siege Sub-Slice 4: Camp Supply Interdiction
+
+- `SiegeSupplyCampComponent`, `SiegeSupplyInterdictionCanon`, and `SiegeSupplyInterdictionSystem` port the browser convoy-interdiction seam on branch `codex/unity-fortification-siege-camp-supply-interdiction`.
+- Logistics-support buildings now seed live camp stockpiles and raider-tracking state. Hostile raiders inside the supply-line radius drain camp stockpile, preserve attacker ownership, and mark camps non-operational below threshold.
+- Supply wagons now carry additive interdiction and convoy-recovery state: `LogisticsInterdictedUntil`, `ConvoyRecoveryUntil`, `ConvoyReconsolidatedAt`, `InterdictedByFactionId`, `EscortCount`, `RequiredEscortCount`, and `EscortScreened`.
+- `SiegeSupportRefreshSystem`, `FieldWaterSupportScanSystem`, and `FieldWaterStrainSystem` now respect interdicted and recovering wagons plus non-operational camps, so siege support and field-water sustainment fall off cleanly during interdiction instead of silently persisting.
+- `BloodlinesDebugCommandSurface.Siege` now exposes dedicated wagon and camp logistics snapshots for debugger and smoke use.
+- New dedicated validator `BloodlinesSiegeSupplyInterdictionSmokeValidation` is green across five phases: baseline readiness, active interdiction, unscreened recovery, screened recovery, and camp recovery back above the operational threshold.
+- Full 10-gate validation is green on `D:\BLFS\bloodlines`:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`
+  - bootstrap runtime smoke PASS via `artifacts/unity-bootstrap-runtime-smoke.log`
+  - combat smoke PASS via `artifacts/unity-combat-smoke.log`
+  - Bootstrap scene shell PASS via `artifacts/unity-bootstrap-scene-batch-rev27-codex.log`
+  - Gameplay scene shell PASS via `artifacts/unity-gameplay-scene-batch-rev27-codex.log`
+  - fortification smoke PASS via `artifacts/unity-fortification-smoke.log`
+  - siege smoke PASS via `artifacts/unity-siege-smoke.log`
+- `node tests/data-validation.mjs` PASS
+- `node tests/runtime-bridge.mjs` PASS
+- contract staleness check PASS at revision 27
+- Dedicated smoke PASS via `artifacts/unity-siege-supply-interdiction-smoke.log` with marker `BLOODLINES_SIEGE_SUPPLY_INTERDICTION_SMOKE PASS`.
+- Contract advanced revision `26 -> 27` under `codex-fortification-siege-camp-supply-interdiction-2026-04-19`.
+- The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-camp-supply-interdiction.md`.

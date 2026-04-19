@@ -24,6 +24,7 @@ namespace Bloodlines.Siege
             var fieldWaterCandidates = new List<FieldWaterCandidate>(32);
             var siegeSupportCandidates = new List<SiegeSupportCandidate>(16);
             var supplyTrainCandidates = new List<Entity>(8);
+            var supplyCampCandidates = new List<Entity>(4);
 
             foreach (var (unitType, combatStats, movementStats, entity) in
                 SystemAPI.Query<
@@ -61,6 +62,18 @@ namespace Bloodlines.Siege
                 {
                     supplyTrainCandidates.Add(entity);
                 }
+            }
+
+            foreach (var (buildingType, entity) in
+                SystemAPI.Query<RefRO<BuildingTypeComponent>>().WithEntityAccess())
+            {
+                if (!buildingType.ValueRO.SupportsSiegeLogistics ||
+                    entityManager.HasComponent<SiegeSupplyCampComponent>(entity))
+                {
+                    continue;
+                }
+
+                supplyCampCandidates.Add(entity);
             }
 
             for (int i = 0; i < fieldWaterCandidates.Count; i++)
@@ -112,6 +125,27 @@ namespace Bloodlines.Siege
                 {
                     LinkedCampEntity = Entity.Null,
                     LastSupplyTransferAt = -999d,
+                    LogisticsInterdictedUntil = 0d,
+                    ConvoyRecoveryUntil = 0d,
+                    ConvoyReconsolidatedAt = 0d,
+                    InterdictedByFactionId = default,
+                    EscortCount = 0,
+                    RequiredEscortCount = 1,
+                    EscortScreened = false,
+                });
+            }
+
+            for (int i = 0; i < supplyCampCandidates.Count; i++)
+            {
+                entityManager.AddComponentData(supplyCampCandidates[i], new SiegeSupplyCampComponent
+                {
+                    Stockpile = SiegeSupplyInterdictionCanon.SupplyCampMaxStockpile,
+                    MaxStockpile = SiegeSupplyInterdictionCanon.SupplyCampMaxStockpile,
+                    OperationalThreshold = SiegeSupplyInterdictionCanon.SupplyCampOperationalThreshold,
+                    NearbyRaiderCount = 0,
+                    LastInterdictedAt = -999d,
+                    LastRecoveredAt = -999d,
+                    InterdictedByFactionId = default,
                 });
             }
         }
