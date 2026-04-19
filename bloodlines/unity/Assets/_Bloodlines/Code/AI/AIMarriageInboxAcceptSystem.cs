@@ -18,14 +18,22 @@ namespace Bloodlines.AI
     /// Like sub-slice 8, this clears LastFiredOp back to None after processing
     /// regardless of outcome so one dispatch produces one execution attempt.
     ///
-    /// Scope: mechanical record creation only. Governance authority costs,
-    /// hostility drop, conviction event recording, legitimacy +2, in-world
-    /// time declaration, and message pushes are browser-side effects that can
-    /// layer on in future slices without reshaping this system.
+    /// Scope: mechanical record creation only. Hostility drop, conviction
+    /// event recording, legitimacy +2, in-world time declaration, and
+    /// message pushes layer on through AIMarriageAcceptEffectsSystem
+    /// (sub-slice 11). Governance authority terms (head-direct vs acting
+    /// authority) are resolved here in sub-slice 12 via
+    /// MarriageAuthorityEvaluator and attached as a
+    /// MarriageAcceptanceTermsComponent on the primary marriage entity; the
+    /// effects system then applies the legitimacy cost on the target
+    /// (spouse) side before the +2 bonus. If the evaluator reports no
+    /// authority path (no head/heir/envoy), the accept is rejected to match
+    /// the browser getMarriageAcceptanceTerms guard.
     ///
     /// Browser reference: ai.js tryAiAcceptIncomingMarriage (~2880-2895) plus
     /// dispatch hook at marriageInboxTimer block (~2632-2636). Simulation-side
-    /// sink: simulation.js acceptMarriage (~7388-7469).
+    /// sink: simulation.js acceptMarriage (~7388-7469). Authority guard:
+    /// getMarriageAcceptanceTerms (~6327).
     /// </summary>
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(AIMarriageProposalExecutionSystem))]
@@ -63,7 +71,22 @@ namespace Bloodlines.AI
                 // where the AI only accepts player-initiated proposals.
                 var sourceFactionId = new FixedString32Bytes("player");
 
-                TryAcceptIncoming(em, sourceFactionId, aiFaction.FactionId, inWorldDays);
+                // Resolve target (AI) authority terms before record creation.
+                // Browser getMarriageAcceptanceTerms rejects when no authority
+                // is available; MarriageAuthorityEvaluator returns false in
+                // that case and TryAcceptIncoming early-exits.
+                if (!MarriageAuthorityEvaluator.TryResolve(
+                        em, aiFactionEntity,
+                        out MarriageAuthorityMode authorityMode,
+                        out float legitimacyCost))
+                {
+                    covert.LastFiredOp = CovertOpKind.None;
+                    em.SetComponentData(aiFactionEntity, covert);
+                    continue;
+                }
+
+                TryAcceptIncoming(em, sourceFactionId, aiFaction.FactionId,
+                    inWorldDays, authorityMode, legitimacyCost);
 
                 covert.LastFiredOp = CovertOpKind.None;
                 em.SetComponentData(aiFactionEntity, covert);
@@ -78,7 +101,9 @@ namespace Bloodlines.AI
             EntityManager em,
             FixedString32Bytes sourceFactionId,
             FixedString32Bytes targetFactionId,
-            float inWorldDays)
+            float inWorldDays,
+            MarriageAuthorityMode authorityMode,
+            float legitimacyCost)
         {
             // Find first pending proposal matching source -> target.
             var proposalQuery = em.CreateEntityQuery(
@@ -135,6 +160,18 @@ namespace Bloodlines.AI
             // browser's one-shot legitimacy/hostility effects exactly once. Mirror
             // record is not tagged to prevent double application.
             em.AddComponent<MarriageAcceptEffectsPendingTag>(primary);
+
+            // Attach acceptance terms so the effects system can apply the
+            // governance-authority legitimacy cost on the target (spouse)
+            // side before the +2 bonus, and record the matching Stewardship
+            // conviction event. Browser parity: simulation.js acceptMarriage
+            // calls applyMarriageGovernanceLegitimacyCost before the
+            // legitimacy +2 block (simulation.js ~7449 vs ~7458).
+            em.AddComponentData(primary, new MarriageAcceptanceTermsComponent
+            {
+                AuthorityMode  = authorityMode,
+                LegitimacyCost = legitimacyCost,
+            });
 
             // Create mirror marriage record (head = target side). Browser creates
             // two records so both factions can enumerate their own marriages.
