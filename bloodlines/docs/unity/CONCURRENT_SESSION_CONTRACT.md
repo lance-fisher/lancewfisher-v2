@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 14
+- Revision: 15
 - Last Updated: 2026-04-18
-- Last Updated By: claude-ai-strategic-pressure-2026-04-18
-- Supersedes: revision 13 (ai-strategic-layer sub-slice 2 landed: AIStrategicPressureSystem ports timer clamp/floor block from ai.js lines 1127-1241; tier2-batch-dynasty and victory-conditions lanes retired)
+- Last Updated By: claude-ai-governance-pressure-2026-04-18
+- Supersedes: revision 14 (ai-strategic-layer sub-slice 3 landed: governance/event-context timer clamp block from ai.js lines 1129-1215; new flag fields on AIStrategyComponent; BloodlinesAIGovernancePressureSmokeValidation added)
 
 ## Purpose
 
@@ -248,7 +248,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: ai-strategic-layer
 
 - Status: active
-- Branch Prefix: `claude/unity-ai-strategic-pressure` (sub-slice 2); future sub-slices on new branches
+- Branch Prefix: `claude/unity-ai-governance-pressure` (sub-slice 3); future sub-slices on new branches
 - Owner Agent: claude-code
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/AI/AIStrategyComponent.cs`
@@ -256,22 +256,26 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/AI/AIStrategicPressureSystem.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIStrategySmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIStrategicPressureSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIGovernancePressureSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AIStrategy.cs`
   - `scripts/Invoke-BloodlinesUnityAIStrategySmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAIStrategicPressureSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityAIGovernancePressureSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs` -- `AIStrategyComponent` seeded on non-player Kingdom faction entities alongside `AIEconomyControllerComponent`
   - `unity/Assembly-CSharp.csproj` -- `AIStrategyComponent.cs`, `EnemyAIStrategySystem.cs`, `AIStrategicPressureSystem.cs` registered
-  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs`, `BloodlinesAIStrategicPressureSmokeValidation.cs` registered
+  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs`, `BloodlinesAIStrategicPressureSmokeValidation.cs`, `BloodlinesAIGovernancePressureSmokeValidation.cs` registered
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-1.md`
   - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-2-pressure.md`
+  - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-3-governance.md`
 - Browser Reference:
   - Sub-slice 1: `src/game/core/ai.js` `pickTerritoryTarget` (~747), `pickScoutHarassTarget` (~412), `getWorldPressureRaidTarget` (~817)
   - Sub-slice 2: `src/game/core/ai.js` timer clamp/floor block lines 1127-1241
-  - Sub-slices pending: supply chain/convoy management (~1100), siege staging, dynasty-aware covert ops (~2681)
-- Current Branch In Flight: `claude/unity-ai-strategic-pressure`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-2-pressure.md`
+  - Sub-slice 3: `src/game/core/ai.js` governance/event-context timer clamp block lines 1129-1215
+  - Sub-slices pending: siege staging, dynasty-aware covert ops (~2681)
+- Current Branch In Flight: `claude/unity-ai-governance-pressure`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-3-governance.md`
 
 ### Lane: victory-conditions
 
