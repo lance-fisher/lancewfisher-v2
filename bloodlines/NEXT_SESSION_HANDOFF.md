@@ -1592,3 +1592,28 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 ### Next Unclaimed Lanes
 1. fortification-siege-sub-slice-3-imminent-engagement-warnings (branch codex/unity-fortification-siege, Codex prompt ready)
 2. ai-strategic-layer-sub-slice-3-supply-chain
+
+## AI Strategic Layer Sub-Slice 3: Governance and Event-Context Pressure (Claude, 2026-04-18)
+
+### Status: COMPLETE on branch claude/unity-ai-governance-pressure
+
+### What Was Done
+- Ported ai.js governance/event-context timer clamp block (lines 1129-1215) into `AIStrategicPressureSystem.ApplyGovernancePressure`.
+- Extended `AIStrategyComponent` with 20 flag fields and `BuildTimer`.
+- 4-phase smoke validator all green. Contract revision 14 -> 15.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- AI strategic pressure smoke (prior sub-slice): PASS
+- AI governance pressure smoke: Phase 1-4 PASS
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED revision=15
+
+### Next Unclaimed Lanes
+1. ai-strategic-layer-sub-slice-4-siege-staging
+2. fortification-siege-sub-slice-3-imminent-engagement-warnings (Codex in progress)

@@ -1743,3 +1743,11 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - 4-phase smoke validator (`BloodlinesAIStrategicPressureSmokeValidation.cs`) and self-contained runner (`scripts/Invoke-BloodlinesUnityAIStrategicPressureSmokeValidation.ps1`) all green. Artifact: `artifacts/unity-ai-strategic-pressure-smoke.log`.
 - All 10 validation gates green; contract bumped revision 13 -> 14. `victory-conditions` and `tier2-batch-dynasty-systems` lanes retired.
 - The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-2-pressure.md`.
+
+### 2026-04-18 Unity AI Strategic Layer Sub-Slice 3: Governance and Event-Context Pressure
+
+- Governance/event-context timer clamp block from ai.js `updateEnemyAi` lines 1129-1215 ported into `AIStrategicPressureSystem` as the `ApplyGovernancePressure` static method.
+- 20 flag fields added to `AIStrategyComponent` covering holy war, player governance recognition (victory/alliance pressure), player covenant test, player divine right, player/enemy succession crisis, enemy covenant test, enemy governance recognition. `BuildTimer` countdown field also added.
+- `BloodlinesAIGovernancePressureSmokeValidation` 4-phase validator all green: Phase 1 holy war clamps, Phase 2 governance victory pressure, Phase 3 succession crisis player side, Phase 4 enemy governance floor boosts.
+- All 10 validation gates green; contract bumped revision 14 -> 15.
+- The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-3-governance.md`.
