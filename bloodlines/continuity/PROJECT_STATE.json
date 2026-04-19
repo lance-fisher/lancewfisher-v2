@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-18T01:28:48.2425250-06:00",
+  "updated_at": "2026-04-19T03:38:55.4537708-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -457,7 +457,8 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-9-marriage-inbox-accept.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-8-command-dispatch.md",
+  "latest_unity_ai_strategic_layer_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-8-command-dispatch.md",
   "latest_unity_fortification_siege_handoff": "docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md",
   "latest_unity_graphics_handoff": "docs/unity/session-handoffs/2026-04-17-unity-graphics-infrastructure-foundation.md",
   "latest_unity_combat_handoff": "docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md",
@@ -471,9 +472,9 @@
   "latest_browser_to_unity_migration_plan": "docs/plans/2026-04-17-browser-to-unity-migration-plan.md",
   "concurrent_session_contract": {
     "path": "docs/unity/CONCURRENT_SESSION_CONTRACT.md",
-    "revision": 21,
+    "revision": 22,
     "last_updated": "2026-04-19",
-    "last_updated_by": "claude-ai-marriage-inbox-accept-2026-04-19",
+    "last_updated_by": "codex-ai-command-dispatch-2026-04-19",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
     "active_lanes": [
       "ai-strategic-layer",
@@ -1353,6 +1354,15 @@
       "description": "AIMarriageInboxAcceptSystem: ports ai.js tryAiAcceptIncomingMarriage (~2880-2895). Consumes AICovertOpsComponent.LastFiredOp == MarriageInboxAccept written by sub-slice 6; finds first pending MarriageProposalComponent where source='player' and target=this AI faction; flips proposal to Accepted; creates primary + mirror MarriageComponent entities sharing MarriageId; MarriageGestationSystem filters on IsPrimary so only one child spawns at 60 in-world days (pulls GestationInWorldDays constant). Always clears LastFiredOp to None. Always runs [UpdateAfter AIMarriageProposalExecutionSystem]. Cross-lane reads only. Mechanical record creation only; browser-side effects (governance authority cost, hostility drop, oathkeeping conviction events, legitimacy +2 both sides, 30-day declareInWorldTime, narrative message) deferred. With sub-slice 9 landed the marriage loop is mechanically end-to-end: propose (6+8), expire (existing), accept (6+9), gestate (existing). 4-phase smoke PASS (dispatch+pending creates primary+mirror, no-proposal no-op, only-expired no-op, no-dispatch no-op). Contract rev 20->21.",
       "handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-9-marriage-inbox-accept.md",
       "validation_gates": "all 10 green"
+    },
+    {
+      "lane": "ai-strategic-layer-sub-slice-8-command-dispatch",
+      "date": "2026-04-19",
+      "branch": "codex/unity-ai-command-dispatch",
+      "status": "active",
+      "description": "AIWorkerCommandSystem + AITerritoryDispatchSystem + WorkerGatherOrderComponent: ports ai.js worker issueGatherCommand dispatch (~1243-1260) and territory expansion command dispatch (~1575-1600). Worker gather decisions now add gather order plus movement and flip Seeking->Gathering; territory timer expiry now moves non-worker, non-siege combat units toward ExpansionTargetCpId and resets TerritoryTimer to 12 seconds. EnemyAIStrategySystem narrowed to target selection; WorkerGatherSystem now requires arrival inside gather radius before harvest. 4-phase smoke PASS. Contract rev 21->22 after rebase onto the sub-slice-9 master base.",
+      "handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-8-command-dispatch.md",
+      "validation_gates": "all 10 green plus AI command dispatch smoke"
     }
   ]
 }
