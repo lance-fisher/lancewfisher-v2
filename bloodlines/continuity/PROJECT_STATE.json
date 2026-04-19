@@ -457,7 +457,7 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-7-build-order.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-8-marriage-proposal-execution.md",
   "latest_unity_fortification_siege_handoff": "docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md",
   "latest_unity_graphics_handoff": "docs/unity/session-handoffs/2026-04-17-unity-graphics-infrastructure-foundation.md",
   "latest_unity_combat_handoff": "docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md",
@@ -471,9 +471,9 @@
   "latest_browser_to_unity_migration_plan": "docs/plans/2026-04-17-browser-to-unity-migration-plan.md",
   "concurrent_session_contract": {
     "path": "docs/unity/CONCURRENT_SESSION_CONTRACT.md",
-    "revision": 19,
+    "revision": 20,
     "last_updated": "2026-04-19",
-    "last_updated_by": "claude-ai-build-timer-chain-2026-04-19",
+    "last_updated_by": "claude-ai-marriage-proposal-execution-2026-04-19",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
     "active_lanes": [
       "ai-strategic-layer",
@@ -498,7 +498,7 @@
       "tier2-batch-dynasty-systems"
     ],
     "next_unblocked_tier_1_lanes": [
-      "ai-strategic-layer-sub-slice-8-marriage-proposal-execution"
+      "ai-strategic-layer-sub-slice-9-marriage-inbox-accept"
     ]
   },
   "latest_unity_economy_handoff": "docs/unity/session-handoffs/2026-04-17-unity-cap-pressure-response.md",
@@ -1334,6 +1334,15 @@
       "status": "active",
       "description": "AIBuildOrderSystem + AIBuildOrderComponent: ports ai.js updateEnemyAi buildTimer<=0 block (~1377-1573). 13-step priority chain preserves ai.js if-else order exactly (Barracks, Wayshrine, Quarry, IronMine, SiegeWorkshop, CovenantHall, GrandSanctuary, ApexCovenant, SupplyCamp, Stable, Dwelling, Farm, Well). BuildOrderKind 14-value enum. Reads AIStrategyComponent.BuildTimer; on fire writes NextBuildOp and resets timer to 4s/6s per PlayerKeepFortified. Faith intensity thresholds 26/48/80 canonical. Actual attemptPlaceBuilding deferred. 5-phase smoke PASS (Barracks, Wayshrine, SiegeWorkshop, Dwelling, Farm). Contract rev 18->19.",
       "handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-7-build-order.md",
+      "validation_gates": "all 10 green"
+    },
+    {
+      "lane": "ai-strategic-layer-sub-slice-8-marriage-proposal-execution",
+      "date": "2026-04-19",
+      "branch": "claude/unity-ai-marriage-proposal-execution",
+      "status": "active",
+      "description": "AIMarriageProposalExecutionSystem: ports ai.js tryAiMarriageProposal (~2897-2944). Consumes AICovertOpsComponent.LastFiredOp == MarriageProposal written by sub-slice 6; four abort gates match browser exactly (already-married, already-pending, no source candidate, no target candidate); candidate selection from DynastyMemberRef buffer (non-head, active/ruling). On pass creates MarriageProposalComponent entity with ProposedAtInWorldDays=now, ExpiresAtInWorldDays=now+30 (pulls from MarriageProposalExpirationSystem). Always clears LastFiredOp to None matching browser single-fire-per-timer. Target hardcoded to 'player' matching browser. Cross-lane reads only. 5-phase smoke PASS (clean create, prior-marriage block, pending block, no-target-dynasty block, no-dispatch no-op). Contract rev 19->20.",
+      "handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-8-marriage-proposal-execution.md",
       "validation_gates": "all 10 green"
     }
   ]
