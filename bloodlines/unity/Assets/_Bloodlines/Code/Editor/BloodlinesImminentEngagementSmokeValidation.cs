@@ -4,41 +4,35 @@ using System.IO;
 using Bloodlines.Components;
 using Bloodlines.Fortification;
 using Unity.Collections;
-using Unity.Core;
 using Unity.Entities;
-using Unity.Mathematics;
 using UnityEditor;
-using UnityEngine;
 using UnityDebug = UnityEngine.Debug;
 
 namespace Bloodlines.EditorTools
 {
     /// <summary>
-    /// Governed imminent-engagement smoke validator. Runs in isolated ECS worlds and proves:
+    /// Smoke validator for ImminentEngagementWarningSystem. Verifies four phases:
     ///
-    ///   1. Tier-0 settlements never activate the warning window even with nearby hostiles.
-    ///   2. Tier-1 settlements stay inactive without hostiles inside the warning radius.
-    ///   3. Tier-1 settlements activate with three hostile units inside the warning radius.
-    ///   4. An already-active engagement expires into WindowConsumed with EngagedAt set.
+    ///   Phase 1: tier-0 gate; warning window must not activate.
+    ///   Phase 2: no-threat baseline; warning window must stay inactive.
+    ///   Phase 3: threat activation; warning window must activate with brace posture.
+    ///   Phase 4: active expired window; must consume and close.
     ///
     /// Artifact: artifacts/unity-imminent-engagement-smoke.log.
     /// </summary>
     public static class BloodlinesImminentEngagementSmokeValidation
     {
         private const string ArtifactPath = "../artifacts/unity-imminent-engagement-smoke.log";
-        private const float SimStepSeconds = 0.05f;
-        private const float TileSize = 64f;
+        private static readonly FixedString32Bytes BraceId = new("brace");
+        private static readonly FixedString32Bytes SteadyId = new("steady");
+        private static readonly FixedString32Bytes TradeTownClassId = new("trade_town");
+        private static readonly FixedString32Bytes KeepClassId = new("primary_dynastic_keep");
 
         [MenuItem("Bloodlines/Fortification/Run Imminent Engagement Smoke Validation")]
-        public static void RunInteractive()
-        {
-            RunInternal(batchMode: false);
-        }
+        public static void RunInteractive() => RunInternal(batchMode: false);
 
-        public static void RunBatchImminentEngagementSmokeValidation()
-        {
+        public static void RunBatchBloodlinesImminentEngagementSmokeValidation() =>
             RunInternal(batchMode: true);
-        }
 
         private static void RunInternal(bool batchMode)
         {
@@ -51,387 +45,239 @@ namespace Bloodlines.EditorTools
             catch (Exception e)
             {
                 success = false;
-                message = "BLOODLINES_IMMINENT_ENGAGEMENT_SMOKE FAIL: " + e;
+                message = "Imminent engagement smoke errored: " + e;
             }
 
-            WriteResult(batchMode, success, message);
-        }
-
-        private static bool RunAllPhases(out string message)
-        {
-            if (!RunTierGuardPhase(out string tierGuardMessage))
-            {
-                message = tierGuardMessage;
-                return false;
-            }
-
-            if (!RunNoThreatPhase(out string idleMessage))
-            {
-                message = idleMessage;
-                return false;
-            }
-
-            if (!RunActivationPhase(out string activationMessage))
-            {
-                message = activationMessage;
-                return false;
-            }
-
-            if (!RunExpiryPhase(out string expiryMessage))
-            {
-                message = expiryMessage;
-                return false;
-            }
-
-            message =
-                "BLOODLINES_IMMINENT_ENGAGEMENT_SMOKE PASS: phase1=True, phase2=True, phase3=True, phase4=True. " +
-                tierGuardMessage + " " + idleMessage + " " + activationMessage + " " + expiryMessage;
-            return true;
-        }
-
-        private static bool RunTierGuardPhase(out string message)
-        {
-            using var world = CreateValidationWorld("BloodlinesImminentEngagementSmokeValidation_TierGuard");
-            var entityManager = world.EntityManager;
-
-            var settlement = CreateSettlement(entityManager, "keep_player", "player", tier: 0);
-            CreateHostileUnit(entityManager, "enemy", new float3(2f * TileSize, 0f, 0f));
-
-            Tick(world, seconds: 0.1d);
-
-            var engagement = entityManager.GetComponentData<ImminentEngagementComponent>(settlement);
-            if (engagement.Active || engagement.WindowConsumed)
-            {
-                message = "BLOODLINES_IMMINENT_ENGAGEMENT_SMOKE FAIL: phase 1 activated despite fortification tier 0.";
-                return false;
-            }
-
-            message = "Phase1: tierGuardHeld=True, active=False.";
-            return true;
-        }
-
-        private static bool RunNoThreatPhase(out string message)
-        {
-            using var world = CreateValidationWorld("BloodlinesImminentEngagementSmokeValidation_NoThreat");
-            var entityManager = world.EntityManager;
-
-            var settlement = CreateSettlement(entityManager, "keep_player", "player", tier: 1);
-            CreateFortificationContribution(entityManager, settlement, "keep_player", contribution: 1, position: new float3(TileSize, 0f, 0f));
-            Tick(world, seconds: 0.1d);
-
-            var engagement = entityManager.GetComponentData<ImminentEngagementComponent>(settlement);
-            if (engagement.Active || engagement.WindowConsumed || engagement.HostileCount != 0)
-            {
-                message =
-                    "BLOODLINES_IMMINENT_ENGAGEMENT_SMOKE FAIL: phase 2 should remain idle. " +
-                    "active=" + engagement.Active +
-                    ", windowConsumed=" + engagement.WindowConsumed +
-                    ", hostileCount=" + engagement.HostileCount + ".";
-                return false;
-            }
-
-            message = "Phase2: noThreatHeld=True, hostileCount=0.";
-            return true;
-        }
-
-        private static bool RunActivationPhase(out string message)
-        {
-            using var world = CreateValidationWorld("BloodlinesImminentEngagementSmokeValidation_Activation");
-            var entityManager = world.EntityManager;
-
-            var settlement = CreateSettlement(entityManager, "keep_player", "player", tier: 1);
-            CreateFortificationContribution(entityManager, settlement, "keep_player", contribution: 1, position: new float3(TileSize, 0f, 0f));
-            float hostileDistance = 8f * TileSize;
-            CreateHostileUnit(entityManager, "enemy", new float3(hostileDistance, 0f, 0f));
-            CreateHostileUnit(entityManager, "enemy", new float3(hostileDistance, 0f, TileSize));
-            CreateHostileUnit(entityManager, "enemy", new float3(hostileDistance, 0f, -TileSize));
-
-            Tick(world, seconds: 0.1d);
-
-            var engagement = entityManager.GetComponentData<ImminentEngagementComponent>(settlement);
-            if (!engagement.Active ||
-                engagement.HostileCount != 3 ||
-                engagement.WarningRadius <= hostileDistance ||
-                engagement.TotalSeconds < ImminentEngagementCanon.MinSeconds ||
-                engagement.TotalSeconds > ImminentEngagementCanon.MaxSeconds)
-            {
-                message =
-                    "BLOODLINES_IMMINENT_ENGAGEMENT_SMOKE FAIL: phase 3 did not enter the warning window correctly. " +
-                    "active=" + engagement.Active +
-                    ", hostileCount=" + engagement.HostileCount +
-                    ", warningRadius=" + engagement.WarningRadius.ToString("0.00") +
-                    ", totalSeconds=" + engagement.TotalSeconds.ToString("0.00") + ".";
-                return false;
-            }
-
-            message =
-                "Phase3: active=True, hostileCount=3, warningRadius=" + engagement.WarningRadius.ToString("0.00") +
-                ", totalSeconds=" + engagement.TotalSeconds.ToString("0.00") + ".";
-            return true;
-        }
-
-        private static bool RunExpiryPhase(out string message)
-        {
-            using var world = CreateValidationWorld("BloodlinesImminentEngagementSmokeValidation_Expiry");
-            var entityManager = world.EntityManager;
-
-            var settlement = CreateSettlement(entityManager, "keep_player", "enemy", tier: 1);
-            CreateFortificationContribution(entityManager, settlement, "keep_player", contribution: 1, position: new float3(TileSize, 0f, 0f));
-            CreateHostileUnit(entityManager, "player", new float3(6f * TileSize, 0f, 0f));
-            CreateHostileUnit(entityManager, "player", new float3(6.5f * TileSize, 0f, TileSize));
-            CreateReadyReserve(entityManager, settlement, "keep_player", "enemy", new float3(-TileSize, 0f, 0f));
-
-            Tick(world, seconds: 0.1d);
-
-            var engagement = entityManager.GetComponentData<ImminentEngagementComponent>(settlement);
-            float elapsed = (float)world.Time.ElapsedTime;
-            engagement.Active = true;
-            engagement.WindowConsumed = false;
-            engagement.SelectedPosture = ImminentEngagementPosture.Counterstroke;
-            engagement.TotalSeconds = 14f;
-            engagement.RemainingSeconds = 0.001f;
-            engagement.ExpiresAt = elapsed - 0.001f;
-            entityManager.SetComponentData(settlement, engagement);
-
-            Tick(world, seconds: SimStepSeconds);
-
-            engagement = entityManager.GetComponentData<ImminentEngagementComponent>(settlement);
-            var reserveQuery = entityManager.CreateEntityQuery(
-                ComponentType.ReadOnly<FortificationSettlementLinkComponent>(),
-                ComponentType.ReadOnly<FortificationReserveAssignmentComponent>());
-            using var reserveAssignments = reserveQuery.ToComponentDataArray<FortificationReserveAssignmentComponent>(Allocator.Temp);
-
-            bool sawSortieMuster = false;
-            for (int i = 0; i < reserveAssignments.Length; i++)
-            {
-                if (reserveAssignments[i].Duty == ReserveDutyState.Muster)
-                {
-                    sawSortieMuster = true;
-                    break;
-                }
-            }
-
-            if (!engagement.WindowConsumed || engagement.Active || engagement.EngagedAt <= 0f)
-            {
-                message =
-                    "BLOODLINES_IMMINENT_ENGAGEMENT_SMOKE FAIL: phase 4 did not consume the window. " +
-                    "active=" + engagement.Active +
-                    ", windowConsumed=" + engagement.WindowConsumed +
-                    ", engagedAt=" + engagement.EngagedAt.ToString("0.000") + ".";
-                return false;
-            }
-
-            message =
-                "Phase4: windowConsumed=True, engagedAt=" + engagement.EngagedAt.ToString("0.000") +
-                ", sortieCommitted=" + sawSortieMuster + ".";
-            return true;
-        }
-
-        private static World CreateValidationWorld(string worldName)
-        {
-            var world = new World(worldName);
-            world.GetOrCreateSystemManaged<InitializationSystemGroup>();
-            var simulationGroup = world.GetOrCreateSystemManaged<SimulationSystemGroup>();
-            world.GetOrCreateSystemManaged<PresentationSystemGroup>();
-            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<AdvanceFortificationTierSystem>());
-            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<FortificationReserveSystem>());
-            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<ImminentEngagementWarningSystem>());
-            return world;
-        }
-
-        private static void Tick(World world, double seconds)
-        {
-            double elapsed = world.Time.ElapsedTime;
-            double target = elapsed + seconds;
-            while (elapsed < target)
-            {
-                world.SetTime(new TimeData(elapsed, SimStepSeconds));
-                world.Update();
-                elapsed += SimStepSeconds;
-            }
-        }
-
-        private static Entity CreateSettlement(
-            EntityManager entityManager,
-            string settlementId,
-            string factionId,
-            int tier)
-        {
-            var entity = entityManager.CreateEntity();
-            entityManager.AddComponentData(entity, new FactionComponent
-            {
-                FactionId = factionId,
-            });
-            entityManager.AddComponentData(entity, new PositionComponent
-            {
-                Value = float3.zero,
-            });
-            entityManager.AddComponentData(entity, new SettlementComponent
-            {
-                SettlementId = settlementId,
-                SettlementClassId = "primary_dynastic_keep",
-                FortificationTier = tier,
-                FortificationCeiling = 3,
-            });
-            entityManager.AddComponent<PrimaryKeepTag>(entity);
-            entityManager.AddComponentData(entity, new FortificationComponent
-            {
-                SettlementId = settlementId,
-                Tier = tier,
-                Ceiling = 3,
-                EcosystemRadiusTiles = FortificationCanon.EcosystemRadiusTiles,
-                AuraRadiusTiles = FortificationCanon.AuraRadiusTiles,
-                ThreatRadiusTiles = FortificationCanon.ThreatRadiusTiles,
-                ReserveRadiusTiles = FortificationCanon.ReserveRadiusTiles,
-                KeepPresenceRadiusTiles = FortificationCanon.KeepPresenceRadiusTiles,
-                FaithWardId = "unwarded",
-                FaithWardSightBonusTiles = 0f,
-                FaithWardDefenderAttackMultiplier = 1f,
-                FaithWardReserveHealMultiplier = 1f,
-                FaithWardReserveMusterMultiplier = 1f,
-                FaithWardLoyaltyProtectionMultiplier = 1f,
-                FaithWardEnemySpeedMultiplier = 1f,
-                FaithWardSurgeActive = false,
-            });
-            entityManager.AddComponentData(entity, new FortificationReserveComponent
-            {
-                MusterIntervalSeconds = FortificationCanon.ReserveMusterIntervalSeconds,
-                ReserveHealPerSecond = FortificationCanon.ReserveTriageHealPerSecond,
-                RetreatHealthRatio = FortificationCanon.ReserveRetreatHealthRatio,
-                RecoveryHealthRatio = FortificationCanon.ReserveRecoveryHealthRatio,
-                TriageRadiusTiles = FortificationCanon.TriageRadiusTiles,
-                LastCommitAt = -999d,
-                ReadyReserveCount = 1,
-            });
-            entityManager.AddComponentData(entity, new ImminentEngagementComponent
-            {
-                SelectedPosture = ImminentEngagementPosture.Steady,
-                LastActivationAt = -999f,
-            });
-            return entity;
-        }
-
-        private static Entity CreateHostileUnit(
-            EntityManager entityManager,
-            string factionId,
-            float3 position)
-        {
-            var entity = entityManager.CreateEntity();
-            entityManager.AddComponentData(entity, new FactionComponent
-            {
-                FactionId = factionId,
-            });
-            entityManager.AddComponentData(entity, new PositionComponent
-            {
-                Value = position,
-            });
-            entityManager.AddComponentData(entity, new HealthComponent
-            {
-                Current = 12f,
-                Max = 12f,
-            });
-            entityManager.AddComponentData(entity, new UnitTypeComponent
-            {
-                TypeId = "militia",
-                Role = UnitRole.Melee,
-                SiegeClass = SiegeClass.None,
-                PopulationCost = 1,
-                Stage = 1,
-            });
-            entityManager.AddComponentData(entity, new MoveCommandComponent
-            {
-                Destination = position,
-                StoppingDistance = 0.25f,
-                IsActive = false,
-            });
-            return entity;
-        }
-
-        private static Entity CreateFortificationContribution(
-            EntityManager entityManager,
-            Entity settlement,
-            string settlementId,
-            int contribution,
-            float3 position)
-        {
-            var entity = entityManager.CreateEntity();
-            entityManager.AddComponentData(entity, new PositionComponent
-            {
-                Value = position,
-            });
-            entityManager.AddComponentData(entity, new HealthComponent
-            {
-                Current = 18f,
-                Max = 18f,
-            });
-            entityManager.AddComponentData(entity, new FortificationSettlementLinkComponent
-            {
-                SettlementEntity = settlement,
-                SettlementId = settlementId,
-            });
-            entityManager.AddComponentData(entity, new FortificationBuildingContributionComponent
-            {
-                TierContribution = contribution,
-            });
-            return entity;
-        }
-
-        private static Entity CreateReadyReserve(
-            EntityManager entityManager,
-            Entity settlement,
-            string settlementId,
-            string factionId,
-            float3 position)
-        {
-            var entity = entityManager.CreateEntity();
-            entityManager.AddComponentData(entity, new FactionComponent
-            {
-                FactionId = factionId,
-            });
-            entityManager.AddComponentData(entity, new PositionComponent
-            {
-                Value = position,
-            });
-            entityManager.AddComponentData(entity, new HealthComponent
-            {
-                Current = 10f,
-                Max = 10f,
-            });
-            entityManager.AddComponentData(entity, new FortificationSettlementLinkComponent
-            {
-                SettlementEntity = settlement,
-                SettlementId = settlementId,
-            });
-            entityManager.AddComponentData(entity, new FortificationReserveAssignmentComponent
-            {
-                Duty = ReserveDutyState.Ready,
-            });
-            entityManager.AddComponentData(entity, new MoveCommandComponent
-            {
-                Destination = position,
-                StoppingDistance = 0.25f,
-                IsActive = false,
-            });
-            return entity;
-        }
-
-        private static void WriteResult(bool batchMode, bool success, string message)
-        {
+            string artifact = "BLOODLINES_IMMINENT_ENGAGEMENT_SMOKE " +
+                              (success ? "PASS" : "FAIL") + "\n" + message;
+            UnityDebug.Log(artifact);
             try
             {
-                var logPath = Path.GetFullPath(Path.Combine(Application.dataPath, ArtifactPath));
-                Directory.CreateDirectory(Path.GetDirectoryName(logPath));
-                File.AppendAllText(logPath, message + Environment.NewLine);
+                Directory.CreateDirectory(Path.GetDirectoryName(ArtifactPath)!);
+                File.WriteAllText(ArtifactPath, artifact);
             }
-            catch
-            {
-            }
+            catch (Exception) { }
 
-            UnityDebug.Log(message);
             if (batchMode)
             {
                 EditorApplication.Exit(success ? 0 : 1);
             }
+        }
+
+        private static bool RunAllPhases(out string report)
+        {
+            var sb = new System.Text.StringBuilder();
+            bool ok = true;
+            ok &= RunPhase1(sb);
+            ok &= RunPhase2(sb);
+            ok &= RunPhase3(sb);
+            ok &= RunPhase4(sb);
+            report = sb.ToString();
+            return ok;
+        }
+
+        private static SimulationSystemGroup SetupSimGroup(World world)
+        {
+            world.GetOrCreateSystemManaged<InitializationSystemGroup>();
+            var sg = world.GetOrCreateSystemManaged<SimulationSystemGroup>();
+            world.GetOrCreateSystemManaged<PresentationSystemGroup>();
+            sg.AddSystemToUpdateList(world.GetOrCreateSystem<ImminentEngagementWarningSystem>());
+            sg.SortSystems();
+            return sg;
+        }
+
+        private static Entity SeedSettlement(
+            EntityManager em,
+            string settlementId,
+            string factionId,
+            int tier,
+            bool threatActive,
+            int readyReserveCount,
+            int hostileCount,
+            bool bloodlineAtRisk,
+            bool isPrimaryDynasticKeep,
+            bool active = false,
+            bool windowConsumed = false,
+            float expiresAt = 0f)
+        {
+            var entity = em.CreateEntity(
+                typeof(SettlementComponent),
+                typeof(FactionComponent),
+                typeof(FortificationComponent),
+                typeof(FortificationReserveComponent),
+                typeof(ImminentEngagementComponent));
+
+            em.SetComponentData(entity, new SettlementComponent
+            {
+                SettlementId = settlementId,
+                SettlementClassId = isPrimaryDynasticKeep ? KeepClassId : TradeTownClassId,
+                FortificationTier = tier,
+                FortificationCeiling = 3,
+            });
+            em.SetComponentData(entity, new FactionComponent { FactionId = factionId });
+            em.SetComponentData(entity, new FortificationComponent
+            {
+                SettlementId = settlementId,
+                Tier = tier,
+                Ceiling = 3,
+                ThreatRadiusTiles = FortificationCanon.ThreatRadiusTiles,
+                ReserveRadiusTiles = FortificationCanon.ReserveRadiusTiles,
+                KeepPresenceRadiusTiles = FortificationCanon.KeepPresenceRadiusTiles,
+                FaithWardId = "unwarded",
+                FaithWardReserveHealMultiplier = 1f,
+                FaithWardReserveMusterMultiplier = 1f,
+                FaithWardSurgeActive = false,
+            });
+            em.SetComponentData(entity, new FortificationReserveComponent
+            {
+                ThreatActive = threatActive,
+                ReadyReserveCount = readyReserveCount,
+                LastCommitAt = -999d,
+            });
+            em.SetComponentData(entity, new ImminentEngagementComponent
+            {
+                SettlementId = settlementId,
+                Active = active,
+                WindowConsumed = windowConsumed,
+                HostileCount = hostileCount,
+                WatchtowerCount = 0,
+                BloodlineAtRisk = bloodlineAtRisk,
+                SelectedResponseId = SteadyId,
+                SelectedResponseLabel = ImminentEngagementCanon.Steady.Label,
+                CommanderRecallIssuedAt = -999f,
+                LastActivationAt = -999f,
+                ExpiresAt = expiresAt,
+                IsPrimaryDynasticKeep = isPrimaryDynasticKeep,
+            });
+            return entity;
+        }
+
+        private static bool RunPhase1(System.Text.StringBuilder sb)
+        {
+            using var world = new World("engagement-phase1");
+            var em = world.EntityManager;
+            SetupSimGroup(world);
+
+            Entity settlement = SeedSettlement(
+                em,
+                settlementId: "tier0",
+                factionId: "player",
+                tier: 0,
+                threatActive: true,
+                readyReserveCount: 1,
+                hostileCount: 3,
+                bloodlineAtRisk: false,
+                isPrimaryDynasticKeep: false);
+
+            world.Update();
+            var engagement = em.GetComponentData<ImminentEngagementComponent>(settlement);
+            if (engagement.Active)
+            {
+                sb.AppendLine("Phase 1 FAIL: tier-0 settlement activated despite threat.");
+                return false;
+            }
+
+            sb.AppendLine("Phase 1 PASS: active=False");
+            return true;
+        }
+
+        private static bool RunPhase2(System.Text.StringBuilder sb)
+        {
+            using var world = new World("engagement-phase2");
+            var em = world.EntityManager;
+            SetupSimGroup(world);
+
+            Entity settlement = SeedSettlement(
+                em,
+                settlementId: "baseline",
+                factionId: "player",
+                tier: 1,
+                threatActive: false,
+                readyReserveCount: 1,
+                hostileCount: 0,
+                bloodlineAtRisk: false,
+                isPrimaryDynasticKeep: false);
+
+            world.Update();
+            var engagement = em.GetComponentData<ImminentEngagementComponent>(settlement);
+            if (engagement.Active)
+            {
+                sb.AppendLine("Phase 2 FAIL: no-threat settlement activated.");
+                return false;
+            }
+
+            sb.AppendLine("Phase 2 PASS: active=False");
+            return true;
+        }
+
+        private static bool RunPhase3(System.Text.StringBuilder sb)
+        {
+            using var world = new World("engagement-phase3");
+            var em = world.EntityManager;
+            SetupSimGroup(world);
+
+            Entity settlement = SeedSettlement(
+                em,
+                settlementId: "activation",
+                factionId: "enemy",
+                tier: 1,
+                threatActive: true,
+                readyReserveCount: 1,
+                hostileCount: 3,
+                bloodlineAtRisk: false,
+                isPrimaryDynasticKeep: false);
+
+            world.Update();
+            var engagement = em.GetComponentData<ImminentEngagementComponent>(settlement);
+            if (!engagement.Active ||
+                engagement.RemainingSeconds <= 0f ||
+                !engagement.SelectedResponseId.Equals(BraceId))
+            {
+                sb.AppendLine(
+                    $"Phase 3 FAIL: expected active brace window. active={engagement.Active} " +
+                    $"remaining={engagement.RemainingSeconds:F2} response={engagement.SelectedResponseId}.");
+                return false;
+            }
+
+            sb.AppendLine(
+                $"Phase 3 PASS: active=True remaining={engagement.RemainingSeconds:F2} " +
+                $"response={engagement.SelectedResponseId}");
+            return true;
+        }
+
+        private static bool RunPhase4(System.Text.StringBuilder sb)
+        {
+            using var world = new World("engagement-phase4");
+            var em = world.EntityManager;
+            SetupSimGroup(world);
+
+            Entity settlement = SeedSettlement(
+                em,
+                settlementId: "expiry",
+                factionId: "enemy",
+                tier: 1,
+                threatActive: true,
+                readyReserveCount: 2,
+                hostileCount: 1,
+                bloodlineAtRisk: false,
+                isPrimaryDynasticKeep: false,
+                active: true,
+                windowConsumed: false,
+                expiresAt: -1f);
+
+            world.Update();
+            var engagement = em.GetComponentData<ImminentEngagementComponent>(settlement);
+            if (engagement.Active || !engagement.WindowConsumed)
+            {
+                sb.AppendLine(
+                    $"Phase 4 FAIL: expected consumed inactive window. active={engagement.Active} " +
+                    $"windowConsumed={engagement.WindowConsumed}.");
+                return false;
+            }
+
+            sb.AppendLine(
+                $"Phase 4 PASS: active=False windowConsumed=True engagedAt={engagement.EngagedAt:F2}");
+            return true;
         }
     }
 }

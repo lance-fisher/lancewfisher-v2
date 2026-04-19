@@ -24,7 +24,7 @@ $arguments = @(
     '-batchmode'
     '-projectPath', $projectPath
     '-logFile', $logPath
-    '-executeMethod', 'Bloodlines.EditorTools.BloodlinesImminentEngagementSmokeValidation.RunBatchImminentEngagementSmokeValidation'
+    '-executeMethod', 'Bloodlines.EditorTools.BloodlinesImminentEngagementSmokeValidation.RunBatchBloodlinesImminentEngagementSmokeValidation'
 )
 
 function Get-ValidationOutcome {
