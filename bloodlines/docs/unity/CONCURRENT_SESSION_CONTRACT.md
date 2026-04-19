@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 18
+- Revision: 19
 - Last Updated: 2026-04-19
-- Last Updated By: claude-ai-covert-ops-2026-04-19
-- Supersedes: revision 17 (ai-strategic-layer sub-slice 6 landed: AICovertOpsSystem + AICovertOpsComponent port ai.js dynasty-aware covert ops dispatch ~lines 2419-2678; 9-timer dispatch loop with pressure caps; CovertOpKind 10-value enum; BloodlinesAICovertOpsSmokeValidation 5-phase validator added)
+- Last Updated By: claude-ai-build-timer-chain-2026-04-19
+- Supersedes: revision 18 (ai-strategic-layer sub-slice 7 landed: AIBuildOrderSystem + AIBuildOrderComponent port ai.js 13-step build priority chain ~lines 1377-1573; BuildOrderKind 14-value enum with 13 building branches plus None; BuildTimer reset at 4s/6s depending on PlayerKeepFortified; BloodlinesAIBuildOrderSmokeValidation 5-phase validator added; sub-slice 6 dynasty covert ops remains landed at revision 18)
 
 ## Purpose
 
@@ -248,7 +248,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: ai-strategic-layer
 
 - Status: active
-- Branch Prefix: `claude/unity-ai-dynasty-covert-ops` (sub-slice 6); future sub-slices on new branches
+- Branch Prefix: `claude/unity-ai-build-timer-chain` (sub-slice 7); future sub-slices on new branches
 - Owner Agent: claude-code
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/AI/AIStrategyComponent.cs`
@@ -259,12 +259,15 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/AI/AISiegeOrchestrationSystem.cs`
   - `unity/Assets/_Bloodlines/Code/AI/AICovertOpsComponent.cs`
   - `unity/Assets/_Bloodlines/Code/AI/AICovertOpsSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/AI/AIBuildOrderComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/AI/AIBuildOrderSystem.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIStrategySmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIStrategicPressureSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIGovernancePressureSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIWorkerGatherSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAISiegeOrchestrationSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAICovertOpsSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIBuildOrderSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AIStrategy.cs`
   - `scripts/Invoke-BloodlinesUnityAIStrategySmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAIStrategicPressureSmokeValidation.ps1`
@@ -272,10 +275,11 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnityAIWorkerGatherSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAISiegeOrchestrationSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAICovertOpsSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityAIBuildOrderSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs` -- `AIStrategyComponent` seeded on non-player Kingdom faction entities alongside `AIEconomyControllerComponent`
-  - `unity/Assembly-CSharp.csproj` -- `AIStrategyComponent.cs`, `EnemyAIStrategySystem.cs`, `AIStrategicPressureSystem.cs`, `AIWorkerGatherSystem.cs`, `AISiegeOrchestrationComponent.cs`, `AISiegeOrchestrationSystem.cs`, `AICovertOpsComponent.cs`, `AICovertOpsSystem.cs` registered
-  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs`, `BloodlinesAIStrategicPressureSmokeValidation.cs`, `BloodlinesAIGovernancePressureSmokeValidation.cs`, `BloodlinesAIWorkerGatherSmokeValidation.cs`, `BloodlinesAISiegeOrchestrationSmokeValidation.cs`, `BloodlinesAICovertOpsSmokeValidation.cs` registered
+  - `unity/Assembly-CSharp.csproj` -- `AIStrategyComponent.cs`, `EnemyAIStrategySystem.cs`, `AIStrategicPressureSystem.cs`, `AIWorkerGatherSystem.cs`, `AISiegeOrchestrationComponent.cs`, `AISiegeOrchestrationSystem.cs`, `AICovertOpsComponent.cs`, `AICovertOpsSystem.cs`, `AIBuildOrderComponent.cs`, `AIBuildOrderSystem.cs` registered
+  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs`, `BloodlinesAIStrategicPressureSmokeValidation.cs`, `BloodlinesAIGovernancePressureSmokeValidation.cs`, `BloodlinesAIWorkerGatherSmokeValidation.cs`, `BloodlinesAISiegeOrchestrationSmokeValidation.cs`, `BloodlinesAICovertOpsSmokeValidation.cs`, `BloodlinesAIBuildOrderSmokeValidation.cs` registered
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-1.md`
   - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-2-pressure.md`
@@ -283,6 +287,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-4-worker-gather.md`
   - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-5-siege-staging.md`
   - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-6-dynasty-covert-ops.md`
+  - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-7-build-order.md`
 - Browser Reference:
   - Sub-slice 1: `src/game/core/ai.js` `pickTerritoryTarget` (~747), `pickScoutHarassTarget` (~412), `getWorldPressureRaidTarget` (~817)
   - Sub-slice 2: `src/game/core/ai.js` timer clamp/floor block lines 1127-1241
@@ -290,9 +295,10 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - Sub-slice 4: `src/game/core/ai.js` idle worker dispatch loop lines 1243-1251, getEnemyGatherPriorities (885-922), chooseGatherNode (924-933)
   - Sub-slice 5: `src/game/core/ai.js` attackTimer<=0 siege staging decision tree ~lines 1825-2090, areSiegeLinesFormed (947), getSiegeStagePoint (935), isReliefArmyApproaching (727)
   - Sub-slice 6: `src/game/core/ai.js` updateEnemyAi dynasty/covert ops dispatch block ~lines 2419-2678 (assassination, missionary, holy war, divine right, captive recovery, marriage proposal/inbox, non-aggression pact, lesser-house promotion)
-  - Sub-slices pending: build timer chain (~line 1060-1100), marriage-proposal execution wiring
-- Current Branch In Flight: `claude/unity-ai-dynasty-covert-ops`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-6-dynasty-covert-ops.md`
+  - Sub-slice 7: `src/game/core/ai.js` updateEnemyAi buildTimer<=0 block ~lines 1377-1573 (13-step priority chain: barracks, wayshrine, quarry, iron mine, siege workshop, covenant hall, grand sanctuary, apex covenant, supply camp, stable, dwelling, farm, well); timer reset at 4s/6s depending on playerKeepFortified
+  - Sub-slices pending: marriage-proposal execution wiring
+- Current Branch In Flight: `claude/unity-ai-build-timer-chain`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-7-build-order.md`
 
 ### Lane: victory-conditions
 
@@ -378,15 +384,20 @@ Note: `fortification-siege-sub-slice-3-imminent-engagement-warnings` is currentl
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-6-dynasty-covert-ops
 
-- Status: ACTIVE on branch `claude/unity-ai-dynasty-covert-ops` (do not claim).
+- Status: DONE (merged to master via `claude/unity-ai-dynasty-covert-ops`; see sub-slice 6 handoff).
 - Browser Reference: `src/game/core/ai.js` updateEnemyAi dynasty covert ops block ~lines 2419-2678.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-7-build-timer-chain
 
-- Suggested Branch: new branch `claude/unity-ai-build-timer-chain`.
-- Target Paths: `unity/Assets/_Bloodlines/Code/AI/**` (additive only, owned by ai-strategic-layer lane).
-- Browser Reference: `src/game/core/ai.js` building construction / upgrade timer evaluation block ~lines 1060-1100.
-- Scope: port the AI building build-order priority evaluation and per-building timer chain that drives when the AI queues construction or upgrades. Depends on ai-strategic-layer sub-slices 1-6 being landed.
+- Status: DONE (landed via `claude/unity-ai-build-timer-chain`; see sub-slice 7 handoff).
+- Browser Reference: `src/game/core/ai.js` updateEnemyAi buildTimer<=0 block ~lines 1377-1573.
+
+### Next Lane Candidate: ai-strategic-layer-sub-slice-8-marriage-proposal-execution
+
+- Suggested Branch: new branch `claude/unity-ai-marriage-proposal-execution`.
+- Target Paths: `unity/Assets/_Bloodlines/Code/AI/**` (additive only, owned by ai-strategic-layer lane); may require narrow shared edits to `unity/Assets/_Bloodlines/Code/Dynasties/**` files owned by the retired tier2-batch-dynasty-systems lane. Any Dynasties edits must be narrow, additive, and justified in the slice handoff.
+- Browser Reference: `src/game/core/ai.js` marriage proposal execution (~lines 2580-2620) and related marriage acceptance wiring; simulation-side `proposeMarriage` (~7340) and `acceptMarriage` (~7388).
+- Scope: port the marriage-proposal execution wiring that moves an AI-initiated proposal from dispatch (handled by sub-slice 6) through candidate selection, proposal entity creation, and the 30-day expiration countdown already implemented in `MarriageProposalExpirationSystem`. Depends on ai-strategic-layer sub-slices 1-7 and tier2-batch-dynasty-systems being landed.
 
 ## Shared Files (Narrow Modification Rights for All Lanes)
 
