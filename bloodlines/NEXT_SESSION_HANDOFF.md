@@ -1,10 +1,43 @@
 # NEXT_SESSION_HANDOFF
 
-Last updated: 2026-04-18 (Session 130: All 3 items complete. Victory Conditions System: VictoryStateComponent + VictoryConditionEvaluationSystem, 4-phase smoke PASS, contract revision 12. Tier 2 batch dynasty: 5 systems + smoke PASS, contract 11. AI strategic layer sub-slice 1: EnemyAIStrategySystem, 4-phase smoke PASS, contract 10. Next: Fortification + Siege system (codex/unity-fortification-siege branch has initial components.))
+Last updated: 2026-04-19 (fortification-siege sub-slice 5 wall-segment destruction resolution complete on branch `codex/unity-fortification-wall-segment-destruction`: live fortification-role building linking plus explicit breach-state resolution landed, dedicated 4-phase wall smoke PASS, contract revision 30 -> 31 on top of rebased `origin/master` `0a0e122f`. Next: consume `OpenBreachCount` in a follow-up breach-aware assault, pathing, or legibility slice on a fresh `codex/unity-fortification-*` branch.)
+Previous entry: Last updated: 2026-04-18 (Session 130: All 3 items complete. Victory Conditions System: VictoryStateComponent + VictoryConditionEvaluationSystem, 4-phase smoke PASS, contract revision 12. Tier 2 batch dynasty: 5 systems + smoke PASS, contract 11. AI strategic layer sub-slice 1: EnemyAIStrategySystem, 4-phase smoke PASS, contract 10. Next: Fortification + Siege system (codex/unity-fortification-siege branch has initial components.))
 Previous entry: Last updated: 2026-04-18 (Session 129: AI strategic layer sub-slice 1 complete -- EnemyAIStrategySystem ISystem live, 4-phase smoke PASS, contract revision 10. Next sub-slices: supply chain/convoy mgmt (ai.js ~1100), siege staging. Also pending: Tier 2 batch systems (marriage, lesser house defection, minor house levies, renown scoring) and Victory Conditions system.)
 Previous entry: Last updated: 2026-04-17 (state-snapshot-restore lane complete on master 2026-04-17: 3 sub-slices merged, BloodlinesSnapshotPayload/Writer/Restorer, 6-phase smoke, ProbeSnapshotIntegrity in bootstrap runtime smoke, all 10 gates green, contract Revision 5. 10 Claude Code skills merged to master. Concurrent session contract revision 5. Browser-to-Unity migration plan drafted and three Tier 1 slices landed on master the same day: Conviction scoring + bands + 4-phase governed validator, Dynasty core with eight-member template set + aging + heir succession + interregnum + 4-phase validator, Faith commitment + exposure threshold + five-tier intensity resolution + 4-phase validator. AI barracks observability and bootstrap runtime smoke startup timeout bump 120s to 240s also on master. Codex group-movement and combat-stances slice is now rebased, green, and pushed on `codex/unity-group-movement-and-stances` with all eight combat smoke phases passing, full governed gate chain green, `Assembly-CSharp.csproj` compile includes restored for the new runtime files, and governed wrapper hardening landed for bootstrap runtime, scene-shell, and graphics validations. Workspace `HANDOFF.md` archived to `HANDOFF_ARCHIVE_2026-04-17_session-125-attack-orders.md`; the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md` is now the authoritative forward-work map; Session 127: Unity passive target-acquisition throttling and sight-loss cleanup green on stacked branch `codex/unity-target-acquisition-los`; Session 126: Unity explicit attack orders and first attack-move command layer green on branch `codex/unity-attack-move`; all prior lanes preserved)
 Previous author: Claude
-Next recommended action: finish the AI strategic layer merge queue in dependency order. Claude's sub-slice 7 build-timer-chain should land on `master` first; then rebase `codex/unity-ai-command-dispatch`, resolve any generated `Assembly-CSharp.csproj` include drift if it appears, preserve `[UpdateAfter(typeof(AICovertOpsSystem))]` unless a deliberate post-rebase ordering pass changes it, and merge the command-dispatch slice. After that, remaining AI strategic-layer follow-up is the marriage-proposal execution seam plus any deeper integration from the browser migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`.
+Next recommended action: claim the next fortification follow-up on a fresh `codex/unity-fortification-*` branch and consume `FortificationComponent.OpenBreachCount` in a breach-aware assault, pathing, or legibility slice. In parallel, the AI strategic layer's highest open candidates remain the narrative message bridge and captive-recovery execution follow-up documented in the revision-31 contract.
+
+## 2026-04-19 Fortification Siege Sub-Slice 5 Wall Segment Destruction Resolution
+
+- Branch lane: `codex/unity-fortification-wall-segment-destruction`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-wall-segment-destruction-resolution.md`
+- Completed in this slice:
+  - `FortificationStructureLinkSystem` now links wall, tower, gate, and keep
+    buildings to the nearest same-faction settlement and materializes
+    `FortificationBuildingContributionComponent` in the live runtime
+  - `FortificationDestructionResolutionSystem` now writes destroyed wall, tower,
+    gate, and keep counts plus `OpenBreachCount` onto `FortificationComponent`
+  - `FortificationReserveSystem` now updates after destruction accounting, so
+    reserve frontage shrinks immediately when a wall segment falls
+  - `BloodlinesDebugCommandSurface.Fortification` now exposes
+    `TryDebugGetFortificationBreachState`
+  - `BloodlinesWallSegmentDestructionSmokeValidation` and
+    `scripts/Invoke-BloodlinesUnityWallSegmentDestructionSmokeValidation.ps1`
+    now prove the breach-resolution seam directly
+- Validation state:
+  - all 10 required governed gates green on the rebased `origin/master`
+    `0a0e122f` base
+  - imminent engagement and siege supply interdiction regressions rerun green
+  - dedicated wall-segment destruction smoke green with 4 proof phases passing
+  - bootstrap runtime and canonical scene-shell gates were executed through
+    worktree-local wrappers under the Unity lock because the checked-in wrappers
+    are still path-pinned to `D:\ProjectsHome\Bloodlines`
+- Immediate next action:
+  - keep the fortification lane on fresh `codex/unity-fortification-*`
+    branches
+  - consume `OpenBreachCount` in the next breach-aware combat, pathing, or HUD
+    slice so the new breach state affects more than tier loss and reserve frontage
 
 ## 2026-04-19 AI Strategic Layer Sub-Slice 8 Command Dispatch
 
@@ -33,11 +66,16 @@ Next recommended action: finish the AI strategic layer merge queue in dependency
 
 ## Active Owner Direction
 
-- The active non-negotiable direction is recorded at `governance/OWNER_DIRECTION_2026-04-16_FULL_CANON_UNITY.md`.
+- The active non-negotiable direction is recorded at `governance/OWNER_DIRECTION_2026-04-19_GAME_MODES_AND_DYNASTY_PROGRESSION.md`, interpreted together with the still-active 2026-04-16 and 2026-04-17 direction files where they do not conflict.
 - Bloodlines now proceeds under these hard rules:
   - full canonical design-bible realization stays in scope
   - Unity 6.3 LTS with DOTS / ECS is the shipping engine
   - the browser runtime is frozen as behavioral specification only
+  - shipping game modes are skirmish vs AI and multiplayer only
+  - campaign and tutorial mode are removed from scope rather than deferred
+  - onboarding remains in scope through HUD tooltips, labels, and panel legibility
+  - asset production is primarily AI-generated and must remain at or below the Generals Zero Hour / Warcraft III fidelity ceiling
+  - cross-match dynasty progression is canonically in scope as a multiplayer-fair sideways-customization system
   - new implementation belongs in `unity/`
   - full commercial polish, Wwise audio, and Netcode for Entities scope remain in force unless Lance changes that direction later
   - MVP, phased-release, and scope-cut reasoning are stale and forbidden
@@ -48,14 +86,14 @@ Next recommended action: finish the AI strategic layer merge queue in dependency
 - The canonical Bloodlines root is stable and continuity-safe.
 - The continuation platform is product-ready for daily offline use, now carries a live Unity execution packet plus governed canonical write workbench, and now opens on a true chat-first Command Deck rather than a dashboard-only front page.
 - The browser reference simulation is heavily built, frozen as behavioral spec, and already carries many live dynasty, siege, diplomacy, sovereignty, and naval systems.
-- The Unity lane is green through first-shell battlefield control, production, construction, constructed `barracks -> militia` continuity, worker gather/deposit, projectile combat delivery, explicit attack orders, attack-move, target-acquisition throttling / sight-loss cleanup, group-aware movement, soft unit separation, and combat stances.
+- The Unity lane is green through first-shell battlefield control, production, construction, constructed `barracks -> militia` continuity, worker gather/deposit, projectile combat delivery, explicit attack orders, attack-move, target-acquisition throttling / sight-loss cleanup, group-aware movement, soft unit separation, combat stances, fortification tier and reserves, siege support and field water, imminent engagement warnings, siege supply interdiction, and wall-segment destruction resolution.
 - Graphics staging is through Batch 08 and review infrastructure is in place.
 - The foundational player guide exists as a completed Volume I.
 - The dated supporting project-wide report now exists at `reports/2026-04-16_project_completion_handoff_and_gap_summary.md`.
 
 ## Remaining Before Bloodlines Is Entirely Done
 
-- Unity still needs broader gameplay depth, more construction and production coverage, richer runtime UI, fortification / siege and match-progression Tier 1 systems, and deeper combat presentation or balance beyond the current projectile + explicit-order + stance foundation.
+- Unity still needs broader gameplay depth, more construction and production coverage, richer runtime UI, the remaining breach-aware and late-fortification follow-ups on top of the now-live fortification/siege lane, match-progression and other unfinished Tier 1 systems, and deeper combat presentation or balance beyond the current projectile + explicit-order + stance foundation.
 - The checked-in bootstrap runtime smoke and canonical scene-shell validator wrappers are still path-pinned to `D:\ProjectsHome\Bloodlines`, so concurrent-lane work may still need clean-worktree equivalents when the canonical checkout is dirty under another Unity session.
 - Browser-side unfinished follow-up remains preserved historically as reference material, but future realization of those systems belongs in Unity rather than in new browser feature work.
 - Graphics is still at concept and staging level pending formal review calls and later runtime-ready asset production.

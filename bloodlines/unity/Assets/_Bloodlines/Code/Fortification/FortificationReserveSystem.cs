@@ -15,6 +15,7 @@ namespace Bloodlines.Fortification
     /// </summary>
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(AdvanceFortificationTierSystem))]
+    [UpdateAfter(typeof(FortificationDestructionResolutionSystem))]
     public partial struct FortificationReserveSystem : ISystem
     {
         public void OnCreate(ref SystemState state)
