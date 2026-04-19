@@ -2301,3 +2301,38 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 2. ai-strategic-layer missionary execution (first consumer of the dynasty operations foundation; port `startMissionaryOperation` at simulation.js:10523 with per-kind resolveAt, operatorId, sourceFaithId, exposureGain, loyaltyPressure fields on a new DynastyOperationMissionaryComponent struct attached to the entity created by BeginOperation).
 3. ai-strategic-layer narrative TTL eviction system (walks the NarrativeMessageElement buffer each tick and removes entries whose CreatedAtInWorldDays + Ttl is past current; small self-contained slice that bounds the buffer before a UI consumer lands).
 4. fortification-siege follow-up: breach HUD / legibility summary on the fortification debug surface; breach-aware pathing after pathing ownership is split; breach sealing / assault failure / recovery follow-up (per Codex sub-slice 6 handoff recommendations).
+
+## Codex Fortification Siege Sub-Slice 7: Breach Legibility Readout (2026-04-19)
+
+### Status: COMPLETE on branch codex/unity-fortification-breach-legibility-readout (branched from origin/master 374bb2e4 after Claude's ai-strategic-layer sub-slice 18 moved the contract to revision 35)
+
+### What Was Done
+- New `SettlementBreachReadout` plain-data struct under `unity/Assets/_Bloodlines/Code/Debug/` plus `TryDebugGetSettlementBreachReadout(FixedString32Bytes settlementId, out SettlementBreachReadout readout)` on `BloodlinesDebugCommandSurface`. The seam packages settlement id, owner faction id, open breach count, destroyed wall/tower/gate/keep counts, current tier, derived reserve frontage, and aggregate breach-assault state without a HUD consumer needing to query `FortificationComponent` and `FieldWaterComponent` directly.
+- Reserve frontage is derived from the already-landed fortification reserve-frontage rule rather than stored separately. Aggregate breach-assault telemetry is reduced from live `FieldWaterComponent` entries that currently target the settlement, so the seam stays aligned with sub-slice 6's runtime consumer.
+- No production HUD renderer ships in this slice. The seam is a foundation only, mirroring the no-consumer foundation pattern Claude used in ai-strategic-layer sub-slice 18 dynasty operations foundation.
+- New dedicated validator `BloodlinesBreachLegibilityReadoutSmokeValidation` plus wrapper `scripts/Invoke-BloodlinesUnityBreachLegibilityReadoutSmokeValidation.ps1`. All 5 phases PASS:
+  - Phase 1 intact fortified settlement baseline: zero breach counts, tier 1, frontage 2, baseline multipliers
+  - Phase 2 single breach: `OpenBreachCount = 1`, active pressure true, aggregate attack `1.08x`, aggregate speed `1.04x`
+  - Phase 3 three breaches: capped aggregate attack `1.24x`, capped aggregate speed `1.12x`
+  - Phase 4 missing settlement: `false` + default readout
+  - Phase 5 partial destruction variety: `walls=2`, `towers=1`, `gates=1`, `keeps=0`, `OpenBreachCount = 3`, tier 2, frontage 3
+- Local csproj note: this fresh worktree initially had no Unity-generated `unity/Assembly-CSharp.csproj` or `unity/Assembly-CSharp-Editor.csproj`. Unity regenerated both locally, and both include the new breach-readout and validator entries. The csproj files remain gitignored and are not part of the commit.
+- Contract revision advanced `35 -> 36`. New per-slice handoff: `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-legibility-readout.md`.
+
+### Gate Results
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS with existing editor warnings only
+- Bootstrap runtime smoke: PASS via `artifacts/unity-bootstrap-runtime-smoke.log`
+- Combat smoke: PASS via `artifacts/unity-combat-smoke.log`
+- Scene shells: Bootstrap + Gameplay PASS via `artifacts/unity-bootstrap-scene-validate.log` and `artifacts/unity-gameplay-scene-validate.log`
+- Fortification smoke: PASS via `artifacts/unity-fortification-smoke.log`
+- Siege smoke: PASS via `artifacts/unity-siege-smoke.log`
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision 36
+- Dedicated breach legibility readout smoke: PASS via `artifacts/unity-breach-legibility-readout-smoke.log` with marker `BLOODLINES_BREACH_LEGIBILITY_READOUT_SMOKE PASS`
+
+### Recommended Next Fortification Follow-Up
+1. Optional fortification sub-slice 8 breach sealing / recovery: defenders restore `OpenBreachCount` toward zero over time through a new `BreachSealingSystem` that spends stone and worker time, so breach pressure becomes a contestable window instead of a static post-destruction state.
+2. Coordinated breach-aware pathing / exploit routing after pathing ownership is explicitly claimed or split in the contract.
+3. Production HUD consumer of `SettlementBreachReadout` after the sealing/recovery rule or pathing follow-up decides which breach signals should be rendered first.

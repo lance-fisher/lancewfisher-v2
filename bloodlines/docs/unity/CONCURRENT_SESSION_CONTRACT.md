@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 35
+- Revision: 36
 - Last Updated: 2026-04-19
-- Last Updated By: claude-ai-dynasty-operations-foundation-2026-04-19
-- Supersedes: revision 34 (ai-strategic-layer sub-slice 18 landed on top of fortification-siege sub-slice 6 breach assault pressure at revision 34; ports the canonical dynasty-operation foundation that every covert/diplomatic dispatch site in the browser simulation.js shares. New DynastyOperationComponent entity shape carries one entity per active operation with OperationId (FixedString64Bytes), SourceFactionId (FixedString32Bytes), OperationKind (new DynastyOperationKind enum covering Missionary, HolyWar, DivineRight, CaptiveRescue, CaptiveRansom, LesserHousePromotion, and None), StartedAtInWorldDays (stamped from DualClock), TargetFactionId (optional, default when N/A), TargetMemberId (optional, default when N/A), and Active (false means the entity remains for audit without consuming capacity). New DynastyOperationLimits static helper exposes DYNASTY_OPERATION_ACTIVE_LIMIT = 6 (browser simulation.js:17) and three operations: HasCapacity(em, factionId) counts active entities matching SourceFactionId and returns true strictly below cap; CountActiveForFaction(em, factionId) exposes the count for smoke assertions and future consumers; BeginOperation(em, operationId, sourceFactionId, kind, targetFactionId, targetMemberId) creates one DynastyOperationComponent entity with Active=true and the DualClock timestamp. Browser parity notes: browser trims the active array to the cap via operations.active.slice(0, DYNASTY_OPERATION_ACTIVE_LIMIT) after unshift; Unity departs from the silent trim and keeps the gate strict at the call site (HasCapacity must be checked before BeginOperation) because an entity-per-operation model cannot silently drop entries without orphaning downstream state. No system ships in sub-slice 18; the foundation ships without a consumer so later slices (missionary dispatch, holy war dispatch, divine right declaration, captive rescue execution, captive ransom execution) can plug in without reshaping the surface. BloodlinesDynastyOperationsSmokeValidation 5-phase validator covers: BeginOperation writes correct fields and stamps DualClock; 4 operations under cap keeps HasCapacity=true; 6 operations at cap flips HasCapacity to false; per-faction scoping keeps enemy's 5-count from blocking player's capacity; and cap-worth of Active=false entities do not consume capacity. Sub-slice 18 rebased onto revision-34 master (a2f5e6cd) after Codex's fortification sub-slice 6 landed; no sub-slice 8-17 regression. All ai-strategic-layer and fortification-siege smokes remain green.)
+- Last Updated By: codex-unity-fortification-breach-legibility-readout-2026-04-19
+- Supersedes: revision 35 (fortification-siege sub-slice 7 adds a settlement breach-legibility foundation on top of Claude's revision-35 ai-strategic-layer sub-slice 18 dynasty-operations foundation. BloodlinesDebugCommandSurface.Fortification now exposes TryDebugGetSettlementBreachReadout(FixedString32Bytes settlementId, out SettlementBreachReadout readout), packaging settlement id, owner faction id, open breach count, destroyed wall/tower/gate/keep counts, current tier, derived reserve frontage, and aggregate breach-assault telemetry without requiring a HUD consumer to scan FortificationComponent or FieldWaterComponent directly. The readout aggregates live breach-assault state by scanning FieldWaterComponent entries that currently target the settlement and reduces reserve frontage through the already-landed fortification reserve-frontage rule instead of inventing a second source of truth. New BloodlinesBreachLegibilityReadoutSmokeValidation covers five phases: intact fortified settlement baseline, single-breach pressure activation, three-breach capped scaling, missing-settlement false/default behavior, and a mixed partial-destruction profile that proves tier contraction and aggregate breach counting. No production HUD ships in this slice; the seam is foundation-only by design, matching the no-consumer pattern used in ai-strategic-layer sub-slice 18.)
 
 ## Purpose
 
@@ -430,7 +430,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: fortification-siege-imminent-engagement
 
 - Status: active
-- Branch Prefix: `codex/unity-fortification-breach-assault-pressure` (sub-slice 6), `codex/unity-fortification-wall-segment-destruction` (sub-slice 5); prior `codex/unity-fortification-siege*` slices 1-4 also landed; future follow-ups should continue on fresh `codex/unity-fortification-*` branches
+- Branch Prefix: `codex/unity-fortification-breach-legibility-readout` (sub-slice 7), `codex/unity-fortification-breach-assault-pressure` (sub-slice 6), `codex/unity-fortification-wall-segment-destruction` (sub-slice 5); prior `codex/unity-fortification-siege*` slices 1-4 also landed; future follow-ups should continue on fresh `codex/unity-fortification-*` branches
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/Fortification/**`
@@ -442,6 +442,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Components/SiegeSupplyTrainComponent.cs`
   - `unity/Assets/_Bloodlines/Code/Components/ImminentEngagementComponent.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Fortification.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Fortification.BreachReadout.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Siege.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSiegeSmokeValidation.cs`
@@ -449,6 +450,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSiegeSupplyInterdictionSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesWallSegmentDestructionSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBreachAssaultPressureSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBreachLegibilityReadoutSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`
@@ -456,6 +458,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnitySiegeSupplyInterdictionSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityWallSegmentDestructionSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityBreachAssaultPressureSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityBreachLegibilityReadoutSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1` -- additive wrapper update preserved fortification smoke ownership while keeping the existing validation surface intact for the rebased imminent-engagement lane
 - Lane Authority Documents:
@@ -465,14 +468,15 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-camp-supply-interdiction.md`
   - `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-wall-segment-destruction-resolution.md`
   - `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-assault-pressure.md`
-- Current Branch In Flight: `codex/unity-fortification-breach-assault-pressure`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-assault-pressure.md`
+  - `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-legibility-readout.md`
+- Current Branch In Flight: `codex/unity-fortification-breach-legibility-readout`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-legibility-readout.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: `fortification-siege-sub-slice-6-breach-assault-pressure` is implemented on `codex/unity-fortification-breach-assault-pressure` and documented in this revision. Further fortification follow-ups should continue using fresh `codex/unity-fortification-*` branches rather than widening the earlier fortification branches.
+Note: `fortification-siege-sub-slice-7-breach-legibility-readout` is implemented on `codex/unity-fortification-breach-legibility-readout` and documented in this revision. Further fortification follow-ups should continue using fresh `codex/unity-fortification-*` branches rather than widening the earlier fortification branches.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 
