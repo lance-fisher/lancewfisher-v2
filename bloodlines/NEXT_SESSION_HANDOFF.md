@@ -2068,3 +2068,33 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 1. ai-strategic-layer-sub-slice-14-narrative-message-bridge (designs an AI->UI message channel; deferred since sub-slices 11, 12, 13).
 2. ai-strategic-layer-sub-slice-15-pact-proposal-execution (mirrors marriage-proposal pattern from sub-slice 8; ports `proposeNonAggressionPact` from ai.js ~2643-2665).
 3. fortification-siege wall-segment destruction resolution (Codex owns; recommended next Codex slice per sub-slice 4 handoff).
+
+## AI Strategic Layer Sub-Slice 14: Non-Aggression Pact Proposal Execution (Claude, 2026-04-19)
+
+### Status: COMPLETE on branch claude/unity-ai-pact-proposal-execution
+
+### What Was Done
+- New `PactComponent` (one entity per active pact, symmetric FactionAId/FactionBId; no primary/mirror split since pacts have no asymmetric downstream system) and new `AIPactProposalExecutionSystem` port ai.js pact dispatch (~2643-2666) and simulation.js `getNonAggressionPactTerms` (~5150-5183) / `proposeNonAggressionPact` (~5185-5222).
+- Consumes `AICovertOpsComponent.LastFiredOp == CovertOpKind.PactProposal` from sub-slice 6. Gates on: both kingdoms (FactionKind.Kingdom), source != target, source hostile to target via HostilityComponent buffer, no existing PactComponent between them, source resources >= 50 Influence + 80 Gold.
+- On success: deduct cost from source ResourceStockpileComponent, remove HostilityComponent entries both ways, create one PactComponent entity with MinimumExpiresAtInWorldDays = start + 180. Dispatch unconditionally cleared (one-shot pattern from sub-slices 8/9/12/13). Target hardcoded as "player" matching browser ai.js:2658.
+- Deferred: holy-war pact gate (waits on holy-war lane); pact expiration / break system; narrative pushMessage (same message-bridge blocker as sub-slices 11, 12, 13).
+- 6-phase dedicated smoke validator all green. Contract revision 28 -> 29.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- Fortification smoke: PASS
+- Siege smoke: exit 0
+- AI pact proposal execution smoke (sub-slice 14): all 6 phases PASS
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED at revision 29
+
+### Next Unclaimed Lanes
+1. ai-strategic-layer-sub-slice-15-pact-break-and-expiration (ports `breakNonAggressionPact` from simulation.js ~5224 + early-break legitimacy penalty; extends PactComponent.Broken/BrokenByFactionId).
+2. ai-strategic-layer narrative message bridge (still deferred across sub-slices 11-14).
+3. Other CovertOpKind executions (assassination, missionary, holy war, divine right, captive rescue, captive ransom).
+4. fortification-siege wall-segment destruction resolution (Codex owns).
