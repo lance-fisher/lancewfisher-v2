@@ -1644,3 +1644,31 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 1. ai-strategic-layer-sub-slice-5-siege-staging (new branch claude/unity-ai-siege-staging)
 2. ai-strategic-layer-sub-slice-6-dynasty-covert-ops (new branch, after sub-slice 5)
 3. fortification-siege-sub-slice-3-imminent-engagement-warnings (Codex in progress, do not claim)
+
+## AI Strategic Layer Sub-Slice 5: Siege Staging Orchestration (Claude, 2026-04-19)
+
+### Status: COMPLETE on branch claude/unity-ai-siege-staging
+
+### What Was Done
+- Ported ai.js attackTimer<=0 siege staging decision tree (~1825-2090) into `AISiegeOrchestrationSystem` + `AISiegeOrchestrationComponent`.
+- `SiegeOrchestrationPhase` 17-value enum matches exact branch priority order.
+- `AISiegeOrchestrationComponent` holds all readiness/context flags (field water, siege engine presence, supply chain, escort, post-repulse, etc.).
+- Pure state machine: reads PlayerKeepFortified from AIStrategyComponent, evaluates priority tree, writes Phase.
+- 6-phase smoke validator all green. Contract revision 16 -> 17.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS (worldPressureChecked=True and all prior fields)
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- AI governance pressure smoke: PASS
+- AI worker gather smoke: PASS
+- AI siege orchestration smoke: Phase 1-6 PASS
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED revision=17
+
+### Next Unclaimed Lanes
+1. ai-strategic-layer-sub-slice-6-dynasty-covert-ops (new branch claude/unity-ai-dynasty-covert-ops; ai.js ~2681)
+2. fortification-siege-sub-slice-3-imminent-engagement-warnings (Codex in progress, do not claim)
