@@ -1565,3 +1565,30 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 - Target browser reference: `src/game/core/simulation.js` `tickImminentEngagementWarnings`.
 - Keep scope discipline: no bootstrap runtime smoke integration, no siege-operation lifecycle, no combat-file edits.
 - Re-check `git branch --show-current` before any continuity update or commit.
+
+## AI Strategic Layer Sub-Slice 2: Strategic Pressure System (Claude, 2026-04-18)
+
+### Status: COMPLETE on branch claude/unity-ai-strategic-pressure
+
+### What Was Done
+- Ported ai.js `updateEnemyAi` timer-clamp and stage-gate block (lines 1127-1241) into `AIStrategicPressureSystem`.
+- Extended `AIStrategyComponent` with `RivalryUnlocked` and `RaidPressureUnlocked` fields.
+- 4-phase smoke validator all green (phase 1: stage lock / territory floor; phase 2: rivalry+raid unlock; phase 3: WP Level 2 clamps; phase 4: Great Reckoning clamps).
+- Contract bumped to revision 14. Retired victory-conditions and tier2-batch-dynasty-systems lanes.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- Fortification smoke: PASS
+- Siege smoke: exit 0
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED revision=14
+- AI strategic pressure smoke: Phase 1-4 PASS
+
+### Next Unclaimed Lanes
+1. fortification-siege-sub-slice-3-imminent-engagement-warnings (branch codex/unity-fortification-siege, Codex prompt ready)
+2. ai-strategic-layer-sub-slice-3-supply-chain

@@ -1733,3 +1733,13 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Next implementation target: `tickImminentEngagementWarnings` from `src/game/core/simulation.js`.
 - Keep bootstrap runtime smoke integration, siege operation lifecycle, and HUD strain readouts out of scope for the next pass unless Lance changes scope.
 - Re-check `git branch --show-current` before any future commit or continuity edit. Branch drift was observed during wrapper execution in prior Codex sessions.
+
+### 2026-04-18 Unity AI Strategic Layer Sub-Slice 2: Strategic Pressure System
+
+- `AIStrategicPressureSystem` ported from ai.js `updateEnemyAi` lines 1127-1241 (timer-clamp and stage-gate block) into Unity ECS on branch `claude/unity-ai-strategic-pressure`.
+- Ports the full timer-clamp logic: world pressure Level 1 caps AttackTimer<=14 and TerritoryTimer<=10; Level 2 caps AttackTimer<=8 and TerritoryTimer<=6; GreatReckoning (score>=4) caps AttackTimer<=6, TerritoryTimer<=4, RaidTimer<=8.
+- Stage gates ported: RivalryUnlocked (stageNumber>=2 or wpLevel>0), RaidPressureUnlocked (stageNumber>=3 or wpLevel>0). Stage 1 floors TerritoryTimer>=24; stage 2 floors TerritoryTimer>=16; no pressure floors RaidTimer>=20.
+- `AIStrategyComponent` extended with `RivalryUnlocked` and `RaidPressureUnlocked` bool fields.
+- 4-phase smoke validator (`BloodlinesAIStrategicPressureSmokeValidation.cs`) and self-contained runner (`scripts/Invoke-BloodlinesUnityAIStrategicPressureSmokeValidation.ps1`) all green. Artifact: `artifacts/unity-ai-strategic-pressure-smoke.log`.
+- All 10 validation gates green; contract bumped revision 13 -> 14. `victory-conditions` and `tier2-batch-dynasty-systems` lanes retired.
+- The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-2-pressure.md`.
