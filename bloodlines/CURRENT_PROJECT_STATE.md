@@ -1812,3 +1812,17 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Strategic profile gating (faith hostility, population deficit, legitimacy distress, succession crises) is responsibility-split: sub-slice 6 gates dispatch via `MarriageStrategicProfileWilling`, sub-slice 8 gates execution structurally. Strategic profile port is a separate future slice.
 - All 10 validation gates green; contract bumped revision 19 -> 20.
 - The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-8-marriage-proposal-execution.md`.
+
+### 2026-04-19 Unity AI Strategic Layer Sub-Slice 9: Marriage Inbox Accept
+
+- `AIMarriageInboxAcceptSystem` ported from ai.js `tryAiAcceptIncomingMarriage` (~2880-2895) on branch `claude/unity-ai-marriage-inbox-accept`. Completes the mechanical marriage loop now that both proposal-side (sub-slice 8) and accept-side are Unity-resident.
+- Consumes `AICovertOpsComponent.LastFiredOp == CovertOpKind.MarriageInboxAccept` written by sub-slice 6; scans `MarriageProposalComponent` entities for the first match with `Status == Pending`, `SourceFactionId == "player"`, `TargetFactionId == this AI faction`.
+- On match: flips proposal `Status` to `Accepted`; creates primary + mirror `MarriageComponent` entities sharing `MarriageId` (primary = source-headed with `IsPrimary = true`; mirror = target-headed with `IsPrimary = false`). `MarriageGestationSystem` filters on `IsPrimary` so only one child spawns at 60 in-world days from the `GestationInWorldDays` constant.
+- Always clears `LastFiredOp` to `None` after processing, matching the browser's single-fire-per-timer semantic.
+- Source hardcoded to `"player"` matching the browser's inbox filter; multi-faction extension reserved alongside sub-slice 8's proposal-side extension.
+- Executes after `AIMarriageProposalExecutionSystem` in `SimulationSystemGroup` so propose + accept cannot race on the same frame when both dispatch in the same tick.
+- Cross-lane reads only: `MarriageProposalComponent` / `MarriageComponent` (tier2-batch-dynasty-systems lane, retired), `MarriageGestationSystem.GestationInWorldDays` constant, `DualClockComponent.InWorldDays`.
+- Mechanical record creation only. Browser effects on accept that remain unported in this slice: governance authority legitimacy cost, hostility drop between factions, oathkeeping conviction events, legitimacy +2 both sides, 30-day declareInWorldTime jump, narrative message push. These remain for a dedicated effects slice.
+- `BloodlinesAIMarriageInboxAcceptSmokeValidation` 4-phase validator all green: Phase 1 dispatch+pending->accepted creates primary+mirror; Phase 2 dispatch+no proposal no-op; Phase 3 dispatch+only-expired no-op with expired preserved; Phase 4 no-dispatch+pending no-op.
+- All 10 validation gates green (required one bootstrap retry and one siege retry due to transient bee_backend/Library write-contention; both passed cleanly on second attempt). Contract bumped revision 20 -> 21.
+- The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-9-marriage-inbox-accept.md`.
