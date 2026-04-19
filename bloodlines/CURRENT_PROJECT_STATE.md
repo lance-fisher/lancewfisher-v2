@@ -1916,3 +1916,17 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   force-push `codex/unity-fortification-siege`, merge it to `master`, then push
   `master` so the next Claude ai-strategic-layer session can start from
   revision 23.
+
+### 2026-04-19 Unity AI Strategic Layer Sub-Slice 10: Marriage Strategic Profile
+
+- `AIMarriageStrategicProfileSystem` ported from ai.js `getAiMarriageStrategicProfile` (~2803-2839) on branch `claude/unity-ai-marriage-strategic-profile`.
+- Runs [UpdateInGroup(SimulationSystemGroup), UpdateBefore(AICovertOpsSystem)]. Each tick snapshots the player faction (population, selectedFaith, doctrinePath) once, then iterates every non-player faction with AICovertOpsComponent + AIStrategyComponent.
+- Computes 4 strategic signals matching browser: isHostile (scan HostilityComponent buffer for "player"), populationDeficit (aiPop > 0 AND aiPop < playerPop * 0.85), legitimacyDistress gated by faith compatibility (<50 threshold, canonical AI_MARRIAGE_LEGITIMACY_DISTRESS_THRESHOLD), successionPressure (Enemy or Player SuccessionCrisisActive).
+- Faith compatibility simplified from the browser's covenantName string grouping to SelectedFaith+DoctrinePath equality: unbound (either side uncommitted) is neutral, same covenant+same doctrine is harmonious, either-match is non-blocking, fully-different covenant+doctrine blocks weak matches. Mechanical intent preserved without requiring Unity-side covenant-name metadata.
+- signalCount = isHostile + populationDeficit + faithBackedLegitimacySignal + successionPressure. blockedByFaith = compat.BlocksWeakMatch && signalCount < 2. willing = signalCount > 0 && !blockedByFaith.
+- Writes `willing` to both `AICovertOpsComponent.MarriageProposalGateMet` and `MarriageInboxAcceptGate` (symmetric per ai.js:2630-2631 "accept gate reuses strategic criteria so AI behavior is symmetric"). AICovertOpsSystem was already reading these gates; this slice is the first to populate them based on live state.
+- Target hardcoded to `"player"` matching browser signature; multi-faction extension reserved.
+- Cross-lane reads only: PopulationComponent, FaithStateComponent, DynastyStateComponent, HostilityComponent buffer, AIStrategyComponent succession flags. No structural edits.
+- `BloodlinesAIMarriageStrategicProfileSmokeValidation` 6-phase validator all green: Phase 1 no signals unbound faith -> not willing; Phase 2 hostility-only -> willing; Phase 3 population-deficit-only -> willing; Phase 4 legitimacy+harmonious-faith -> willing; Phase 5 succession-crisis-only -> willing; Phase 6 single-signal+incompatible-faith blocks weak match -> not willing.
+- All 10 validation gates green. Contract bumped revision 23 -> 24.
+- The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-10-marriage-strategic-profile.md`.

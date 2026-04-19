@@ -1884,3 +1884,33 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
   1. Force-push `codex/unity-fortification-siege`.
   2. Merge it to `master` and push `master`.
   3. Start the next ai-strategic-layer lane from revision 23 on a new Claude branch.
+
+## AI Strategic Layer Sub-Slice 10: Marriage Strategic Profile (Claude, 2026-04-19)
+
+### Status: COMPLETE on branch claude/unity-ai-marriage-strategic-profile
+
+### What Was Done
+- Ported ai.js `getAiMarriageStrategicProfile` (~2803-2839) into new `AIMarriageStrategicProfileSystem`. Runs before `AICovertOpsSystem`, closes the gap where sub-slices 6/8/9 referenced `MarriageProposalGateMet` and `MarriageInboxAcceptGate` but nothing populated them.
+- 4 strategic signals per browser: isHostile (HostilityComponent buffer), populationDeficit (<85% of player), legitimacyDistress gated by faith compat (<50), successionPressure (either side active). signalCount + blockedByFaith -> willing.
+- Faith compatibility simplified to SelectedFaith+DoctrinePath equality (harmonious / either-match / incompatible / unbound); preserves mechanical intent without browser covenantName metadata.
+- Writes `willing` to both gate flags symmetrically per ai.js comment that accept gate reuses proposal strategic criteria.
+- Target hardcoded to `"player"` matching browser; multi-faction extension reserved.
+- Cross-lane reads only; no structural edits to retired lanes.
+- 6-phase smoke validator covers no-signal, each individual signal path, harmonious-faith legitimacy path, and incompatible-faith-blocks-weak-match path. Contract revision 23 -> 24.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- Fortification smoke: PASS
+- Siege smoke: exit 0
+- AI marriage strategic profile smoke: Phase 1-6 PASS
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED (bumped to revision 24 post-gate)
+
+### Next Unclaimed Lanes
+1. ai-strategic-layer-sub-slice-11-marriage-accept-effects (new branch claude/unity-ai-marriage-accept-effects; simulation.js acceptMarriage ~7388-7469 effects block: +2 legitimacy both sides, hostility drop both ways, oathkeeping conviction +2, 30-day declareInWorldTime jump).
+2. fortification-siege sub-slice 4+ (Codex owns; lane still active after sub-slice 3 imminent engagement landed at rev 23).
