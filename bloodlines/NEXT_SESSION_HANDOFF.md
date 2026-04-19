@@ -1943,3 +1943,36 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 ### Next Unclaimed Lanes
 1. ai-strategic-layer-sub-slice-12-marriage-acceptance-terms (new branch claude/unity-ai-marriage-acceptance-terms; ports `getMarriageAcceptanceTerms` and governance-authority legitimacy cost on accept).
 2. fortification-siege sub-slice 4+ (Codex owns; lane still active after sub-slice 3 imminent engagement landed at rev 23).
+
+## AI Strategic Layer Sub-Slice 12: Marriage Acceptance Terms (Claude, 2026-04-19)
+
+### Status: COMPLETE on branch claude/unity-ai-marriage-acceptance-terms
+
+### What Was Done
+- New `MarriageAcceptanceTermsComponent` (AuthorityMode + LegitimacyCost) and `MarriageAuthorityEvaluator` static helper. Ports simulation.js `getMarriageAuthorityProfile` (~6134), `getMarriageAcceptanceTerms` (~6327), `applyMarriageGovernanceLegitimacyCost` (~6232), and `MARRIAGE_REGENCY_LEGITIMACY_COSTS` (~6091).
+- `MarriageAuthorityEvaluator` walks the target faction's `DynastyMemberRef` buffer in browser priority order: HeadDirect (head_of_bloodline + Ruling, cost 0), HeirRegency (heir_designate available, cost 1), EnvoyRegency (diplomat available, cost 2). Returns false (reject) when a roster exists but yields none of those. Backward-compatible default: empty roster -> HeadDirect cost 0.
+- `AIMarriageInboxAcceptSystem` resolves the authority before `TryAcceptIncoming`. On reject, dispatch is cleared and accept short-circuits (matches browser `getMarriageAcceptanceTerms` rejection). On success the resolved terms are attached to the primary marriage entity as `MarriageAcceptanceTermsComponent` alongside the pending tag.
+- `AIMarriageAcceptEffectsSystem` reordered to browser order (cost first, hostility, oathkeeping, legitimacy +2, declare time). New helper `ApplyAuthorityLegitimacyCost` reads the terms component, deducts cost from spouse `DynastyStateComponent.Legitimacy` clamped [0, 100], and records a Stewardship -cost conviction event via `ConvictionScoring.ApplyEvent`. Skips silently when terms are absent (preserves sub-slice 11 phase-3 untagged synthetic test).
+- Cost-before-bonus net spouse legitimacy = min(100, max(0, L - cost) + 2). Head-direct (cost 0) yields the same +2 baseline as sub-slice 11; regency costs partially absorb the bonus when below the ceiling.
+- Terms component persists after the pending tag is removed, providing a durable provenance marker for downstream HUD or audit systems.
+- Cross-lane reads only: `DynastyMemberRef`, `DynastyMemberComponent.Role/Status`. Cross-lane mutations are field-level only: `DynastyStateComponent.Legitimacy` clamped [0, 100], `ConvictionComponent.Stewardship` via the existing scoring helper.
+- Deferred: narrative message push (still no AI->UI message component).
+- 5-phase dedicated smoke validator all green. Sub-slice 11 regression smoke also re-run green. Contract revision 25 -> 26.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- Fortification smoke: PASS
+- Siege smoke: exit 0
+- AI marriage accept effects smoke (sub-slice 11 regression): Phase 1-6 PASS
+- AI marriage acceptance terms smoke (sub-slice 12): all 5 phases PASS (head-direct, heir-regency, envoy-regency, no-authority, terms-persisted)
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED (bumped to revision 26 post-gate)
+
+### Next Unclaimed Lanes
+1. ai-strategic-layer-sub-slice-13-narrative-message-bridge (designs an AI->UI message channel so `acceptMarriage` ceremonial pushMessage and other AI events can surface to the player; deferred since sub-slice 11).
+2. fortification-siege sub-slice 4+ (Codex owns; lane still active).
