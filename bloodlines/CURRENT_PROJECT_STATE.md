@@ -2178,3 +2178,34 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - All 10 governed validation gates green. Contract bumped revision 37 -> 38.
 - Post-implementation diagnostic: initial bundled smoke run failed with `FixedString32Bytes: Truncation while copying ". The spread window opens for "` because the divine-right narrative line had a 31-character segment that overflowed FixedString32Bytes (29-byte cap after header). Fix: cast the segment to FixedString64Bytes. Smoke re-ran clean.
 - The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-bundle-2-holy-war-and-divine-right-execution.md`.
+
+### 2026-04-19 Unity Fortification Siege Sub-Slice 8: Breach Sealing Recovery
+
+- New `BreachSealingProgressComponent` plus `BreachSealingSystem` give fortified
+  settlements a defender-side recovery loop for `OpenBreachCount`. A settlement
+  with open breaches now reserves `60` stone per breach, consumes `8` in-world
+  worker-hours per breach at a 1 Hz tick, and reduces `OpenBreachCount` when the
+  active breach finishes.
+- Worker availability is resolved by scanning the owning faction's live idle
+  workers (`UnitRole.Worker`, positive health, `WorkerGatherPhase.Idle`) instead
+  of widening `FortificationReserveComponent`. This keeps the slice narrow and
+  player/AI-neutral.
+- `FortificationDestructionResolutionSystem` no longer rewrites
+  `OpenBreachCount = destroyedWalls + destroyedGates` every frame. It still
+  refreshes destroyed wall/tower/gate/keep counters, but now only adds
+  newly-created breaches back into the live open-breach total so sealing can
+  persist while destroyed structures remain unrepaired.
+- New dedicated validator `BloodlinesBreachSealingRecoverySmokeValidation` plus
+  wrapper `scripts/Invoke-BloodlinesUnityBreachSealingRecoverySmokeValidation.ps1`
+  are green across six phases: half-window progress accumulation, first breach
+  sealed, insufficient-stone block, zero-idle-worker block, intact-settlement
+  no-op, and full three-breach sealing.
+- Full governed 10-gate chain is green on `D:\BLBSR\bloodlines`, plus the
+  dedicated breach-sealing smoke on the rebased `origin/master` `cec33509`
+  base. Contract bumped revision `38 -> 39`.
+- Local csproj note: the local gitignored `unity/Assembly-CSharp.csproj` and
+  `unity/Assembly-CSharp-Editor.csproj` were refreshed so they included Claude
+  Bundle 1 and Bundle 2 already-landed files plus the new breach-sealing files
+  before the `dotnet build` gates ran.
+- The per-slice handoff lives at
+  `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-sealing-recovery.md`.
