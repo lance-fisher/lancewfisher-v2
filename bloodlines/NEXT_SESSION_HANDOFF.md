@@ -2165,3 +2165,34 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 2. ai-strategic-layer narrative message bridge (still deferred across sub-slices 11-15).
 3. Other CovertOpKind executions (assassination, missionary, holy war, divine right).
 4. fortification-siege wall-segment destruction resolution (Codex owns).
+
+## AI Strategic Layer Sub-Slice 16: Narrative Message Bridge (Claude, 2026-04-19)
+
+### Status: COMPLETE on branch claude/unity-ai-narrative-message-bridge (rebased onto origin/master 40e80e03 after Codex's fortification-siege sub-slice 5 landed at revision 31)
+
+### What Was Done
+- New `NarrativeMessageComponents` (NarrativeMessageSingleton tag + NarrativeMessageElement buffer { Text: FixedString128Bytes, Tone: { Info, Good, Warn }, CreatedAtInWorldDays, Ttl }) and `NarrativeMessageBridge` (static Push / Count helpers with lazy-singleton creation). Ports the browser `pushMessage` surface from simulation.js (many call sites).
+- PactBreakSystem (sub-slice 15) wired as first consumer: after mechanical break effects, builds the browser ceremonial line with the same early-breach vs hostility-resumes suffix and routes tone via breaker-is-player -> Warn else Info.
+- Append-order buffer (browser uses unshift; Unity consumers iterate per their preference). No consumer/drain/TTL-eviction system yet. Global scoping; per-faction scoping reserved for a future multiplayer slice.
+- 6-phase dedicated smoke validator all green. Sub-slice 15 regression smoke all 5 phases still PASS.
+- Contract revision 31 -> 32.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- Fortification smoke: PASS
+- Siege smoke: exit 0 (passed on retry after transient bee_backend cache-rebuild error referencing a stale FortificationStructureResolutionSystem.cs path in Unity Library; retried once per protocol and passed cleanly)
+- Pact break smoke (sub-slice 15 regression): all 5 phases PASS
+- Narrative message bridge smoke (sub-slice 16): all 6 phases PASS
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED at revision 32
+
+### Next Unclaimed Lanes
+1. ai-strategic-layer-sub-slice-17-back-wire-narrative-pushes (add NarrativeMessageBridge.Push calls to AIMarriageAcceptEffectsSystem, AIMarriageInboxAcceptSystem, AILesserHousePromotionSystem, AIPactProposalExecutionSystem so the ceremonial lines deferred by sub-slices 11, 12, 13, 14 now surface; one-line additive edits following the PactBreakSystem pattern from sub-slice 16).
+2. ai-strategic-layer-sub-slice-18-dynasty-operations-foundation (new DynastyOperationComponent entity shape + DYNASTY_OPERATION_ACTIVE_LIMIT gate; unblocks missionary, holy war, divine right, captive rescue, and ransom execution sub-slices).
+3. ai-strategic-layer-sub-slice-19-captive-member-state (port faction.captives + CapturedMemberRecord shape; needed for captive rescue/ransom execution on top of sub-slice 18 foundation).
+4. fortification-siege breach-aware follow-up (Codex owns; use FortificationComponent.OpenBreachCount in breach-aware assault, pathing, or HUD/legibility logic on a fresh `codex/unity-fortification-*` branch).
