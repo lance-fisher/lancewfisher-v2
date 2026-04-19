@@ -14,7 +14,10 @@ namespace Bloodlines.Fortification
     ///   2. ensuring each linked structure exposes the tier contribution needed by the
     ///      existing AdvanceFortificationTierSystem
     ///   3. resolving destroyed structural counts and breach counts back onto the owning
-    ///      settlement's FortificationComponent so later slices can read breach state
+    ///      settlement's FortificationComponent so later slices can read breach state.
+    ///      Open breaches can now recover below the destroyed-structure total, so this
+    ///      system only adds newly-created breaches instead of rewriting the live open
+    ///      count every frame.
     ///
     /// Browser references:
     ///   simulation.js nearestSettlementForBuilding (11182)
@@ -240,11 +243,17 @@ namespace Bloodlines.Fortification
                 }
 
                 var fortification = fortificationRw.ValueRO;
+                int previousDestroyedBreaches = fortification.DestroyedWallSegmentCount + fortification.DestroyedGateCount;
+                int currentDestroyedBreaches = destroyedWalls + destroyedGates;
+                int newlyCreatedBreaches = math.max(0, currentDestroyedBreaches - previousDestroyedBreaches);
                 fortification.DestroyedWallSegmentCount = destroyedWalls;
                 fortification.DestroyedTowerCount = destroyedTowers;
                 fortification.DestroyedGateCount = destroyedGates;
                 fortification.DestroyedKeepCount = destroyedKeeps;
-                fortification.OpenBreachCount = destroyedWalls + destroyedGates;
+                fortification.OpenBreachCount = math.clamp(
+                    fortification.OpenBreachCount + newlyCreatedBreaches,
+                    0,
+                    currentDestroyedBreaches);
                 fortificationRw.ValueRW = fortification;
             }
         }

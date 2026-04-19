@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-19T14:20:09.1687038-06:00",
+  "updated_at": "2026-04-19T16:48:38.3546523-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -471,9 +471,9 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-wall-segment-destruction-resolution.md",
-  "latest_unity_ai_strategic_layer_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-15-pact-break-expiration.md",
-  "latest_unity_fortification_siege_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-wall-segment-destruction-resolution.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-sealing-recovery.md",
+  "latest_unity_ai_strategic_layer_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-bundle-2-holy-war-and-divine-right-execution.md",
+  "latest_unity_fortification_siege_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-sealing-recovery.md",
   "latest_unity_graphics_handoff": "docs/unity/session-handoffs/2026-04-17-unity-graphics-infrastructure-foundation.md",
   "latest_unity_combat_handoff": "docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md",
   "latest_unity_attack_move_handoff": "docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md",
@@ -481,14 +481,14 @@
   "latest_unity_conviction_handoff": "docs/unity/session-handoffs/2026-04-17-unity-conviction-scoring-and-bands.md",
   "latest_unity_dynasty_handoff": "docs/unity/session-handoffs/2026-04-17-unity-dynasty-core.md",
   "latest_unity_faith_handoff": "docs/unity/session-handoffs/2026-04-17-unity-faith-commitment-and-intensity.md",
-  "latest_unity_fortification_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-wall-segment-destruction-resolution.md",
+  "latest_unity_fortification_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-sealing-recovery.md",
   "latest_governance_handoff": "docs/unity/session-handoffs/2026-04-17-governance-contract-source-of-truth.md",
   "latest_browser_to_unity_migration_plan": "docs/plans/2026-04-17-browser-to-unity-migration-plan.md",
   "concurrent_session_contract": {
     "path": "docs/unity/CONCURRENT_SESSION_CONTRACT.md",
-    "revision": 31,
+    "revision": 39,
     "last_updated": "2026-04-19",
-    "last_updated_by": "codex-fortification-wall-segment-destruction-2026-04-19",
+    "last_updated_by": "codex-unity-fortification-breach-sealing-recovery-2026-04-19",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
     "active_lanes": [
       "ai-strategic-layer",
@@ -1601,6 +1601,15 @@
       "description": "Bundle 2 of the AI mechanical campaign: two faith-driven dispatch consumers ship as one commit, one merge, and one contract revision bump. Sub-slice 21 holy war declaration execution: second production consumer of the sub-slice 18 dynasty-operation foundation. New DynastyOperationHolyWarComponent per-kind component carries ResolveAtInWorldDays (current + 18f for declaration window), WarExpiresAtInWorldDays (current + 180f for full holy-war duration), OperatorMemberId, OperatorTitle, IntensityPulse (browser doctrine bias 1.2 dark / 0.9 light), LoyaltyPulse (1.8 dark / 1.2 light), CompatibilityLabel (simplified Unity-side derivation), IntensityCost (18f), and EscrowCost (Influence = 24f). New AIHolyWarExecutionSystem consumes AICovertOpsComponent.LastFiredOp == CovertOpKind.HolyWar, gates on getHolyWarDeclarationTerms parity (source != target, both factions have committed faith, simplified harmonious-tier check via identical (faith, doctrine), source has faith operator on roster matching IdeologicalLeader/Spymaster/HeadOfBloodline/Diplomat with non-Fallen/non-Captured status, source ResourceStockpileComponent.Influence >= 24, source FaithStateComponent.Intensity >= 18), capacity-gates on DynastyOperationLimits.HasCapacity, deducts cost on success, computes per-kind doctrine-bias pulses, calls DynastyOperationLimits.BeginOperation with DynastyOperationKind.HolyWar + player target, attaches the per-kind component, and pushes a NarrativeMessageBridge.Push line with tone Warn when source or target is player and Info otherwise (browser tone routing simulation.js:10599 always-warn-on-player-involvement). Sub-slice 22 divine right declaration execution: third production consumer. New DynastyOperationDivineRightComponent per-kind component carries ResolveAtInWorldDays (current + 180f), SourceFaithId (CovenantId mapped to canonical string), DoctrinePath (captured at declaration), RecognitionShare/RecognitionSharePct placeholders defaulting to 0 (recognition system not yet ported), ActiveApexStructureId/ActiveApexStructureName placeholders defaulting to empty (apex structure surface not yet ported). No EscrowCost or IntensityCost (browser divine right does NOT deduct intensity or charge escrow; the cost is the covenant-test prerequisite). New AIDivineRightExecutionSystem consumes AICovertOpsComponent.LastFiredOp == CovertOpKind.DivineRight, gates on the simplified Unity-side parity set (source has committed faith, source FaithStateComponent.Intensity >= 80 DIVINE_RIGHT_INTENSITY_THRESHOLD, source FaithStateComponent.Level >= 5, no existing active DivineRight DynastyOperationComponent for this faction, DynastyOperationLimits.HasCapacity), calls DynastyOperationLimits.BeginOperation with DynastyOperationKind.DivineRight and default target, attaches the per-kind component, pushes a narrative line with Warn tone always (browser simulation.js:10832 always-warn). Both systems clear LastFiredOp to None unconditionally after processing (one-shot pattern shared with sub-slices 8/9/12/13/14/20). Browser duration translation continues the sub-slice 20 convention: HOLY_WAR_DECLARATION_DURATION_SECONDS=18, HOLY_WAR_DURATION_SECONDS=180, DIVINE_RIGHT_DECLARATION_DURATION_SECONDS=180 reinterpreted as in-world-day numeric values directly. Notable Unity-side departure (sub-slice 22): divine right routes through DynastyOperationLimits.BeginOperation with DynastyOperationKind.DivineRight even though browser does NOT gate divine right on DYNASTY_OPERATION_ACTIVE_LIMIT; routing is for surface consistency, browser per-faction one-active-at-a-time semantic preserved by explicit existing-declaration gate before capacity check. Sub-slice 21 compatibility-tier simplification: identical-(faith, doctrine) equality instead of browser's getMarriageFaithCompatibilityProfile tier ladder. Sub-slice 22 deferred gates: covenant-test-passed, cooldown, stage-ready, active-apex-structure, recognition-share, faction-kind == kingdom. Sub-slice 22 deferred effects: mutual hostility application against non-same-faith kingdoms, AI timer cap propagation to candidate factions, conviction event recording, resolution at ResolveAtInWorldDays (apex faith claim on success vs failDivineRightDeclaration cooldown + legitimacy penalty on failure). 10-phase bundled smoke PASS: PhaseHolyWarDispatchSuccess (op created, per-kind attached with ResolveAt=68, WarExpiresAt=230, IntensityCost=18, EscrowCost.Influence=24, OperatorMemberId resolved, light pulses 0.9/1.2, source Influence 50->26, source Intensity 30->12, narrative +1 Warn, dispatch cleared); PhaseHolyWarHarmoniousFaithBlocks (identical (faith, doctrine) blocks); PhaseHolyWarTargetNoFaithBlocks (target CovenantId.None blocks); PhaseHolyWarInsufficientIntensityBlocks (intensity 12 < 18 blocks); PhaseHolyWarInsufficientResourcesBlocks (influence 20 < 24 blocks); PhaseHolyWarDarkPathPulses (dark doctrine produces 1.2/1.8 pulses); PhaseDivineRightDispatchSuccess (op created with default target, per-kind attached with ResolveAt=280, SourceFaithId=the_order, DoctrinePath=Light, recognition/structure placeholders default, narrative +1 Warn, dispatch cleared); PhaseDivineRightInsufficientIntensityBlocks (intensity 50 < 80 blocks); PhaseDivineRightInsufficientLevelBlocks (level 4 < 5 blocks); PhaseDivineRightExistingDeclarationBlocks (preexisting active DivineRight op blocks new creation, dispatch still cleared). Branched from origin/master 0b2fd111 (after Bundle 1 captive state + missionary execution landed at revision 37). Contract rev 37->38.",
       "handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-bundle-2-holy-war-and-divine-right-execution.md",
       "validation_gates": "all 10 green plus holy war and divine right execution smoke"
+    },
+    {
+      "lane": "fortification-siege-sub-slice-8-breach-sealing-recovery",
+      "date": "2026-04-19",
+      "branch": "codex/unity-fortification-breach-sealing-recovery",
+      "status": "active",
+      "description": "BreachSealingProgressComponent + BreachSealingSystem add the first defender-side breach recovery loop. Fortified settlements with OpenBreachCount > 0 now lazily attach a per-settlement progress component carrying AccumulatedWorkerHours, StoneReservedForCurrentBreach, and LastTickInWorldDays. At 1 Hz, the system reads the owning faction's ResourceStockpileComponent, scans live idle workers by UnitRole.Worker plus WorkerGatherPhase.Idle and positive health, reserves 60 stone for the active breach, accumulates 8 in-world worker-hours, and reduces FortificationComponent.OpenBreachCount when a breach seals. No new worker-count field was added to FortificationReserveComponent; the direct worker scan keeps the slice narrow and player/AI-neutral. FortificationDestructionResolutionSystem was narrowed so it still refreshes destroyed wall/tower/gate/keep counters but only adds newly-created breaches back into the live open-breach count, preserving sealed closures while destroyed structures remain unrepaired. Dedicated 6-phase smoke PASS: half-window progress accumulation with breaches unchanged, first breach sealed with stone 200->140, insufficient-stone block, zero-idle-worker block, intact-settlement no-op with no progress component attached, and full three-breach sealing consuming 180 stone. Bundle 2 landed on master while the slice was in flight, so the branch rebased onto cec33509 before close. Contract rev 38->39.",
+      "handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-sealing-recovery.md",
+      "validation_gates": "all 10 green plus breach sealing recovery smoke"
     }
   ]
 }
