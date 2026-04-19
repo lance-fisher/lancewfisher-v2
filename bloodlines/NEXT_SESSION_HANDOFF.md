@@ -1203,7 +1203,7 @@ Older handoff content below is preserved historically but superseded by this 202
 ## Session 14 Next Action Priority
 
 1. Longer-siege AI next layer: post-repulse adjustment (retreat + recompose after cohesion strain threshold hit)
-2. Faith Hall (L2) canonical covenant building — built on top of committed-covenant Wayshrine; unlocks L3 unit recruitment seat
+2. Faith Hall (L2) canonical covenant building â€” built on top of committed-covenant Wayshrine; unlocks L3 unit recruitment seat
 3. Conviction milestone powers per band
 4. Save-state serialization primer
 5. Dual-clock declaration seam minimal
@@ -1278,7 +1278,7 @@ Unity version alignment is still unresolved. Installed editors include `6000.3.1
 - Unity version alignment decision RESOLVED. Option B locked: Unity 6.3 LTS (`6000.3.13f1`). `ProjectSettings/ProjectVersion.txt` and `Packages/manifest.json` aligned to 6.3 LTS-compatible package versions (Entities 1.4.0, Collections 2.5.7, Entities.Graphics 1.4.0, URP 17.3.0, Input System 1.11.2, Addressables 2.5.0).
 - First ECS foundation authored: 15 canonical component files and 3 canonical systems under `unity/Assets/_Bloodlines/Code/`. Components cover position, faction, health, unit type (with role + siege class enums), building type (with fort role enum), resource node, control point (with control state enum), settlement (with primary keep tag), commander (with keep-presence tag), bloodline member (9-role enum + status enum + 7-path enum), faith (covenant id + doctrine path + exposure buffer + warded tag), conviction (4-bucket + 5-band enum), realm condition + cycle config, population + resource stockpile, siege engine state + mantlet cover. Systems cover Bootstrap (one-shot RealmCycleConfig seeding), RealmConditionCycle (90-second canonical cycle), PopulationGrowth (18-second gated growth).
 - Sabotage operations are now live as the first covert operation type in `dynasty.operations`. Four canonical sub-types (gate_opening, fire_raising, supply_poisoning, well_poisoning). Spymaster-gated. Canonical cost, duration, success formula, counterplay. Burn DOT through a new `tickBuildingStatusEffects` loop. Poisoned supply camps break the supply chain for their window.
-- Commander keep-presence sortie is now live. `issueKeepSortie(state, factionId, settlementId)` grants defenders ×1.22 attack and +22 sight for 12 seconds with a 60-second cooldown. Requires commander at keep AND active threat.
+- Commander keep-presence sortie is now live. `issueKeepSortie(state, factionId, settlementId)` grants defenders Ã—1.22 attack and +22 sight for 12 seconds with a 60-second cooldown. Requires commander at keep AND active threat.
 - `getRealmConditionSnapshot` fortification block now exposes `commanderAtKeep`, `sortieActive`, `sortieCooldownRemaining`, `sortieReady`.
 - Tests extended: sabotage subtype validation, target validation, fire_raising escrow, sortie refusal path, snapshot exposure of new fortification fields.
 
@@ -1306,11 +1306,11 @@ Stonehelm AI currently prepares and commits to formal siege but does not adapt t
 
 ### Step 4 (Faith prototype enablement)
 
-All four covenants are still `prototypeEnabled: false` in `data/faiths.json`. Flip the flags, add per-covenant building progression (Wayshrine → Hall → Grand Sanctuary equivalents), add L3 faith unit roster (8 units: 2 per covenant per doctrine path). Extend `updateFaithExposure` and ward profiles to consume the new structures.
+All four covenants are still `prototypeEnabled: false` in `data/faiths.json`. Flip the flags, add per-covenant building progression (Wayshrine â†’ Hall â†’ Grand Sanctuary equivalents), add L3 faith unit roster (8 units: 2 per covenant per doctrine path). Extend `updateFaithExposure` and ward profiles to consume the new structures.
 
 ### Step 5 (Lance first-open Unity menu run)
 
-Lance-gated. Run `Bloodlines → Import → Sync JSON Content` in Unity 6.3 LTS (6000.3.13f1) to generate ScriptableObject `.asset` files. Commit generated assets.
+Lance-gated. Run `Bloodlines â†’ Import â†’ Sync JSON Content` in Unity 6.3 LTS (6000.3.13f1) to generate ScriptableObject `.asset` files. Commit generated assets.
 
 ### Step 6 (Session-by-session roadmap)
 
@@ -1322,9 +1322,9 @@ See `docs/plans/2026-04-14-session-9-next-phase-execution-roadmap.md` for the fu
 
 Open `D:\ProjectsHome\Bloodlines\unity\` in Unity 6.3 LTS (`6000.3.13f1`). Accept any LTS-compatible package version adjustments the Package Manager offers. Let Unity regenerate `Library/`. Verify the authored session 10 ECS layer compiles cleanly.
 
-Then run `Bloodlines → Import → Sync JSON Content`. Commit the generated ScriptableObject assets under `Assets/_Bloodlines/Data/*/`.
+Then run `Bloodlines â†’ Import â†’ Sync JSON Content`. Commit the generated ScriptableObject assets under `Assets/_Bloodlines/Data/*/`.
 
-### Step 2 (Second playable house — Stonehelm)
+### Step 2 (Second playable house â€” Stonehelm)
 
 Enable Stonehelm as `prototypePlayable: true` in `data/houses.json`. Add minimal URL-driven house-select to `play.html` so the skirmish can launch as Stonehelm via `play.html?house=stonehelm`. Give Stonehelm at least one distinguishing mechanical hook (fortification cost discount per `04_SYSTEMS/TERRITORY_SYSTEM.md`).
 
@@ -1336,11 +1336,11 @@ Add the canonical Hartvale unique unit to `data/units.json`. Mark `house: "hartv
 
 Give Stonehelm AI the ability to run sabotage against player-owned targets. Spymaster-gated the same way, same success formula. Natural counter-pressure emerges when the player has exposed gates, supply camps, or wells.
 
-### Step 5 (Longer-siege AI adaptation — continuing session 12 scope if time allows)
+### Step 5 (Longer-siege AI adaptation â€” continuing session 12 scope if time allows)
 
 Relief-window awareness, repeated-assault window logic, supply-protection patrols, post-repulse tactical adjustment.
 
-### Step 6 (Continued ECS foundation — session 14 scope if time allows)
+### Step 6 (Continued ECS foundation â€” session 14 scope if time allows)
 
 Once session 11 verifies Unity open, continue authoring: UnitMovementSystem, UnitGatherSystem, SmeltingFuelSystem, BuildingProductionSystem, ConstructionSystem, CombatTargetingSystem, CombatDamageSystem, AssaultCohesionSystem, TerritoryCaptureSystem, FaithExposureSystem, DynastyCascadeSystem. Plus authoring + baking for scene-to-entity conversion.
 
@@ -1523,7 +1523,7 @@ Lane: `dual-clock-match-progression`, Branch: `claude/unity-match-progression`
 - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.MatchProgression.cs` -- TryDebugGetDualClock, TryDebugGetMatchProgression
 - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMatchProgressionSmokeValidation.cs` -- 4-phase validator (DualClock defaults, tick arithmetic, MatchProgression defaults, stage advance)
 - `scripts/Invoke-BloodlinesUnityMatchProgressionSmokeValidation.ps1` -- PS1 wrapper
-- `docs/unity/CONCURRENT_SESSION_CONTRACT.md` -- revision 5 → 6, dual-clock-match-progression lane claimed as active
+- `docs/unity/CONCURRENT_SESSION_CONTRACT.md` -- revision 5 â†’ 6, dual-clock-match-progression lane claimed as active
 
 ### Namespace Note
 `Bloodlines.GameTime` (not `Bloodlines.Time`) to avoid ambiguity with `UnityEngine.Time`.
@@ -2424,3 +2424,39 @@ Branch: `claude/unity-ai-holy-war-and-divine-right-execution`. Master base: `0b2
 1. Captive rescue execution (sub-slice 23) + captive ransom execution (sub-slice 24): consume `CovertOpKind.CaptiveRescue` / `CovertOpKind.CaptiveRansom`, produce per-kind components (`DynastyOperationCaptiveRescueComponent`, `DynastyOperationCaptiveRansomComponent`), and mutate the sub-slice 19 `CapturedMemberElement` buffer (rescue removes Held captives via Released status flip; ransom flips to RansomOffered then Released with gold cost on the home faction). Bundle as Bundle 3 following the same ceremony.
 2. Per-kind resolution system: walk expired `DynastyOperationMissionaryComponent`, `DynastyOperationHolyWarComponent`, and `DynastyOperationDivineRightComponent` entries at their ResolveAtInWorldDays / WarExpiresAtInWorldDays boundaries, apply per-kind effects, flip Active=false. Could ship as a single resolution slice or split per-kind.
 3. Divine right side-effect resolution (mutual hostility application against non-same-faith kingdoms, AI timer cap propagation, conviction event recording). Currently deferred from sub-slice 22.
+## Codex Fortification Siege Sub-Slice 8: Breach Sealing Recovery (2026-04-19)
+
+### Status: COMPLETE on branch codex/unity-fortification-breach-sealing-recovery
+
+### What Was Done
+- New `BreachSealingProgressComponent` plus `BreachSealingSystem` give defenders an explicit recovery loop for `FortificationComponent.OpenBreachCount`. At `1 Hz`, a breached settlement can reserve `60` stone for the active breach, accumulate `8` in-world worker-hours, and then reduce `OpenBreachCount` by one when the breach seals.
+- Worker availability is resolved by scanning the owning faction's live idle workers (`UnitRole.Worker`, positive health, `WorkerGatherPhase.Idle`) instead of adding a new cached field to `FortificationReserveComponent`. This keeps the foundation slice narrow and player/AI-neutral.
+- `FortificationDestructionResolutionSystem` was narrowed so sealing actually persists. Destroyed wall, tower, gate, and keep counts still refresh every tick, but `OpenBreachCount` now only increases when new walls or gates are destroyed. Previously it was recomputed from destroyed counters every frame, which would have overwritten any sealing progress immediately.
+- No destroyed-structure repair ships here. Downstream consumers continue to derive assault-pressure and readout changes from `OpenBreachCount` only.
+- New dedicated validator `BloodlinesBreachSealingRecoverySmokeValidation` plus wrapper `scripts/Invoke-BloodlinesUnityBreachSealingRecoverySmokeValidation.ps1`. All 6 phases PASS:
+  - half-window progress accumulates to `4.00` worker-hours while breaches stay open
+  - first breach seals cleanly with stone `200 -> 140`
+  - insufficient stone blocks progress
+  - zero idle workers block progress
+  - intact settlement remains a no-op with no progress component attached
+  - three full windows clear three open breaches and consume `180` stone
+- Bundle 2 landed on `master` while this slice was in flight, so the fortification branch was rebased onto `origin/master` `cec33509` before close.
+- Contract revision advanced `38 -> 39`. New per-slice handoff: `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-sealing-recovery.md`.
+
+### Gate Results
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS
+- Bootstrap runtime smoke: PASS via `artifacts/unity-bootstrap-runtime-smoke.log`
+- Combat smoke: PASS via `artifacts/unity-combat-smoke.log`
+- Scene shells: Bootstrap + Gameplay PASS via `artifacts/unity-bootstrap-scene-validate.log` and `artifacts/unity-gameplay-scene-validate.log`
+- Fortification smoke: PASS via `artifacts/unity-fortification-smoke.log`
+- Siege smoke: PASS via `artifacts/unity-siege-smoke.log`
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision 39
+- Dedicated breach sealing recovery smoke: PASS via `artifacts/unity-breach-sealing-recovery-smoke.log` with marker `BLOODLINES_BREACH_SEALING_RECOVERY_SMOKE PASS`
+
+### Recommended Next Fortification Follow-Up
+1. Destroyed-counter recovery if the owner wants actual wall or gate repair to follow sealed breaches.
+2. Sealing-cost or worker-throughput balance if the owner wants the new loop tuned before more consumers land.
+3. A production HUD consumer of the breach readout after the owner decides which post-sealing signals should be rendered first.
