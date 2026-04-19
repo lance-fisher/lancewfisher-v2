@@ -1914,3 +1914,32 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 ### Next Unclaimed Lanes
 1. ai-strategic-layer-sub-slice-11-marriage-accept-effects (new branch claude/unity-ai-marriage-accept-effects; simulation.js acceptMarriage ~7388-7469 effects block: +2 legitimacy both sides, hostility drop both ways, oathkeeping conviction +2, 30-day declareInWorldTime jump).
 2. fortification-siege sub-slice 4+ (Codex owns; lane still active after sub-slice 3 imminent engagement landed at rev 23).
+
+## AI Strategic Layer Sub-Slice 11: Marriage Accept Effects (Claude, 2026-04-19)
+
+### Status: COMPLETE on branch claude/unity-ai-marriage-accept-effects
+
+### What Was Done
+- New `AIMarriageAcceptEffectsSystem` + `MarriageAcceptEffectsPendingTag`. Ports simulation.js `acceptMarriage` (~7388-7469) post-record effects block.
+- `AIMarriageInboxAcceptSystem` (sub-slice 9) now attaches the pending tag to the primary marriage entity at creation. Mirror record untagged.
+- Effects applied exactly once per marriage: legitimacy +2 clamped 100 both dynasties, hostility drop both ways (HostilityComponent buffer), 30-day DeclareInWorldTimeRequest push onto DualClock singleton, oathkeeping +2 on both factions via `ConvictionScoring.ApplyEvent`.
+- Null-safe: each effect checks component/buffer presence before mutating.
+- Deferred: governance authority legitimacy cost (needs getMarriageAcceptanceTerms port), narrative message push (needs UI message component).
+- 6-phase smoke validator all green. Contract revision 24 -> 25.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- Fortification smoke: PASS
+- Siege smoke: exit 0
+- AI marriage accept effects smoke: Phase 1-6 PASS
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED (bumped to revision 25 post-gate)
+
+### Next Unclaimed Lanes
+1. ai-strategic-layer-sub-slice-12-marriage-acceptance-terms (new branch claude/unity-ai-marriage-acceptance-terms; ports `getMarriageAcceptanceTerms` and governance-authority legitimacy cost on accept).
+2. fortification-siege sub-slice 4+ (Codex owns; lane still active after sub-slice 3 imminent engagement landed at rev 23).

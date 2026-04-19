@@ -457,8 +457,8 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-10-marriage-strategic-profile.md",
-  "latest_unity_ai_strategic_layer_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-10-marriage-strategic-profile.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-11-marriage-accept-effects.md",
+  "latest_unity_ai_strategic_layer_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-11-marriage-accept-effects.md",
   "latest_unity_fortification_siege_handoff": "docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-imminent-engagement-warnings.md",
   "latest_unity_graphics_handoff": "docs/unity/session-handoffs/2026-04-17-unity-graphics-infrastructure-foundation.md",
   "latest_unity_combat_handoff": "docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md",
@@ -472,9 +472,9 @@
   "latest_browser_to_unity_migration_plan": "docs/plans/2026-04-17-browser-to-unity-migration-plan.md",
   "concurrent_session_contract": {
     "path": "docs/unity/CONCURRENT_SESSION_CONTRACT.md",
-    "revision": 24,
+    "revision": 25,
     "last_updated": "2026-04-19",
-    "last_updated_by": "claude-ai-marriage-strategic-profile-2026-04-19",
+    "last_updated_by": "claude-ai-marriage-accept-effects-2026-04-19",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
     "active_lanes": [
       "ai-strategic-layer",
@@ -499,7 +499,7 @@
       "tier2-batch-dynasty-systems"
     ],
     "next_unblocked_tier_1_lanes": [
-      "ai-strategic-layer-sub-slice-11-marriage-accept-effects"
+      "ai-strategic-layer-sub-slice-12-marriage-acceptance-terms"
     ]
   },
   "latest_unity_economy_handoff": "docs/unity/session-handoffs/2026-04-17-unity-cap-pressure-response.md",
@@ -1402,6 +1402,15 @@
       "description": "AIMarriageStrategicProfileSystem: ports ai.js getAiMarriageStrategicProfile (~2803-2839) plus simplified getMarriageFaithCompatibilityProfile. Runs [UpdateBefore(AICovertOpsSystem)]; snapshots player faction then iterates AI factions; computes 4 signals (isHostile via HostilityComponent buffer, populationDeficit <85%, legitimacyDistress <50 gated by faith, successionPressure from AIStrategyComponent flags) + simplified faith-compat tier from SelectedFaith+DoctrinePath equality (unbound/harmonious/either-match/incompatible). signalCount + blockedByFaith -> willing. Writes willing symmetrically to AICovertOpsComponent.MarriageProposalGateMet and MarriageInboxAcceptGate so sub-slices 6/8/9 dispatch/execute only on browser-accurate justification. Target hardcoded to 'player' matching browser. Cross-lane reads only (Population, FaithState, DynastyState, Hostility, AIStrategy). 6-phase smoke PASS. Contract rev 23->24.",
       "handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-10-marriage-strategic-profile.md",
       "validation_gates": "all 10 green plus AI marriage strategic profile smoke"
+    },
+    {
+      "lane": "ai-strategic-layer-sub-slice-11-marriage-accept-effects",
+      "date": "2026-04-19",
+      "branch": "claude/unity-ai-marriage-accept-effects",
+      "status": "active",
+      "description": "AIMarriageAcceptEffectsSystem + MarriageAcceptEffectsPendingTag: ports simulation.js acceptMarriage (~7388-7469) post-record effects block. Sub-slice 9's AIMarriageInboxAcceptSystem now attaches the pending tag to the primary marriage entity at creation. Effects system runs [UpdateAfter(AIMarriageInboxAcceptSystem)], queries MarriageComponent + tag, applies four browser effects exactly once per marriage: legitimacy +2 both dynasties clamped 100, hostility drop both ways via HostilityComponent buffer, 30-day DeclareInWorldTimeRequest push onto DualClock singleton, oathkeeping +2 on both factions via ConvictionScoring.ApplyEvent helper (score+band refresh). Tag removed after application. Mirror record untagged to prevent double. Null-safe skip paths for missing components. Deferred: governance authority legitimacy cost (needs getMarriageAcceptanceTerms), narrative message push (no AI->UI component). Cross-lane mutations are field-level only; no schema changes. 6-phase smoke PASS. Contract rev 24->25.",
+      "handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-11-marriage-accept-effects.md",
+      "validation_gates": "all 10 green plus AI marriage accept effects smoke"
     },
     {
       "lane": "fortification-siege-imminent-engagement",

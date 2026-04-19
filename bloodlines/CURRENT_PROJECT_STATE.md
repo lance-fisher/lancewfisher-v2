@@ -1930,3 +1930,19 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - `BloodlinesAIMarriageStrategicProfileSmokeValidation` 6-phase validator all green: Phase 1 no signals unbound faith -> not willing; Phase 2 hostility-only -> willing; Phase 3 population-deficit-only -> willing; Phase 4 legitimacy+harmonious-faith -> willing; Phase 5 succession-crisis-only -> willing; Phase 6 single-signal+incompatible-faith blocks weak match -> not willing.
 - All 10 validation gates green. Contract bumped revision 23 -> 24.
 - The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-10-marriage-strategic-profile.md`.
+
+### 2026-04-19 Unity AI Strategic Layer Sub-Slice 11: Marriage Accept Effects
+
+- `AIMarriageAcceptEffectsSystem` + `MarriageAcceptEffectsPendingTag` ported from simulation.js `acceptMarriage` (~7388-7469) post-record effects block on branch `claude/unity-ai-marriage-accept-effects`. Sub-slice 9 deferred these effects; sub-slice 11 now applies them via a tag-driven one-shot pipeline.
+- `AIMarriageInboxAcceptSystem` (sub-slice 9) now attaches `MarriageAcceptEffectsPendingTag` to the primary marriage entity at creation. Mirror record remains untagged to prevent double application.
+- `AIMarriageAcceptEffectsSystem` runs [UpdateInGroup(SimulationSystemGroup), UpdateAfter(AIMarriageInboxAcceptSystem)]. Queries MarriageComponent + MarriageAcceptEffectsPendingTag, applies four browser effects exactly once per accepted marriage, then removes the tag.
+- Effect 1: Legitimacy +2 on both HeadFaction and SpouseFaction DynastyStateComponents, clamped to `min(100, legitimacy + 2)`.
+- Effect 2: Hostility drop. Iterates HostilityComponent buffer back-to-front on both factions and removes entries where HostileFactionId matches the other side.
+- Effect 3: 30-day DeclareInWorldTimeRequest push onto DualClock singleton buffer with reason `"Marriage <marriageId>"`. DualClockDeclarationSystem drains the buffer and applies the jump.
+- Effect 4: Oathkeeping conviction +2 on both factions via `ConvictionScoring.ApplyEvent(ref conviction, ConvictionBucket.Oathkeeping, +2f)`. The helper refreshes ConvictionComponent.Score and Band in place.
+- All effects use null-safe skip paths (HasComponent / HasBuffer checks) so bootstraps that don't seed every component don't throw.
+- Cross-lane mutations are field-level only, no schema changes: DynastyStateComponent.Legitimacy (dynasty-core lane), HostilityComponent buffer entries (combat-and-projectile lane), ConvictionComponent via ConvictionScoring helper (conviction-scoring lane), DualClock singleton buffer push (dual-clock-match-progression lane). Reuses existing helpers and established buffer patterns.
+- Deferred to future slices: governance-authority legitimacy cost on accept (requires `getMarriageAcceptanceTerms` port), narrative message push (no AI-to-UI message component wired yet).
+- `BloodlinesAIMarriageAcceptEffectsSmokeValidation` 6-phase validator all green: Phase 1 full accept pipeline legitimacy +2 + hostility drop + tag removal; Phase 2 legitimacy ceiling clamped to 100; Phase 3 untagged marriage ignored; Phase 4 full end-to-end pipeline; Phase 5 DeclareInWorldTimeRequest enqueued with DaysDelta=30; Phase 6 oathkeeping +2 + score refresh.
+- All 10 validation gates green. Contract bumped revision 24 -> 25.
+- The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-11-marriage-accept-effects.md`.
