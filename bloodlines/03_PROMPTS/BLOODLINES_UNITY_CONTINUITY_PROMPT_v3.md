@@ -248,7 +248,7 @@ Presentation (bounded by the Graphics Fidelity Target):
 - All nine founding houses visually distinct at RTS zoom through silhouette, color, and simple material variation.
 - Basic combat VFX: projectile trails, impact particles, death effects, blood hit flashes.
 - Audio: Wwise integration for unit voice-overs, music, ambient, combat SFX. Fidelity matches the visual ceiling (appropriate for early-2000s RTS, not AAA sound design).
-- UX: onboarding, tutorials, campaign framework, lobby, settings. Information density over visual spectacle.
+- UX: onboarding via HUD tooltips and panel labels, lobby, settings. Information density over visual spectacle. No interactive tutorial mode and no story campaign per `governance/OWNER_DIRECTION_2026-04-19_GAME_MODES_AND_DYNASTY_PROGRESSION.md`.
 
 Multiplayer:
 - Netcode for Entities multiplayer unless explicitly ruled out by the operator.

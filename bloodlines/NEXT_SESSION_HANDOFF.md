@@ -2015,3 +2015,24 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 1. Wall-segment destruction resolution.
 2. Gate breach mechanics.
 3. Casualty accumulation and morale collapse.
+
+## Owner Direction Update: Game Modes And Dynasty Progression (Lance, 2026-04-19)
+
+### Status: LANDED in governance/
+
+### What Changed
+- New owner direction file: `governance/OWNER_DIRECTION_2026-04-19_GAME_MODES_AND_DYNASTY_PROGRESSION.md`. Amends 2026-04-16 and 2026-04-17 owner directions on three points; the rest of those documents stays active.
+- Shipping game modes are now skirmish vs AI and multiplayer only. Story campaign and interactive tutorial mode removed from scope (not deferred). Onboarding lives in HUD tooltips and panel labels.
+- Asset production is primarily AI-generated. Delivered fidelity may run somewhat below the Generals Zero Hour / Warcraft III ceiling but never above it. All "no PBR / no HDRP / no ray tracing / no AAA pipelines" rules from 2026-04-17 remain in full effect.
+- New canonical system in scope: a cross-match dynasty progression system. Top-performing dynasties (not strictly #1) accrue XP that unlocks tiers. Tier bonuses are sideways customization options (canonical example: swap a dynasty-specific special unit for another from the same house's progression options) so non-#1 placements stay rewarding. Design and `data/` surface to be added when the design lands.
+- `CLAUDE.md` Owner Direction Override section updated to reference the new file. Governing-implications list amended for game modes and progression. Current Direction polish list no longer mentions tutorials or campaign.
+- `03_PROMPTS/BLOODLINES_UNITY_CONTINUITY_PROMPT_v3.md` Presentation block UX line updated to drop tutorials and campaign framework, route onboarding through HUD tooltips, and reference the 2026-04-19 owner direction.
+
+### Implication For Sub-Slice 13 And Beyond
+- The narrative message bridge candidate is unchanged in priority. It remains the highest-leverage cleanup item once a UI consumer is in scope.
+- The dynasty progression system is canonically in scope but should not be prioritized ahead of the in-flight ai-strategic-layer and fortification-siege lanes. It gets its own slice plan and `data/` file when the design lands.
+- Any planning doc, prompt, or backlog item that lists campaign or tutorial work as in-flight should be treated as stale.
+
+### Gate Results
+- N/A. Governance-only edits. No code changed. No validator run required.
+- Contract revision unchanged (the contract tracks Unity lane scope, not owner direction).
