@@ -365,6 +365,7 @@ namespace Bloodlines.EditorTools
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<SiegeComponentInitializationSystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<SiegeSupportRefreshSystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<FieldWaterSupportScanSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<BreachAssaultPressureSystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<FieldWaterStrainSystem>());
             return world;
         }
