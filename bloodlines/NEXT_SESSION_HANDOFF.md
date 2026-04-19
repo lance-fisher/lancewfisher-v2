@@ -2098,3 +2098,32 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 2. ai-strategic-layer narrative message bridge (still deferred across sub-slices 11-14).
 3. Other CovertOpKind executions (assassination, missionary, holy war, divine right, captive rescue, captive ransom).
 4. fortification-siege wall-segment destruction resolution (Codex owns).
+
+## AI Strategic Layer Sub-Slice 15: Pact Break And Expiration (Claude, 2026-04-19)
+
+### Status: COMPLETE on branch claude/unity-ai-pact-break-expiration
+
+### What Was Done
+- New `PactBreakRequestComponent` (request marker: PactId + RequestingFactionId) and `PactBreakSystem` port simulation.js `breakNonAggressionPact` (~5224-5257). Request-entity pattern mirrors browser's explicit-only break semantic; no auto-expiration.
+- Per request: find matching PactComponent, short-circuit if missing or already broken; mark Broken=true + BrokenByFactionId; re-establish hostility both ways idempotently; apply breaker legitimacy -8 clamped [0, 100]; apply breaker Oathkeeping -2 via ConvictionScoring.ApplyEvent (bucket-layer mapping of browser's direct conviction.score -= 2). Request entity destroyed after processing.
+- Penalty is unconditional regardless of early-break timing (browser earlyBreak flag affects only messaging). No target-side penalty.
+- 5-phase dedicated smoke validator all green. Contract revision 29 -> 30.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- Fortification smoke: PASS
+- Siege smoke: exit 0
+- Pact break smoke (sub-slice 15): all 5 phases PASS
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED at revision 30
+
+### Next Unclaimed Lanes
+1. ai-strategic-layer-sub-slice-16-captive-recovery-execution (ports CovertOpKind.CaptiveRescue / CaptiveRansom consumers from ai.js ~2566-2608).
+2. ai-strategic-layer narrative message bridge (still deferred across sub-slices 11-15).
+3. Other CovertOpKind executions (assassination, missionary, holy war, divine right).
+4. fortification-siege wall-segment destruction resolution (Codex owns).

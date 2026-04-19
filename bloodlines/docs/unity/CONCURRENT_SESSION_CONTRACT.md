@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 29
+- Revision: 30
 - Last Updated: 2026-04-19
-- Last Updated By: claude-ai-pact-proposal-execution-2026-04-19
-- Supersedes: revision 28 (ai-strategic-layer sub-slice 14 landed: AIPactProposalExecutionSystem + PactComponent port the browser proposeNonAggressionPact pipeline from simulation.js ~5185-5222 and the pact dispatch hook from ai.js ~2643-2666; consumes AICovertOpsComponent.LastFiredOp == PactProposal from sub-slice 6; gates on source and target both being FactionKind.Kingdom, source hostile to target, no existing PactComponent between them, source resources >= 50 Influence + 80 Gold; on success deducts cost from source ResourceStockpileComponent, removes HostilityComponent buffer entries both ways, and creates one PactComponent entity with FactionAId/FactionBId + StartedAtInWorldDays + MinimumExpiresAtInWorldDays = start + 180 days; single entity per pact is a deliberate departure from the marriage primary+mirror pattern because pacts have no asymmetric downstream system; one-shot dispatch consumption matches sub-slices 8/9/12/13; deferred: holy-war pact gate waiting on holy-war lane, pact expiration/break system, narrative pushMessage. BloodlinesAIPactProposalExecutionSmokeValidation 6-phase validator covers successful pact creation (resources -50/-80, hostility dropped, expiry=start+180), hostility-required gate rejection, already-pacted gate rejection, insufficient-influence rejection, insufficient-gold rejection, and tribe-source rejection)
+- Last Updated By: claude-ai-pact-break-expiration-2026-04-19
+- Supersedes: revision 29 (ai-strategic-layer sub-slice 15 landed: PactBreakRequestComponent + PactBreakSystem port simulation.js breakNonAggressionPact (~5224-5257); request-entity pattern mirrors the browser's explicit-only break semantic (no auto-expiration; pacts past minimumExpiresAtInWorldDays remain active until broken); on break mark PactComponent.Broken = true and BrokenByFactionId = requester, re-establish mutual hostility via idempotent EnsureHostility (adds HostilityComponent entries only when absent), apply breaker DynastyStateComponent.Legitimacy -= 8 clamped [0, 100] (NON_AGGRESSION_PACT_BREAK_LEGITIMACY_COST = 8), apply breaker ConvictionComponent.Oathkeeping -= 2 via ConvictionScoring.ApplyEvent (clamps at 0); browser decrements conviction.score directly but Unity drives Score from bucket values so Oathkeeping is the architecturally correct surface and semantically correct choice because pacts are oaths; penalty applies regardless of early-break timing (browser earlyBreak flag affects only messaging); no target-side penalty (only breaker pays); request entity destroyed after processing so idempotent re-requests do not double-apply. BloodlinesPactBreakSmokeValidation 5-phase validator covers early-break full penalty, late-break identical penalty, idempotent-break stability on second request, no-pact-no-op, and clamp-at-zero for both legitimacy and oathkeeping)
 
 ## Purpose
 
@@ -248,7 +248,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: ai-strategic-layer
 
 - Status: active
-- Branch Prefix: `claude/unity-ai-pact-proposal-execution` (sub-slice 14); prior claude/unity-ai-lesser-house-promotion (13), claude/unity-ai-marriage-acceptance-terms (12), claude/unity-ai-marriage-accept-effects (11), claude/unity-ai-marriage-strategic-profile (10), claude/unity-ai-marriage-inbox-accept (9), codex/unity-ai-command-dispatch (8) also landed; future sub-slices on new branches
+- Branch Prefix: `claude/unity-ai-pact-break-expiration` (sub-slice 15); prior claude/unity-ai-pact-proposal-execution (14), claude/unity-ai-lesser-house-promotion (13), claude/unity-ai-marriage-acceptance-terms (12), claude/unity-ai-marriage-accept-effects (11), claude/unity-ai-marriage-strategic-profile (10), claude/unity-ai-marriage-inbox-accept (9), codex/unity-ai-command-dispatch (8) also landed; future sub-slices on new branches
 - Owner Agent: claude-code
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/AI/AIStrategyComponent.cs`
@@ -271,6 +271,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/AI/AILesserHousePromotionSystem.cs`
   - `unity/Assets/_Bloodlines/Code/AI/PactComponent.cs`
   - `unity/Assets/_Bloodlines/Code/AI/AIPactProposalExecutionSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/AI/PactBreakRequestComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/AI/PactBreakSystem.cs`
   - `unity/Assets/_Bloodlines/Code/AI/AIWorkerCommandSystem.cs`
   - `unity/Assets/_Bloodlines/Code/AI/AITerritoryDispatchSystem.cs`
   - `unity/Assets/_Bloodlines/Code/Components/WorkerGatherOrderComponent.cs`
@@ -288,6 +290,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIMarriageAcceptanceTermsSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAILesserHousePromotionSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIPactProposalExecutionSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPactBreakSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAICommandDispatchSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AIStrategy.cs`
   - `scripts/Invoke-BloodlinesUnityAIStrategySmokeValidation.ps1`
@@ -304,11 +307,12 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnityAIMarriageAcceptanceTermsSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAILesserHousePromotionSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAIPactProposalExecutionSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityPactBreakSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAICommandDispatchSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs` -- `AIStrategyComponent` seeded on non-player Kingdom faction entities alongside `AIEconomyControllerComponent`
-  - `unity/Assembly-CSharp.csproj` -- `AIStrategyComponent.cs`, `EnemyAIStrategySystem.cs`, `AIStrategicPressureSystem.cs`, `AIWorkerGatherSystem.cs`, `AISiegeOrchestrationComponent.cs`, `AISiegeOrchestrationSystem.cs`, `AICovertOpsComponent.cs`, `AICovertOpsSystem.cs`, `AIBuildOrderComponent.cs`, `AIBuildOrderSystem.cs`, `AIMarriageProposalExecutionSystem.cs`, `AIMarriageInboxAcceptSystem.cs`, `AIMarriageStrategicProfileSystem.cs`, `MarriageAcceptEffectsPendingTag.cs`, `AIMarriageAcceptEffectsSystem.cs`, `MarriageAcceptanceTermsComponent.cs`, `MarriageAuthorityEvaluator.cs`, `AILesserHousePromotionSystem.cs`, `PactComponent.cs`, `AIPactProposalExecutionSystem.cs`, `AIWorkerCommandSystem.cs`, `AITerritoryDispatchSystem.cs`, `WorkerGatherOrderComponent.cs` registered
-  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs`, `BloodlinesAIStrategicPressureSmokeValidation.cs`, `BloodlinesAIGovernancePressureSmokeValidation.cs`, `BloodlinesAIWorkerGatherSmokeValidation.cs`, `BloodlinesAISiegeOrchestrationSmokeValidation.cs`, `BloodlinesAICovertOpsSmokeValidation.cs`, `BloodlinesAIBuildOrderSmokeValidation.cs`, `BloodlinesAIMarriageProposalExecutionSmokeValidation.cs`, `BloodlinesAIMarriageInboxAcceptSmokeValidation.cs`, `BloodlinesAIMarriageStrategicProfileSmokeValidation.cs`, `BloodlinesAIMarriageAcceptEffectsSmokeValidation.cs`, `BloodlinesAIMarriageAcceptanceTermsSmokeValidation.cs`, `BloodlinesAILesserHousePromotionSmokeValidation.cs`, `BloodlinesAIPactProposalExecutionSmokeValidation.cs`, `BloodlinesAICommandDispatchSmokeValidation.cs` registered
+  - `unity/Assembly-CSharp.csproj` -- `AIStrategyComponent.cs`, `EnemyAIStrategySystem.cs`, `AIStrategicPressureSystem.cs`, `AIWorkerGatherSystem.cs`, `AISiegeOrchestrationComponent.cs`, `AISiegeOrchestrationSystem.cs`, `AICovertOpsComponent.cs`, `AICovertOpsSystem.cs`, `AIBuildOrderComponent.cs`, `AIBuildOrderSystem.cs`, `AIMarriageProposalExecutionSystem.cs`, `AIMarriageInboxAcceptSystem.cs`, `AIMarriageStrategicProfileSystem.cs`, `MarriageAcceptEffectsPendingTag.cs`, `AIMarriageAcceptEffectsSystem.cs`, `MarriageAcceptanceTermsComponent.cs`, `MarriageAuthorityEvaluator.cs`, `AILesserHousePromotionSystem.cs`, `PactComponent.cs`, `AIPactProposalExecutionSystem.cs`, `PactBreakRequestComponent.cs`, `PactBreakSystem.cs`, `AIWorkerCommandSystem.cs`, `AITerritoryDispatchSystem.cs`, `WorkerGatherOrderComponent.cs` registered
+  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs`, `BloodlinesAIStrategicPressureSmokeValidation.cs`, `BloodlinesAIGovernancePressureSmokeValidation.cs`, `BloodlinesAIWorkerGatherSmokeValidation.cs`, `BloodlinesAISiegeOrchestrationSmokeValidation.cs`, `BloodlinesAICovertOpsSmokeValidation.cs`, `BloodlinesAIBuildOrderSmokeValidation.cs`, `BloodlinesAIMarriageProposalExecutionSmokeValidation.cs`, `BloodlinesAIMarriageInboxAcceptSmokeValidation.cs`, `BloodlinesAIMarriageStrategicProfileSmokeValidation.cs`, `BloodlinesAIMarriageAcceptEffectsSmokeValidation.cs`, `BloodlinesAIMarriageAcceptanceTermsSmokeValidation.cs`, `BloodlinesAILesserHousePromotionSmokeValidation.cs`, `BloodlinesAIPactProposalExecutionSmokeValidation.cs`, `BloodlinesPactBreakSmokeValidation.cs`, `BloodlinesAICommandDispatchSmokeValidation.cs` registered
   - `unity/Assets/_Bloodlines/Code/Systems/WorkerGatherSystem.cs` -- workers now must travel inside `GatherRadius` before harvesting; `AIWorkerCommandSystem` may flip `Seeking -> Gathering` immediately but harvest does not start until arrival
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageComponents.cs` -- read `MarriageComponent` (already-married gate) and `MarriageProposalComponent` / `MarriageProposalStatus` (already-pending gate, proposal creation, accept flip). Sub-slice 8 creates new `MarriageProposalComponent` entities; sub-slice 9 creates new `MarriageComponent` entities and mutates existing `MarriageProposalComponent.Status` pending->accepted. Does not modify existing dynasty system code.
@@ -339,6 +343,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-12-marriage-acceptance-terms.md`
   - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-13-lesser-house-promotion.md`
   - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-14-pact-proposal-execution.md`
+  - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-15-pact-break-expiration.md`
 - Browser Reference:
   - Sub-slice 1: `src/game/core/ai.js` `pickTerritoryTarget` (~747), `pickScoutHarassTarget` (~412), `getWorldPressureRaidTarget` (~817)
   - Sub-slice 2: `src/game/core/ai.js` timer clamp/floor block lines 1127-1241
@@ -356,8 +361,9 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - Sub-slice 13: `src/game/core/ai.js` `tryAiPromoteLesserHouse` (~2784-2801) plus updateEnemyAi dispatch hook (~2674-2677); simulation-side sink `promoteMemberToLesserHouse` (~7184-7258) ported at the mechanical level Unity tracks; constants block at simulation.js (~6444-6457): LESSER_HOUSE_RENOWN_THRESHOLD = 30, LESSER_HOUSE_MIN_PROMOTIONS = 1 (deferred), LESSER_HOUSE_LEGITIMACY_BONUS = 3, LESSER_HOUSE_INITIAL_LOYALTY = 75, LESSER_HOUSE_QUALIFYING_PATHS = {Governance, MilitaryCommand, CovertOperations}; `memberIsLesserHouseCandidate` (~6469-6479) gates ported (renown, role, status, path; foundedLesserHouseId replaced by cross-reference of LesserHouseElement.FounderMemberId since DynastyMemberComponent has no foundedLesserHouseId field); strategic gates: legitimacy &lt; 90, lesser-house buffer count &lt; 3
   - Sub-slice 14: `src/game/core/ai.js` pact dispatch block (~2643-2666); simulation-side sinks `getNonAggressionPactTerms` (~5150-5183) and `proposeNonAggressionPact` (~5185-5222); constants at simulation.js ~5126-5128 (NON_AGGRESSION_PACT_INFLUENCE_COST = 50, NON_AGGRESSION_PACT_GOLD_COST = 80, NON_AGGRESSION_PACT_MINIMUM_DURATION_IN_WORLD_DAYS = 180); gates: both FactionKind.Kingdom, source != target, source hostile to target, no existing PactComponent between them, source ResourceStockpileComponent.Influence &gt;= 50 + Gold &gt;= 80; on success deducts cost, removes HostilityComponent buffer entries both ways, creates one PactComponent entity; holy-war gate from getNonAggressionPactTerms deferred until a Unity holy-war system exists; browser creates symmetric per-faction `faction.diplomacy.nonAggressionPacts` records, Unity collapses to a single entity per pact because both sides carry identical fields
   - Sub-slices pending: narrative message push (no AI->UI message component yet); per-member FoundedLesserHouseId on DynastyMemberComponent (cross-reference workaround in place); promotion-history gate; marital-anchor and cadet world-pressure profiles on lesser houses; holy-war pact gate; pact expiration / break system (browser breakNonAggressionPact ~5224 plus early-break legitimacy penalty); and dispatch-execution sub-slices for assassination, missionary, holy war, divine right, captive recovery, captive ransom CovertOpKind values
-- Current Branch In Flight: `claude/unity-ai-pact-proposal-execution`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-14-pact-proposal-execution.md`
+  - Sub-slice 15: `src/game/core/simulation.js` `breakNonAggressionPact` (~5224-5257); NON_AGGRESSION_PACT_BREAK_LEGITIMACY_COST = 8 (~5129); ports the explicit-break semantic (no auto-expiration; minimumExpiresAtInWorldDays marks only the early-break threshold for messaging, not an auto-dissolve). Unity introduces PactBreakRequestComponent as the producer surface; PactBreakSystem consumes the request, marks the PactComponent broken, re-establishes mutual hostility idempotently, applies legitimacy -8 clamped [0, 100] and Oathkeeping -2 via ConvictionScoring.ApplyEvent; browser's direct conviction.score -= 2 maps to Oathkeeping in Unity because Score is derived from bucket values (Score = Stewardship + Oathkeeping - Ruthlessness - Desecration) and breaking an oath-like pact is semantically a Oathkeeping penalty; penalty is unconditional regardless of early-break status (browser earlyBreak flag affects messaging only)
+- Current Branch In Flight: `claude/unity-ai-pact-break-expiration`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-15-pact-break-expiration.md`
 
 ### Lane: victory-conditions
 
@@ -504,10 +510,15 @@ Note: `fortification-siege-sub-slice-4-siege-camp-supply-interdiction` is implem
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-15-pact-break-and-expiration
 
-- Suggested Branch: new branch `claude/unity-ai-pact-break-expiration` or similar.
-- Target Paths: `unity/Assets/_Bloodlines/Code/AI/**` (additive); extends `PactComponent` lifecycle (Broken, BrokenByFactionId already present on the struct so expiration is an append-only add).
-- Browser Reference: `src/game/core/simulation.js` `breakNonAggressionPact` (~5224) plus the early-break legitimacy penalty. Pact expiration in the browser is implicit (the minimumExpiresAtInWorldDays marker gates early-break penalty; pacts do not auto-dissolve).
-- Scope: port the early-break legitimacy penalty and the hostility re-establishment on pact break. Optionally add an auto-expiration seam if one exists in the browser canon. Straightforward mechanical port following the patterns established in sub-slices 11, 12, 13, 14.
+- Status: DONE (landed via `claude/unity-ai-pact-break-expiration`; see sub-slice 15 handoff).
+- Browser Reference: `src/game/core/simulation.js` `breakNonAggressionPact` (~5224-5257); NON_AGGRESSION_PACT_BREAK_LEGITIMACY_COST = 8 (~5129).
+
+### Next Lane Candidate: ai-strategic-layer-sub-slice-16-captive-recovery-execution
+
+- Suggested Branch: new branch `claude/unity-ai-captive-recovery-execution` or similar.
+- Target Paths: `unity/Assets/_Bloodlines/Code/AI/**` (additive).
+- Browser Reference: `src/game/core/ai.js` captive-recovery dispatch block (~2566-2608) plus the simulation-side `startCaptiveRescueOperation` and `startCaptiveRansomOperation` sinks.
+- Scope: consume `AICovertOpsComponent.LastFiredOp == CovertOpKind.CaptiveRescue` or `== CaptiveRansom` from sub-slice 6 and execute the respective operation. The two paths share dispatch context (CaptivesSourceFocused, HighPriorityCaptive, EnemyIsHostileToPlayer) but diverge on operation mechanics (rescue attempts a military extraction; ransom pays resources to return). Follows the one-shot pattern from sub-slices 8/9/12/13/14/15.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-8-command-dispatch
 
