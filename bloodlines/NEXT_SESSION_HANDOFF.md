@@ -4,7 +4,32 @@ Last updated: 2026-04-18 (Session 130: All 3 items complete. Victory Conditions 
 Previous entry: Last updated: 2026-04-18 (Session 129: AI strategic layer sub-slice 1 complete -- EnemyAIStrategySystem ISystem live, 4-phase smoke PASS, contract revision 10. Next sub-slices: supply chain/convoy mgmt (ai.js ~1100), siege staging. Also pending: Tier 2 batch systems (marriage, lesser house defection, minor house levies, renown scoring) and Victory Conditions system.)
 Previous entry: Last updated: 2026-04-17 (state-snapshot-restore lane complete on master 2026-04-17: 3 sub-slices merged, BloodlinesSnapshotPayload/Writer/Restorer, 6-phase smoke, ProbeSnapshotIntegrity in bootstrap runtime smoke, all 10 gates green, contract Revision 5. 10 Claude Code skills merged to master. Concurrent session contract revision 5. Browser-to-Unity migration plan drafted and three Tier 1 slices landed on master the same day: Conviction scoring + bands + 4-phase governed validator, Dynasty core with eight-member template set + aging + heir succession + interregnum + 4-phase validator, Faith commitment + exposure threshold + five-tier intensity resolution + 4-phase validator. AI barracks observability and bootstrap runtime smoke startup timeout bump 120s to 240s also on master. Codex group-movement and combat-stances slice is now rebased, green, and pushed on `codex/unity-group-movement-and-stances` with all eight combat smoke phases passing, full governed gate chain green, `Assembly-CSharp.csproj` compile includes restored for the new runtime files, and governed wrapper hardening landed for bootstrap runtime, scene-shell, and graphics validations. Workspace `HANDOFF.md` archived to `HANDOFF_ARCHIVE_2026-04-17_session-125-attack-orders.md`; the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md` is now the authoritative forward-work map; Session 127: Unity passive target-acquisition throttling and sight-loss cleanup green on stacked branch `codex/unity-target-acquisition-los`; Session 126: Unity explicit attack orders and first attack-move command layer green on branch `codex/unity-attack-move`; all prior lanes preserved)
 Previous author: Claude
-Next recommended action: the migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md` is the canonical forward-work map. Completed Tier 1 items: conviction/dynasty/faith, combat foundation, projectile combat, attack orders/attack-move, target-acquisition throttling, economy/AI lanes (starvation/cap-pressure/stability-surplus/loyalty/trickle/gather), state-snapshot-restore (complete 2026-04-17). Remaining Tier 1 items in suggested dependency order: fortification + siege + imminent-engagement (codex/unity-fortification-siege branch in flight; port fortification tiers and reserves; depends on dual-clock for stage-4 triggers), dual-clock + five-stage match progression + declaration seam, full enemy AI strategic layer port from `src/game/core/ai.js`.
+Next recommended action: finish the AI strategic layer merge queue in dependency order. Claude's sub-slice 7 build-timer-chain should land on `master` first; then rebase `codex/unity-ai-command-dispatch`, resolve any generated `Assembly-CSharp.csproj` include drift if it appears, preserve `[UpdateAfter(typeof(AICovertOpsSystem))]` unless a deliberate post-rebase ordering pass changes it, and merge the command-dispatch slice. After that, remaining AI strategic-layer follow-up is the marriage-proposal execution seam plus any deeper integration from the browser migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`.
+
+## 2026-04-19 AI Strategic Layer Sub-Slice 8 Command Dispatch
+
+- Branch lane: `codex/unity-ai-command-dispatch`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-8-command-dispatch.md`
+- Completed in this slice:
+  - `AIWorkerCommandSystem` now dispatches actual worker gather orders and movement
+  - `AITerritoryDispatchSystem` now dispatches territory-expansion movement orders for
+    eligible combat units
+  - `WorkerGatherOrderComponent` added as the AI gather-order payload
+  - `BloodlinesAICommandDispatchSmokeValidation` and
+    `scripts/Invoke-BloodlinesUnityAICommandDispatchSmokeValidation.ps1` added
+  - `EnemyAIStrategySystem` narrowed to territory target selection only
+  - `WorkerGatherSystem` now blocks harvesting until arrival at gather radius
+- Validation state:
+  - all 10 required gates green
+  - dedicated AI command dispatch smoke green
+  - bootstrap runtime, scene-shell, fortification, and command-dispatch smokes were run
+    directly against `D:\BLAICD\bloodlines\unity` because the checked-in wrappers stay
+    pinned to `D:\ProjectsHome\Bloodlines`
+- Immediate next action:
+  - rebase this branch after `claude/unity-ai-build-timer-chain` lands on `master`
+  - resolve any generated-project include drift
+  - then merge the command-dispatch slice
 
 ## Active Owner Direction
 
