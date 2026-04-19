@@ -1751,3 +1751,15 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - `BloodlinesAIGovernancePressureSmokeValidation` 4-phase validator all green: Phase 1 holy war clamps, Phase 2 governance victory pressure, Phase 3 succession crisis player side, Phase 4 enemy governance floor boosts.
 - All 10 validation gates green; contract bumped revision 14 -> 15.
 - The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-3-governance.md`.
+
+### 2026-04-18 Unity AI Strategic Layer Sub-Slice 4: Worker Gather Dispatch
+
+- `AIWorkerGatherSystem` ported from ai.js idle-worker dispatch loop (lines 1243-1251), `getEnemyGatherPriorities` (885-922), `chooseGatherNode` (924-933) into Unity ECS on branch `claude/unity-ai-worker-gather`.
+- Throttled by `WorkerGatherIntervalSeconds` accumulator on `AIStrategyComponent` (default 5s). Dispatch fires per faction when accumulator exceeds interval; resets to 0.
+- Resource priority rotation: `workerIndex % 4` selects starting slot from `{gold, wood, stone, iron}`. Iterates from that slot forward (wrapping) until a non-depleted node is found.
+- `PlayerKeepFortified` flag: when true, skips stone as a gather priority (mirrors ai.js fortified-keep defense posture block, lines 910-914).
+- Nearest-node selection by Euclidean distance across all `ResourceNodeComponent` entities with `Amount > 0`.
+- On dispatch: `WorkerGatherComponent.Phase = Seeking`, `AssignedNode`, `AssignedResourceId`, `CarryResourceId` set.
+- `BloodlinesAIWorkerGatherSmokeValidation` 4-phase validator all green: Phase 1 idle->Seeking with gold node; Phase 2 all depleted stays Idle; Phase 3 Gathering not re-dispatched; Phase 4 two workers spread across gold and wood.
+- All 10 validation gates green; contract bumped revision 15 -> 16.
+- The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-4-worker-gather.md`.
