@@ -53,12 +53,16 @@ namespace Bloodlines.AI
     /// NON_AGGRESSION_PACT_MINIMUM_DURATION_IN_WORLD_DAYS = 180
     /// at simulation.js ~5126-5128.
     ///
+    /// Sub-slice 17 addition:
+    ///   Narrative message push. After the pact entity is created, call
+    ///     NarrativeMessageBridge.Push with the browser-parity line at
+    ///     simulation.js:5216-5220: "<sourceFactionId> and
+    ///     <targetFactionId> enter a non-aggression pact. Hostility ceases
+    ///     for at least 180 in-world days." Tone is Good when the source
+    ///     is "player", else Info.
+    ///
     /// Deferred to later slices:
     ///   - Holy-war pact gate (waits on the holy-war lane).
-    ///   - Pact expiration / break system (browser breakNonAggressionPact
-    ///     ~5224 plus the early-break legitimacy penalty).
-    ///   - Narrative pushMessage (waits on the AI->UI message bridge,
-    ///     same blocker as sub-slices 11, 12, 13).
     /// </summary>
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(AICovertOpsSystem))]
@@ -164,6 +168,30 @@ namespace Bloodlines.AI
                 Broken                       = false,
                 BrokenByFactionId            = default,
             });
+
+            // Narrative push (sub-slice 17). Browser pushMessage at
+            // simulation.js:5216-5220.
+            PushPactEnteredMessage(em, sourceFactionId, targetFactionId);
+        }
+
+        private static void PushPactEnteredMessage(
+            EntityManager em,
+            FixedString32Bytes sourceFactionId,
+            FixedString32Bytes targetFactionId)
+        {
+            var message = new FixedString128Bytes();
+            message.Append(sourceFactionId);
+            message.Append((FixedString32Bytes)" and ");
+            message.Append(targetFactionId);
+            message.Append((FixedString64Bytes)" enter a non-aggression pact. Hostility ceases for at least ");
+            message.Append((int)MinimumDurationInWorldDays);
+            message.Append((FixedString32Bytes)" in-world days.");
+
+            var tone = sourceFactionId.Equals(new FixedString32Bytes("player"))
+                ? NarrativeMessageTone.Good
+                : NarrativeMessageTone.Info;
+
+            NarrativeMessageBridge.Push(em, message, tone);
         }
 
         // ------------------------------------------------------------------ helpers
