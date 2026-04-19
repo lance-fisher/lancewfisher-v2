@@ -177,7 +177,11 @@ namespace Bloodlines.Siege
                                 ? SiegeSupportStatus.Supporting
                                 : SiegeSupportStatus.Idle;
                     }
-                    else if (siegeSupport.IsSupplyWagon && !siegeSupport.HasLinkedSupplyCamp)
+                    else if (siegeSupport.IsSupplyWagon &&
+                             siegeSupport.Status != SiegeSupportStatus.Interdicted &&
+                             siegeSupport.Status != SiegeSupportStatus.RecoveringUnscreened &&
+                             siegeSupport.Status != SiegeSupportStatus.RecoveringScreened &&
+                             !siegeSupport.HasLinkedSupplyCamp)
                     {
                         siegeSupport.Status = SiegeSupportStatus.CutOff;
                     }

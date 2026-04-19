@@ -32,5 +32,8 @@ namespace Bloodlines.Components
         CutOff = 3,
         Starved = 4,
         Repair = 5,
+        Interdicted = 6,
+        RecoveringUnscreened = 7,
+        RecoveringScreened = 8,
     }
 }
