@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 31
+- Revision: 32
 - Last Updated: 2026-04-19
-- Last Updated By: codex-fortification-wall-segment-destruction-2026-04-19
-- Supersedes: revision 30 (fortification-siege sub-slice 5 landed on top of `origin/master` `0a0e122f`: `FortificationStructureLinkSystem` now links fortification-role buildings to their nearest same-faction settlement at runtime and materializes `FortificationBuildingContributionComponent`, `FortificationDestructionResolutionSystem` writes destroyed wall/tower/gate/keep counts plus `OpenBreachCount` back onto `FortificationComponent`, `FortificationReserveSystem` now runs after destruction resolution so breached walls reduce reserve frontage on the same update chain, `BloodlinesDebugCommandSurface.Fortification` adds `TryDebugGetFortificationBreachState`, and the dedicated `BloodlinesWallSegmentDestructionSmokeValidation` plus `scripts/Invoke-BloodlinesUnityWallSegmentDestructionSmokeValidation.ps1` prove linked-wall tiering, breach creation, and breached-frontage reserve contraction)
+- Last Updated By: claude-ai-narrative-message-bridge-2026-04-19
+- Supersedes: revision 31 (ai-strategic-layer sub-slice 16 landed on top of Codex's fortification-siege sub-slice 5 wall-segment destruction at revision 31; NarrativeMessageComponents + NarrativeMessageBridge port the browser pushMessage surface at simulation.js (many call sites); new NarrativeMessageSingleton tag entity carries the NarrativeMessageElement buffer (FixedString128Bytes Text, NarrativeMessageTone { Info, Good, Warn }, CreatedAtInWorldDays, Ttl); NarrativeMessageBridge.Push lazy-creates the singleton if missing and reads in-world days from DualClockComponent if seeded; PactBreakSystem (sub-slice 15) wired as first consumer, producing the browser ceremonial line with the same early-breach vs hostility-resumes suffix and the same tone routing (player-breaker -> Warn, other -> Info); no consumer/drain/TTL-eviction system yet in scope; per-faction scoping reserved for a future multiplayer slice. BloodlinesNarrativeMessageBridgeSmokeValidation 6-phase validator covers lazy-singleton creation, multi-push append order, CreatedAtInWorldDays stamping from DualClock, pact-break early-breach message + Warn tone for player breaker, pact-break late-break Hostility resumes message + Info tone for non-player breaker, and missing-pact short-circuit not pushing a message)
 
 ## Purpose
 
@@ -248,7 +248,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: ai-strategic-layer
 
 - Status: active
-- Branch Prefix: `claude/unity-ai-pact-break-expiration` (sub-slice 15); prior claude/unity-ai-pact-proposal-execution (14), claude/unity-ai-lesser-house-promotion (13), claude/unity-ai-marriage-acceptance-terms (12), claude/unity-ai-marriage-accept-effects (11), claude/unity-ai-marriage-strategic-profile (10), claude/unity-ai-marriage-inbox-accept (9), codex/unity-ai-command-dispatch (8) also landed; future sub-slices on new branches
+- Branch Prefix: `claude/unity-ai-narrative-message-bridge` (sub-slice 16); prior claude/unity-ai-pact-break-expiration (15), claude/unity-ai-pact-proposal-execution (14), claude/unity-ai-lesser-house-promotion (13), claude/unity-ai-marriage-acceptance-terms (12), claude/unity-ai-marriage-accept-effects (11), claude/unity-ai-marriage-strategic-profile (10), claude/unity-ai-marriage-inbox-accept (9), codex/unity-ai-command-dispatch (8) also landed; future sub-slices on new branches
 - Owner Agent: claude-code
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/AI/AIStrategyComponent.cs`
@@ -272,6 +272,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/AI/PactComponent.cs`
   - `unity/Assets/_Bloodlines/Code/AI/AIPactProposalExecutionSystem.cs`
   - `unity/Assets/_Bloodlines/Code/AI/PactBreakRequestComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/AI/NarrativeMessageComponents.cs`
+  - `unity/Assets/_Bloodlines/Code/AI/NarrativeMessageBridge.cs`
   - `unity/Assets/_Bloodlines/Code/AI/PactBreakSystem.cs`
   - `unity/Assets/_Bloodlines/Code/AI/AIWorkerCommandSystem.cs`
   - `unity/Assets/_Bloodlines/Code/AI/AITerritoryDispatchSystem.cs`
@@ -291,6 +293,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAILesserHousePromotionSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIPactProposalExecutionSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPactBreakSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesNarrativeMessageBridgeSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAICommandDispatchSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AIStrategy.cs`
   - `scripts/Invoke-BloodlinesUnityAIStrategySmokeValidation.ps1`
@@ -308,11 +311,12 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnityAILesserHousePromotionSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAIPactProposalExecutionSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityPactBreakSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityNarrativeMessageBridgeSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAICommandDispatchSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs` -- `AIStrategyComponent` seeded on non-player Kingdom faction entities alongside `AIEconomyControllerComponent`
-  - `unity/Assembly-CSharp.csproj` -- `AIStrategyComponent.cs`, `EnemyAIStrategySystem.cs`, `AIStrategicPressureSystem.cs`, `AIWorkerGatherSystem.cs`, `AISiegeOrchestrationComponent.cs`, `AISiegeOrchestrationSystem.cs`, `AICovertOpsComponent.cs`, `AICovertOpsSystem.cs`, `AIBuildOrderComponent.cs`, `AIBuildOrderSystem.cs`, `AIMarriageProposalExecutionSystem.cs`, `AIMarriageInboxAcceptSystem.cs`, `AIMarriageStrategicProfileSystem.cs`, `MarriageAcceptEffectsPendingTag.cs`, `AIMarriageAcceptEffectsSystem.cs`, `MarriageAcceptanceTermsComponent.cs`, `MarriageAuthorityEvaluator.cs`, `AILesserHousePromotionSystem.cs`, `PactComponent.cs`, `AIPactProposalExecutionSystem.cs`, `PactBreakRequestComponent.cs`, `PactBreakSystem.cs`, `AIWorkerCommandSystem.cs`, `AITerritoryDispatchSystem.cs`, `WorkerGatherOrderComponent.cs` registered
-  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs`, `BloodlinesAIStrategicPressureSmokeValidation.cs`, `BloodlinesAIGovernancePressureSmokeValidation.cs`, `BloodlinesAIWorkerGatherSmokeValidation.cs`, `BloodlinesAISiegeOrchestrationSmokeValidation.cs`, `BloodlinesAICovertOpsSmokeValidation.cs`, `BloodlinesAIBuildOrderSmokeValidation.cs`, `BloodlinesAIMarriageProposalExecutionSmokeValidation.cs`, `BloodlinesAIMarriageInboxAcceptSmokeValidation.cs`, `BloodlinesAIMarriageStrategicProfileSmokeValidation.cs`, `BloodlinesAIMarriageAcceptEffectsSmokeValidation.cs`, `BloodlinesAIMarriageAcceptanceTermsSmokeValidation.cs`, `BloodlinesAILesserHousePromotionSmokeValidation.cs`, `BloodlinesAIPactProposalExecutionSmokeValidation.cs`, `BloodlinesPactBreakSmokeValidation.cs`, `BloodlinesAICommandDispatchSmokeValidation.cs` registered
+  - `unity/Assembly-CSharp.csproj` -- `AIStrategyComponent.cs`, `EnemyAIStrategySystem.cs`, `AIStrategicPressureSystem.cs`, `AIWorkerGatherSystem.cs`, `AISiegeOrchestrationComponent.cs`, `AISiegeOrchestrationSystem.cs`, `AICovertOpsComponent.cs`, `AICovertOpsSystem.cs`, `AIBuildOrderComponent.cs`, `AIBuildOrderSystem.cs`, `AIMarriageProposalExecutionSystem.cs`, `AIMarriageInboxAcceptSystem.cs`, `AIMarriageStrategicProfileSystem.cs`, `MarriageAcceptEffectsPendingTag.cs`, `AIMarriageAcceptEffectsSystem.cs`, `MarriageAcceptanceTermsComponent.cs`, `MarriageAuthorityEvaluator.cs`, `AILesserHousePromotionSystem.cs`, `PactComponent.cs`, `AIPactProposalExecutionSystem.cs`, `PactBreakRequestComponent.cs`, `PactBreakSystem.cs`, `NarrativeMessageComponents.cs`, `NarrativeMessageBridge.cs`, `AIWorkerCommandSystem.cs`, `AITerritoryDispatchSystem.cs`, `WorkerGatherOrderComponent.cs` registered
+  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs`, `BloodlinesAIStrategicPressureSmokeValidation.cs`, `BloodlinesAIGovernancePressureSmokeValidation.cs`, `BloodlinesAIWorkerGatherSmokeValidation.cs`, `BloodlinesAISiegeOrchestrationSmokeValidation.cs`, `BloodlinesAICovertOpsSmokeValidation.cs`, `BloodlinesAIBuildOrderSmokeValidation.cs`, `BloodlinesAIMarriageProposalExecutionSmokeValidation.cs`, `BloodlinesAIMarriageInboxAcceptSmokeValidation.cs`, `BloodlinesAIMarriageStrategicProfileSmokeValidation.cs`, `BloodlinesAIMarriageAcceptEffectsSmokeValidation.cs`, `BloodlinesAIMarriageAcceptanceTermsSmokeValidation.cs`, `BloodlinesAILesserHousePromotionSmokeValidation.cs`, `BloodlinesAIPactProposalExecutionSmokeValidation.cs`, `BloodlinesPactBreakSmokeValidation.cs`, `BloodlinesNarrativeMessageBridgeSmokeValidation.cs`, `BloodlinesAICommandDispatchSmokeValidation.cs` registered
   - `unity/Assets/_Bloodlines/Code/Systems/WorkerGatherSystem.cs` -- workers now must travel inside `GatherRadius` before harvesting; `AIWorkerCommandSystem` may flip `Seeking -> Gathering` immediately but harvest does not start until arrival
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageComponents.cs` -- read `MarriageComponent` (already-married gate) and `MarriageProposalComponent` / `MarriageProposalStatus` (already-pending gate, proposal creation, accept flip). Sub-slice 8 creates new `MarriageProposalComponent` entities; sub-slice 9 creates new `MarriageComponent` entities and mutates existing `MarriageProposalComponent.Status` pending->accepted. Does not modify existing dynasty system code.
@@ -344,6 +348,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-13-lesser-house-promotion.md`
   - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-14-pact-proposal-execution.md`
   - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-15-pact-break-expiration.md`
+  - `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-16-narrative-message-bridge.md`
 - Browser Reference:
   - Sub-slice 1: `src/game/core/ai.js` `pickTerritoryTarget` (~747), `pickScoutHarassTarget` (~412), `getWorldPressureRaidTarget` (~817)
   - Sub-slice 2: `src/game/core/ai.js` timer clamp/floor block lines 1127-1241
@@ -362,8 +367,9 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - Sub-slice 14: `src/game/core/ai.js` pact dispatch block (~2643-2666); simulation-side sinks `getNonAggressionPactTerms` (~5150-5183) and `proposeNonAggressionPact` (~5185-5222); constants at simulation.js ~5126-5128 (NON_AGGRESSION_PACT_INFLUENCE_COST = 50, NON_AGGRESSION_PACT_GOLD_COST = 80, NON_AGGRESSION_PACT_MINIMUM_DURATION_IN_WORLD_DAYS = 180); gates: both FactionKind.Kingdom, source != target, source hostile to target, no existing PactComponent between them, source ResourceStockpileComponent.Influence &gt;= 50 + Gold &gt;= 80; on success deducts cost, removes HostilityComponent buffer entries both ways, creates one PactComponent entity; holy-war gate from getNonAggressionPactTerms deferred until a Unity holy-war system exists; browser creates symmetric per-faction `faction.diplomacy.nonAggressionPacts` records, Unity collapses to a single entity per pact because both sides carry identical fields
   - Sub-slices pending: narrative message push (no AI->UI message component yet); per-member FoundedLesserHouseId on DynastyMemberComponent (cross-reference workaround in place); promotion-history gate; marital-anchor and cadet world-pressure profiles on lesser houses; holy-war pact gate; pact expiration / break system (browser breakNonAggressionPact ~5224 plus early-break legitimacy penalty); and dispatch-execution sub-slices for assassination, missionary, holy war, divine right, captive recovery, captive ransom CovertOpKind values
   - Sub-slice 15: `src/game/core/simulation.js` `breakNonAggressionPact` (~5224-5257); NON_AGGRESSION_PACT_BREAK_LEGITIMACY_COST = 8 (~5129); ports the explicit-break semantic (no auto-expiration; minimumExpiresAtInWorldDays marks only the early-break threshold for messaging, not an auto-dissolve). Unity introduces PactBreakRequestComponent as the producer surface; PactBreakSystem consumes the request, marks the PactComponent broken, re-establishes mutual hostility idempotently, applies legitimacy -8 clamped [0, 100] and Oathkeeping -2 via ConvictionScoring.ApplyEvent; browser's direct conviction.score -= 2 maps to Oathkeeping in Unity because Score is derived from bucket values (Score = Stewardship + Oathkeeping - Ruthlessness - Desecration) and breaking an oath-like pact is semantically a Oathkeeping penalty; penalty is unconditional regardless of early-break status (browser earlyBreak flag affects messaging only)
-- Current Branch In Flight: `claude/unity-ai-pact-break-expiration`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-15-pact-break-expiration.md`
+  - Sub-slice 16: `src/game/core/simulation.js` `pushMessage` call sites; narrative message bridge carries the browser `{ text, tone, ttl }` shape; Unity adds a CreatedAtInWorldDays stamp so consumers can render chronologically. Browser uses `state.messages.unshift(...)`; Unity appends to the buffer (ordering difference is consumer-side, buffer preserves append order). PactBreakSystem (sub-slice 15) wired as first consumer to prove the bridge end-to-end.
+- Current Branch In Flight: `claude/unity-ai-narrative-message-bridge`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-16-narrative-message-bridge.md`
 
 ### Lane: victory-conditions
 

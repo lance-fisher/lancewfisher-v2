@@ -135,6 +135,44 @@ namespace Bloodlines.AI
                     -OathkeepingPenalty);
                 em.SetComponentData(breakerEntity, conviction);
             }
+
+            // Browser pushMessage (simulation.js:5251). Narrative message
+            // bridge from sub-slice 16: any system can push a FixedString128
+            // message onto the global narrative buffer. Early-break flag
+            // switches the suffix exactly as the browser does.
+            PushBreakMessage(em, requestingFactionId, otherFactionId, pact.MinimumExpiresAtInWorldDays);
+        }
+
+        private static void PushBreakMessage(
+            EntityManager em,
+            FixedString32Bytes breakerId,
+            FixedString32Bytes otherId,
+            float minimumExpiresAtInWorldDays)
+        {
+            float currentDays = GetInWorldDaysLocal(em);
+            bool earlyBreak = currentDays < minimumExpiresAtInWorldDays;
+
+            var message = new FixedString128Bytes();
+            message.Append(breakerId);
+            message.Append((FixedString64Bytes)" breaks the non-aggression pact with ");
+            message.Append(otherId);
+            message.Append(earlyBreak
+                ? (FixedString64Bytes)". The early breach damages legitimacy and conviction."
+                : (FixedString64Bytes)". Hostility resumes.");
+
+            var tone = breakerId.Equals(new FixedString32Bytes("player"))
+                ? NarrativeMessageTone.Warn
+                : NarrativeMessageTone.Info;
+            NarrativeMessageBridge.Push(em, message, tone);
+        }
+
+        private static float GetInWorldDaysLocal(EntityManager em)
+        {
+            var q = em.CreateEntityQuery(ComponentType.ReadOnly<DualClockComponent>());
+            if (q.IsEmpty) { q.Dispose(); return 0f; }
+            float d = q.GetSingleton<DualClockComponent>().InWorldDays;
+            q.Dispose();
+            return d;
         }
 
         // ------------------------------------------------------------------ helpers
