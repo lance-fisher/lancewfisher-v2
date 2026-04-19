@@ -1798,3 +1798,17 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Timer seeding note: test worlds run world.Update() with deltaTime=0; AIStrategicPressureSystem applies a 0.016f floor; firing timers seeded at -1f become -1.016f, still <= 0 at the build-order check.
 - All 10 validation gates green; contract bumped revision 18 -> 19.
 - The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-7-build-order.md`.
+
+### 2026-04-19 Unity AI Strategic Layer Sub-Slice 8: Marriage Proposal Execution
+
+- `AIMarriageProposalExecutionSystem` ported from ai.js `tryAiMarriageProposal` (~2897-2944) on branch `claude/unity-ai-marriage-proposal-execution`.
+- Consumes `AICovertOpsComponent.LastFiredOp == CovertOpKind.MarriageProposal` written by sub-slice 6 and runs the four browser abort gates in order: already-married between source and target factions (`MarriageComponent.Dissolved == false` match either direction); already-pending proposal from source to target (`MarriageProposalComponent.Status == Pending` match); no non-head active/ruling source-member candidate; no non-head active/ruling target-member candidate.
+- On pass: creates a `MarriageProposalComponent` entity with ProposalId, source/target faction and member ids, `Status = Pending`, `ProposedAtInWorldDays = DualClockComponent.InWorldDays`, `ExpiresAtInWorldDays = now + 30` (pulls `ExpirationInWorldDays` from `MarriageProposalExpirationSystem` so the window stays synchronized).
+- Target faction hardcoded to `"player"` matching the browser convention; multi-faction extension is reserved for a later slice.
+- Always clears `LastFiredOp` back to `None` after processing (pass or fail), matching the browser's single-fire-per-timer semantic.
+- Executes after `AICovertOpsSystem` in `SimulationSystemGroup`. Consumes signal in the same frame it was written to avoid multi-frame races.
+- Cross-lane reads only: `MarriageComponent` / `MarriageProposalComponent` (tier2-batch-dynasty-systems lane, retired), `DynastyMemberComponent` / `DynastyMemberRef` (dynasty-core lane, retired), `DualClockComponent.InWorldDays` (dual-clock-match-progression lane, retired). No structural edits to those lanes' code.
+- `BloodlinesAIMarriageProposalExecutionSmokeValidation` 5-phase validator all green: Phase 1 clean-path creation; Phase 2 blocked by prior marriage; Phase 3 blocked by pending proposal; Phase 4 blocked by missing target dynasty members; Phase 5 no-op when LastFiredOp is None.
+- Strategic profile gating (faith hostility, population deficit, legitimacy distress, succession crises) is responsibility-split: sub-slice 6 gates dispatch via `MarriageStrategicProfileWilling`, sub-slice 8 gates execution structurally. Strategic profile port is a separate future slice.
+- All 10 validation gates green; contract bumped revision 19 -> 20.
+- The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-8-marriage-proposal-execution.md`.
