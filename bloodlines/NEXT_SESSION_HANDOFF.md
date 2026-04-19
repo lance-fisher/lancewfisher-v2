@@ -2233,3 +2233,39 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 2. ai-strategic-layer-sub-slice-19-captive-member-state (port faction.captives + CapturedMemberRecord shape; needed for captive rescue/ransom execution on top of sub-slice 18 foundation).
 3. ai-strategic-layer narrative TTL eviction system (walks the NarrativeMessageElement buffer each tick and removes entries whose CreatedAtInWorldDays + Ttl is past current; small self-contained slice that bounds the buffer before a UI consumer lands).
 4. fortification-siege follow-up (Codex has `codex/unity-fortification-breach-assault-pressure` in flight locally but not yet on origin/master; breach-aware assault, pathing, or HUD/legibility is still unclaimed on a fresh `codex/unity-fortification-*` branch).
+
+## Codex Fortification Siege Sub-Slice 6: Breach Assault Pressure (2026-04-19)
+
+### Status: COMPLETE on rebased branch codex/unity-fortification-breach-assault-pressure
+
+### What Was Done
+- Chosen scope: breach-aware assault pressure. This was the highest-leverage `OpenBreachCount` consumer that stayed inside Codex-owned fortification/siege surfaces. Pathing was deferred because the active contract does not give this lane ownership of `unity/Assets/_Bloodlines/Code/Pathing/**`, and debug-only legibility was lower leverage than making breaches alter live assault outcomes.
+- New `BreachAssaultPressureSystem` runs after `FortificationDestructionResolutionSystem` and before `FieldWaterStrainSystem`. It scans breached settlements and grants hostile units inside the breached settlement threat radius a bounded exploitation bonus, while resetting the state cleanly when no breach applies.
+- `FieldWaterComponent` now carries additive breach telemetry (`BreachAssaultAdvantageActive`, `BreachOpenCount`, `BreachTargetSettlementId`, `BreachAssaultAttackMultiplier`, `BreachAssaultSpeedMultiplier`). `FieldWaterStrainSystem` now multiplies breach pressure into the existing attack/speed resolution path, so the change affects live unit performance without touching combat-lane files.
+- `SiegeSupportCanon` now defines the bounded breach bonus: `+8%` attack and `+4%` speed per open breach, capped at 3 breaches.
+- `BloodlinesSiegeSmokeValidation` now includes the new breach-pressure system in its validation-world setup so the owned siege smoke matches live runtime ordering.
+- New dedicated validator `BloodlinesBreachAssaultPressureSmokeValidation` plus wrapper `scripts/Invoke-BloodlinesUnityBreachAssaultPressureSmokeValidation.ps1`. All 4 phases PASS:
+  - Phase 1 intact wall -> no assault bonus
+  - Phase 2 one breach -> hostile attacker gets `1.08x` attack and `1.04x` speed
+  - Phase 3 settlement owner excluded
+  - Phase 4 two breaches -> near attacker scales to `1.16x` attack while far attacker stays baseline
+- Local csproj refresh note: after rebasing onto `dfec72f5`, the generated csproj files were missing the already-landed fortification files `FortificationStructureResolutionSystem.cs` and `BloodlinesWallSegmentDestructionSmokeValidation.cs`, plus the new breach-assault files. Both generated csproj files were refreshed locally so the governed `dotnet build` gates could run. The csproj files remain gitignored and are not part of the commit.
+- Contract revision advanced `33 -> 34`. New per-slice handoff: `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-assault-pressure.md`.
+
+### Gate Results
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS
+- Bootstrap runtime smoke: PASS
+- Combat smoke: PASS
+- Scene shells: Bootstrap + Gameplay PASS
+- Fortification smoke: PASS
+- Siege smoke: PASS
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision 34
+- Dedicated breach assault pressure smoke: PASS via `artifacts/unity-breach-assault-pressure-smoke.log` with marker `BLOODLINES_BREACH_ASSAULT_PRESSURE_SMOKE PASS`
+
+### Recommended Next Fortification Follow-Up
+1. Breach HUD / legibility summary on the fortification debug surface so the new assault-pressure state is readable per settlement without inspecting unit telemetry.
+2. Coordinated breach-aware pathing / exploitation after pathing ownership is explicitly claimed or split in the contract.
+3. Breach sealing, assault failure, or recovery follow-up so defenders can contest the new exploit window over time instead of only suffering the static bonus.

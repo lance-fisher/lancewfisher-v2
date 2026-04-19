@@ -22,6 +22,9 @@ namespace Bloodlines.Siege
         public const float SupplyTransferFoodCost = 1f;
         public const float SupplyTransferWaterCost = 1f;
         public const float SupplyTransferWoodCost = 1f;
+        public const int BreachAssaultMaxBreachesCounted = 3;
+        public const float BreachAssaultAttackBonusPerBreach = 0.08f;
+        public const float BreachAssaultSpeedBonusPerBreach = 0.04f;
 
         private static readonly FixedString64Bytes SiegeEngineerId = new("siege_engineer");
         private static readonly FixedString64Bytes SupplyWagonId = new("supply_wagon");
@@ -60,6 +63,28 @@ namespace Bloodlines.Siege
         public static float ResolveSpeedMultiplier(bool hasSupplyTrainSupport)
         {
             return hasSupplyTrainSupport ? 1f : SiegeUnsuppliedSpeedMultiplier;
+        }
+
+        public static float ResolveBreachAssaultAttackMultiplier(int openBreachCount)
+        {
+            if (openBreachCount <= 0)
+            {
+                return 1f;
+            }
+
+            int effectiveBreaches = math.clamp(openBreachCount, 1, BreachAssaultMaxBreachesCounted);
+            return 1f + (effectiveBreaches * BreachAssaultAttackBonusPerBreach);
+        }
+
+        public static float ResolveBreachAssaultSpeedMultiplier(int openBreachCount)
+        {
+            if (openBreachCount <= 0)
+            {
+                return 1f;
+            }
+
+            int effectiveBreaches = math.clamp(openBreachCount, 1, BreachAssaultMaxBreachesCounted);
+            return 1f + (effectiveBreaches * BreachAssaultSpeedBonusPerBreach);
         }
     }
 }
