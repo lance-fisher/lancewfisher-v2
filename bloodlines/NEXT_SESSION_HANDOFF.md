@@ -1702,3 +1702,35 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 ### Next Unclaimed Lanes
 1. ai-strategic-layer-sub-slice-7-build-timer-chain (new branch claude/unity-ai-build-timer-chain; ai.js building construction/upgrade timer block ~lines 1060-1100)
 2. fortification-siege-sub-slice-3-imminent-engagement-warnings (Codex in progress, do not claim)
+
+## AI Strategic Layer Sub-Slice 7: Build Order Priority Chain (Claude, 2026-04-19)
+
+### Status: COMPLETE on branch claude/unity-ai-build-timer-chain
+
+### What Was Done
+- Ported ai.js updateEnemyAi buildTimer<=0 block (~lines 1377-1573) into `AIBuildOrderSystem` + `AIBuildOrderComponent`.
+- 13-step build priority chain preserves ai.js if-else order exactly: Barracks, Wayshrine, Quarry, IronMine, SiegeWorkshop, CovenantHall, GrandSanctuary, ApexCovenant, SupplyCamp, Stable, Dwelling, Farm, Well.
+- `BuildOrderKind` 14-value enum (None plus 13 branches).
+- Timer source: reads `AIStrategyComponent.BuildTimer` (decremented by `AIStrategicPressureSystem` with 0.016f floor). On fire, writes first matching branch to `NextBuildOp` and resets `BuildTimer = PlayerKeepFortified ? 4f : 6f` per ai.js line 1573.
+- Faith intensity thresholds canonical: 26 (covenant hall), 48 (grand sanctuary), 80 (apex covenant). Grand sanctuary urgency also fires on active covenant test, player covenant active, or player divine right active.
+- Scheduling and decision only; actual `attemptPlaceBuilding` deferred to later economy/placement integration pass.
+- 5-phase smoke validator all green (Barracks, Wayshrine, SiegeWorkshop, Dwelling, Farm). Contract revision 18 -> 19.
+- Firing timers seeded at -1f in smoke tests (same pattern as sub-slice 6).
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- Fortification smoke: PASS
+- Siege smoke: exit 0
+- AI build order smoke: Phase 1-5 PASS
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED revision=19
+
+### Next Unclaimed Lanes
+1. ai-strategic-layer-sub-slice-8-marriage-proposal-execution (new branch claude/unity-ai-marriage-proposal-execution; ai.js ~2580-2620 plus simulation proposeMarriage ~7340 and acceptMarriage ~7388)
+2. fortification-siege-sub-slice-3-imminent-engagement-warnings (Codex in progress on codex/unity-fortification-siege, do not claim)
+3. codex/unity-ai-command-dispatch rebase pending on Codex side once master advances to revision 19.
