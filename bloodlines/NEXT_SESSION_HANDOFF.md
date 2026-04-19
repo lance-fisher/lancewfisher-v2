@@ -1766,3 +1766,37 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 1. ai-strategic-layer-sub-slice-9-marriage-inbox-accept (new branch claude/unity-ai-marriage-inbox-accept; ai.js tryAiAcceptIncomingMarriage ~2880-2895; simulation acceptMarriage ~7388)
 2. fortification-siege-sub-slice-3-imminent-engagement-warnings (Codex in progress on codex/unity-fortification-siege; do not claim)
 3. codex/unity-ai-command-dispatch rebase pending on Codex side; master now at revision 20 so Codex should bump to 21 on rebase.
+
+## AI Strategic Layer Sub-Slice 9: Marriage Inbox Accept (Claude, 2026-04-19)
+
+### Status: COMPLETE on branch claude/unity-ai-marriage-inbox-accept
+
+### What Was Done
+- Ported ai.js `tryAiAcceptIncomingMarriage` (~2880-2895) into `AIMarriageInboxAcceptSystem` as the execution half of the covert-ops marriage inbox path. With sub-slice 8 already landed, the marriage loop is now mechanically end-to-end in Unity (dispatch, proposal, accept, expiration, gestation).
+- Consumes `AICovertOpsComponent.LastFiredOp == CovertOpKind.MarriageInboxAccept` written by sub-slice 6. Scans `MarriageProposalComponent` entities for the first `Status == Pending` match where source is `"player"` and target is this AI faction.
+- On match: flips proposal status to `Accepted`, creates primary + mirror `MarriageComponent` entities sharing a `MarriageId` derived from the proposal id. Primary (source-headed) drives child generation via existing `MarriageGestationSystem`; mirror (target-headed) exists for symmetric enumeration only.
+- Gestation window pulled from `MarriageGestationSystem.GestationInWorldDays` so the two systems stay in sync on the 60-day canon.
+- Always clears `LastFiredOp` back to `None` after processing (match or no match). Matches browser single-fire-per-timer semantic.
+- Source hardcoded to `"player"` matching browser inbox filter; multi-faction extension reserved for future slice.
+- `[UpdateAfter(AIMarriageProposalExecutionSystem)]` so propose + accept cannot race on the same frame.
+- Cross-lane reads only (MarriageProposalComponent, MarriageComponent, MarriageGestationSystem constant, DualClockComponent).
+- Deferred: browser-side effects on accept (governance authority cost, hostility drop, conviction event recording, legitimacy +2, declareInWorldTime 30-day jump, narrative message push). These remain for a dedicated effects slice.
+- 4-phase smoke validator all green (dispatch+pending creates primary+mirror, dispatch+no-proposal no-op, dispatch+only-expired no-op, no-dispatch+pending no-op). Contract revision 20 -> 21.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS (required one retry after transient bee_backend state-file contention)
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- Fortification smoke: PASS
+- Siege smoke: exit 0 PASS (required one retry after transient Library write-contention from back-to-back Unity launches)
+- AI marriage inbox accept smoke: Phase 1-4 PASS
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED (bumped to revision 21 post-gate)
+
+### Next Unclaimed Lanes
+1. ai-strategic-layer-sub-slice-10-marriage-strategic-profile (new branch claude/unity-ai-marriage-strategic-profile; ai.js getAiMarriageStrategicProfile ~2730-2857; gates both proposal and accept paths on faith-aware legitimacy repair vs. hardened refusal, population deficit, hostility, succession signals).
+2. fortification-siege-sub-slice-3-imminent-engagement-warnings (Codex in progress on codex/unity-fortification-siege; do not claim).
+3. codex/unity-ai-command-dispatch rebase pending on Codex side; master now at revision 21 so Codex should bump to 22 on rebase. codex/unity-fortification-siege will bump to 23.
