@@ -1617,3 +1617,30 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 ### Next Unclaimed Lanes
 1. ai-strategic-layer-sub-slice-4-siege-staging
 2. fortification-siege-sub-slice-3-imminent-engagement-warnings (Codex in progress)
+
+## AI Strategic Layer Sub-Slice 4: Worker Gather Dispatch (Claude, 2026-04-18)
+
+### Status: COMPLETE on branch claude/unity-ai-worker-gather
+
+### What Was Done
+- Ported ai.js idle-worker dispatch loop (1243-1251), getEnemyGatherPriorities (885-922), chooseGatherNode (924-933) into `AIWorkerGatherSystem`.
+- Throttled by WorkerGatherIntervalSeconds accumulator (default 5s). Index-modulo resource priority rotation. PlayerKeepFortified skips stone.
+- Nearest-node selection by Euclidean distance. Sets Phase=Seeking, AssignedNode, AssignedResourceId, CarryResourceId on dispatch.
+- 4-phase smoke validator all green. Contract revision 15 -> 16.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- AI governance pressure smoke (prior sub-slice): PASS
+- AI worker gather smoke: Phase 1-4 PASS
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED revision=16
+
+### Next Unclaimed Lanes
+1. ai-strategic-layer-sub-slice-5-siege-staging (new branch claude/unity-ai-siege-staging)
+2. ai-strategic-layer-sub-slice-6-dynasty-covert-ops (new branch, after sub-slice 5)
+3. fortification-siege-sub-slice-3-imminent-engagement-warnings (Codex in progress, do not claim)

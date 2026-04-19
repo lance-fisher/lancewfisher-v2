@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 15
+- Revision: 16
 - Last Updated: 2026-04-18
-- Last Updated By: claude-ai-governance-pressure-2026-04-18
-- Supersedes: revision 14 (ai-strategic-layer sub-slice 3 landed: governance/event-context timer clamp block from ai.js lines 1129-1215; new flag fields on AIStrategyComponent; BloodlinesAIGovernancePressureSmokeValidation added)
+- Last Updated By: claude-ai-worker-gather-2026-04-18
+- Supersedes: revision 15 (ai-strategic-layer sub-slice 4 landed: AIWorkerGatherSystem ports ai.js idle worker dispatch loop lines 1243-1251; WorkerGatherIntervalSeconds + PlayerKeepFortified flags added to AIStrategyComponent; BloodlinesAIWorkerGatherSmokeValidation added)
 
 ## Purpose
 
@@ -248,7 +248,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: ai-strategic-layer
 
 - Status: active
-- Branch Prefix: `claude/unity-ai-governance-pressure` (sub-slice 3); future sub-slices on new branches
+- Branch Prefix: `claude/unity-ai-worker-gather` (sub-slice 4); future sub-slices on new branches
 - Owner Agent: claude-code
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/AI/AIStrategyComponent.cs`
@@ -257,25 +257,29 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIStrategySmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIStrategicPressureSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIGovernancePressureSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesAIWorkerGatherSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.AIStrategy.cs`
   - `scripts/Invoke-BloodlinesUnityAIStrategySmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAIStrategicPressureSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityAIGovernancePressureSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityAIWorkerGatherSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs` -- `AIStrategyComponent` seeded on non-player Kingdom faction entities alongside `AIEconomyControllerComponent`
-  - `unity/Assembly-CSharp.csproj` -- `AIStrategyComponent.cs`, `EnemyAIStrategySystem.cs`, `AIStrategicPressureSystem.cs` registered
-  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs`, `BloodlinesAIStrategicPressureSmokeValidation.cs`, `BloodlinesAIGovernancePressureSmokeValidation.cs` registered
+  - `unity/Assembly-CSharp.csproj` -- `AIStrategyComponent.cs`, `EnemyAIStrategySystem.cs`, `AIStrategicPressureSystem.cs`, `AIWorkerGatherSystem.cs` registered
+  - `unity/Assembly-CSharp-Editor.csproj` -- `BloodlinesAIStrategySmokeValidation.cs`, `BloodlinesAIStrategicPressureSmokeValidation.cs`, `BloodlinesAIGovernancePressureSmokeValidation.cs`, `BloodlinesAIWorkerGatherSmokeValidation.cs` registered
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-1.md`
   - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-2-pressure.md`
   - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-3-governance.md`
+  - `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-4-worker-gather.md`
 - Browser Reference:
   - Sub-slice 1: `src/game/core/ai.js` `pickTerritoryTarget` (~747), `pickScoutHarassTarget` (~412), `getWorldPressureRaidTarget` (~817)
   - Sub-slice 2: `src/game/core/ai.js` timer clamp/floor block lines 1127-1241
   - Sub-slice 3: `src/game/core/ai.js` governance/event-context timer clamp block lines 1129-1215
+  - Sub-slice 4: `src/game/core/ai.js` idle worker dispatch loop lines 1243-1251, getEnemyGatherPriorities (885-922), chooseGatherNode (924-933)
   - Sub-slices pending: siege staging, dynasty-aware covert ops (~2681)
-- Current Branch In Flight: `claude/unity-ai-governance-pressure`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-3-governance.md`
+- Current Branch In Flight: `claude/unity-ai-worker-gather`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-4-worker-gather.md`
 
 ### Lane: victory-conditions
 
@@ -353,19 +357,21 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-### Next Lane Candidate: fortification-siege-sub-slice-3-imminent-engagement-warnings
+Note: `fortification-siege-sub-slice-3-imminent-engagement-warnings` is currently active under Codex on `codex/unity-fortification-siege`. Do not claim that work item.
 
-- Suggested Branch: `codex/unity-fortification-siege` (existing in-flight branch).
-- Target Paths: `unity/Assets/_Bloodlines/Code/Fortification/**`, `unity/Assets/_Bloodlines/Code/Siege/**` (additive only).
-- Browser Reference: `src/game/core/simulation.js` `tickImminentEngagementWarnings`.
-- Canon: `04_SYSTEMS/TERRITORY_SYSTEM.md`, `governance/DEFENSIVE_FORTIFICATION_DOCTRINE.md`.
+### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 
-### Next Lane Candidate: ai-strategic-layer-sub-slice-2-supply-chain
+- Suggested Branch: new branch `claude/unity-ai-siege-staging`.
+- Target Paths: `unity/Assets/_Bloodlines/Code/AI/**` (additive only, owned by ai-strategic-layer lane).
+- Browser Reference: `src/game/core/ai.js` siege staging dispatch block; pairs with the fortification/siege system already landed.
+- Scope: port the AI siege-staging logic as the next sub-slice on the ai-strategic-layer lane. Add a smoke validator following the same pattern as prior sub-slices. Add a PowerShell runner script. Register new files in `Assembly-CSharp.csproj` and `Assembly-CSharp-Editor.csproj`.
 
-- Suggested Branch: `codex/unity-fortification-siege` or new lane branch.
-- Target Paths: `unity/Assets/_Bloodlines/Code/AI/**` (extensive additions).
-- Browser Reference: `src/game/core/ai.js` supply chain / convoy management (~line 1100).
-- Scope: port in per-stage slices following the existing ai-strategic-layer lane.
+### Next Lane Candidate: ai-strategic-layer-sub-slice-6-dynasty-covert-ops
+
+- Suggested Branch: new branch `claude/unity-ai-dynasty-covert-ops`.
+- Target Paths: `unity/Assets/_Bloodlines/Code/AI/**` (additive only, owned by ai-strategic-layer lane).
+- Browser Reference: `src/game/core/ai.js` dynasty-aware covert ops dispatch (~line 2681).
+- Scope: port dynasty-aware assassination, marriage proposal, and missionary dispatch as the next sub-slice after siege staging. Depends on dynasty-core lane being landed (already done).
 
 ## Shared Files (Narrow Modification Rights for All Lanes)
 
