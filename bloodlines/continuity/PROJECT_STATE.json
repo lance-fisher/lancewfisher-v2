@@ -457,8 +457,8 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-imminent-engagement-warnings.md",
-  "latest_unity_ai_strategic_layer_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-8-command-dispatch.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-10-marriage-strategic-profile.md",
+  "latest_unity_ai_strategic_layer_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-10-marriage-strategic-profile.md",
   "latest_unity_fortification_siege_handoff": "docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-imminent-engagement-warnings.md",
   "latest_unity_graphics_handoff": "docs/unity/session-handoffs/2026-04-17-unity-graphics-infrastructure-foundation.md",
   "latest_unity_combat_handoff": "docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md",
@@ -472,9 +472,9 @@
   "latest_browser_to_unity_migration_plan": "docs/plans/2026-04-17-browser-to-unity-migration-plan.md",
   "concurrent_session_contract": {
     "path": "docs/unity/CONCURRENT_SESSION_CONTRACT.md",
-    "revision": 23,
+    "revision": 24,
     "last_updated": "2026-04-19",
-    "last_updated_by": "codex-fortification-siege-imminent-engagement-2026-04-19",
+    "last_updated_by": "claude-ai-marriage-strategic-profile-2026-04-19",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
     "active_lanes": [
       "ai-strategic-layer",
@@ -499,7 +499,7 @@
       "tier2-batch-dynasty-systems"
     ],
     "next_unblocked_tier_1_lanes": [
-      "ai-strategic-layer-sub-slice-10-marriage-strategic-profile"
+      "ai-strategic-layer-sub-slice-11-marriage-accept-effects"
     ]
   },
   "latest_unity_economy_handoff": "docs/unity/session-handoffs/2026-04-17-unity-cap-pressure-response.md",
@@ -1393,6 +1393,15 @@
       "description": "AIWorkerCommandSystem + AITerritoryDispatchSystem + WorkerGatherOrderComponent: ports ai.js worker issueGatherCommand dispatch (~1243-1260) and territory expansion command dispatch (~1575-1600). Worker gather decisions now add gather order plus movement and flip Seeking->Gathering; territory timer expiry now moves non-worker, non-siege combat units toward ExpansionTargetCpId and resets TerritoryTimer to 12 seconds. EnemyAIStrategySystem narrowed to target selection; WorkerGatherSystem now requires arrival inside gather radius before harvest. 4-phase smoke PASS. Contract rev 21->22 after rebase onto the sub-slice-9 master base.",
       "handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-8-command-dispatch.md",
       "validation_gates": "all 10 green plus AI command dispatch smoke"
+    },
+    {
+      "lane": "ai-strategic-layer-sub-slice-10-marriage-strategic-profile",
+      "date": "2026-04-19",
+      "branch": "claude/unity-ai-marriage-strategic-profile",
+      "status": "active",
+      "description": "AIMarriageStrategicProfileSystem: ports ai.js getAiMarriageStrategicProfile (~2803-2839) plus simplified getMarriageFaithCompatibilityProfile. Runs [UpdateBefore(AICovertOpsSystem)]; snapshots player faction then iterates AI factions; computes 4 signals (isHostile via HostilityComponent buffer, populationDeficit <85%, legitimacyDistress <50 gated by faith, successionPressure from AIStrategyComponent flags) + simplified faith-compat tier from SelectedFaith+DoctrinePath equality (unbound/harmonious/either-match/incompatible). signalCount + blockedByFaith -> willing. Writes willing symmetrically to AICovertOpsComponent.MarriageProposalGateMet and MarriageInboxAcceptGate so sub-slices 6/8/9 dispatch/execute only on browser-accurate justification. Target hardcoded to 'player' matching browser. Cross-lane reads only (Population, FaithState, DynastyState, Hostility, AIStrategy). 6-phase smoke PASS. Contract rev 23->24.",
+      "handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-10-marriage-strategic-profile.md",
+      "validation_gates": "all 10 green plus AI marriage strategic profile smoke"
     },
     {
       "lane": "fortification-siege-imminent-engagement",
