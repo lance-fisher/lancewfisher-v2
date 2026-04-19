@@ -2336,3 +2336,45 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 1. Optional fortification sub-slice 8 breach sealing / recovery: defenders restore `OpenBreachCount` toward zero over time through a new `BreachSealingSystem` that spends stone and worker time, so breach pressure becomes a contestable window instead of a static post-destruction state.
 2. Coordinated breach-aware pathing / exploit routing after pathing ownership is explicitly claimed or split in the contract.
 3. Production HUD consumer of `SettlementBreachReadout` after the sealing/recovery rule or pathing follow-up decides which breach signals should be rendered first.
+
+## Unity AI Strategic Layer Bundle 1: Captive State (Sub-Slice 19) and Missionary Execution (Sub-Slice 20) Landed (2026-04-19)
+
+Branch: `claude/unity-ai-captive-state-and-missionary-execution`. Master base: `ef58ec4f` (after Codex fortification-siege sub-slice 7 breach legibility readout landed at revision 36). Bundle 1 of the AI mechanical campaign per the 2026-04-19 roadmap decision: two logical sub-slices ship as one commit, one merge, and one contract revision bump.
+
+### What Was Done
+- **Sub-slice 19 captive member state**: new `CapturedMemberElement` IBufferElementData with `[InternalBufferCapacity(8)]` carries `MemberId`, `MemberTitle`, `OriginFactionId`, `CapturedAtInWorldDays` (DualClock-stamped), `RansomCost`, and `Status` (new `CapturedMemberStatus` enum: Held, RansomOffered, Released, Executed). Buffer attaches to the captor faction entity. Sub-slices 23/24 captive rescue/ransom dispatch will consume it. New `CapturedMemberHelpers` static class exposes `CaptureMember` (lazy-creates buffer, appends Held entry, returns buffer index), `TryGetCaptive` (lookup by member id with index), and `ReleaseCaptive` (mutates status in place, retains entry for audit). No consumer system ships in this slice; the data shape lands ahead of dispatch.
+- **Sub-slice 20 missionary execution**: first production consumer of sub-slice 18 dynasty operations foundation. New `DynastyOperationMissionaryComponent` per-kind component carries `ResolveAtInWorldDays` (current + 32f), `OperatorMemberId`, `OperatorTitle`, `SourceFaithId`, `ExposureGain`, `IntensityErosion`, `LoyaltyPressure`, `SuccessScore`, `ProjectedChance`, `IntensityCost` (12f), and `EscrowCost` (new `DynastyOperationEscrowCost` struct mirroring resource-stockpile fields with only Influence set to 14f). New `AIMissionaryExecutionSystem` consumes `AICovertOpsComponent.LastFiredOp == CovertOpKind.Missionary`, gates on getMissionaryTerms parity, capacity-gates on `DynastyOperationLimits.HasCapacity`, deducts cost on success, computes per-kind terms from the simplified browser parity formula, calls `DynastyOperationLimits.BeginOperation` with `DynastyOperationKind.Missionary` + player target, attaches `DynastyOperationMissionaryComponent`, and pushes a `NarrativeMessageBridge.Push` line ("<source> dispatches missionaries of <faith> toward <target>.") with tone Warn when target is player and Info otherwise (browser tone routing simulation.js:10560-10561). Always clears LastFiredOp to None regardless of outcome (one-shot pattern shared with sub-slices 8/9/12/13/14).
+- Browser duration translation: `MISSIONARY_DURATION_SECONDS = 32` real seconds is reinterpreted as `MissionaryDurationInWorldDays = 32f` directly on the in-world timeline rather than translated through `DualClock.DaysPerRealSecond`. Future resolution slice can re-translate at runtime if the canonical clock rate shifts; data shape stays the same.
+- Per-kind resolution intentionally deferred. Created operation entities sit Active=true with the per-kind component attached until a future slice walks expired entries at `ResolveAtInWorldDays`, applies `ExposureGain`/`IntensityErosion`/`LoyaltyPressure` to the target faction, and flips Active=false.
+- Defense-score simplification vs browser: Unity omits target-operator renown contribution and ward-profile bonus from the defense score because Unity has no symmetric target-operator gate yet and no faith-ward readout. Slight power adjustment vs browser; revisit when the resolution slice and ward-profile readout land.
+- Faith operator role gate substitutes Spymaster for the canonical Sorcerer role (browser `getFaithOperatorMember` accepts `["ideological_leader", "sorcerer", "head_of_bloodline", "diplomat"]`); Unity has no Sorcerer DynastyRole yet.
+- New dedicated bundled validator `BloodlinesCaptiveStateAndMissionaryExecutionSmokeValidation` plus wrapper `scripts/Invoke-BloodlinesUnityCaptiveStateAndMissionaryExecutionSmokeValidation.ps1`. All 8 phases PASS:
+  - PhaseCaptureMember: 1 Held entry with correct fields and DualClock timestamp
+  - PhaseMultipleCaptivesPerFaction: 3 captives from 3 origin factions, each found by member id
+  - PhaseReleaseCaptive: status flipped to Released, entry retained on buffer for audit
+  - PhaseMissionaryDispatchSuccess: op created with player target, per-kind attached with ResolveAt=72, OperatorMemberId resolved, IntensityCost=12, EscrowCost.Influence=14, source Influence 50->36, source Intensity 30->18, narrative +1, dispatch cleared
+  - PhaseMissionaryCapBlocks: cap-worth pre-seeded blocks new creation, resources/intensity untouched, dispatch still cleared
+  - PhaseMissionaryNoFaithBlocks: CovenantId.None blocks dispatch
+  - PhaseMissionaryInsufficientIntensityBlocks: intensity 8 < 12 blocks
+  - PhaseMissionaryInsufficientResourcesBlocks: influence 10 < 14 blocks
+- Local csproj note: branch began with `unity/Assembly-CSharp.csproj` and `unity/Assembly-CSharp-Editor.csproj` carried from the prior `claude/unity-ai-dynasty-operations-foundation` worktree state, so the csproj also required adding Codex sub-slice 7 entries (`BloodlinesDebugCommandSurface.Fortification.BreachReadout.cs` and `BloodlinesBreachLegibilityReadoutSmokeValidation.cs`) for the dotnet-build gate to compile them. Unity's csproj auto-regeneration restores entries when the editor reloads. csproj files remain gitignored.
+- Contract revision advanced 36 -> 37. New per-slice handoff: `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-bundle-1-captive-state-and-missionary-execution.md`.
+
+### Gate Results
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS with existing editor warnings only
+- Bootstrap runtime smoke: PASS via `artifacts/unity-bootstrap-runtime-smoke.log`
+- Combat smoke: PASS via `artifacts/unity-combat-smoke.log` (all 8 phases)
+- Scene shells: Bootstrap + Gameplay PASS via `artifacts/unity-bootstrap-scene-validate.log` and `artifacts/unity-gameplay-scene-validate.log`
+- Fortification smoke: PASS via `artifacts/unity-fortification-smoke.log`
+- Siege smoke: PASS via `artifacts/unity-siege-smoke.log`
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision 37
+- Dedicated bundled smoke: PASS via `artifacts/unity-captive-state-and-missionary-execution-smoke.log` with marker `BLOODLINES_CAPTIVE_STATE_AND_MISSIONARY_EXECUTION_SMOKE PASS`
+
+### Recommended Next AI Strategic Layer Slices (Bundle 2 candidates)
+1. Holy war declaration execution (sub-slice 21): port `startHolyWarDeclaration` at simulation.js:10565 with a `DynastyOperationHolyWarComponent` attached to the entity created by `DynastyOperationLimits.BeginOperation`. Consumes `AICovertOpsComponent.LastFiredOp == CovertOpKind.HolyWar`. Same one-shot pattern.
+2. Divine right declaration execution (sub-slice 22): port the divine right declaration flow with a `DynastyOperationDivineRightComponent`. Consumes `AICovertOpsComponent.LastFiredOp == CovertOpKind.DivineRight`. Bundle with sub-slice 21 if scope allows; both are faith-driven dispatch consumers of the sub-slice 18 foundation.
+3. Captive rescue and ransom execution (sub-slices 23/24): consume `CovertOpKind.CaptiveRescue` / `CovertOpKind.CaptiveRansom` and produce per-kind components plus mutations on the sub-slice 19 `CapturedMemberElement` buffer (rescue removes Held captives via state flip; ransom flips to RansomOffered then Released with gold cost).
+4. Per-kind resolution system: walk expired `DynastyOperationMissionaryComponent` entries at `ResolveAtInWorldDays`, apply `ExposureGain` to target's `FaithExposureElement` buffer, apply `IntensityErosion` to target's `FaithStateComponent.Intensity`, apply `LoyaltyPressure` to lowest-loyalty `ControlPointComponent` owned by target, flip Active=false. Generalizes once additional per-kind components land.
