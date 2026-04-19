@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-19T07:14:07.7672250-06:00",
+  "updated_at": "2026-04-19T12:07:15.7213416-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -1556,6 +1556,15 @@
       "description": "Back-wires NarrativeMessageBridge.Push into the three AI systems that deferred their browser ceremonial lines in earlier slices: AIMarriageAcceptEffectsSystem (marriage accept line at simulation.js:7463, sub-slice 11+12), AILesserHousePromotionSystem (founding line at simulation.js:7251-7255, sub-slice 13), AIPactProposalExecutionSystem (pact entry line at simulation.js:5216-5220, sub-slice 14). Each wire-up follows the one-line-push pattern from PactBreakSystem (sub-slice 16). Marriage accept composes '<headTitle> of <headFactionId> weds <spouseTitle> of <spouseFactionId> <approvalText>.' with approvalText from MarriageAcceptanceTermsComponent (HeadDirect -> 'under head approval'; HeirRegency -> 'under heir regency (legitimacy -1)'; EnvoyRegency -> 'under envoy regency (legitimacy -2)'). Lesser-house composes '<factionId> founds <lesserHouseName>, honoring <founderTitle>.'. Pact proposal composes '<sourceFactionId> and <targetFactionId> enter a non-aggression pact. Hostility ceases for at least 180 in-world days.'. Tone routing: player-involved party promotes to Good, else Info. AIPactProposalExecutionSystem hardcodes target='player' so its Good branch is defensive. Member title lookup uses DynastyMemberRef with a direct FixedString64Bytes MemberId fallback (byte-by-byte FixedString.Append promotes through the int overload and writes decimal digits; direct FixedString assignment preserves UTF-8 verbatim). FactionId substitutes for display name until a Unity display-name component lands. BloodlinesAINarrativeBackWireSmokeValidation 6-phase PASS: PhaseMarriageAcceptPlayerHeadDirect (Good, 'weds'/'under head approval'), PhaseMarriageAcceptEnemyHeirRegency (Info, 'heir regency'/'legitimacy -1'), PhaseMarriageAcceptEnemyEnvoyRegency (Info, 'envoy regency'/'legitimacy -2'), PhaseLesserHousePromotionPlayer (Good, 'founds'/'honoring'), PhaseLesserHousePromotionEnemy (Info), PhasePactProposalEnemy (Info, 'enter a non-aggression pact'/'180 in-world days'). Sub-slice 11, 13, 14, 15, 16 regression smokes all re-run green. Branched from origin/master 8826d855. Contract rev 32->33.",
       "handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-17-narrative-back-wire.md",
       "validation_gates": "all 10 green plus narrative back-wire smoke and sub-slice 11/13/14/15/16 regressions"
+    },
+    {
+      "lane": "fortification-siege-sub-slice-6-breach-assault-pressure",
+      "date": "2026-04-19",
+      "branch": "codex/unity-fortification-breach-assault-pressure",
+      "status": "active",
+      "description": "Rebased onto origin/master dfec72f5 after Claude's revision-33 ai-strategic-layer sub-slice 17 landed. BreachAssaultPressureSystem consumes FortificationComponent.OpenBreachCount after fortification destruction resolution and before FieldWaterStrainSystem. Hostile units inside a breached settlement's threat radius now gain a bounded exploitation bonus while the settlement owner is explicitly excluded. FieldWaterComponent now carries breach telemetry (advantage active flag, breach count, target settlement id, attack multiplier, speed multiplier), and FieldWaterStrainSystem multiplies that state into the existing field-water plus siege-support attack/speed resolution path. SiegeSupportCanon now applies +8% attack and +4% speed per open breach capped at 3 breaches. BloodlinesSiegeSmokeValidation now includes the new system in its validation world. Dedicated 4-phase breach assault pressure smoke PASS: intact-wall baseline, single-breach hostile bonus, settlement-owner exclusion, and multi-breach scaling with radius gating. Contract rev 33->34.",
+      "handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-assault-pressure.md",
+      "validation_gates": "all 10 green plus breach assault pressure smoke"
     }
   ]
 }

@@ -191,11 +191,22 @@ namespace Bloodlines.Siege
                     entityManager.SetComponentData(entity, siegeSupport);
                 }
 
+                float breachAttackMultiplier = fieldWater.BreachAssaultAdvantageActive
+                    ? math.max(1f, fieldWater.BreachAssaultAttackMultiplier)
+                    : 1f;
+                float breachSpeedMultiplier = fieldWater.BreachAssaultAdvantageActive
+                    ? math.max(1f, fieldWater.BreachAssaultSpeedMultiplier)
+                    : 1f;
+
                 fieldWater.IsSupported = supported;
                 fieldWater.OperationalAttackMultiplier =
-                    FieldWaterCanon.ResolveAttackMultiplier(fieldWater.Strain) * siegeAttackMultiplier;
+                    FieldWaterCanon.ResolveAttackMultiplier(fieldWater.Strain) *
+                    siegeAttackMultiplier *
+                    breachAttackMultiplier;
                 fieldWater.OperationalSpeedMultiplier =
-                    FieldWaterCanon.ResolveSpeedMultiplier(fieldWater.Strain) * siegeSpeedMultiplier;
+                    FieldWaterCanon.ResolveSpeedMultiplier(fieldWater.Strain) *
+                    siegeSpeedMultiplier *
+                    breachSpeedMultiplier;
 
                 if (health.Current <= 0f)
                 {

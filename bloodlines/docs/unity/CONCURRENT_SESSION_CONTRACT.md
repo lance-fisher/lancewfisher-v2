@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 33
+- Revision: 34
 - Last Updated: 2026-04-19
-- Last Updated By: claude-ai-narrative-back-wire-2026-04-19
-- Supersedes: revision 32 (ai-strategic-layer sub-slice 17 landed on top of sub-slice 16 narrative message bridge at revision 32; back-wires NarrativeMessageBridge.Push into the three AI systems that deferred their ceremonial lines in earlier slices: AIMarriageAcceptEffectsSystem (sub-slice 11+12 marriage accept ceremonial line with authority-mode suffix at simulation.js:7463), AILesserHousePromotionSystem (sub-slice 13 founding line at simulation.js:7251-7255), AIPactProposalExecutionSystem (sub-slice 14 pact entry line at simulation.js:5216-5220); tone routing follows the browser source/target rule: player as head (marriage accept) or player as source (pact proposal) promotes to Good, player faction on lesser-house promotes to Good, else Info; AIPactProposalExecutionSystem hardcodes target to "player" per the browser ai.js dispatch so the Good branch is defensive for future extension; marriage member titles are looked up via the DynastyMemberRef buffer with a direct FixedString64Bytes memberId fallback when no roster is seeded (byte-by-byte Append promotes through the integer overload and was not a safe fallback); FactionId is used as a display-name stand-in since Unity has no faction display-name component yet. BloodlinesAINarrativeBackWireSmokeValidation 6-phase validator covers: player-source marriage accept (head-direct, Good tone, "under head approval"), enemy-source marriage accept (heir regency, Info tone, "legitimacy -1"), enemy-source marriage accept (envoy regency, Info tone, "legitimacy -2"), player-faction lesser-house promotion (Good tone, "founds"/"honoring"), enemy-faction lesser-house promotion (Info tone), enemy-source pact proposal (Info tone, "enter a non-aggression pact"/"180 in-world days"); sub-slice 11/13/14/15/16 regression smokes all re-run green, confirming the wire-ups are purely additive)
+- Last Updated By: codex-fortification-breach-assault-pressure-2026-04-19
+- Supersedes: revision 33 (Claude's ai-strategic-layer sub-slice 17 narrative back-wire landed on `dfec72f5`; revision 34 carries that lane block forward unchanged and supersedes it with fortification-siege sub-slice 6 breach assault pressure, adding `BreachAssaultPressureSystem.cs`, `BloodlinesBreachAssaultPressureSmokeValidation.cs`, and `Invoke-BloodlinesUnityBreachAssaultPressureSmokeValidation.ps1` to the fortification lane while consuming `FortificationComponent.OpenBreachCount` after destruction resolution and before `FieldWaterStrainSystem` so hostile units inside the breached settlement threat envelope gain a bounded exploitation bonus. `FieldWaterComponent` now carries breach pressure telemetry fields, `SiegeSupportCanon` adds +8% attack and +4% speed per open breach capped at 3 breaches, `BloodlinesSiegeSmokeValidation` includes the new system in its validation world, and the dedicated breach smoke proves intact-wall baseline, single-breach hostile bonus, settlement-owner exclusion, and multi-breach scaling with radius gating)
 
 ## Purpose
 
@@ -424,7 +424,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: fortification-siege-imminent-engagement
 
 - Status: active
-- Branch Prefix: `codex/unity-fortification-wall-segment-destruction` (sub-slice 5); prior `codex/unity-fortification-siege*` slices 1-4 also landed; future follow-ups should continue on fresh `codex/unity-fortification-*` branches
+- Branch Prefix: `codex/unity-fortification-breach-assault-pressure` (sub-slice 6), `codex/unity-fortification-wall-segment-destruction` (sub-slice 5); prior `codex/unity-fortification-siege*` slices 1-4 also landed; future follow-ups should continue on fresh `codex/unity-fortification-*` branches
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/Fortification/**`
@@ -442,12 +442,14 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesImminentEngagementSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSiegeSupplyInterdictionSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesWallSegmentDestructionSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBreachAssaultPressureSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityImminentEngagementSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnitySiegeSupplyInterdictionSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityWallSegmentDestructionSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityBreachAssaultPressureSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1` -- additive wrapper update preserved fortification smoke ownership while keeping the existing validation surface intact for the rebased imminent-engagement lane
 - Lane Authority Documents:
@@ -456,14 +458,15 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-imminent-engagement-warnings.md`
   - `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-camp-supply-interdiction.md`
   - `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-wall-segment-destruction-resolution.md`
-- Current Branch In Flight: `codex/unity-fortification-wall-segment-destruction`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-wall-segment-destruction-resolution.md`
+  - `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-assault-pressure.md`
+- Current Branch In Flight: `codex/unity-fortification-breach-assault-pressure`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-assault-pressure.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: `fortification-siege-sub-slice-5-wall-segment-destruction-resolution` is implemented on `codex/unity-fortification-wall-segment-destruction` and documented in this revision. Further fortification follow-ups should continue using fresh `codex/unity-fortification-*` branches rather than widening the earlier fortification branches.
+Note: `fortification-siege-sub-slice-6-breach-assault-pressure` is implemented on `codex/unity-fortification-breach-assault-pressure` and documented in this revision. Further fortification follow-ups should continue using fresh `codex/unity-fortification-*` branches rather than widening the earlier fortification branches.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 
