@@ -9,8 +9,8 @@ namespace Bloodlines.AI
 {
     /// <summary>
     /// Strategic AI decision layer for non-player Kingdom factions. Runs territory
-    /// expansion, scout/harass dispatch, world-pressure posture response, and
-    /// reinforcement routing on governed per-faction timers.
+    /// target selection, scout/harass dispatch, world-pressure posture response,
+    /// and reinforcement routing on governed per-faction timers.
     ///
     /// Requires AIEconomyControllerComponent.Enabled == true to activate per faction.
     /// Reads AIStrategyComponent for per-faction state and writes back updated state.
@@ -160,63 +160,10 @@ namespace Bloodlines.AI
             if (CountCombatUnits(em, factionId) < militiaThreshold)
                 return;
 
-            if (!TryPickExpansionTarget(em, factionId, out float3 targetPos, out var targetCpId))
+            if (!TryPickExpansionTarget(em, factionId, out _, out var targetCpId))
                 return;
 
             strategy.ExpansionTargetCpId = targetCpId;
-
-            var factionKey = new FixedString32Bytes(factionId);
-            var unitQuery  = em.CreateEntityQuery(
-                ComponentType.ReadOnly<FactionComponent>(),
-                ComponentType.ReadOnly<UnitTypeComponent>(),
-                ComponentType.ReadOnly<PositionComponent>(),
-                ComponentType.ReadOnly<HealthComponent>(),
-                typeof(MoveCommandComponent));
-
-            var unitEntities  = unitQuery.ToEntityArray(Allocator.Temp);
-            var unitFactions  = unitQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp);
-            var unitTypes     = unitQuery.ToComponentDataArray<UnitTypeComponent>(Allocator.Temp);
-            var unitPositions = unitQuery.ToComponentDataArray<PositionComponent>(Allocator.Temp);
-            var unitHealth    = unitQuery.ToComponentDataArray<HealthComponent>(Allocator.Temp);
-            var moveComps     = unitQuery.ToComponentDataArray<MoveCommandComponent>(Allocator.Temp);
-            unitQuery.Dispose();
-
-            const float captureRadius = 1.5f;
-            int ordered = 0;
-            for (int i = 0; i < unitEntities.Length; i++)
-            {
-                if (!unitFactions[i].FactionId.Equals(factionKey) || unitHealth[i].Current <= 0f)
-                    continue;
-                var role = unitTypes[i].Role;
-                if (role == UnitRole.Worker || role == UnitRole.SiegeEngine ||
-                    role == UnitRole.SiegeSupport || role == UnitRole.Support)
-                    continue;
-
-                if (moveComps[i].IsActive &&
-                    math.distancesq(moveComps[i].Destination, targetPos) <= captureRadius * captureRadius)
-                    continue;
-
-                if (math.distancesq(unitPositions[i].Value, targetPos) <= captureRadius * captureRadius)
-                    continue;
-
-                em.SetComponentData(unitEntities[i], new MoveCommandComponent
-                {
-                    Destination     = targetPos,
-                    StoppingDistance = captureRadius,
-                    IsActive        = true,
-                });
-                ordered++;
-            }
-
-            unitEntities.Dispose();
-            unitFactions.Dispose();
-            unitTypes.Dispose();
-            unitPositions.Dispose();
-            unitHealth.Dispose();
-            moveComps.Dispose();
-
-            strategy.ExpansionOrdersIssued   += ordered;
-            strategy.TerritoryCommandsIssued += ordered;
         }
 
         private static bool TryPickExpansionTarget(

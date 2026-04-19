@@ -127,6 +127,17 @@ namespace Bloodlines.Systems
             float dt,
             ref WorkerGatherComponent gather)
         {
+            var nodePosition = entityManager.GetComponentData<PositionComponent>(gather.AssignedNode).Value;
+            float distanceSq = math.distancesq(workerPosition, nodePosition);
+            float radiusSq = gather.GatherRadius * gather.GatherRadius;
+            if (distanceSq > radiusSq)
+            {
+                IssueMoveCommand(entityManager, workerEntity, nodePosition, math.max(0.2f, gather.GatherRadius * 0.9f));
+                return;
+            }
+
+            StopMoveCommand(entityManager, workerEntity);
+
             var node = entityManager.GetComponentData<ResourceNodeComponent>(gather.AssignedNode);
             if (node.Amount <= 0f)
             {
