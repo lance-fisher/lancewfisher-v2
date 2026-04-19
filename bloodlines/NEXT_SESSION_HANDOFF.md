@@ -2196,3 +2196,40 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 2. ai-strategic-layer-sub-slice-18-dynasty-operations-foundation (new DynastyOperationComponent entity shape + DYNASTY_OPERATION_ACTIVE_LIMIT gate; unblocks missionary, holy war, divine right, captive rescue, and ransom execution sub-slices).
 3. ai-strategic-layer-sub-slice-19-captive-member-state (port faction.captives + CapturedMemberRecord shape; needed for captive rescue/ransom execution on top of sub-slice 18 foundation).
 4. fortification-siege breach-aware follow-up (Codex owns; use FortificationComponent.OpenBreachCount in breach-aware assault, pathing, or HUD/legibility logic on a fresh `codex/unity-fortification-*` branch).
+
+## AI Strategic Layer Sub-Slice 17: Narrative Back-Wire (Claude, 2026-04-19)
+
+### Status: COMPLETE on branch claude/unity-ai-narrative-back-wire (branched from origin/master 8826d855 after sub-slice 16 narrative message bridge landed at revision 32)
+
+### What Was Done
+- Back-wires `NarrativeMessageBridge.Push` into the three AI systems that deferred their browser ceremonial lines in earlier slices: `AIMarriageAcceptEffectsSystem` (marriage accept line at simulation.js:7463, sub-slice 11+12), `AILesserHousePromotionSystem` (founding line at simulation.js:7251-7255, sub-slice 13), `AIPactProposalExecutionSystem` (pact entry line at simulation.js:5216-5220, sub-slice 14). Each wire-up is a small additive edit following the PactBreakSystem pattern from sub-slice 16.
+- Marriage accept push reads `MarriageAcceptanceTermsComponent.AuthorityMode` + `LegitimacyCost` for the approval suffix (HeadDirect -> "under head approval"; HeirRegency -> "under heir regency (legitimacy -1)"; EnvoyRegency -> "under envoy regency (legitimacy -2)"). Member titles resolve via `DynastyMemberRef` with a direct FixedString64Bytes `MemberId` fallback. Player as head promotes to Good tone, else Info.
+- Lesser-house push composes `"<factionId> founds <lesserHouseName>, honoring <founderTitle>."` with Good tone for player faction, else Info.
+- Pact proposal push composes `"<sourceFactionId> and <targetFactionId> enter a non-aggression pact. Hostility ceases for at least 180 in-world days."` with Good tone for player source, else Info. Target is hardcoded to "player" in the system, so the Good branch is defensive for future extension.
+- Title fallback rewrite: `ResolveMemberTitle` returns the raw MemberId directly. Byte-by-byte FixedString.Append promotes through the int overload and writes decimal digits rather than characters; direct FixedString assignment preserves the UTF-8 bytes verbatim.
+- `BloodlinesAINarrativeBackWireSmokeValidation` 6-phase validator all green. Sub-slice 11, 13, 14, 15, 16 regression smokes all re-run green.
+- Contract revision 32 -> 33.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS
+- Combat smoke: 8 phases PASS
+- Scene shells: Bootstrap + Gameplay green
+- Fortification smoke: PASS
+- Siege smoke: PASS
+- AI narrative back-wire smoke (sub-slice 17): all 6 phases PASS
+- AI marriage accept effects regression (sub-slice 11): PASS
+- AI lesser-house promotion regression (sub-slice 13): PASS
+- AI pact proposal execution regression (sub-slice 14): PASS
+- Pact break regression (sub-slice 15): PASS
+- Narrative message bridge regression (sub-slice 16): PASS
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED at revision 33
+
+### Next Unclaimed Lanes
+1. ai-strategic-layer-sub-slice-18-dynasty-operations-foundation (new DynastyOperationComponent entity shape + DYNASTY_OPERATION_ACTIVE_LIMIT gate; unblocks missionary, holy war, divine right, captive rescue, and ransom execution sub-slices).
+2. ai-strategic-layer-sub-slice-19-captive-member-state (port faction.captives + CapturedMemberRecord shape; needed for captive rescue/ransom execution on top of sub-slice 18 foundation).
+3. ai-strategic-layer narrative TTL eviction system (walks the NarrativeMessageElement buffer each tick and removes entries whose CreatedAtInWorldDays + Ttl is past current; small self-contained slice that bounds the buffer before a UI consumer lands).
+4. fortification-siege follow-up (Codex has `codex/unity-fortification-breach-assault-pressure` in flight locally but not yet on origin/master; breach-aware assault, pathing, or HUD/legibility is still unclaimed on a fresh `codex/unity-fortification-*` branch).
