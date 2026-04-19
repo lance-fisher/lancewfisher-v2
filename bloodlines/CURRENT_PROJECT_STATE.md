@@ -1785,3 +1785,16 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Note: Firing timers must be seeded at -1f (already expired) in test worlds; deltaTime=0 means 0.001f timers never expire.
 - All 10 validation gates green; contract bumped revision 17 -> 18.
 - The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-6-dynasty-covert-ops.md`.
+
+### 2026-04-19 Unity AI Strategic Layer Sub-Slice 7: Build Order Priority Chain
+
+- `AIBuildOrderSystem` + `AIBuildOrderComponent` ported from ai.js updateEnemyAi buildTimer<=0 block (~lines 1377-1573) on branch `claude/unity-ai-build-timer-chain`.
+- 13-step build priority chain preserves ai.js if-else order exactly: (1) Barracks, (2) Wayshrine (faith faction + barracks), (3) Quarry (keep fortified + barracks), (4) IronMine (keep fortified + barracks), (5) SiegeWorkshop (keep fortified + barracks + quarry + iron mine), (6) CovenantHall (faith + wayshrine completed + intensity >= 26), (7) GrandSanctuary (faith + covenant hall completed + urgency gate: intensity >= 48 OR active covenant test OR player covenant active OR player divine right active), (8) ApexCovenant (faith + covenant test passed + grand sanctuary completed + intensity >= 80), (9) SupplyCamp (keep fortified + siege workshop completed), (10) Stable (keep fortified + supply camp completed + engineer corps + supply wagon), (11) Dwelling (population cap <= 1 + houses < 4), (12) Farm (food < total+4 + farms < 3), (13) Well (water < total+4 + wells < 3).
+- `BuildOrderKind` 14-value enum: None, Barracks, Wayshrine, Quarry, IronMine, SiegeWorkshop, CovenantHall, GrandSanctuary, ApexCovenant, SupplyCamp, Stable, Dwelling, Farm, Well.
+- Timer source: reads `AIStrategyComponent.BuildTimer` (decremented by `AIStrategicPressureSystem`). On fire, writes first matching branch to `NextBuildOp` and resets `BuildTimer = PlayerKeepFortified ? 4f : 6f` matching ai.js line 1573.
+- Faith intensity thresholds canonical: 26 (covenant hall), 48 (grand sanctuary), 80 (apex covenant).
+- Scheduling and decision logic only; actual `attemptPlaceBuilding` call is deferred to a later economy/placement integration pass. Same deferred pattern as sub-slice 6.
+- `BloodlinesAIBuildOrderSmokeValidation` 5-phase validator all green: Phase 1 Barracks, Phase 2 Wayshrine, Phase 3 SiegeWorkshop, Phase 4 Dwelling, Phase 5 Farm.
+- Timer seeding note: test worlds run world.Update() with deltaTime=0; AIStrategicPressureSystem applies a 0.016f floor; firing timers seeded at -1f become -1.016f, still <= 0 at the build-order check.
+- All 10 validation gates green; contract bumped revision 18 -> 19.
+- The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-7-build-order.md`.
