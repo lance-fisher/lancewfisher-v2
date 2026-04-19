@@ -1672,3 +1672,33 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 ### Next Unclaimed Lanes
 1. ai-strategic-layer-sub-slice-6-dynasty-covert-ops (new branch claude/unity-ai-dynasty-covert-ops; ai.js ~2681)
 2. fortification-siege-sub-slice-3-imminent-engagement-warnings (Codex in progress, do not claim)
+
+## AI Strategic Layer Sub-Slice 6: Dynasty Covert Ops Dispatch (Claude, 2026-04-19)
+
+### Status: COMPLETE on branch claude/unity-ai-dynasty-covert-ops
+
+### What Was Done
+- Ported ai.js updateEnemyAi dynasty covert ops dispatch block (~2419-2678) into `AICovertOpsSystem` + `AICovertOpsComponent`.
+- Nine countdown timers with canonical ai.js defaults. `CovertOpKind` 10-value enum.
+- Three phases per entity: TickTimers, ApplyPressureCaps (DarkExtremes/WorldPressureLevel/convergence/HolyWarFocused/DivineRight/CaptivesFocused caps via math.min), TryFireOps (fires first expired timer with gate met, writes LastFiredOp, returns).
+- Captive branch: rescue-first for HighPriorityCaptive or EnemyIsHostileToPlayer; ransom-first otherwise.
+- Pact branch: shouldPropose when succession pressure or army <= 3 or governance near victory.
+- 5-phase smoke validator all green. Contract revision 17 -> 18.
+- Key lesson: firing timers in smoke tests must be -1f (already expired); 0.001f never fires with deltaTime=0.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- Fortification smoke: PASS
+- Siege smoke: exit 0
+- AI covert ops smoke: Phase 1-5 PASS
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED revision=18
+
+### Next Unclaimed Lanes
+1. ai-strategic-layer-sub-slice-7-build-timer-chain (new branch claude/unity-ai-build-timer-chain; ai.js building construction/upgrade timer block ~lines 1060-1100)
+2. fortification-siege-sub-slice-3-imminent-engagement-warnings (Codex in progress, do not claim)

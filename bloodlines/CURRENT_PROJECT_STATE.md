@@ -1773,3 +1773,15 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - `BloodlinesAISiegeOrchestrationSmokeValidation` 6-phase validator all green: Phase 1 Inactive (keep not fortified); Phase 2 FieldWaterRetreat highest priority override; Phase 3 SiegeRefusal; Phase 4 StagingLines; Phase 5 Assaulting; Phase 6 PostRepulse cohesion penalty.
 - All 10 validation gates green; contract bumped revision 16 -> 17.
 - The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-5-siege-staging.md`.
+
+### 2026-04-19 Unity AI Strategic Layer Sub-Slice 6: Dynasty Covert Ops Dispatch
+
+- `AICovertOpsSystem` + `AICovertOpsComponent` ported from ai.js updateEnemyAi dynasty covert ops dispatch block (~lines 2419-2678) on branch `claude/unity-ai-dynasty-covert-ops`.
+- Nine countdown timers: assassination (80s), missionary (70s), holy war (95s), divine right (140s), captive recovery (60s), marriage proposal (90s), marriage inbox (30s), pact proposal (120s), lesser-house promotion (60s). All defaults mirror ai.js canonical values.
+- `CovertOpKind` 10-value enum: None, Assassination, Missionary, HolyWar, DivineRight, CaptiveRescue, CaptiveRansom, MarriageProposal, MarriageInboxAccept, PactProposal, LesserHousePromotion.
+- `AICovertOpsSystem` three phases per entity per frame: TickTimers (decrement by deltaTime), ApplyPressureCaps (DarkExtremes/WorldPressureLevel/convergence/HolyWarFocused/DivineRight/CaptivesSourceFocused pressure-cap chain via math.min), TryFireOps (fire first expired timer whose gate conditions are met, write LastFiredOp, reset timer, return).
+- Captive branch: HighPriorityCaptive or EnemyIsHostileToPlayer yields CaptiveRescue; otherwise CaptiveRansom. Pact branch: shouldPropose when succession pressure or army count <= 3 or governance near victory.
+- `BloodlinesAICovertOpsSmokeValidation` 5-phase validator all green: Phase 1 Assassination, Phase 2 Missionary, Phase 3 HolyWar, Phase 4 PactProposal, Phase 5 CaptiveRescue.
+- Note: Firing timers must be seeded at -1f (already expired) in test worlds; deltaTime=0 means 0.001f timers never expire.
+- All 10 validation gates green; contract bumped revision 17 -> 18.
+- The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-6-dynasty-covert-ops.md`.

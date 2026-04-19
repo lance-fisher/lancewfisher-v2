@@ -1318,6 +1318,15 @@
       "description": "AISiegeOrchestrationSystem + AISiegeOrchestrationComponent: ports ai.js attackTimer<=0 siege staging decision tree (~1825-2090). SiegeOrchestrationPhase 17-value enum matches branch priority order exactly. Pure state machine reads PlayerKeepFortified from AIStrategyComponent, evaluates 16-gate priority tree, writes Phase. Field water retreat highest priority; Assaulting only when all gates clear. 6-phase smoke PASS. Contract rev 16->17.",
       "handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-5-siege-staging.md",
       "validation_gates": "all 10 green"
+    },
+    {
+      "lane": "ai-strategic-layer-sub-slice-6-dynasty-covert-ops",
+      "date": "2026-04-19",
+      "branch": "claude/unity-ai-dynasty-covert-ops",
+      "status": "active",
+      "description": "AICovertOpsSystem + AICovertOpsComponent: ports ai.js updateEnemyAi dynasty covert ops dispatch block (~2419-2678). Nine countdown timers, 31 context flags, CovertOpKind 10-value enum. TickTimers/ApplyPressureCaps/TryFireOps dispatch loop fires first expired timer with gate met. Captive rescue-first for high priority or hostile. Pact shouldPropose on succession/army/governance pressure. 5-phase smoke PASS. Contract rev 17->18.",
+      "handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-6-dynasty-covert-ops.md",
+      "validation_gates": "all 10 green"
     }
   ]
 }
