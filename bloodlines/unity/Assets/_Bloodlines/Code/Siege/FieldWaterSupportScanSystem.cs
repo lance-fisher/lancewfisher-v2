@@ -81,13 +81,14 @@ namespace Bloodlines.Siege
                 });
             }
 
-            foreach (var (buildingType, faction, position, health) in
+            foreach (var (buildingType, faction, position, health, entity) in
                 SystemAPI.Query<
                     RefRO<BuildingTypeComponent>,
                     RefRO<FactionComponent>,
                     RefRO<PositionComponent>,
                     RefRO<HealthComponent>>()
-                .WithNone<DeadTag>())
+                .WithNone<DeadTag>()
+                .WithEntityAccess())
             {
                 if (health.ValueRO.Current <= 0f ||
                     !FieldWaterCanon.TryGetBuildingSupportProfile(
@@ -96,6 +97,16 @@ namespace Bloodlines.Siege
                         out float supportDurationSeconds))
                 {
                     continue;
+                }
+
+                if (buildingType.ValueRO.SupportsSiegeLogistics &&
+                    entityManager.HasComponent<SiegeSupplyCampComponent>(entity))
+                {
+                    var camp = entityManager.GetComponentData<SiegeSupplyCampComponent>(entity);
+                    if (!SiegeSupplyInterdictionCanon.IsCampOperational(camp))
+                    {
+                        continue;
+                    }
                 }
 
                 buildingSources.Add(new BuildingSupportRecord
@@ -120,8 +131,13 @@ namespace Bloodlines.Siege
                 if (!support.ValueRO.IsSupplyWagon ||
                     !support.ValueRO.HasLinkedSupplyCamp ||
                     supplyTrain.ValueRO.LinkedCampEntity == Entity.Null ||
+                    (supplyTrain.ValueRO.LogisticsInterdictedUntil > elapsed) ||
+                    (supplyTrain.ValueRO.ConvoyRecoveryUntil > elapsed) ||
                     !entityManager.Exists(supplyTrain.ValueRO.LinkedCampEntity) ||
                     !entityManager.HasComponent<HealthComponent>(supplyTrain.ValueRO.LinkedCampEntity) ||
+                    !entityManager.HasComponent<SiegeSupplyCampComponent>(supplyTrain.ValueRO.LinkedCampEntity) ||
+                    !SiegeSupplyInterdictionCanon.IsCampOperational(
+                        entityManager.GetComponentData<SiegeSupplyCampComponent>(supplyTrain.ValueRO.LinkedCampEntity)) ||
                     entityManager.GetComponentData<HealthComponent>(supplyTrain.ValueRO.LinkedCampEntity).Current <= 0f ||
                     health.ValueRO.Current <= 0f ||
                     !FieldWaterCanon.TryGetSupplyWagonSupportProfile(

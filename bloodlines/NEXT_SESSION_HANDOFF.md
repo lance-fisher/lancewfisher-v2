@@ -1976,3 +1976,42 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 ### Next Unclaimed Lanes
 1. ai-strategic-layer-sub-slice-13-narrative-message-bridge (designs an AI->UI message channel so `acceptMarriage` ceremonial pushMessage and other AI events can surface to the player; deferred since sub-slice 11).
 2. fortification-siege sub-slice 4+ (Codex owns; lane still active).
+
+## 2026-04-19 Codex Fortification Siege Sub-Slice 4: Camp Supply Interdiction
+
+### Status: COMPLETE on branch codex/unity-fortification-siege-camp-supply-interdiction
+
+### What Was Done
+- Chosen scope: siege camp supply interdiction. This was the highest-value bounded fortification follow-up that stayed entirely inside Codex-owned siege and fortification surfaces while feeding the already-landed AI siege orchestration phases.
+- Added `SiegeSupplyCampComponent` for live logistics stockpile state on logistics-support buildings and `SiegeSupplyInterdictionCanon` for browser-derived convoy and raid constants.
+- Added `SiegeSupplyInterdictionSystem` to scan raiders and escorts, drain contested camp stockpiles, mark wagons interdicted and recovering, record convoy screening and reconsolidation, apply direct resource loss on wagon hits, and write `InterdictedWagonCount`, `RecoveringWagonCount`, and `ConvoyRecoveringUnscreenedCount` into `AISiegeOrchestrationComponent` without editing Claude-owned AI files.
+- Extended `SiegeSupplyTrainComponent` with additive interdiction and recovery fields; extended `SiegeSupportStatus` with `Interdicted`, `RecoveringUnscreened`, and `RecoveringScreened`.
+- Updated `SiegeComponentInitializationSystem`, `SiegeSupportRefreshSystem`, `FieldWaterSupportScanSystem`, and `FieldWaterStrainSystem` so camps and wagons stop providing siege or field-water sustainment while the logistics chain is interdicted or recovering.
+- Added debug helpers to `BloodlinesDebugCommandSurface.Siege` for wagon and camp logistics state.
+- Added dedicated validator `BloodlinesSiegeSupplyInterdictionSmokeValidation` plus wrapper `scripts/Invoke-BloodlinesUnitySiegeSupplyInterdictionSmokeValidation.ps1`.
+- Important validation note: the checked-in bootstrap-runtime and scene-shell wrappers are still pinned to `D:\ProjectsHome\Bloodlines`, so the worktree at `D:\BLFS\bloodlines` used worktree-local direct execute-method validation for those gates rather than committing shared wrapper churn.
+
+### Gate Results
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS
+- Bootstrap runtime smoke: PASS via `artifacts/unity-bootstrap-runtime-smoke.log`
+- Combat smoke: PASS via `artifacts/unity-combat-smoke.log`
+- Bootstrap scene shell: PASS via `artifacts/unity-bootstrap-scene-batch-rev27-codex.log`
+- Gameplay scene shell: PASS via `artifacts/unity-gameplay-scene-batch-rev27-codex.log`
+- Fortification smoke: PASS via `artifacts/unity-fortification-smoke.log`
+- Siege smoke: PASS via `artifacts/unity-siege-smoke.log`
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision 27
+- Dedicated siege supply interdiction smoke: PASS via `artifacts/unity-siege-supply-interdiction-smoke.log`
+- Dedicated smoke marker: `BLOODLINES_SIEGE_SUPPLY_INTERDICTION_SMOKE PASS`
+
+### Continuity Updates
+- Contract bumped `26 -> 27` under `codex-fortification-siege-camp-supply-interdiction-2026-04-19`.
+- New slice handoff: `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-camp-supply-interdiction.md`.
+- `CURRENT_PROJECT_STATE.md`, `NEXT_SESSION_HANDOFF.md`, and `continuity/PROJECT_STATE.json` updated additively with the new fortification entry while preserving Claude sub-slice 12.
+
+### Recommended Next Fortification Follow-Up
+1. Wall-segment destruction resolution.
+2. Gate breach mechanics.
+3. Casualty accumulation and morale collapse.
