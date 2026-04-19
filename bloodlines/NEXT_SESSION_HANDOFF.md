@@ -1734,3 +1734,35 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 1. ai-strategic-layer-sub-slice-8-marriage-proposal-execution (new branch claude/unity-ai-marriage-proposal-execution; ai.js ~2580-2620 plus simulation proposeMarriage ~7340 and acceptMarriage ~7388)
 2. fortification-siege-sub-slice-3-imminent-engagement-warnings (Codex in progress on codex/unity-fortification-siege, do not claim)
 3. codex/unity-ai-command-dispatch rebase pending on Codex side once master advances to revision 19.
+
+## AI Strategic Layer Sub-Slice 8: Marriage Proposal Execution (Claude, 2026-04-19)
+
+### Status: COMPLETE on branch claude/unity-ai-marriage-proposal-execution
+
+### What Was Done
+- Ported ai.js `tryAiMarriageProposal` (~2897-2944) into `AIMarriageProposalExecutionSystem` as the execution half of the covert-ops marriage path.
+- Consumes `AICovertOpsComponent.LastFiredOp == CovertOpKind.MarriageProposal` written by sub-slice 6; always clears back to `None` after processing (pass or fail) to match browser single-fire-per-timer semantic.
+- Four abort gates in browser order: already-married, already-pending, no source candidate, no target candidate. Candidate selection walks `DynastyMemberRef` buffer, filters to non-head active/ruling members, picks first match.
+- Creates `MarriageProposalComponent` entity with `ProposedAtInWorldDays = DualClockComponent.InWorldDays` and `ExpiresAtInWorldDays = now + 30`. Expiration window pulls from `MarriageProposalExpirationSystem.ExpirationInWorldDays` so it stays in sync.
+- Target faction hardcoded to `"player"` matching browser. Multi-faction extension reserved for later slice.
+- Strategic profile gating (faith hostility, population deficit, legitimacy distress, succession crises) is responsibility-split: sub-slice 6 gates dispatch via `MarriageStrategicProfileWilling`, this slice gates execution structurally.
+- Cross-lane reads only (MarriageComponent, MarriageProposalComponent, DynastyMemberComponent, DualClockComponent); no structural edits to retired lanes.
+- 5-phase smoke validator all green (clean creation, already-married block, already-pending block, missing target dynasty, no-dispatch no-op). Contract revision 19 -> 20.
+
+### Gate Results
+- dotnet build Assembly-CSharp.csproj: 0 errors
+- dotnet build Assembly-CSharp-Editor.csproj: 0 errors
+- Bootstrap runtime smoke: PASS
+- Combat smoke: exit 0
+- Scene shells: Bootstrap + Gameplay green
+- Fortification smoke: PASS
+- Siege smoke: exit 0
+- AI marriage proposal execution smoke: Phase 1-5 PASS
+- data-validation.mjs: PASS
+- runtime-bridge.mjs: PASS
+- Contract staleness check: PASSED revision=20 (bumped post-gate)
+
+### Next Unclaimed Lanes
+1. ai-strategic-layer-sub-slice-9-marriage-inbox-accept (new branch claude/unity-ai-marriage-inbox-accept; ai.js tryAiAcceptIncomingMarriage ~2880-2895; simulation acceptMarriage ~7388)
+2. fortification-siege-sub-slice-3-imminent-engagement-warnings (Codex in progress on codex/unity-fortification-siege; do not claim)
+3. codex/unity-ai-command-dispatch rebase pending on Codex side; master now at revision 20 so Codex should bump to 21 on rebase.
