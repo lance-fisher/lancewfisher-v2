@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 26
+- Revision: 27
 - Last Updated: 2026-04-19
-- Last Updated By: claude-ai-marriage-acceptance-terms-2026-04-19
-- Supersedes: revision 25 (ai-strategic-layer sub-slice 12 landed: marriage acceptance terms ported from simulation.js getMarriageAcceptanceTerms (~6327) and applyMarriageGovernanceLegitimacyCost (~6232); new MarriageAcceptanceTermsComponent attached to the primary marriage entity by AIMarriageInboxAcceptSystem captures AuthorityMode + LegitimacyCost; new MarriageAuthorityEvaluator resolves head-direct (cost 0) / heir-regency (cost 1) / envoy-regency (cost 2) / none from the target faction's DynastyMemberRef roster, defaulting to HeadDirect when no roster is present so sub-slice 11 synthetic tests stay green; AIMarriageAcceptEffectsSystem now applies the cost on the spouse legitimacy clamped [0,100] and records a Stewardship -cost conviction event before the +2 bonus, matching the browser order; if no authority path exists the accept short-circuits without creating records and the dispatch is cleared; BloodlinesAIMarriageAcceptanceTermsSmokeValidation 5-phase validator covers head-direct, heir regency, envoy regency, no-authority rejection, and terms-persisted-after-effects)
+- Last Updated By: codex-fortification-siege-camp-supply-interdiction-2026-04-19
+- Supersedes: revision 26 (fortification-siege sub-slice 4 landed on top of the rev-26 master base; SiegeSupplyCampComponent, SiegeSupplyInterdictionCanon, and SiegeSupplyInterdictionSystem port the browser convoy-interdiction seam; camps now lose stockpile under raid pressure, wagons enter interdicted and recovering states, convoy escort screening feeds AISiegeOrchestrationComponent supply phases, and BloodlinesSiegeSupplyInterdictionSmokeValidation covers the new logistics path)
 
 ## Purpose
 
@@ -411,24 +411,27 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSiegeSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesImminentEngagementSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSiegeSupplyInterdictionSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityImminentEngagementSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnitySiegeSupplyInterdictionSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1` -- additive wrapper update preserved fortification smoke ownership while keeping the existing validation surface intact for the rebased imminent-engagement lane
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-17-unity-fortification-siege-fortification-tier-and-reserves.md`
   - `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md`
   - `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-imminent-engagement-warnings.md`
-- Current Branch In Flight: `codex/unity-fortification-siege`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-imminent-engagement-warnings.md`
+  - `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-camp-supply-interdiction.md`
+- Current Branch In Flight: `codex/unity-fortification-siege-camp-supply-interdiction`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-camp-supply-interdiction.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: `fortification-siege-sub-slice-3-imminent-engagement-warnings` is implemented on `codex/unity-fortification-siege` and documented in this revision. No new claim should widen that branch before merge coordination completes.
+Note: `fortification-siege-sub-slice-4-siege-camp-supply-interdiction` is implemented on `codex/unity-fortification-siege-camp-supply-interdiction` and documented in this revision. The next fortification follow-up should claim a fresh `codex/unity-fortification-*` branch rather than widening the earlier fortification branches.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 

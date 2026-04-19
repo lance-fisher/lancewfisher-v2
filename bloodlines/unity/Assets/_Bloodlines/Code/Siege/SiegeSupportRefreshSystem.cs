@@ -22,6 +22,7 @@ namespace Bloodlines.Siege
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<SiegeSupportComponent>();
+            state.RequireForUpdate<SiegeSupplyCampComponent>();
         }
 
         public void OnUpdate(ref SystemState state)
@@ -84,12 +85,13 @@ namespace Bloodlines.Siege
                 }
             }
 
-            foreach (var (buildingType, faction, position, health, entity) in
+            foreach (var (buildingType, faction, position, health, supportCamp, entity) in
                 SystemAPI.Query<
                     RefRO<BuildingTypeComponent>,
                     RefRO<FactionComponent>,
                     RefRO<PositionComponent>,
-                    RefRO<HealthComponent>>()
+                    RefRO<HealthComponent>,
+                    RefRO<SiegeSupplyCampComponent>>()
                 .WithNone<DeadTag>()
                 .WithEntityAccess())
             {
@@ -103,6 +105,7 @@ namespace Bloodlines.Siege
                     Entity = entity,
                     FactionId = faction.ValueRO.FactionId,
                     Position = position.ValueRO.Value,
+                    IsOperational = SiegeSupplyInterdictionCanon.IsCampOperational(supportCamp.ValueRO),
                 });
             }
 
@@ -172,8 +175,11 @@ namespace Bloodlines.Siege
                 var support = wagon.Support;
                 support.LastRefreshAt = elapsed;
                 support.Status = SiegeSupportStatus.Idle;
+                support.HasSupplyTrainSupport = false;
 
                 var supplyTrain = entityManager.GetComponentData<SiegeSupplyTrainComponent>(wagon.Entity);
+                bool interdicted = supplyTrain.LogisticsInterdictedUntil > elapsed;
+                bool recovering = !interdicted && supplyTrain.ConvoyRecoveryUntil > elapsed;
                 int linkedCampIndex = FindNearestSupplyCampIndex(supplyCamps, wagon.FactionId, wagon.Position);
                 if (linkedCampIndex < 0)
                 {
@@ -189,6 +195,17 @@ namespace Bloodlines.Siege
                 support.HasLinkedSupplyCamp = true;
                 supplyTrain.LinkedCampEntity = supplyCamps[linkedCampIndex].Entity;
 
+                if (interdicted)
+                {
+                    support.HasLinkedSupplyCamp = false;
+                    support.Status = SiegeSupportStatus.Interdicted;
+                    supplyTrain.LinkedCampEntity = Entity.Null;
+                    wagon.Support = support;
+                    entityManager.SetComponentData(wagon.Entity, wagon.Support);
+                    entityManager.SetComponentData(wagon.Entity, supplyTrain);
+                    continue;
+                }
+
                 int nearbyEngineCount = 0;
                 var nearbyEngineIndices = new List<int>(4);
                 for (int engineIndex = 0; engineIndex < engines.Count; engineIndex++)
@@ -201,6 +218,17 @@ namespace Bloodlines.Siege
 
                     nearbyEngineIndices.Add(engineIndex);
                     nearbyEngineCount++;
+                }
+
+                if (recovering)
+                {
+                    support.Status = supplyTrain.EscortScreened
+                        ? SiegeSupportStatus.RecoveringScreened
+                        : SiegeSupportStatus.RecoveringUnscreened;
+                    wagon.Support = support;
+                    entityManager.SetComponentData(wagon.Entity, wagon.Support);
+                    entityManager.SetComponentData(wagon.Entity, supplyTrain);
+                    continue;
                 }
 
                 if (nearbyEngineCount <= 0)
@@ -277,7 +305,8 @@ namespace Bloodlines.Siege
             float bestDistance = float.MaxValue;
             for (int i = 0; i < supplyCamps.Count; i++)
             {
-                if (!supplyCamps[i].FactionId.Equals(factionId))
+                if (!supplyCamps[i].FactionId.Equals(factionId) ||
+                    !supplyCamps[i].IsOperational)
                 {
                     continue;
                 }
@@ -353,6 +382,7 @@ namespace Bloodlines.Siege
             public Entity Entity;
             public FixedString32Bytes FactionId;
             public float3 Position;
+            public bool IsOperational;
         }
 
         private struct FactionStockpileRecord
