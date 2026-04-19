@@ -69,6 +69,13 @@ namespace Bloodlines.Components
         // --- build timer (ai.js updateEnemyAi, enemy.ai.buildTimer) ---
         public float BuildTimer;  // canonical initial 8s; accelerated by covenant/governance pressure
 
+        // --- worker gather dispatch (ai.js idleWorkers dispatch loop, lines 1243-1251) ---
+        public float WorkerGatherAccumulator;
+        public float WorkerGatherIntervalSeconds; // canonical default 5s
+        public int IdleWorkerCount;               // observability
+        public int WorkersDispatched;             // running total
+        public bool PlayerKeepFortified;          // drives gather priority (context.playerKeepFortified)
+
         // --- governance / event-context pressure flags (ai.js lines 1129-1215) ---
         // These are written by dynasty, faith, and governance systems (or seeded directly in tests).
         // AIStrategicPressureSystem reads them to apply the second layer of timer clamps.

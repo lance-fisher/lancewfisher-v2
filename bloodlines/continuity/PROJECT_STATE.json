@@ -457,7 +457,7 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-3-governance.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-4-worker-gather.md",
   "latest_unity_fortification_siege_handoff": "docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md",
   "latest_unity_graphics_handoff": "docs/unity/session-handoffs/2026-04-17-unity-graphics-infrastructure-foundation.md",
   "latest_unity_combat_handoff": "docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md",
@@ -471,9 +471,9 @@
   "latest_browser_to_unity_migration_plan": "docs/plans/2026-04-17-browser-to-unity-migration-plan.md",
   "concurrent_session_contract": {
     "path": "docs/unity/CONCURRENT_SESSION_CONTRACT.md",
-    "revision": 15,
+    "revision": 16,
     "last_updated": "2026-04-18",
-    "last_updated_by": "claude-ai-governance-pressure-2026-04-18",
+    "last_updated_by": "claude-ai-worker-gather-2026-04-18",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
     "active_lanes": [
       "ai-strategic-layer",
@@ -498,8 +498,8 @@
       "tier2-batch-dynasty-systems"
     ],
     "next_unblocked_tier_1_lanes": [
-      "fortification-siege-sub-slice-3-imminent-engagement-warnings",
-      "ai-strategic-layer-sub-slice-4-siege-staging"
+      "ai-strategic-layer-sub-slice-5-siege-staging",
+      "ai-strategic-layer-sub-slice-6-dynasty-covert-ops"
     ]
   },
   "latest_unity_economy_handoff": "docs/unity/session-handoffs/2026-04-17-unity-cap-pressure-response.md",
@@ -1300,6 +1300,15 @@
       "description": "EnemyAIStrategySystem ISystem: territory expansion, scout/harass dispatch, world-pressure posture conditioning (Expand/Consolidate/Defend), reinforcement routing. AIStrategyComponent + AIStrategicPosture. SkirmishBootstrapSystem seeds component on non-player Kingdom factions. Debug surface slimmed to TryDebugGetAIStrategy. 4-phase smoke PASS. Contract rev 9->10.",
       "handoff": "docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-1.md",
       "validation_gates": "all 8 green"
+    },
+    {
+      "lane": "ai-strategic-layer-sub-slice-4-worker-gather",
+      "date": "2026-04-18",
+      "branch": "claude/unity-ai-worker-gather",
+      "status": "active",
+      "description": "AIWorkerGatherSystem ISystem: ports ai.js idle worker dispatch loop (1243-1251), getEnemyGatherPriorities (885-922), chooseGatherNode (924-933). Throttled by WorkerGatherIntervalSeconds accumulator (default 5s). Index-modulo resource priority rotation across gold/wood/stone/iron. PlayerKeepFortified skips stone. Nearest-node selection by Euclidean distance. Sets Phase=Seeking, AssignedNode, AssignedResourceId, CarryResourceId on dispatch. 4-phase smoke PASS. Contract rev 15->16.",
+      "handoff": "docs/unity/session-handoffs/2026-04-18-unity-ai-strategic-layer-sub-slice-4-worker-gather.md",
+      "validation_gates": "all 10 green"
     }
   ]
 }
