@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 22
+- Revision: 23
 - Last Updated: 2026-04-19
-- Last Updated By: codex-ai-command-dispatch-2026-04-19
-- Supersedes: revision 21 (Claude sub-slice 9 marriage inbox accept is the master-side base; Codex command-dispatch layers AIWorkerCommandSystem, AITerritoryDispatchSystem, WorkerGatherOrderComponent, WorkerGatherSystem arrival gating, and BloodlinesAICommandDispatchSmokeValidation on top of that revision-21 lane state)
+- Last Updated By: codex-fortification-siege-imminent-engagement-2026-04-19
+- Supersedes: revision 22 (master-side base includes Claude ai-strategic-layer sub-slices 7-9 plus Codex command-dispatch; this revision layers fortification-siege sub-slice 3 imminent engagement warning ownership, validation, and handoff metadata on top of that base)
 
 ## Purpose
 
@@ -321,7 +321,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - Sub-slice 8: `src/game/core/ai.js` `tryAiMarriageProposal` (~2897-2944) plus updateEnemyAi dispatch hook (~2616-2624); simulation-side sink `proposeMarriage` (~7340); expiration at 30 in-world days delegated to existing `MarriageProposalExpirationSystem`
   - Sub-slice 9: `src/game/core/ai.js` `tryAiAcceptIncomingMarriage` (~2880-2895) plus updateEnemyAi dispatch hook (~2632-2636); simulation-side sink `acceptMarriage` (~7388-7469); gestation at 60 in-world days delegated to existing `MarriageGestationSystem` which only processes `IsPrimary == true` records
   - Sub-slices pending: marriage strategic-profile faith/hostility/population gates, governance authority cost on accept, hostility drop + conviction event recording + legitimacy +2 + declareInWorldTime + message push effects that currently remain in the browser only
-- Current Branch In Flight: `codex/unity-ai-command-dispatch`
+- Current Branch In Flight: none (sub-slices 1-9 plus Codex command-dispatch are landed on `master`; the next ai-strategic-layer slice should start on a fresh branch from revision 23)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-8-command-dispatch.md`
 
 ### Lane: victory-conditions
@@ -383,24 +383,30 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Components/SiegeSupportComponent.cs`
   - `unity/Assets/_Bloodlines/Code/Components/FieldWaterComponent.cs`
   - `unity/Assets/_Bloodlines/Code/Components/SiegeSupplyTrainComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Components/ImminentEngagementComponent.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Fortification.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Siege.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSiegeSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesImminentEngagementSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityImminentEngagementSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1` -- additive wrapper update preserved fortification smoke ownership while keeping the existing validation surface intact for the rebased imminent-engagement lane
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-17-unity-fortification-siege-fortification-tier-and-reserves.md`
   - `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md`
+  - `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-imminent-engagement-warnings.md`
 - Current Branch In Flight: `codex/unity-fortification-siege`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-imminent-engagement-warnings.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: `fortification-siege-sub-slice-3-imminent-engagement-warnings` is currently active under Codex on `codex/unity-fortification-siege`. Do not claim that work item.
+Note: `fortification-siege-sub-slice-3-imminent-engagement-warnings` is implemented on `codex/unity-fortification-siege` and documented in this revision. No new claim should widen that branch before merge coordination completes.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 
@@ -435,7 +441,7 @@ Note: `fortification-siege-sub-slice-3-imminent-engagement-warnings` is currentl
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-8-command-dispatch
 
-- Status: ACTIVE on branch `codex/unity-ai-command-dispatch` (this branch; do not claim).
+- Status: DONE (landed via `codex/unity-ai-command-dispatch`; see sub-slice 8 command-dispatch handoff).
 - Browser Reference: `src/game/core/ai.js` idle worker `issueGatherCommand` dispatch (~1243-1260), territory expansion command dispatch (~1575-1600).
 
 ## Shared Files (Narrow Modification Rights for All Lanes)

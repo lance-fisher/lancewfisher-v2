@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 $unityPath = 'C:\Program Files\Unity\Hub\Editor\6000.3.13f1\Editor\Unity.exe'
 $rootPath = Split-Path -Parent $PSScriptRoot
 $projectPath = Join-Path $rootPath 'unity'
-$logPath = Join-Path $rootPath 'artifacts\unity-fortification-smoke.log'
+$logPath = Join-Path $rootPath 'artifacts\unity-imminent-engagement-smoke.log'
 
 if (-not (Test-Path -LiteralPath $unityPath)) {
     throw "Unity editor not found at $unityPath"
@@ -24,7 +24,7 @@ $arguments = @(
     '-batchmode'
     '-projectPath', $projectPath
     '-logFile', $logPath
-    '-executeMethod', 'Bloodlines.EditorTools.BloodlinesFortificationSmokeValidation.RunBatchFortificationSmokeValidation'
+    '-executeMethod', 'Bloodlines.EditorTools.BloodlinesImminentEngagementSmokeValidation.RunBatchBloodlinesImminentEngagementSmokeValidation'
 )
 
 function Get-ValidationOutcome {
@@ -33,11 +33,11 @@ function Get-ValidationOutcome {
     }
 
     $content = Get-Content -Path $logPath -Raw
-    if ($content -match 'Fortification smoke validation passed') {
+    if ($content -match 'BLOODLINES_IMMINENT_ENGAGEMENT_SMOKE PASS') {
         return 'passed'
     }
 
-    if ($content -match 'Fortification smoke validation failed' -or
+    if ($content -match 'BLOODLINES_IMMINENT_ENGAGEMENT_SMOKE FAIL' -or
         $content -match 'errored' -or
         $content -match 'timed out') {
         return 'failed'
@@ -74,7 +74,7 @@ function Invoke-UnityValidationPass {
     return $process.ExitCode
 }
 
-Write-Host 'Running Bloodlines Unity fortification smoke validation...'
+Write-Host 'Running Bloodlines Unity imminent engagement smoke validation...'
 Write-Host "Unity:   $unityPath"
 Write-Host "Project: $projectPath"
 Write-Host "Log:     $logPath"
@@ -83,18 +83,18 @@ $exitCode = Invoke-UnityValidationPass
 $outcome = Get-ValidationOutcome
 
 if ($outcome -eq 'unknown') {
-    Write-Host 'Fortification smoke validation did not report an explicit outcome immediately. Waiting for the batch editor to finish.'
+    Write-Host 'Imminent engagement smoke validation did not report an explicit outcome immediately. Waiting for the batch editor to finish.'
     $outcome = Wait-ForValidationOutcome
 }
 
 if ($outcome -eq 'unknown') {
-    Write-Host 'First fortification batch pass ended without an explicit outcome. Rerunning once after compilation/import.'
+    Write-Host 'First imminent engagement batch pass ended without an explicit outcome. Rerunning once after compilation/import.'
     $exitCode = Invoke-UnityValidationPass
     $outcome = Wait-ForValidationOutcome
 }
 
 if ($outcome -eq 'passed') {
-    Write-Host 'Fortification smoke validation passed.'
+    Write-Host 'Imminent engagement smoke validation passed.'
     exit 0
 }
 
@@ -103,5 +103,5 @@ if ($outcome -eq 'failed') {
     exit 1
 }
 
-Write-Host 'Fortification smoke validation produced no pass/fail marker. Check the log.'
+Write-Host 'Imminent engagement smoke validation produced no pass/fail marker. Check the log.'
 exit 1
