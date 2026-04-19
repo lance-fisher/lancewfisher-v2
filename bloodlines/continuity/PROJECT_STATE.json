@@ -1413,6 +1413,15 @@
       "validation_gates": "all 10 green plus AI marriage accept effects smoke"
     },
     {
+      "lane": "ai-strategic-layer-sub-slice-12-marriage-acceptance-terms",
+      "date": "2026-04-19",
+      "branch": "claude/unity-ai-marriage-acceptance-terms",
+      "status": "active",
+      "description": "MarriageAcceptanceTermsComponent + MarriageAuthorityEvaluator + extensions to AIMarriageInboxAcceptSystem and AIMarriageAcceptEffectsSystem: ports simulation.js getMarriageAcceptanceTerms (~6327), applyMarriageGovernanceLegitimacyCost (~6232), getMarriageAuthorityProfile (~6134), and MARRIAGE_REGENCY_LEGITIMACY_COSTS (~6091). Evaluator walks DynastyMemberRef buffer to resolve HeadDirect (head_of_bloodline + Ruling, cost 0) / HeirRegency (heir_designate available, cost 1) / EnvoyRegency (diplomat available, cost 2); returns reject when roster exists but yields none of those; defaults to HeadDirect when no roster (preserves sub-slice 11 synthetic fixtures). Inbox accept calls evaluator pre-record-creation; rejection clears dispatch and skips create. On accept, MarriageAcceptanceTermsComponent { AuthorityMode, LegitimacyCost } is attached to the primary marriage entity alongside the pending tag and persists after effects apply. Effects system reordered to browser order (cost first, hostility, oathkeeping, legitimacy +2, declare time); ApplyAuthorityLegitimacyCost deducts cost from spouse legitimacy clamped [0,100] and records Stewardship -cost via ConvictionScoring.ApplyEvent. Net spouse legitimacy = min(100, max(0, L - cost) + 2). Cross-lane reads: DynastyMemberRef + DynastyMemberComponent. Cross-lane mutations: DynastyStateComponent.Legitimacy clamped, ConvictionComponent.Stewardship via scoring helper. 5-phase dedicated smoke PASS (head-direct, heir-regency, envoy-regency, no-authority rejection, terms-persisted). Sub-slice 11 regression smoke also re-run green. Contract rev 25->26.",
+      "handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-12-marriage-acceptance-terms.md",
+      "validation_gates": "all 10 green plus AI marriage acceptance terms smoke and sub-slice 11 regression"
+    },
+    {
       "lane": "fortification-siege-imminent-engagement",
       "date": "2026-04-19",
       "branch": "codex/unity-fortification-siege",
