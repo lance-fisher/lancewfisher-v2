@@ -1,3 +1,4 @@
+using Unity.Collections;
 using Unity.Entities;
 
 namespace Bloodlines.Components
@@ -21,6 +22,11 @@ namespace Bloodlines.Components
         public bool IsSupported;
         public bool AttritionActive;
         public bool DesertionRisk;
+        public bool BreachAssaultAdvantageActive;
+        public int BreachOpenCount;
+        public FixedString64Bytes BreachTargetSettlementId;
+        public float BreachAssaultAttackMultiplier;
+        public float BreachAssaultSpeedMultiplier;
         public float OperationalAttackMultiplier;
         public float OperationalSpeedMultiplier;
         public FieldWaterStatus Status;
