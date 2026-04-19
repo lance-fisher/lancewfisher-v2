@@ -65,5 +65,50 @@ namespace Bloodlines.Components
         // RaidPressureUnlocked: stage >= 3 or raidPressureOverride is active.
         public bool RivalryUnlocked;
         public bool RaidPressureUnlocked;
+
+        // --- build timer (ai.js updateEnemyAi, enemy.ai.buildTimer) ---
+        public float BuildTimer;  // canonical initial 8s; accelerated by covenant/governance pressure
+
+        // --- governance / event-context pressure flags (ai.js lines 1129-1215) ---
+        // These are written by dynasty, faith, and governance systems (or seeded directly in tests).
+        // AIStrategicPressureSystem reads them to apply the second layer of timer clamps.
+
+        // Holy war (either direction): attackTimer<=10, territoryTimer<=8 (line 1129-1132).
+        public bool HolyWarActive;
+
+        // Player territorial governance recognition pressure (lines 1133-1149).
+        public bool PlayerGovernanceActive;          // recognition is live
+        public bool PlayerGovernanceVictoryPressure; // victoryReady && !completed
+        public bool PlayerGovernanceAlliancePressure;// integrationReady / pct >= alliance threshold
+
+        // Player active covenant test (lines 1150-1155).
+        public bool PlayerCovenantActive;
+        public bool PlayerCovenantTargetsEnemy;      // targetFactionId == "enemy" or CP owned by enemy
+
+        // Player divine right declaration active (lines 1156-1160).
+        public bool PlayerDivineRightActive;
+
+        // Player succession crisis (lines 1161-1165).
+        public bool PlayerSuccessionCrisisActive;
+        public bool PlayerSuccessionCrisisHigh; // severityId "major" or "catastrophic"
+
+        // Enemy succession crisis (lines 1167-1185).
+        // Floors attackTimer/territoryTimer upward; drives marriageProposalTimer down.
+        public bool EnemySuccessionCrisisActive;
+        public bool EnemySuccessionCrisisSevere;     // severityId "major" or "catastrophic"
+        public float EnemySuccessionCrisisAccumulator; // countdown for consolidation check
+
+        // Enemy active covenant test (lines 1186-1197).
+        public bool EnemyCovenantActive;
+        public bool EnemyCovenantTargetsPlayer;      // targetFactionId == "player"
+        public bool EnemyCovenantDarkPurgeMandate;   // mandateId == "old_light_dark_purge"
+        public bool EnemyCovenantHasTargetPoint;     // enemyCovenantTargetPoint != null
+
+        // Enemy territorial governance recognition (lines 1198-1215).
+        // Floors attackTimer/holyWarTimer upward (enemy focuses on governance, not aggression).
+        public bool EnemyGovernanceActive;
+        public bool EnemyGovernanceVictoryPressure;  // victoryReady && !completed
+        public bool EnemyGovernanceAlliancePressure; // integrationReady / pct >= threshold
+        public bool EnemyGovernanceHasTargetPoint;   // enemyGovernanceTargetPoint != null
     }
 }
