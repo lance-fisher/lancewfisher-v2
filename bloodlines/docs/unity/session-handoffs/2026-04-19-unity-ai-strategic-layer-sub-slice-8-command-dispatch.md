@@ -6,7 +6,7 @@
 - Branch: `codex/unity-ai-command-dispatch`
 - Lane: `ai-strategic-layer`
 - Session Identifier: `codex-ai-command-dispatch-2026-04-19`
-- Contract Revision At Close: 19
+- Contract Revision At Close: 22
 
 ## Goal
 
@@ -127,7 +127,7 @@ All 10 validation gates green in the clean `D:\BLAICD\bloodlines` worktree:
 7. Siege smoke -- PASS
 8. `node tests/data-validation.mjs` -- PASS
 9. `node tests/runtime-bridge.mjs` -- PASS
-10. Contract staleness check -- PASS at revision 19
+10. Contract staleness check -- PASS at revision 22
 
 Dedicated command-dispatch smoke:
 - Phase 1 PASS: `Seeking -> Gathering`, `WorkerGatherOrderComponent` present
@@ -156,16 +156,40 @@ used throughout the Unity runtime. No parallel move-order type was introduced.
 `WorkerGatherSystem` closes the order-to-arrival gap. The pair is required for correct
 behavior.
 
+## Post-Rebase Update (Revision 22)
+
+- Rebased `codex/unity-ai-command-dispatch` onto `origin/master`
+  `00847e77ab8d7e085adcbf5de4ac10baa584bcba` after Claude landed
+  ai-strategic-layer sub-slices 8 and 9 on `master`.
+- Updated `docs/unity/CONCURRENT_SESSION_CONTRACT.md` from revision 21 to 22 with
+  the rev-21 master base preserved and the command-dispatch ownership layered on top.
+- Reran the full 10-gate chain on the rebased `D:\BLAICD\bloodlines` worktree:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo` PASS
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo` PASS
+  - Bootstrap runtime smoke PASS via the authoritative worktree artifact
+    `artifacts/unity-bootstrap-runtime-smoke.log`
+  - Combat smoke PASS
+  - Bootstrap scene shell PASS via `artifacts/unity-bootstrap-scene-batch-rev22.log`
+  - Gameplay scene shell PASS via `artifacts/unity-gameplay-scene-batch-rev22.log`
+  - Fortification smoke PASS
+  - Siege smoke PASS
+  - `node tests/data-validation.mjs` PASS
+  - `node tests/runtime-bridge.mjs` PASS
+  - Contract staleness check PASS at revision 22
+- Dedicated AI command dispatch smoke rerun PASS on the rebased head via
+  `artifacts/unity-ai-command-dispatch-batch-rev22.log`.
+- Kept `[UpdateAfter(typeof(AICovertOpsSystem))]` on both new systems during the
+  rebase. No `AIBuildOrderSystem` retargeting was introduced.
+
 ## Current Readiness
 
-Branch `codex/unity-ai-command-dispatch` is green and ready for commit/push. After Claude's
-sub-slice 7 lands on `master`, rebase this branch, resolve any generated
-`Assembly-CSharp.csproj` include drift if it appears, and keep
-`[UpdateAfter(typeof(AICovertOpsSystem))]` unless a later post-rebase ordering pass
-deliberately switches to `AIBuildOrderSystem`.
+Branch `codex/unity-ai-command-dispatch` is rebased to the revision-21 `master`
+base at `34b8d694c4726345a63ce1577d63e34d4bdce5e1`, all gates are green, and the
+slice is ready for force-with-lease push plus merge to `master`.
 
 ## Next Action
 
-1. Commit and push `codex/unity-ai-command-dispatch`.
-2. Rebase onto `master` after `claude/unity-ai-build-timer-chain` lands.
-3. Merge this branch only after that rebase resolves the shared generated-project-file drift.
+1. Force-push `codex/unity-ai-command-dispatch`.
+2. Merge `codex/unity-ai-command-dispatch` to `master`.
+3. Rebase `codex/unity-fortification-siege` onto the new revision-22 `master` base
+   and bump the contract to revision 23.

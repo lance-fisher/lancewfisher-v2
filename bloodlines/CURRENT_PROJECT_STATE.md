@@ -1858,3 +1858,32 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - `BloodlinesAIMarriageInboxAcceptSmokeValidation` 4-phase validator all green: Phase 1 dispatch+pending->accepted creates primary+mirror; Phase 2 dispatch+no proposal no-op; Phase 3 dispatch+only-expired no-op with expired preserved; Phase 4 no-dispatch+pending no-op.
 - All 10 validation gates green (required one bootstrap retry and one siege retry due to transient bee_backend/Library write-contention; both passed cleanly on second attempt). Contract bumped revision 20 -> 21.
 - The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-9-marriage-inbox-accept.md`.
+
+### 2026-04-19 Unity AI Strategic Layer Sub-Slice 8 Command Dispatch Rebase To Revision 22
+
+- `codex/unity-ai-command-dispatch` is now rebased onto `origin/master`
+  `00847e77ab8d7e085adcbf5de4ac10baa584bcba`, preserving Claude's merged
+  ai-strategic-layer sub-slices 8 and 9 as the master-side base.
+- `docs/unity/CONCURRENT_SESSION_CONTRACT.md` advanced from revision 21 to 22 under
+  `codex-ai-command-dispatch-2026-04-19`, layering the command-dispatch ownership
+  (`AIWorkerCommandSystem`, `AITerritoryDispatchSystem`, `WorkerGatherOrderComponent`,
+  `BloodlinesAICommandDispatchSmokeValidation`, and `WorkerGatherSystem` arrival
+  gating) on top of the rev-21 contract.
+- Rebased validation is green on `D:\BLAICD\bloodlines`:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`
+  - bootstrap runtime smoke PASS via `artifacts/unity-bootstrap-runtime-smoke.log`
+  - combat smoke PASS
+  - Bootstrap scene shell PASS via `artifacts/unity-bootstrap-scene-batch-rev22.log`
+  - Gameplay scene shell PASS via `artifacts/unity-gameplay-scene-batch-rev22.log`
+  - fortification smoke PASS
+  - siege smoke PASS
+  - `node tests/data-validation.mjs` PASS
+  - `node tests/runtime-bridge.mjs` PASS
+  - contract staleness check PASS at revision 22
+- Dedicated `BloodlinesAICommandDispatchSmokeValidation` rerun PASS on the rebased
+  head via `artifacts/unity-ai-command-dispatch-batch-rev22.log`.
+- Update-order discipline preserved: both new systems remain
+  `[UpdateAfter(typeof(AICovertOpsSystem))]`.
+- Rebasing produced branch head `34b8d694c4726345a63ce1577d63e34d4bdce5e1`; the
+  slice is ready for force-with-lease push and merge to `master`.

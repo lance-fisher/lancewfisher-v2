@@ -1825,3 +1825,34 @@ See `docs/unity/CONCURRENT_SESSION_CONTRACT.md` "Next Unblocked Tier 1 Lanes" se
 1. ai-strategic-layer-sub-slice-10-marriage-strategic-profile (new branch claude/unity-ai-marriage-strategic-profile; ai.js getAiMarriageStrategicProfile ~2730-2857; gates both proposal and accept paths on faith-aware legitimacy repair vs. hardened refusal, population deficit, hostility, succession signals).
 2. fortification-siege-sub-slice-3-imminent-engagement-warnings (Codex in progress on codex/unity-fortification-siege; do not claim).
 3. codex/unity-ai-command-dispatch rebase pending on Codex side; master now at revision 21 so Codex should bump to 22 on rebase. codex/unity-fortification-siege will bump to 23.
+
+## 2026-04-19 Codex Command Dispatch Rebase To Revision 22
+
+- Status: rebased green on `codex/unity-ai-command-dispatch` at
+  `34b8d694c4726345a63ce1577d63e34d4bdce5e1`.
+- Base: `origin/master` `00847e77ab8d7e085adcbf5de4ac10baa584bcba`
+  (contract revision 21, Claude sub-slice 9 merged).
+- Contract updated 21 -> 22 under `codex-ai-command-dispatch-2026-04-19`.
+- Validation on `D:\BLAICD\bloodlines` is fully green:
+  - both `dotnet build` gates PASS
+  - bootstrap runtime smoke PASS via `artifacts/unity-bootstrap-runtime-smoke.log`
+  - combat smoke PASS
+  - Bootstrap and Gameplay scene shells PASS via
+    `artifacts/unity-bootstrap-scene-batch-rev22.log` and
+    `artifacts/unity-gameplay-scene-batch-rev22.log`
+  - fortification smoke PASS
+  - siege smoke PASS
+  - `node tests/data-validation.mjs` PASS
+  - `node tests/runtime-bridge.mjs` PASS
+  - contract staleness check PASS at revision 22
+  - dedicated AI command dispatch smoke PASS via
+    `artifacts/unity-ai-command-dispatch-batch-rev22.log`
+- Note: checked-in bootstrap, scene-shell, fortification, and command-dispatch
+  wrappers are still pinned to `D:\ProjectsHome\Bloodlines`, so the rebased worktree
+  used direct worktree-local execute-method validation for those gates.
+- Next recommended action:
+  1. Force-push `codex/unity-ai-command-dispatch`.
+  2. Merge it to `master` and push `master`.
+  3. Rebase `codex/unity-fortification-siege` onto the new revision-22 master base,
+     bump the contract to 23, rerun the full gate chain plus imminent-engagement
+     smoke, and merge that lane next.
