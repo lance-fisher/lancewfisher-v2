@@ -131,6 +131,10 @@ namespace Bloodlines.AI
                 ChildGenerated             = false,
                 Dissolved                  = false,
             });
+            // Tag the primary record so AIMarriageAcceptEffectsSystem applies the
+            // browser's one-shot legitimacy/hostility effects exactly once. Mirror
+            // record is not tagged to prevent double application.
+            em.AddComponent<MarriageAcceptEffectsPendingTag>(primary);
 
             // Create mirror marriage record (head = target side). Browser creates
             // two records so both factions can enumerate their own marriages.
