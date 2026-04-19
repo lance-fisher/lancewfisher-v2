@@ -2378,3 +2378,49 @@ Branch: `claude/unity-ai-captive-state-and-missionary-execution`. Master base: `
 2. Divine right declaration execution (sub-slice 22): port the divine right declaration flow with a `DynastyOperationDivineRightComponent`. Consumes `AICovertOpsComponent.LastFiredOp == CovertOpKind.DivineRight`. Bundle with sub-slice 21 if scope allows; both are faith-driven dispatch consumers of the sub-slice 18 foundation.
 3. Captive rescue and ransom execution (sub-slices 23/24): consume `CovertOpKind.CaptiveRescue` / `CovertOpKind.CaptiveRansom` and produce per-kind components plus mutations on the sub-slice 19 `CapturedMemberElement` buffer (rescue removes Held captives via state flip; ransom flips to RansomOffered then Released with gold cost).
 4. Per-kind resolution system: walk expired `DynastyOperationMissionaryComponent` entries at `ResolveAtInWorldDays`, apply `ExposureGain` to target's `FaithExposureElement` buffer, apply `IntensityErosion` to target's `FaithStateComponent.Intensity`, apply `LoyaltyPressure` to lowest-loyalty `ControlPointComponent` owned by target, flip Active=false. Generalizes once additional per-kind components land.
+
+## Unity AI Strategic Layer Bundle 2: Holy War (Sub-Slice 21) and Divine Right (Sub-Slice 22) Execution Landed (2026-04-19)
+
+Branch: `claude/unity-ai-holy-war-and-divine-right-execution`. Master base: `0b2fd111` (after Bundle 1 captive state + missionary execution landed at revision 37). Bundle 2 of the AI mechanical campaign: two faith-driven dispatch consumers ship as one commit, one merge, and one contract revision bump.
+
+### What Was Done
+- **Sub-slice 21 holy war declaration execution**: second production consumer of the sub-slice 18 dynasty-operation foundation. New `DynastyOperationHolyWarComponent` per-kind component carries `ResolveAtInWorldDays` (current + 18f), `WarExpiresAtInWorldDays` (current + 180f), `OperatorMemberId`, `OperatorTitle`, `IntensityPulse` (browser doctrine bias 1.2 dark / 0.9 light), `LoyaltyPulse` (1.8 dark / 1.2 light), `CompatibilityLabel` (simplified Unity-side derivation), `IntensityCost` (18f), and `EscrowCost` (Influence = 24f). New `AIHolyWarExecutionSystem` consumes `AICovertOpsComponent.LastFiredOp == CovertOpKind.HolyWar`, gates on getHolyWarDeclarationTerms parity, capacity-gates on `DynastyOperationLimits.HasCapacity`, deducts cost on success, calls `BeginOperation` with `DynastyOperationKind.HolyWar` + player target, attaches the per-kind component, and pushes a narrative line with `Warn` tone when source or target is player.
+- **Sub-slice 22 divine right declaration execution**: third production consumer. New `DynastyOperationDivineRightComponent` per-kind component carries `ResolveAtInWorldDays` (current + 180f), `SourceFaithId` (CovenantId mapped to canonical string), `DoctrinePath`, `RecognitionShare`/`RecognitionSharePct` placeholders (default 0; recognition system not yet ported), `ActiveApexStructureId`/`ActiveApexStructureName` placeholders (default empty; apex structure system not yet ported). No EscrowCost or IntensityCost (browser divine right does NOT deduct intensity or charge an escrow cost; the cost is the covenant-test prerequisite). New `AIDivineRightExecutionSystem` consumes `AICovertOpsComponent.LastFiredOp == CovertOpKind.DivineRight`, gates on the simplified Unity-side parity set (committed faith, intensity >= 80, level >= 5, no existing active DivineRight op for this faction, capacity), calls `BeginOperation` with `DynastyOperationKind.DivineRight` and default target (no specific target faction), attaches the per-kind component, pushes a narrative line with `Warn` tone always (browser always-warn).
+- Both systems clear LastFiredOp to None unconditionally after processing (one-shot pattern shared with sub-slices 8/9/12/13/14/20).
+- Browser duration translation continues the sub-slice 20 convention: `HOLY_WAR_DECLARATION_DURATION_SECONDS = 18`, `HOLY_WAR_DURATION_SECONDS = 180`, and `DIVINE_RIGHT_DECLARATION_DURATION_SECONDS = 180` are reinterpreted as in-world-day numeric values directly.
+- Notable Unity-side departure (sub-slice 22): divine right routes through `DynastyOperationLimits.BeginOperation` with `DynastyOperationKind.DivineRight` even though browser does NOT gate divine right on `DYNASTY_OPERATION_ACTIVE_LIMIT`. Routing is for surface consistency with all other dispatch consumers; browser per-faction one-active-at-a-time semantic is preserved by the explicit existing-declaration gate before the capacity check.
+- Sub-slice 21 compatibility-tier simplification: Unity uses identical-(faith, doctrine) equality instead of browser's `getMarriageFaithCompatibilityProfile` tier ladder. Unity gate is strictly looser than browser; future tightening lands when the covenant compatibility surface ports.
+- Sub-slice 22 deferred gates: covenant-test-passed, cooldown, stage-ready (Final Convergence threshold), active-apex-structure, recognition-share, faction-kind == kingdom. All wait on their respective surface ports.
+- Sub-slice 22 deferred effects: mutual hostility application, AI timer cap propagation, conviction event recording, resolution at ResolveAtInWorldDays. All wait on a future per-kind resolution slice.
+- Per-kind resolution intentionally deferred for both sub-slices (matching the Bundle 1 pattern). Created operation entities sit Active=true with the per-kind component attached until a future slice walks expired entries, applies effects, and flips Active=false.
+- New dedicated bundled validator `BloodlinesHolyWarAndDivineRightExecutionSmokeValidation` plus wrapper `scripts/Invoke-BloodlinesUnityHolyWarAndDivineRightExecutionSmokeValidation.ps1`. All 10 phases PASS:
+  - PhaseHolyWarDispatchSuccess: op created, per-kind attached with ResolveAt=68, WarExpiresAt=230, IntensityCost=18, EscrowCost.Influence=24, OperatorMemberId resolved, light pulses 0.9/1.2, source Influence 50->26, source Intensity 30->12, narrative +1 Warn, dispatch cleared
+  - PhaseHolyWarHarmoniousFaithBlocks: identical (faith, doctrine) blocks
+  - PhaseHolyWarTargetNoFaithBlocks: target CovenantId.None blocks
+  - PhaseHolyWarInsufficientIntensityBlocks: intensity 12 < 18 blocks
+  - PhaseHolyWarInsufficientResourcesBlocks: influence 20 < 24 blocks
+  - PhaseHolyWarDarkPathPulses: dark doctrine produces 1.2/1.8 pulses
+  - PhaseDivineRightDispatchSuccess: op created with default target, per-kind attached with ResolveAt=280, SourceFaithId=the_order, DoctrinePath=Light, recognition/structure placeholders default, narrative +1 Warn, dispatch cleared
+  - PhaseDivineRightInsufficientIntensityBlocks: intensity 50 < 80 blocks
+  - PhaseDivineRightInsufficientLevelBlocks: level 4 < 5 blocks
+  - PhaseDivineRightExistingDeclarationBlocks: preexisting active DivineRight op blocks new creation
+- Post-implementation diagnostic note: initial bundled smoke run failed with `FixedString32Bytes: Truncation while copying ". The spread window opens for "`. The divine-right narrative line had a 31-character string segment that overflowed FixedString32Bytes (29-byte cap after header). Fixed by casting the segment to FixedString64Bytes. Smoke re-ran clean.
+- Contract revision advanced 37 -> 38. New per-slice handoff: `docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-bundle-2-holy-war-and-divine-right-execution.md`.
+
+### Gate Results
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS with existing editor warnings only
+- Bootstrap runtime smoke: PASS via `artifacts/unity-bootstrap-runtime-smoke.log`
+- Combat smoke: PASS via `artifacts/unity-combat-smoke.log`
+- Scene shells: Bootstrap + Gameplay PASS
+- Fortification smoke: PASS via `artifacts/unity-fortification-smoke.log`
+- Siege smoke: PASS via `artifacts/unity-siege-smoke.log`
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision 38
+- Dedicated bundled smoke: PASS via `artifacts/unity-holy-war-and-divine-right-execution-smoke.log` with marker `BLOODLINES_HOLY_WAR_AND_DIVINE_RIGHT_EXECUTION_SMOKE PASS`
+
+### Recommended Next AI Strategic Layer Slices (Bundle 3 candidates)
+1. Captive rescue execution (sub-slice 23) + captive ransom execution (sub-slice 24): consume `CovertOpKind.CaptiveRescue` / `CovertOpKind.CaptiveRansom`, produce per-kind components (`DynastyOperationCaptiveRescueComponent`, `DynastyOperationCaptiveRansomComponent`), and mutate the sub-slice 19 `CapturedMemberElement` buffer (rescue removes Held captives via Released status flip; ransom flips to RansomOffered then Released with gold cost on the home faction). Bundle as Bundle 3 following the same ceremony.
+2. Per-kind resolution system: walk expired `DynastyOperationMissionaryComponent`, `DynastyOperationHolyWarComponent`, and `DynastyOperationDivineRightComponent` entries at their ResolveAtInWorldDays / WarExpiresAtInWorldDays boundaries, apply per-kind effects, flip Active=false. Could ship as a single resolution slice or split per-kind.
+3. Divine right side-effect resolution (mutual hostility application against non-same-faith kingdoms, AI timer cap propagation, conviction event recording). Currently deferred from sub-slice 22.
