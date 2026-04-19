@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 30
+- Revision: 31
 - Last Updated: 2026-04-19
-- Last Updated By: claude-ai-pact-break-expiration-2026-04-19
-- Supersedes: revision 29 (ai-strategic-layer sub-slice 15 landed: PactBreakRequestComponent + PactBreakSystem port simulation.js breakNonAggressionPact (~5224-5257); request-entity pattern mirrors the browser's explicit-only break semantic (no auto-expiration; pacts past minimumExpiresAtInWorldDays remain active until broken); on break mark PactComponent.Broken = true and BrokenByFactionId = requester, re-establish mutual hostility via idempotent EnsureHostility (adds HostilityComponent entries only when absent), apply breaker DynastyStateComponent.Legitimacy -= 8 clamped [0, 100] (NON_AGGRESSION_PACT_BREAK_LEGITIMACY_COST = 8), apply breaker ConvictionComponent.Oathkeeping -= 2 via ConvictionScoring.ApplyEvent (clamps at 0); browser decrements conviction.score directly but Unity drives Score from bucket values so Oathkeeping is the architecturally correct surface and semantically correct choice because pacts are oaths; penalty applies regardless of early-break timing (browser earlyBreak flag affects only messaging); no target-side penalty (only breaker pays); request entity destroyed after processing so idempotent re-requests do not double-apply. BloodlinesPactBreakSmokeValidation 5-phase validator covers early-break full penalty, late-break identical penalty, idempotent-break stability on second request, no-pact-no-op, and clamp-at-zero for both legitimacy and oathkeeping)
+- Last Updated By: codex-fortification-wall-segment-destruction-2026-04-19
+- Supersedes: revision 30 (fortification-siege sub-slice 5 landed on top of `origin/master` `0a0e122f`: `FortificationStructureLinkSystem` now links fortification-role buildings to their nearest same-faction settlement at runtime and materializes `FortificationBuildingContributionComponent`, `FortificationDestructionResolutionSystem` writes destroyed wall/tower/gate/keep counts plus `OpenBreachCount` back onto `FortificationComponent`, `FortificationReserveSystem` now runs after destruction resolution so breached walls reduce reserve frontage on the same update chain, `BloodlinesDebugCommandSurface.Fortification` adds `TryDebugGetFortificationBreachState`, and the dedicated `BloodlinesWallSegmentDestructionSmokeValidation` plus `scripts/Invoke-BloodlinesUnityWallSegmentDestructionSmokeValidation.ps1` prove linked-wall tiering, breach creation, and breached-frontage reserve contraction)
 
 ## Purpose
 
@@ -414,7 +414,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: fortification-siege-imminent-engagement
 
 - Status: active
-- Branch Prefix: `codex/unity-fortification-siege`
+- Branch Prefix: `codex/unity-fortification-wall-segment-destruction` (sub-slice 5); prior `codex/unity-fortification-siege*` slices 1-4 also landed; future follow-ups should continue on fresh `codex/unity-fortification-*` branches
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/Fortification/**`
@@ -431,11 +431,13 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSiegeSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesImminentEngagementSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSiegeSupplyInterdictionSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesWallSegmentDestructionSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityImminentEngagementSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnitySiegeSupplyInterdictionSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityWallSegmentDestructionSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1` -- additive wrapper update preserved fortification smoke ownership while keeping the existing validation surface intact for the rebased imminent-engagement lane
 - Lane Authority Documents:
@@ -443,14 +445,15 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md`
   - `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-imminent-engagement-warnings.md`
   - `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-camp-supply-interdiction.md`
-- Current Branch In Flight: `codex/unity-fortification-siege-camp-supply-interdiction`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-camp-supply-interdiction.md`
+  - `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-wall-segment-destruction-resolution.md`
+- Current Branch In Flight: `codex/unity-fortification-wall-segment-destruction`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-wall-segment-destruction-resolution.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: `fortification-siege-sub-slice-4-siege-camp-supply-interdiction` is implemented on `codex/unity-fortification-siege-camp-supply-interdiction` and documented in this revision. The next fortification follow-up should claim a fresh `codex/unity-fortification-*` branch rather than widening the earlier fortification branches.
+Note: `fortification-siege-sub-slice-5-wall-segment-destruction-resolution` is implemented on `codex/unity-fortification-wall-segment-destruction` and documented in this revision. Further fortification follow-ups should continue using fresh `codex/unity-fortification-*` branches rather than widening the earlier fortification branches.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 

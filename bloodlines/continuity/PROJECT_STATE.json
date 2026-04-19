@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-19T05:17:34.6238808-06:00",
+  "updated_at": "2026-04-19T07:14:07.7672250-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -10,11 +10,25 @@
   "preservation_mode": true,
   "single_root_governance": true,
   "owner_direction": {
-    "updated_at": "2026-04-16T19:58:57.2557202-06:00",
+    "updated_at": "2026-04-19T06:28:52.4355823-06:00",
     "owner": "Lance Fisher",
     "status": "active_non_negotiable",
-    "canonical_direction_file": "governance/OWNER_DIRECTION_2026-04-16_FULL_CANON_UNITY.md",
+    "canonical_direction_file": "governance/OWNER_DIRECTION_2026-04-19_GAME_MODES_AND_DYNASTY_PROGRESSION.md",
+    "amends_direction_files": [
+      "governance/OWNER_DIRECTION_2026-04-16_FULL_CANON_UNITY.md",
+      "governance/OWNER_DIRECTION_2026-04-17_FIDELITY_AND_STRATEGY_DEPTH.md"
+    ],
     "shipping_engine": "Unity 6.3 LTS with DOTS/ECS",
+    "shipping_game_modes": [
+      "skirmish_vs_ai",
+      "multiplayer"
+    ],
+    "removed_from_scope": [
+      "campaign",
+      "tutorial"
+    ],
+    "graphics_asset_direction": "ai_generated_primary_zero_hour_or_lower_ceiling",
+    "dynasty_progression_scope": "cross_match_sidegrade_customization_in_scope",
     "target_feel": "Command and Conquer Generals / Zero Hour fused with Warcraft III at massively expanded Bloodlines scale",
     "browser_runtime_role": "frozen_behavioral_specification_only",
     "active_unity_work_target": "unity/",
@@ -457,9 +471,9 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-camp-supply-interdiction.md",
-  "latest_unity_ai_strategic_layer_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-12-marriage-acceptance-terms.md",
-  "latest_unity_fortification_siege_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-camp-supply-interdiction.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-wall-segment-destruction-resolution.md",
+  "latest_unity_ai_strategic_layer_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-15-pact-break-expiration.md",
+  "latest_unity_fortification_siege_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-wall-segment-destruction-resolution.md",
   "latest_unity_graphics_handoff": "docs/unity/session-handoffs/2026-04-17-unity-graphics-infrastructure-foundation.md",
   "latest_unity_combat_handoff": "docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md",
   "latest_unity_attack_move_handoff": "docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md",
@@ -467,14 +481,14 @@
   "latest_unity_conviction_handoff": "docs/unity/session-handoffs/2026-04-17-unity-conviction-scoring-and-bands.md",
   "latest_unity_dynasty_handoff": "docs/unity/session-handoffs/2026-04-17-unity-dynasty-core.md",
   "latest_unity_faith_handoff": "docs/unity/session-handoffs/2026-04-17-unity-faith-commitment-and-intensity.md",
-  "latest_unity_fortification_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-camp-supply-interdiction.md",
+  "latest_unity_fortification_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-wall-segment-destruction-resolution.md",
   "latest_governance_handoff": "docs/unity/session-handoffs/2026-04-17-governance-contract-source-of-truth.md",
   "latest_browser_to_unity_migration_plan": "docs/plans/2026-04-17-browser-to-unity-migration-plan.md",
   "concurrent_session_contract": {
     "path": "docs/unity/CONCURRENT_SESSION_CONTRACT.md",
-    "revision": 27,
+    "revision": 31,
     "last_updated": "2026-04-19",
-    "last_updated_by": "codex-fortification-siege-camp-supply-interdiction-2026-04-19",
+    "last_updated_by": "codex-fortification-wall-segment-destruction-2026-04-19",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
     "active_lanes": [
       "ai-strategic-layer",
@@ -499,7 +513,8 @@
       "tier2-batch-dynasty-systems"
     ],
     "next_unblocked_tier_1_lanes": [
-      "ai-strategic-layer-sub-slice-12-marriage-acceptance-terms"
+      "ai-strategic-layer-sub-slice-14-narrative-message-bridge",
+      "ai-strategic-layer-sub-slice-16-captive-recovery-execution"
     ]
   },
   "latest_unity_economy_handoff": "docs/unity/session-handoffs/2026-04-17-unity-cap-pressure-response.md",
@@ -817,8 +832,11 @@
     "shipping_engine_locked_to_unity_6_3_lts_dots_ecs_in_unity_only",
     "browser_reference_simulation_frozen_as_behavioral_spec_with_no_new_canonical_systems",
     "full_canonical_realization_all_nine_founding_houses_all_units_buildings_faiths_mechanics_and_late_game_arcs",
-    "full_commercial_polish_target_for_art_audio_via_wwise_ux_onboarding_campaign_lobby_hud_and_panels",
-    "multiplayer_via_netcode_for_entities_in_scope_unless_explicitly_removed"
+    "full_commercial_polish_target_for_art_audio_via_wwise_ux_onboarding_lobby_hud_and_panels",
+    "shipping_game_modes_skirmish_vs_ai_and_multiplayer_only",
+    "multiplayer_via_netcode_for_entities_in_scope_unless_explicitly_removed",
+    "cross_match_dynasty_progression_sidegrade_system_in_scope",
+    "ai_generated_asset_pipeline_at_or_below_zero_hour_ceiling"
   ],
   "unity_scene_shell_tools": {
     "scene_bootstrap_script": "unity/Assets/_Bloodlines/Code/Editor/BloodlinesGameplaySceneBootstrap.cs",
@@ -1511,6 +1529,15 @@
       "description": "PactBreakRequestComponent + PactBreakSystem port simulation.js breakNonAggressionPact (~5224-5257). Request-entity pattern mirrors browser's explicit-only break semantic; no auto-expiration (minimumExpiresAtInWorldDays marks only the messaging threshold). Per request: find matching PactComponent by PactId, short-circuit if missing or already broken; set Broken=true + BrokenByFactionId=requesting; EnsureHostility idempotent-adds HostilityComponent entries both ways; DynastyStateComponent.Legitimacy -= 8 clamped [0, 100] on breaker (NON_AGGRESSION_PACT_BREAK_LEGITIMACY_COST); ConvictionComponent.Oathkeeping -= 2 via ConvictionScoring.ApplyEvent on breaker (browser conviction.score -= 2 mapped to Oathkeeping bucket because Unity derives Score from bucket values; Oathkeeping is both architecturally correct and semantically correct since pacts are oaths). Request entity destroyed after processing. Penalty is unconditional regardless of early-break timing; browser earlyBreak flag affects messaging only. No target-side penalty. Deferred: narrative pushMessage (AI->UI message bridge). 5-phase smoke PASS: PhaseEarlyBreak (legitimacy 70->62, oathkeeping 5->3, hostility restored, request destroyed), PhaseLateBreak (identical penalty past minimum expiry), PhaseIdempotentBreak (second break request does not double-apply), PhaseNoPactNoOp (missing PactId leaves state untouched, request still destroyed), PhaseLegitimacyClamp (legitimacy 5-8=-3->0, oathkeeping 0-2=-2->0). Contract rev 29->30.",
       "handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-sub-slice-15-pact-break-expiration.md",
       "validation_gates": "all 10 green plus pact break smoke"
+    },
+    {
+      "lane": "fortification-siege-sub-slice-5-wall-segment-destruction-resolution",
+      "date": "2026-04-19",
+      "branch": "codex/unity-fortification-wall-segment-destruction",
+      "status": "active",
+      "description": "FortificationStructureLinkSystem + FortificationDestructionResolutionSystem close the browser fortification destruction seam. Fortification-role buildings now auto-link to the nearest same-faction settlement inside the ecosystem radius and materialize FortificationBuildingContributionComponent so AdvanceFortificationTierSystem sees real walls, towers, gates, and keeps in live runtime state. Destroyed linked structures now resolve into FortificationComponent.DestroyedWallSegmentCount / DestroyedTowerCount / DestroyedGateCount / DestroyedKeepCount plus OpenBreachCount, and FortificationReserveSystem now runs after destruction accounting so reserve frontage contracts immediately when a wall or gate falls. BloodlinesDebugCommandSurface.Fortification adds TryDebugGetFortificationBreachState. Dedicated 4-phase wall destruction smoke PASS: linked wall baseline tier 1/no breach, destroyed wall tier 0/one breach, intact wall+gate tier 3 with 3 reserve commits, breached wall tier 2 with 2 reserve commits. Restacked onto origin/master 0a0e122f after AI sub-slice 15 landed. Contract rev 30->31.",
+      "handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-wall-segment-destruction-resolution.md",
+      "validation_gates": "all 10 green plus imminent engagement, siege supply interdiction, and wall destruction smokes"
     }
   ]
 }

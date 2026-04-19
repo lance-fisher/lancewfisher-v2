@@ -79,6 +79,40 @@ namespace Bloodlines.Debug
             return true;
         }
 
+        public bool TryDebugGetFortificationBreachState(
+            string settlementId,
+            out int openBreachCount,
+            out int destroyedWalls,
+            out int destroyedTowers,
+            out int destroyedGates,
+            out int destroyedKeeps)
+        {
+            openBreachCount = 0;
+            destroyedWalls = 0;
+            destroyedTowers = 0;
+            destroyedGates = 0;
+            destroyedKeeps = 0;
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var settlementEntity = FindSettlementEntity(entityManager, settlementId);
+            if (settlementEntity == Entity.Null ||
+                !entityManager.HasComponent<FortificationComponent>(settlementEntity))
+            {
+                return false;
+            }
+
+            var fortification = entityManager.GetComponentData<FortificationComponent>(settlementEntity);
+            openBreachCount = fortification.OpenBreachCount;
+            destroyedWalls = fortification.DestroyedWallSegmentCount;
+            destroyedTowers = fortification.DestroyedTowerCount;
+            destroyedGates = fortification.DestroyedGateCount;
+            destroyedKeeps = fortification.DestroyedKeepCount;
+            return true;
+        }
+
         public bool TryDebugForceMuster(string settlementId, out int committedCount)
         {
             committedCount = 0;

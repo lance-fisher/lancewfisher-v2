@@ -13,6 +13,11 @@ namespace Bloodlines.Components
         public FixedString64Bytes SettlementId;
         public int Tier;
         public int Ceiling;
+        public int DestroyedWallSegmentCount;
+        public int DestroyedTowerCount;
+        public int DestroyedGateCount;
+        public int DestroyedKeepCount;
+        public int OpenBreachCount;
         public float EcosystemRadiusTiles;
         public float AuraRadiusTiles;
         public float ThreatRadiusTiles;
