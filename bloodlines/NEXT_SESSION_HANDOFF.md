@@ -2494,3 +2494,43 @@ Branch: `claude/unity-ai-captive-rescue-and-ransom-execution`. Master base: `782
 1. Per-kind resolution system (the first multi-kind resolution consumer): walk expired per-kind components at their resolve boundaries, apply effects, flip Active=false. Missionary is simplest (exposure + intensity + loyalty); holy war requires faction.faith.activeHolyWars materialization + war-tick pulses; divine right requires apex faith claim evaluation; captive rescue/ransom require captive status flips plus member roster restoration. Ship as one walker or split per-kind.
 2. CapturedMemberElement extension (roleId + renown fields): adds the canonical browser fields to enable renown-scaled cost, role-priority captive picker, and simplified parity formula tightening.
 3. Divine right side-effect resolution (sub-slice 22 deferrals): mutual hostility application against non-same-faith kingdoms, AI timer cap propagation to candidate factions, conviction event recording.
+
+## Unity AI Strategic Layer Bundle 4: Missionary Resolution (Sub-Slice 25) Landed (2026-04-20)
+
+Branch: `claude/unity-ai-missionary-resolution`. Master base: `e73933e4` (after Bundle 3 captive rescue + ransom execution landed at revision 40). Bundle 4 ships sub-slice 25 alone because per-kind resolution systems differ substantively across operation kinds; bundling them would couple distinct effect logic without saving code.
+
+### What Was Done
+- **Sub-slice 25 missionary resolution**: first production per-kind resolution consumer. New `AIMissionaryResolutionSystem` ([UpdateInGroup(SimulationSystemGroup), UpdateAfter(AIMissionaryExecutionSystem)]) walks every DynastyOperationComponent entity with OperationKind=Missionary and Active=true, filters by ResolveAtInWorldDays <= current DualClock.InWorldDays, and applies the canonical browser missionary resolution effects from simulation.js:5517-5588 (tickDynastyOperations missionary branch) + simulation.js:10473-10503 (applyMissionaryEffect).
+- Success gate: `SuccessScore >= 0` (deterministic, matching browser gate at simulation.js:5527). On success applies ExposureGain to target's FaithExposureElement buffer (appends new entry with Discovered=true if absent, otherwise updates existing entry; clamp to [0, 100]); applies IntensityErosion to target's FaithStateComponent.Intensity (clamped >= 0) IFF target has a different committed faith (browser gate simulation.js:10485-10488); applies LoyaltyPressure to the lowest-loyalty ControlPointComponent owned by target (clamped [0, 100]). On failure applies +2 intensity reinforcement when target has a committed faith.
+- Always flips DynastyOperationComponent.Active = false regardless of outcome so the per-faction capacity budget (sub-slice 18) releases the slot.
+- Narrative push via NarrativeMessageBridge.Push with three variants (success, failure, void) and canonical tone routing (Good when source=player + success, Warn when target=player, Info otherwise for success/failure; Info always for void).
+- First consumer of DynastyOperation* per-kind components that reads them rather than producing them. Establishes the resolution walker pattern future per-kind resolution systems (holy war, divine right, captive rescue, captive ransom) can reuse.
+- Unity-side simplifications deferred: ward-profile-triggered mutual hostility on failure; conviction event recording (oathkeeping/desecration/stewardship +1); legitimacy-penalty fallback when target owns zero control points; exposure-threshold crossing narrative.
+- New dedicated validator `BloodlinesMissionaryResolutionSmokeValidation` plus wrapper `scripts/Invoke-BloodlinesUnityMissionaryResolutionSmokeValidation.ps1`. All 8 phases PASS:
+  - PhaseNotExpiredSkips: ResolveAt > current, Active stays true, no effects
+  - PhaseExpiredSuccessApplies: Active->false, exposure 10->30, intensity 50->45, loyalty 80->77, narrative +1
+  - PhaseExpiredFailureStrengthens: Active->false, target intensity 50->52, exposure/loyalty unchanged
+  - PhaseVoidOnMissingTarget: missing target flips Active->false and pushes void narrative
+  - PhaseExposureAppendsNewEntry: absent exposure entry appended with Discovered=true, Exposure=20
+  - PhaseExposureClampsAt100: exposure 95+20 clamped to 100
+  - PhaseLowestLoyaltyControlPointTargeted: only low-loyalty cp (50->47) affected, high-loyalty cp (80) untouched
+  - PhaseIntensityErosionSkippedWhenSameFaith: matching faith blocks intensity erosion; Intensity remains 50
+- Contract revision advanced 40 -> 41. New per-slice handoff: `docs/unity/session-handoffs/2026-04-20-unity-ai-strategic-layer-bundle-4-missionary-resolution.md`.
+
+### Gate Results
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS
+- Bootstrap runtime smoke: PASS
+- Combat smoke: PASS (all 8 phases)
+- Scene shells: Bootstrap + Gameplay PASS
+- Fortification smoke: PASS
+- Siege smoke: PASS
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision 41
+- Dedicated smoke: PASS via `artifacts/unity-missionary-resolution-smoke.log` with marker `BLOODLINES_MISSIONARY_RESOLUTION_SMOKE PASS`
+
+### Recommended Next AI Strategic Layer Slices (Bundle 5 candidates)
+1. Holy war + divine right resolution (sub-slices 26 + 27): ship as Bundle 5 following the resolution walker pattern established by sub-slice 25. Holy war resolution materializes an active holy war entity and applies war-tick pulses until WarExpiresAtInWorldDays. Divine right resolution evaluates apex-faith-claim success at ResolveAtInWorldDays (simplified Unity-side flag since recognition share surface is not yet ported).
+2. Captive rescue + ransom resolution (sub-slices 28 + 29): ship as Bundle 6. Rescue rolls against ProjectedChance and on success flips captive status to Released via CapturedMemberHelpers.ReleaseCaptive. Ransom unconditionally flips to Released (ProjectedChance=1.0).
+3. Codex fortification-siege sub-slice 9 destroyed-counter recovery (Codex's recommended next slice).
