@@ -1,8 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /ftda/
-Disallow: /playbook/
-Disallow: /concepts/
 Disallow: /thumbs/
 
 Sitemap: https://lancewfisher.com/sitemap.xml
