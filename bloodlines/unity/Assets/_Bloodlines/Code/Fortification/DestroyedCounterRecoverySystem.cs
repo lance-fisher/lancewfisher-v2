@@ -18,10 +18,6 @@ namespace Bloodlines.Fortification
     [UpdateAfter(typeof(BreachSealingSystem))]
     public partial struct DestroyedCounterRecoverySystem : ISystem
     {
-        private const float RebuildStoneCostPerSegment = 90f;
-        private const float RebuildWorkerHoursPerSegment = 14f;
-        private const float RebuildTickRateHz = 1f;
-        private const float KeepRebuildMultiplier = 2f;
         private const float WorkerHourCompletionEpsilon = 0.001f;
 
         private float tickAccumulatorSeconds;
@@ -34,7 +30,7 @@ namespace Bloodlines.Fortification
 
         public void OnUpdate(ref SystemState state)
         {
-            float tickIntervalSeconds = 1f / RebuildTickRateHz;
+            float tickIntervalSeconds = 1f / FortificationCanon.DestroyedCounterRecoveryTickRateHz;
             tickAccumulatorSeconds += SystemAPI.Time.DeltaTime;
             int processedTickCount = (int)math.floor((tickAccumulatorSeconds + 0.0001f) / tickIntervalSeconds);
             if (processedTickCount <= 0)
@@ -446,11 +442,13 @@ namespace Bloodlines.Fortification
 
         private static TargetRequirements ResolveTargetRequirements(DestroyedCounterKind targetCounter)
         {
-            float multiplier = targetCounter == DestroyedCounterKind.Keep ? KeepRebuildMultiplier : 1f;
+            float multiplier = targetCounter == DestroyedCounterKind.Keep
+                ? FortificationCanon.DestroyedCounterRecoveryKeepMultiplier
+                : 1f;
             return new TargetRequirements
             {
-                StoneCost = RebuildStoneCostPerSegment * multiplier,
-                WorkerHours = RebuildWorkerHoursPerSegment * multiplier,
+                StoneCost = FortificationCanon.DestroyedCounterRecoveryStoneCostPerSegment * multiplier,
+                WorkerHours = FortificationCanon.DestroyedCounterRecoveryWorkerHoursPerSegment * multiplier,
             };
         }
 

@@ -23,6 +23,13 @@ namespace Bloodlines.Fortification
         public const float ReserveRecoveryHealthRatio = 0.82f;
         public const float ReserveTriageHealPerSecond = 5.5f;
         public const float ReserveMusterIntervalSeconds = 3.5f;
+        public const float BreachSealingTickRateHz = 1f;
+        public const float BreachSealingStoneCostPerBreach = 60f;
+        public const float BreachSealingWorkerHoursPerBreach = 8f;
+        public const float DestroyedCounterRecoveryTickRateHz = 1f;
+        public const float DestroyedCounterRecoveryStoneCostPerSegment = 90f;
+        public const float DestroyedCounterRecoveryWorkerHoursPerSegment = 14f;
+        public const float DestroyedCounterRecoveryKeepMultiplier = 2f;
         public const float BloodAltarSurgeDurationSeconds = 18f;
         public const float BloodAltarSurgeCooldownSeconds = 34f;
         public const float RealmCycleDefaultSeconds = 90f;

@@ -4,7 +4,9 @@ using System.IO;
 using Bloodlines.Components;
 using Bloodlines.Debug;
 using Bloodlines.Fortification;
+using Bloodlines.GameTime;
 using Bloodlines.Siege;
+using Bloodlines.Systems;
 using Unity.Collections;
 using Unity.Core;
 using Unity.Entities;
@@ -24,6 +26,10 @@ namespace Bloodlines.EditorTools
     {
         private const string ArtifactPath = "../artifacts/unity-breach-legibility-readout-smoke.log";
         private const float SimStepSeconds = 0.05f;
+        private const float HoursPerSecond = 1f;
+        private const float DaysPerSecond = HoursPerSecond / 24f;
+        private const float HalfSealingWindowSeconds = 4f;
+        private const float HalfKeepRebuildWindowSeconds = 14f;
 
         [MenuItem("Bloodlines/Fortification/Run Breach Legibility Readout Smoke Validation")]
         public static void RunInteractive()
@@ -81,6 +87,8 @@ namespace Bloodlines.EditorTools
             ok &= RunMultiBreachScalingPhase(sb);
             ok &= RunMissingSettlementPhase(sb);
             ok &= RunPartialDestructionVarietyPhase(sb);
+            ok &= RunSealingTelemetryPhase(sb);
+            ok &= RunRecoveryTelemetryPhase(sb);
             report = sb.ToString();
             return ok;
         }
@@ -408,6 +416,158 @@ namespace Bloodlines.EditorTools
             return true;
         }
 
+        private static bool RunSealingTelemetryPhase(System.Text.StringBuilder sb)
+        {
+            using var world = CreateTelemetryValidationWorld("BloodlinesBreachLegibilityReadout_SealingTelemetry");
+            using var scope = new DebugCommandSurfaceScope(world);
+            var em = world.EntityManager;
+
+            SeedDualClockRate(em, DaysPerSecond);
+            SeedFactionStockpile(em, "player", stone: 200f);
+            CreateIdleWorker(em, "player");
+            CreateSettlement(em, "keep_player", "player", ceiling: 6);
+            CreateFortificationBuilding(
+                em,
+                "player",
+                FortificationRole.Wall,
+                "wall_segment",
+                new float3(2f, 0f, 0f),
+                currentHealth: 0f,
+                maxHealth: 900f);
+            CreateFortificationBuilding(
+                em,
+                "player",
+                FortificationRole.Gate,
+                "gatehouse",
+                new float3(4f, 0f, 0f),
+                currentHealth: 0f,
+                maxHealth: 1200f);
+
+            Tick(world, HalfSealingWindowSeconds);
+
+            if (!scope.CommandSurface.TryDebugGetSettlementBreachTelemetry(
+                    new FixedString32Bytes("keep_player"),
+                    out var telemetry))
+            {
+                sb.AppendLine("Phase 6 FAIL: sealing telemetry could not be resolved.");
+                return false;
+            }
+
+            if (telemetry.Readout.OpenBreachCount != 2 ||
+                telemetry.Readout.DestroyedWallSegmentCount != 1 ||
+                telemetry.Readout.DestroyedGateCount != 1 ||
+                !telemetry.SealingEligible ||
+                !telemetry.SealingTracked ||
+                !Approximately(telemetry.SealingAccumulatedWorkerHours, 4f, 0.001f) ||
+                !Approximately(telemetry.SealingRequiredWorkerHours, FortificationCanon.BreachSealingWorkerHoursPerBreach, 0.001f) ||
+                !Approximately(telemetry.SealingReservedStone, FortificationCanon.BreachSealingStoneCostPerBreach, 0.001f) ||
+                !Approximately(telemetry.SealingRequiredStone, FortificationCanon.BreachSealingStoneCostPerBreach, 0.001f) ||
+                !Approximately(telemetry.SealingProgress01, 0.5f, 0.001f) ||
+                telemetry.RecoveryEligible ||
+                telemetry.RecoveryTracked ||
+                telemetry.RecoveryTargetCounter != DestroyedCounterKind.None ||
+                !Approximately(telemetry.RecoveryAccumulatedWorkerHours, 0f, 0.001f) ||
+                !Approximately(telemetry.RecoveryRequiredWorkerHours, 0f, 0.001f) ||
+                !Approximately(telemetry.RecoveryReservedStone, 0f, 0.001f) ||
+                !Approximately(telemetry.RecoveryRequiredStone, 0f, 0.001f) ||
+                !Approximately(telemetry.RecoveryProgress01, 0f, 0.001f))
+            {
+                sb.AppendLine(
+                    "Phase 6 FAIL: sealing telemetry drifted. " +
+                    $"breaches={telemetry.Readout.OpenBreachCount} walls={telemetry.Readout.DestroyedWallSegmentCount} gates={telemetry.Readout.DestroyedGateCount} " +
+                    $"sealEligible={telemetry.SealingEligible} sealTracked={telemetry.SealingTracked} " +
+                    $"sealHours={telemetry.SealingAccumulatedWorkerHours:F2}/{telemetry.SealingRequiredWorkerHours:F2} " +
+                    $"sealStone={telemetry.SealingReservedStone:F2}/{telemetry.SealingRequiredStone:F2} sealProgress={telemetry.SealingProgress01:F2} " +
+                    $"recoveryEligible={telemetry.RecoveryEligible} recoveryTracked={telemetry.RecoveryTracked} " +
+                    $"recoveryTarget={telemetry.RecoveryTargetCounter} recoveryHours={telemetry.RecoveryAccumulatedWorkerHours:F2}/{telemetry.RecoveryRequiredWorkerHours:F2} " +
+                    $"recoveryStone={telemetry.RecoveryReservedStone:F2}/{telemetry.RecoveryRequiredStone:F2} recoveryProgress={telemetry.RecoveryProgress01:F2}");
+                return false;
+            }
+
+            sb.AppendLine(
+                $"Phase 6 PASS: sealHours={telemetry.SealingAccumulatedWorkerHours:F2}/{telemetry.SealingRequiredWorkerHours:F2} sealStone={telemetry.SealingReservedStone:F2}/{telemetry.SealingRequiredStone:F2}.");
+            return true;
+        }
+
+        private static bool RunRecoveryTelemetryPhase(System.Text.StringBuilder sb)
+        {
+            using var world = CreateTelemetryValidationWorld(
+                "BloodlinesBreachLegibilityReadout_RecoveryTelemetry",
+                includeDestroyedCounterRecovery: true);
+            using var scope = new DebugCommandSurfaceScope(world);
+            var em = world.EntityManager;
+
+            SeedDualClockRate(em, DaysPerSecond);
+            SeedFactionStockpile(em, "player", stone: 400f);
+            CreateIdleWorker(em, "player");
+            var settlement = CreateSettlement(em, "keep_player", "player", ceiling: 6);
+            var fortification = em.GetComponentData<FortificationComponent>(settlement);
+            fortification.DestroyedGateCount = 1;
+            fortification.DestroyedKeepCount = 1;
+            fortification.OpenBreachCount = 0;
+            em.SetComponentData(settlement, fortification);
+            CreateFortificationBuilding(
+                em,
+                "player",
+                FortificationRole.Gate,
+                "gatehouse",
+                new float3(4f, 0f, 0f),
+                currentHealth: 0f,
+                maxHealth: 1200f);
+            CreateFortificationBuilding(
+                em,
+                "player",
+                FortificationRole.Keep,
+                "keep_tier_1",
+                new float3(0.5f, 0f, 0f),
+                currentHealth: 0f,
+                maxHealth: 1600f);
+
+            Tick(world, HalfKeepRebuildWindowSeconds);
+
+            if (!scope.CommandSurface.TryDebugGetSettlementBreachTelemetry(
+                    new FixedString32Bytes("keep_player"),
+                    out var telemetry))
+            {
+                sb.AppendLine("Phase 7 FAIL: recovery telemetry could not be resolved.");
+                return false;
+            }
+
+            float expectedRecoveryHours =
+                FortificationCanon.DestroyedCounterRecoveryWorkerHoursPerSegment *
+                FortificationCanon.DestroyedCounterRecoveryKeepMultiplier;
+            float expectedRecoveryStone =
+                FortificationCanon.DestroyedCounterRecoveryStoneCostPerSegment *
+                FortificationCanon.DestroyedCounterRecoveryKeepMultiplier;
+            if (telemetry.Readout.OpenBreachCount != 0 ||
+                telemetry.Readout.DestroyedGateCount != 1 ||
+                telemetry.Readout.DestroyedKeepCount != 1 ||
+                telemetry.SealingEligible ||
+                telemetry.SealingTracked ||
+                !telemetry.RecoveryEligible ||
+                !telemetry.RecoveryTracked ||
+                telemetry.RecoveryTargetCounter != DestroyedCounterKind.Keep ||
+                !Approximately(telemetry.RecoveryAccumulatedWorkerHours, 14f, 0.001f) ||
+                !Approximately(telemetry.RecoveryRequiredWorkerHours, expectedRecoveryHours, 0.001f) ||
+                !Approximately(telemetry.RecoveryReservedStone, expectedRecoveryStone, 0.001f) ||
+                !Approximately(telemetry.RecoveryRequiredStone, expectedRecoveryStone, 0.001f) ||
+                !Approximately(telemetry.RecoveryProgress01, 0.5f, 0.001f))
+            {
+                sb.AppendLine(
+                    "Phase 7 FAIL: recovery telemetry drifted. " +
+                    $"breaches={telemetry.Readout.OpenBreachCount} gate={telemetry.Readout.DestroyedGateCount} keep={telemetry.Readout.DestroyedKeepCount} " +
+                    $"sealEligible={telemetry.SealingEligible} sealTracked={telemetry.SealingTracked} " +
+                    $"recoveryEligible={telemetry.RecoveryEligible} recoveryTracked={telemetry.RecoveryTracked} " +
+                    $"recoveryTarget={telemetry.RecoveryTargetCounter} recoveryHours={telemetry.RecoveryAccumulatedWorkerHours:F2}/{telemetry.RecoveryRequiredWorkerHours:F2} " +
+                    $"recoveryStone={telemetry.RecoveryReservedStone:F2}/{telemetry.RecoveryRequiredStone:F2} recoveryProgress={telemetry.RecoveryProgress01:F2}");
+                return false;
+            }
+
+            sb.AppendLine(
+                $"Phase 7 PASS: recoveryTarget={telemetry.RecoveryTargetCounter} recoveryHours={telemetry.RecoveryAccumulatedWorkerHours:F2}/{telemetry.RecoveryRequiredWorkerHours:F2} recoveryStone={telemetry.RecoveryReservedStone:F2}/{telemetry.RecoveryRequiredStone:F2}.");
+            return true;
+        }
+
         private static World CreateValidationWorld(string worldName)
         {
             var world = new World(worldName);
@@ -426,6 +586,29 @@ namespace Bloodlines.EditorTools
             return world;
         }
 
+        private static World CreateTelemetryValidationWorld(
+            string worldName,
+            bool includeDestroyedCounterRecovery = false)
+        {
+            var world = new World(worldName);
+            world.GetOrCreateSystemManaged<InitializationSystemGroup>();
+            var simulationGroup = world.GetOrCreateSystemManaged<SimulationSystemGroup>();
+            world.GetOrCreateSystemManaged<PresentationSystemGroup>();
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<DualClockTickSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<DualClockDeclarationSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<FortificationStructureLinkSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<AdvanceFortificationTierSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<FortificationDestructionResolutionSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<BreachSealingSystem>());
+            if (includeDestroyedCounterRecovery)
+            {
+                simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<DestroyedCounterRecoverySystem>());
+            }
+
+            simulationGroup.SortSystems();
+            return world;
+        }
+
         private static void Tick(World world, double seconds)
         {
             double elapsed = world.Time.ElapsedTime;
@@ -436,6 +619,67 @@ namespace Bloodlines.EditorTools
                 world.Update();
                 elapsed += SimStepSeconds;
             }
+        }
+
+        private static void SeedDualClockRate(EntityManager entityManager, float daysPerSecond)
+        {
+            var clockQuery = entityManager.CreateEntityQuery(ComponentType.ReadWrite<DualClockComponent>());
+            var clockEntity = clockQuery.GetSingletonEntity();
+            var clock = entityManager.GetComponentData<DualClockComponent>(clockEntity);
+            clock.InWorldDays = 0f;
+            clock.DaysPerRealSecond = daysPerSecond;
+            clock.DeclarationCount = 0;
+            entityManager.SetComponentData(clockEntity, clock);
+            clockQuery.Dispose();
+        }
+
+        private static Entity SeedFactionStockpile(EntityManager entityManager, string factionId, float stone)
+        {
+            var entity = entityManager.CreateEntity();
+            entityManager.AddComponentData(entity, new FactionComponent
+            {
+                FactionId = factionId,
+            });
+            entityManager.AddComponentData(entity, new ResourceStockpileComponent
+            {
+                Stone = stone,
+            });
+            return entity;
+        }
+
+        private static Entity CreateIdleWorker(EntityManager entityManager, string factionId)
+        {
+            var entity = entityManager.CreateEntity();
+            entityManager.AddComponentData(entity, new FactionComponent
+            {
+                FactionId = factionId,
+            });
+            entityManager.AddComponentData(entity, new UnitTypeComponent
+            {
+                TypeId = "villager",
+                Role = UnitRole.Worker,
+                SiegeClass = SiegeClass.None,
+                PopulationCost = 1,
+                Stage = 1,
+            });
+            entityManager.AddComponentData(entity, new HealthComponent
+            {
+                Current = 10f,
+                Max = 10f,
+            });
+            entityManager.AddComponentData(entity, new WorkerGatherComponent
+            {
+                AssignedNode = Entity.Null,
+                AssignedResourceId = default,
+                CarryResourceId = default,
+                CarryAmount = 0f,
+                CarryCapacity = 5f,
+                GatherRate = 1f,
+                Phase = WorkerGatherPhase.Idle,
+                GatherRadius = 0.8f,
+                DepositRadius = 0.8f,
+            });
+            return entity;
         }
 
         private static Entity CreateSettlement(
