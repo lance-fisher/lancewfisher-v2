@@ -2494,3 +2494,22 @@ Branch: `claude/unity-ai-captive-rescue-and-ransom-execution`. Master base: `782
 1. Per-kind resolution system (the first multi-kind resolution consumer): walk expired per-kind components at their resolve boundaries, apply effects, flip Active=false. Missionary is simplest (exposure + intensity + loyalty); holy war requires faction.faith.activeHolyWars materialization + war-tick pulses; divine right requires apex faith claim evaluation; captive rescue/ransom require captive status flips plus member roster restoration. Ship as one walker or split per-kind.
 2. CapturedMemberElement extension (roleId + renown fields): adds the canonical browser fields to enable renown-scaled cost, role-priority captive picker, and simplified parity formula tightening.
 3. Divine right side-effect resolution (sub-slice 22 deferrals): mutual hostility application against non-same-faith kingdoms, AI timer cap propagation to candidate factions, conviction event recording.
+
+## Codex Fortification Siege Sub-Slice 9: Destroyed Counter Recovery (2026-04-20)
+
+This foundation slice is complete on `codex/unity-fortification-destroyed-counter-recovery` and updates the fortification lane to contract revision `41`.
+
+### What Landed
+- `DestroyedCounterRecoveryProgressComponent` plus `DestroyedCounterRecoverySystem` now restore destroyed wall, tower, gate, and keep counters over in-world time after sub-slice 8 has already driven `OpenBreachCount` to zero.
+- Recovery is intentionally ordered `Keep > Gate > Wall > Tower`, uses `90` stone plus `14` worker-hours per standard segment, and applies a `2x` multiplier for keep rebuilds.
+- The runtime system heals the linked destroyed structure back to full health on completion so `FortificationDestructionResolutionSystem` stays authoritative for the fortification counters.
+- Dedicated validator `BloodlinesDestroyedCounterRecoverySmokeValidation` plus wrapper `scripts/Invoke-BloodlinesUnityDestroyedCounterRecoverySmokeValidation.ps1` are green.
+- The full governed 10-gate chain is green in the clean merge worktree, plus the dedicated destroyed-counter smoke.
+
+### Validation Notes
+- The checked-in bootstrap runtime and canonical scene-shell wrappers still pin `D:\ProjectsHome\Bloodlines\unity`, so this session used temporary worktree-safe wrapper copies for those gates while preserving the same pass markers.
+- Local gitignored Unity-generated csproj files were refreshed before the `dotnet build` gates so they included Claude Bundle 3's already-landed files plus the new destroyed-counter recovery files.
+
+### Next Fortification Scope
+1. Sealing-cost balance pass.
+2. Breach-depth telemetry.

@@ -2232,3 +2232,34 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   - PhaseRansomNoMerchantBlocks: only Diplomat on roster blocks
 - All 10 governed validation gates green on the rebased base. Contract bumped revision 39 -> 40.
 - The per-slice handoff lives at `docs/unity/session-handoffs/2026-04-20-unity-ai-strategic-layer-bundle-3-captive-rescue-and-ransom-execution.md`.
+
+## Codex Fortification Siege Sub-Slice 9: Destroyed Counter Recovery (2026-04-20)
+
+### Status: COMPLETE on branch codex/unity-fortification-destroyed-counter-recovery
+
+### What Was Done
+- New `DestroyedCounterRecoveryProgressComponent` plus `DestroyedCounterRecoverySystem` extend the sub-slice 8 sealing loop into slow structural rebuild for `FortificationComponent.DestroyedWallCount`, `DestroyedTowerCount`, `DestroyedGateCount`, and `DestroyedKeepCount`.
+- The recovery gate is explicit: the system only runs when `OpenBreachCount == 0`, so live breach sealing always finishes before destroyed counters begin to recover.
+- Recovery priority is strict `Keep > Gate > Wall > Tower`. Standard rebuilds reserve `90` stone and `14` worker-hours at `1 Hz`; keep rebuilds apply a `2x` cost and `2x` worker-hour multiplier.
+- Worker availability reuses the narrow live idle-worker scan from sub-slice 8 (`UnitRole.Worker`, positive health, `WorkerGatherPhase.Idle`) instead of widening `FortificationReserveComponent`.
+- When a rebuild completes, the system decrements the chosen destroyed counter and restores the linked destroyed structure's `HealthComponent.Current` to max so `FortificationDestructionResolutionSystem` remains authoritative on subsequent ticks.
+- New dedicated validator `BloodlinesDestroyedCounterRecoverySmokeValidation` plus wrapper `scripts/Invoke-BloodlinesUnityDestroyedCounterRecoverySmokeValidation.ps1` are green across six phases: post-sealing progress accumulation, first wall rebuild completion, keep-over-gate priority with `2x` keep multipliers, open-breach block, all-counters-zero no-op, and full keep->gate->wall->tower rebuild order.
+- Full governed 10-gate chain is green on `D:\BLDCR\bloodlines`, plus the dedicated destroyed-counter recovery smoke on the rebased `origin/master` `e73933e4` base. Contract bumped revision `40 -> 41`.
+- Local csproj note: the local gitignored `unity/Assembly-CSharp.csproj` and `unity/Assembly-CSharp-Editor.csproj` were refreshed so they included Claude Bundle 3's already-landed files plus the new destroyed-counter recovery files before the `dotnet build` gates ran.
+
+### Gate Results
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS
+- Bootstrap runtime smoke: PASS via `artifacts/unity-bootstrap-runtime-smoke.log`
+- Combat smoke: PASS via `artifacts/unity-combat-smoke.log`
+- Scene shells: Bootstrap + Gameplay PASS via `artifacts/unity-bootstrap-scene-validate.log` and `artifacts/unity-gameplay-scene-validate.log`
+- Fortification smoke: PASS via `artifacts/unity-fortification-smoke.log`
+- Siege smoke: PASS via `artifacts/unity-siege-smoke.log`
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision 40 before the revision-41 doc bump; re-run required after doc update
+- Dedicated destroyed-counter recovery smoke: PASS via `artifacts/unity-destroyed-counter-recovery-smoke.log` with marker `BLOODLINES_DESTROYED_COUNTER_RECOVERY_SMOKE PASS`
+
+### Recommended Next Fortification Follow-Up
+1. Sealing-cost balance pass if the owner wants the new sealing and rebuild loops tuned before additional consumers land.
+2. Breach-depth telemetry if the owner wants more explicit observability around sealing versus rebuild progress.
