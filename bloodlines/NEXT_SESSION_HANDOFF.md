@@ -2532,3 +2532,30 @@ Branch: `claude/unity-ai-missionary-resolution-rebased`. Master base: `082699ab`
 1. Holy war + divine right resolution (sub-slices 26 + 27) as Bundle 5.
 2. Captive rescue + ransom resolution (sub-slices 28 + 29) as Bundle 6.
 3. CapturedMemberElement extension (roleId + renown fields) to enable renown-scaled cost and role-priority captive picker.
+
+## Codex Fortification Siege Sub-Slice 10: Breach Depth Telemetry (2026-04-20)
+
+This observability follow-up is complete on `codex/unity-fortification-breach-depth-telemetry`.
+
+### What Landed
+- `SettlementBreachTelemetry` and `TryDebugGetSettlementBreachTelemetry` were added to the fortification debug surface so one settlement-level read gives:
+  - the existing breach readout
+  - sealing eligibility, tracked state, worker-hours, stone cost, and normalized progress
+  - destroyed-counter recovery eligibility, tracked state, target counter, worker-hours, stone cost, and normalized progress
+- `FortificationCanon` now owns the sealing and rebuild tick/cost constants; `BreachSealingSystem` and `DestroyedCounterRecoverySystem` were updated to read those shared values.
+- `BloodlinesBreachLegibilityReadoutSmokeValidation` now covers 7 phases, including half-window sealing telemetry and half-window keep-recovery telemetry.
+- All 10 governed validation gates are green in `D:\BLBDT\bloodlines`, plus the breach legibility readout smoke.
+
+### Immediate Next Actions
+1. Push `codex/unity-fortification-breach-depth-telemetry`.
+2. Merge it to `master` via the normal merge-temp ceremony.
+3. After merge, either pause or retire the fortification lane unless Lance explicitly wants the optional sealing-cost balance pass.
+
+### Important Repo-Reality Note
+- The current multi-day directive's Priority 2 description is stale against the repository. The repo already contains Tier 2 dynasties foundation code in:
+  - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageComponents.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageProposalExpirationSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageGestationSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/LesserHouseLoyaltyDriftSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/MinorHouseLevySystem.cs`
+- Do not open a duplicate zero-code marriages lane. If Lance still wants more dynasty work, scope the next lane as hardening or extension on top of those existing surfaces after checking the retired `tier2-batch-dynasty-systems` handoff.

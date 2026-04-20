@@ -22,10 +22,6 @@ namespace Bloodlines.Fortification
     [UpdateBefore(typeof(BreachAssaultPressureSystem))]
     public partial struct BreachSealingSystem : ISystem
     {
-        private const float SealingStoneCostPerBreach = 60f;
-        private const float SealingWorkerHoursPerBreach = 8f;
-        private const float SealingTickRateHz = 1f;
-
         private float tickAccumulatorSeconds;
 
         public void OnCreate(ref SystemState state)
@@ -36,7 +32,7 @@ namespace Bloodlines.Fortification
 
         public void OnUpdate(ref SystemState state)
         {
-            float tickIntervalSeconds = 1f / SealingTickRateHz;
+            float tickIntervalSeconds = 1f / FortificationCanon.BreachSealingTickRateHz;
             tickAccumulatorSeconds += SystemAPI.Time.DeltaTime;
             if (tickAccumulatorSeconds + 0.0001f < tickIntervalSeconds)
             {
@@ -112,7 +108,8 @@ namespace Bloodlines.Fortification
                     if (laborIndex >= 0 && idleWorkers[laborIndex].AvailableIdleWorkers > 0)
                     {
                         int stockpileIndex = FindStockpileIndex(stockpiles, factions[i].FactionId);
-                        bool canFundCurrentBreach = progress.StoneReservedForCurrentBreach >= SealingStoneCostPerBreach;
+                        bool canFundCurrentBreach =
+                            progress.StoneReservedForCurrentBreach >= FortificationCanon.BreachSealingStoneCostPerBreach;
                         if (!canFundCurrentBreach &&
                             stockpileIndex >= 0 &&
                             TryReserveStoneForCurrentBreach(ref stockpiles, stockpileIndex, ref progress))
@@ -236,7 +233,7 @@ namespace Bloodlines.Fortification
             float remainingWorkerHours = math.max(0f, elapsedInWorldDays * 24f);
             while (remainingWorkerHours > 0f && fortification.OpenBreachCount > 0)
             {
-                if (progress.StoneReservedForCurrentBreach < SealingStoneCostPerBreach)
+                if (progress.StoneReservedForCurrentBreach < FortificationCanon.BreachSealingStoneCostPerBreach)
                 {
                     if (stockpileIndex < 0 ||
                         !TryReserveStoneForCurrentBreach(ref stockpiles, stockpileIndex, ref progress))
@@ -245,12 +242,13 @@ namespace Bloodlines.Fortification
                     }
                 }
 
-                float neededWorkerHours = SealingWorkerHoursPerBreach - progress.AccumulatedWorkerHours;
+                float neededWorkerHours =
+                    FortificationCanon.BreachSealingWorkerHoursPerBreach - progress.AccumulatedWorkerHours;
                 float appliedWorkerHours = math.min(remainingWorkerHours, neededWorkerHours);
                 progress.AccumulatedWorkerHours += appliedWorkerHours;
                 remainingWorkerHours -= appliedWorkerHours;
 
-                if (progress.AccumulatedWorkerHours + 0.0001f < SealingWorkerHoursPerBreach)
+                if (progress.AccumulatedWorkerHours + 0.0001f < FortificationCanon.BreachSealingWorkerHoursPerBreach)
                 {
                     break;
                 }
@@ -272,10 +270,11 @@ namespace Bloodlines.Fortification
             }
 
             var stockpileRecord = stockpiles[stockpileIndex];
-            float requiredStone = SealingStoneCostPerBreach - progress.StoneReservedForCurrentBreach;
+            float requiredStone =
+                FortificationCanon.BreachSealingStoneCostPerBreach - progress.StoneReservedForCurrentBreach;
             if (requiredStone <= 0f)
             {
-                progress.StoneReservedForCurrentBreach = SealingStoneCostPerBreach;
+                progress.StoneReservedForCurrentBreach = FortificationCanon.BreachSealingStoneCostPerBreach;
                 return true;
             }
 
@@ -286,7 +285,7 @@ namespace Bloodlines.Fortification
 
             stockpileRecord.Stockpile.Stone -= requiredStone;
             stockpiles[stockpileIndex] = stockpileRecord;
-            progress.StoneReservedForCurrentBreach = SealingStoneCostPerBreach;
+            progress.StoneReservedForCurrentBreach = FortificationCanon.BreachSealingStoneCostPerBreach;
             return true;
         }
 

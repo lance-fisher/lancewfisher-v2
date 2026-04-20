@@ -25,6 +25,31 @@ namespace Bloodlines.Debug
         public float AggregateSpeedMultiplier;
     }
 
+    /// <summary>
+    /// Extended fortification telemetry for smoke validation and future debug HUD work.
+    /// Keeps the player-facing breach readout intact while exposing sealing and
+    /// destroyed-counter recovery progress with their live costs.
+    /// </summary>
+    public struct SettlementBreachTelemetry
+    {
+        public SettlementBreachReadout Readout;
+        public bool SealingEligible;
+        public bool SealingTracked;
+        public float SealingAccumulatedWorkerHours;
+        public float SealingRequiredWorkerHours;
+        public float SealingReservedStone;
+        public float SealingRequiredStone;
+        public float SealingProgress01;
+        public bool RecoveryEligible;
+        public bool RecoveryTracked;
+        public DestroyedCounterKind RecoveryTargetCounter;
+        public float RecoveryAccumulatedWorkerHours;
+        public float RecoveryRequiredWorkerHours;
+        public float RecoveryReservedStone;
+        public float RecoveryRequiredStone;
+        public float RecoveryProgress01;
+    }
+
     public sealed partial class BloodlinesDebugCommandSurface
     {
         public bool TryDebugGetSettlementBreachReadout(
@@ -32,6 +57,20 @@ namespace Bloodlines.Debug
             out SettlementBreachReadout readout)
         {
             readout = default;
+            if (!TryDebugGetSettlementBreachTelemetry(settlementId, out var telemetry))
+            {
+                return false;
+            }
+
+            readout = telemetry.Readout;
+            return true;
+        }
+
+        public bool TryDebugGetSettlementBreachTelemetry(
+            FixedString32Bytes settlementId,
+            out SettlementBreachTelemetry telemetry)
+        {
+            telemetry = default;
             if (!TryGetEntityManager(out var entityManager))
             {
                 return false;
@@ -53,8 +92,31 @@ namespace Bloodlines.Debug
                 out bool breachAdvantageActive,
                 out float aggregateAttackMultiplier,
                 out float aggregateSpeedMultiplier);
+            ResolveSealingTelemetry(
+                entityManager,
+                settlementEntity,
+                fortification,
+                out bool sealingEligible,
+                out bool sealingTracked,
+                out float sealingAccumulatedWorkerHours,
+                out float sealingRequiredWorkerHours,
+                out float sealingReservedStone,
+                out float sealingRequiredStone,
+                out float sealingProgress01);
+            ResolveRecoveryTelemetry(
+                entityManager,
+                settlementEntity,
+                fortification,
+                out bool recoveryEligible,
+                out bool recoveryTracked,
+                out DestroyedCounterKind recoveryTargetCounter,
+                out float recoveryAccumulatedWorkerHours,
+                out float recoveryRequiredWorkerHours,
+                out float recoveryReservedStone,
+                out float recoveryRequiredStone,
+                out float recoveryProgress01);
 
-            readout = new SettlementBreachReadout
+            var readout = new SettlementBreachReadout
             {
                 SettlementId = fortification.SettlementId,
                 OwnerFactionId = ownerFaction.FactionId,
@@ -72,6 +134,26 @@ namespace Bloodlines.Debug
                 BreachAssaultAdvantageActive = breachAdvantageActive,
                 AggregateAttackMultiplier = aggregateAttackMultiplier,
                 AggregateSpeedMultiplier = aggregateSpeedMultiplier,
+            };
+
+            telemetry = new SettlementBreachTelemetry
+            {
+                Readout = readout,
+                SealingEligible = sealingEligible,
+                SealingTracked = sealingTracked,
+                SealingAccumulatedWorkerHours = sealingAccumulatedWorkerHours,
+                SealingRequiredWorkerHours = sealingRequiredWorkerHours,
+                SealingReservedStone = sealingReservedStone,
+                SealingRequiredStone = sealingRequiredStone,
+                SealingProgress01 = sealingProgress01,
+                RecoveryEligible = recoveryEligible,
+                RecoveryTracked = recoveryTracked,
+                RecoveryTargetCounter = recoveryTargetCounter,
+                RecoveryAccumulatedWorkerHours = recoveryAccumulatedWorkerHours,
+                RecoveryRequiredWorkerHours = recoveryRequiredWorkerHours,
+                RecoveryReservedStone = recoveryReservedStone,
+                RecoveryRequiredStone = recoveryRequiredStone,
+                RecoveryProgress01 = recoveryProgress01,
             };
 
             return true;
@@ -153,6 +235,91 @@ namespace Bloodlines.Debug
                 aggregateSpeedMultiplier = math.max(
                     aggregateSpeedMultiplier,
                     fieldWaters[i].BreachAssaultSpeedMultiplier);
+            }
+        }
+
+        private static void ResolveSealingTelemetry(
+            EntityManager entityManager,
+            Entity settlementEntity,
+            in FortificationComponent fortification,
+            out bool sealingEligible,
+            out bool sealingTracked,
+            out float accumulatedWorkerHours,
+            out float requiredWorkerHours,
+            out float reservedStone,
+            out float requiredStone,
+            out float progress01)
+        {
+            sealingEligible = fortification.OpenBreachCount > 0;
+            sealingTracked = entityManager.HasComponent<BreachSealingProgressComponent>(settlementEntity);
+            accumulatedWorkerHours = 0f;
+            requiredWorkerHours = sealingEligible ? FortificationCanon.BreachSealingWorkerHoursPerBreach : 0f;
+            reservedStone = 0f;
+            requiredStone = sealingEligible ? FortificationCanon.BreachSealingStoneCostPerBreach : 0f;
+            progress01 = 0f;
+
+            if (!sealingTracked)
+            {
+                return;
+            }
+
+            var progress = entityManager.GetComponentData<BreachSealingProgressComponent>(settlementEntity);
+            accumulatedWorkerHours = progress.AccumulatedWorkerHours;
+            reservedStone = progress.StoneReservedForCurrentBreach;
+            if (requiredWorkerHours > 0f)
+            {
+                progress01 = math.clamp(accumulatedWorkerHours / requiredWorkerHours, 0f, 1f);
+            }
+        }
+
+        private static void ResolveRecoveryTelemetry(
+            EntityManager entityManager,
+            Entity settlementEntity,
+            in FortificationComponent fortification,
+            out bool recoveryEligible,
+            out bool recoveryTracked,
+            out DestroyedCounterKind targetCounter,
+            out float accumulatedWorkerHours,
+            out float requiredWorkerHours,
+            out float reservedStone,
+            out float requiredStone,
+            out float progress01)
+        {
+            recoveryEligible = fortification.OpenBreachCount <= 0 &&
+                               fortification.DestroyedWallSegmentCount +
+                               fortification.DestroyedTowerCount +
+                               fortification.DestroyedGateCount +
+                               fortification.DestroyedKeepCount > 0;
+            recoveryTracked = entityManager.HasComponent<DestroyedCounterRecoveryProgressComponent>(settlementEntity);
+            targetCounter = DestroyedCounterKind.None;
+            accumulatedWorkerHours = 0f;
+            requiredWorkerHours = 0f;
+            reservedStone = 0f;
+            requiredStone = 0f;
+            progress01 = 0f;
+
+            if (!recoveryTracked)
+            {
+                return;
+            }
+
+            var progress = entityManager.GetComponentData<DestroyedCounterRecoveryProgressComponent>(settlementEntity);
+            targetCounter = progress.TargetCounter;
+            accumulatedWorkerHours = progress.AccumulatedWorkerHours;
+            reservedStone = progress.StoneReservedForCurrentSegment;
+            if (targetCounter == DestroyedCounterKind.None)
+            {
+                return;
+            }
+
+            float multiplier = targetCounter == DestroyedCounterKind.Keep
+                ? FortificationCanon.DestroyedCounterRecoveryKeepMultiplier
+                : 1f;
+            requiredWorkerHours = FortificationCanon.DestroyedCounterRecoveryWorkerHoursPerSegment * multiplier;
+            requiredStone = FortificationCanon.DestroyedCounterRecoveryStoneCostPerSegment * multiplier;
+            if (requiredWorkerHours > 0f)
+            {
+                progress01 = math.clamp(accumulatedWorkerHours / requiredWorkerHours, 0f, 1f);
             }
         }
     }

@@ -2274,3 +2274,31 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Unity-side simplifications deferred: ward-profile-triggered mutual hostility on failure; conviction event recording; legitimacy-penalty fallback; exposure-threshold crossing narrative.
 - All 10 governed validation gates green. Contract bumped revision 41 -> 42.
 - Per-slice handoff: `docs/unity/session-handoffs/2026-04-20-unity-ai-strategic-layer-bundle-4-missionary-resolution.md`.
+
+## Codex Fortification Siege Sub-Slice 10: Breach Depth Telemetry (2026-04-20)
+
+### Status: COMPLETE on branch codex/unity-fortification-breach-depth-telemetry
+
+### What Was Done
+- Added `SettlementBreachTelemetry` plus `TryDebugGetSettlementBreachTelemetry` in `BloodlinesDebugCommandSurface.Fortification.BreachReadout.cs` so one structured debug seam now exposes settlement breach state, sealing eligibility/progress/costs, and destroyed-counter recovery eligibility/progress/costs without breaking the existing `SettlementBreachReadout` callers.
+- Centralized the sealing and rebuild canon values in `FortificationCanon.cs` and updated both `BreachSealingSystem` and `DestroyedCounterRecoverySystem` to consume those shared constants instead of private copies.
+- Extended `BloodlinesBreachLegibilityReadoutSmokeValidation` from 5 phases to 7 phases so the validator now proves mid-seal telemetry (`4/8` worker-hours, `60/60` stone, `0.5` progress) and mid-recovery telemetry on keep-priority rebuild (`14/28` worker-hours, `180/180` stone, `0.5` progress).
+- Full governed 10-gate chain is green on `D:\BLBDT\bloodlines`, plus the dedicated breach-legibility readout smoke on top of revision-42 master-equivalent `575b824f`. Contract bumped revision `42 -> 43` to document the new fortification branch and handoff.
+- Repo-state note: the current multi-day directive's Priority 2 description is stale. The repo already contains `MarriageComponents`, `MarriageProposalExpirationSystem`, `MarriageGestationSystem`, `LesserHouseLoyaltyDriftSystem`, and `MinorHouseLevySystem` from the retired `tier2-batch-dynasty-systems` lane, so no duplicate zero-code marriages lane was opened.
+
+### Gate Results
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS
+- Bootstrap runtime smoke: PASS via `artifacts/unity-bootstrap-runtime-smoke.log`
+- Combat smoke: PASS via `artifacts/unity-combat-smoke.log`
+- Scene shells: Bootstrap + Gameplay PASS via `artifacts/unity-bootstrap-scene-validate.log` and `artifacts/unity-gameplay-scene-validate.log`
+- Fortification smoke: PASS via `artifacts/unity-fortification-smoke.log`
+- Siege smoke: PASS via `artifacts/unity-siege-smoke.log`
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision 42 before the revision-43 doc bump; re-run required after doc update
+- Breach legibility readout smoke: PASS via `artifacts/unity-breach-legibility-readout-smoke.log` with phases 6 and 7 covering sealing and recovery telemetry
+
+### Recommended Next Fortification Follow-Up
+1. Push and merge `codex/unity-fortification-breach-depth-telemetry`, then retire or pause the fortification lane unless Lance requests the optional sealing-cost balance pass.
+2. If a dynasty follow-up is still desired, scope it as hardening or extension on top of the existing Tier 2 dynasties implementation instead of re-porting marriages, lesser houses, and minor houses from zero.
