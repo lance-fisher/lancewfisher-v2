@@ -16,7 +16,7 @@ namespace Bloodlines.Dynasties
     /// MarriageProposalExpirationSystem; accepted by the accept action.
     /// Browser reference: simulation.js proposeMarriage (~7340),
     /// tickMarriageProposalExpiration (~7274).
-    /// MARRIAGE_PROPOSAL_EXPIRATION_IN_WORLD_DAYS = 30 (browser default).
+    /// MARRIAGE_PROPOSAL_EXPIRATION_IN_WORLD_DAYS = 90 (browser default).
     /// </summary>
     public struct MarriageProposalComponent : IComponentData
     {
@@ -35,7 +35,7 @@ namespace Bloodlines.Dynasties
     /// is the canonical side for child generation. Browser reference:
     /// simulation.js acceptMarriage (~7388), tickMarriageGestation (~7496),
     /// tickMarriageDissolutionFromDeath (~7471).
-    /// MARRIAGE_GESTATION_IN_WORLD_DAYS = 60 (browser default).
+    /// MARRIAGE_GESTATION_IN_WORLD_DAYS = 280 (browser default).
     /// </summary>
     public struct MarriageComponent : IComponentData
     {
@@ -49,6 +49,27 @@ namespace Bloodlines.Dynasties
         public bool IsPrimary;
         public bool ChildGenerated;
         public bool Dissolved;
+        public float DissolvedAtInWorldDays;
+    }
+
+    /// <summary>
+    /// Buffer on the primary marriage record tracking generated children in
+    /// canonical order. Browser reference: simulation.js tickMarriageGestation
+    /// (~7496) pushes each child id onto marriage.children.
+    /// </summary>
+    public struct MarriageChildElement : IBufferElementData
+    {
+        public FixedString64Bytes ChildMemberId;
+    }
+
+    /// <summary>
+    /// Child-only mixed bloodline metadata. Browser reference: simulation.js
+    /// tickMarriageGestation (~7511-7519) mixedBloodline object.
+    /// </summary>
+    public struct DynastyMixedBloodlineComponent : IComponentData
+    {
+        public FixedString32Bytes HeadHouseId;
+        public FixedString32Bytes SpouseHouseId;
     }
 
     /// <summary>

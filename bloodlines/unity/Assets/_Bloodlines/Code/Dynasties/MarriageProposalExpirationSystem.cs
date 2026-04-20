@@ -8,12 +8,12 @@ namespace Bloodlines.Dynasties
     /// Expires pending marriage proposals whose in-world age exceeds the
     /// canonical expiration window. Browser reference: simulation.js
     /// tickMarriageProposalExpiration (~7274).
-    /// MARRIAGE_PROPOSAL_EXPIRATION_IN_WORLD_DAYS = 30.
+    /// MARRIAGE_PROPOSAL_EXPIRATION_IN_WORLD_DAYS = 90.
     /// </summary>
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public partial struct MarriageProposalExpirationSystem : ISystem
     {
-        public const float ExpirationInWorldDays = 30f;
+        public const float ExpirationInWorldDays = 90f;
 
         public void OnCreate(ref SystemState state)
         {
@@ -37,11 +37,16 @@ namespace Bloodlines.Dynasties
                 if (comps[i].Status != MarriageProposalStatus.Pending)
                     continue;
 
-                if (inWorldDays - comps[i].ProposedAtInWorldDays < ExpirationInWorldDays)
+                float expiresAt = comps[i].ExpiresAtInWorldDays > comps[i].ProposedAtInWorldDays
+                    ? comps[i].ExpiresAtInWorldDays
+                    : comps[i].ProposedAtInWorldDays + ExpirationInWorldDays;
+
+                if (inWorldDays < expiresAt)
                     continue;
 
                 var p = comps[i];
                 p.Status = MarriageProposalStatus.Expired;
+                p.ExpiresAtInWorldDays = expiresAt;
                 em.SetComponentData(entities[i], p);
             }
 
