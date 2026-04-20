@@ -2460,3 +2460,37 @@ Branch: `claude/unity-ai-holy-war-and-divine-right-execution`. Master base: `0b2
 1. Destroyed-counter recovery if the owner wants actual wall or gate repair to follow sealed breaches.
 2. Sealing-cost or worker-throughput balance if the owner wants the new loop tuned before more consumers land.
 3. A production HUD consumer of the breach readout after the owner decides which post-sealing signals should be rendered first.
+
+## Unity AI Strategic Layer Bundle 3: Captive Rescue (Sub-Slice 23) and Captive Ransom (Sub-Slice 24) Execution Landed (2026-04-20)
+
+Branch: `claude/unity-ai-captive-rescue-and-ransom-execution`. Master base: `7821d74a` (rebased from original `cec33509` base after Codex fortification-siege sub-slice 8 breach sealing / recovery landed at revision 39 concurrently with Bundle 3's original revision-39 claim; Bundle 3 bumped to revision 40). Bundle 3 of the AI mechanical campaign: two captive-lifecycle dispatch consumers ship as one commit, one merge, and one contract revision bump.
+
+### What Was Done
+- **Sub-slice 23 captive rescue execution**: fourth production consumer of the sub-slice 18 dynasty-operation foundation and first production reader of the sub-slice 19 `CapturedMemberElement` buffer. New `DynastyOperationCaptiveRescueComponent` per-kind component carries rescue-specific duration (20f), operator metadata (Spymaster + Diplomat member ids resolved by role priority), holding-settlement/keep-tier/ward placeholders (surfaces not yet ported), `SuccessScore` from simplified parity formula, `ProjectedChance` clamped 0.12-0.88, and `EscrowCost` (Gold=42, Influence=26). New `AICaptiveRescueExecutionSystem` consumes `AICovertOpsComponent.LastFiredOp == CovertOpKind.CaptiveRescue`, picks a Held captive belonging to source via the shared `TryPickCaptive` helper, gates on operative availability + cost + capacity + no-existing-op-for-member, deducts cost, attaches the per-kind component, and pushes a narrative line with Good tone (Info when source is player).
+- **Sub-slice 24 captive ransom execution**: fifth production consumer and second production reader of the captive buffer. New `DynastyOperationCaptiveRansomComponent` carries ransom-specific duration (16f), operator metadata (Diplomat + Merchant), `ProjectedChance` hardcoded 1.0 (ransom is a paid transaction, not a roll), and `EscrowCost` (Gold=70, Influence=18). New `AICaptiveRansomExecutionSystem` reuses the sub-slice 23 captive picker and gate helpers via three `internal static` methods on AICaptiveRescueExecutionSystem (`TryPickCaptive`, `HasActiveOperationForMember`, `TryGetMemberByRolePriority`), keeping the two systems in sync without duplication.
+- Both systems clear LastFiredOp to None unconditionally after processing (one-shot pattern shared with sub-slices 8/9/12/13/14/20/21/22).
+- Browser duration translation continues the sub-slice 20 convention: RESCUE_BASE_DURATION_SECONDS=20, RANSOM_BASE_DURATION_SECONDS=16 reinterpreted as in-world-day numeric values directly.
+- Cost simplification: Unity uses canonical base constants without browser's renown/role/keepTier/ward scaling because CapturedMemberElement does not yet carry renown or roleId.
+- Per-kind resolution intentionally deferred for both sub-slices. Created entities sit Active=true until a future slice walks expired entries at ResolveAtInWorldDays, rolls against ProjectedChance for rescue (or unconditionally succeeds for ransom), applies effects (captive Status flip to Released via CapturedMemberHelpers.ReleaseCaptive, conviction event recording, source-faction member roster restoration), and flips Active=false.
+- Parallel-revision resolution: Bundle 3 originally branched from revision-38 master (cec33509) and claimed revision 39 concurrently with Codex's fortification sub-slice 8. Codex landed first at revision 39 on master 7821d74a. Bundle 3 rebased onto 7821d74a and bumped from 39 to 40. All Bundle 3 validation gates re-run cleanly on the new base; Codex's sub-slice 8 BreachSealingSystem smoke also re-verified green alongside Bundle 3 (6 sealing phases all green).
+- New dedicated bundled validator `BloodlinesCaptiveRescueAndRansomExecutionSmokeValidation` plus wrapper `scripts/Invoke-BloodlinesUnityCaptiveRescueAndRansomExecutionSmokeValidation.ps1`. All 9 phases PASS.
+- Contract revision advanced 39 -> 40. New per-slice handoff: `docs/unity/session-handoffs/2026-04-20-unity-ai-strategic-layer-bundle-3-captive-rescue-and-ransom-execution.md`.
+
+### Gate Results
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS
+- Bootstrap runtime smoke: PASS
+- Combat smoke: PASS (all 8 phases)
+- Scene shells: Bootstrap + Gameplay PASS
+- Fortification smoke: PASS
+- Siege smoke: PASS
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision 40
+- Dedicated bundled smoke: PASS via `artifacts/unity-captive-rescue-and-ransom-execution-smoke.log` with marker `BLOODLINES_CAPTIVE_RESCUE_AND_RANSOM_EXECUTION_SMOKE PASS`
+- Codex sub-slice 8 breach-sealing smoke: re-verified PASS via `artifacts/unity-breach-sealing-recovery-smoke.log` confirming no regression from Bundle 3
+
+### Recommended Next AI Strategic Layer Slices (Bundle 4 candidates)
+1. Per-kind resolution system (the first multi-kind resolution consumer): walk expired per-kind components at their resolve boundaries, apply effects, flip Active=false. Missionary is simplest (exposure + intensity + loyalty); holy war requires faction.faith.activeHolyWars materialization + war-tick pulses; divine right requires apex faith claim evaluation; captive rescue/ransom require captive status flips plus member roster restoration. Ship as one walker or split per-kind.
+2. CapturedMemberElement extension (roleId + renown fields): adds the canonical browser fields to enable renown-scaled cost, role-priority captive picker, and simplified parity formula tightening.
+3. Divine right side-effect resolution (sub-slice 22 deferrals): mutual hostility application against non-same-faith kingdoms, AI timer cap propagation to candidate factions, conviction event recording.
