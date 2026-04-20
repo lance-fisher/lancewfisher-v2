@@ -2513,3 +2513,22 @@ This foundation slice is complete on `codex/unity-fortification-destroyed-counte
 ### Next Fortification Scope
 1. Sealing-cost balance pass.
 2. Breach-depth telemetry.
+
+## Unity AI Strategic Layer Bundle 4: Missionary Resolution (Sub-Slice 25) Landed (2026-04-20)
+
+Branch: `claude/unity-ai-missionary-resolution-rebased`. Master base: `082699ab` (after Codex fortification-siege sub-slice 9 destroyed-counter recovery landed at revision 41; Bundle 4 cherry-picked onto rewritten master following upstream history rewrite that orphaned the original `claude/unity-ai-missionary-resolution` branch). Bundle 4 ships sub-slice 25 alone.
+
+### What Was Done
+- **Sub-slice 25 missionary resolution**: first production per-kind resolution consumer. New `AIMissionaryResolutionSystem` walks expired Missionary DynastyOperationComponent entries and applies canonical browser effects (ExposureGain to target's FaithExposureElement; IntensityErosion to target's Intensity IFF different faith; LoyaltyPressure to lowest-loyalty ControlPointComponent; +2 reinforcement on failure when target has committed faith). Always flips Active=false. Narrative push with success/failure/void variants.
+- First consumer of DynastyOperation* per-kind components reading rather than producing. Establishes the resolution walker pattern for future per-kind resolution systems.
+- New dedicated validator `BloodlinesMissionaryResolutionSmokeValidation` (8 phases) plus wrapper. All pass.
+- Contract revision advanced 41 -> 42.
+
+### Gate Results
+- All 10 governed validation gates green.
+- Dedicated smoke: PASS via `artifacts/unity-missionary-resolution-smoke.log`.
+
+### Recommended Next AI Strategic Layer Slices (Bundle 5 candidates)
+1. Holy war + divine right resolution (sub-slices 26 + 27) as Bundle 5.
+2. Captive rescue + ransom resolution (sub-slices 28 + 29) as Bundle 6.
+3. CapturedMemberElement extension (roleId + renown fields) to enable renown-scaled cost and role-priority captive picker.

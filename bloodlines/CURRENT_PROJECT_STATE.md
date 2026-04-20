@@ -2263,3 +2263,14 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 ### Recommended Next Fortification Follow-Up
 1. Sealing-cost balance pass if the owner wants the new sealing and rebuild loops tuned before additional consumers land.
 2. Breach-depth telemetry if the owner wants more explicit observability around sealing versus rebuild progress.
+
+### 2026-04-20 Unity AI Strategic Layer Bundle 4: Missionary Resolution (Sub-Slice 25)
+
+- Bundle 4 of the AI mechanical campaign: first production per-kind resolution consumer. Ships sub-slice 25 alone because per-kind resolution systems differ substantively across operation kinds. Branch: `claude/unity-ai-missionary-resolution-rebased`. Master base: `082699ab` (after Codex fortification-siege sub-slice 9 landed at revision 41; Bundle 4 cherry-picked onto rewritten master following upstream history rewrite).
+- `AIMissionaryResolutionSystem` ([UpdateInGroup(SimulationSystemGroup), UpdateAfter(AIMissionaryExecutionSystem)]) walks every DynastyOperationComponent with OperationKind=Missionary and Active=true, filters by DynastyOperationMissionaryComponent.ResolveAtInWorldDays <= current DualClock.InWorldDays, applies canonical browser missionary resolution effects from simulation.js:5517-5588 + simulation.js:10473-10503.
+- Success gate: SuccessScore >= 0. On success: ExposureGain applied to target's FaithExposureElement buffer (clamp [0,100]); IntensityErosion to target's FaithStateComponent.Intensity (clamped >=0) IFF target has different committed faith; LoyaltyPressure to lowest-loyalty ControlPointComponent owned by target (clamped [0,100]). On failure: +2 intensity reinforcement when target has committed faith. Always flips Active=false.
+- First consumer of DynastyOperation* per-kind components reading rather than producing. Establishes resolution walker pattern future per-kind resolution systems (holy war, divine right, captive rescue, captive ransom) can reuse.
+- 8-phase smoke PASS: PhaseNotExpiredSkips; PhaseExpiredSuccessApplies (exposure 10->30, intensity 50->45, loyalty 80->77, narrative +1); PhaseExpiredFailureStrengthens (intensity 50->52, exposure/loyalty unchanged); PhaseVoidOnMissingTarget; PhaseExposureAppendsNewEntry; PhaseExposureClampsAt100; PhaseLowestLoyaltyControlPointTargeted; PhaseIntensityErosionSkippedWhenSameFaith.
+- Unity-side simplifications deferred: ward-profile-triggered mutual hostility on failure; conviction event recording; legitimacy-penalty fallback; exposure-threshold crossing narrative.
+- All 10 governed validation gates green. Contract bumped revision 41 -> 42.
+- Per-slice handoff: `docs/unity/session-handoffs/2026-04-20-unity-ai-strategic-layer-bundle-4-missionary-resolution.md`.
