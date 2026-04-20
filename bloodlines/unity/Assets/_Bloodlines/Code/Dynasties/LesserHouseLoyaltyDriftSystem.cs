@@ -4,6 +4,7 @@ using Bloodlines.GameTime;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 
 namespace Bloodlines.Dynasties
 {
@@ -50,6 +51,25 @@ namespace Bloodlines.Dynasties
         private const float DefectionLegitimacyPenalty = 6f;
         private const float DefectionRuthlessnessGain = 1f;
         private const float UnsetInWorldDays = -1f;
+        private const float MinorHouseClaimRadiusTiles = 2.8f;
+        private const float MinorHouseClaimCaptureTimeSeconds = 9f;
+        private const float MinorHouseClaimInitialLoyalty = 62f;
+        private const float MinorHouseClaimFoodTrickle = 0.08f;
+        private const float MinorHouseClaimInfluenceTrickle = 0.06f;
+        private const float MinorHouseSpawnLegitimacy = 30f;
+        private const float MinorHouseSpawnFaithIntensity = 20f;
+        private const int MinorHouseSpawnFaithLevel = 1;
+        private static readonly float2[] ClaimOffsets =
+        {
+            new float2(36f, 36f),
+            new float2(-36f, 36f),
+            new float2(36f, -36f),
+            new float2(-36f, -36f),
+            new float2(48f, 0f),
+            new float2(-48f, 0f),
+            new float2(0f, 48f),
+            new float2(0f, -48f),
+        };
 
         private struct CadetWorldPressureProfile
         {
@@ -604,15 +624,214 @@ namespace Bloodlines.Dynasties
             {
                 HouseId = defection.LesserHouse.HouseId,
             });
+            em.AddComponentData(minorEntity, new ResourceStockpileComponent());
+            em.AddComponentData(minorEntity, new PopulationComponent());
+            em.AddComponentData(minorEntity, new DynastyStateComponent
+            {
+                Legitimacy = MinorHouseSpawnLegitimacy,
+            });
+            if (em.HasComponent<FaithStateComponent>(defection.ParentFactionEntity))
+            {
+                var parentFaith = em.GetComponentData<FaithStateComponent>(defection.ParentFactionEntity);
+                if (parentFaith.SelectedFaith != CovenantId.None)
+                {
+                    em.AddComponentData(minorEntity, new FaithStateComponent
+                    {
+                        SelectedFaith = parentFaith.SelectedFaith,
+                        DoctrinePath = parentFaith.DoctrinePath,
+                        Intensity = MinorHouseSpawnFaithIntensity,
+                        Level = MinorHouseSpawnFaithLevel,
+                    });
+                }
+            }
             em.AddComponentData(minorEntity, new AIEconomyControllerComponent { Enabled = true });
+
+            FixedString32Bytes parentFactionId = em.GetComponentData<FactionComponent>(defection.ParentFactionEntity).FactionId;
+            FixedString32Bytes claimControlPointId = EnsureMinorHouseClaim(
+                em,
+                defection.ParentFactionEntity,
+                minorEntity,
+                defection.LesserHouse);
             em.AddComponentData(minorEntity, new MinorHouseLevyComponent
             {
-                LevyIntervalSeconds = 60f,
+                OriginFactionId = parentFactionId,
+                ClaimControlPointId = claimControlPointId,
+                LevyIntervalSeconds = 22f,
                 LevyAccumulator     = 0f,
                 LeviesIssued        = 0,
+                LevyStatus = MinorHouseLevyStatus.Forming,
+                LevyUnitId = new FixedString64Bytes("militia"),
+                RetinueCap = 1,
+                RetinueCount = 0,
+                LastLevyAtInWorldDays = UnsetInWorldDays,
+                ParentPressureLevel = 0,
+                ParentPressureStatus = LesserHouseWorldPressureStatus.Quiet,
+                ParentPressureLevyTempo = 1f,
+                ParentPressureRetakeTempo = 1f,
+                ParentPressureRetinueBonus = 0,
             });
 
             EnsureMutualHostility(em, defection.ParentFactionEntity, minorEntity);
+        }
+
+        private static FixedString32Bytes EnsureMinorHouseClaim(
+            EntityManager em,
+            Entity parentFactionEntity,
+            Entity minorFactionEntity,
+            in LesserHouseElement lesserHouse)
+        {
+            var minorFactionId = em.GetComponentData<FactionComponent>(minorFactionEntity).FactionId;
+            var claimId = new FixedString32Bytes(minorFactionId);
+            claimId.Append("-claim");
+
+            var controlPointQuery = em.CreateEntityQuery(
+                ComponentType.ReadOnly<ControlPointComponent>(),
+                ComponentType.ReadOnly<PositionComponent>());
+            using var controlPointEntities = controlPointQuery.ToEntityArray(Allocator.Temp);
+            using var controlPoints = controlPointQuery.ToComponentDataArray<ControlPointComponent>(Allocator.Temp);
+            using var controlPointPositions = controlPointQuery.ToComponentDataArray<PositionComponent>(Allocator.Temp);
+            controlPointQuery.Dispose();
+
+            for (int i = 0; i < controlPoints.Length; i++)
+            {
+                if (controlPoints[i].ControlPointId.Equals(claimId))
+                {
+                    return claimId;
+                }
+            }
+
+            ResolveMinorHouseClaimAnchor(
+                em,
+                parentFactionEntity,
+                controlPoints,
+                controlPointPositions,
+                out float3 anchorPosition,
+                out FixedString32Bytes continentId);
+
+            float3 claimPosition = ResolveMinorHouseClaimPosition(controlPointPositions, anchorPosition);
+            var claimEntity = em.CreateEntity();
+            em.AddComponentData(claimEntity, new PositionComponent
+            {
+                Value = claimPosition,
+            });
+            em.AddComponentData(claimEntity, new LocalTransform
+            {
+                Position = claimPosition,
+                Rotation = quaternion.identity,
+                Scale = 1f,
+            });
+            em.AddComponentData(claimEntity, new ControlPointComponent
+            {
+                ControlPointId = claimId,
+                OwnerFactionId = minorFactionId,
+                CaptureFactionId = default,
+                ContinentId = continentId,
+                ControlState = ControlState.Stabilized,
+                IsContested = false,
+                Loyalty = MinorHouseClaimInitialLoyalty,
+                CaptureProgress = 0f,
+                SettlementClassId = new FixedString32Bytes("border_settlement"),
+                FortificationTier = 0,
+                RadiusTiles = MinorHouseClaimRadiusTiles,
+                CaptureTimeSeconds = MinorHouseClaimCaptureTimeSeconds,
+                GoldTrickle = 0f,
+                FoodTrickle = MinorHouseClaimFoodTrickle,
+                WaterTrickle = 0f,
+                WoodTrickle = 0f,
+                StoneTrickle = 0f,
+                IronTrickle = 0f,
+                InfluenceTrickle = MinorHouseClaimInfluenceTrickle,
+            });
+
+            return claimId;
+        }
+
+        private static void ResolveMinorHouseClaimAnchor(
+            EntityManager em,
+            Entity parentFactionEntity,
+            NativeArray<ControlPointComponent> controlPoints,
+            NativeArray<PositionComponent> controlPointPositions,
+            out float3 anchorPosition,
+            out FixedString32Bytes continentId)
+        {
+            anchorPosition = float3.zero;
+            continentId = new FixedString32Bytes("home");
+
+            if (parentFactionEntity == Entity.Null || !em.HasComponent<FactionComponent>(parentFactionEntity))
+            {
+                return;
+            }
+
+            FixedString32Bytes parentFactionId = em.GetComponentData<FactionComponent>(parentFactionEntity).FactionId;
+            for (int i = 0; i < controlPoints.Length; i++)
+            {
+                if (!controlPoints[i].OwnerFactionId.Equals(parentFactionId))
+                {
+                    continue;
+                }
+
+                anchorPosition = controlPointPositions[i].Value;
+                if (controlPoints[i].ContinentId.Length > 0)
+                {
+                    continentId = controlPoints[i].ContinentId;
+                }
+                return;
+            }
+
+            var settlementQuery = em.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<SettlementComponent>(),
+                ComponentType.ReadOnly<PositionComponent>());
+            using var settlementFactions = settlementQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var settlementPositions = settlementQuery.ToComponentDataArray<PositionComponent>(Allocator.Temp);
+            settlementQuery.Dispose();
+
+            for (int i = 0; i < settlementFactions.Length; i++)
+            {
+                if (!settlementFactions[i].FactionId.Equals(parentFactionId))
+                {
+                    continue;
+                }
+
+                anchorPosition = settlementPositions[i].Value;
+                return;
+            }
+        }
+
+        private static float3 ResolveMinorHouseClaimPosition(
+            NativeArray<PositionComponent> controlPointPositions,
+            float3 anchorPosition)
+        {
+            float3 fallback = anchorPosition + new float3(ClaimOffsets[0].x, 0f, ClaimOffsets[0].y);
+            if (controlPointPositions.Length == 0)
+            {
+                return fallback;
+            }
+
+            float bestNearestDistanceSq = float.NegativeInfinity;
+            float3 bestPosition = fallback;
+
+            for (int offsetIndex = 0; offsetIndex < ClaimOffsets.Length; offsetIndex++)
+            {
+                float3 candidate = anchorPosition + new float3(
+                    ClaimOffsets[offsetIndex].x,
+                    0f,
+                    ClaimOffsets[offsetIndex].y);
+                float nearestDistanceSq = float.PositiveInfinity;
+                for (int i = 0; i < controlPointPositions.Length; i++)
+                {
+                    float distanceSq = math.lengthsq(candidate - controlPointPositions[i].Value);
+                    nearestDistanceSq = math.min(nearestDistanceSq, distanceSq);
+                }
+
+                if (nearestDistanceSq > bestNearestDistanceSq)
+                {
+                    bestNearestDistanceSq = nearestDistanceSq;
+                    bestPosition = candidate;
+                }
+            }
+
+            return bestPosition;
         }
 
         private static void EnsureMutualHostility(EntityManager em, Entity leftFaction, Entity rightFaction)

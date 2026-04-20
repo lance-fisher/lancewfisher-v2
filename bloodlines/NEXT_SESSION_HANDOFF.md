@@ -1,13 +1,49 @@
 # NEXT_SESSION_HANDOFF
 
-Last updated: 2026-04-20 (dynasty lesser-house loyalty parity slice complete on branch `codex/unity-dynasty-lesser-house-loyalty-parity`: `LesserHouseElement` now tracks mixed-bloodline, marital-anchor, world-pressure, and defection timing state, `LesserHouseLoyaltyDriftSystem` now applies browser-style loyalty drift with a 5-day zero-loyalty grace window plus hostile breakaway spawning, dedicated 3-phase lesser-house parity smoke PASS, full governed gate chain green in `D:\BLAICD\bloodlines`, contract revision 44 -> 45. Next: continue the active `codex/unity-dynasty-*` lane with minor-house levy and breakaway-spawn parity hardening.)
+Last updated: 2026-04-20 (dynasty minor-house levy parity slice complete on branch `codex/unity-dynasty-minor-house-levy-parity`: `MinorHouseLevyComponent` now tracks origin, claim, levy status, retinue metrics, and parent-pressure tempo; `LesserHouseLoyaltyDriftSystem` now seeds stockpile, population, dynasty legitimacy, inherited faith, and a stabilized border claim on breakaway spawn; `MinorHouseLevySystem` now mirrors browser territorial-levy gating, retinue caps, pressure tempo, and `militia`/`swordsman`/`bowman` profile selection; dedicated 4-phase minor-house parity smoke PASS, lesser-house regression smoke PASS, full governed gate chain green in `D:\BLAICD\bloodlines`, contract revision 45 -> 46. Next: dynasty-house parity can pause cleanly; under current governance the next unblocked priority is a fresh non-AI lane such as scout raids or logistics interdiction unless Lance wants one more minor-house provenance follow-up first.)
+Previous entry: Last updated: 2026-04-20 (dynasty lesser-house loyalty parity slice complete on branch `codex/unity-dynasty-lesser-house-loyalty-parity`: `LesserHouseElement` now tracks mixed-bloodline, marital-anchor, world-pressure, and defection timing state, `LesserHouseLoyaltyDriftSystem` now applies browser-style loyalty drift with a 5-day zero-loyalty grace window plus hostile breakaway spawning, dedicated 3-phase lesser-house parity smoke PASS, full governed gate chain green in `D:\BLAICD\bloodlines`, contract revision 44 -> 45. Next: continue the active `codex/unity-dynasty-*` lane with minor-house levy and breakaway-spawn parity hardening.)
 Previous entry: Last updated: 2026-04-20 (dynasty marriage parity slice complete on branch `codex/unity-dynasty-marriage-parity`: marriage proposal expiration now matches the browser 90-day window, marriage gestation now matches the browser 280-day window and records mixed-bloodline child provenance, new `MarriageDeathDissolutionSystem` ports death-driven dissolution with legitimacy and oathkeeping effects, dedicated 4-phase marriage parity smoke PASS, full governed gate chain green in `D:\BLDMP\bloodlines`, contract revision 43 -> 44. Next: continue the new `codex/unity-dynasty-*` lane with lesser-house loyalty drift and minor-house levy parity follow-ups rather than opening a duplicate zero-code marriages lane.)
 Previous entry: Last updated: 2026-04-19 (fortification-siege sub-slice 5 wall-segment destruction resolution complete on branch `codex/unity-fortification-wall-segment-destruction`: live fortification-role building linking plus explicit breach-state resolution landed, dedicated 4-phase wall smoke PASS, contract revision 30 -> 31 on top of rebased `origin/master` `0a0e122f`. Next: consume `OpenBreachCount` in a follow-up breach-aware assault, pathing, or legibility slice on a fresh `codex/unity-fortification-*` branch.)
 Previous entry: Last updated: 2026-04-18 (Session 130: All 3 items complete. Victory Conditions System: VictoryStateComponent + VictoryConditionEvaluationSystem, 4-phase smoke PASS, contract revision 12. Tier 2 batch dynasty: 5 systems + smoke PASS, contract 11. AI strategic layer sub-slice 1: EnemyAIStrategySystem, 4-phase smoke PASS, contract 10. Next: Fortification + Siege system (codex/unity-fortification-siege branch has initial components.))
 Previous entry: Last updated: 2026-04-18 (Session 129: AI strategic layer sub-slice 1 complete -- EnemyAIStrategySystem ISystem live, 4-phase smoke PASS, contract revision 10. Next sub-slices: supply chain/convoy mgmt (ai.js ~1100), siege staging. Also pending: Tier 2 batch systems (marriage, lesser house defection, minor house levies, renown scoring) and Victory Conditions system.)
 Previous entry: Last updated: 2026-04-17 (state-snapshot-restore lane complete on master 2026-04-17: 3 sub-slices merged, BloodlinesSnapshotPayload/Writer/Restorer, 6-phase smoke, ProbeSnapshotIntegrity in bootstrap runtime smoke, all 10 gates green, contract Revision 5. 10 Claude Code skills merged to master. Concurrent session contract revision 5. Browser-to-Unity migration plan drafted and three Tier 1 slices landed on master the same day: Conviction scoring + bands + 4-phase governed validator, Dynasty core with eight-member template set + aging + heir succession + interregnum + 4-phase validator, Faith commitment + exposure threshold + five-tier intensity resolution + 4-phase validator. AI barracks observability and bootstrap runtime smoke startup timeout bump 120s to 240s also on master. Codex group-movement and combat-stances slice is now rebased, green, and pushed on `codex/unity-group-movement-and-stances` with all eight combat smoke phases passing, full governed gate chain green, `Assembly-CSharp.csproj` compile includes restored for the new runtime files, and governed wrapper hardening landed for bootstrap runtime, scene-shell, and graphics validations. Workspace `HANDOFF.md` archived to `HANDOFF_ARCHIVE_2026-04-17_session-125-attack-orders.md`; the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md` is now the authoritative forward-work map; Session 127: Unity passive target-acquisition throttling and sight-loss cleanup green on stacked branch `codex/unity-target-acquisition-los`; Session 126: Unity explicit attack orders and first attack-move command layer green on branch `codex/unity-attack-move`; all prior lanes preserved)
 Previous author: Claude
-Next recommended action: stay on the active `codex/unity-dynasty-*` lane and harden `MinorHouseLevySystem` against the browser spec rather than reopening marriages or lesser houses from zero. The clean next slice is minor-house territorial levy and breakaway-spawn parity from `tickMinorHouseTerritorialLevies` and `spawnDefectedMinorFaction`, using the new lesser-house defection timestamps and hostility hooks that are now live in Unity. After that, move into the covert-ops or scout-raid/logistics-interdiction stack from the directive.
+Next recommended action: the dynasty-house parity lane can pause in a clean state. Under the current contract, the next unblocked priority is a fresh non-AI lane, with scout raids or logistics interdiction the safest target if the AI strategic layer remains owned elsewhere. If Lance wants one more dynasty follow-up before that, the clean remaining gap is founder-member and ceremonial-message provenance on defected minor-house spawns.
+
+## 2026-04-20 Dynasty Minor-House Levy Parity
+
+- Branch lane: `codex/unity-dynasty-minor-house-levy-parity`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-20-unity-dynasty-minor-house-levy-parity.md`
+- Completed in this slice:
+  - `MinorHouseLevyComponent` now carries origin faction, claim id, levy
+    status, retinue metrics, last levy metadata, and parent world-pressure
+    tempo instead of the retired interval-only placeholder
+  - `LesserHouseLoyaltyDriftSystem` now seeds breakaway minor factions with
+    stockpile, population, dynasty legitimacy, inherited faith, and a
+    stabilized border claim so the spawned polity has live ECS territory and
+    economy surfaces instead of an inert registry entry
+  - `MinorHouseLevySystem` now mirrors the browser levy loop: claim ownership
+    and stability gates, loyalty threshold `48`, levy-progress decay,
+    retinue-cap calculation, parent-pressure tempo bonuses, and
+    `militia`/`swordsman`/`bowman` profile selection with cost and loyalty burn
+  - `BloodlinesMinorHouseLevyParitySmokeValidation` and
+    `scripts/Invoke-BloodlinesUnityMinorHouseLevyParitySmokeValidation.ps1`
+    now prove claim creation, landless decay, pressured bowman raising, and
+    muster-cap blocking
+- Validation state:
+  - all 10 required governed gates green
+  - dedicated minor-house parity smoke green with 4 proof phases passing
+  - lesser-house parity regression smoke green after the breakaway-spawn
+    widening
+  - bootstrap runtime and canonical scene-shell gates were again executed
+    through worktree-local wrappers because the checked-in wrappers are still
+    path-pinned to `D:\ProjectsHome\Bloodlines`
+- Immediate next action:
+  - dynasty-house parity can pause unless the owner wants deeper founder or
+    narrative provenance on breakaway spawns
+  - otherwise claim a fresh non-AI lane next, with scout raids or logistics
+    interdiction the cleanest current target under the contract
 
 ## 2026-04-20 Dynasty Lesser-House Loyalty Parity
 

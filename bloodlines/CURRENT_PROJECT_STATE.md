@@ -2371,3 +2371,34 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 ### Recommended Next Dynasty Follow-Up
 1. Tighten `MinorHouseLevySystem` parity next, especially territorial-levy timing and breakaway-spawn integration with the new lesser-house defection timestamps and hostility hooks.
 2. After the dynasty parity stack closes, continue into covert-ops or scout-raid/logistics-interdiction follow-ups from the active directive.
+
+## Codex Dynasty Sub-Slice 3: Minor-House Levy Parity (2026-04-20)
+
+### Status: COMPLETE on branch codex/unity-dynasty-minor-house-levy-parity
+
+### What Was Done
+- `MarriageComponents.cs` now expands `MinorHouseLevyComponent` from the retired three-field placeholder into the runtime levy payload the browser loop expects: origin faction, claim id, levy status, retinue count and cap, last levy metadata, and parent-pressure tempo.
+- `LesserHouseLoyaltyDriftSystem` now seeds a breakaway minor house with the live ECS surfaces it needs to function as more than a registry record: `ResourceStockpileComponent`, `PopulationComponent`, `DynastyStateComponent` at legitimacy `30`, inherited `FaithStateComponent` when the parent is committed, and a stabilized border-claim `ControlPointComponent` with loyalty `62`, food trickle `0.08`, and influence trickle `0.06`.
+- `MinorHouseLevySystem` now ports the browser's territorial-levy cadence instead of the flat interval timer. The system now handles landless/dispossessed/contested/unsettled decay, canonical loyalty gate `48`, retinue-cap calculation from claim stability plus territory count, parent world-pressure tempo bonuses, and browser levy-profile selection for `militia`, `swordsman`, and `bowman`.
+- Successful levies now spend food, influence, and claim loyalty and spawn a real ECS combat unit with position, transform, health, movement, combat stats, stance, and projectile data instead of the old minimal marker entity.
+- New dedicated validator `BloodlinesMinorHouseLevyParitySmokeValidation` plus wrapper `scripts/Invoke-BloodlinesUnityMinorHouseLevyParitySmokeValidation.ps1` are green across four phases: defection claim spawn, landless decay, pressured bowman raise, and muster-cap blocking.
+- The prior lesser-house parity validator was re-run green after the breakaway-spawn widening so the new claim and stockpile seeding did not regress day-16 defection behavior.
+- Full governed validation chain is green on `D:\BLAICD\bloodlines`. Contract bumped revision `45 -> 46`.
+
+### Gate Results
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS
+- Bootstrap runtime smoke: PASS via worktree-local wrapper copy under the Unity lock
+- Combat smoke: PASS
+- Scene shells: Bootstrap + Gameplay PASS via worktree-local wrapper copies under the Unity lock
+- Fortification smoke: PASS
+- Siege smoke: PASS
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision 46 after the continuity and contract updates
+- Dedicated lesser-house loyalty parity regression smoke: PASS with marker `BLOODLINES_LESSER_HOUSE_LOYALTY_PARITY_SMOKE PASS`
+- Dedicated minor-house levy parity smoke: PASS with marker `BLOODLINES_MINOR_HOUSE_LEVY_PARITY_SMOKE PASS`
+
+### Recommended Next Follow-Up
+1. The dynasty-house parity lane can pause cleanly. Under the current contract, scout raids or logistics interdiction are the safest next non-AI targets.
+2. Optional dynasty follow-up only if Lance wants more parity before that: founder-member and ceremonial-message provenance on defected minor-house spawns.

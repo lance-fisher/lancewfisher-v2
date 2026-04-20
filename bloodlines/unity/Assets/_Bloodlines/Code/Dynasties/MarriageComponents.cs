@@ -97,6 +97,21 @@ namespace Bloodlines.Dynasties
         Convergence = 3,
     }
 
+    public enum MinorHouseLevyStatus : byte
+    {
+        Forming = 0,
+        Landless = 1,
+        Dispossessed = 2,
+        Contested = 3,
+        Unsettled = 4,
+        AwaitingFood = 5,
+        AwaitingInfluence = 6,
+        Levying = 7,
+        Mustered = 8,
+        Raised = 9,
+        Stalled = 10,
+    }
+
     /// <summary>
     /// Lesser-house cadence mirrors the browser runtime's richer cadet-house
     /// register: mixed-bloodline source house, marriage-anchor stability,
@@ -135,8 +150,21 @@ namespace Bloodlines.Dynasties
     /// </summary>
     public struct MinorHouseLevyComponent : IComponentData
     {
+        public FixedString32Bytes OriginFactionId;
+        public FixedString32Bytes ClaimControlPointId;
         public float LevyAccumulator;
         public float LevyIntervalSeconds;
         public int LeviesIssued;
+        public MinorHouseLevyStatus LevyStatus;
+        public FixedString64Bytes LevyUnitId;
+        public int RetinueCap;
+        public int RetinueCount;
+        public float LastLevyAtInWorldDays;
+        public FixedString64Bytes LastLevyUnitId;
+        public int ParentPressureLevel;
+        public LesserHouseWorldPressureStatus ParentPressureStatus;
+        public float ParentPressureLevyTempo;
+        public float ParentPressureRetakeTempo;
+        public int ParentPressureRetinueBonus;
     }
 }

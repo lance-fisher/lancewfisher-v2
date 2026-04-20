@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-20T15:28:18.4293246-06:00",
+  "updated_at": "2026-04-20T15:53:36.2665279-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -1664,6 +1664,15 @@
       "description": "The active codex dynasty parity lane now extends beyond marriage parity into lesser-house and next minor-house hardening work. MarriageComponents.cs expands LesserHouseElement with mixed-bloodline, marital-anchor, world-pressure, and defection-timing state. LesserHouseLoyaltyDriftSystem now mirrors browser tickLesserHouseLoyaltyDrift and spawnDefectedMinorFaction: daily delta combines legitimacy, oathkeeping, ruthlessness, and fallen-ledger pressure with mixed-bloodline hostility, marriage-anchor recovery or fracture, and world pressure; loyalty crossing zero starts a 5-day grace window before defection; defection applies legitimacy -6 and ruthlessness +1, spawns a hostile minor faction, and establishes reciprocal hostility against the parent. BloodlinesLesserHouseLoyaltyParitySmokeValidation proves active-anchor recovery, hostile death-dissolution strain, and day-16 post-grace defection. Full governed 10-gate chain green in D:\\BLAICD\\bloodlines via worktree-local wrapper copies for the path-pinned bootstrap and scene-shell gates. Contract rev 44->45.",
       "handoff": "docs/unity/session-handoffs/2026-04-20-unity-dynasty-lesser-house-loyalty-parity.md",
       "validation_gates": "all 10 green plus lesser-house loyalty parity smoke"
+    },
+    {
+      "lane": "dynasty-house-parity",
+      "date": "2026-04-20",
+      "branch": "codex/unity-dynasty-minor-house-levy-parity",
+      "status": "active",
+      "description": "The active codex dynasty-house parity lane now covers the minor-house levy and breakaway-spawn follow-through on top of the earlier marriage and lesser-house slices. MarriageComponents.cs expands MinorHouseLevyComponent with origin parent, claim id, levy status, retinue metrics, last levy metadata, and parent-pressure tempo. LesserHouseLoyaltyDriftSystem now seeds breakaway minors with stockpile, population, dynasty legitimacy, inherited faith, and a stabilized border claim control point. MinorHouseLevySystem now mirrors browser tickMinorHouseTerritorialLevies and getMinorHousePressureOpportunityProfile: landless/dispossessed/contested/unsettled decay, loyalty threshold 48, retinue-cap calculation, pressure tempo bonuses, and militia/swordsman/bowman profile selection with resource and loyalty spend plus live ECS combat-unit spawning. BloodlinesMinorHouseLevyParitySmokeValidation proves claim creation, landless decay, pressured bowman raising, and muster-cap blocking; the lesser-house parity regression smoke also re-ran green. Full governed 10-gate chain green in D:\\BLAICD\\bloodlines via worktree-local wrapper copies for the path-pinned bootstrap and scene-shell gates. Contract rev 45->46.",
+      "handoff": "docs/unity/session-handoffs/2026-04-20-unity-dynasty-minor-house-levy-parity.md",
+      "validation_gates": "all 10 green plus minor-house levy parity smoke and lesser-house regression smoke"
     }
   ]
 }
