@@ -80,6 +80,29 @@ namespace Bloodlines.Dynasties
     /// Browser reference: simulation.js tickLesserHouseLoyaltyDrift (~6631),
     /// spawnDefectedMinorFaction (~6851).
     /// </summary>
+    public enum LesserHouseMaritalAnchorStatus : byte
+    {
+        None = 0,
+        Active = 1,
+        Strained = 2,
+        Dissolved = 3,
+        Fractured = 4,
+    }
+
+    public enum LesserHouseWorldPressureStatus : byte
+    {
+        Quiet = 0,
+        Gathering = 1,
+        Overwhelming = 2,
+        Convergence = 3,
+    }
+
+    /// <summary>
+    /// Lesser-house cadence mirrors the browser runtime's richer cadet-house
+    /// register: mixed-bloodline source house, marriage-anchor stability,
+    /// world-pressure state, computed daily delta, and the grace-window
+    /// timestamps used before a true defection fires.
+    /// </summary>
     public struct LesserHouseElement : IBufferElementData
     {
         public FixedString32Bytes HouseId;
@@ -89,6 +112,20 @@ namespace Bloodlines.Dynasties
         public float DailyLoyaltyDelta;
         public float LastDriftAppliedInWorldDays;
         public bool Defected;
+        public FixedString32Bytes MixedBloodlineHouseId;
+        public float MixedBloodlinePressure;
+        public FixedString32Bytes MaritalAnchorHouseId;
+        public FixedString64Bytes MaritalAnchorMarriageId;
+        public LesserHouseMaritalAnchorStatus MaritalAnchorStatus;
+        public LesserHouseMaritalAnchorStatus LastMaritalAnchorStatus;
+        public float MaritalAnchorPressure;
+        public int MaritalAnchorChildCount;
+        public LesserHouseWorldPressureStatus WorldPressureStatus;
+        public float WorldPressurePressure;
+        public int WorldPressureLevel;
+        public float CurrentDailyLoyaltyDelta;
+        public float BrokeAtLoyaltyZeroInWorldDays;
+        public float DepartedAtInWorldDays;
     }
 
     /// <summary>

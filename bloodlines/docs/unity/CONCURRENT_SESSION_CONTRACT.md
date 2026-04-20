@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 44
+- Revision: 45
 - Last Updated: 2026-04-20
-- Last Updated By: codex-dynasty-marriage-parity-2026-04-20
-- Supersedes: revision 43 (Codex claims a new active `dynasty-marriage-parity` lane on `codex/unity-dynasty-marriage-parity` to harden the already-landed tier-2 marriage surface against the canonical browser references. `MarriageProposalExpirationSystem` now matches the browser 90-day window, `MarriageGestationSystem` now matches 280-day gestation while recording `MarriageChildElement` and `DynastyMixedBloodlineComponent`, and new `MarriageDeathDissolutionSystem` ports death-driven marriage dissolution with legitimacy and oathkeeping effects. `BloodlinesMarriageParitySmokeValidation` proves proposal expiration, mixed-bloodline child generation, and death dissolution. Active AI-lane cross-reads now point at the corrected 90-day and 280-day constants.)
+- Last Updated By: codex-dynasty-lesser-house-loyalty-parity-2026-04-20
+- Supersedes: revision 44 (Codex broadens the active dynasty parity follow-up from marriage-only to `dynasty-house-parity` on `codex/unity-dynasty-lesser-house-loyalty-parity`. `LesserHouseElement` now records mixed-bloodline pressure, marital-anchor state, world-pressure state, and defection timing; `LesserHouseLoyaltyDriftSystem` now applies mixed-bloodline hostility pressure, death-dissolution aftermath, 5-day zero-loyalty grace, and hostile minor-house breakaway spawning; `BloodlinesLesserHouseLoyaltyParitySmokeValidation` proves anchor recovery, hostile dissolution strain, and post-grace defection. The active dynasty lane now owns the lesser-house and next minor-house parity follow-ups.)
 
 
 ## Purpose
@@ -507,33 +507,38 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - Current Branch In Flight: `codex/unity-fortification-breach-depth-telemetry`
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-20-unity-fortification-siege-breach-depth-telemetry.md`
 
-### Lane: dynasty-marriage-parity
+### Lane: dynasty-house-parity
 
 - Status: active
-- Branch Prefix: `codex/unity-dynasty-marriage-parity`; future dynasty parity follow-ups should continue on fresh `codex/unity-dynasty-*` branches
+- Branch Prefix: `codex/unity-dynasty-*`
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageComponents.cs`
   - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageProposalExpirationSystem.cs`
   - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageGestationSystem.cs`
   - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageDeathDissolutionSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/LesserHouseLoyaltyDriftSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/MinorHouseLevySystem.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMarriageParitySmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesLesserHouseLoyaltyParitySmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityMarriageParitySmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityLesserHouseLoyaltyParitySmokeValidation.ps1`
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-18-unity-tier2-batch-dynasty-systems.md`
   - `docs/unity/session-handoffs/2026-04-20-unity-dynasty-marriage-parity.md`
+  - `docs/unity/session-handoffs/2026-04-20-unity-dynasty-lesser-house-loyalty-parity.md`
 - Browser Reference:
-  - `src/game/core/simulation.js` `MARRIAGE_GESTATION_IN_WORLD_DAYS` (6088), `MARRIAGE_DISSOLUTION_LEGITIMACY_LOSS` (6089), `MARRIAGE_DISSOLUTION_OATHKEEPING_GAIN` (6090), `dissolveMarriageFromDeath` (6382), `MARRIAGE_PROPOSAL_EXPIRATION_IN_WORLD_DAYS` (7272), `tickMarriageProposalExpiration` (7274), `tickMarriageDissolutionFromDeath` (7471), `tickMarriageGestation` (7496)
+  - `src/game/core/simulation.js` `MARRIAGE_GESTATION_IN_WORLD_DAYS` (6088), `MARRIAGE_DISSOLUTION_LEGITIMACY_LOSS` (6089), `MARRIAGE_DISSOLUTION_OATHKEEPING_GAIN` (6090), `dissolveMarriageFromDeath` (6382), `tickLesserHouseLoyaltyDrift` (~6631), `spawnDefectedMinorFaction` (~6851), `tickMinorHouseTerritorialLevies` (~7060), `MARRIAGE_PROPOSAL_EXPIRATION_IN_WORLD_DAYS` (7272), `tickMarriageProposalExpiration` (7274), `tickMarriageDissolutionFromDeath` (7471), `tickMarriageGestation` (7496)
   - `tests/runtime-bridge.mjs` mixed-bloodline and death-dissolution assertions (3180-3229, 3270-3297)
-- Current Branch In Flight: `codex/unity-dynasty-marriage-parity`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-20-unity-dynasty-marriage-parity.md`
+- Current Branch In Flight: `codex/unity-dynasty-lesser-house-loyalty-parity`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-20-unity-dynasty-lesser-house-loyalty-parity.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: `fortification-siege-sub-slice-10-breach-depth-telemetry` is implemented on `codex/unity-fortification-breach-depth-telemetry` and documented in this revision. The fortification lane now exposes sealing and destroyed-counter recovery telemetry through one settlement-level debug surface while preserving the older breach readout shape. Further fortification follow-ups should continue using fresh `codex/unity-fortification-*` branches rather than widening the earlier fortification branches. Also note that the repo already contains a retired `tier2-batch-dynasty-systems` lane, and Codex has now claimed an active `dynasty-marriage-parity` follow-up lane to correct the marriage constants and death-dissolution behavior; do not duplicate that work under a new zero-code marriages lane.
+Note: `fortification-siege-sub-slice-10-breach-depth-telemetry` is implemented on `codex/unity-fortification-breach-depth-telemetry` and documented in this revision. The fortification lane now exposes sealing and destroyed-counter recovery telemetry through one settlement-level debug surface while preserving the older breach readout shape. Further fortification follow-ups should continue using fresh `codex/unity-fortification-*` branches rather than widening the earlier fortification branches. Also note that the repo already contains a retired `tier2-batch-dynasty-systems` lane, and Codex now owns an active `dynasty-house-parity` follow-up lane covering marriage, lesser-house, and upcoming minor-house hardening work; do not duplicate that work under a new zero-code marriages lane or a parallel lesser-house lane.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 

@@ -2342,3 +2342,32 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 ### Recommended Next Fortification Follow-Up
 1. Push and merge `codex/unity-fortification-breach-depth-telemetry`, then retire or pause the fortification lane unless Lance requests the optional sealing-cost balance pass.
 2. If a dynasty follow-up is still desired, scope it as hardening or extension on top of the existing Tier 2 dynasties implementation instead of re-porting marriages, lesser houses, and minor houses from zero.
+
+## Codex Dynasty Sub-Slice 2: Lesser-House Loyalty Parity (2026-04-20)
+
+### Status: COMPLETE on branch codex/unity-dynasty-lesser-house-loyalty-parity
+
+### What Was Done
+- `MarriageComponents.cs` now expands `LesserHouseElement` with mixed-bloodline, marital-anchor, world-pressure, and defection-timing state plus the supporting `LesserHouseMaritalAnchorStatus` and `LesserHouseWorldPressureStatus` enums.
+- `LesserHouseLoyaltyDriftSystem` now consumes the browser-style drift stack instead of the flat Tier 2 placeholder: legitimacy, oathkeeping, ruthlessness, and fallen-ledger pressure set the base daily delta; mixed-bloodline hostility, marriage-anchor recovery or fracture, and world pressure then push the final loyalty change.
+- The system now starts a 5-day grace window the first day loyalty reaches zero, then defects only after the grace window expires. The resulting breakaway applies dynasty legitimacy `-6`, conviction ruthlessness `+1`, and establishes reciprocal hostility between the parent faction and the spawned minor house.
+- The slice deliberately reuses the marriage-parity hooks that landed immediately before it: `DynastyMixedBloodlineComponent`, `MarriageChildElement`, and `MarriageDeathDissolutionSystem` are now live inputs to lesser-house loyalty drift rather than dead metadata.
+- New dedicated validator `BloodlinesLesserHouseLoyaltyParitySmokeValidation` plus wrapper `scripts/Invoke-BloodlinesUnityLesserHouseLoyaltyParitySmokeValidation.ps1` are green across three phases: active-anchor recovery, hostile dissolution strain under overwhelming world pressure, and day-16 post-grace defection.
+- Full governed validation chain is green on `D:\BLAICD\bloodlines`. Contract bumped revision `44 -> 45`.
+
+### Gate Results
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS
+- Bootstrap runtime smoke: PASS via worktree-local wrapper copy under the Unity lock
+- Combat smoke: PASS
+- Scene shells: Bootstrap + Gameplay PASS via worktree-local wrapper copies under the Unity lock
+- Fortification smoke: PASS
+- Siege smoke: PASS
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision 45 after the continuity and contract updates
+- Dedicated lesser-house loyalty parity smoke: PASS with three proof phases and marker `BLOODLINES_LESSER_HOUSE_LOYALTY_PARITY_SMOKE PASS`
+
+### Recommended Next Dynasty Follow-Up
+1. Tighten `MinorHouseLevySystem` parity next, especially territorial-levy timing and breakaway-spawn integration with the new lesser-house defection timestamps and hostility hooks.
+2. After the dynasty parity stack closes, continue into covert-ops or scout-raid/logistics-interdiction follow-ups from the active directive.
