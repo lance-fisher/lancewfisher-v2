@@ -1628,6 +1628,15 @@
       "description": "DestroyedCounterRecoveryProgressComponent + DestroyedCounterRecoverySystem extend the sub-slice 8 sealing loop into slow structural rebuild. Recovery only runs when FortificationComponent.OpenBreachCount == 0, then scans the owning faction's live idle workers, reserves 90 stone and 14 worker-hours per standard segment at 1 Hz, applies a 2x cost and 2x worker-hour multiplier for keeps, and rebuilds destroyed counters in strict Keep > Gate > Wall > Tower priority. On completion the system decrements the selected destroyed counter and restores the linked destroyed structure's HealthComponent.Current to max so FortificationDestructionResolutionSystem remains authoritative on the next tick. The slice adds BloodlinesDestroyedCounterRecoverySmokeValidation plus a dedicated wrapper, passes all 10 governed gates plus the 6-phase destroyed-counter recovery smoke, starts from revision-39 master 7821d74a, fast-forwards onto revision-40 master e73933e4 after Claude Bundle 3 lands, and advances the contract revision 40->41.",
       "handoff": "docs/unity/session-handoffs/2026-04-20-unity-fortification-siege-destroyed-counter-recovery.md",
       "validation_gates": "all 10 green plus destroyed counter recovery smoke"
+    },
+    {
+      "lane": "ai-strategic-layer-bundle-4-missionary-resolution",
+      "date": "2026-04-20",
+      "branch": "claude/unity-ai-missionary-resolution-rebased",
+      "status": "active",
+      "description": "Bundle 4 of the AI mechanical campaign: first production per-kind resolution consumer. Ships sub-slice 25 alone because per-kind resolution systems differ substantively across operation kinds. AIMissionaryResolutionSystem walks expired Missionary DynastyOperationComponent entries and applies canonical browser effects from simulation.js:5517-5588 + simulation.js:10473-10503 (ExposureGain to target FaithExposureElement; IntensityErosion IFF different faith; LoyaltyPressure to lowest-loyalty ControlPointComponent; +2 reinforcement on failure). Always flips Active=false. First consumer of DynastyOperation per-kind components reading rather than producing; establishes the resolution walker pattern. Rebase note: cherry-picked onto rewritten master (082699ab) after upstream history rewrite orphaned the original branch. Contract rev 41->42.",
+      "handoff": "docs/unity/session-handoffs/2026-04-20-unity-ai-strategic-layer-bundle-4-missionary-resolution.md",
+      "validation_gates": "all 10 green plus missionary resolution smoke"
     }
   ]
 }
