@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-20T12:12:49.4868398-06:00",
+  "updated_at": "2026-04-20T12:56:48.4952679-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -1646,6 +1646,15 @@
       "description": "SettlementBreachTelemetry + TryDebugGetSettlementBreachTelemetry extend the fortification debug seam so one settlement-level query now reports the existing SettlementBreachReadout plus sealing eligibility/tracked state, accumulated worker-hours, required worker-hours, reserved stone, required stone, normalized progress, and destroyed-counter recovery eligibility/tracked state, target counter, worker-hours, stone cost, and normalized progress. FortificationCanon now owns the sealing and destroyed-counter recovery tick/cost constants, and both BreachSealingSystem and DestroyedCounterRecoverySystem consume those shared values instead of private copies. BloodlinesBreachLegibilityReadoutSmokeValidation expands from 5 phases to 7, adding half-window sealing telemetry proof (4/8 worker-hours, 60/60 stone, 0.5 progress) and half-window keep-priority recovery telemetry proof (14/28 worker-hours, 180/180 stone, 0.5 progress). The full governed 10-gate chain is green in D:\\BLBDT\\bloodlines, plus breach legibility readout smoke. Repo-state note: the directive claiming marriages, lesser houses, and minor houses have zero Unity code is stale; the retired tier2-batch-dynasty-systems lane already owns MarriageComponents, MarriageProposalExpirationSystem, MarriageGestationSystem, LesserHouseLoyaltyDriftSystem, and MinorHouseLevySystem. Contract rev 42->43.",
       "handoff": "docs/unity/session-handoffs/2026-04-20-unity-fortification-siege-breach-depth-telemetry.md",
       "validation_gates": "all 10 green plus breach legibility readout smoke with sealing and recovery telemetry phases"
+    },
+    {
+      "lane": "dynasty-marriage-parity",
+      "date": "2026-04-20",
+      "branch": "codex/unity-dynasty-marriage-parity",
+      "status": "active",
+      "description": "MarriageProposalExpirationSystem now matches simulation.js MARRIAGE_PROPOSAL_EXPIRATION_IN_WORLD_DAYS=90, MarriageGestationSystem now matches MARRIAGE_GESTATION_IN_WORLD_DAYS=280 and records MarriageChildElement plus DynastyMixedBloodlineComponent, and new MarriageDeathDissolutionSystem ports dissolveMarriageFromDeath with legitimacy -2 and oathkeeping +1 on both sides while halting pending gestation. BloodlinesMarriageParitySmokeValidation proves day-89 pending state, day-90 expiration, mixed-bloodline child generation, and death-driven dissolution. Full governed 10-gate chain green in D:\\BLDMP\\bloodlines, plus dedicated marriage parity smoke. Contract rev 43->44.",
+      "handoff": "docs/unity/session-handoffs/2026-04-20-unity-dynasty-marriage-parity.md",
+      "validation_gates": "all 10 green plus marriage parity smoke"
     }
   ]
 }

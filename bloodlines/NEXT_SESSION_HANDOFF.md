@@ -1,11 +1,43 @@
 # NEXT_SESSION_HANDOFF
 
-Last updated: 2026-04-19 (fortification-siege sub-slice 5 wall-segment destruction resolution complete on branch `codex/unity-fortification-wall-segment-destruction`: live fortification-role building linking plus explicit breach-state resolution landed, dedicated 4-phase wall smoke PASS, contract revision 30 -> 31 on top of rebased `origin/master` `0a0e122f`. Next: consume `OpenBreachCount` in a follow-up breach-aware assault, pathing, or legibility slice on a fresh `codex/unity-fortification-*` branch.)
+Last updated: 2026-04-20 (dynasty marriage parity slice complete on branch `codex/unity-dynasty-marriage-parity`: marriage proposal expiration now matches the browser 90-day window, marriage gestation now matches the browser 280-day window and records mixed-bloodline child provenance, new `MarriageDeathDissolutionSystem` ports death-driven dissolution with legitimacy and oathkeeping effects, dedicated 4-phase marriage parity smoke PASS, full governed gate chain green in `D:\BLDMP\bloodlines`, contract revision 43 -> 44. Next: continue the new `codex/unity-dynasty-*` lane with lesser-house loyalty drift and minor-house levy parity follow-ups rather than opening a duplicate zero-code marriages lane.)
+Previous entry: Last updated: 2026-04-19 (fortification-siege sub-slice 5 wall-segment destruction resolution complete on branch `codex/unity-fortification-wall-segment-destruction`: live fortification-role building linking plus explicit breach-state resolution landed, dedicated 4-phase wall smoke PASS, contract revision 30 -> 31 on top of rebased `origin/master` `0a0e122f`. Next: consume `OpenBreachCount` in a follow-up breach-aware assault, pathing, or legibility slice on a fresh `codex/unity-fortification-*` branch.)
 Previous entry: Last updated: 2026-04-18 (Session 130: All 3 items complete. Victory Conditions System: VictoryStateComponent + VictoryConditionEvaluationSystem, 4-phase smoke PASS, contract revision 12. Tier 2 batch dynasty: 5 systems + smoke PASS, contract 11. AI strategic layer sub-slice 1: EnemyAIStrategySystem, 4-phase smoke PASS, contract 10. Next: Fortification + Siege system (codex/unity-fortification-siege branch has initial components.))
 Previous entry: Last updated: 2026-04-18 (Session 129: AI strategic layer sub-slice 1 complete -- EnemyAIStrategySystem ISystem live, 4-phase smoke PASS, contract revision 10. Next sub-slices: supply chain/convoy mgmt (ai.js ~1100), siege staging. Also pending: Tier 2 batch systems (marriage, lesser house defection, minor house levies, renown scoring) and Victory Conditions system.)
 Previous entry: Last updated: 2026-04-17 (state-snapshot-restore lane complete on master 2026-04-17: 3 sub-slices merged, BloodlinesSnapshotPayload/Writer/Restorer, 6-phase smoke, ProbeSnapshotIntegrity in bootstrap runtime smoke, all 10 gates green, contract Revision 5. 10 Claude Code skills merged to master. Concurrent session contract revision 5. Browser-to-Unity migration plan drafted and three Tier 1 slices landed on master the same day: Conviction scoring + bands + 4-phase governed validator, Dynasty core with eight-member template set + aging + heir succession + interregnum + 4-phase validator, Faith commitment + exposure threshold + five-tier intensity resolution + 4-phase validator. AI barracks observability and bootstrap runtime smoke startup timeout bump 120s to 240s also on master. Codex group-movement and combat-stances slice is now rebased, green, and pushed on `codex/unity-group-movement-and-stances` with all eight combat smoke phases passing, full governed gate chain green, `Assembly-CSharp.csproj` compile includes restored for the new runtime files, and governed wrapper hardening landed for bootstrap runtime, scene-shell, and graphics validations. Workspace `HANDOFF.md` archived to `HANDOFF_ARCHIVE_2026-04-17_session-125-attack-orders.md`; the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md` is now the authoritative forward-work map; Session 127: Unity passive target-acquisition throttling and sight-loss cleanup green on stacked branch `codex/unity-target-acquisition-los`; Session 126: Unity explicit attack orders and first attack-move command layer green on branch `codex/unity-attack-move`; all prior lanes preserved)
 Previous author: Claude
-Next recommended action: claim the next fortification follow-up on a fresh `codex/unity-fortification-*` branch and consume `FortificationComponent.OpenBreachCount` in a breach-aware assault, pathing, or legibility slice. In parallel, the AI strategic layer's highest open candidates remain the narrative message bridge and captive-recovery execution follow-up documented in the revision-31 contract.
+Next recommended action: stay on the active `codex/unity-dynasty-*` lane and harden the already-landed lesser-house and minor-house systems against the browser spec rather than reopening marriages from zero. The clean next slice is lesser-house loyalty drift parity from `src/game/core/simulation.js` (~6631 onward), especially the mixed-bloodline hostility pressure and death-dissolution aftermath that now have the required child provenance and dissolution hooks. After that, tighten the minor-house territorial levy and breakaway-spawn parity from `tickMinorHouseTerritorialLevies` and `spawnDefectedMinorFaction`.
+
+## 2026-04-20 Dynasty Marriage Parity
+
+- Branch lane: `codex/unity-dynasty-marriage-parity`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-20-unity-dynasty-marriage-parity.md`
+- Completed in this slice:
+  - `MarriageProposalExpirationSystem` now expires pending proposals at the
+    canonical 90 in-world days instead of the stale 30-day placeholder
+  - `MarriageGestationSystem` now uses the canonical 280-day gestation window,
+    records generated child ids into `MarriageChildElement`, and adds
+    `DynastyMixedBloodlineComponent` to the spawned child
+  - new `MarriageDeathDissolutionSystem` now dissolves marriages when either
+    spouse dies, marks both records with the dissolution timestamp, applies
+    legitimacy loss, and records oathkeeping mourning effects
+  - `BloodlinesMarriageParitySmokeValidation` and
+    `scripts/Invoke-BloodlinesUnityMarriageParitySmokeValidation.ps1` now prove
+    day-89 pending state, day-90 expiration, mixed-bloodline child generation,
+    and death-driven dissolution blocking gestation
+- Validation state:
+  - all 10 required governed gates green
+  - dedicated marriage parity smoke green with 4 proof phases passing
+  - bootstrap runtime and canonical scene-shell gates were again executed
+    through worktree-local wrappers because the checked-in wrappers are still
+    path-pinned to `D:\ProjectsHome\Bloodlines`
+- Immediate next action:
+  - keep this work on fresh `codex/unity-dynasty-*` branches
+  - continue into lesser-house loyalty drift parity now that mixed-bloodline
+    children and death-dissolution hooks exist in Unity
+  - then tighten minor-house levy and breakaway-spawn parity without touching
+    the AI strategic-layer-owned marriage and dynasty AI files
 
 ## 2026-04-19 Fortification Siege Sub-Slice 5 Wall Segment Destruction Resolution
 
