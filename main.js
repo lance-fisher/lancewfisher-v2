@@ -570,7 +570,7 @@
     roundRect(ctx, sx+5*s, bannerY, sw-10*s, bannerH, 4*s);
     ctx.fillStyle = '#d8cfc0'; ctx.fill();
 
-    loadImg('thumbs/harmony-promo.jpg', function(img) {
+    loadImg('thumbs/medspa-promo.jpg', function(img) {
       if (!img) return;
       ctx.save();
       roundRect(ctx, sx+5*s, bannerY, sw-10*s, bannerH, 4*s); ctx.clip();
@@ -603,7 +603,7 @@
       ctx.fillStyle = provColors[pi]; ctx.fill();
       ctx.strokeStyle = aClr(p,0.25); ctx.lineWidth = 0.8*s; ctx.stroke();
     }
-    loadImg('thumbs/harmony-provider.jpg', function(img) {
+    loadImg('thumbs/medspa-provider.jpg', function(img) {
       if (!img) return;
       ctx.save();
       ctx.beginPath(); ctx.arc(sx+16*s, sy+162*s, 10*s, 0, Math.PI*2); ctx.clip();
