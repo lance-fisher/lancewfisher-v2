@@ -569,10 +569,11 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Siege/SiegeSupportRefreshSystem.cs` -- active raid state now suppresses raided supply camps as linked logistics anchors
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-20-unity-scout-raids-and-logistics-interdiction.md`
+  - `docs/unity/session-handoffs/2026-04-21-unity-scout-raids-logistics-interdiction-rebase-validation.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `SCOUT_RAID_TARGET_RANGE` (35), `SCOUT_RAID_RETREAT_DISTANCE` (36), `SCOUT_RAID_LOYALTY_RADIUS` (37), `isBuildingUnderScoutRaid` (2046), `getRaidRetreatCommand` (2349), `executeScoutRaid` (2362), `executeScoutLogisticsInterdiction` (2515)
 - Current Branch In Flight: `codex/unity-scout-raids-logistics-interdiction`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-20-unity-scout-raids-and-logistics-interdiction.md`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-scout-raids-logistics-interdiction-rebase-validation.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
