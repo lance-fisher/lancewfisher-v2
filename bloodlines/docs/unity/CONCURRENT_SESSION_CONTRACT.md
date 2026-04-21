@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 50
+- Revision: 51
 - Last Updated: 2026-04-21
-- Last Updated By: codex-scout-raids-logistics-interdiction-2026-04-21
-- Supersedes: revision 49 (Codex rebases the active `scout-raids-logistics-interdiction` lane onto the latest revision-49 master that already contains fortification sub-slices 11-13 and the fortification session wrap. The contract now preserves that latest fortification closure state, keeps `dynasty-house-parity` paused after the landed parity stack, and carries the scout-raids lane forward as the active Codex non-AI runtime lane on `codex/unity-scout-raids-logistics-interdiction` pending validation rerun and merge.)
+- Last Updated By: codex-scout-raids-logistics-interdiction-landing-2026-04-21
+- Supersedes: revision 50 (Codex has now merged `codex/unity-scout-raids-logistics-interdiction` to `master` via `dda7c25e`, rerun the governed validation gate on the merged master content, and updated continuity so the scout-raids lane remains active but no longer claims an in-flight branch. Fortification stays paused after the landed sub-slice-13 wrap, `dynasty-house-parity` stays paused after the landed parity stack, and the next Codex pickup should be a fresh player-facing diplomacy or other unclaimed non-AI lane.)
 
 
 ## Purpose
@@ -551,7 +551,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: scout-raids-logistics-interdiction
 
-- Status: active
+- Status: active (foundation landed on master; no follow-up branch currently in flight)
 - Branch Prefix: `codex/unity-scout-raids-logistics-interdiction`
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -570,16 +570,17 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-20-unity-scout-raids-and-logistics-interdiction.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-scout-raids-logistics-interdiction-rebase-validation.md`
+  - `docs/unity/session-handoffs/2026-04-21-unity-scout-raids-logistics-interdiction-landing.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `SCOUT_RAID_TARGET_RANGE` (35), `SCOUT_RAID_RETREAT_DISTANCE` (36), `SCOUT_RAID_LOYALTY_RADIUS` (37), `isBuildingUnderScoutRaid` (2046), `getRaidRetreatCommand` (2349), `executeScoutRaid` (2362), `executeScoutLogisticsInterdiction` (2515)
-- Current Branch In Flight: `codex/unity-scout-raids-logistics-interdiction`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-scout-raids-logistics-interdiction-rebase-validation.md`
+- Current Branch In Flight: none (merged into master via `dda7c25e`; future scout follow-ups should start from a fresh branch)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-scout-raids-logistics-interdiction-landing.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the `fortification-siege-imminent-engagement` lane is paused unless Lance explicitly defines a fresh fortification sub-slice 14. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. Codex now owns the active `scout-raids-logistics-interdiction` lane; future non-AI work should either continue there or claim a different unblocked lane explicitly.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the `fortification-siege-imminent-engagement` lane is paused unless Lance explicitly defines a fresh fortification sub-slice 14. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation is now landed on master; future raid follow-ups should start from a fresh scout branch. Under the current multi-day directive, the cleanest next Codex pickup is the player-facing marriage diplomacy lane.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 

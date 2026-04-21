@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-21T15:33:06.5907353-06:00",
+  "updated_at": "2026-04-21T17:33:05.2472858-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -486,15 +486,18 @@
   "latest_browser_to_unity_migration_plan": "docs/plans/2026-04-17-browser-to-unity-migration-plan.md",
   "concurrent_session_contract": {
     "path": "docs/unity/CONCURRENT_SESSION_CONTRACT.md",
-    "revision": 47,
+    "revision": 51,
     "last_updated": "2026-04-21",
-    "last_updated_by": "codex-fortification-sealing-cost-tier-scaling-2026-04-21",
+    "last_updated_by": "codex-scout-raids-logistics-interdiction-landing-2026-04-21",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
     "active_lanes": [
       "ai-strategic-layer",
-      "fortification-siege-imminent-engagement"
+      "scout-raids-logistics-interdiction"
     ],
-    "paused_lanes": [],
+    "paused_lanes": [
+      "fortification-siege-imminent-engagement",
+      "dynasty-house-parity"
+    ],
     "retired_lanes": [
       "economy-and-ai",
       "combat-and-projectile",
@@ -1709,6 +1712,15 @@
       "description": "The fortification-siege queue is now closed through sub-slice 13. Sub-slice 10 breach-depth telemetry, sub-slice 11 sealing-cost tier scaling, sub-slice 12 worker locality, and sub-slice 13 repair narrative are all landed. The slice 12 worker-locality smoke-wrapper fixup was merged before sub-slice 13 so future locality validation is stable on master. No approved fortification sub-slice 14 remains; future fortification work now requires fresh operator direction or a lane handoff to the next arc.",
       "handoff": "docs/unity/session-handoffs/2026-04-21-unity-fortification-siege-session-wrap-10-through-13.md",
       "validation_gates": "session wrap only; sub-slice 13 closed with all 10 gates green plus fortification repair narrative smoke"
+    },
+    {
+      "lane": "scout-raids-logistics-interdiction-landing",
+      "date": "2026-04-21",
+      "branch": "master",
+      "status": "complete",
+      "description": "The rebased `codex/unity-scout-raids-logistics-interdiction` lane is now merged to master via `dda7c25e`. `ScoutRaidCommandComponent`, `BuildingRaidStateComponent`, `ScoutRaidCanon`, and `ScoutRaidResolutionSystem` land the browser scout-raid and supply-wagon interdiction execution seams on master, while `ResourceTrickleBuildingSystem`, `WorkerGatherSystem`, `FieldWaterSupportScanSystem`, and `SiegeSupportRefreshSystem` now all respect active raid state. The full governed validation gate reran green on detached merged master in D:\\BLAICD\\bloodlines; temporary worktree-local wrapper copies were again used for the root-pinned bootstrap runtime and scene-shell validators, and the dedicated scout validator stayed green. Contract rev 50->51 records the lane as landed-on-master with no branch currently in flight.",
+      "handoff": "docs/unity/session-handoffs/2026-04-21-unity-scout-raids-logistics-interdiction-landing.md",
+      "validation_gates": "all 10 green plus scout raid and interdiction smoke on merged master"
     }
   ]
 }

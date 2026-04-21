@@ -1,6 +1,6 @@
 # NEXT_SESSION_HANDOFF
 
-Last updated: 2026-04-20 (dynasty minor-house levy parity slice complete on branch `codex/unity-dynasty-minor-house-levy-parity`: `MinorHouseLevyComponent` now tracks origin, claim, levy status, retinue metrics, and parent-pressure tempo; `LesserHouseLoyaltyDriftSystem` now seeds stockpile, population, dynasty legitimacy, inherited faith, and a stabilized border claim on breakaway spawn; `MinorHouseLevySystem` now mirrors browser territorial-levy gating, retinue caps, pressure tempo, and `militia`/`swordsman`/`bowman` profile selection; dedicated 4-phase minor-house parity smoke PASS, lesser-house regression smoke PASS, full governed gate chain green in `D:\BLAICD\bloodlines`, contract revision 45 -> 46. Next: dynasty-house parity can pause cleanly; under current governance the next unblocked priority is a fresh non-AI lane such as scout raids or logistics interdiction unless Lance wants one more minor-house provenance follow-up first.)
+Last updated: 2026-04-21 (scout raids and logistics interdiction landed on `master` via merge commit `dda7c25e`: the scout runtime surface, dedicated smoke validator, and revision-50/51 lane governance all landed cleanly; full governed validation gate reran green on detached merged `master` in `D:\BLAICD\bloodlines`; next Codex pickup should be the player-facing marriage diplomacy lane unless Lance reprioritizes another non-AI lane.)
 Previous entry: Last updated: 2026-04-20 (dynasty lesser-house loyalty parity slice complete on branch `codex/unity-dynasty-lesser-house-loyalty-parity`: `LesserHouseElement` now tracks mixed-bloodline, marital-anchor, world-pressure, and defection timing state, `LesserHouseLoyaltyDriftSystem` now applies browser-style loyalty drift with a 5-day zero-loyalty grace window plus hostile breakaway spawning, dedicated 3-phase lesser-house parity smoke PASS, full governed gate chain green in `D:\BLAICD\bloodlines`, contract revision 44 -> 45. Next: continue the active `codex/unity-dynasty-*` lane with minor-house levy and breakaway-spawn parity hardening.)
 Previous entry: Last updated: 2026-04-20 (dynasty marriage parity slice complete on branch `codex/unity-dynasty-marriage-parity`: marriage proposal expiration now matches the browser 90-day window, marriage gestation now matches the browser 280-day window and records mixed-bloodline child provenance, new `MarriageDeathDissolutionSystem` ports death-driven dissolution with legitimacy and oathkeeping effects, dedicated 4-phase marriage parity smoke PASS, full governed gate chain green in `D:\BLDMP\bloodlines`, contract revision 43 -> 44. Next: continue the new `codex/unity-dynasty-*` lane with lesser-house loyalty drift and minor-house levy parity follow-ups rather than opening a duplicate zero-code marriages lane.)
 Previous entry: Last updated: 2026-04-19 (fortification-siege sub-slice 5 wall-segment destruction resolution complete on branch `codex/unity-fortification-wall-segment-destruction`: live fortification-role building linking plus explicit breach-state resolution landed, dedicated 4-phase wall smoke PASS, contract revision 30 -> 31 on top of rebased `origin/master` `0a0e122f`. Next: consume `OpenBreachCount` in a follow-up breach-aware assault, pathing, or legibility slice on a fresh `codex/unity-fortification-*` branch.)
@@ -8,7 +8,7 @@ Previous entry: Last updated: 2026-04-18 (Session 130: All 3 items complete. Vic
 Previous entry: Last updated: 2026-04-18 (Session 129: AI strategic layer sub-slice 1 complete -- EnemyAIStrategySystem ISystem live, 4-phase smoke PASS, contract revision 10. Next sub-slices: supply chain/convoy mgmt (ai.js ~1100), siege staging. Also pending: Tier 2 batch systems (marriage, lesser house defection, minor house levies, renown scoring) and Victory Conditions system.)
 Previous entry: Last updated: 2026-04-17 (state-snapshot-restore lane complete on master 2026-04-17: 3 sub-slices merged, BloodlinesSnapshotPayload/Writer/Restorer, 6-phase smoke, ProbeSnapshotIntegrity in bootstrap runtime smoke, all 10 gates green, contract Revision 5. 10 Claude Code skills merged to master. Concurrent session contract revision 5. Browser-to-Unity migration plan drafted and three Tier 1 slices landed on master the same day: Conviction scoring + bands + 4-phase governed validator, Dynasty core with eight-member template set + aging + heir succession + interregnum + 4-phase validator, Faith commitment + exposure threshold + five-tier intensity resolution + 4-phase validator. AI barracks observability and bootstrap runtime smoke startup timeout bump 120s to 240s also on master. Codex group-movement and combat-stances slice is now rebased, green, and pushed on `codex/unity-group-movement-and-stances` with all eight combat smoke phases passing, full governed gate chain green, `Assembly-CSharp.csproj` compile includes restored for the new runtime files, and governed wrapper hardening landed for bootstrap runtime, scene-shell, and graphics validations. Workspace `HANDOFF.md` archived to `HANDOFF_ARCHIVE_2026-04-17_session-125-attack-orders.md`; the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md` is now the authoritative forward-work map; Session 127: Unity passive target-acquisition throttling and sight-loss cleanup green on stacked branch `codex/unity-target-acquisition-los`; Session 126: Unity explicit attack orders and first attack-move command layer green on branch `codex/unity-attack-move`; all prior lanes preserved)
 Previous author: Claude
-Next recommended action: the dynasty-house parity lane can pause in a clean state. Under the current contract, the next unblocked priority is a fresh non-AI lane, with scout raids or logistics interdiction the safest target if the AI strategic layer remains owned elsewhere. If Lance wants one more dynasty follow-up before that, the clean remaining gap is founder-member and ceremonial-message provenance on defected minor-house spawns.
+Next recommended action: claim the player-facing marriage diplomacy lane on a fresh `codex/unity-player-marriage-proposal` branch, add its owned paths to the concurrent-session contract, and port the browser `proposeMarriage` gate chain plus dedicated proposal smoke validation before touching acceptance.
 
 ## 2026-04-20 Dynasty Minor-House Levy Parity
 
@@ -2755,3 +2755,38 @@ This observability follow-up is complete on `codex/unity-fortification-breach-de
 ### Context Notes
 - The checked-in bootstrap runtime and canonical scene-shell wrappers still pin `D:\ProjectsHome\Bloodlines\unity`. Clean worktree validation should keep using temporary worktree-safe wrapper copies.
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json` still dirties during Unity validation and should remain unstaged.
+
+## Codex Scout Raids And Logistics Interdiction Landing (2026-04-21)
+
+Branch landed: `codex/unity-scout-raids-logistics-interdiction`
+
+### What Landed
+- `ScoutRaidCommandComponent`, `BuildingRaidStateComponent`, `ScoutRaidCanon`,
+  and `ScoutRaidResolutionSystem` are now on `master`.
+- Building raids now suppress passive trickle, apply stockpile loss and local
+  loyalty shock, and force raider retreat.
+- Supply-wagon interdiction now applies stockpile loss, interdiction and convoy
+  recovery timers, support-status downgrade, and wagon retreat toward the
+  nearest operational allied camp.
+- `WorkerGatherSystem`, `FieldWaterSupportScanSystem`, and
+  `SiegeSupportRefreshSystem` all now respect active raid state.
+- Dedicated validation is landed through
+  `BloodlinesScoutRaidAndInterdictionSmokeValidation` and
+  `scripts/Invoke-BloodlinesUnityScoutRaidAndInterdictionSmokeValidation.ps1`.
+
+### Validation State
+- Merge commit: `dda7c25e`
+- Full governed gate rerun green on detached merged `master` in
+  `D:\BLAICD\bloodlines`
+- Dedicated scout smoke green with marker
+  `BLOODLINES_SCOUT_RAID_AND_INTERDICTION_SMOKE PASS`
+
+### Immediate Next Action
+1. Claim the player-facing marriage diplomacy lane next.
+2. Start with proposal execution under
+   `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/` on a fresh
+   `codex/unity-player-marriage-proposal` branch.
+3. Before coding, add the new lane to
+   `docs/unity/CONCURRENT_SESSION_CONTRACT.md` and re-read the browser
+   references for `proposeMarriage`, `getMarriageAuthorityProfile`, and
+   `getMarriageAcceptanceTerms`.
