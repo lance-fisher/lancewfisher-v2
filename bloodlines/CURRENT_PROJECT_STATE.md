@@ -2430,3 +2430,34 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 ### Recommended Next Fortification Follow-Up
 1. Sub-slice 12 worker-locality gating so only idle workers local to the settlement's own control point can contribute to breach sealing.
 2. Sub-slice 13 repair narrative after locality lands, so breach closure and destroyed-counter rebuilds emit the required info-tone messages without cross-settlement labor leakage.
+
+## Codex Fortification Siege Sub-Slice 12: Sealing Worker Locality (2026-04-21)
+
+### Status: COMPLETE on branch codex/unity-fortification-sealing-worker-locality
+
+### What Was Done
+- `BreachSealingSystem` now resolves each settlement's nearest same-owner control point from the settlement anchor position and only counts idle workers whose own nearest control point matches that anchor.
+- The idle-worker scan now requires `PositionComponent`, resolves the worker's nearest `ControlPointComponent`, and rejects workers whose nearest control point is not owned by their faction.
+- Same-faction workers near another settlement no longer contribute to breach closure here, which closes the cross-settlement labor-poaching gap without adding a new stored settlement-control-point foreign key.
+- New dedicated validator `BloodlinesBreachSealingWorkerLocalitySmokeValidation` plus wrapper `scripts/Invoke-BloodlinesUnityBreachSealingWorkerLocalitySmokeValidation.ps1` prove local sealing, same-faction other-settlement blocking, no-workers blocking, and non-idle blocking.
+- Full governed validation is green on `D:\BLF12\bloodlines`, with worktree-safe wrapper copies again used for the still-root-pinned bootstrap runtime and canonical scene-shell validators. Contract bumped revision `47 -> 48`.
+
+### Gate Results
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS with existing editor warnings only
+- Bootstrap runtime smoke: PASS via worktree-local wrapper copy under the Unity lock
+- Combat smoke: PASS
+- Scene shells: Bootstrap + Gameplay PASS via worktree-local wrapper copies under the Unity lock
+- Fortification smoke: PASS
+- Siege smoke: PASS
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision `48` after the continuity and contract updates
+- Dedicated breach sealing worker locality smoke: PASS with marker `BLOODLINES_BREACH_SEALING_WORKER_LOCALITY_SMOKE PASS`
+
+### Validation Notes
+- The first dedicated locality-smoke rerun after script compilation exited immediately with return code `1` before the validator executed. A single 10-second retry reached the batch method and passed cleanly, so the slice stays unblocked.
+
+### Recommended Next Fortification Follow-Up
+1. Sub-slice 13 repair narrative so breach closures and destroyed-counter rebuilds emit the required info-tone narrative pushes.
+2. After the repair narrative lands, continue through any remaining fortification-siege follow-ups or hand the lane back for the next arc.

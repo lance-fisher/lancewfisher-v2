@@ -1682,6 +1682,15 @@
       "description": "FortificationCanon now resolves breach sealing cost and labor by fortification tier: Tier 1 stays at 60 stone and 8 worker-hours, Tier 2 scales to 90 stone and 12 worker-hours, and Tier 3 scales to 135 stone and 18 worker-hours. BreachSealingSystem now reads those helpers before reserving stone, checking funding, and accumulating progress so stronger settlements take more stone and labor to reseal. SettlementBreachTelemetry and BloodlinesBreachLegibilityReadoutSmokeValidation now report and assert the tier-aware sealing requirements, and the new BloodlinesBreachSealingTierScalingSmokeValidation proves Tier 1 baseline, Tier 2 scaling, Tier 3 scaling, and mixed-tier portfolio reservation behavior. The full governed 10-gate chain is green in D:\\BLF11\\bloodlines; worktree-local wrapper copies were used for the still-root-pinned bootstrap runtime and canonical scene-shell validators. Contract rev 46->47.",
       "handoff": "docs/unity/session-handoffs/2026-04-21-unity-fortification-siege-sealing-cost-tier-scaling.md",
       "validation_gates": "all 10 green plus breach sealing tier scaling smoke"
+    },
+    {
+      "lane": "fortification-siege-sub-slice-12-sealing-worker-locality",
+      "date": "2026-04-21",
+      "branch": "codex/unity-fortification-sealing-worker-locality",
+      "status": "active",
+      "description": "BreachSealingSystem now gates repair labor to the settlement's own control-point footprint instead of a faction-wide idle-worker bucket. The system resolves the settlement's nearest same-owner control point from the settlement anchor position, resolves each idle worker's nearest control point from worker PositionComponent, requires owner match on that nearest ControlPointComponent, and only spends labor when the worker and settlement resolve to the same control-point anchor. Same-faction workers near another settlement no longer poach breach closure here. New BloodlinesBreachSealingWorkerLocalitySmokeValidation plus wrapper prove local sealing, other-settlement blocking, no-workers blocking, and non-idle blocking. The full governed 10-gate chain is green in D:\\BLF12\\bloodlines; worktree-local wrapper copies were again used for the still-root-pinned bootstrap runtime and canonical scene-shell validators. Contract rev 47->48.",
+      "handoff": "docs/unity/session-handoffs/2026-04-21-unity-fortification-siege-sealing-worker-locality.md",
+      "validation_gates": "all 10 green plus breach sealing worker locality smoke"
     }
   ]
 }

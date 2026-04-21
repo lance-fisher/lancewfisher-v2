@@ -59,15 +59,18 @@ namespace Bloodlines.Fortification
                 currentInWorldDays - (processedSeconds * math.max(0f, clock.DaysPerRealSecond)));
 
             var stockpiles = BuildFactionStockpileRecords(entityManager);
-            var idleWorkers = BuildFactionIdleWorkerRecords(entityManager);
+            var controlPoints = BuildControlPointRecords(entityManager);
+            var idleWorkers = BuildFactionIdleWorkerRecords(entityManager, controlPoints);
 
             var settlementQuery = entityManager.CreateEntityQuery(
                 ComponentType.ReadOnly<FortificationComponent>(),
-                ComponentType.ReadOnly<FactionComponent>());
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<PositionComponent>());
 
             using var settlementEntities = settlementQuery.ToEntityArray(Allocator.Temp);
             using var fortifications = settlementQuery.ToComponentDataArray<FortificationComponent>(Allocator.Temp);
             using var factions = settlementQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var positions = settlementQuery.ToComponentDataArray<PositionComponent>(Allocator.Temp);
             settlementQuery.Dispose();
 
             for (int i = 0; i < settlementEntities.Length; i++)
@@ -106,7 +109,16 @@ namespace Bloodlines.Fortification
 
                 if (elapsedInWorldDays > 0f)
                 {
-                    int laborIndex = FindIdleWorkerIndex(idleWorkers, factions[i].FactionId);
+                    int settlementControlPointIndex = FindNearestOwnedControlPointIndex(
+                        controlPoints,
+                        factions[i].FactionId,
+                        positions[i].Value);
+                    int laborIndex = settlementControlPointIndex >= 0
+                        ? FindIdleWorkerIndex(
+                            idleWorkers,
+                            factions[i].FactionId,
+                            controlPoints[settlementControlPointIndex].Entity)
+                        : -1;
                     if (laborIndex >= 0 && idleWorkers[laborIndex].AvailableIdleWorkers > 0)
                     {
                         int stockpileIndex = FindStockpileIndex(stockpiles, factions[i].FactionId);
@@ -187,16 +199,45 @@ namespace Bloodlines.Fortification
             return stockpiles;
         }
 
-        private static List<FactionIdleWorkerRecord> BuildFactionIdleWorkerRecords(EntityManager entityManager)
+        private static List<ControlPointRecord> BuildControlPointRecords(EntityManager entityManager)
+        {
+            var controlPoints = new List<ControlPointRecord>(8);
+            var controlPointQuery = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<ControlPointComponent>(),
+                ComponentType.ReadOnly<PositionComponent>());
+
+            using var entities = controlPointQuery.ToEntityArray(Allocator.Temp);
+            using var controlPointComponents = controlPointQuery.ToComponentDataArray<ControlPointComponent>(Allocator.Temp);
+            using var positions = controlPointQuery.ToComponentDataArray<PositionComponent>(Allocator.Temp);
+            controlPointQuery.Dispose();
+
+            for (int i = 0; i < entities.Length; i++)
+            {
+                controlPoints.Add(new ControlPointRecord
+                {
+                    Entity = entities[i],
+                    OwnerFactionId = controlPointComponents[i].OwnerFactionId,
+                    Position = positions[i].Value,
+                });
+            }
+
+            return controlPoints;
+        }
+
+        private static List<FactionIdleWorkerRecord> BuildFactionIdleWorkerRecords(
+            EntityManager entityManager,
+            List<ControlPointRecord> controlPoints)
         {
             var idleWorkerRecords = new List<FactionIdleWorkerRecord>(4);
             var workerQuery = entityManager.CreateEntityQuery(
                 ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<PositionComponent>(),
                 ComponentType.ReadOnly<UnitTypeComponent>(),
                 ComponentType.ReadOnly<HealthComponent>(),
                 ComponentType.ReadOnly<WorkerGatherComponent>());
 
             using var workerFactions = workerQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var workerPositions = workerQuery.ToComponentDataArray<PositionComponent>(Allocator.Temp);
             using var workerTypes = workerQuery.ToComponentDataArray<UnitTypeComponent>(Allocator.Temp);
             using var workerHealth = workerQuery.ToComponentDataArray<HealthComponent>(Allocator.Temp);
             using var workerGathers = workerQuery.ToComponentDataArray<WorkerGatherComponent>(Allocator.Temp);
@@ -211,7 +252,22 @@ namespace Bloodlines.Fortification
                     continue;
                 }
 
-                int recordIndex = FindIdleWorkerIndex(idleWorkerRecords, workerFactions[i].FactionId);
+                int nearestControlPointIndex = FindNearestControlPointIndex(controlPoints, workerPositions[i].Value);
+                if (nearestControlPointIndex < 0)
+                {
+                    continue;
+                }
+
+                var nearestControlPoint = controlPoints[nearestControlPointIndex];
+                if (!nearestControlPoint.OwnerFactionId.Equals(workerFactions[i].FactionId))
+                {
+                    continue;
+                }
+
+                int recordIndex = FindIdleWorkerIndex(
+                    idleWorkerRecords,
+                    workerFactions[i].FactionId,
+                    nearestControlPoint.Entity);
                 if (recordIndex >= 0)
                 {
                     var record = idleWorkerRecords[recordIndex];
@@ -223,6 +279,7 @@ namespace Bloodlines.Fortification
                     idleWorkerRecords.Add(new FactionIdleWorkerRecord
                     {
                         FactionId = workerFactions[i].FactionId,
+                        ControlPointEntity = nearestControlPoint.Entity,
                         AvailableIdleWorkers = 1,
                     });
                 }
@@ -319,17 +376,72 @@ namespace Bloodlines.Fortification
 
         private static int FindIdleWorkerIndex(
             List<FactionIdleWorkerRecord> idleWorkers,
-            FixedString32Bytes factionId)
+            FixedString32Bytes factionId,
+            Entity controlPointEntity)
         {
             for (int i = 0; i < idleWorkers.Count; i++)
             {
-                if (idleWorkers[i].FactionId.Equals(factionId))
+                if (idleWorkers[i].FactionId.Equals(factionId) &&
+                    idleWorkers[i].ControlPointEntity == controlPointEntity)
                 {
                     return i;
                 }
             }
 
             return -1;
+        }
+
+        private static int FindNearestOwnedControlPointIndex(
+            List<ControlPointRecord> controlPoints,
+            FixedString32Bytes factionId,
+            float3 position)
+        {
+            float bestDistanceSq = float.MaxValue;
+            int bestIndex = -1;
+
+            for (int i = 0; i < controlPoints.Count; i++)
+            {
+                if (!controlPoints[i].OwnerFactionId.Equals(factionId))
+                {
+                    continue;
+                }
+
+                float distanceSq = math.distancesq(position, controlPoints[i].Position);
+                if (distanceSq < bestDistanceSq)
+                {
+                    bestDistanceSq = distanceSq;
+                    bestIndex = i;
+                }
+            }
+
+            return bestIndex;
+        }
+
+        private static int FindNearestControlPointIndex(
+            List<ControlPointRecord> controlPoints,
+            float3 position)
+        {
+            float bestDistanceSq = float.MaxValue;
+            int bestIndex = -1;
+
+            for (int i = 0; i < controlPoints.Count; i++)
+            {
+                float distanceSq = math.distancesq(position, controlPoints[i].Position);
+                if (distanceSq < bestDistanceSq)
+                {
+                    bestDistanceSq = distanceSq;
+                    bestIndex = i;
+                }
+            }
+
+            return bestIndex;
+        }
+
+        private struct ControlPointRecord
+        {
+            public Entity Entity;
+            public FixedString32Bytes OwnerFactionId;
+            public float3 Position;
         }
 
         private struct FactionStockpileRecord
@@ -342,6 +454,7 @@ namespace Bloodlines.Fortification
         private struct FactionIdleWorkerRecord
         {
             public FixedString32Bytes FactionId;
+            public Entity ControlPointEntity;
             public int AvailableIdleWorkers;
         }
     }
