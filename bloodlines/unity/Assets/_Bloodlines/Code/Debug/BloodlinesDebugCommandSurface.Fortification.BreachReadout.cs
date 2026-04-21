@@ -253,9 +253,13 @@ namespace Bloodlines.Debug
             sealingEligible = fortification.OpenBreachCount > 0;
             sealingTracked = entityManager.HasComponent<BreachSealingProgressComponent>(settlementEntity);
             accumulatedWorkerHours = 0f;
-            requiredWorkerHours = sealingEligible ? FortificationCanon.BreachSealingWorkerHoursPerBreach : 0f;
+            requiredWorkerHours = sealingEligible
+                ? FortificationCanon.ResolveBreachSealingWorkerHoursPerBreach(fortification.Tier)
+                : 0f;
             reservedStone = 0f;
-            requiredStone = sealingEligible ? FortificationCanon.BreachSealingStoneCostPerBreach : 0f;
+            requiredStone = sealingEligible
+                ? FortificationCanon.ResolveBreachSealingStoneCostPerBreach(fortification.Tier)
+                : 0f;
             progress01 = 0f;
 
             if (!sealingTracked)

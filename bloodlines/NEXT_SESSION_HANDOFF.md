@@ -2660,3 +2660,30 @@ This observability follow-up is complete on `codex/unity-fortification-breach-de
   - `unity/Assets/_Bloodlines/Code/Dynasties/LesserHouseLoyaltyDriftSystem.cs`
   - `unity/Assets/_Bloodlines/Code/Dynasties/MinorHouseLevySystem.cs`
 - Do not open a duplicate zero-code marriages lane. If Lance still wants more dynasty work, scope the next lane as hardening or extension on top of those existing surfaces after checking the retired `tier2-batch-dynasty-systems` handoff.
+
+## Codex Fortification Siege Sub-Slice 11: Sealing Cost Tier Scaling (2026-04-21)
+
+### Status: COMPLETE on branch codex/unity-fortification-sealing-cost-tier-scaling
+
+### What Landed
+- `FortificationCanon` now carries the tier-aware breach-sealing cost curve: Tier 1 `60` stone and `8` worker-hours, Tier 2 `90` stone and `12` worker-hours, Tier 3 `135` stone and `18` worker-hours.
+- `BreachSealingSystem` now resolves required stone and labor from `FortificationComponent.Tier`, so stronger settlements cost more to close after a breach opens.
+- `SettlementBreachTelemetry` and the existing breach-legibility smoke now read those tier-aware values, and the new `BloodlinesBreachSealingTierScalingSmokeValidation` proves all three tiers plus a mixed-tier portfolio in one dedicated validator.
+- The full governed chain is green in `D:\BLF11\bloodlines`, with worktree-local wrapper copies used for the still-root-pinned bootstrap runtime and scene-shell gates. Contract revision advanced `46 -> 47`.
+
+### Immediate Next Fortification Action
+1. Merge `codex/unity-fortification-sealing-cost-tier-scaling`.
+2. Fetch `origin/master` again after the merge lands.
+3. Continue on sub-slice 12 with `codex/unity-fortification-sealing-worker-locality`.
+
+### Validation Notes
+- `dotnet build` runtime and editor gates: PASS
+- Bootstrap runtime smoke: PASS via worktree-local wrapper copy
+- Combat smoke: PASS
+- Scene shells: Bootstrap + Gameplay PASS via worktree-local wrapper copies
+- Fortification smoke: PASS
+- Siege smoke: PASS
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision `46` before the revision-47 contract update
+- Dedicated tier-scaling smoke: PASS with marker `BLOODLINES_BREACH_SEALING_TIER_SCALING_SMOKE PASS`

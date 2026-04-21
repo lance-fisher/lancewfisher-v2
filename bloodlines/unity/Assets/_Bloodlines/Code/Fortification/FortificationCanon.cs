@@ -26,6 +26,10 @@ namespace Bloodlines.Fortification
         public const float BreachSealingTickRateHz = 1f;
         public const float BreachSealingStoneCostPerBreach = 60f;
         public const float BreachSealingWorkerHoursPerBreach = 8f;
+        public const float BreachSealingTier2StoneCostPerBreach = 90f;
+        public const float BreachSealingTier2WorkerHoursPerBreach = 12f;
+        public const float BreachSealingTier3StoneCostPerBreach = 135f;
+        public const float BreachSealingTier3WorkerHoursPerBreach = 18f;
         public const float DestroyedCounterRecoveryTickRateHz = 1f;
         public const float DestroyedCounterRecoveryStoneCostPerSegment = 90f;
         public const float DestroyedCounterRecoveryWorkerHoursPerSegment = 14f;
@@ -63,5 +67,35 @@ namespace Bloodlines.Fortification
         public const float AssaultStrainDecayPerSecond = 0.12f;
         public const float AssaultCohesionPenaltyDuration = 20f;
         public const float AssaultCohesionPenaltyMultiplier = 0.85f;
+
+        public static float ResolveBreachSealingStoneCostPerBreach(int fortificationTier)
+        {
+            if (fortificationTier >= 3)
+            {
+                return BreachSealingTier3StoneCostPerBreach;
+            }
+
+            if (fortificationTier == 2)
+            {
+                return BreachSealingTier2StoneCostPerBreach;
+            }
+
+            return BreachSealingStoneCostPerBreach;
+        }
+
+        public static float ResolveBreachSealingWorkerHoursPerBreach(int fortificationTier)
+        {
+            if (fortificationTier >= 3)
+            {
+                return BreachSealingTier3WorkerHoursPerBreach;
+            }
+
+            if (fortificationTier == 2)
+            {
+                return BreachSealingTier2WorkerHoursPerBreach;
+            }
+
+            return BreachSealingWorkerHoursPerBreach;
+        }
     }
 }

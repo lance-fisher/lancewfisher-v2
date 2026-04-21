@@ -101,6 +101,8 @@ namespace Bloodlines.Fortification
 
                 float elapsedInWorldDays = math.max(0f, currentInWorldDays - progress.LastTickInWorldDays);
                 progress.LastTickInWorldDays = currentInWorldDays;
+                float requiredStone = FortificationCanon.ResolveBreachSealingStoneCostPerBreach(fortification.Tier);
+                float requiredWorkerHours = FortificationCanon.ResolveBreachSealingWorkerHoursPerBreach(fortification.Tier);
 
                 if (elapsedInWorldDays > 0f)
                 {
@@ -109,10 +111,14 @@ namespace Bloodlines.Fortification
                     {
                         int stockpileIndex = FindStockpileIndex(stockpiles, factions[i].FactionId);
                         bool canFundCurrentBreach =
-                            progress.StoneReservedForCurrentBreach >= FortificationCanon.BreachSealingStoneCostPerBreach;
+                            progress.StoneReservedForCurrentBreach >= requiredStone;
                         if (!canFundCurrentBreach &&
                             stockpileIndex >= 0 &&
-                            TryReserveStoneForCurrentBreach(ref stockpiles, stockpileIndex, ref progress))
+                            TryReserveStoneForCurrentBreach(
+                                ref stockpiles,
+                                stockpileIndex,
+                                ref progress,
+                                requiredStone))
                         {
                             canFundCurrentBreach = true;
                         }
@@ -128,7 +134,9 @@ namespace Bloodlines.Fortification
                                 stockpileIndex,
                                 ref fortification,
                                 ref progress,
-                                elapsedInWorldDays);
+                                elapsedInWorldDays,
+                                requiredStone,
+                                requiredWorkerHours);
                         }
                     }
                 }
@@ -228,27 +236,32 @@ namespace Bloodlines.Fortification
             int stockpileIndex,
             ref FortificationComponent fortification,
             ref BreachSealingProgressComponent progress,
-            float elapsedInWorldDays)
+            float elapsedInWorldDays,
+            float requiredStone,
+            float requiredWorkerHours)
         {
             float remainingWorkerHours = math.max(0f, elapsedInWorldDays * 24f);
             while (remainingWorkerHours > 0f && fortification.OpenBreachCount > 0)
             {
-                if (progress.StoneReservedForCurrentBreach < FortificationCanon.BreachSealingStoneCostPerBreach)
+                if (progress.StoneReservedForCurrentBreach < requiredStone)
                 {
                     if (stockpileIndex < 0 ||
-                        !TryReserveStoneForCurrentBreach(ref stockpiles, stockpileIndex, ref progress))
+                        !TryReserveStoneForCurrentBreach(
+                            ref stockpiles,
+                            stockpileIndex,
+                            ref progress,
+                            requiredStone))
                     {
                         break;
                     }
                 }
 
-                float neededWorkerHours =
-                    FortificationCanon.BreachSealingWorkerHoursPerBreach - progress.AccumulatedWorkerHours;
+                float neededWorkerHours = requiredWorkerHours - progress.AccumulatedWorkerHours;
                 float appliedWorkerHours = math.min(remainingWorkerHours, neededWorkerHours);
                 progress.AccumulatedWorkerHours += appliedWorkerHours;
                 remainingWorkerHours -= appliedWorkerHours;
 
-                if (progress.AccumulatedWorkerHours + 0.0001f < FortificationCanon.BreachSealingWorkerHoursPerBreach)
+                if (progress.AccumulatedWorkerHours + 0.0001f < requiredWorkerHours)
                 {
                     break;
                 }
@@ -262,7 +275,8 @@ namespace Bloodlines.Fortification
         private static bool TryReserveStoneForCurrentBreach(
             ref List<FactionStockpileRecord> stockpiles,
             int stockpileIndex,
-            ref BreachSealingProgressComponent progress)
+            ref BreachSealingProgressComponent progress,
+            float requiredStone)
         {
             if (stockpileIndex < 0)
             {
@@ -270,22 +284,21 @@ namespace Bloodlines.Fortification
             }
 
             var stockpileRecord = stockpiles[stockpileIndex];
-            float requiredStone =
-                FortificationCanon.BreachSealingStoneCostPerBreach - progress.StoneReservedForCurrentBreach;
-            if (requiredStone <= 0f)
+            float remainingStoneToReserve = requiredStone - progress.StoneReservedForCurrentBreach;
+            if (remainingStoneToReserve <= 0f)
             {
-                progress.StoneReservedForCurrentBreach = FortificationCanon.BreachSealingStoneCostPerBreach;
+                progress.StoneReservedForCurrentBreach = requiredStone;
                 return true;
             }
 
-            if (stockpileRecord.Stockpile.Stone < requiredStone)
+            if (stockpileRecord.Stockpile.Stone < remainingStoneToReserve)
             {
                 return false;
             }
 
-            stockpileRecord.Stockpile.Stone -= requiredStone;
+            stockpileRecord.Stockpile.Stone -= remainingStoneToReserve;
             stockpiles[stockpileIndex] = stockpileRecord;
-            progress.StoneReservedForCurrentBreach = FortificationCanon.BreachSealingStoneCostPerBreach;
+            progress.StoneReservedForCurrentBreach = requiredStone;
             return true;
         }
 
