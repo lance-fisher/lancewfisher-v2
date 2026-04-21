@@ -2687,3 +2687,31 @@ This observability follow-up is complete on `codex/unity-fortification-breach-de
 - `node tests/runtime-bridge.mjs`: PASS
 - Contract staleness check: PASS at revision `46` before the revision-47 contract update
 - Dedicated tier-scaling smoke: PASS with marker `BLOODLINES_BREACH_SEALING_TIER_SCALING_SMOKE PASS`
+
+## Codex Fortification Siege Sub-Slice 12: Sealing Worker Locality (2026-04-21)
+
+### Status: COMPLETE on branch codex/unity-fortification-sealing-worker-locality
+
+### What Landed
+- `BreachSealingSystem` now ties sealing labor to the settlement's own control-point footprint instead of a faction-wide idle-worker pool. The system resolves the settlement's nearest same-owner control point, resolves each idle worker's nearest control point, and only spends labor when those anchors match.
+- The worker scan now requires `PositionComponent` and owner match on the worker's nearest `ControlPointComponent`, so same-faction workers parked near another settlement no longer poach this settlement's breach closure.
+- New dedicated validator `BloodlinesBreachSealingWorkerLocalitySmokeValidation` plus wrapper prove local sealing, same-faction other-settlement blocking, no-workers blocking, and non-idle blocking.
+- Full governed validation is green on `D:\BLF12\bloodlines`, again using worktree-local wrapper copies for the path-pinned bootstrap runtime and scene-shell gates. Contract revision advanced `47 -> 48`.
+
+### Immediate Next Fortification Action
+1. Merge `codex/unity-fortification-sealing-worker-locality`.
+2. Fetch `origin/master` again after the merge lands.
+3. Continue on sub-slice 13 with `codex/unity-fortification-repair-narrative`.
+
+### Validation Notes
+- `dotnet build` runtime and editor gates: PASS
+- Bootstrap runtime smoke: PASS via worktree-local wrapper copy
+- Combat smoke: PASS
+- Scene shells: Bootstrap + Gameplay PASS via worktree-local wrapper copies
+- Fortification smoke: PASS
+- Siege smoke: PASS
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision `48` after the contract and continuity updates
+- Dedicated worker-locality smoke: PASS with marker `BLOODLINES_BREACH_SEALING_WORKER_LOCALITY_SMOKE PASS`
+- The first post-compile locality-smoke rerun exited immediately with return code `1` before the validator executed. One 10-second retry passed cleanly, so no block remains.
