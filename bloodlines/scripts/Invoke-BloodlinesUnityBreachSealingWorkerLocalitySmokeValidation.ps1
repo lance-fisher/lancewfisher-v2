@@ -25,7 +25,7 @@ $arguments = @(
     '-quit'
     '-projectPath', $projectPath
     '-logFile', $logPath
-    '-executeMethod', 'Bloodlines.EditorTools.BloodlinesBreachSealingRecoverySmokeValidation.RunBatchBreachSealingWorkerLocalitySmokeValidationBridge'
+    '-executeMethod', 'Bloodlines.EditorTools.BloodlinesBreachSealingRecoverySmokeValidation.RunBatchBreachSealingRecoverySmokeValidation'
 )
 
 function Get-ValidationOutcome {
@@ -52,8 +52,20 @@ function Invoke-UnityValidationPass {
         Remove-Item -LiteralPath $logPath -Force
     }
 
-    $process = Start-Process -FilePath $unityPath -ArgumentList $arguments -PassThru -Wait
-    return $process.ExitCode
+    $previousMode = $env:BLOODLINES_BREACH_SEALING_MODE
+    $env:BLOODLINES_BREACH_SEALING_MODE = 'worker-locality'
+
+    try {
+        $process = Start-Process -FilePath $unityPath -ArgumentList $arguments -PassThru -Wait
+        return $process.ExitCode
+    }
+    finally {
+        if ($null -eq $previousMode) {
+            Remove-Item Env:BLOODLINES_BREACH_SEALING_MODE -ErrorAction SilentlyContinue
+        } else {
+            $env:BLOODLINES_BREACH_SEALING_MODE = $previousMode
+        }
+    }
 }
 
 Write-Host 'Running Bloodlines Unity breach sealing worker locality smoke validation...'
