@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-20T15:53:36.2665279-06:00",
+  "updated_at": "2026-04-21T15:33:06.5907353-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -481,14 +481,14 @@
   "latest_unity_conviction_handoff": "docs/unity/session-handoffs/2026-04-17-unity-conviction-scoring-and-bands.md",
   "latest_unity_dynasty_handoff": "docs/unity/session-handoffs/2026-04-17-unity-dynasty-core.md",
   "latest_unity_faith_handoff": "docs/unity/session-handoffs/2026-04-17-unity-faith-commitment-and-intensity.md",
-  "latest_unity_fortification_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-sealing-recovery.md",
+  "latest_unity_fortification_handoff": "docs/unity/session-handoffs/2026-04-21-unity-fortification-siege-sealing-cost-tier-scaling.md",
   "latest_governance_handoff": "docs/unity/session-handoffs/2026-04-17-governance-contract-source-of-truth.md",
   "latest_browser_to_unity_migration_plan": "docs/plans/2026-04-17-browser-to-unity-migration-plan.md",
   "concurrent_session_contract": {
     "path": "docs/unity/CONCURRENT_SESSION_CONTRACT.md",
-    "revision": 39,
-    "last_updated": "2026-04-19",
-    "last_updated_by": "codex-unity-fortification-breach-sealing-recovery-2026-04-19",
+    "revision": 47,
+    "last_updated": "2026-04-21",
+    "last_updated_by": "codex-fortification-sealing-cost-tier-scaling-2026-04-21",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
     "active_lanes": [
       "ai-strategic-layer",
@@ -1673,6 +1673,15 @@
       "description": "The active codex dynasty-house parity lane now covers the minor-house levy and breakaway-spawn follow-through on top of the earlier marriage and lesser-house slices. MarriageComponents.cs expands MinorHouseLevyComponent with origin parent, claim id, levy status, retinue metrics, last levy metadata, and parent-pressure tempo. LesserHouseLoyaltyDriftSystem now seeds breakaway minors with stockpile, population, dynasty legitimacy, inherited faith, and a stabilized border claim control point. MinorHouseLevySystem now mirrors browser tickMinorHouseTerritorialLevies and getMinorHousePressureOpportunityProfile: landless/dispossessed/contested/unsettled decay, loyalty threshold 48, retinue-cap calculation, pressure tempo bonuses, and militia/swordsman/bowman profile selection with resource and loyalty spend plus live ECS combat-unit spawning. BloodlinesMinorHouseLevyParitySmokeValidation proves claim creation, landless decay, pressured bowman raising, and muster-cap blocking; the lesser-house parity regression smoke also re-ran green. Full governed 10-gate chain green in D:\\BLAICD\\bloodlines via worktree-local wrapper copies for the path-pinned bootstrap and scene-shell gates. Contract rev 45->46.",
       "handoff": "docs/unity/session-handoffs/2026-04-20-unity-dynasty-minor-house-levy-parity.md",
       "validation_gates": "all 10 green plus minor-house levy parity smoke and lesser-house regression smoke"
+    },
+    {
+      "lane": "fortification-siege-sub-slice-11-sealing-cost-tier-scaling",
+      "date": "2026-04-21",
+      "branch": "codex/unity-fortification-sealing-cost-tier-scaling",
+      "status": "active",
+      "description": "FortificationCanon now resolves breach sealing cost and labor by fortification tier: Tier 1 stays at 60 stone and 8 worker-hours, Tier 2 scales to 90 stone and 12 worker-hours, and Tier 3 scales to 135 stone and 18 worker-hours. BreachSealingSystem now reads those helpers before reserving stone, checking funding, and accumulating progress so stronger settlements take more stone and labor to reseal. SettlementBreachTelemetry and BloodlinesBreachLegibilityReadoutSmokeValidation now report and assert the tier-aware sealing requirements, and the new BloodlinesBreachSealingTierScalingSmokeValidation proves Tier 1 baseline, Tier 2 scaling, Tier 3 scaling, and mixed-tier portfolio reservation behavior. The full governed 10-gate chain is green in D:\\BLF11\\bloodlines; worktree-local wrapper copies were used for the still-root-pinned bootstrap runtime and canonical scene-shell validators. Contract rev 46->47.",
+      "handoff": "docs/unity/session-handoffs/2026-04-21-unity-fortification-siege-sealing-cost-tier-scaling.md",
+      "validation_gates": "all 10 green plus breach sealing tier scaling smoke"
     }
   ]
 }

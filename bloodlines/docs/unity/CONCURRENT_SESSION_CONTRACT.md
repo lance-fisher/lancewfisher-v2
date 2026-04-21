@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 46
-- Last Updated: 2026-04-20
-- Last Updated By: codex-dynasty-minor-house-levy-parity-2026-04-20
-- Supersedes: revision 45 (Codex advances the active `dynasty-house-parity` lane onto `codex/unity-dynasty-minor-house-levy-parity`. Breakaway spawns now seed stockpile, population, dynasty legitimacy, inherited faith, and a stabilized border claim; `MinorHouseLevySystem` now ports claim ownership and stability gates, retinue-cap calculation, parent world-pressure tempo bonuses, and `militia`/`swordsman`/`bowman` levy profiles; `BloodlinesMinorHouseLevyParitySmokeValidation` proves claim creation, landless decay, pressured bowman raising, and muster-cap blocking. The dynasty parity lane is now in a clean pause state.)
+- Revision: 47
+- Last Updated: 2026-04-21
+- Last Updated By: codex-fortification-sealing-cost-tier-scaling-2026-04-21
+- Supersedes: revision 46 (Codex resumes the active `fortification-siege-imminent-engagement` lane on `codex/unity-fortification-sealing-cost-tier-scaling`. `FortificationCanon` now resolves breach sealing cost and labor by fortification tier: Tier 1 stays at `60` stone and `8` worker-hours, Tier 2 scales to `90` stone and `12` worker-hours, and Tier 3 scales to `135` stone and `18` worker-hours. `BreachSealingSystem` now reads those helpers before reserving stone, checking funding, and accumulating progress, so the runtime sealing loop matches browser-style tier pressure. `SettlementBreachTelemetry` and `BloodlinesBreachLegibilityReadoutSmokeValidation` now report and assert the tier-aware sealing requirements instead of the old flat constants, and the new dedicated `BloodlinesBreachSealingTierScalingSmokeValidation` proves Tier 1 baseline, Tier 2 scale-up, Tier 3 scale-up, and mixed-portfolio reservation behavior. The governed 10-gate chain is green in `D:\BLF11\bloodlines`, with worktree-safe wrapper copies used for the still-root-pinned bootstrap and scene-shell validators. The fortification lane stays active and the next unblocked follow-up is sub-slice 12 worker-locality gating.)
 
 
 ## Purpose
@@ -454,7 +454,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: fortification-siege-imminent-engagement
 
 - Status: active
-- Branch Prefix: `codex/unity-fortification-breach-depth-telemetry` (sub-slice 10), `codex/unity-fortification-destroyed-counter-recovery` (sub-slice 9), `codex/unity-fortification-breach-sealing-recovery` (sub-slice 8), `codex/unity-fortification-breach-legibility-readout` (sub-slice 7), `codex/unity-fortification-breach-assault-pressure` (sub-slice 6), `codex/unity-fortification-wall-segment-destruction` (sub-slice 5); prior `codex/unity-fortification-siege*` slices 1-4 also landed; future follow-ups should continue on fresh `codex/unity-fortification-*` branches
+- Branch Prefix: `codex/unity-fortification-sealing-cost-tier-scaling` (sub-slice 11), `codex/unity-fortification-breach-depth-telemetry` (sub-slice 10), `codex/unity-fortification-destroyed-counter-recovery` (sub-slice 9), `codex/unity-fortification-breach-sealing-recovery` (sub-slice 8), `codex/unity-fortification-breach-legibility-readout` (sub-slice 7), `codex/unity-fortification-breach-assault-pressure` (sub-slice 6), `codex/unity-fortification-wall-segment-destruction` (sub-slice 5); prior `codex/unity-fortification-siege*` slices 1-4 also landed; future follow-ups should continue on fresh `codex/unity-fortification-*` branches
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/Fortification/**`
@@ -479,6 +479,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBreachLegibilityReadoutSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBreachSealingRecoverySmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDestroyedCounterRecoverySmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBreachSealingTierScalingSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`
@@ -489,6 +490,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnityBreachLegibilityReadoutSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityBreachSealingRecoverySmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityDestroyedCounterRecoverySmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityBreachSealingTierScalingSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1` -- additive wrapper update preserved fortification smoke ownership while keeping the existing validation surface intact for the rebased imminent-engagement lane
   - `unity/Assembly-CSharp.csproj` -- verified Claude Bundle 3 runtime entries were present on disk and locally registered `DestroyedCounterRecoveryProgressComponent.cs` plus `DestroyedCounterRecoverySystem.cs` for the governed `dotnet build` gate; Unity-generated gitignored file, not part of the commit
@@ -504,8 +506,9 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-sealing-recovery.md`
   - `docs/unity/session-handoffs/2026-04-20-unity-fortification-siege-destroyed-counter-recovery.md`
   - `docs/unity/session-handoffs/2026-04-20-unity-fortification-siege-breach-depth-telemetry.md`
-- Current Branch In Flight: `codex/unity-fortification-breach-depth-telemetry`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-20-unity-fortification-siege-breach-depth-telemetry.md`
+  - `docs/unity/session-handoffs/2026-04-21-unity-fortification-siege-sealing-cost-tier-scaling.md`
+- Current Branch In Flight: `codex/unity-fortification-sealing-cost-tier-scaling`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-fortification-siege-sealing-cost-tier-scaling.md`
 
 ### Lane: dynasty-house-parity
 
@@ -541,7 +544,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: `fortification-siege-sub-slice-10-breach-depth-telemetry` is implemented on `codex/unity-fortification-breach-depth-telemetry` and documented in this revision. The fortification lane now exposes sealing and destroyed-counter recovery telemetry through one settlement-level debug surface while preserving the older breach readout shape. Further fortification follow-ups should continue using fresh `codex/unity-fortification-*` branches rather than widening the earlier fortification branches. Also note that the repo already contains a retired `tier2-batch-dynasty-systems` lane, and Codex now owns an active `dynasty-house-parity` follow-up lane covering marriage, lesser-house, and minor-house hardening work; do not duplicate that work under a new zero-code marriages lane, a parallel lesser-house lane, or a fresh minor-house lane.
+Note: `fortification-siege-sub-slice-11-sealing-cost-tier-scaling` is implemented on `codex/unity-fortification-sealing-cost-tier-scaling` and documented in this revision. The fortification lane now scales breach sealing cost and labor by settlement tier while preserving the sub-slice 10 breach telemetry surface for debug consumers. Further fortification follow-ups should continue using fresh `codex/unity-fortification-*` branches rather than widening the earlier fortification branches. The next unblocked fortification follow-up is sub-slice 12 worker-locality gating so idle-worker sealing can stop poaching labor across settlements. Also note that the repo already contains a retired `tier2-batch-dynasty-systems` lane, and Codex now owns an active `dynasty-house-parity` follow-up lane covering marriage, lesser-house, and minor-house hardening work; do not duplicate that work under a new zero-code marriages lane, a parallel lesser-house lane, or a fresh minor-house lane.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 

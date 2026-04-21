@@ -453,15 +453,19 @@ namespace Bloodlines.EditorTools
                 return false;
             }
 
+            float expectedSealingWorkerHours =
+                FortificationCanon.ResolveBreachSealingWorkerHoursPerBreach(telemetry.Readout.CurrentTier);
+            float expectedSealingStone =
+                FortificationCanon.ResolveBreachSealingStoneCostPerBreach(telemetry.Readout.CurrentTier);
             if (telemetry.Readout.OpenBreachCount != 2 ||
                 telemetry.Readout.DestroyedWallSegmentCount != 1 ||
                 telemetry.Readout.DestroyedGateCount != 1 ||
                 !telemetry.SealingEligible ||
                 !telemetry.SealingTracked ||
                 !Approximately(telemetry.SealingAccumulatedWorkerHours, 4f, 0.001f) ||
-                !Approximately(telemetry.SealingRequiredWorkerHours, FortificationCanon.BreachSealingWorkerHoursPerBreach, 0.001f) ||
-                !Approximately(telemetry.SealingReservedStone, FortificationCanon.BreachSealingStoneCostPerBreach, 0.001f) ||
-                !Approximately(telemetry.SealingRequiredStone, FortificationCanon.BreachSealingStoneCostPerBreach, 0.001f) ||
+                !Approximately(telemetry.SealingRequiredWorkerHours, expectedSealingWorkerHours, 0.001f) ||
+                !Approximately(telemetry.SealingReservedStone, expectedSealingStone, 0.001f) ||
+                !Approximately(telemetry.SealingRequiredStone, expectedSealingStone, 0.001f) ||
                 !Approximately(telemetry.SealingProgress01, 0.5f, 0.001f) ||
                 telemetry.RecoveryEligible ||
                 telemetry.RecoveryTracked ||

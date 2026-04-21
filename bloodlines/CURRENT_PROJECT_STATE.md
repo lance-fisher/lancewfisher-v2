@@ -2402,3 +2402,31 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 ### Recommended Next Follow-Up
 1. The dynasty-house parity lane can pause cleanly. Under the current contract, scout raids or logistics interdiction are the safest next non-AI targets.
 2. Optional dynasty follow-up only if Lance wants more parity before that: founder-member and ceremonial-message provenance on defected minor-house spawns.
+
+## Codex Fortification Siege Sub-Slice 11: Sealing Cost Tier Scaling (2026-04-21)
+
+### Status: COMPLETE on branch codex/unity-fortification-sealing-cost-tier-scaling
+
+### What Was Done
+- `FortificationCanon` now resolves breach-sealing economy by fortification tier: Tier 1 stays at `60` stone / `8` worker-hours, Tier 2 scales to `90` / `12`, and Tier 3 scales to `135` / `18`.
+- `BreachSealingSystem` now reads those helpers before funding and progress accumulation so open-breach closure cost tracks settlement strength instead of using the old flat constants.
+- `SettlementBreachTelemetry` and `BloodlinesBreachLegibilityReadoutSmokeValidation` now report and assert the tier-aware sealing requirements, so sub-slice 10 telemetry remains truthful after the balance change.
+- New dedicated validator `BloodlinesBreachSealingTierScalingSmokeValidation` plus wrapper `scripts/Invoke-BloodlinesUnityBreachSealingTierScalingSmokeValidation.ps1` prove Tier 1 baseline, Tier 2 scaling, Tier 3 scaling, and mixed-tier portfolio reservation behavior.
+- Full governed validation is green on `D:\BLF11\bloodlines`, with worktree-safe wrapper copies used for the still-root-pinned bootstrap runtime and canonical scene-shell validators. Contract bumped revision `46 -> 47`.
+
+### Gate Results
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS with existing editor warnings only
+- Bootstrap runtime smoke: PASS via worktree-local wrapper copy under the Unity lock
+- Combat smoke: PASS
+- Scene shells: Bootstrap + Gameplay PASS via worktree-local wrapper copies under the Unity lock
+- Fortification smoke: PASS
+- Siege smoke: PASS
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision `46` before the revision-47 doc bump; re-run required after the continuity and contract updates
+- Dedicated breach sealing tier scaling smoke: PASS with marker `BLOODLINES_BREACH_SEALING_TIER_SCALING_SMOKE PASS`
+
+### Recommended Next Fortification Follow-Up
+1. Sub-slice 12 worker-locality gating so only idle workers local to the settlement's own control point can contribute to breach sealing.
+2. Sub-slice 13 repair narrative after locality lands, so breach closure and destroyed-counter rebuilds emit the required info-tone messages without cross-settlement labor leakage.
