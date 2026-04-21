@@ -37,6 +37,15 @@ namespace Bloodlines.EditorTools
 
         public static void RunBatchBreachSealingRecoverySmokeValidation()
         {
+            if (string.Equals(
+                    Environment.GetEnvironmentVariable("BLOODLINES_BREACH_SEALING_MODE"),
+                    "worker-locality",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                BloodlinesBreachSealingWorkerLocalitySmokeValidation.RunBatchBreachSealingWorkerLocalitySmokeValidation();
+                return;
+            }
+
             RunInternal(batchMode: true);
         }
 
