@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Bloodlines.AI;
 using Bloodlines.Components;
 using Bloodlines.GameTime;
 using Bloodlines.Siege;
@@ -142,13 +143,16 @@ namespace Bloodlines.Fortification
                             idleWorkers[laborIndex] = labor;
 
                             AccumulateSealingProgress(
+                                entityManager,
                                 ref stockpiles,
                                 stockpileIndex,
                                 ref fortification,
                                 ref progress,
                                 elapsedInWorldDays,
                                 requiredStone,
-                                requiredWorkerHours);
+                                requiredWorkerHours,
+                                factions[i].FactionId,
+                                fortification.SettlementId);
                         }
                     }
                 }
@@ -289,13 +293,16 @@ namespace Bloodlines.Fortification
         }
 
         private static void AccumulateSealingProgress(
+            EntityManager entityManager,
             ref List<FactionStockpileRecord> stockpiles,
             int stockpileIndex,
             ref FortificationComponent fortification,
             ref BreachSealingProgressComponent progress,
             float elapsedInWorldDays,
             float requiredStone,
-            float requiredWorkerHours)
+            float requiredWorkerHours,
+            FixedString32Bytes factionId,
+            FixedString64Bytes settlementId)
         {
             float remainingWorkerHours = math.max(0f, elapsedInWorldDays * 24f);
             while (remainingWorkerHours > 0f && fortification.OpenBreachCount > 0)
@@ -326,7 +333,21 @@ namespace Bloodlines.Fortification
                 fortification.OpenBreachCount = math.max(0, fortification.OpenBreachCount - 1);
                 progress.AccumulatedWorkerHours = 0f;
                 progress.StoneReservedForCurrentBreach = 0f;
+                PushBreachClosedMessage(entityManager, factionId, settlementId);
             }
+        }
+
+        private static void PushBreachClosedMessage(
+            EntityManager entityManager,
+            FixedString32Bytes factionId,
+            FixedString64Bytes settlementId)
+        {
+            var message = new FixedString128Bytes();
+            message.Append(factionId);
+            message.Append((FixedString64Bytes)"'s masons seal a breach at ");
+            message.Append(settlementId);
+            message.Append((FixedString32Bytes)".");
+            NarrativeMessageBridge.Push(entityManager, message, NarrativeMessageTone.Info);
         }
 
         private static bool TryReserveStoneForCurrentBreach(

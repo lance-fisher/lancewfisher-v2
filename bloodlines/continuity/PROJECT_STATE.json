@@ -1691,6 +1691,24 @@
       "description": "BreachSealingSystem now gates repair labor to the settlement's own control-point footprint instead of a faction-wide idle-worker bucket. The system resolves the settlement's nearest same-owner control point from the settlement anchor position, resolves each idle worker's nearest control point from worker PositionComponent, requires owner match on that nearest ControlPointComponent, and only spends labor when the worker and settlement resolve to the same control-point anchor. Same-faction workers near another settlement no longer poach breach closure here. New BloodlinesBreachSealingWorkerLocalitySmokeValidation plus wrapper prove local sealing, other-settlement blocking, no-workers blocking, and non-idle blocking. The full governed 10-gate chain is green in D:\\BLF12\\bloodlines; worktree-local wrapper copies were again used for the still-root-pinned bootstrap runtime and canonical scene-shell validators. Contract rev 47->48.",
       "handoff": "docs/unity/session-handoffs/2026-04-21-unity-fortification-siege-sealing-worker-locality.md",
       "validation_gates": "all 10 green plus breach sealing worker locality smoke"
+    },
+    {
+      "lane": "fortification-siege-sub-slice-13-repair-narrative",
+      "date": "2026-04-21",
+      "branch": "codex/unity-fortification-repair-narrative",
+      "status": "active",
+      "description": "BreachSealingSystem now pushes one info-tone NarrativeMessageBridge line each time a breach closes, and DestroyedCounterRecoverySystem now pushes one info-tone repair line each time a destroyed counter rebuild completes. New BloodlinesFortificationRepairNarrativeSmokeValidation plus wrapper prove single-breach closure, three-breach closure, and wall-rebuild emission. The full governed 10-gate chain is green in D:\\BLF13\\bloodlines with worktree-local wrapper copies still used for the root-pinned bootstrap runtime and canonical scene-shell validators. Contract rev 48->49.",
+      "handoff": "docs/unity/session-handoffs/2026-04-21-unity-fortification-repair-narrative.md",
+      "validation_gates": "all 10 green plus fortification repair narrative smoke"
+    },
+    {
+      "lane": "fortification-siege-session-wrap-10-through-13",
+      "date": "2026-04-21",
+      "branch": "codex/unity-fortification-repair-narrative",
+      "status": "complete",
+      "description": "The fortification-siege queue is now closed through sub-slice 13. Sub-slice 10 breach-depth telemetry, sub-slice 11 sealing-cost tier scaling, sub-slice 12 worker locality, and sub-slice 13 repair narrative are all landed. The slice 12 worker-locality smoke-wrapper fixup was merged before sub-slice 13 so future locality validation is stable on master. No approved fortification sub-slice 14 remains; future fortification work now requires fresh operator direction or a lane handoff to the next arc.",
+      "handoff": "docs/unity/session-handoffs/2026-04-21-unity-fortification-siege-session-wrap-10-through-13.md",
+      "validation_gates": "session wrap only; sub-slice 13 closed with all 10 gates green plus fortification repair narrative smoke"
     }
   ]
 }

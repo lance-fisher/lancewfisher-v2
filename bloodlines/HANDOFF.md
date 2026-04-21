@@ -1,35 +1,38 @@
-# Session Handoff - 2026-04-21 - Codex fortification-siege sub-slice 12
+# Session Handoff - 2026-04-21 - Codex fortification-siege session wrap 10 through 13
 
 ## Task
 
-Fortification-siege sub-slice 12 sealing worker locality is complete. The
-recommended next slice is sub-slice 13 fortification repair narrative on a
-fresh `codex/unity-fortification-repair-narrative` branch after re-fetching
-`origin/master`.
+The fortification-siege queue is complete through sub-slice 13. No further
+fortification slice is currently approved. The next pickup should either
+define a new operator-directed sub-slice 14 or hand Codex to a different
+approved arc after refreshing `origin/master`.
 
 ## Status
 
-- [x] Complete: fortification-siege sub-slice 12 sealing worker locality
-- [x] Contract bumped to revision 48
-- [x] Continuity files and per-slice handoff updated
+- [x] Complete: fortification-siege sub-slice 13 repair narrative
+- [x] Complete: fortification-siege queue wrap through sub-slice 13
+- [x] Contract bumped to revision 49
+- [x] Continuity files, per-slice handoff, and session wrap updated
 - [ ] In progress: none
 - [ ] Blocked: none
 
-## Completed In The Previous Session
+## Completed In This Session
 
-**Sub-slice 12 sealing worker locality** shipped on
-`codex/unity-fortification-sealing-worker-locality`.
+**Sub-slice 13 repair narrative** shipped on
+`codex/unity-fortification-repair-narrative`.
 
 - `unity/Assets/_Bloodlines/Code/Fortification/BreachSealingSystem.cs`
-  - breach sealing now resolves the settlement's nearest same-owner control
-    point and only counts idle workers whose own nearest control point matches
-    that settlement anchor
-  - same-faction workers parked near another settlement no longer poach breach
-    closure labor here
-- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBreachSealingWorkerLocalitySmokeValidation.cs`
-- `scripts/Invoke-BloodlinesUnityBreachSealingWorkerLocalitySmokeValidation.ps1`
-  - new dedicated validator and wrapper covering local sealing,
-    other-settlement blocking, no-workers blocking, and non-idle blocking
+  - breach closures now push info-tone narrative lines through
+    `NarrativeMessageBridge`
+- `unity/Assets/_Bloodlines/Code/Fortification/DestroyedCounterRecoverySystem.cs`
+  - destroyed-counter rebuild completions now push info-tone repair lines
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationRepairNarrativeSmokeValidation.cs`
+- `scripts/Invoke-BloodlinesUnityFortificationRepairNarrativeSmokeValidation.ps1`
+  - new dedicated validator and wrapper covering one-breach closure,
+    three-breach closure, and wall-rebuild narrative emission
+
+**Fortification queue wrap 10 through 13** is recorded in
+`docs/unity/session-handoffs/2026-04-21-unity-fortification-siege-session-wrap-10-through-13.md`.
 
 Validation remained green:
 
@@ -44,17 +47,17 @@ Validation remained green:
 9. `node tests/data-validation.mjs`
 10. `node tests/runtime-bridge.mjs`
 11. `scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1`
-12. breach sealing worker locality smoke
+12. fortification repair narrative smoke
 
 ## Next Action (Specific)
 
 1. `git -C D:/ProjectsHome/FisherSovereign/lancewfisher-v2 fetch origin`
 2. `git -C D:/ProjectsHome/FisherSovereign/lancewfisher-v2 log --oneline origin/master -5`
-3. Confirm the contract top matter shows revision `48`.
-4. Branch from the refreshed `origin/master` onto
-   `codex/unity-fortification-repair-narrative`.
-5. Implement sub-slice 13 so breach closures and destroyed-counter rebuilds
-   push the required info-tone narrative messages.
+3. Confirm the contract top matter shows revision `49`.
+4. If Lance wants more fortification work, define and claim a fresh
+   `codex/unity-fortification-*` branch for sub-slice 14 or later.
+5. Otherwise claim the next approved Codex lane after reading the owner
+   direction and the fortification session wrap.
 
 ## Context Notes
 
@@ -65,6 +68,5 @@ Validation remained green:
 - `unity/Assembly-CSharp.csproj` and `unity/Assembly-CSharp-Editor.csproj` are
   still gitignored Unity outputs. Regenerate them locally after branch switches
   before the `dotnet build` gates.
-- The first dedicated locality-smoke rerun after script compilation exited with
-  return code `1` before the validator executed. One 10-second retry passed
-  cleanly, so the slice is not blocked.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.

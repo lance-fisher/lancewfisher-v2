@@ -2461,3 +2461,43 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 ### Recommended Next Fortification Follow-Up
 1. Sub-slice 13 repair narrative so breach closures and destroyed-counter rebuilds emit the required info-tone narrative pushes.
 2. After the repair narrative lands, continue through any remaining fortification-siege follow-ups or hand the lane back for the next arc.
+
+## Codex Fortification Siege Sub-Slice 13: Repair Narrative (2026-04-21)
+
+### Status: COMPLETE on branch codex/unity-fortification-repair-narrative
+
+### What Was Done
+- `BreachSealingSystem` now pushes one info-tone narrative message through `NarrativeMessageBridge` each time a breach closes: `"<faction>'s masons seal a breach at <settlement>."`
+- `DestroyedCounterRecoverySystem` now pushes one info-tone repair message each time a destroyed counter rebuild completes, with wall rebuilds matching the prompt-accurate `"<faction> rebuilds a wall at <settlement>."` line and the same pattern reused for other rebuilt fortification kinds.
+- New dedicated validator `BloodlinesFortificationRepairNarrativeSmokeValidation` plus wrapper `scripts/Invoke-BloodlinesUnityFortificationRepairNarrativeSmokeValidation.ps1` prove single-breach closure, three-breach closure, and wall-rebuild narrative emission.
+- Full governed validation is green on `D:\BLF13\bloodlines`, with worktree-safe wrapper copies still used for the root-pinned bootstrap runtime and canonical scene-shell validators. Contract bumped revision `48 -> 49`.
+
+### Gate Results
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS with existing editor warnings only
+- Bootstrap runtime smoke: PASS via worktree-local wrapper copy under the Unity lock
+- Combat smoke: PASS
+- Scene shells: Bootstrap + Gameplay PASS via worktree-local wrapper copies under the Unity lock
+- Fortification smoke: PASS
+- Siege smoke: PASS
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision `49` after the continuity and contract updates
+- Dedicated fortification repair narrative smoke: PASS with marker `BLOODLINES_FORTIFICATION_REPAIR_NARRATIVE_SMOKE PASS`
+
+### Recommended Next Fortification Follow-Up
+1. No queued fortification sub-slice remains after sub-slice 13.
+2. Future fortification work now requires an operator-defined sub-slice 14 or a lane handoff to the next arc.
+
+## Codex Fortification Siege Session Wrap 10 Through 13 (2026-04-21)
+
+### Status: CURRENT QUEUE CLOSED
+
+### What Was Done
+- The current fortification-siege queue is now closed through sub-slice 13: breach-depth telemetry, sealing cost tier scaling, sealing worker locality, and repair narrative are all landed.
+- The slice 12 worker-locality smoke-wrapper fixup was merged before sub-slice 13 so the locality validator is now stable on master instead of depending on the brittle one-off execute-method bridge.
+- The fortification lane has no approved next slice. Further work now depends on a fresh operator-defined follow-up rather than an implied continuation.
+
+### Recommended Next Follow-Up
+1. Fetch `origin/master`, confirm contract revision `49`, and wait for Lance to define sub-slice 14 if fortification work should continue.
+2. Otherwise claim a different approved Codex lane and leave fortification idle.
