@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 49
+- Revision: 50
 - Last Updated: 2026-04-21
-- Last Updated By: codex-fortification-repair-narrative-2026-04-21
-- Supersedes: revision 48 (Codex closes the queued fortification-siege follow-up on `codex/unity-fortification-repair-narrative`. `BreachSealingSystem` now pushes info-tone narrative messages when breaches close, and `DestroyedCounterRecoverySystem` now pushes info-tone repair messages when destroyed counters rebuild. The new dedicated `BloodlinesFortificationRepairNarrativeSmokeValidation` proves single-breach closure, three-breach closure, and wall-rebuild narrative emission. The governed 10-gate chain is green in `D:\BLF13\bloodlines`, with worktree-safe wrapper copies still required for the root-pinned bootstrap and scene-shell validators. The fortification-siege queue through sub-slice 13 is now complete; any further fortification work requires a fresh operator-defined sub-slice 14 or a lane handoff to the next arc.)
+- Last Updated By: codex-scout-raids-logistics-interdiction-2026-04-21
+- Supersedes: revision 49 (Codex rebases the active `scout-raids-logistics-interdiction` lane onto the latest revision-49 master that already contains fortification sub-slices 11-13 and the fortification session wrap. The contract now preserves that latest fortification closure state, keeps `dynasty-house-parity` paused after the landed parity stack, and carries the scout-raids lane forward as the active Codex non-AI runtime lane on `codex/unity-scout-raids-logistics-interdiction` pending validation rerun and merge.)
 
 
 ## Purpose
@@ -453,7 +453,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: fortification-siege-imminent-engagement
 
-- Status: active
+- Status: paused (the fortification queue is closed cleanly through sub-slice 13; any future sub-slice 14 requires fresh operator direction)
 - Branch Prefix: `codex/unity-fortification-repair-narrative` (sub-slice 13), `codex/unity-fortification-sealing-worker-locality` (sub-slice 12), `codex/unity-fortification-sealing-cost-tier-scaling` (sub-slice 11), `codex/unity-fortification-breach-depth-telemetry` (sub-slice 10), `codex/unity-fortification-destroyed-counter-recovery` (sub-slice 9), `codex/unity-fortification-breach-sealing-recovery` (sub-slice 8), `codex/unity-fortification-breach-legibility-readout` (sub-slice 7), `codex/unity-fortification-breach-assault-pressure` (sub-slice 6), `codex/unity-fortification-wall-segment-destruction` (sub-slice 5); prior `codex/unity-fortification-siege*` slices 1-4 also landed; future follow-ups should continue on fresh `codex/unity-fortification-*` branches
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -521,7 +521,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: dynasty-house-parity
 
-- Status: active
+- Status: paused (marriage, lesser-house, and minor-house parity stack landed cleanly)
 - Branch Prefix: `codex/unity-dynasty-*`
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -546,14 +546,40 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - Browser Reference:
   - `src/game/core/simulation.js` `MARRIAGE_GESTATION_IN_WORLD_DAYS` (6088), `MARRIAGE_DISSOLUTION_LEGITIMACY_LOSS` (6089), `MARRIAGE_DISSOLUTION_OATHKEEPING_GAIN` (6090), `dissolveMarriageFromDeath` (6382), `tickLesserHouseLoyaltyDrift` (~6631), `spawnDefectedMinorTerritoryClaim` (~6801), `spawnDefectedMinorFaction` (~6851), `getMinorHouseClaim` (~6982), `ensureMinorHouseLevyState` (~6996), `getMinorHouseRetinueCap` (~7011), `pickMinorHouseLevyProfile` (~7024), `spawnMinorHouseRetinueUnit` (~7034), `tickMinorHouseTerritorialLevies` (~7060), `getMinorHousePressureOpportunityProfile` (~13913), `MARRIAGE_PROPOSAL_EXPIRATION_IN_WORLD_DAYS` (7272), `tickMarriageProposalExpiration` (7274), `tickMarriageDissolutionFromDeath` (7471), `tickMarriageGestation` (7496)
   - `tests/runtime-bridge.mjs` mixed-bloodline and death-dissolution assertions (3180-3229, 3270-3297)
-- Current Branch In Flight: `codex/unity-dynasty-minor-house-levy-parity`
+- Current Branch In Flight: none
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-20-unity-dynasty-minor-house-levy-parity.md`
+
+### Lane: scout-raids-logistics-interdiction
+
+- Status: active
+- Branch Prefix: `codex/unity-scout-raids-logistics-interdiction`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Raids/**`
+  - `unity/Assets/_Bloodlines/Code/Systems/WorkerGatherSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Economy/ResourceTrickleBuildingSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesScoutRaidAndInterdictionSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityScoutRaidAndInterdictionSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs` -- additive bootstrap spawn wiring for `BuildingRaidStateComponent` on raidable structures
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.cs` -- additive debug construction spawn wiring for `BuildingRaidStateComponent`
+- Coordinated Same-Agent Edits On Fortification-Owned Paths:
+  - `unity/Assets/_Bloodlines/Code/Siege/FieldWaterSupportScanSystem.cs` -- active raid state now suppresses well and supply-camp support sources until expiry
+  - `unity/Assets/_Bloodlines/Code/Siege/SiegeSupportRefreshSystem.cs` -- active raid state now suppresses raided supply camps as linked logistics anchors
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-20-unity-scout-raids-and-logistics-interdiction.md`
+  - `docs/unity/session-handoffs/2026-04-21-unity-scout-raids-logistics-interdiction-rebase-validation.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `SCOUT_RAID_TARGET_RANGE` (35), `SCOUT_RAID_RETREAT_DISTANCE` (36), `SCOUT_RAID_LOYALTY_RADIUS` (37), `isBuildingUnderScoutRaid` (2046), `getRaidRetreatCommand` (2349), `executeScoutRaid` (2362), `executeScoutLogisticsInterdiction` (2515)
+- Current Branch In Flight: `codex/unity-scout-raids-logistics-interdiction`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-scout-raids-logistics-interdiction-rebase-validation.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: `fortification-siege-sub-slice-12-sealing-worker-locality` is implemented on `codex/unity-fortification-sealing-worker-locality` and documented in this revision. The fortification lane now gates breach sealing labor to the settlement's own control-point footprint, closing the cross-settlement worker-poaching gap without introducing a new stored settlement-control-point foreign key. Further fortification follow-ups should continue using fresh `codex/unity-fortification-*` branches rather than widening the earlier fortification branches. The next unblocked fortification follow-up is sub-slice 13 fortification repair narrative so breach closures and destroyed-counter rebuilds emit the required info-tone narrative messages. Also note that the repo already contains a retired `tier2-batch-dynasty-systems` lane, and Codex now owns an active `dynasty-house-parity` follow-up lane covering marriage, lesser-house, and minor-house hardening work; do not duplicate that work under a new zero-code marriages lane, a parallel lesser-house lane, or a fresh minor-house lane.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the `fortification-siege-imminent-engagement` lane is paused unless Lance explicitly defines a fresh fortification sub-slice 14. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. Codex now owns the active `scout-raids-logistics-interdiction` lane; future non-AI work should either continue there or claim a different unblocked lane explicitly.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 

@@ -5,6 +5,7 @@ using BattlefieldCameraController = Bloodlines.Camera.BloodlinesBattlefieldCamer
 using Bloodlines.Authoring;
 using Bloodlines.Components;
 using Bloodlines.DataDefinitions;
+using Bloodlines.Raids;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -1125,6 +1126,7 @@ namespace Bloodlines.Debug
                 Max = maxHealth,
             });
             entityManager.AddComponentData(buildingEntity, CreateBuildingTypeComponent(buildingDefinition));
+            entityManager.AddComponentData(buildingEntity, new BuildingRaidStateComponent());
             entityManager.AddComponentData(buildingEntity, new ConstructionStateComponent
             {
                 RemainingSeconds = math.max(0.1f, buildingDefinition.buildTime),
