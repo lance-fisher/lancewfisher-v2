@@ -1,4 +1,5 @@
 using Bloodlines.Components;
+using Bloodlines.Raids;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -54,6 +55,14 @@ namespace Bloodlines.Systems
                 }
 
                 if (entityManager.HasComponent<ConstructionStateComponent>(entity))
+                {
+                    continue;
+                }
+
+                if (entityManager.HasComponent<BuildingRaidStateComponent>(entity) &&
+                    ScoutRaidCanon.IsBuildingRaided(
+                        entityManager.GetComponentData<BuildingRaidStateComponent>(entity),
+                        SystemAPI.Time.ElapsedTime))
                 {
                     continue;
                 }

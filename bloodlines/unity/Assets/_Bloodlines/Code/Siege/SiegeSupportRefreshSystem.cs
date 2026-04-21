@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Bloodlines.Components;
+using Bloodlines.Raids;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -96,6 +97,14 @@ namespace Bloodlines.Siege
                 .WithEntityAccess())
             {
                 if (health.ValueRO.Current <= 0f || !buildingType.ValueRO.SupportsSiegeLogistics)
+                {
+                    continue;
+                }
+
+                if (entityManager.HasComponent<BuildingRaidStateComponent>(entity) &&
+                    ScoutRaidCanon.IsBuildingRaided(
+                        entityManager.GetComponentData<BuildingRaidStateComponent>(entity),
+                        elapsed))
                 {
                     continue;
                 }

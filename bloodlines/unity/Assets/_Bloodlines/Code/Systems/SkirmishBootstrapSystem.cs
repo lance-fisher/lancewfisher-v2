@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Bloodlines.Components;
+using Bloodlines.Raids;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -363,6 +364,7 @@ namespace Bloodlines.Systems
                 SupportsSiegePreparation = seed.SupportsSiegePreparation,
                 SupportsSiegeLogistics = seed.SupportsSiegeLogistics,
             });
+            entityManager.AddComponentData(entity, new BuildingRaidStateComponent());
             entityManager.AddComponentData(entity, new ProductionFacilityComponent
             {
                 SpawnSequence = 0,

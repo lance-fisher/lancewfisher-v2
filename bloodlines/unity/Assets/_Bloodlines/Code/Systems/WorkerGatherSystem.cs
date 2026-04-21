@@ -1,4 +1,5 @@
 using Bloodlines.Components;
+using Bloodlines.Raids;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -15,7 +16,8 @@ namespace Bloodlines.Systems
     /// Scope of this first slice:
     /// - Any resource type can be assigned; deposits accrue into the faction's
     ///   ResourceStockpileComponent field that matches the carry resource.
-    /// - Drop-off is the nearest alive, fully-built, faction-owned command_hall.
+    /// - Drop-off is the nearest alive, fully-built, faction-owned structure that
+    ///   accepts the carried resource and is not under active scout raid.
     /// - Movement is driven through the existing MoveCommandComponent, keeping
     ///   the pattern consistent with player-issued moves.
     /// </summary>
@@ -23,8 +25,6 @@ namespace Bloodlines.Systems
     [UpdateAfter(typeof(UnitProductionSystem))]
     public partial struct WorkerGatherSystem : ISystem
     {
-        private const string CommandHallBuildingType = "command_hall";
-
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<WorkerGatherComponent>();
@@ -39,6 +39,7 @@ namespace Bloodlines.Systems
             }
 
             var entityManager = state.EntityManager;
+            double elapsed = SystemAPI.Time.ElapsedTime;
 
             using var workerEntities = CollectWorkerEntities(entityManager);
             foreach (var workerEntity in workerEntities)
@@ -90,7 +91,7 @@ namespace Bloodlines.Systems
                         AdvanceGathering(entityManager, workerEntity, workerPosition, dt, ref gather);
                         break;
                     case WorkerGatherPhase.Returning:
-                        AdvanceReturning(entityManager, workerEntity, workerPosition, workerFaction, ref gather);
+                        AdvanceReturning(entityManager, workerEntity, workerPosition, workerFaction, elapsed, ref gather);
                         break;
                     case WorkerGatherPhase.Depositing:
                         AdvanceDepositing(entityManager, workerEntity, workerPosition, workerFaction, ref gather);
@@ -177,9 +178,14 @@ namespace Bloodlines.Systems
             Entity workerEntity,
             float3 workerPosition,
             FixedString32Bytes workerFaction,
+            double elapsed,
             ref WorkerGatherComponent gather)
         {
-            if (!TryFindNearestDropOff(entityManager, workerFaction, workerPosition, out var dropOffPosition))
+            FixedString32Bytes resourceId = gather.CarryResourceId.Length > 0
+                ? gather.CarryResourceId
+                : gather.AssignedResourceId;
+
+            if (!TryFindNearestDropOff(entityManager, workerFaction, resourceId, workerPosition, elapsed, out var dropOffPosition))
             {
                 return;
             }
@@ -266,7 +272,9 @@ namespace Bloodlines.Systems
         private static bool TryFindNearestDropOff(
             EntityManager entityManager,
             FixedString32Bytes factionId,
+            FixedString32Bytes resourceId,
             float3 workerPosition,
+            double elapsed,
             out float3 dropOffPosition)
         {
             dropOffPosition = default;
@@ -294,7 +302,15 @@ namespace Bloodlines.Systems
                     continue;
                 }
 
-                if (!buildingTypes[i].TypeId.Equals(CommandHallBuildingType))
+                if (entityManager.HasComponent<BuildingRaidStateComponent>(entities[i]) &&
+                    ScoutRaidCanon.IsBuildingRaided(
+                        entityManager.GetComponentData<BuildingRaidStateComponent>(entities[i]),
+                        elapsed))
+                {
+                    continue;
+                }
+
+                if (!ScoutRaidCanon.CanBuildingDropOff(buildingTypes[i].TypeId, resourceId))
                 {
                     continue;
                 }
