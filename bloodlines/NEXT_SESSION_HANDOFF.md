@@ -2715,3 +2715,43 @@ This observability follow-up is complete on `codex/unity-fortification-breach-de
 - Contract staleness check: PASS at revision `48` after the contract and continuity updates
 - Dedicated worker-locality smoke: PASS with marker `BLOODLINES_BREACH_SEALING_WORKER_LOCALITY_SMOKE PASS`
 - The first post-compile locality-smoke rerun exited immediately with return code `1` before the validator executed. One 10-second retry passed cleanly, so no block remains.
+
+## Codex Fortification Siege Sub-Slice 13: Repair Narrative (2026-04-21)
+
+### Status: COMPLETE on branch codex/unity-fortification-repair-narrative
+
+### What Landed
+- `BreachSealingSystem` now pushes one info-tone message through `NarrativeMessageBridge` whenever a breach closes.
+- `DestroyedCounterRecoverySystem` now pushes one info-tone repair message whenever a destroyed counter rebuild completes.
+- New dedicated validator `BloodlinesFortificationRepairNarrativeSmokeValidation` plus wrapper `scripts/Invoke-BloodlinesUnityFortificationRepairNarrativeSmokeValidation.ps1` prove single-breach close, three-breach close, and wall rebuild narrative emission.
+- Full governed validation is green on `D:\BLF13\bloodlines`, with worktree-safe wrapper copies still used for the root-pinned bootstrap runtime and scene-shell validators. Contract revision advanced `48 -> 49`.
+
+### Immediate Next Action
+1. Merge `codex/unity-fortification-repair-narrative`.
+2. Regenerate the root `HANDOFF.md` for a post-fortification lane handoff.
+3. Stop unless Lance explicitly defines a new fortification sub-slice 14.
+
+### Validation Notes
+- `dotnet build` runtime and editor gates: PASS
+- Bootstrap runtime smoke: PASS via worktree-local wrapper copy
+- Combat smoke: PASS
+- Scene shells: Bootstrap + Gameplay PASS via worktree-local wrapper copies
+- Fortification smoke: PASS
+- Siege smoke: PASS
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- Contract staleness check: PASS at revision `49` after the continuity and contract updates
+- Dedicated fortification repair narrative smoke: PASS with marker `BLOODLINES_FORTIFICATION_REPAIR_NARRATIVE_SMOKE PASS`
+
+## Codex Fortification Siege Session Wrap 10 Through 13 (2026-04-21)
+
+### Status: FORTIFICATION QUEUE PAUSED
+
+### Next Recommended Pickup
+1. Fetch `origin/master` and confirm `docs/unity/CONCURRENT_SESSION_CONTRACT.md` is at revision `49`.
+2. There is no approved fortification sub-slice 14. Do not extend the lane without fresh operator direction.
+3. If Lance does not define a new fortification follow-up, claim a different approved Codex lane instead.
+
+### Context Notes
+- The checked-in bootstrap runtime and canonical scene-shell wrappers still pin `D:\ProjectsHome\Bloodlines\unity`. Clean worktree validation should keep using temporary worktree-safe wrapper copies.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json` still dirties during Unity validation and should remain unstaged.

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Bloodlines.AI;
 using Bloodlines.Components;
 using Bloodlines.GameTime;
 using Bloodlines.Systems;
@@ -144,7 +145,9 @@ namespace Bloodlines.Fortification
                                 settlementEntity,
                                 ref fortification,
                                 ref progress,
-                                elapsedInWorldDays);
+                                elapsedInWorldDays,
+                                factions[i].FactionId,
+                                fortification.SettlementId);
                         }
                     }
                 }
@@ -178,7 +181,9 @@ namespace Bloodlines.Fortification
             Entity settlementEntity,
             ref FortificationComponent fortification,
             ref DestroyedCounterRecoveryProgressComponent progress,
-            float elapsedInWorldDays)
+            float elapsedInWorldDays,
+            FixedString32Bytes factionId,
+            FixedString64Bytes settlementId)
         {
             float remainingWorkerHours = math.max(0f, elapsedInWorldDays * 24f);
             while (remainingWorkerHours > 0f && GetTotalDestroyedCount(fortification) > 0)
@@ -249,6 +254,7 @@ namespace Bloodlines.Fortification
                     break;
                 }
 
+                PushRebuildMessage(entityManager, factionId, settlementId, progress.TargetCounter);
                 progress.AccumulatedWorkerHours = 0f;
                 progress.StoneReservedForCurrentSegment = 0f;
                 progress.TargetCounter = ResolveHighestPriorityTarget(fortification);
@@ -258,6 +264,22 @@ namespace Bloodlines.Fortification
             {
                 progress.TargetCounter = DestroyedCounterKind.None;
             }
+        }
+
+        private static void PushRebuildMessage(
+            EntityManager entityManager,
+            FixedString32Bytes factionId,
+            FixedString64Bytes settlementId,
+            DestroyedCounterKind targetCounter)
+        {
+            var message = new FixedString128Bytes();
+            message.Append(factionId);
+            message.Append((FixedString32Bytes)" rebuilds a ");
+            message.Append(ResolveRebuildLabel(targetCounter));
+            message.Append((FixedString32Bytes)" at ");
+            message.Append(settlementId);
+            message.Append((FixedString32Bytes)".");
+            NarrativeMessageBridge.Push(entityManager, message, NarrativeMessageTone.Info);
         }
 
         private static bool TryCompleteCurrentRebuild(
@@ -547,6 +569,18 @@ namespace Bloodlines.Fortification
                 DestroyedCounterKind.Gate => FortificationRole.Gate,
                 DestroyedCounterKind.Keep => FortificationRole.Keep,
                 _ => FortificationRole.None,
+            };
+        }
+
+        private static FixedString32Bytes ResolveRebuildLabel(DestroyedCounterKind targetCounter)
+        {
+            return targetCounter switch
+            {
+                DestroyedCounterKind.Wall => new FixedString32Bytes("wall"),
+                DestroyedCounterKind.Tower => new FixedString32Bytes("tower"),
+                DestroyedCounterKind.Gate => new FixedString32Bytes("gate"),
+                DestroyedCounterKind.Keep => new FixedString32Bytes("keep"),
+                _ => new FixedString32Bytes("fortification"),
             };
         }
 

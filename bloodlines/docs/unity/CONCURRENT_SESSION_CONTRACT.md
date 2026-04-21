@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 48
+- Revision: 49
 - Last Updated: 2026-04-21
-- Last Updated By: codex-fortification-sealing-worker-locality-2026-04-21
-- Supersedes: revision 47 (Codex resumes the active `fortification-siege-imminent-engagement` lane on `codex/unity-fortification-sealing-worker-locality`. `BreachSealingSystem` now gates repair labor to the settlement's own control-point footprint instead of a faction-wide idle-worker bucket: it resolves the settlement's nearest same-owner control point from the settlement anchor position, resolves each idle worker's nearest control point from `PositionComponent`, requires owner match on that nearest `ControlPointComponent`, and only spends labor when the worker and settlement resolve to the same control-point anchor. Same-faction workers near another settlement no longer poach breach closure here. The new dedicated `BloodlinesBreachSealingWorkerLocalitySmokeValidation` proves local sealing, same-faction other-settlement blocking, no-workers blocking, and non-idle blocking. The governed 10-gate chain is green in `D:\BLF12\bloodlines`, with worktree-safe wrapper copies used again for the still-root-pinned bootstrap and scene-shell validators. The fortification lane stays active and the next unblocked follow-up is sub-slice 13 fortification repair narrative.)
+- Last Updated By: codex-fortification-repair-narrative-2026-04-21
+- Supersedes: revision 48 (Codex closes the queued fortification-siege follow-up on `codex/unity-fortification-repair-narrative`. `BreachSealingSystem` now pushes info-tone narrative messages when breaches close, and `DestroyedCounterRecoverySystem` now pushes info-tone repair messages when destroyed counters rebuild. The new dedicated `BloodlinesFortificationRepairNarrativeSmokeValidation` proves single-breach closure, three-breach closure, and wall-rebuild narrative emission. The governed 10-gate chain is green in `D:\BLF13\bloodlines`, with worktree-safe wrapper copies still required for the root-pinned bootstrap and scene-shell validators. The fortification-siege queue through sub-slice 13 is now complete; any further fortification work requires a fresh operator-defined sub-slice 14 or a lane handoff to the next arc.)
 
 
 ## Purpose
@@ -454,7 +454,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: fortification-siege-imminent-engagement
 
 - Status: active
-- Branch Prefix: `codex/unity-fortification-sealing-worker-locality` (sub-slice 12), `codex/unity-fortification-sealing-cost-tier-scaling` (sub-slice 11), `codex/unity-fortification-breach-depth-telemetry` (sub-slice 10), `codex/unity-fortification-destroyed-counter-recovery` (sub-slice 9), `codex/unity-fortification-breach-sealing-recovery` (sub-slice 8), `codex/unity-fortification-breach-legibility-readout` (sub-slice 7), `codex/unity-fortification-breach-assault-pressure` (sub-slice 6), `codex/unity-fortification-wall-segment-destruction` (sub-slice 5); prior `codex/unity-fortification-siege*` slices 1-4 also landed; future follow-ups should continue on fresh `codex/unity-fortification-*` branches
+- Branch Prefix: `codex/unity-fortification-repair-narrative` (sub-slice 13), `codex/unity-fortification-sealing-worker-locality` (sub-slice 12), `codex/unity-fortification-sealing-cost-tier-scaling` (sub-slice 11), `codex/unity-fortification-breach-depth-telemetry` (sub-slice 10), `codex/unity-fortification-destroyed-counter-recovery` (sub-slice 9), `codex/unity-fortification-breach-sealing-recovery` (sub-slice 8), `codex/unity-fortification-breach-legibility-readout` (sub-slice 7), `codex/unity-fortification-breach-assault-pressure` (sub-slice 6), `codex/unity-fortification-wall-segment-destruction` (sub-slice 5); prior `codex/unity-fortification-siege*` slices 1-4 also landed; future follow-ups should continue on fresh `codex/unity-fortification-*` branches
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/Fortification/**`
@@ -481,6 +481,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDestroyedCounterRecoverySmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBreachSealingTierScalingSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBreachSealingWorkerLocalitySmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationRepairNarrativeSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`
@@ -493,10 +494,13 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnityDestroyedCounterRecoverySmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityBreachSealingTierScalingSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityBreachSealingWorkerLocalitySmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityFortificationRepairNarrativeSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1` -- additive wrapper update preserved fortification smoke ownership while keeping the existing validation surface intact for the rebased imminent-engagement lane
   - `unity/Assembly-CSharp.csproj` -- verified Claude Bundle 3 runtime entries were present on disk and locally registered `DestroyedCounterRecoveryProgressComponent.cs` plus `DestroyedCounterRecoverySystem.cs` for the governed `dotnet build` gate; Unity-generated gitignored file, not part of the commit
   - `unity/Assembly-CSharp-Editor.csproj` -- verified Claude Bundle 3 editor entries were present on disk and locally registered `BloodlinesDestroyedCounterRecoverySmokeValidation.cs` for the governed `dotnet build` gate; Unity-generated gitignored file, not part of the commit
+  - `unity/Assembly-CSharp.csproj` -- re-verified local registration for Claude Bundles 1-4 runtime files plus Codex fortification sub-slices 7-13 runtime files before the governed `dotnet build` gate; Unity-generated gitignored file, not part of the commit
+  - `unity/Assembly-CSharp-Editor.csproj` -- re-verified local registration for Claude Bundles 1-4 editor validators plus Codex fortification sub-slices 7-13 editor validators, including `BloodlinesFortificationRepairNarrativeSmokeValidation.cs`, before the governed `dotnet build` gate; Unity-generated gitignored file, not part of the commit
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-17-unity-fortification-siege-fortification-tier-and-reserves.md`
   - `docs/unity/session-handoffs/2026-04-18-unity-fortification-siege-siege-support-and-field-water.md`
@@ -510,8 +514,10 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-20-unity-fortification-siege-breach-depth-telemetry.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-fortification-siege-sealing-cost-tier-scaling.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-fortification-siege-sealing-worker-locality.md`
-- Current Branch In Flight: `codex/unity-fortification-sealing-worker-locality`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-fortification-siege-sealing-worker-locality.md`
+  - `docs/unity/session-handoffs/2026-04-21-unity-fortification-repair-narrative.md`
+  - `docs/unity/session-handoffs/2026-04-21-unity-fortification-siege-session-wrap-10-through-13.md`
+- Current Branch In Flight: none (queued fortification-siege follow-ups through sub-slice 13 are landed; any new fortification work requires a fresh claim)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-fortification-repair-narrative.md`
 
 ### Lane: dynasty-house-parity
 
