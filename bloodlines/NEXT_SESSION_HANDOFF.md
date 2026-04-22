@@ -3594,3 +3594,78 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   those files unstaged unless a slice explicitly needs to own them.
 - The on-screen HUD and the remaining fortification / victory readouts are
   still follow-up work inside this same lane.
+
+## Codex Player Diplomacy Holy War And Divine Right Slice (2026-04-22)
+
+### Status: VALIDATED on branch `codex/unity-player-holy-war-divine-right`
+
+### What Landed On Branch
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerHolyWarDeclarationRequestComponent.cs`
+  and
+  `PlayerDivineRightDeclarationRequestComponent.cs`
+  now provide the player-owned request surfaces for issuing faith declarations.
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerFaithDeclarationUtility.cs`
+  now centralizes faction-root preference, kingdom gating, active-operation
+  scans, faith-operator selection, and declaration narrative helpers for the
+  `PlayerDiplomacy/**` lane.
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerHolyWarDeclarationSystem.cs`
+  now ports player-side holy-war declaration dispatch using the browser
+  `getHolyWarDeclarationTerms` / `startHolyWarDeclaration` parity subset:
+  source and target kingdom validation, committed faith validation, harmony
+  rejection for identical `(faith, doctrine)`, duplicate-active-op rejection,
+  canonical `influence=24` and `intensity=18` deduction, active-cap
+  enforcement through read-only `DynastyOperationLimits`, AI-owned
+  `DynastyOperationComponent` + `DynastyOperationHolyWarComponent` creation,
+  and narrative emission through `NarrativeMessageBridge`.
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerDivineRightDeclarationSystem.cs`
+  now ports player-side divine-right declaration dispatch using the browser
+  `getDivineRightDeclarationTerms` / `startDivineRightDeclaration` parity
+  subset: committed faith, `intensity >= 80`, `level >= 5`, no existing active
+  declaration for the same faction, active-cap enforcement, AI-owned
+  `DynastyOperationComponent` + `DynastyOperationDivineRightComponent`
+  creation, and declaration narrative emission.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerDiplomacy.cs`
+  now exposes:
+  - `TryDebugIssuePlayerHolyWarDeclaration(...)`
+  - `TryDebugIssuePlayerDivineRightDeclaration(...)`
+  - `TryDebugGetPlayerFaithDeclarationOperations(...)`
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerHolyWarDivineRightSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityPlayerHolyWarDivineRightSmokeValidation.ps1`
+  now prove four phases:
+  1. holy-war success against an incompatible-faith kingdom
+  2. holy-war rejection for harmonious same-faith/same-doctrine targets
+  3. divine-right success at intensity 85 and level 5
+  4. divine-right rejection below the threshold
+- Narrow shared-file edits were applied to
+  `unity/Assembly-CSharp.csproj`
+  and
+  `unity/Assembly-CSharp-Editor.csproj`
+  so the generated local projects compile the new player-diplomacy files.
+
+### Validation Proof
+- Runtime build: `Build succeeded.` / `0 Error(s)`
+- Editor build: `Build succeeded.` / `0 Error(s)`
+- Bootstrap runtime: `Bootstrap runtime smoke validation passed.`
+- Combat smoke: Unity exit code `0`
+- Scene shells: bootstrap and gameplay scene shell validation both passed
+- Fortification smoke: `Fortification smoke validation passed.`
+- Siege smoke: Unity exit code `0`
+- Data validation: `Bloodlines data validation passed.`
+- Runtime bridge: `Bloodlines runtime bridge validation passed.`
+- Contract staleness: `STALENESS CHECK PASSED: Contract revision=71, last-updated=2026-04-22 is current.`
+- Dedicated smoke: `Player holy war/divine right smoke validation passed.`
+
+### Immediate Next Action
+1. Stage the player-faith declaration slice files plus continuity/contract updates and commit them on `codex/unity-player-holy-war-divine-right`.
+2. Push the branch to `origin`, merge it to `master`, and rerun the full governed validation gate on merged `master`.
+3. After the landing continuity pass, continue the next directive item from the current player-facing priority stack on a fresh Codex branch.
+
+### Context Notes
+- `unity/Assets/_Bloodlines/Code/AI/**` remained read-only throughout the slice;
+  the new systems only reuse AI-owned dynasty-operation payload shapes.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged for this slice.
+- Holy-war compatibility is still a simplified identical `(faith, doctrine)`
+  gate rather than the browser's fuller compatibility ladder because the
+  covenant covariance surface is not yet ported.
