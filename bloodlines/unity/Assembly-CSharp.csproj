@@ -63,6 +63,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Combat\HostilityComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Definitions\HouseDefinition.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.PlayerDiplomacy.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerCaptiveRansomDispatchSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Systems\ConstructionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\PactComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Economy\CapPressureResponseSystem.cs" />
@@ -262,6 +263,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Fortification\ImminentEngagementCanon.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Definitions\UnitVisualDefinition.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerCovertOps\PlayerCounterIntelligenceSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerCaptiveRansomRequestComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Siege\FieldWaterSupportScanSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Dynasty.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Systems\ControlPointResourceTrickleSystem.cs" />
