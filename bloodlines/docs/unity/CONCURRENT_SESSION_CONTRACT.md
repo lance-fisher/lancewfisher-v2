@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 88
+- Revision: 89
 - Last Updated: 2026-04-22
-- Last Updated By: codex-player-hud-command-deck-2026-04-22
-- Supersedes: revision 87 (The `player-hud-realm-condition-legibility` lane now has a fresh in-flight branch `codex/unity-player-hud-command-deck-summary` for a consolidated player command-deck HUD summary. `PlayerCommandDeckHUDComponent`, `PlayerCommandDeckHUDSystem`, and the dedicated smoke validator/wrapper are now owned by the lane, and the lane handoff stack records the branch validation state.)
+- Last Updated By: codex-player-hud-command-deck-landing-2026-04-22
+- Supersedes: revision 88 (The `player-hud-realm-condition-legibility` lane's `codex/unity-player-hud-command-deck-summary` slice is now merged to canonical `master` via `b8fc7589`. `PlayerCommandDeckHUDComponent`, `PlayerCommandDeckHUDSystem`, the dedicated smoke validator/wrapper, and the debug command-deck readout now live on canonical `master`. This revision clears the in-flight branch marker and records the landing handoff.)
 
 
 ## Purpose
@@ -836,11 +836,12 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-panel.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-panel-landing.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary.md`
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary-landing.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `getRealmConditionSnapshot` (14291-14764), `getMatchProgressionSnapshot` (13650-13658)
   - `tests/runtime-bridge.mjs` realm-condition snapshot assertions (1344-1364), match-progression assertions (7521, 7773-7871, 7923-7975, 8133, 8185), fortification/readout assertions (1438-1444), hostile-post-repulse world-pressure assertions (1718-1733)
-- Current Branch In Flight: `codex/unity-player-hud-command-deck-summary`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary.md`
+- Current Branch In Flight: none (merged to canonical `master` via `b8fc7589`)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary-landing.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 

@@ -3676,3 +3676,16 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   `node tests/runtime-bridge.mjs`, and contract staleness.
 - Contract revision advanced `87 -> 88` and now records the HUD lane with the
   command-deck summary branch in flight.
+
+## 2026-04-22 Player Command-Deck HUD Summary Landing
+
+- Canonical `master` advanced via merge commit `b8fc7589`, landing the player
+  command-deck HUD summary slice on top of the already-landed match, victory,
+  fortification, and dynasty HUD seams.
+- Merge-result governed validation is green: runtime build, editor build,
+  bootstrap runtime smoke, combat smoke, canonical scene shell validation,
+  fortification smoke, siege smoke, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated player
+  command-deck HUD smoke.
+- Contract revision advanced `88 -> 89` and now clears the HUD lane branch in
+  flight after the landing pass.

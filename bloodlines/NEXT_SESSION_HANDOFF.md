@@ -4631,3 +4631,67 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   are not part of the slice and should remain unstaged.
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
+
+## Codex Player Command-Deck HUD Summary Landing (2026-04-22)
+
+### Merge Result
+
+- `b8fc7589`
+
+### What Landed On Master
+
+- `unity/Assets/_Bloodlines/Code/HUD/PlayerCommandDeckHUDComponent.cs`
+  and
+  `PlayerCommandDeckHUDSystem.cs`
+  now live on canonical `master`, providing the faction-scoped command-deck
+  summary that consumes the already-landed match progression, victory
+  leaderboard, dynasty renown, and fortification HUD seams.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes `TryDebugGetPlayerCommandDeckHUDSnapshot()` on canonical
+  `master`.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCommandDeckHUDSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityPlayerCommandDeckHUDSmokeValidation.ps1`
+  now live on canonical `master`.
+
+### Validation Proof
+
+- Runtime build:
+  - `Build succeeded.`
+  - `0 Error(s)`
+- Editor build:
+  - `Build succeeded.`
+  - `0 Error(s)` with existing repo-wide warnings only
+- Bootstrap runtime:
+  - `Bootstrap runtime smoke validation passed.`
+- Combat smoke:
+  - `Unity exited with code 0`
+- Scene shells:
+  - `Bootstrap scene shell validation passed.`
+  - `Gameplay scene shell validation passed.`
+- Fortification smoke:
+  - `Fortification smoke validation passed.`
+- Siege smoke:
+  - `Unity exited with code 0`
+- Data validation:
+  - `Bloodlines data validation passed.`
+- Runtime bridge:
+  - `Bloodlines runtime bridge validation passed.`
+- Contract staleness before landing contract bump:
+  - `STALENESS CHECK PASSED: Contract revision=88, last-updated=2026-04-22 is current.`
+- Dedicated smoke:
+  - `Player command-deck HUD smoke validation passed.`
+
+### Immediate Next Action
+
+1. Claim the next fresh HUD/player-facing follow-up from canonical `master`.
+2. The cleanest pickup is an actual on-screen HUD binding that consumes the new
+   command-deck snapshot, or another adjacent consolidated player-facing HUD
+   surface.
+
+### Context Notes
+
+- The HUD lane has no branch currently in flight after this landing pass.
+- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
