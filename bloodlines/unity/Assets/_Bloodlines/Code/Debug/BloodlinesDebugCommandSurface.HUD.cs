@@ -366,5 +366,47 @@ namespace Bloodlines.Debug
             readout = builder.ToString();
             return true;
         }
+
+        public bool TryDebugGetBattlefieldCommandDeckSummary(string factionId, out string readout)
+        {
+            readout = string.Empty;
+            if (string.IsNullOrWhiteSpace(factionId) ||
+                !TryGetEntityManager(out var entityManager) ||
+                !TryBuildBattlefieldCommandDeckSummary(entityManager, factionId, out var summary))
+            {
+                return false;
+            }
+
+            var builder = new StringBuilder(512);
+            builder.Append("CommandDeckSummary")
+                .Append("|FactionId=").Append(summary.FactionId)
+                .Append("|StageNumber=").Append(summary.StageNumber)
+                .Append("|PhaseLabel=").Append(summary.PhaseLabel)
+                .Append("|InWorldYears=").Append(summary.InWorldYears.ToString("0.00", CultureInfo.InvariantCulture))
+                .Append("|DeclarationCount=").Append(summary.DeclarationCount)
+                .Append("|WorldPressureLevel=").Append(summary.WorldPressureLevel)
+                .Append("|WorldPressureLabel=").Append(summary.WorldPressureLabel)
+                .Append("|GreatReckoningActive=").Append(summary.GreatReckoningActive ? "true" : "false")
+                .Append("|GreatReckoningTargetFactionId=").Append(summary.GreatReckoningTargetFactionId)
+                .Append("|GreatReckoningShare=").Append(summary.GreatReckoningShare.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|CycleCount=").Append(summary.CycleCount)
+                .Append("|PopulationBand=").Append(summary.PopulationBand)
+                .Append("|FoodBand=").Append(summary.FoodBand)
+                .Append("|WaterBand=").Append(summary.WaterBand)
+                .Append("|LoyaltyBand=").Append(summary.LoyaltyBand)
+                .Append("|ConvictionLabel=").Append(summary.ConvictionLabel)
+                .Append("|FaithLabel=").Append(summary.FaithLabel)
+                .Append("|FaithTier=").Append(summary.FaithTier)
+                .Append("|FaithBand=").Append(summary.FaithBand)
+                .Append("|PlayerVictoryRank=").Append(summary.PlayerVictoryRank)
+                .Append("|PlayerVictoryConditionId=").Append(summary.PlayerVictoryConditionId)
+                .Append("|PlayerVictoryProgressPct=").Append(summary.PlayerVictoryProgressPct.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|TopFactionId=").Append(summary.TopFactionId)
+                .Append("|TopVictoryConditionId=").Append(summary.TopVictoryConditionId)
+                .Append("|TopVictoryProgressPct=").Append(summary.TopVictoryProgressPct.ToString("0.000", CultureInfo.InvariantCulture));
+
+            readout = builder.ToString();
+            return true;
+        }
     }
 }

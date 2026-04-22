@@ -1993,58 +1993,13 @@
       "validation_gates": "all 10 green plus victory leaderboard HUD smoke"
     },
     {
-      "lane": "player-hud-realm-condition-legibility-slice-6-dynasty-renown-readout",
+      "lane": "player-hud-realm-condition-legibility-slice-6-command-deck-summary",
       "date": "2026-04-22",
-      "branch": "codex/unity-hud-dynasty-renown-readout",
+      "branch": "codex/unity-player-hud-command-deck-summary-followup",
       "status": "active",
-      "description": "The sixth player-HUD slice is now complete on branch. `DynastyRenownHUDComponent` and `DynastyRenownHUDSystem` add a faction-scoped dynasty prestige HUD read-model under `HUD/**` that consumes the already-landed `DynastyRenownComponent`, computes cross-faction rank ordering, projects ruler identity, legitimacy, and interregnum state, and applies a HUD-only prestige band without widening `AI/**`. `BloodlinesDebugCommandSurface.HUD` now exposes a parseable `DynastyRenownHUD|FactionId=...|Score=...|PeakRenown=...|Rank=...|...` snapshot, and `BloodlinesDynastyRenownHUDSmokeValidation` plus its wrapper prove score mirroring, dynasty ranking, and interregnum projection. The full governed 10-gate chain is green in this worktree and the contract is current at revision 85.",
-      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-readout.md",
-      "validation_gates": "all 10 green plus dynasty renown HUD smoke"
-    },
-    {
-      "lane": "player-hud-realm-condition-legibility-slice-7-dynasty-renown-panel",
-      "date": "2026-04-22",
-      "branch": "codex/unity-hud-dynasty-renown-panel",
-      "status": "active",
-      "description": "The seventh player-HUD slice is now complete on branch. `DynastyRenownLeaderboardHUDComponent` and `DynastyRenownLeaderboardHUDSystem` add a singleton ordered dynasty prestige panel under `HUD/**` that consumes the already-landed `DynastyRenownHUDComponent` snapshots, sorts factions by renown score with peak-renown tie-breaking, and carries player/interregnum/ruler identity state into one consolidated read-model without widening `AI/**`. `BloodlinesDebugCommandSurface.HUD` now exposes a parseable multi-line `DynastyRenownLeaderboard|Rank=...|FactionId=...|Score=...|PeakRenown=...|...` snapshot, and `BloodlinesDynastyRenownLeaderboardHUDSmokeValidation` plus its wrapper prove row population, human/interregnum projection, and prestige ordering. The full governed 10-gate chain is green in this worktree, and the generated `Assembly-CSharp*.csproj` analyzer paths plus `unity/Library` access were repaired back to the canonical Unity Library. Contract rev 85->86.",
-      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-panel.md",
-      "validation_gates": "all 10 green plus dynasty renown leaderboard HUD smoke"
-    },
-    {
-      "lane": "player-hud-realm-condition-legibility-slice-7-dynasty-renown-panel-landing",
-      "date": "2026-04-22",
-      "branch": "master",
-      "status": "complete",
-      "description": "The validated `codex/unity-hud-dynasty-renown-panel` branch is now merged to canonical `master` via `a80fef7a`. `DynastyRenownLeaderboardHUDComponent`, `DynastyRenownLeaderboardHUDSystem`, `BloodlinesDebugCommandSurface.HUD` dynasty leaderboard readout support, and `BloodlinesDynastyRenownLeaderboardHUDSmokeValidation` plus wrapper now live on canonical `master`. The full governed 10-gate chain reran green on the merge result in this worktree, the dedicated dynasty renown leaderboard HUD smoke also reran green, and contract rev 86->87 now clears the HUD lane branch in flight while preserving the canonical Unity Library analyzer-path repair.",
-      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-panel-landing.md",
-      "validation_gates": "all 10 green plus dynasty renown leaderboard HUD smoke on merged master"
-    },
-    {
-      "lane": "player-hud-realm-condition-legibility-slice-8-command-deck-summary",
-      "date": "2026-04-22",
-      "branch": "codex/unity-player-hud-command-deck-summary",
-      "status": "active",
-      "description": "The eighth player-HUD slice is now complete on branch. `PlayerCommandDeckHUDComponent` and `PlayerCommandDeckHUDSystem` add a faction-scoped command-deck summary under `HUD/**` that consumes the already-landed match progression, victory leaderboard, dynasty renown, and fortification HUD seams, derives command-deck population/loyalty/faith bands, and resolves one `PrimaryAlertLabel` with precedence across Great Reckoning, fortification threat, loyalty crisis, victory-imminent pressure, and world pressure without widening `AI/**`. `BloodlinesDebugCommandSurface.HUD` now exposes a parseable `PlayerCommandDeckHUD|FactionId=...|StageLabel=...|LeadingVictoryConditionId=...|PrimaryAlertLabel=...` snapshot, and `BloodlinesPlayerCommandDeckHUDSmokeValidation` plus its wrapper prove summary projection plus Great Reckoning, fortification threat, and victory-imminent alert precedence. The full governed 10-gate chain is green on the branch and contract rev 87->88.",
+      "description": "The sixth player-HUD slice is now complete on branch. `BloodlinesDebugCommandSurface.cs` now renders a consolidated battlefield command-deck summary that consumes the already-landed match-progression, realm-condition, conviction/faith, and victory HUD read-models to surface match state, world pressure / Great Reckoning status, realm bands, and player-vs-leader victory standing without widening retired runtime lanes. `BloodlinesDebugCommandSurface.HUD.cs` now exposes a parseable `CommandDeckSummary|FactionId=...|StageNumber=...|...|TopVictoryProgressPct=...` seam, and `BloodlinesBattlefieldCommandDeckSmokeValidation` plus its wrapper prove both a stable baseline command deck and a Great Reckoning follow-up where convergence pressure, player strain, and trailing victory rank surface together. The full governed 10-gate chain is green in this worktree and the contract is current at revision 85.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary.md",
-      "validation_gates": "all 10 green plus player command-deck HUD smoke"
-    },
-    {
-      "lane": "player-hud-realm-condition-legibility-slice-8-command-deck-summary-landing",
-      "date": "2026-04-22",
-      "branch": "master",
-      "status": "complete",
-      "description": "The validated `codex/unity-player-hud-command-deck-summary` branch is now merged to canonical `master` via `b8fc7589`. `PlayerCommandDeckHUDComponent`, `PlayerCommandDeckHUDSystem`, `BloodlinesDebugCommandSurface.HUD` command-deck readout support, and `BloodlinesPlayerCommandDeckHUDSmokeValidation` plus wrapper now live on canonical `master`. The full governed 10-gate chain reran green on the merge result in this worktree, the dedicated player command-deck HUD smoke also reran green, and contract rev 88->89 now clears the HUD lane branch in flight.",
-      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary-landing.md",
-      "validation_gates": "all 10 green plus player command-deck HUD smoke on merged master"
-    },
-    {
-      "lane": "player-hud-realm-condition-legibility-slice-9-command-deck-overlay",
-      "date": "2026-04-22",
-      "branch": "codex/unity-player-hud-command-deck-overlay-followup",
-      "status": "active",
-      "description": "The ninth player-HUD slice is now complete on branch. `PlayerCommandDeckOverlayPresenter` and `BloodlinesDebugCommandSurface.CommandDeckOverlay` bind the already-landed `PlayerCommandDeckHUDComponent` into the live IMGUI battlefield shell as a top-right command-deck overlay with alert-color accenting, without widening `AI/**` or touching scene assets. `BloodlinesPlayerCommandDeckOverlaySmokeValidation` plus its wrapper prove stable overlay copy, victory ETA rendering, and Great Reckoning alert preservation. The worktree-local `unity/Library` junction and generated `Assembly-CSharp*.csproj` analyzer paths were repaired back to `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache`, and the full governed 10-gate chain is green in this worktree. Contract rev 89->90.",
-      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-overlay.md",
-      "validation_gates": "all 10 green plus player command-deck overlay smoke"
+      "validation_gates": "all 10 green plus battlefield command deck smoke"
     }
   ]
 }

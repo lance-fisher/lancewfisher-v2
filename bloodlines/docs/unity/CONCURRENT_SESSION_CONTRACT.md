@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 90
+- Revision: 85
 - Last Updated: 2026-04-22
-- Last Updated By: codex-player-hud-command-deck-overlay-2026-04-22
-- Supersedes: revision 89 (The `player-hud-realm-condition-legibility` lane now carries a fresh branch-side follow-up on `codex/unity-player-hud-command-deck-overlay-followup`. The new slice binds the already-landed `PlayerCommandDeckHUDComponent` into the live IMGUI battlefield shell through `BloodlinesDebugCommandSurface.CommandDeckOverlay.cs`, adds the pure `PlayerCommandDeckOverlayPresenter`, adds the dedicated overlay smoke validator/wrapper, and repairs this worktree's generated `Assembly-CSharp*.csproj` analyzer paths plus local `unity/Library` junction so the governed build gates run cleanly again.)
+- Last Updated By: codex-2026-04-22
+- Supersedes: revision 84 (The `player-hud-realm-condition-legibility` lane now carries `codex/unity-player-hud-command-deck-summary-followup`. `BloodlinesDebugCommandSurface.cs` now renders a consolidated player command-deck summary over the existing HUD read-models, `BloodlinesDebugCommandSurface.HUD.cs` exposes a parseable `CommandDeckSummary|...` seam, and `BloodlinesBattlefieldCommandDeckSmokeValidation` plus wrapper prove both the baseline and Great Reckoning command-deck states.)
 
 
 ## Purpose
@@ -756,26 +756,18 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/HUD/**`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
-  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.CommandDeckOverlay.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMatchProgressionHUDSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationHUDSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesVictoryReadoutSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesVictoryLeaderboardHUDSmokeValidation.cs`
-  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyRenownHUDSmokeValidation.cs`
-  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyRenownLeaderboardHUDSmokeValidation.cs`
-  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCommandDeckHUDSmokeValidation.cs`
-  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCommandDeckOverlaySmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityRealmConditionHUDSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityMatchProgressionHUDSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityFortificationHUDSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityVictoryReadoutSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityVictoryLeaderboardHUDSmokeValidation.ps1`
-  - `scripts/Invoke-BloodlinesUnityDynastyRenownHUDSmokeValidation.ps1`
-  - `scripts/Invoke-BloodlinesUnityDynastyRenownLeaderboardHUDSmokeValidation.ps1`
-  - `scripts/Invoke-BloodlinesUnityPlayerCommandDeckHUDSmokeValidation.ps1`
-  - `scripts/Invoke-BloodlinesUnityPlayerCommandDeckOverlaySmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityBattlefieldCommandDeckSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/RealmConditionHUDComponent.cs`, `Code/HUD/RealmConditionHUDSystem.cs`, and `Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
@@ -787,15 +779,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesVictoryReadoutSmokeValidation.cs`; stale analyzer/source-generator paths were corrected back to this worktree's `unity/Library/PackageCache`
   - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/VictoryLeaderboardHUDComponent.cs` and `Code/HUD/VictoryLeaderboardHUDSystem.cs`; stale analyzer/source-generator paths were corrected back to this worktree's `unity/Library/PackageCache`
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesVictoryLeaderboardHUDSmokeValidation.cs`; stale analyzer/source-generator paths were corrected back to this worktree's `unity/Library/PackageCache`
-  - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/DynastyRenownHUDComponent.cs` and `Code/HUD/DynastyRenownHUDSystem.cs`
-  - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesDynastyRenownHUDSmokeValidation.cs`
-  - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/DynastyRenownLeaderboardHUDComponent.cs` and `Code/HUD/DynastyRenownLeaderboardHUDSystem.cs`; stale analyzer/source-generator paths were corrected from the dead `c946` worktree to `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
-  - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesDynastyRenownLeaderboardHUDSmokeValidation.cs`; stale analyzer/source-generator paths were corrected from the dead `c946` worktree to `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
-  - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/PlayerCommandDeckHUDComponent.cs` and `Code/HUD/PlayerCommandDeckHUDSystem.cs`
-  - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesPlayerCommandDeckHUDSmokeValidation.cs`
-  - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/PlayerCommandDeckOverlayPresenter.cs` and `Code/Debug/BloodlinesDebugCommandSurface.CommandDeckOverlay.cs`; stale analyzer/source-generator paths were corrected from the dead `ba3c` worktree to `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
-  - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesPlayerCommandDeckOverlaySmokeValidation.cs`; stale analyzer/source-generator paths were corrected from the dead `ba3c` worktree to `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
-  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.cs` -- additive IMGUI hook now draws the command-deck overlay panel without changing existing battlefield command behavior
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.cs` -- additive battlefield command-deck summary rendering that consumes existing HUD read-models without widening runtime ownership beyond the player command shell
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBattlefieldCommandDeckSmokeValidation.cs` -- dedicated validator for the unified command-deck summary seam
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve HUD snapshots by `FactionId`
   - `unity/Assets/_Bloodlines/Code/Components/RealmConditionComponent.cs` -- read realm cycle accumulator, cycle count, strain streaks, and realm legibility thresholds
@@ -822,13 +807,6 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Components/BuildingTypeComponent.cs` -- read command-hall identity for Command Hall Fall progress
   - `unity/Assets/_Bloodlines/Code/Components/HealthComponent.cs` -- read `DeadTag` on command halls for Command Hall Fall completion
   - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- read in-world-day cadence plus days-per-real-second for the HUD throttle and sovereignty ETA
-  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyRenownComponent.cs` -- read the already-landed dynasty prestige score without reopening the renown lane
-  - `unity/Assets/_Bloodlines/Code/Components/DynastyMemberComponent.cs` -- resolve the current ruling member id/title for dynasty HUD legibility
-  - `unity/Assets/_Bloodlines/Code/Components/DynastyStateComponent.cs` -- read legitimacy and interregnum status for dynasty HUD legibility
-  - `unity/Assets/_Bloodlines/Code/HUD/DynastyRenownHUDComponent.cs` -- consume the already-landed per-faction renown HUD snapshot rather than duplicating dynasty ranking logic
-  - `unity/Assets/_Bloodlines/Code/HUD/MatchProgressionHUDComponent.cs` -- consume the already-landed match stage / world-pressure / Great Reckoning HUD snapshot for the command-deck summary
-  - `unity/Assets/_Bloodlines/Code/HUD/VictoryLeaderboardHUDComponent.cs` -- consume the already-landed leading victory condition and ETA per faction
-  - `unity/Assets/_Bloodlines/Code/HUD/FortificationHUDComponent.cs` -- consume fortification threat state without reopening the paused fortification lane
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility-landing.md`
@@ -838,17 +816,12 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification-rerun.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-distance-readout.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-panel.md`
-  - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-readout.md`
-  - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-panel.md`
-  - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-panel-landing.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary.md`
-  - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary-landing.md`
-  - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-overlay.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `getRealmConditionSnapshot` (14291-14764), `getMatchProgressionSnapshot` (13650-13658)
   - `tests/runtime-bridge.mjs` realm-condition snapshot assertions (1344-1364), match-progression assertions (7521, 7773-7871, 7923-7975, 8133, 8185), fortification/readout assertions (1438-1444), hostile-post-repulse world-pressure assertions (1718-1733)
-- Current Branch In Flight: `codex/unity-player-hud-command-deck-overlay-followup`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-overlay.md`
+- Current Branch In Flight: `codex/unity-player-hud-command-deck-summary-followup`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 

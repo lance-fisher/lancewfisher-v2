@@ -2912,80 +2912,6 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
 
-## Codex Dynasty Renown HUD Readout (2026-04-22)
-
-### Branch
-
-- `codex/unity-hud-dynasty-renown-readout`
-
-### What Landed On Branch
-
-- `unity/Assets/_Bloodlines/Code/HUD/DynastyRenownHUDComponent.cs`
-  and
-  `DynastyRenownHUDSystem.cs`
-  now add a faction-scoped HUD read-model for the already-landed dynasty
-  renown/prestige runtime, projecting score, peak, score-to-peak ratio,
-  cross-faction rank, ruler identity, legitimacy, interregnum, and a HUD-only
-  prestige band under `HUD/**`.
-- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
-  now exposes `TryDebugGetDynastyRenownHUDSnapshot(...)` with parseable
-  `DynastyRenownHUD|FactionId=...|Score=...|PeakRenown=...|Rank=...|...`
-  output for smoke and later panel wiring.
-- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyRenownHUDSmokeValidation.cs`
-  plus
-  `scripts/Invoke-BloodlinesUnityDynastyRenownHUDSmokeValidation.ps1`
-  now prove renown score mirroring, dynasty ranking, and interregnum/ruler
-  legibility.
-- `unity/Assembly-CSharp.csproj` and `unity/Assembly-CSharp-Editor.csproj`
-  now include the new runtime/editor files for this worktree's generated
-  project metadata.
-
-### Validation Proof
-
-- Dedicated smoke:
-  - `Dynasty renown HUD smoke validation passed.`
-- Runtime build:
-  - `Build succeeded.`
-  - `0 Warning(s)`
-  - `0 Error(s)`
-- Editor build:
-  - `Build succeeded.`
-  - `0 Warning(s)`
-  - `0 Error(s)`
-- Bootstrap runtime:
-  - `Bootstrap runtime smoke validation passed.`
-- Combat smoke:
-  - `Unity exited with code 0`
-- Scene shells:
-  - `Bootstrap scene shell validation passed.`
-  - `Gameplay scene shell validation passed.`
-- Fortification smoke:
-  - `Fortification smoke validation passed.`
-- Siege smoke:
-  - `Unity exited with code 0`
-- Data validation:
-  - `Bloodlines data validation passed.`
-- Runtime bridge:
-  - `Bloodlines runtime bridge validation passed.`
-- Contract staleness after contract bump:
-  - `STALENESS CHECK PASSED: Contract revision=85, last-updated=2026-04-22 is current.`
-
-### Immediate Next Action
-
-1. Push `codex/unity-hud-dynasty-renown-readout`, merge it to `master`, and
-   rerun the governed 10-gate chain on the merge result.
-2. Continue the HUD lane with the next dynasty-facing follow-up, ideally a
-   leaderboard/panel that consolidates renown pressure across factions.
-
-### Context Notes
-
-- The browser still has no dynasty-level prestige HUD, only per-member renown;
-  this slice is an additive Unity HUD consumer over the already-landed
-  renown/prestige runtime.
-- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
-- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
-  still dirties during Unity validation and should remain unstaged.
-
 ## Codex Player Marriage Diplomacy Sub-Slice 2B: Acceptance And Effects (2026-04-21)
 
 ### Status: COMPLETE on branch `codex/unity-player-marriage-acceptance`
@@ -4423,39 +4349,33 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
 
-## Codex Dynasty Renown Leaderboard HUD (2026-04-22)
+## Codex Battlefield Command Deck Summary (2026-04-22)
 
 ### Branch
 
-- `codex/unity-hud-dynasty-renown-panel`
+- `codex/unity-player-hud-command-deck-summary-followup`
 
 ### What Landed On Branch
 
-- `unity/Assets/_Bloodlines/Code/HUD/DynastyRenownLeaderboardHUDComponent.cs`
-  and
-  `DynastyRenownLeaderboardHUDSystem.cs`
-  now add a singleton ordered dynasty prestige panel that consumes the
-  per-faction `DynastyRenownHUDComponent` snapshots, sorts by renown score with
-  peak-renown tie-breaking, and carries player/interregnum/ruler identity state
-  into one consolidated HUD read surface.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.cs`
+  now renders a consolidated player-facing command-deck summary block that
+  surfaces match stage/phase/year/declarations, world pressure / Great
+  Reckoning status, realm-condition bands, conviction-faith state, and the
+  player's live victory standing versus the overall leader.
 - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
-  now exposes `TryDebugGetDynastyRenownLeaderboard()` with parseable multi-line
-  `DynastyRenownLeaderboard|Rank=...|FactionId=...|Score=...|PeakRenown=...|...`
-  output.
-- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyRenownLeaderboardHUDSmokeValidation.cs`
+  now exposes `TryDebugGetBattlefieldCommandDeckSummary(...)` with a parseable
+  `CommandDeckSummary|...` seam for future UI consumers and editor smoke
+  validators.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBattlefieldCommandDeckSmokeValidation.cs`
   plus
-  `scripts/Invoke-BloodlinesUnityDynastyRenownLeaderboardHUDSmokeValidation.ps1`
-  now prove row population, human/interregnum projection, and prestige
-  ordering.
-- `unity/Assembly-CSharp.csproj` and `unity/Assembly-CSharp-Editor.csproj`
-  now include the new runtime/editor files and retarget the stale analyzer
-  paths away from the dead `c946` worktree to
-  `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`.
+  `scripts/Invoke-BloodlinesUnityBattlefieldCommandDeckSmokeValidation.ps1`
+  now prove both a stable baseline summary and a Great Reckoning follow-up
+  summary with convergence pressure and player strain.
 
 ### Validation Proof
 
 - Dedicated smoke:
-  - `Dynasty renown leaderboard HUD smoke validation passed.`
+  - `Battlefield command deck smoke validation passed.`
 - Runtime build:
   - `Build succeeded.`
   - `0 Error(s)`
@@ -4477,291 +4397,20 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   - `Bloodlines data validation passed.`
 - Runtime bridge:
   - `Bloodlines runtime bridge validation passed.`
-- Contract staleness before contract bump:
+- Contract staleness:
   - `STALENESS CHECK PASSED: Contract revision=85, last-updated=2026-04-22 is current.`
 
 ### Immediate Next Action
 
-1. Stage the dynasty-renown panel slice files plus contract and continuity
-   updates, commit them on `codex/unity-hud-dynasty-renown-panel`, and push to
-   `origin`.
-2. Merge the branch to `master`, rerun the full governed 10-gate chain on the
-   merge result, and then continue the next player-facing dynasty consumer or
-   on-screen HUD binding.
+1. Push `codex/unity-player-hud-command-deck-summary-followup`, then continue
+   the next player-HUD follow-up on the same unified command-deck surface.
+2. The cleanest next additive pickup is a dynasty-renown/prestige consumer or
+   another on-screen summary block that reuses existing ECS HUD read-models.
 
 ### Context Notes
 
 - `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
-- The worktree needed a `unity/Library` junction back to
-  `D:\ProjectsHome\Bloodlines\unity\Library` plus analyzer-path repair before
-  the governed build gates would go green again.
-- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
-  still dirties during Unity validation and should remain unstaged.
-
-## Codex Dynasty Renown Leaderboard HUD Landing (2026-04-22)
-
-### Merge Result
-
-- `a80fef7a`
-
-### What Landed On Master
-
-- `unity/Assets/_Bloodlines/Code/HUD/DynastyRenownLeaderboardHUDComponent.cs`
-  and
-  `DynastyRenownLeaderboardHUDSystem.cs`
-  now live on canonical `master`, providing the singleton ordered dynasty
-  prestige panel that consumes the already-landed `DynastyRenownHUDComponent`
-  snapshots.
-- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
-  now exposes `TryDebugGetDynastyRenownLeaderboard()` on canonical `master`.
-- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyRenownLeaderboardHUDSmokeValidation.cs`
-  plus
-  `scripts/Invoke-BloodlinesUnityDynastyRenownLeaderboardHUDSmokeValidation.ps1`
-  now live on canonical `master`.
-- The generated `Assembly-CSharp*.csproj` analyzer paths now target
-  `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`, and this worktree's
-  `unity/Library` junction is restored.
-
-### Validation Proof
-
-- Runtime build:
-  - `Build succeeded.`
-  - `0 Error(s)`
-- Editor build:
-  - `Build succeeded.`
-  - `0 Error(s)` with existing repo-wide warnings only
-- Bootstrap runtime:
-  - `Bootstrap runtime smoke validation passed.`
-- Combat smoke:
-  - `Unity exited with code 0`
-- Scene shells:
-  - `Bootstrap scene shell validation passed.`
-  - `Gameplay scene shell validation passed.`
-- Fortification smoke:
-  - `Fortification smoke validation passed.`
-- Siege smoke:
-  - `Unity exited with code 0`
-- Data validation:
-  - `Bloodlines data validation passed.`
-- Runtime bridge:
-  - `Bloodlines runtime bridge validation passed.`
-- Contract staleness before landing contract bump:
-  - `STALENESS CHECK PASSED: Contract revision=86, last-updated=2026-04-22 is current.`
-- Dedicated smoke:
-  - `Dynasty renown leaderboard HUD smoke validation passed.`
-
-### Immediate Next Action
-
-1. Claim the next fresh HUD/player-facing follow-up from canonical `master`.
-2. The cleanest pickup is an actual on-screen binding or another consolidated
-   dynasty read surface that consumes the now-landed renown leaderboard.
-
-### Context Notes
-
-- The HUD lane has no branch currently in flight after this landing pass.
-- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
-- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
-  still dirties during Unity validation and should remain unstaged.
-
-## Codex Player Command-Deck Overlay Slice (2026-04-22)
-
-### Branch Status
-
-- Branch: `codex/unity-player-hud-command-deck-overlay-followup`
-- Status: validated on branch and ready to stage/commit/push
-
-### What Changed
-
-- `unity/Assets/_Bloodlines/Code/HUD/PlayerCommandDeckOverlayPresenter.cs`
-  now centralizes the overlay title/body formatting so the live shell and
-  dedicated validator share one deterministic copy contract.
-- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.CommandDeckOverlay.cs`
-  now renders the already-landed `PlayerCommandDeckHUDComponent` into the
-  existing IMGUI battlefield shell as a top-right command-deck panel with
-  alert-color accenting.
-- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCommandDeckOverlaySmokeValidation.cs`
-  plus
-  `scripts/Invoke-BloodlinesUnityPlayerCommandDeckOverlaySmokeValidation.ps1`
-  now prove stable projection, victory ETA rendering, and Great Reckoning
-  alert preservation.
-- The worktree-local `unity/Library` junction was restored and generated
-  `Assembly-CSharp*.csproj` analyzer paths were repaired back to
-  `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache` so the governed
-  build gates run cleanly again.
-
-### Validation Proof
-
-- Dedicated smoke:
-  - `Player command-deck overlay smoke validation passed.`
-  - `BLOODLINES_PLAYER_COMMAND_DECK_OVERLAY_SMOKE PASS`
-- Runtime build:
-  - `Build succeeded.`
-  - `0 Error(s)`
-- Editor build:
-  - `Build succeeded.`
-  - `0 Error(s)` with existing repo-wide warnings only
-- Bootstrap runtime:
-  - `Bootstrap runtime smoke validation passed.`
-- Combat smoke:
-  - `Unity exited with code 0`
-- Scene shells:
-  - `Bootstrap scene shell validation passed.`
-  - `Gameplay scene shell validation passed.`
-- Fortification smoke:
-  - `Fortification smoke validation passed.`
-- Siege smoke:
-  - `Unity exited with code 0`
-- Data validation:
-  - `Bloodlines data validation passed.`
-- Runtime bridge:
-  - `Bloodlines runtime bridge validation passed.`
-- Contract staleness before contract bump:
-  - `STALENESS CHECK PASSED: Contract revision=89, last-updated=2026-04-22 is current.`
-
-### Immediate Next Action
-
-1. Stage the command-deck overlay slice files plus continuity/contract updates,
-   commit them on `codex/unity-player-hud-command-deck-overlay-followup`, and
-   push to `origin`.
-2. Continue the HUD lane with the next actual player-facing follow-up. The
-   cleanest pickup is either a narrative/inbox overlay consumer or a richer
-   consolidated faction leaderboard that reuses the same HUD seams.
-
-### Context Notes
-
-- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
-- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
-  still dirties during Unity validation and should remain unstaged.
-
-## Codex Player Command-Deck HUD Summary (2026-04-22)
-
-### Branch Status
-
-- Branch: `codex/unity-player-hud-command-deck-summary`
-- Status: validated on branch and ready to stage/commit/push
-
-### What Changed
-
-- `unity/Assets/_Bloodlines/Code/HUD/PlayerCommandDeckHUDComponent.cs`
-  and
-  `PlayerCommandDeckHUDSystem.cs`
-  now project a faction-scoped command-deck summary that consumes the already
-  landed match progression, victory leaderboard, dynasty renown, and
-  fortification HUD read-models, derives realm population/loyalty/faith bands,
-  and resolves a single `PrimaryAlertLabel` with strict precedence.
-- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
-  now exposes `TryDebugGetPlayerCommandDeckHUDSnapshot()` for parseable command
-  deck readouts.
-- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCommandDeckHUDSmokeValidation.cs`
-  plus
-  `scripts/Invoke-BloodlinesUnityPlayerCommandDeckHUDSmokeValidation.ps1`
-  now prove summary projection, Great Reckoning alert precedence, fortification
-  threat alerting, and victory-imminent alerting.
-
-### Validation Proof
-
-- Dedicated smoke:
-  - `Player command-deck HUD smoke validation passed.`
-- Runtime build:
-  - `Build succeeded.`
-  - `0 Error(s)`
-- Editor build:
-  - `Build succeeded.`
-  - `0 Error(s)` with existing repo-wide warnings only
-- Bootstrap runtime:
-  - `Bootstrap runtime smoke validation passed.`
-- Combat smoke:
-  - `Unity exited with code 0`
-- Scene shells:
-  - `Bootstrap scene shell validation passed.`
-  - `Gameplay scene shell validation passed.`
-- Fortification smoke:
-  - `Fortification smoke validation passed.`
-- Siege smoke:
-  - `Unity exited with code 0`
-- Data validation:
-  - `Bloodlines data validation passed.`
-- Runtime bridge:
-  - `Bloodlines runtime bridge validation passed.`
-- Contract staleness before contract bump:
-  - `STALENESS CHECK PASSED: Contract revision=87, last-updated=2026-04-22 is current.`
-
-### Immediate Next Action
-
-1. Stage the command-deck HUD slice files plus contract and continuity updates,
-   commit them on `codex/unity-player-hud-command-deck-summary`, and push to
-   `origin`.
-2. Merge the branch to `master`, rerun the full governed 10-gate chain on the
-   merge result, and then continue the next on-screen HUD binding follow-up.
-
-### Context Notes
-
-- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
-- The temporary local wrapper copies used to rerun root-pinned validation gates
-  are not part of the slice and should remain unstaged.
-- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
-  still dirties during Unity validation and should remain unstaged.
-
-## Codex Player Command-Deck HUD Summary Landing (2026-04-22)
-
-### Merge Result
-
-- `b8fc7589`
-
-### What Landed On Master
-
-- `unity/Assets/_Bloodlines/Code/HUD/PlayerCommandDeckHUDComponent.cs`
-  and
-  `PlayerCommandDeckHUDSystem.cs`
-  now live on canonical `master`, providing the faction-scoped command-deck
-  summary that consumes the already-landed match progression, victory
-  leaderboard, dynasty renown, and fortification HUD seams.
-- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
-  now exposes `TryDebugGetPlayerCommandDeckHUDSnapshot()` on canonical
-  `master`.
-- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCommandDeckHUDSmokeValidation.cs`
-  plus
-  `scripts/Invoke-BloodlinesUnityPlayerCommandDeckHUDSmokeValidation.ps1`
-  now live on canonical `master`.
-
-### Validation Proof
-
-- Runtime build:
-  - `Build succeeded.`
-  - `0 Error(s)`
-- Editor build:
-  - `Build succeeded.`
-  - `0 Error(s)` with existing repo-wide warnings only
-- Bootstrap runtime:
-  - `Bootstrap runtime smoke validation passed.`
-- Combat smoke:
-  - `Unity exited with code 0`
-- Scene shells:
-  - `Bootstrap scene shell validation passed.`
-  - `Gameplay scene shell validation passed.`
-- Fortification smoke:
-  - `Fortification smoke validation passed.`
-- Siege smoke:
-  - `Unity exited with code 0`
-- Data validation:
-  - `Bloodlines data validation passed.`
-- Runtime bridge:
-  - `Bloodlines runtime bridge validation passed.`
-- Contract staleness before landing contract bump:
-  - `STALENESS CHECK PASSED: Contract revision=88, last-updated=2026-04-22 is current.`
-- Dedicated smoke:
-  - `Player command-deck HUD smoke validation passed.`
-
-### Immediate Next Action
-
-1. Claim the next fresh HUD/player-facing follow-up from canonical `master`.
-2. The cleanest pickup is an actual on-screen HUD binding that consumes the new
-   command-deck snapshot, or another adjacent consolidated player-facing HUD
-   surface.
-
-### Context Notes
-
-- The HUD lane has no branch currently in flight after this landing pass.
-- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
+- The new command-deck line intentionally reuses existing HUD read-models
+  rather than inventing another parallel match-summary object.
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.

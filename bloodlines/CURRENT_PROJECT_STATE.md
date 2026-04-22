@@ -3579,140 +3579,29 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   victory leaderboard follow-up branch in flight while clearing the already
   landed player-captive-ransom and dynasty-renown branch markers.
 
-## 2026-04-22 Dynasty Renown HUD Readout Slice
+## 2026-04-22 Battlefield Command Deck Summary Slice
 
-- Branch in flight: `codex/unity-hud-dynasty-renown-readout`.
-- `unity/Assets/_Bloodlines/Code/HUD/DynastyRenownHUDComponent.cs`
-  and
-  `DynastyRenownHUDSystem.cs`
-  now add a faction-scoped dynasty prestige HUD read-model under `HUD/**` that
-  consumes the already-landed `DynastyRenownComponent`, computes cross-faction
-  renown rank, projects ruler identity, legitimacy, and interregnum state, and
-  applies a HUD-only renown band for readability without widening `AI/**`.
+- Branch in flight: `codex/unity-player-hud-command-deck-summary-followup`.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.cs`
+  now renders an additive player-facing command-deck summary block that
+  consumes the already-landed match-progression, realm-condition,
+  conviction/faith, and victory HUD read-models instead of leaving them as
+  isolated debug getters.
 - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
-  now exposes parseable
-  `DynastyRenownHUD|FactionId=...|Score=...|PeakRenown=...|Rank=...|...`
-  output for smoke and later panel consumers.
-- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyRenownHUDSmokeValidation.cs`
+  now exposes a parseable
+  `CommandDeckSummary|FactionId=...|StageNumber=...|...|TopVictoryProgressPct=...`
+  seam for smoke validation and future UI consumers.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBattlefieldCommandDeckSmokeValidation.cs`
   plus
-  `scripts/Invoke-BloodlinesUnityDynastyRenownHUDSmokeValidation.ps1`
-  now prove score mirroring, dynasty ranking, and interregnum projection in a
-  dedicated ECS validation world.
-- Governed validation is green on the branch: runtime build, editor build,
-  bootstrap runtime smoke, combat smoke, canonical scene shell validation,
-  fortification smoke, siege smoke, `node tests/data-validation.mjs`,
-  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated
-  dynasty renown HUD smoke.
+  `scripts/Invoke-BloodlinesUnityBattlefieldCommandDeckSmokeValidation.ps1`
+  now prove both a stable baseline command deck and a Great Reckoning follow-up
+  where convergence pressure, player strain bands, and trailing victory rank
+  surface together.
+- Governed validation is green on the branch: dedicated battlefield command
+  deck smoke, runtime build, editor build, bootstrap runtime smoke, combat
+  smoke, canonical scene shell validation, fortification smoke, siege smoke,
+  `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`,
+  and contract staleness.
 - Contract revision advanced `84 -> 85` and now records the HUD lane with the
-  dynasty-renown follow-up branch in flight.
-
-## 2026-04-22 Dynasty Renown Leaderboard HUD Slice
-
-- Branch in flight: `codex/unity-hud-dynasty-renown-panel`.
-- `unity/Assets/_Bloodlines/Code/HUD/DynastyRenownLeaderboardHUDComponent.cs`
-  and
-  `DynastyRenownLeaderboardHUDSystem.cs`
-  now add a singleton ordered dynasty prestige panel under `HUD/**` that
-  consumes the already-landed `DynastyRenownHUDComponent` snapshots, sorts
-  factions by renown score with peak-renown tie-breaking, and carries
-  player/interregnum/ruler identity state in one consolidated read-model.
-- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
-  now exposes parseable
-  `DynastyRenownLeaderboard|Rank=...|FactionId=...|Score=...|PeakRenown=...|...`
-  output for later UI consumers.
-- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyRenownLeaderboardHUDSmokeValidation.cs`
-  plus
-  `scripts/Invoke-BloodlinesUnityDynastyRenownLeaderboardHUDSmokeValidation.ps1`
-  now prove row population, human/interregnum projection, and prestige
-  ordering in a dedicated ECS validation world.
-- Governed validation is green on the branch: dedicated dynasty renown
-  leaderboard HUD smoke, runtime build, editor build, bootstrap runtime smoke,
-  combat smoke, canonical scene shell validation, fortification smoke, siege
-  smoke, `node tests/data-validation.mjs`,
-  `node tests/runtime-bridge.mjs`, and contract staleness.
-- Contract revision advanced `85 -> 86`, and this worktree's generated
-  `Assembly-CSharp*.csproj` metadata plus `unity/Library` access were repaired
-  so the governed build gates resolve against the canonical Unity Library
-  instead of the dead `c946` worktree.
-
-## 2026-04-22 Dynasty Renown Leaderboard HUD Landing
-
-- Canonical `master` advanced via merge commit `a80fef7a`, landing the
-  dynasty-renown leaderboard HUD slice on top of the prior renown HUD and
-  renown runtime surfaces.
-- Merge-result governed validation is green: runtime build, editor build,
-  bootstrap runtime smoke, combat smoke, canonical scene shell validation,
-  fortification smoke, siege smoke, `node tests/data-validation.mjs`,
-  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated
-  dynasty renown leaderboard HUD smoke.
-- Contract revision advanced `86 -> 87` and now clears the HUD lane branch in
-  flight after the landing pass.
-
-## 2026-04-22 Player Command-Deck HUD Summary Slice
-
-- Branch in flight: `codex/unity-player-hud-command-deck-summary`.
-- `unity/Assets/_Bloodlines/Code/HUD/PlayerCommandDeckHUDComponent.cs`
-  and
-  `PlayerCommandDeckHUDSystem.cs`
-  now add a faction-scoped command-deck summary under `HUD/**` that consumes
-  the already-landed match progression, victory leaderboard, dynasty renown,
-  and fortification HUD seams, derives realm population/loyalty/faith bands,
-  and resolves a single `PrimaryAlertLabel` with precedence across Great
-  Reckoning, fortification threat, loyalty crisis, victory-imminent pressure,
-  and world pressure.
-- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
-  now exposes parseable
-  `PlayerCommandDeckHUD|FactionId=...|StageLabel=...|PhaseLabel=...|LeadingVictoryConditionId=...|PrimaryAlertLabel=...`
-  output for smoke and later on-screen panel consumers.
-- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCommandDeckHUDSmokeValidation.cs`
-  plus
-  `scripts/Invoke-BloodlinesUnityPlayerCommandDeckHUDSmokeValidation.ps1`
-  now prove summary projection plus Great Reckoning, fortification threat, and
-  victory-imminent alert precedence in a dedicated ECS validation world.
-- Governed validation is green on the branch: dedicated player command-deck HUD
-  smoke, runtime build, editor build, bootstrap runtime smoke, combat smoke,
-  canonical scene shell validation, fortification smoke, siege smoke,
-  `node tests/data-validation.mjs`,
-  `node tests/runtime-bridge.mjs`, and contract staleness.
-- Contract revision advanced `87 -> 88` and now records the HUD lane with the
-  command-deck summary branch in flight.
-
-## 2026-04-22 Player Command-Deck HUD Summary Landing
-
-- Canonical `master` advanced via merge commit `b8fc7589`, landing the player
-  command-deck HUD summary slice on top of the already-landed match, victory,
-  fortification, and dynasty HUD seams.
-- Merge-result governed validation is green: runtime build, editor build,
-  bootstrap runtime smoke, combat smoke, canonical scene shell validation,
-  fortification smoke, siege smoke, `node tests/data-validation.mjs`,
-  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated player
-  command-deck HUD smoke.
-- Contract revision advanced `88 -> 89` and now clears the HUD lane branch in
-  flight after the landing pass.
-
-## 2026-04-22 Player Command-Deck Overlay Slice
-
-- Branch in flight: `codex/unity-player-hud-command-deck-overlay-followup`.
-- `unity/Assets/_Bloodlines/Code/HUD/PlayerCommandDeckOverlayPresenter.cs`
-  now provides a pure formatter for the live command-deck overlay title/body
-  so both the IMGUI shell and dedicated validator consume the same copy
-  contract.
-- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.CommandDeckOverlay.cs`
-  now binds the already-landed `PlayerCommandDeckHUDComponent` into the
-  on-screen Unity shell as a top-right panel with alert-color accenting.
-- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCommandDeckOverlaySmokeValidation.cs`
-  plus
-  `scripts/Invoke-BloodlinesUnityPlayerCommandDeckOverlaySmokeValidation.ps1`
-  now prove stable overlay rendering, victory ETA rendering, and Great
-  Reckoning alert preservation.
-- This worktree's generated `Assembly-CSharp*.csproj` analyzer paths were
-  repaired back to `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`,
-  and a local `unity/Library` junction was restored so the governed .NET build
-  gates run cleanly again.
-- Governed validation is green on the branch: dedicated overlay smoke, runtime
-  build, editor build, bootstrap runtime smoke, combat smoke, canonical scene
-  shell validation, fortification smoke, siege smoke,
-  `node tests/data-validation.mjs`,
-  `node tests/runtime-bridge.mjs`, and contract staleness.
-- Contract revision advanced `89 -> 90` and now records the HUD lane with the
-  command-deck overlay follow-up branch in flight.
+  command-deck summary follow-up branch in flight.
