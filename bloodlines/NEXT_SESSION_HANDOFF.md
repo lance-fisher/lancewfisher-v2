@@ -4563,6 +4563,76 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
 
+## Codex Player Command-Deck Overlay Slice (2026-04-22)
+
+### Branch Status
+
+- Branch: `codex/unity-player-hud-command-deck-overlay-followup`
+- Status: validated on branch and ready to stage/commit/push
+
+### What Changed
+
+- `unity/Assets/_Bloodlines/Code/HUD/PlayerCommandDeckOverlayPresenter.cs`
+  now centralizes the overlay title/body formatting so the live shell and
+  dedicated validator share one deterministic copy contract.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.CommandDeckOverlay.cs`
+  now renders the already-landed `PlayerCommandDeckHUDComponent` into the
+  existing IMGUI battlefield shell as a top-right command-deck panel with
+  alert-color accenting.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCommandDeckOverlaySmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityPlayerCommandDeckOverlaySmokeValidation.ps1`
+  now prove stable projection, victory ETA rendering, and Great Reckoning
+  alert preservation.
+- The worktree-local `unity/Library` junction was restored and generated
+  `Assembly-CSharp*.csproj` analyzer paths were repaired back to
+  `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache` so the governed
+  build gates run cleanly again.
+
+### Validation Proof
+
+- Dedicated smoke:
+  - `Player command-deck overlay smoke validation passed.`
+  - `BLOODLINES_PLAYER_COMMAND_DECK_OVERLAY_SMOKE PASS`
+- Runtime build:
+  - `Build succeeded.`
+  - `0 Error(s)`
+- Editor build:
+  - `Build succeeded.`
+  - `0 Error(s)` with existing repo-wide warnings only
+- Bootstrap runtime:
+  - `Bootstrap runtime smoke validation passed.`
+- Combat smoke:
+  - `Unity exited with code 0`
+- Scene shells:
+  - `Bootstrap scene shell validation passed.`
+  - `Gameplay scene shell validation passed.`
+- Fortification smoke:
+  - `Fortification smoke validation passed.`
+- Siege smoke:
+  - `Unity exited with code 0`
+- Data validation:
+  - `Bloodlines data validation passed.`
+- Runtime bridge:
+  - `Bloodlines runtime bridge validation passed.`
+- Contract staleness before contract bump:
+  - `STALENESS CHECK PASSED: Contract revision=89, last-updated=2026-04-22 is current.`
+
+### Immediate Next Action
+
+1. Stage the command-deck overlay slice files plus continuity/contract updates,
+   commit them on `codex/unity-player-hud-command-deck-overlay-followup`, and
+   push to `origin`.
+2. Continue the HUD lane with the next actual player-facing follow-up. The
+   cleanest pickup is either a narrative/inbox overlay consumer or a richer
+   consolidated faction leaderboard that reuses the same HUD seams.
+
+### Context Notes
+
+- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
+
 ## Codex Player Command-Deck HUD Summary (2026-04-22)
 
 ### Branch Status
