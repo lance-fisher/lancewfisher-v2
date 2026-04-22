@@ -26,6 +26,12 @@ namespace Bloodlines.PlayerCovertOps
         public float CounterIntelligenceDefense;
         public bool CounterIntelligenceActive;
         public float BloodlineGuardBonus;
+        public float WatchDurationInWorldDays;
+        public float WatchStrength;
+        public FixedString64Bytes WardLabel;
+        public FixedString128Bytes GuardedRoles;
+        public float AverageLoyalty;
+        public float WeakestLoyalty;
         public bool Active;
         public float EscrowGold;
         public float EscrowInfluence;

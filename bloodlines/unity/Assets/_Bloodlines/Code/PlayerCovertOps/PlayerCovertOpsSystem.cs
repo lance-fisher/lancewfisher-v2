@@ -1,5 +1,6 @@
 using Bloodlines.AI;
 using Bloodlines.Components;
+using Bloodlines.Dynasties;
 using Bloodlines.GameTime;
 using Unity.Collections;
 using Unity.Entities;
@@ -23,6 +24,10 @@ namespace Bloodlines.PlayerCovertOps
         public const float AssassinationCostGold = 85f;
         public const float AssassinationCostInfluence = 28f;
         public const float AssassinationDurationInWorldDays = 34f / 86400f;
+        public const float CounterIntelligenceCostGold = 60f;
+        public const float CounterIntelligenceCostInfluence = 18f;
+        public const float CounterIntelligenceDurationInWorldDays = 18f / 86400f;
+        public const float CounterIntelligenceWatchDurationInWorldDays = 150f / 86400f;
 
         private const float EspionageMinimumProjectedChance = 0.08f;
         private const float EspionageMaximumProjectedChance = 0.92f;
@@ -35,6 +40,9 @@ namespace Bloodlines.PlayerCovertOps
         private const float AssassinationBaseOffense = 36f;
         private const float AssassinationIntelSupportBonus = 12f;
         private const float SabotageBaseOffense = 45f;
+        private const float EspionageWardDefense = 8f;
+        private const float AssassinationWardDefense = 12f;
+        private const float CounterIntelligenceHostilitySupport = 4f;
 
         public void OnCreate(ref SystemState state)
         {
@@ -62,6 +70,10 @@ namespace Bloodlines.PlayerCovertOps
 
                     case CovertOpKindPlayer.Assassination:
                         TryDispatchAssassination(entityManager, requests[i], inWorldDays);
+                        break;
+
+                    case CovertOpKindPlayer.CounterIntelligence:
+                        TryDispatchCounterIntelligence(entityManager, requests[i], inWorldDays);
                         break;
 
                     case CovertOpKindPlayer.Sabotage:
@@ -127,8 +139,10 @@ namespace Bloodlines.PlayerCovertOps
 
             var contest = BuildEspionageContest(
                 entityManager,
+                request.SourceFactionId,
                 request.TargetFactionId,
-                operatorMember.Renown);
+                operatorMember.Renown,
+                inWorldDays);
 
             stockpile.Gold -= EspionageCostGold;
             stockpile.Influence -= EspionageCostInfluence;
@@ -156,8 +170,14 @@ namespace Bloodlines.PlayerCovertOps
                 IntelSupport = false,
                 IntelSupportBonus = 0f,
                 CounterIntelligenceDefense = contest.CounterIntelligenceDefense,
-                CounterIntelligenceActive = false,
+                CounterIntelligenceActive = contest.CounterIntelligenceActive,
                 BloodlineGuardBonus = 0f,
+                WatchDurationInWorldDays = 0f,
+                WatchStrength = 0f,
+                WardLabel = default,
+                GuardedRoles = default,
+                AverageLoyalty = 0f,
+                WeakestLoyalty = 0f,
                 Active = true,
                 EscrowGold = EspionageCostGold,
                 EscrowInfluence = EspionageCostInfluence,
@@ -230,10 +250,12 @@ namespace Bloodlines.PlayerCovertOps
                 inWorldDays);
             var contest = BuildAssassinationContest(
                 entityManager,
+                request.SourceFactionId,
                 request.TargetFactionId,
                 targetMember,
                 operatorMember.Renown,
-                intelSupport);
+                intelSupport,
+                inWorldDays);
 
             stockpile.Gold -= AssassinationCostGold;
             stockpile.Influence -= AssassinationCostInfluence;
@@ -263,9 +285,101 @@ namespace Bloodlines.PlayerCovertOps
                 CounterIntelligenceDefense = contest.CounterIntelligenceDefense,
                 CounterIntelligenceActive = contest.CounterIntelligenceActive,
                 BloodlineGuardBonus = contest.BloodlineGuardBonus,
+                WatchDurationInWorldDays = 0f,
+                WatchStrength = 0f,
+                WardLabel = default,
+                GuardedRoles = default,
+                AverageLoyalty = 0f,
+                WeakestLoyalty = 0f,
                 Active = true,
                 EscrowGold = AssassinationCostGold,
                 EscrowInfluence = AssassinationCostInfluence,
+            });
+        }
+
+        private static void TryDispatchCounterIntelligence(
+            EntityManager entityManager,
+            PlayerCovertOpsRequestComponent request,
+            float inWorldDays)
+        {
+            if (request.SourceFactionId.Length == 0)
+            {
+                return;
+            }
+
+            var sourceFactionEntity = FindFactionEntity(entityManager, request.SourceFactionId);
+            if (sourceFactionEntity == Entity.Null ||
+                !entityManager.HasComponent<ResourceStockpileComponent>(sourceFactionEntity) ||
+                !entityManager.HasBuffer<DynastyMemberRef>(sourceFactionEntity))
+            {
+                return;
+            }
+
+            if (HasActiveCounterIntelligenceOperation(entityManager, request.SourceFactionId) ||
+                HasActiveCounterIntelligenceWatch(entityManager, sourceFactionEntity, inWorldDays) ||
+                !HasPlayerOperationCapacity(entityManager, request.SourceFactionId))
+            {
+                return;
+            }
+
+            if (!TrySelectCounterIntelligenceOperator(
+                    entityManager,
+                    sourceFactionEntity,
+                    out var operatorMember) ||
+                !TryBuildCounterIntelligenceTerms(
+                    entityManager,
+                    sourceFactionEntity,
+                    request.SourceFactionId,
+                    operatorMember,
+                    out var watchTerms))
+            {
+                return;
+            }
+
+            var stockpile = entityManager.GetComponentData<ResourceStockpileComponent>(sourceFactionEntity);
+            if (stockpile.Gold < CounterIntelligenceCostGold ||
+                stockpile.Influence < CounterIntelligenceCostInfluence)
+            {
+                return;
+            }
+
+            stockpile.Gold -= CounterIntelligenceCostGold;
+            stockpile.Influence -= CounterIntelligenceCostInfluence;
+            entityManager.SetComponentData(sourceFactionEntity, stockpile);
+
+            var operationEntity = entityManager.CreateEntity(typeof(PlayerCovertOpsResolutionComponent));
+            entityManager.SetComponentData(operationEntity, new PlayerCovertOpsResolutionComponent
+            {
+                OperationId = BuildOperationId("player-counter-intel-", request.SourceFactionId, request.SourceFactionId, operationEntity.Index),
+                Kind = CovertOpKindPlayer.CounterIntelligence,
+                Subtype = default,
+                SourceFactionId = request.SourceFactionId,
+                TargetFactionId = default,
+                TargetMemberId = default,
+                TargetEntityIndex = -1,
+                StartedAtInWorldDays = inWorldDays,
+                ResolveAtInWorldDays = inWorldDays + CounterIntelligenceDurationInWorldDays,
+                ReportExpiresAtInWorldDays = 0f,
+                OperatorMemberId = operatorMember.MemberId,
+                OperatorTitle = operatorMember.Title,
+                TargetLabel = new FixedString64Bytes("bloodline-court"),
+                LocationLabel = watchTerms.WardLabel,
+                SuccessScore = watchTerms.WatchStrength,
+                ProjectedChance = 1f,
+                IntelSupport = false,
+                IntelSupportBonus = 0f,
+                CounterIntelligenceDefense = 0f,
+                CounterIntelligenceActive = false,
+                BloodlineGuardBonus = 0f,
+                WatchDurationInWorldDays = CounterIntelligenceWatchDurationInWorldDays,
+                WatchStrength = watchTerms.WatchStrength,
+                WardLabel = watchTerms.WardLabel,
+                GuardedRoles = watchTerms.GuardedRoles,
+                AverageLoyalty = watchTerms.AverageLoyalty,
+                WeakestLoyalty = watchTerms.WeakestLoyalty,
+                Active = true,
+                EscrowGold = CounterIntelligenceCostGold,
+                EscrowInfluence = CounterIntelligenceCostInfluence,
             });
         }
 
@@ -367,6 +481,12 @@ namespace Bloodlines.PlayerCovertOps
                 CounterIntelligenceDefense = 0f,
                 CounterIntelligenceActive = false,
                 BloodlineGuardBonus = 0f,
+                WatchDurationInWorldDays = 0f,
+                WatchStrength = 0f,
+                WardLabel = default,
+                GuardedRoles = default,
+                AverageLoyalty = 0f,
+                WeakestLoyalty = 0f,
                 Active = true,
                 EscrowGold = sabotageTerms.GoldCost,
                 EscrowInfluence = sabotageTerms.InfluenceCost,
@@ -485,11 +605,9 @@ namespace Bloodlines.PlayerCovertOps
             return false;
         }
 
-        private static bool HasActiveIntelligenceReport(
+        private static bool HasActiveCounterIntelligenceOperation(
             EntityManager entityManager,
-            FixedString32Bytes sourceFactionId,
-            FixedString32Bytes targetFactionId,
-            float inWorldDays)
+            FixedString32Bytes sourceFactionId)
         {
             var query = entityManager.CreateEntityQuery(
                 ComponentType.ReadOnly<PlayerCovertOpsResolutionComponent>());
@@ -504,14 +622,13 @@ namespace Bloodlines.PlayerCovertOps
             for (int i = 0; i < operations.Length; i++)
             {
                 var operation = operations[i];
-                if (operation.Kind != CovertOpKindPlayer.Espionage ||
-                    !operation.SourceFactionId.Equals(sourceFactionId) ||
-                    !operation.TargetFactionId.Equals(targetFactionId))
+                if (!operation.Active ||
+                    operation.Kind != CovertOpKindPlayer.CounterIntelligence)
                 {
                     continue;
                 }
 
-                if (operation.ReportExpiresAtInWorldDays > inWorldDays)
+                if (operation.SourceFactionId.Equals(sourceFactionId))
                 {
                     return true;
                 }
@@ -520,7 +637,52 @@ namespace Bloodlines.PlayerCovertOps
             return false;
         }
 
-        private static bool TrySelectOperator(
+        private static bool HasActiveCounterIntelligenceWatch(
+            EntityManager entityManager,
+            Entity factionEntity,
+            float inWorldDays)
+        {
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<PlayerCounterIntelligenceComponent>(factionEntity))
+            {
+                return false;
+            }
+
+            return entityManager.GetComponentData<PlayerCounterIntelligenceComponent>(factionEntity)
+                .ExpiresAtInWorldDays > inWorldDays;
+        }
+
+        internal static bool HasActiveIntelligenceReport(
+            EntityManager entityManager,
+            FixedString32Bytes sourceFactionId,
+            FixedString32Bytes targetFactionId,
+            float inWorldDays)
+        {
+            var sourceFactionEntity = FindFactionEntity(entityManager, sourceFactionId);
+            if (sourceFactionEntity == Entity.Null ||
+                !entityManager.HasBuffer<IntelligenceReportElement>(sourceFactionEntity))
+            {
+                return false;
+            }
+
+            var reports = entityManager.GetBuffer<IntelligenceReportElement>(sourceFactionEntity);
+            for (int i = 0; i < reports.Length; i++)
+            {
+                if (!reports[i].TargetFactionId.Equals(targetFactionId))
+                {
+                    continue;
+                }
+
+                if (reports[i].ExpiresAtInWorldDays > inWorldDays)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        internal static bool TrySelectOperator(
             EntityManager entityManager,
             Entity factionEntity,
             out DynastyMemberComponent member)
@@ -540,6 +702,17 @@ namespace Bloodlines.PlayerCovertOps
             return TrySelectOperatorByRole(entityManager, factionEntity, DynastyRole.Spymaster, out member) ||
                    TrySelectOperatorByRole(entityManager, factionEntity, DynastyRole.Diplomat, out member) ||
                    TrySelectOperatorByPath(entityManager, factionEntity, DynastyPath.CovertOperations, out member);
+        }
+
+        private static bool TrySelectCounterIntelligenceOperator(
+            EntityManager entityManager,
+            Entity factionEntity,
+            out DynastyMemberComponent member)
+        {
+            member = default;
+            return TrySelectOperatorByRole(entityManager, factionEntity, DynastyRole.Spymaster, out member) ||
+                   TrySelectOperatorByRole(entityManager, factionEntity, DynastyRole.Diplomat, out member) ||
+                   TrySelectOperatorByRole(entityManager, factionEntity, DynastyRole.HeadOfBloodline, out member);
         }
 
         private static bool TrySelectOperatorByRole(
@@ -612,7 +785,7 @@ namespace Bloodlines.PlayerCovertOps
             return false;
         }
 
-        private static bool TryResolveDynastyMember(
+        internal static bool TryResolveDynastyMember(
             EntityManager entityManager,
             Entity factionEntity,
             FixedString64Bytes memberId,
@@ -649,14 +822,26 @@ namespace Bloodlines.PlayerCovertOps
             return false;
         }
 
-        private static EspionageContest BuildEspionageContest(
+        internal static EspionageContest BuildEspionageContest(
             EntityManager entityManager,
+            FixedString32Bytes sourceFactionId,
             FixedString32Bytes targetFactionId,
-            float offenseRenown)
+            float offenseRenown,
+            float inWorldDays)
         {
+            var seatProfile = ResolvePrimarySeatProfile(entityManager, targetFactionId);
+            var counterIntel = ResolveCounterIntelligenceProfile(
+                entityManager,
+                targetFactionId,
+                sourceFactionId,
+                hasTargetMember: false,
+                DynastyRole.HeadOfBloodline,
+                inWorldDays);
             float offense = EspionageBaseOffense + offenseRenown;
             float defense = ResolveDefenseRenown(entityManager, targetFactionId) +
-                            ResolveHighestSettlementFortificationTier(entityManager, targetFactionId) * 6f;
+                            seatProfile.FortificationTier * 6f +
+                            (seatProfile.WardActive ? EspionageWardDefense : 0f) +
+                            counterIntel.TotalBonus;
             float successScore = offense - defense;
             float projectedChance = math.clamp(
                 0.5f + (successScore / 100f),
@@ -667,25 +852,38 @@ namespace Bloodlines.PlayerCovertOps
             {
                 SuccessScore = successScore,
                 ProjectedChance = projectedChance,
-                CounterIntelligenceDefense = 0f,
+                CounterIntelligenceDefense = counterIntel.TotalBonus,
+                CounterIntelligenceActive = counterIntel.Active,
             };
         }
 
-        private static AssassinationContest BuildAssassinationContest(
+        internal static AssassinationContest BuildAssassinationContest(
             EntityManager entityManager,
+            FixedString32Bytes sourceFactionId,
             FixedString32Bytes targetFactionId,
             DynastyMemberComponent targetMember,
             float offenseRenown,
-            bool intelSupport)
+            bool intelSupport,
+            float inWorldDays)
         {
             var location = ResolveAssassinationLocationProfile(entityManager, targetFactionId, targetMember.Role);
+            var counterIntel = ResolveCounterIntelligenceProfile(
+                entityManager,
+                targetFactionId,
+                sourceFactionId,
+                hasTargetMember: true,
+                targetMember.Role,
+                inWorldDays);
             float offense = offenseRenown +
                             AssassinationBaseOffense +
                             (intelSupport ? AssassinationIntelSupportBonus : 0f) +
                             location.ExposureBonus;
             float defense = ResolveDefenseRenown(entityManager, targetFactionId) +
                             location.KeepTier * 7f +
-                            (targetMember.Role == DynastyRole.HeadOfBloodline ? 8f : 0f);
+                            location.WardDefenseBonus +
+                            location.BloodlineProtectionBonus +
+                            (targetMember.Role == DynastyRole.HeadOfBloodline ? 8f : 0f) +
+                            counterIntel.TotalBonus;
             float successScore = offense - defense;
             float projectedChance = math.clamp(
                 0.5f + (successScore / 100f),
@@ -698,9 +896,9 @@ namespace Bloodlines.PlayerCovertOps
                 ProjectedChance = projectedChance,
                 LocationLabel = location.Label,
                 IntelSupportBonus = intelSupport ? AssassinationIntelSupportBonus : 0f,
-                CounterIntelligenceDefense = 0f,
-                CounterIntelligenceActive = false,
-                BloodlineGuardBonus = 0f,
+                CounterIntelligenceDefense = counterIntel.TotalBonus,
+                CounterIntelligenceActive = counterIntel.Active,
+                BloodlineGuardBonus = counterIntel.RoleGuardBonus,
             };
         }
 
@@ -886,6 +1084,10 @@ namespace Bloodlines.PlayerCovertOps
                 Label = label,
                 KeepTier = settlements[bestIndex].FortificationTier,
                 ExposureBonus = ResolveExposureBonus(targetRole),
+                WardDefenseBonus = entityManager.HasComponent<FaithWardedSettlementTag>(entities[bestIndex])
+                    ? AssassinationWardDefense
+                    : 0f,
+                BloodlineProtectionBonus = 0f,
             };
         }
 
@@ -900,6 +1102,8 @@ namespace Bloodlines.PlayerCovertOps
                         : new FixedString64Bytes("rival-court"),
                 KeepTier = 0,
                 ExposureBonus = ResolveExposureBonus(targetRole),
+                WardDefenseBonus = 0f,
+                BloodlineProtectionBonus = 0f,
             };
         }
 
@@ -1032,7 +1236,7 @@ namespace Bloodlines.PlayerCovertOps
             return false;
         }
 
-        private static Entity FindFactionEntity(
+        internal static Entity FindFactionEntity(
             EntityManager entityManager,
             FixedString32Bytes factionId)
         {
@@ -1041,18 +1245,31 @@ namespace Bloodlines.PlayerCovertOps
             using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
             query.Dispose();
 
+            Entity fallback = Entity.Null;
             for (int i = 0; i < entities.Length; i++)
             {
-                if (factions[i].FactionId.Equals(factionId))
+                if (!factions[i].FactionId.Equals(factionId))
+                {
+                    continue;
+                }
+
+                if (entityManager.HasComponent<FactionKindComponent>(entities[i]) ||
+                    entityManager.HasComponent<ResourceStockpileComponent>(entities[i]) ||
+                    entityManager.HasComponent<DynastyStateComponent>(entities[i]))
                 {
                     return entities[i];
                 }
+
+                if (fallback == Entity.Null)
+                {
+                    fallback = entities[i];
+                }
             }
 
-            return Entity.Null;
+            return fallback;
         }
 
-        private static float GetInWorldDays(EntityManager entityManager)
+        internal static float GetInWorldDays(EntityManager entityManager)
         {
             var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<DualClockComponent>());
             if (query.IsEmpty)
@@ -1066,10 +1283,46 @@ namespace Bloodlines.PlayerCovertOps
             return inWorldDays;
         }
 
-        private static bool IsAvailable(DynastyMemberStatus status)
+        internal static bool IsAvailable(DynastyMemberStatus status)
         {
             return status == DynastyMemberStatus.Active ||
                    status == DynastyMemberStatus.Ruling;
+        }
+
+        internal static int CountActivePlayerOperations(
+            EntityManager entityManager,
+            FixedString32Bytes factionId,
+            CovertOpKindPlayer? kind = null)
+        {
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<PlayerCovertOpsResolutionComponent>());
+            if (query.IsEmpty)
+            {
+                query.Dispose();
+                return 0;
+            }
+
+            using var operations = query.ToComponentDataArray<PlayerCovertOpsResolutionComponent>(Allocator.Temp);
+            query.Dispose();
+
+            int count = 0;
+            for (int i = 0; i < operations.Length; i++)
+            {
+                if (!operations[i].Active ||
+                    !operations[i].SourceFactionId.Equals(factionId))
+                {
+                    continue;
+                }
+
+                if (kind.HasValue && operations[i].Kind != kind.Value)
+                {
+                    continue;
+                }
+
+                count++;
+            }
+
+            return count;
         }
 
         private static FixedString64Bytes BuildOperationId(
@@ -1087,14 +1340,310 @@ namespace Bloodlines.PlayerCovertOps
             return id;
         }
 
-        private struct EspionageContest
+        private static bool TryBuildCounterIntelligenceTerms(
+            EntityManager entityManager,
+            Entity factionEntity,
+            FixedString32Bytes factionId,
+            DynastyMemberComponent operatorMember,
+            out CounterIntelligenceWatchTerms watchTerms)
+        {
+            watchTerms = default;
+            ResolveCourtLoyaltyProfile(entityManager, factionEntity, out float averageLoyalty, out float weakestLoyalty);
+            var seatProfile = ResolvePrimarySeatProfile(entityManager, factionId);
+            float legitimacy = 0f;
+            if (entityManager.HasComponent<DynastyStateComponent>(factionEntity))
+            {
+                legitimacy = entityManager.GetComponentData<DynastyStateComponent>(factionEntity).Legitimacy;
+            }
+
+            float loyaltySupport = math.max(0f, (averageLoyalty - 50f) * 0.08f);
+            float legitimacySupport = math.max(0f, (legitimacy - 55f) * 0.05f);
+            float instabilityPenalty = math.max(0f, (58f - weakestLoyalty) * 0.12f);
+
+            watchTerms = new CounterIntelligenceWatchTerms
+            {
+                WatchStrength = math.max(
+                    8f,
+                    math.round(
+                        (operatorMember.Renown * 0.5f) +
+                        10f +
+                        seatProfile.FortificationTier * 3f +
+                        (seatProfile.WardActive ? 5f : 0f) +
+                        loyaltySupport +
+                        legitimacySupport -
+                        instabilityPenalty)),
+                WardLabel = seatProfile.WardLabel,
+                GuardedRoles = BuildGuardedRoleSummary(),
+                AverageLoyalty = averageLoyalty,
+                WeakestLoyalty = weakestLoyalty,
+            };
+            return true;
+        }
+
+        private static SeatDefenseProfile ResolvePrimarySeatProfile(
+            EntityManager entityManager,
+            FixedString32Bytes factionId)
+        {
+            if (!TryResolvePrimarySeat(entityManager, factionId, out var seatEntity, out var seat))
+            {
+                return new SeatDefenseProfile
+                {
+                    FortificationTier = 0,
+                    WardActive = false,
+                    WardLabel = new FixedString64Bytes("Unwarded Keep"),
+                };
+            }
+
+            return new SeatDefenseProfile
+            {
+                FortificationTier = seat.FortificationTier,
+                WardActive = entityManager.HasComponent<FaithWardedSettlementTag>(seatEntity),
+                WardLabel = ResolveWardLabel(entityManager, seatEntity, factionId),
+            };
+        }
+
+        private static bool TryResolvePrimarySeat(
+            EntityManager entityManager,
+            FixedString32Bytes factionId,
+            out Entity seatEntity,
+            out SettlementComponent seat)
+        {
+            seatEntity = Entity.Null;
+            seat = default;
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<SettlementComponent>());
+            if (query.IsEmpty)
+            {
+                query.Dispose();
+                return false;
+            }
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var settlements = query.ToComponentDataArray<SettlementComponent>(Allocator.Temp);
+            query.Dispose();
+
+            int bestIndex = -1;
+            int highestTier = -1;
+            for (int i = 0; i < settlements.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(factionId))
+                {
+                    continue;
+                }
+
+                if (entityManager.HasComponent<PrimaryKeepTag>(entities[i]))
+                {
+                    bestIndex = i;
+                    break;
+                }
+
+                if (settlements[i].FortificationTier > highestTier)
+                {
+                    highestTier = settlements[i].FortificationTier;
+                    bestIndex = i;
+                }
+            }
+
+            if (bestIndex < 0)
+            {
+                return false;
+            }
+
+            seatEntity = entities[bestIndex];
+            seat = settlements[bestIndex];
+            return true;
+        }
+
+        private static void ResolveCourtLoyaltyProfile(
+            EntityManager entityManager,
+            Entity factionEntity,
+            out float averageLoyalty,
+            out float weakestLoyalty)
+        {
+            float total = 0f;
+            int count = 0;
+            weakestLoyalty = 50f;
+
+            if (factionEntity != Entity.Null &&
+                entityManager.HasComponent<FactionLoyaltyComponent>(factionEntity))
+            {
+                var loyalty = entityManager.GetComponentData<FactionLoyaltyComponent>(factionEntity).Current;
+                total += loyalty;
+                weakestLoyalty = loyalty;
+                count++;
+            }
+
+            if (factionEntity != Entity.Null &&
+                entityManager.HasBuffer<LesserHouseElement>(factionEntity))
+            {
+                var houses = entityManager.GetBuffer<LesserHouseElement>(factionEntity);
+                for (int i = 0; i < houses.Length; i++)
+                {
+                    if (houses[i].Defected)
+                    {
+                        continue;
+                    }
+
+                    total += houses[i].Loyalty;
+                    weakestLoyalty = count == 0
+                        ? houses[i].Loyalty
+                        : math.min(weakestLoyalty, houses[i].Loyalty);
+                    count++;
+                }
+            }
+
+            if (count == 0)
+            {
+                averageLoyalty = 50f;
+                weakestLoyalty = 50f;
+                return;
+            }
+
+            averageLoyalty = total / count;
+        }
+
+        private static FixedString64Bytes ResolveWardLabel(
+            EntityManager entityManager,
+            Entity seatEntity,
+            FixedString32Bytes factionId)
+        {
+            if (seatEntity == Entity.Null ||
+                !entityManager.HasComponent<FaithWardedSettlementTag>(seatEntity))
+            {
+                return new FixedString64Bytes("Unwarded Keep");
+            }
+
+            var factionEntity = FindFactionEntity(entityManager, factionId);
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<FaithStateComponent>(factionEntity))
+            {
+                return new FixedString64Bytes("Unwarded Keep");
+            }
+
+            var faith = entityManager.GetComponentData<FaithStateComponent>(factionEntity);
+            return faith.SelectedFaith switch
+            {
+                CovenantId.OldLight => faith.DoctrinePath == DoctrinePath.Dark
+                    ? new FixedString64Bytes("Judgment Pyre")
+                    : new FixedString64Bytes("Pyre Ward"),
+                CovenantId.BloodDominion => new FixedString64Bytes("Blood-Altar Reserve"),
+                CovenantId.TheOrder => faith.DoctrinePath == DoctrinePath.Dark
+                    ? new FixedString64Bytes("Submission Edict")
+                    : new FixedString64Bytes("Edict Ward"),
+                CovenantId.TheWild => faith.DoctrinePath == DoctrinePath.Dark
+                    ? new FixedString64Bytes("Predator Root Ward")
+                    : new FixedString64Bytes("Root Ward"),
+                _ => new FixedString64Bytes("Unwarded Keep"),
+            };
+        }
+
+        private static FixedString128Bytes BuildGuardedRoleSummary()
+        {
+            var summary = new FixedString128Bytes("head_of_bloodline|heir_designate|commander|spymaster|governor");
+            return summary;
+        }
+
+        private static CounterIntelligenceProfile ResolveCounterIntelligenceProfile(
+            EntityManager entityManager,
+            FixedString32Bytes targetFactionId,
+            FixedString32Bytes sourceFactionId,
+            bool hasTargetMember,
+            DynastyRole targetRole,
+            float inWorldDays)
+        {
+            var targetFactionEntity = FindFactionEntity(entityManager, targetFactionId);
+            if (targetFactionEntity == Entity.Null ||
+                !entityManager.HasComponent<PlayerCounterIntelligenceComponent>(targetFactionEntity))
+            {
+                return default;
+            }
+
+            var entry = entityManager.GetComponentData<PlayerCounterIntelligenceComponent>(targetFactionEntity);
+            if (entry.ExpiresAtInWorldDays <= inWorldDays)
+            {
+                return default;
+            }
+
+            ResolveCourtLoyaltyProfile(entityManager, targetFactionEntity, out float averageLoyalty, out float weakestLoyalty);
+            float legitimacy = entityManager.HasComponent<DynastyStateComponent>(targetFactionEntity)
+                ? entityManager.GetComponentData<DynastyStateComponent>(targetFactionEntity).Legitimacy
+                : 0f;
+            float roleGuardBonus = hasTargetMember
+                ? ResolveCounterIntelligenceRoleGuardBonus(targetRole)
+                : 0f;
+            float hostilitySupport = HasHostility(entityManager, targetFactionEntity, sourceFactionId)
+                ? CounterIntelligenceHostilitySupport
+                : 0f;
+            float loyaltySupport = math.max(0f, (averageLoyalty - 50f) * 0.06f);
+            float legitimacySupport = math.max(0f, (legitimacy - 55f) * 0.04f);
+            float instabilityPenalty = math.max(0f, (58f - weakestLoyalty) * 0.14f);
+            float totalBonus = math.max(
+                0f,
+                math.round(
+                    entry.WatchStrength +
+                    loyaltySupport +
+                    legitimacySupport +
+                    hostilitySupport +
+                    roleGuardBonus -
+                    instabilityPenalty));
+
+            return new CounterIntelligenceProfile
+            {
+                Active = true,
+                TotalBonus = totalBonus,
+                RoleGuardBonus = roleGuardBonus,
+            };
+        }
+
+        private static bool HasHostility(
+            EntityManager entityManager,
+            Entity factionEntity,
+            FixedString32Bytes hostileFactionId)
+        {
+            if (factionEntity == Entity.Null ||
+                hostileFactionId.Length == 0 ||
+                !entityManager.HasBuffer<HostilityComponent>(factionEntity))
+            {
+                return false;
+            }
+
+            var hostility = entityManager.GetBuffer<HostilityComponent>(factionEntity);
+            for (int i = 0; i < hostility.Length; i++)
+            {
+                if (hostility[i].HostileFactionId.Equals(hostileFactionId))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static float ResolveCounterIntelligenceRoleGuardBonus(DynastyRole role)
+        {
+            return role switch
+            {
+                DynastyRole.HeadOfBloodline => 10f,
+                DynastyRole.HeirDesignate => 8f,
+                DynastyRole.Commander => 8f,
+                DynastyRole.Spymaster => 7f,
+                DynastyRole.Governor => 6f,
+                _ => 0f,
+            };
+        }
+
+        internal struct EspionageContest
         {
             public float SuccessScore;
             public float ProjectedChance;
             public float CounterIntelligenceDefense;
+            public bool CounterIntelligenceActive;
         }
 
-        private struct AssassinationContest
+        internal struct AssassinationContest
         {
             public float SuccessScore;
             public float ProjectedChance;
@@ -1123,6 +1672,31 @@ namespace Bloodlines.PlayerCovertOps
             public FixedString64Bytes Label;
             public int KeepTier;
             public float ExposureBonus;
+            public float WardDefenseBonus;
+            public float BloodlineProtectionBonus;
+        }
+
+        private struct CounterIntelligenceWatchTerms
+        {
+            public float WatchStrength;
+            public FixedString64Bytes WardLabel;
+            public FixedString128Bytes GuardedRoles;
+            public float AverageLoyalty;
+            public float WeakestLoyalty;
+        }
+
+        private struct SeatDefenseProfile
+        {
+            public int FortificationTier;
+            public bool WardActive;
+            public FixedString64Bytes WardLabel;
+        }
+
+        private struct CounterIntelligenceProfile
+        {
+            public bool Active;
+            public float TotalBonus;
+            public float RoleGuardBonus;
         }
     }
 }

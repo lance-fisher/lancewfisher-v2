@@ -2899,3 +2899,63 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Start sub-slice 3C on fresh branch `codex/unity-player-counter-intelligence`.
 2. Port `tickDynastyCounterIntelligence` and `tickDynastyIntelligenceReports` under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/`.
 3. Keep `unity/Assets/_Bloodlines/Code/AI/**` read-only and continue using worktree-local wrapper copies for the still-root-pinned bootstrap-runtime and scene-shell validators.
+
+## 2026-04-21 Player Covert Ops Sub-Slice 3C: Counter-Intelligence And Intelligence Reports
+
+- Branch lane: `codex/unity-player-counter-intelligence`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-counter-intelligence.md`
+- The player covert ops lane now ports the browser's counter-intelligence and
+  intelligence-report seam under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/`:
+  - `IntelligenceReportElement`, `PlayerCounterIntelligenceComponent`, and
+    `PlayerCounterIntelligenceSystem` now land the player-owned report/watch
+    state, expiry, dossier interception, and defended-op resolution path.
+  - `PlayerCovertOpsResolutionComponent` now carries watch duration, watch
+    strength, ward label, guarded-role summary, and loyalty telemetry through
+    deferred resolution.
+  - `PlayerCovertOpsSystem` now dispatches player counter-intelligence with
+    canonical `gold=60` / `influence=18`, 18-second activation delay,
+    150-second watch duration, operator order
+    `Spymaster -> Diplomat -> HeadOfBloodline`, and defended espionage /
+    assassination contest penalties.
+  - `BloodlinesDebugCommandSurface.PlayerCovertOps.cs` now exposes
+    counter-intelligence issue/readout commands plus structured
+    intelligence-report readout.
+  - `BloodlinesPlayerCounterIntelligenceSmokeValidation` now proves four
+    phases: baseline, watch activation/expiry, report creation/expiry, and
+    defended hostile espionage producing dossier + legitimacy gain.
+  - During this slice, faction resolution was corrected to prefer the real
+    faction root over same-faction settlement entities so watches and reports
+    bind to the owning faction rather than a keep shell.
+- Full governed validation is green in `D:\BLM13\bloodlines\bloodlines`,
+  using temporary worktree-local copies only for the still-root-pinned
+  bootstrap-runtime and canonical scene-shell wrappers:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`: `Build succeeded.` / `0 Error(s)`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: `113 Warning(s)` / `0 Error(s)`
+  - bootstrap runtime smoke:
+    `Bootstrap runtime smoke validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity on map ironmark_frontier. ...`
+  - combat smoke:
+    `Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True, groupMovementPhase=True, separationPhase=True, stancePhase=True.`
+  - scene shells:
+    `Bootstrap scene shell validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity with canonical map Assets/_Bloodlines/Data/MapDefinitions/ironmark_frontier.asset.`
+    and
+    `Gameplay scene shell validation passed for Assets/_Bloodlines/Scenes/Gameplay/IronmarkFrontier.unity.`
+  - fortification smoke:
+    `Fortification smoke validation passed: baselinePhase=True, tierAdvancePhase=True, reserveMusterPhase=True, reserveRecoveryPhase=True. ...`
+  - siege smoke:
+    `Siege smoke validation passed: baselinePhase=True, strainPhase=True, recoveryPhase=True, supportPhase=True. ...`
+  - `node tests/data-validation.mjs`: PASS
+  - `node tests/runtime-bridge.mjs`: PASS
+  - contract staleness before branch continuity:
+    `STALENESS CHECK PASSED: Contract revision=63, last-updated=2026-04-21 is current. Latest handoff: 2026-04-21-unity-fortification-repair-narrative.md (2026-04-21).`
+  - dedicated player counter-intelligence smoke:
+    `BLOODLINES_PLAYER_COUNTER_INTELLIGENCE_SMOKE PASS`
+    with
+    `Phase 2 PASS: watchId=dynastyCounter-player-player-2073627-25, strength=34, opId=player-counter-intel-player-to-player-25, lapsed cleanly.`
+    and
+    `Phase 4 PASS: baselineChance=0.651, defendedChance=0.331, watchId=dynastyCounter-player-player-2764827-25, legitimacy 70->71.`
+
+### Recommended Next Follow-Up
+1. Stage the player covert ops 3C files plus continuity/contract updates and commit them on `codex/unity-player-counter-intelligence`.
+2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
+3. After the landing continuity pass, close the player covert ops lane and claim the player HUD / realm-condition legibility lane.
