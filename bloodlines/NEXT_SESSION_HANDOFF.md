@@ -4209,3 +4209,72 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   constants.
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
+
+## Codex Dynasty Renown Prestige (2026-04-22)
+
+### Branch
+
+- `codex/unity-dynasty-renown-prestige`
+
+### What Landed On Branch
+
+- `unity/Assets/_Bloodlines/Code/Dynasties/DynastyRenownComponent.cs`
+  and
+  `DynastyRenownAccumulationSystem.cs`
+  now add a dynasty-facing renown/prestige surface under `Dynasties/**` without
+  widening `AI/**`. The runtime derives renown from territorial advantage above
+  average control holdings, committed-faith intensity, victory momentum, and
+  legitimate succession, then applies whole-day decay and peak tracking.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.DynastyRenown.cs`
+  now exposes a parseable
+  `DynastyRenown|FactionId=...|Score=...|PeakRenown=...|DecayRate=...|LastUpdatedInWorldDays=...`
+  seam for smoke and later HUD consumption.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyRenownSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityDynastyRenownSmokeValidation.ps1`
+  now prove four phases: accumulation, decay, territory scaling, and peak
+  tracking.
+
+### Validation Proof
+
+- Dedicated smoke:
+  - `Dynasty renown smoke validation passed.`
+- Runtime build:
+  - `Build succeeded.`
+  - `0 Error(s)`
+- Editor build:
+  - `Build succeeded.`
+  - `0 Error(s)` with existing repo-wide warnings only
+- Bootstrap runtime:
+  - `Bootstrap runtime smoke validation passed.`
+- Combat smoke:
+  - `Unity exited with code 0`
+- Scene shells:
+  - `Bootstrap scene shell validation passed.`
+  - `Gameplay scene shell validation passed.`
+- Fortification smoke:
+  - `Fortification smoke validation passed.`
+- Siege smoke:
+  - `Unity exited with code 0`
+- Data validation:
+  - `Bloodlines data validation passed.`
+- Runtime bridge:
+  - `Bloodlines runtime bridge validation passed.`
+- Contract staleness:
+  - `STALENESS CHECK PASSED: Contract revision=83, last-updated=2026-04-22 is current.`
+
+### Immediate Next Action
+
+1. Stage the dynasty renown slice files plus contract and continuity updates,
+   commit them on `codex/unity-dynasty-renown-prestige`, and push to `origin`.
+2. Continue the next directive item after renown/prestige: either the consumer
+   read surface that needs this seam or the next player/HUD branchable slice.
+
+### Context Notes
+
+- The dedicated validator primes the world at day 0 before advancing elapsed
+  days so the system's lazy component attach does not consume the entire first
+  scoring window.
+- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
