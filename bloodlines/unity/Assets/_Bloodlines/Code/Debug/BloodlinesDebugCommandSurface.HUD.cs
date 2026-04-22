@@ -190,5 +190,48 @@ namespace Bloodlines.Debug
             readout = builder.ToString();
             return true;
         }
+
+        public bool TryDebugGetVictoryLeaderboard(out string readout)
+        {
+            readout = string.Empty;
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            using var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<VictoryLeaderboardHUDSingleton>(),
+                ComponentType.ReadOnly<VictoryLeaderboardHUDComponent>());
+            if (query.IsEmptyIgnoreFilter)
+            {
+                return false;
+            }
+
+            DynamicBuffer<VictoryLeaderboardHUDComponent> buffer =
+                entityManager.GetBuffer<VictoryLeaderboardHUDComponent>(query.GetSingletonEntity());
+            if (buffer.Length == 0)
+            {
+                return false;
+            }
+
+            var builder = new StringBuilder(512);
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                if (i > 0)
+                {
+                    builder.AppendLine();
+                }
+
+                builder.Append("VictoryLeaderboard")
+                    .Append("|Rank=").Append(i + 1)
+                    .Append("|FactionId=").Append(buffer[i].FactionId)
+                    .Append("|LeadingConditionId=").Append(buffer[i].LeadingConditionId)
+                    .Append("|ProgressPct=").Append(buffer[i].ProgressPct.ToString("0.000", CultureInfo.InvariantCulture))
+                    .Append("|IsHumanPlayer=").Append(buffer[i].IsHumanPlayer ? "true" : "false");
+            }
+
+            readout = builder.ToString();
+            return true;
+        }
     }
 }

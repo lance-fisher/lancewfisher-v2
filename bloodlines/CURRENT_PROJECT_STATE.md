@@ -3548,3 +3548,33 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   and contract staleness.
 - Contract revision advanced `82 -> 83` and now records the new
   `dynasty-renown-prestige` lane in flight.
+
+## 2026-04-22 Victory Leaderboard HUD Slice
+
+- Branch in flight: `codex/unity-hud-victory-panel`.
+- `unity/Assets/_Bloodlines/Code/HUD/VictoryLeaderboardHUDComponent.cs`
+  and
+  `VictoryLeaderboardHUDSystem.cs`
+  now add a singleton leaderboard read-model under `HUD/**` that consumes the
+  already-landed per-faction `VictoryConditionReadoutComponent` buffers,
+  resolves each faction's strongest live victory path, sorts factions by
+  highest progress, and exposes human-player tagging without widening the
+  retired `Victory/**` lane.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes a parseable multi-line
+  `VictoryLeaderboard|Rank=...|FactionId=...|LeadingConditionId=...|ProgressPct=...|IsHumanPlayer=...`
+  readout for the combined player-facing victory surface.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesVictoryLeaderboardHUDSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityVictoryLeaderboardHUDSmokeValidation.ps1`
+  now prove leaderboard population, player-flag projection, and descending
+  ordering in dedicated ECS validation worlds.
+- Governed validation is green on the branch: dedicated victory leaderboard HUD
+  smoke, runtime build, editor build, bootstrap runtime smoke, combat smoke,
+  canonical scene shell validation, fortification smoke, siege smoke,
+  `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`,
+  and contract staleness.
+- Contract revision advanced `83 -> 84` and now records the HUD lane with the
+  victory leaderboard follow-up branch in flight while clearing the already
+  landed player-captive-ransom and dynasty-renown branch markers.

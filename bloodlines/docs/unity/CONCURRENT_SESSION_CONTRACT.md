@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 83
+- Revision: 84
 - Last Updated: 2026-04-22
-- Last Updated By: codex-2026-04-22
-- Supersedes: revision 82 (The new `codex/unity-dynasty-renown-prestige` lane is now active. `DynastyRenownComponent` and `DynastyRenownAccumulationSystem` add a dynasty-facing renown/prestige surface under `Dynasties/**`, deriving score from territorial advantage, committed-faith intensity, victory momentum, and legitimate succession while tracking decay and peak renown. `BloodlinesDebugCommandSurface.DynastyRenown.cs` adds a parseable read seam, and `BloodlinesDynastyRenownSmokeValidation` plus wrapper prove accumulation, decay, territory scaling, and peak tracking.)
+- Last Updated By: codex-hud-legibility-2026-04-22
+- Supersedes: revision 83 (The `player-hud-realm-condition-legibility` lane now carries `codex/unity-hud-victory-panel`. `VictoryLeaderboardHUDComponent` and `VictoryLeaderboardHUDSystem` add a singleton ordered leaderboard surface that consumes the per-faction victory readout buffers, while `BloodlinesDebugCommandSurface.HUD.cs` now exposes a parseable victory leaderboard readout. `BloodlinesVictoryLeaderboardHUDSmokeValidation` plus wrapper prove row population, human-player flagging, and ordered ranking. This revision also clears the already-landed `codex/unity-player-captive-ransom-followup` and `codex/unity-dynasty-renown-prestige` branch markers.)
 
 
 ## Purpose
@@ -224,7 +224,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-22-unity-dynasty-renown-prestige.md`
 - Browser Reference:
   - `src/game/core/simulation.js` per-member renown state only; no dynasty-level prestige ledger exists in browser runtime, so this lane lifts the design-bible dynasty prestige surface onto Unity ECS state
-- Current Branch In Flight: `codex/unity-dynasty-renown-prestige`
+- Current Branch In Flight: none (landed on canonical `master` during the 2026-04-22 overnight build advance)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-dynasty-renown-prestige.md`
 
 ### Lane: faith-commitment
@@ -705,7 +705,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `src/game/core/simulation.js` `NON_AGGRESSION_PACT_INFLUENCE_COST` (5126), `NON_AGGRESSION_PACT_GOLD_COST` (5127), `NON_AGGRESSION_PACT_MINIMUM_DURATION_IN_WORLD_DAYS` (5128), `NON_AGGRESSION_PACT_BREAK_LEGITIMACY_COST` (5129), `getNonAggressionPactTerms` (5150-5183), `proposeNonAggressionPact` (5185-5222), `breakNonAggressionPact` (5224-5257)
   - `src/game/core/simulation.js` `getCapturedMemberRescueTerms` (~11153-11234), `startRescueOperation` (~11236-11341)
   - `src/game/core/ai.js` captive recovery contest / operator selection logic (~2550-2760)
-- Current Branch In Flight: `codex/unity-player-captive-ransom-followup`
+- Current Branch In Flight: none (player captive rescue + ransom dispatch now landed on canonical `master`)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-captive-ransom.md`
 
 ### Lane: player-covert-ops
@@ -760,11 +760,13 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMatchProgressionHUDSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationHUDSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesVictoryReadoutSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesVictoryLeaderboardHUDSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityRealmConditionHUDSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityMatchProgressionHUDSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityFortificationHUDSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityVictoryReadoutSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityVictoryLeaderboardHUDSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/RealmConditionHUDComponent.cs`, `Code/HUD/RealmConditionHUDSystem.cs`, and `Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
@@ -774,6 +776,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesFortificationHUDSmokeValidation.cs`
   - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/VictoryConditionReadoutComponent.cs` and `Code/HUD/VictoryConditionReadoutSystem.cs`; stale analyzer/source-generator paths were corrected back to this worktree's `unity/Library/PackageCache`
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesVictoryReadoutSmokeValidation.cs`; stale analyzer/source-generator paths were corrected back to this worktree's `unity/Library/PackageCache`
+  - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/VictoryLeaderboardHUDComponent.cs` and `Code/HUD/VictoryLeaderboardHUDSystem.cs`; stale analyzer/source-generator paths were corrected back to this worktree's `unity/Library/PackageCache`
+  - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesVictoryLeaderboardHUDSmokeValidation.cs`; stale analyzer/source-generator paths were corrected back to this worktree's `unity/Library/PackageCache`
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve HUD snapshots by `FactionId`
   - `unity/Assets/_Bloodlines/Code/Components/RealmConditionComponent.cs` -- read realm cycle accumulator, cycle count, strain streaks, and realm legibility thresholds
@@ -808,11 +812,12 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification-rerun.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-distance-readout.md`
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-panel.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `getRealmConditionSnapshot` (14291-14764), `getMatchProgressionSnapshot` (13650-13658)
   - `tests/runtime-bridge.mjs` realm-condition snapshot assertions (1344-1364), match-progression assertions (7521, 7773-7871, 7923-7975, 8133, 8185), fortification/readout assertions (1438-1444), hostile-post-repulse world-pressure assertions (1718-1733)
-- Current Branch In Flight: `codex/unity-hud-victory-distance-readout`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-distance-readout.md`
+- Current Branch In Flight: `codex/unity-hud-victory-panel`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-panel.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
