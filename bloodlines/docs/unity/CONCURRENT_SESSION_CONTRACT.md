@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 60
+- Revision: 61
 - Last Updated: 2026-04-21
 - Last Updated By: codex-player-covert-ops-foundation-2026-04-21
-- Supersedes: revision 59 (Codex has completed player covert ops sub-slice 3A on branch `codex/unity-player-covert-ops-foundation`. The dedicated player covert ops smoke and the full governed validation gate are green in `D:\BLM13\bloodlines\bloodlines`; landing to `master` remains the next action. `unity/Assets/_Bloodlines/Code/AI/**` remains Claude-owned and read-only from this Codex slice.)
+- Supersedes: revision 60 (The validated `codex/unity-player-covert-ops-foundation` branch is now merged to `master` via `c18966d6`. Player covert ops sub-slice 3A is landed on canonical master content, the merged-master governed validation gate plus dedicated player covert ops smoke are green in `D:\BLM13\bloodlines\bloodlines`, and the next clean Codex pickup is sub-slice 3B on a fresh branch. `unity/Assets/_Bloodlines/Code/AI/**` remains Claude-owned and read-only from this Codex lane.)
 
 
 ## Purpose
@@ -620,7 +620,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: player-covert-ops
 
-- Status: active (sub-slice 3A complete on branch, pending merge to `master`)
+- Status: active (sub-slice 3A landed on master; no follow-up branch currently in flight)
 - Branch Prefix: `codex/unity-player-covert-ops-*`
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -640,17 +640,18 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Combat/HostilityComponent.cs` -- reserved for later player assassination/sabotage follow-ups that trigger hostility without widening the AI lane
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-21-unity-player-covert-ops-foundation.md`
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-covert-ops-foundation-landing.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `DYNASTY_OPERATION_ACTIVE_LIMIT` (17), `getActiveDynastyOperationForTargetFaction` (4084), `getActiveIntelligenceReport` (4097), `tickDynastyIntelligenceReports` (4106), `getEspionageContest` (10187), `getEspionageTerms` (10248), `startEspionageOperation` (10876)
   - `tests/runtime-bridge.mjs` espionage assertions (3490-3543)
-- Current Branch In Flight: `codex/unity-player-covert-ops-foundation`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-covert-ops-foundation.md`
+- Current Branch In Flight: none (merged into master via `c18966d6`; next clean Codex pickup is `codex/unity-player-assassination-sabotage`)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-covert-ops-foundation-landing.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the `fortification-siege-imminent-engagement` lane is paused unless Lance explicitly defines a fresh fortification sub-slice 14. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation is now landed on master; future raid follow-ups should start from a fresh scout branch. Under the current multi-day directive, the active Codex pickup is `player-covert-ops` on `codex/unity-player-covert-ops-foundation`.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the `fortification-siege-imminent-engagement` lane is paused unless Lance explicitly defines a fresh fortification sub-slice 14. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation is now landed on master; future raid follow-ups should start from a fresh scout branch. Under the current multi-day directive, the active Codex pickup is `player-covert-ops` sub-slice 3B on fresh branch `codex/unity-player-assassination-sabotage`.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 

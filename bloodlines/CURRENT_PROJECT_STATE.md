@@ -2785,3 +2785,29 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Merge `codex/unity-player-covert-ops-foundation` to `master` and rerun the governed gate on merged `master`.
 2. After landing 3A, start sub-slice 3B on fresh branch `codex/unity-player-assassination-sabotage`.
 3. Keep all writes under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/` plus narrow continuity/contract updates; do not reopen `unity/Assets/_Bloodlines/Code/AI/**`.
+
+## 2026-04-21 Player Covert Ops Sub-Slice 3A Landing
+
+- Merged branch: `codex/unity-player-covert-ops-foundation`
+- Merge commit on `master`: `c18966d6`
+- Landing handoff:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-covert-ops-foundation-landing.md`
+- The player covert ops foundation is now canonical `master` content:
+  - `unity/Assets/_Bloodlines/Code/PlayerCovertOps/` now contains the landed
+    player-owned covert-op enum, request component, resolution component, and
+    espionage dispatch system.
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerCovertOps.cs`
+    and
+    `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCovertOpsSmokeValidation.cs`
+    are now part of the canonical debug and validation surfaces.
+  - The lane still remains active for sub-slices 3B and 3C, but there is no
+    follow-up branch currently in flight.
+- Merged `master` re-passed runtime build, editor build, bootstrap runtime,
+  combat, scene shells, fortification, siege, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated player
+  covert ops smoke in `D:\BLM13\bloodlines\bloodlines`.
+
+### Recommended Next Follow-Up
+1. Start sub-slice 3B from merged `master` on fresh branch `codex/unity-player-assassination-sabotage`.
+2. Port `startAssassinationOperation` and `startSabotageOperation` under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/`.
+3. Extend the player covert ops smoke to prove assassination target validation and sabotage target validation without reopening `unity/Assets/_Bloodlines/Code/AI/**`.

@@ -3094,3 +3094,38 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 - The player covert ops lane intentionally keeps live operation entities under
   `PlayerCovertOps/**` instead of widening Claude's AI-owned
   `DynastyOperationComponent` graph.
+
+## Codex Player Covert Ops Sub-Slice 3A Landing (2026-04-21)
+
+### Status: MERGED to `master` via `c18966d6`
+
+### What Landed
+- `codex/unity-player-covert-ops-foundation` is now merged, so player-facing
+  espionage dispatch is part of canonical `master`.
+- `unity/Assets/_Bloodlines/Code/PlayerCovertOps/` now contains the landed
+  covert-op enum, request component, resolution component, and espionage
+  dispatch system.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerCovertOps.cs`
+  and
+  `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCovertOpsSmokeValidation.cs`
+  are now canonical debug and validation surfaces on `master`.
+- Merged `master` re-passed runtime build, editor build, bootstrap runtime,
+  combat, scene shells, fortification, siege, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated player
+  covert ops smoke.
+
+### Immediate Next Action
+1. Create fresh branch `codex/unity-player-assassination-sabotage` from current `master`.
+2. Port the browser's `startAssassinationOperation` and `startSabotageOperation` under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/`.
+3. Extend the dedicated player covert ops smoke and wrapper before attempting any later counter-intelligence follow-up.
+
+### Context Notes
+- The checked-in bootstrap-runtime and canonical scene-shell wrappers are still
+  pinned to `D:\ProjectsHome\Bloodlines`; continue using temporary worktree-safe
+  copies when validating this clean worktree.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
+- Node validations for this worktree must run from `D:\BLM13\bloodlines\bloodlines`
+  rather than the outer worktree root `D:\BLM13\bloodlines`.
+- The player covert ops lane remains active for 3B and 3C, but there is no
+  current feature branch in flight after this landing pass.
