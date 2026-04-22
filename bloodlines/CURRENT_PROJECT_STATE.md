@@ -2990,3 +2990,45 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Claim the player HUD / realm-condition legibility lane in the concurrent-session contract before writing code.
 2. Create a fresh Codex branch for that HUD lane from current `master`.
 3. Keep using the worktree-local bootstrap-runtime and scene-shell wrapper copies until the checked-in path-pinned wrappers are repaired.
+
+## 2026-04-21 Player HUD Realm-Condition Legibility Slice 1
+
+- Branch lane: `codex/unity-player-hud-realm-condition-legibility`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility.md`
+- The first HUD slice is now complete on branch:
+  - `unity/Assets/_Bloodlines/Code/HUD/RealmConditionHUDComponent.cs`
+    and
+    `RealmConditionHUDSystem.cs`
+    now project cycle, population pressure, food, water, loyalty, conviction,
+    and faith into a per-faction HUD read-model without mutating the source
+    simulation state.
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+    now exposes `TryDebugGetRealmConditionHUDSnapshot(...)` as a single
+    parseable `RealmHUD|Key=Value|...` readout.
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
+    plus
+    `scripts/Invoke-BloodlinesUnityRealmConditionHUDSmokeValidation.ps1`
+    now prove four phases: stable baseline, red realm strain, Apex Moral
+    conviction shift, and committed Fervent faith.
+  - `unity/Assembly-CSharp.csproj`
+    and
+    `unity/Assembly-CSharp-Editor.csproj`
+    now include the new HUD runtime/debug/editor files.
+- Governed validation is green in `D:\BLM13\bloodlines\bloodlines`:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`: `Build succeeded.` / `0 Error(s)`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: `113 Warning(s)` / `0 Error(s)`
+  - dedicated HUD smoke:
+    `BLOODLINES_REALM_CONDITION_HUD_SMOKE PASS`
+    with
+    `Phase 1 PASS: stable baseline surfaces green realm bands, neutral conviction, red uncommitted faith, CycleProgress=0.500.`
+    and
+    `Phase 4 PASS: FaithId=OldLight, DoctrinePath=Light, FaithLevel=4, FaithTier=Fervent, FaithBand=green.`
+  - bootstrap runtime, combat, canonical scene shells, fortification, siege,
+    `node tests/data-validation.mjs`, and `node tests/runtime-bridge.mjs`
+    all re-passed green.
+
+### Recommended Next Follow-Up
+1. Stage the HUD slice files plus continuity/contract updates and commit them on `codex/unity-player-hud-realm-condition-legibility`.
+2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
+3. After landing, continue the same lane with the match progression HUD slice.

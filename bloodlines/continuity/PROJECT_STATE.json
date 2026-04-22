@@ -1829,6 +1829,15 @@
       "description": "The validated `codex/unity-player-counter-intelligence` branch is now merged to master via `661fea5b`. `IntelligenceReportElement`, `PlayerCounterIntelligenceComponent`, and `PlayerCounterIntelligenceSystem` now canonically land player-owned report/watch state, dossier interception, and defended-op resolution on master; `PlayerCovertOpsSystem` now canonically dispatches player counter-intelligence alongside espionage, assassination, and sabotage; `BloodlinesDebugCommandSurface.PlayerCovertOps` now exposes counter-intelligence issue/readout and intelligence-report readout; and `BloodlinesPlayerCounterIntelligenceSmokeValidation` plus wrapper now prove the 3C watch/report lifecycle on canonical master. The slice-discovered faction-root binding bug is fixed on master, the full governed 10-gate chain re-passed green in D:\\BLM13\\bloodlines\\bloodlines, and contract rev 64->65 records the player-covert-ops lane as fully landed with no branch in flight.",
       "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-counter-intelligence-landing.md",
       "validation_gates": "all 10 green plus player counter-intelligence smoke on merged master"
+    },
+    {
+      "lane": "player-hud-realm-condition-legibility-slice-1",
+      "date": "2026-04-21",
+      "branch": "codex/unity-player-hud-realm-condition-legibility",
+      "status": "active",
+      "description": "The first player HUD slice is now complete on branch. `unity/Assets/_Bloodlines/Code/HUD/RealmConditionHUDComponent.cs` and `RealmConditionHUDSystem.cs` project cycle progress, population pressure, food/water ratios plus strain streaks, faction loyalty band, conviction band/label/color, and faith covenant/doctrine/tier/band into a per-faction HUD read-model without mutating the source ECS state. `BloodlinesDebugCommandSurface.HUD.cs` adds a parseable `RealmHUD|Key=Value|...` readout, and `BloodlinesRealmConditionHUDSmokeValidation` plus `scripts/Invoke-BloodlinesUnityRealmConditionHUDSmokeValidation.ps1` prove stable baseline, red realm strain, Apex Moral conviction, and committed Fervent faith. The governed branch-side gate is green in D:\\BLM13\\bloodlines\\bloodlines: runtime build, editor build, dedicated HUD smoke, bootstrap runtime, combat, canonical scene shells, fortification, siege, `node tests/data-validation.mjs`, and `node tests/runtime-bridge.mjs`. Contract rev 66->67.",
+      "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility.md",
+      "validation_gates": "all 10 green plus realm-condition HUD smoke"
     }
   ]
 }

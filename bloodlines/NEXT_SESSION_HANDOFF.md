@@ -3377,3 +3377,74 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 - Snapshot/save-load integration for retained report/watch state remains
   deferred, and sabotage resolution still remains outside the landed
   player-covert-ops scope.
+
+## Codex Player HUD Realm-Condition Legibility Slice 1 (2026-04-21)
+
+### Status: VALIDATED on branch `codex/unity-player-hud-realm-condition-legibility`
+
+### What Landed On Branch
+- `unity/Assets/_Bloodlines/Code/HUD/RealmConditionHUDComponent.cs` and
+  `RealmConditionHUDSystem.cs` now project the canonical player-facing realm
+  block from existing ECS state:
+  - cycle count / progress
+  - population pressure
+  - food / water ratios and strain streaks
+  - loyalty band
+  - conviction band / label / color
+  - faith covenant / doctrine / intensity / tier / band
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes `TryDebugGetRealmConditionHUDSnapshot(...)` as a structured
+  `RealmHUD|Key=Value|...` readout for smoke assertions.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityRealmConditionHUDSmokeValidation.ps1`
+  now prove four phases:
+  1. stable baseline
+  2. red realm strain
+  3. Apex Moral conviction shift
+  4. committed Fervent faith
+- Narrow shared-file edits were applied to
+  `unity/Assembly-CSharp.csproj`
+  and
+  `unity/Assembly-CSharp-Editor.csproj`
+  so the new HUD files compile in the worktree.
+
+### Validation Proof
+- Runtime build: `Build succeeded.` / `0 Error(s)`
+- Editor build: `113 Warning(s)` / `0 Error(s)`
+- Dedicated HUD smoke:
+  - `BLOODLINES_REALM_CONDITION_HUD_SMOKE PASS`
+  - `Phase 1 PASS: stable baseline surfaces green realm bands, neutral conviction, red uncommitted faith, CycleProgress=0.500.`
+  - `Phase 2 PASS: cap pressure, food strain, water strain, and loyalty distress all surface red with visible strain streaks.`
+  - `Phase 3 PASS: ConvictionBand=ApexMoral, ConvictionLabel=Apex Moral, ConvictionScore=80.0.`
+  - `Phase 4 PASS: FaithId=OldLight, DoctrinePath=Light, FaithLevel=4, FaithTier=Fervent, FaithBand=green.`
+- Bootstrap runtime:
+  - `Bootstrap runtime smoke validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity on map ironmark_frontier. Counts: factions=3, buildings=13, units=19, resourceNodes=13, controlPoints=4, settlements=2. ...`
+- Combat:
+  - `Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True, groupMovementPhase=True, separationPhase=True, stancePhase=True.`
+- Scene shells:
+  - `Bootstrap scene shell validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity with canonical map Assets/_Bloodlines/Data/MapDefinitions/ironmark_frontier.asset.`
+  - `Gameplay scene shell validation passed for Assets/_Bloodlines/Scenes/Gameplay/IronmarkFrontier.unity.`
+- Fortification:
+  - `Fortification smoke validation passed: baselinePhase=True, tierAdvancePhase=True, reserveMusterPhase=True, reserveRecoveryPhase=True. ...`
+- Siege:
+  - `Siege smoke validation passed: baselinePhase=True, strainPhase=True, recoveryPhase=True, supportPhase=True. ...`
+- Data validation:
+  - `Bloodlines data validation passed.`
+- Runtime bridge:
+  - `Bloodlines runtime bridge validation passed.`
+
+### Immediate Next Action
+1. Stage the HUD slice files plus continuity/contract updates and commit them on `codex/unity-player-hud-realm-condition-legibility`.
+2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
+3. After the landing continuity pass, continue the lane with the match progression HUD slice.
+
+### Context Notes
+- The checked-in bootstrap-runtime and canonical scene-shell wrappers are still
+  pinned to `D:\ProjectsHome\Bloodlines`; continue using the worktree-local
+  copies under `artifacts/validation-temp/scripts` for those two validators.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
+- The first HUD slice is intentionally a read-model + proof seam only; the
+  on-screen player HUD surface and the broader match/fortification/world/victory
+  HUD blocks remain follow-up work inside this same lane.
