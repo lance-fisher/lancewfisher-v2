@@ -3886,3 +3886,54 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   this slice because generic combat units still lack captive-ready dynasty identity.
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged for this slice.
+
+## Codex Player HUD Fortification Legibility Slice (2026-04-22)
+
+### Branch
+
+- `codex/unity-player-hud-fortification`
+
+### What Landed On Branch
+
+- `unity/Assets/_Bloodlines/Code/HUD/FortificationHUDComponent.cs`
+  and
+  `unity/Assets/_Bloodlines/Code/HUD/FortificationHUDSystem.cs`
+  now project fortification tier, breach count, reserve frontage, mustered defenders, ready / recovering reserve
+  counts, threat state, and sealing / recovery progress into a player-facing HUD read-model.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes a parseable `FortificationHUD|Key=Value|...` settlement readout for command-surface and smoke usage.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationHUDSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityFortificationHUDSmokeValidation.ps1`
+  now prove baseline reserve state, active breach / threat projection, and sealing / recovery progress transitions in a
+  dedicated ECS validation world.
+- `unity/Assembly-CSharp.csproj`
+  and
+  `unity/Assembly-CSharp-Editor.csproj`
+  were refreshed so the initialized local project metadata includes the new runtime and editor slice files.
+
+### Validation Proof
+
+- Runtime build: `Build succeeded.` / `0 Error(s)`
+- Editor build: `Build succeeded.` / `0 Error(s)`
+- Bootstrap runtime: `Bootstrap runtime smoke validation passed.`
+- Combat smoke: Unity exit code `0`
+- Scene shells: bootstrap and gameplay scene shell validation both passed
+- Fortification smoke: `Fortification smoke validation passed.`
+- Siege smoke: Unity exit code `0`
+- Data validation: `Bloodlines data validation passed.`
+- Runtime bridge: `Bloodlines runtime bridge validation passed.`
+- Contract staleness: `STALENESS CHECK PASSED: Contract revision=78, last-updated=2026-04-22 is current.`
+- Dedicated smoke: `Fortification HUD smoke validation passed.`
+
+### Immediate Next Action
+
+1. Stage only the fortification HUD slice files plus continuity / contract updates and commit them on `codex/unity-player-hud-fortification`.
+2. Push the branch to `origin`.
+3. After the landing continuity pass, continue the next player-HUD follow-up slice: victory-distance readout.
+
+### Context Notes
+
+- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched; this slice only reads shared fortification and reserve state.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged for this slice.
