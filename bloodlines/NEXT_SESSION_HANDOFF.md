@@ -3772,3 +3772,55 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   `CommanderComponent`, not on ordinary militia / worker units.
 - The existing branch still has the usual unstaged Unity churn at
   `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`; keep it out of any commit.
+
+## Codex Conviction Band Wiring Completion (2026-04-22)
+
+### Branch
+
+- `codex/unity-conviction-band-wiring-finish`
+
+### What Landed On Branch
+
+- `unity/Assets/_Bloodlines/Code/Economy/StarvationResponseSystem.cs`
+  retains the checkpointed conviction protection for negative starvation loyalty loss and famine population decline.
+- `unity/Assets/_Bloodlines/Code/Economy/CapPressureResponseSystem.cs`
+  now applies the same loyalty-protection multiplier to negative cap-pressure loyalty loss.
+- `unity/Assets/_Bloodlines/Code/Combat/PendingCommanderCaptureComponent.cs`
+  introduces a narrow commander-only conviction capture helper and pending-capture marker.
+- `unity/Assets/_Bloodlines/Code/Combat/AttackResolutionSystem.cs`
+  and
+  `unity/Assets/_Bloodlines/Code/Combat/ProjectileImpactSystem.cs`
+  now mark lethal commander defeats for capture using the attacker's faction conviction band.
+- `unity/Assets/_Bloodlines/Code/Combat/DeathResolutionSystem.cs`
+  now resolves pending commander capture before death cleanup, writes `CapturedMemberElement` to the captor faction
+  root, and marks the matching dynasty member `Captured`.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesConvictionSmokeValidation.cs`
+  now proves starvation protection, cap-pressure protection, and deterministic commander capture in dedicated ECS
+  worlds.
+
+### Validation Proof
+
+- Runtime build: `Build succeeded.` / `0 Error(s)`
+- Editor build: `Build succeeded.` / `0 Error(s)` with existing repo-wide warnings only
+- Bootstrap runtime: `Bootstrap runtime smoke validation passed.`
+- Combat smoke: Unity exit code `0`
+- Scene shells: bootstrap and gameplay scene shell validation both passed
+- Fortification smoke: `Fortification smoke validation passed.`
+- Siege smoke: Unity exit code `0`
+- Data validation: `Bloodlines data validation passed.`
+- Runtime bridge: `Bloodlines runtime bridge validation passed.`
+- Contract staleness: `STALENESS CHECK PASSED: Contract revision=74, last-updated=2026-04-22 is current.`
+- Dedicated smoke: `Conviction smoke validation passed.`
+
+### Immediate Next Action
+
+1. Stage the conviction-band wiring slice files plus continuity/contract updates and commit them on `codex/unity-conviction-band-wiring-finish`.
+2. Push the branch to `origin`, merge it to `master`, and rerun the full governed validation gate on merged `master`.
+3. After the landing continuity pass, continue the next Codex player-facing follow-up slice: fortification legibility or victory-distance HUD readout.
+
+### Context Notes
+
+- The conviction `CaptureMultiplier` is intentionally implemented only for commanders / bloodline-backed combatants in
+  this slice because generic combat units still lack captive-ready dynasty identity.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged for this slice.

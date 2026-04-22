@@ -1892,6 +1892,15 @@
       "description": "A new narrow Codex lane is now active for conviction-band downstream wiring. `StarvationResponseSystem` reads `ConvictionComponent` and reduces starvation-side loyalty loss via `LoyaltyProtectionMultiplier` plus famine population decline via `PopulationGrowthMultiplier`. `BloodlinesConvictionSmokeValidation` now includes a starvation-protection phase proving `ApexMoral` loses less loyalty and population than `Neutral` under identical famine conditions. Runtime build, editor build, and conviction smoke are green on the branch. `AttackResolutionSystem` is intentionally untouched so far because the combat-side `CaptureMultiplier` seam still needs a scope decision: only commander / bloodline-backed units currently carry captive-ready member identity.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-conviction-band-wiring.md",
       "validation_gates": "runtime build, editor build, and conviction smoke green; full 10-gate chain pending after combat-hook decision"
+    },
+    {
+      "lane": "conviction-band-wiring-completion",
+      "date": "2026-04-22",
+      "branch": "codex/unity-conviction-band-wiring-finish",
+      "status": "active",
+      "description": "The conviction-band downstream wiring slice is now complete on branch. `StarvationResponseSystem` keeps the checkpointed starvation-side conviction protection, `CapPressureResponseSystem` now applies the same loyalty-protection multiplier to negative cap-pressure loss, and the new commander-only capture seam in `PendingCommanderCaptureComponent`, `AttackResolutionSystem`, `ProjectileImpactSystem`, and `DeathResolutionSystem` consumes the canonical conviction `CaptureMultiplier` without widening generic militia identity. Lethal commander defeats can now emit `CapturedMemberElement` to the captor faction root and mark the matching dynasty member `Captured`. `BloodlinesConvictionSmokeValidation` now proves starvation protection, cap-pressure protection, and deterministic commander capture. The full governed 10-gate chain is green in the worktree using local wrapper copies only for the still-root-pinned bootstrap-runtime and canonical scene-shell validators. Contract rev 73->74.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-conviction-band-wiring.md",
+      "validation_gates": "all 10 green plus conviction smoke"
     }
   ]
 }

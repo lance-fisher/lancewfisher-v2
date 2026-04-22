@@ -2,8 +2,8 @@
 
 ## Status
 
-- Branch: `codex/unity-conviction-band-wiring`
-- State: in progress, checkpointed with build + conviction smoke green
+- Branch: `codex/unity-conviction-band-wiring-finish`
+- State: complete on branch, full governed gate green
 
 ## What Landed On Branch
 
@@ -11,31 +11,50 @@
   now reads `ConvictionComponent` and applies the canonical conviction table as protection on starvation-side losses:
   negative loyalty deltas are divided by `max(1, LoyaltyProtectionMultiplier)` and famine population decline is reduced by
   `PopulationGrowthMultiplier` with a floor of one head when any decline occurs.
+- `unity/Assets/_Bloodlines/Code/Economy/CapPressureResponseSystem.cs`
+  now applies the same conviction loyalty-protection multiplier to negative cap-pressure loyalty loss so the downstream
+  loyalty seam is consistent across starvation and over-cap pressure.
+- `unity/Assets/_Bloodlines/Code/Combat/PendingCommanderCaptureComponent.cs`
+  introduces a narrow commander-only capture bridge for conviction-driven `CaptureMultiplier` consumption. The helper
+  resolves the attacker's faction conviction band, converts the canonical multiplier into a deterministic capture chance,
+  and marks lethal commander defeats for capture without widening generic militia identity.
+- `unity/Assets/_Bloodlines/Code/Combat/AttackResolutionSystem.cs`
+  and
+  `unity/Assets/_Bloodlines/Code/Combat/ProjectileImpactSystem.cs`
+  now call the commander-capture helper when lethal damage lands on a commander.
+- `unity/Assets/_Bloodlines/Code/Combat/DeathResolutionSystem.cs`
+  now resolves pending commander capture before dead-tag cleanup, writes `CapturedMemberElement` to the captor faction
+  root, and marks the matched `DynastyMemberComponent` as `Captured`.
 - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesConvictionSmokeValidation.cs`
-  now runs a fifth starvation-protection phase in a dedicated ECS world. It seeds identical famine conditions for an
-  `ApexMoral` faction and a `Neutral` faction, then proves the conviction wiring reduces both loyalty loss and
-  population decline for the higher-band faction.
+  now runs starvation-protection, cap-pressure-protection, and commander-capture phases in dedicated ECS worlds. The
+  validator proves higher conviction reduces starvation loss, reduces cap-pressure loyalty loss, and enables commander
+  capture to emit a captive plus captured dynasty-member state.
 
-## Validation Completed At Checkpoint
+## Validation Completed
 
-- `dotnet build bloodlines/unity/Assembly-CSharp.csproj -nologo`: PASS
-- `dotnet build bloodlines/unity/Assembly-CSharp-Editor.csproj -nologo`: PASS
-- `powershell -ExecutionPolicy Bypass -File scripts/Invoke-BloodlinesUnityConvictionSmokeValidation.ps1`: PASS
+- `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+- `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS
+- `artifacts/Invoke-LocalUnityBootstrapRuntimeSmoke.ps1` under `scripts/Invoke-BloodlinesUnityWrapperWithLock.ps1`: PASS
+- `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1` under wrapper lock: PASS
+- `artifacts/Invoke-LocalUnityValidateCanonicalSceneShells.ps1` under wrapper lock: PASS
+- `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1` under wrapper lock: PASS
+- `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1` under wrapper lock: PASS
+- `node tests/data-validation.mjs`: PASS
+- `node tests/runtime-bridge.mjs`: PASS
+- `powershell -ExecutionPolicy Bypass -File scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1`: PASS after contract bump
+- `artifacts/Invoke-LocalUnityConvictionSmoke.ps1` under wrapper lock: PASS
 
-## Unresolved Seam Before The Slice Can Close
+## Scope Decision
 
-- The directive calls for a `CaptureMultiplier` hook in `AttackResolutionSystem`, but the live Unity combat runtime does
-  not have a generic captive-ready member identity on every combat unit.
-- `CapturedMemberElement` requires a stable `MemberId` and `MemberTitle`. Today that identity exists on
-  `DynastyMemberComponent` and `CommanderComponent`, not on ordinary militia / worker units.
-- The next action should decide whether this hook:
-  1. applies only to commander / bloodline-backed combatants for this slice, or
-  2. waits for a broader combat-unit-to-dynasty-member capture bridge.
+- The slice closes on the narrower commander-only interpretation of `CaptureMultiplier`.
+- Generic combat units still do not carry captive-ready dynasty identity, so ordinary militia / workers remain outside
+  this conviction capture hook until a broader unit-to-dynasty captive bridge exists.
+- `CapturedMemberElement` emission is routed through the defeated commander's dynasty member record and the captor
+  faction root buffer only.
 
 ## Recommended Next Action
 
-1. Resolve the combat capture scope.
-2. If commander-only is approved, wire `AttackResolutionSystem` to capture lethal commander defeats into
-   `CapturedMemberElement`, mark the corresponding dynasty member `Captured`, and extend the conviction smoke or combat
-   smoke with a deterministic proof phase.
-3. Re-run the full 10-gate chain plus conviction smoke, then append continuity and land the slice.
+1. Commit and push the validated conviction-band wiring slice on `codex/unity-conviction-band-wiring-finish`.
+2. Merge the branch to `master` and rerun the full governed gate on merged `master`.
+3. After the landing continuity pass, continue the next Codex priority slice from the player-facing HUD lane:
+   fortification legibility or victory-distance readout.
