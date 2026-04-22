@@ -2912,6 +2912,80 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
 
+## Codex Dynasty Renown HUD Readout (2026-04-22)
+
+### Branch
+
+- `codex/unity-hud-dynasty-renown-readout`
+
+### What Landed On Branch
+
+- `unity/Assets/_Bloodlines/Code/HUD/DynastyRenownHUDComponent.cs`
+  and
+  `DynastyRenownHUDSystem.cs`
+  now add a faction-scoped HUD read-model for the already-landed dynasty
+  renown/prestige runtime, projecting score, peak, score-to-peak ratio,
+  cross-faction rank, ruler identity, legitimacy, interregnum, and a HUD-only
+  prestige band under `HUD/**`.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes `TryDebugGetDynastyRenownHUDSnapshot(...)` with parseable
+  `DynastyRenownHUD|FactionId=...|Score=...|PeakRenown=...|Rank=...|...`
+  output for smoke and later panel wiring.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyRenownHUDSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityDynastyRenownHUDSmokeValidation.ps1`
+  now prove renown score mirroring, dynasty ranking, and interregnum/ruler
+  legibility.
+- `unity/Assembly-CSharp.csproj` and `unity/Assembly-CSharp-Editor.csproj`
+  now include the new runtime/editor files for this worktree's generated
+  project metadata.
+
+### Validation Proof
+
+- Dedicated smoke:
+  - `Dynasty renown HUD smoke validation passed.`
+- Runtime build:
+  - `Build succeeded.`
+  - `0 Warning(s)`
+  - `0 Error(s)`
+- Editor build:
+  - `Build succeeded.`
+  - `0 Warning(s)`
+  - `0 Error(s)`
+- Bootstrap runtime:
+  - `Bootstrap runtime smoke validation passed.`
+- Combat smoke:
+  - `Unity exited with code 0`
+- Scene shells:
+  - `Bootstrap scene shell validation passed.`
+  - `Gameplay scene shell validation passed.`
+- Fortification smoke:
+  - `Fortification smoke validation passed.`
+- Siege smoke:
+  - `Unity exited with code 0`
+- Data validation:
+  - `Bloodlines data validation passed.`
+- Runtime bridge:
+  - `Bloodlines runtime bridge validation passed.`
+- Contract staleness after contract bump:
+  - `STALENESS CHECK PASSED: Contract revision=85, last-updated=2026-04-22 is current.`
+
+### Immediate Next Action
+
+1. Push `codex/unity-hud-dynasty-renown-readout`, merge it to `master`, and
+   rerun the governed 10-gate chain on the merge result.
+2. Continue the HUD lane with the next dynasty-facing follow-up, ideally a
+   leaderboard/panel that consolidates renown pressure across factions.
+
+### Context Notes
+
+- The browser still has no dynasty-level prestige HUD, only per-member renown;
+  this slice is an additive Unity HUD consumer over the already-landed
+  renown/prestige runtime.
+- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
+
 ## Codex Player Marriage Diplomacy Sub-Slice 2B: Acceptance And Effects (2026-04-21)
 
 ### Status: COMPLETE on branch `codex/unity-player-marriage-acceptance`

@@ -3578,3 +3578,30 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Contract revision advanced `83 -> 84` and now records the HUD lane with the
   victory leaderboard follow-up branch in flight while clearing the already
   landed player-captive-ransom and dynasty-renown branch markers.
+
+## 2026-04-22 Dynasty Renown HUD Readout Slice
+
+- Branch in flight: `codex/unity-hud-dynasty-renown-readout`.
+- `unity/Assets/_Bloodlines/Code/HUD/DynastyRenownHUDComponent.cs`
+  and
+  `DynastyRenownHUDSystem.cs`
+  now add a faction-scoped dynasty prestige HUD read-model under `HUD/**` that
+  consumes the already-landed `DynastyRenownComponent`, computes cross-faction
+  renown rank, projects ruler identity, legitimacy, and interregnum state, and
+  applies a HUD-only renown band for readability without widening `AI/**`.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes parseable
+  `DynastyRenownHUD|FactionId=...|Score=...|PeakRenown=...|Rank=...|...`
+  output for smoke and later panel consumers.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyRenownHUDSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityDynastyRenownHUDSmokeValidation.ps1`
+  now prove score mirroring, dynasty ranking, and interregnum projection in a
+  dedicated ECS validation world.
+- Governed validation is green on the branch: runtime build, editor build,
+  bootstrap runtime smoke, combat smoke, canonical scene shell validation,
+  fortification smoke, siege smoke, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated
+  dynasty renown HUD smoke.
+- Contract revision advanced `84 -> 85` and now records the HUD lane with the
+  dynasty-renown follow-up branch in flight.

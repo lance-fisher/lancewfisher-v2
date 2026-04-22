@@ -233,5 +233,42 @@ namespace Bloodlines.Debug
             readout = builder.ToString();
             return true;
         }
+
+        public bool TryDebugGetDynastyRenownHUDSnapshot(string factionId, out string readout)
+        {
+            readout = string.Empty;
+            if (string.IsNullOrWhiteSpace(factionId) ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var factionEntity = FindFactionRootEntity(entityManager, new FixedString32Bytes(factionId));
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<DynastyRenownHUDComponent>(factionEntity))
+            {
+                return false;
+            }
+
+            var hud = entityManager.GetComponentData<DynastyRenownHUDComponent>(factionEntity);
+            var builder = new StringBuilder(384);
+            builder.Append("DynastyRenownHUD")
+                .Append("|FactionId=").Append(hud.FactionId)
+                .Append("|Score=").Append(hud.RenownScore.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|PeakRenown=").Append(hud.PeakRenown.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|ScoreToPeakRatio=").Append(hud.ScoreToPeakRatio.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|Rank=").Append(hud.RenownRank)
+                .Append("|IsLeadingDynasty=").Append(hud.IsLeadingDynasty ? "true" : "false")
+                .Append("|RulerMemberId=").Append(hud.RulerMemberId)
+                .Append("|RulerTitle=").Append(hud.RulerTitle)
+                .Append("|Legitimacy=").Append(hud.Legitimacy.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|Interregnum=").Append(hud.Interregnum ? "true" : "false")
+                .Append("|StatusLabel=").Append(hud.StatusLabel)
+                .Append("|BandLabel=").Append(hud.RenownBandLabel)
+                .Append("|BandColor=").Append(hud.RenownBandColor);
+
+            readout = builder.ToString();
+            return true;
+        }
     }
 }
