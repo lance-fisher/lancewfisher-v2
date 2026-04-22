@@ -3689,3 +3689,30 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   command-deck HUD smoke.
 - Contract revision advanced `88 -> 89` and now clears the HUD lane branch in
   flight after the landing pass.
+
+## 2026-04-22 Player Command-Deck Overlay Slice
+
+- Branch in flight: `codex/unity-player-hud-command-deck-overlay-followup`.
+- `unity/Assets/_Bloodlines/Code/HUD/PlayerCommandDeckOverlayPresenter.cs`
+  now provides a pure formatter for the live command-deck overlay title/body
+  so both the IMGUI shell and dedicated validator consume the same copy
+  contract.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.CommandDeckOverlay.cs`
+  now binds the already-landed `PlayerCommandDeckHUDComponent` into the
+  on-screen Unity shell as a top-right panel with alert-color accenting.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCommandDeckOverlaySmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityPlayerCommandDeckOverlaySmokeValidation.ps1`
+  now prove stable overlay rendering, victory ETA rendering, and Great
+  Reckoning alert preservation.
+- This worktree's generated `Assembly-CSharp*.csproj` analyzer paths were
+  repaired back to `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`,
+  and a local `unity/Library` junction was restored so the governed .NET build
+  gates run cleanly again.
+- Governed validation is green on the branch: dedicated overlay smoke, runtime
+  build, editor build, bootstrap runtime smoke, combat smoke, canonical scene
+  shell validation, fortification smoke, siege smoke,
+  `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, and contract staleness.
+- Contract revision advanced `89 -> 90` and now records the HUD lane with the
+  command-deck overlay follow-up branch in flight.

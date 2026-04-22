@@ -2036,6 +2036,15 @@
       "description": "The validated `codex/unity-player-hud-command-deck-summary` branch is now merged to canonical `master` via `b8fc7589`. `PlayerCommandDeckHUDComponent`, `PlayerCommandDeckHUDSystem`, `BloodlinesDebugCommandSurface.HUD` command-deck readout support, and `BloodlinesPlayerCommandDeckHUDSmokeValidation` plus wrapper now live on canonical `master`. The full governed 10-gate chain reran green on the merge result in this worktree, the dedicated player command-deck HUD smoke also reran green, and contract rev 88->89 now clears the HUD lane branch in flight.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary-landing.md",
       "validation_gates": "all 10 green plus player command-deck HUD smoke on merged master"
+    },
+    {
+      "lane": "player-hud-realm-condition-legibility-slice-9-command-deck-overlay",
+      "date": "2026-04-22",
+      "branch": "codex/unity-player-hud-command-deck-overlay-followup",
+      "status": "active",
+      "description": "The ninth player-HUD slice is now complete on branch. `PlayerCommandDeckOverlayPresenter` and `BloodlinesDebugCommandSurface.CommandDeckOverlay` bind the already-landed `PlayerCommandDeckHUDComponent` into the live IMGUI battlefield shell as a top-right command-deck overlay with alert-color accenting, without widening `AI/**` or touching scene assets. `BloodlinesPlayerCommandDeckOverlaySmokeValidation` plus its wrapper prove stable overlay copy, victory ETA rendering, and Great Reckoning alert preservation. The worktree-local `unity/Library` junction and generated `Assembly-CSharp*.csproj` analyzer paths were repaired back to `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache`, and the full governed 10-gate chain is green in this worktree. Contract rev 89->90.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-overlay.md",
+      "validation_gates": "all 10 green plus player command-deck overlay smoke"
     }
   ]
 }
