@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 58
+- Revision: 60
 - Last Updated: 2026-04-21
-- Last Updated By: codex-player-marriage-dissolution-landing-2026-04-21
-- Supersedes: revision 57 (Codex has now merged `codex/unity-player-marriage-dissolution` onto `master` via `f5bfef1d`: the dedicated player-marriage dissolution smoke and wrapper are green on merged master, and the player-marriage diplomacy stack is now fully landed. `unity/Assets/_Bloodlines/Code/AI/**` remains Claude-owned.)
+- Last Updated By: codex-player-covert-ops-foundation-2026-04-21
+- Supersedes: revision 59 (Codex has completed player covert ops sub-slice 3A on branch `codex/unity-player-covert-ops-foundation`. The dedicated player covert ops smoke and the full governed validation gate are green in `D:\BLM13\bloodlines\bloodlines`; landing to `master` remains the next action. `unity/Assets/_Bloodlines/Code/AI/**` remains Claude-owned and read-only from this Codex slice.)
 
 
 ## Purpose
@@ -618,11 +618,39 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - Current Branch In Flight: none (merged into master via `f5bfef1d`; next clean Codex pickup is `codex/unity-player-covert-ops-foundation`)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-dissolution-landing.md`
 
+### Lane: player-covert-ops
+
+- Status: active (sub-slice 3A complete on branch, pending merge to `master`)
+- Branch Prefix: `codex/unity-player-covert-ops-*`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/PlayerCovertOps/**`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerCovertOps.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCovertOpsSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityPlayerCovertOpsSmokeValidation.ps1`
+- Shared-File Narrow Edits Planned:
+  - `unity/Assembly-CSharp.csproj` -- add compile includes for new `PlayerCovertOps/**` runtime files only if the local generated project file does not already pick them up
+  - `unity/Assembly-CSharp-Editor.csproj` -- add compile includes for `BloodlinesPlayerCovertOpsSmokeValidation.cs` only if the local generated project file does not already pick it up
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/AI/DynastyOperationLimits.cs` -- reuse the canonical dynasty-operation active-cap constant/helper without widening Claude's AI-owned operation surfaces
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve source/target faction entities by `FactionId`
+  - `unity/Assets/_Bloodlines/Code/Components/PopulationComponent.cs` -- read and deduct `ResourceStockpileComponent` fields from the owning faction
+  - `unity/Assets/_Bloodlines/Code/Components/DynastyMemberComponent.cs` -- resolve the player covert operator roster (spymaster, diplomat, merchant) and member availability
+  - `unity/Assets/_Bloodlines/Code/Combat/HostilityComponent.cs` -- reserved for later player assassination/sabotage follow-ups that trigger hostility without widening the AI lane
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-covert-ops-foundation.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `DYNASTY_OPERATION_ACTIVE_LIMIT` (17), `getActiveDynastyOperationForTargetFaction` (4084), `getActiveIntelligenceReport` (4097), `tickDynastyIntelligenceReports` (4106), `getEspionageContest` (10187), `getEspionageTerms` (10248), `startEspionageOperation` (10876)
+  - `tests/runtime-bridge.mjs` espionage assertions (3490-3543)
+- Current Branch In Flight: `codex/unity-player-covert-ops-foundation`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-covert-ops-foundation.md`
+
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the `fortification-siege-imminent-engagement` lane is paused unless Lance explicitly defines a fresh fortification sub-slice 14. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation is now landed on master; future raid follow-ups should start from a fresh scout branch. Under the current multi-day directive, the cleanest next Codex pickup is the player-facing marriage diplomacy lane.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the `fortification-siege-imminent-engagement` lane is paused unless Lance explicitly defines a fresh fortification sub-slice 14. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation is now landed on master; future raid follow-ups should start from a fresh scout branch. Under the current multi-day directive, the active Codex pickup is `player-covert-ops` on `codex/unity-player-covert-ops-foundation`.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 

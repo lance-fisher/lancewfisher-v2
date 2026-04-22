@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-21T23:18:00-06:00",
+  "updated_at": "2026-04-21T21:22:14-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -1775,6 +1775,15 @@
       "description": "The validated `codex/unity-player-marriage-dissolution` branch is now merged to master via `f5bfef1d`. BloodlinesPlayerMarriageDissolutionSmokeValidation and scripts/Invoke-BloodlinesUnityPlayerMarriageDissolutionSmokeValidation.ps1 are now canonical master validation surfaces, closing the remaining player-marriage diplomacy proof gap while continuing to reuse the already-landed MarriageDeathDissolutionSystem from the paused dynasty-house-parity lane. Merged master re-passed runtime build, editor build, bootstrap runtime, combat, scene shells, fortification, siege, node validation, contract staleness, and the dedicated player marriage dissolution smoke in D:\\BLM13\\bloodlines\\bloodlines. Contract rev 57->58 records the player-marriage lane as fully landed.",
       "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-marriage-dissolution-landing.md",
       "validation_gates": "all 10 green plus player marriage dissolution smoke on merged master"
+    },
+    {
+      "lane": "player-covert-ops-sub-slice-3a-foundation",
+      "date": "2026-04-21",
+      "branch": "codex/unity-player-covert-ops-foundation",
+      "status": "active",
+      "description": "Player-facing covert ops foundation is now complete on branch. CovertOpKindPlayer, PlayerCovertOpsRequestComponent, PlayerCovertOpsResolutionComponent, and PlayerCovertOpsSystem land the browser's startEspionageOperation dispatch seam under unity/Assets/_Bloodlines/Code/PlayerCovertOps/ without widening Claude's AI-owned DynastyOperationComponent graph. The slice validates source/target factions, active-op and live-report dedupe, operator resolution from the dynasty roster, canonical gold=45 / influence=16 cost deduction, resolve/report timing, and combined active-cap enforcement using read-only DynastyOperationLimits plus player-owned live op entities. BloodlinesDebugCommandSurface.PlayerCovertOps adds issuance/readout support, and BloodlinesPlayerCovertOpsSmokeValidation proves baseline, successful dispatch, insufficient-influence rejection, and cap-at-6 behavior. The full governed 10-gate chain is green in D:\\BLM13\\bloodlines\\bloodlines with temporary worktree-local wrapper copies used only for the still-root-pinned bootstrap runtime and scene-shell validators. Contract rev 59->60.",
+      "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-covert-ops-foundation.md",
+      "validation_gates": "all 10 green plus player covert ops smoke"
     }
   ]
 }

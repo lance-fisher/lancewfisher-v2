@@ -2734,3 +2734,54 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Start Priority 3 on fresh branch `codex/unity-player-covert-ops-foundation`.
 2. Port `startEspionageOperation` under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/`.
 3. Keep `unity/Assets/_Bloodlines/Code/AI/**` untouched; Claude still owns the AI strategic lane.
+
+## 2026-04-21 Player Covert Ops Sub-Slice 3A: Foundation
+
+- Branch lane: `codex/unity-player-covert-ops-foundation`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-covert-ops-foundation.md`
+- The player-side covert-ops foundation now ports the browser's espionage
+  dispatch seam under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/`:
+  - `CovertOpKindPlayer`, `PlayerCovertOpsRequestComponent`,
+    `PlayerCovertOpsResolutionComponent`, and `PlayerCovertOpsSystem` cover
+    player-issued espionage requests, operator resolution
+    (`Spymaster` -> `Diplomat` -> `Merchant`), canonical gold/influence cost
+    deduction, active target/report dedupe, and the per-faction active-op cap
+    combined with Claude's AI-side `DynastyOperationLimits`.
+  - `BloodlinesDebugCommandSurface.PlayerCovertOps.cs` adds player espionage
+    issuance and structured active-op readout.
+  - `BloodlinesPlayerCovertOpsSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityPlayerCovertOpsSmokeValidation.ps1`
+    prove baseline, successful dispatch, insufficient-influence rejection, and
+    cap enforcement.
+- Full governed validation is green in `D:\BLM13\bloodlines\bloodlines`,
+  using temporary worktree-local copies only for the still-root-pinned
+  bootstrap-runtime and canonical scene-shell wrappers:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`: `Build succeeded.` / `0 Error(s)`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: `0 Error(s)` with existing editor warnings
+  - bootstrap runtime smoke:
+    `Bootstrap runtime smoke validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity on map ironmark_frontier. ...`
+  - combat smoke:
+    `Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True, groupMovementPhase=True, separationPhase=True, stancePhase=True.`
+  - scene shells:
+    `Bootstrap scene shell validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity with canonical map Assets/_Bloodlines/Data/MapDefinitions/ironmark_frontier.asset.`
+    and
+    `Gameplay scene shell validation passed for Assets/_Bloodlines/Scenes/Gameplay/IronmarkFrontier.unity.`
+  - fortification smoke:
+    `Fortification smoke validation passed: baselinePhase=True, tierAdvancePhase=True, reserveMusterPhase=True, reserveRecoveryPhase=True. ...`
+  - siege smoke:
+    `Siege smoke validation passed: baselinePhase=True, strainPhase=True, recoveryPhase=True, supportPhase=True. ...`
+  - `node tests/data-validation.mjs`: PASS
+  - `node tests/runtime-bridge.mjs`: PASS
+  - contract staleness check: PASS
+  - dedicated player covert ops smoke:
+    `BLOODLINES_PLAYER_COVERT_OPS_SMOKE PASS`
+    with
+    `Phase 2 PASS: espionage created, gold=155, influence=64, readout='ActivePlayerCovertOpCount=1`
+    and
+    `Phase 4 PASS: active espionage ops capped at 6 with readout 'ActivePlayerCovertOpCount=6`
+
+### Recommended Next Follow-Up
+1. Merge `codex/unity-player-covert-ops-foundation` to `master` and rerun the governed gate on merged `master`.
+2. After landing 3A, start sub-slice 3B on fresh branch `codex/unity-player-assassination-sabotage`.
+3. Keep all writes under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/` plus narrow continuity/contract updates; do not reopen `unity/Assets/_Bloodlines/Code/AI/**`.

@@ -3031,3 +3031,66 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   still dirties during Unity validation and should remain unstaged.
 - Node validations for this worktree must run from `D:\BLM13\bloodlines\bloodlines`
   rather than the outer worktree root `D:\BLM13\bloodlines`.
+
+## Codex Player Covert Ops Sub-Slice 3A: Foundation (2026-04-21)
+
+### Status: COMPLETE on branch `codex/unity-player-covert-ops-foundation`
+
+### What Was Done
+- Added `unity/Assets/_Bloodlines/Code/PlayerCovertOps/CovertOpKindPlayer.cs`.
+- Added `unity/Assets/_Bloodlines/Code/PlayerCovertOps/PlayerCovertOpsRequestComponent.cs`.
+- Added `unity/Assets/_Bloodlines/Code/PlayerCovertOps/PlayerCovertOpsResolutionComponent.cs`.
+- Added `unity/Assets/_Bloodlines/Code/PlayerCovertOps/PlayerCovertOpsSystem.cs`.
+- Added `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerCovertOps.cs`.
+- Added `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCovertOpsSmokeValidation.cs`.
+- Added `scripts/Invoke-BloodlinesUnityPlayerCovertOpsSmokeValidation.ps1`.
+- Ported the browser's player-facing espionage dispatch seam:
+  source/target faction validation, active-op and live-report dedupe, operator
+  resolution from the dynasty roster, canonical espionage cost deduction, live
+  player-op entity creation, and the combined active-op cap using Claude's
+  `DynastyOperationLimits` read-only helper plus player-owned operation
+  entities.
+- Full governed validation is green in `D:\BLM13\bloodlines\bloodlines` with
+  temporary worktree-local copies used only for the still-root-pinned
+  bootstrap-runtime and canonical scene-shell wrappers.
+
+### Validation Proof
+- Runtime build: `Build succeeded.` / `0 Error(s)`
+- Editor build: `0 Error(s)` with existing warnings
+- Bootstrap runtime smoke:
+  `Bootstrap runtime smoke validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity on map ironmark_frontier. ...`
+- Combat smoke:
+  `Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True, groupMovementPhase=True, separationPhase=True, stancePhase=True.`
+- Bootstrap scene shell:
+  `Bootstrap scene shell validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity with canonical map Assets/_Bloodlines/Data/MapDefinitions/ironmark_frontier.asset.`
+- Gameplay scene shell:
+  `Gameplay scene shell validation passed for Assets/_Bloodlines/Scenes/Gameplay/IronmarkFrontier.unity.`
+- Fortification smoke:
+  `Fortification smoke validation passed: baselinePhase=True, tierAdvancePhase=True, reserveMusterPhase=True, reserveRecoveryPhase=True. ...`
+- Siege smoke:
+  `Siege smoke validation passed: baselinePhase=True, strainPhase=True, recoveryPhase=True, supportPhase=True. ...`
+- Data validation: `Bloodlines data validation passed.`
+- Runtime bridge: `Bloodlines runtime bridge validation passed.`
+- Dedicated smoke:
+  `BLOODLINES_PLAYER_COVERT_OPS_SMOKE PASS`
+  with
+  `Phase 2 PASS: espionage created, gold=155, influence=64, readout='ActivePlayerCovertOpCount=1`
+  and
+  `Phase 4 PASS: active espionage ops capped at 6 with readout 'ActivePlayerCovertOpCount=6`
+
+### Immediate Next Action
+1. Stage the player covert ops foundation files plus continuity/contract updates and commit them on `codex/unity-player-covert-ops-foundation`.
+2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
+3. After the landing continuity pass, start sub-slice 3B on fresh branch `codex/unity-player-assassination-sabotage`.
+
+### Context Notes
+- The checked-in bootstrap-runtime and canonical scene-shell wrappers are still
+  pinned to `D:\ProjectsHome\Bloodlines`; continue using temporary worktree-safe
+  copies when validating this clean worktree.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
+- Node validations for this worktree must run from `D:\BLM13\bloodlines\bloodlines`
+  rather than the outer worktree root `D:\BLM13\bloodlines`.
+- The player covert ops lane intentionally keeps live operation entities under
+  `PlayerCovertOps/**` instead of widening Claude's AI-owned
+  `DynastyOperationComponent` graph.
