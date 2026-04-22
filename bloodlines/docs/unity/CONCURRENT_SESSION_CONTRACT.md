@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 81
+- Revision: 82
 - Last Updated: 2026-04-22
-- Last Updated By: codex-2026-04-22
-- Supersedes: revision 80 (The player-marriage-diplomacy lane now carries the additive captive-rescue follow-up on `codex/unity-player-captive-rescue`. `PlayerCaptiveRescueRequestComponent`, `PlayerCaptiveDispatchUtility`, and `PlayerCaptiveRescueDispatchSystem` add the player-owned rescue request seam without widening `AI/**`, reusing the AI-owned `CapturedMemberElement` and `DynastyOperationCaptiveRescueComponent` shapes. `BloodlinesDebugCommandSurface.PlayerDiplomacy.cs` now exposes a captive rescue dispatch hook, and `BloodlinesPlayerCaptiveRescueSmokeValidation` plus wrapper prove success, missing-operator rejection, and missing-captive rejection.)
+- Last Updated By: codex-player-diplomacy-2026-04-22
+- Supersedes: revision 81 (The player-marriage-diplomacy lane now carries the additive captive-ransom follow-up on `codex/unity-player-captive-ransom-dispatch`. `PlayerCaptiveRansomRequestComponent`, `PlayerCaptiveRansomDispatchSystem`, and the additive `PlayerCaptiveDispatchUtility` / `BloodlinesDebugCommandSurface.PlayerDiplomacy.cs` updates add the player-owned ransom request seam without widening `AI/**`, reusing the AI-owned `CapturedMemberElement`, `DynastyOperationCaptiveRansomComponent`, and `AICaptiveRansomExecutionSystem` operator/cost surfaces. `BloodlinesPlayerCaptiveRansomSmokeValidation` plus wrapper prove success, insufficient-gold rejection, and hostility-gated rejection. Because this worktree has no local `unity/Library`, the generated `Assembly-CSharp*.csproj` project/reference paths were narrowed to the canonical root `D:\ProjectsHome\Bloodlines\unity\Library\...` cache so the governed `dotnet build` gates can run from this checkout.)
 
 
 ## Purpose
@@ -607,7 +607,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: player-marriage-diplomacy
 
 - Status: active
-- Branch Prefix: `codex/unity-player-marriage-*`, `codex/unity-player-holy-war-divine-right`, `codex/unity-player-missionary-dispatch`, `codex/unity-player-pact-proposal`, `codex/unity-player-captive-rescue`
+- Branch Prefix: `codex/unity-player-marriage-*`, `codex/unity-player-holy-war-divine-right`, `codex/unity-player-missionary-dispatch`, `codex/unity-player-pact-proposal`, `codex/unity-player-captive-rescue`, `codex/unity-player-captive-ransom-*`
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/**`
@@ -619,6 +619,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMissionaryDispatchSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerPactSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRescueSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRansomSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityPlayerMarriageProposalSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityPlayerMarriageAcceptanceSmokeValidation.ps1`
@@ -627,6 +628,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnityPlayerMissionaryDispatchSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityPlayerPactSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityPlayerCaptiveRescueSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityPlayerCaptiveRansomSmokeValidation.ps1`
 - Shared-File Narrow Edits Planned:
   - `unity/Assembly-CSharp.csproj` -- add compile includes for new `PlayerDiplomacy/**` runtime files only if the local generated project file does not already pick them up
   - `unity/Assembly-CSharp-Editor.csproj` -- add compile includes for the lane's dedicated player-diplomacy smoke validators only if the local generated project file does not already pick them up
@@ -650,6 +652,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/AI/CapturedMemberHelpers.cs` -- read-only validation helper seam reused by the dedicated player captive rescue smoke
   - `unity/Assets/_Bloodlines/Code/AI/DynastyOperationCaptiveRescueComponent.cs` -- read-only rescue operation payload shape reused by the player captive rescue slice
   - `unity/Assets/_Bloodlines/Code/AI/AICaptiveRescueExecutionSystem.cs` -- read-only rescue constants and operator-priority seam reused for browser-parity dispatch terms without widening the AI lane
+  - `unity/Assets/_Bloodlines/Code/AI/DynastyOperationCaptiveRansomComponent.cs` -- read-only ransom operation payload shape reused by the player captive ransom slice
+  - `unity/Assets/_Bloodlines/Code/AI/AICaptiveRansomExecutionSystem.cs` -- read-only ransom constants and operator-priority seam reused for browser-parity dispatch terms without widening the AI lane
   - `unity/Assets/_Bloodlines/Code/Narrative/NarrativeMessageBridge.cs` -- shared message bridge used for player declaration messaging without widening the AI-owned lane
   - `unity/Assets/_Bloodlines/Code/Conviction/ConvictionScoring.cs` -- apply proposal and acceptance-side stewardship/oathkeeping conviction events
   - `unity/Assets/_Bloodlines/Code/Combat/HostilityComponent.cs` -- remove reciprocal hostility on successful acceptance
@@ -664,6 +668,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-22-unity-player-missionary-dispatch.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-pact-proposal.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-captive-rescue.md`
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-captive-ransom.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `MARRIAGE_REGENCY_LEGITIMACY_COSTS` (6091), `getMarriageAuthorityProfile` (6134), `getMarriageEnvoyProfile` (6192), `buildMarriageGovernanceStatus` (6217), `applyMarriageGovernanceLegitimacyCost` (6232), `getMarriageProposalContext` (6247), `getMarriageProposalTerms` (6296), `getMarriageAcceptanceTerms` (6327), `memberHasActiveMarriage` (7260), `proposeMarriage` (7340), `acceptMarriage` (7388), `tickMarriageDissolutionFromDeath` (7471), `tickMarriageGestation` (7496)
   - `tests/runtime-bridge.mjs` marriage proposal and acceptance assertions (2072-2113, 2240-2308), death-driven dissolution assertions (3234-3298)
@@ -672,8 +677,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `src/game/core/simulation.js` `NON_AGGRESSION_PACT_INFLUENCE_COST` (5126), `NON_AGGRESSION_PACT_GOLD_COST` (5127), `NON_AGGRESSION_PACT_MINIMUM_DURATION_IN_WORLD_DAYS` (5128), `NON_AGGRESSION_PACT_BREAK_LEGITIMACY_COST` (5129), `getNonAggressionPactTerms` (5150-5183), `proposeNonAggressionPact` (5185-5222), `breakNonAggressionPact` (5224-5257)
   - `src/game/core/simulation.js` `getCapturedMemberRescueTerms` (~11153-11234), `startRescueOperation` (~11236-11341)
   - `src/game/core/ai.js` captive recovery contest / operator selection logic (~2550-2760)
-- Current Branch In Flight: `codex/unity-player-captive-rescue`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-captive-rescue.md`
+- Current Branch In Flight: `codex/unity-player-captive-ransom-dispatch`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-captive-ransom.md`
 
 ### Lane: player-covert-ops
 

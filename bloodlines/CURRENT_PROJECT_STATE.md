@@ -3488,3 +3488,39 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   player captive rescue smoke.
 - Contract revision advanced `80 -> 81` and now records the player-diplomacy
   lane with this branch in flight.
+
+## 2026-04-22 Player Captive Ransom Dispatch Slice
+
+- Branch in flight: `codex/unity-player-captive-ransom-dispatch`.
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerCaptiveRansomRequestComponent.cs`,
+  `PlayerCaptiveRansomDispatchSystem.cs`,
+  and additive ransom helpers in
+  `PlayerCaptiveDispatchUtility.cs`
+  now port the browser player-side captive ransom seam without widening the
+  AI-owned `AI/**` lane. The player dispatch validates kingdom state, confirms
+  the member is actually captured, resolves the holding faction from
+  `CapturedMemberElement`, rejects duplicate active ransom ops, reuses the AI
+  diplomat/merchant operator priorities, blocks ransom when the player is
+  actively hostile to the captor, deducts canonical `gold=70` /
+  `influence=18`, creates the AI-owned ransom operation payload, and emits a
+  ransom narrative line.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerDiplomacy.cs`
+  now exposes `TryDebugDispatchCaptiveRansom(...)` for command-surface
+  issuance.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRansomSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityPlayerCaptiveRansomSmokeValidation.ps1`
+  now prove ransom success, insufficient-gold rejection, and hostile-captor
+  rejection in a dedicated ECS validation world.
+- Because this worktree has no local `unity/Library`, the generated
+  `unity/Assembly-CSharp.csproj`
+  and
+  `unity/Assembly-CSharp-Editor.csproj`
+  project/reference paths were repaired to the canonical
+  `D:\ProjectsHome\Bloodlines\unity\Library\...` cache so the governed
+  `dotnet build` gates can run from this checkout.
+- Governed validation is green on the branch: runtime build, editor build,
+  bootstrap runtime smoke, combat smoke, canonical scene shell validation,
+  fortification smoke, siege smoke, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated
+  player captive ransom smoke.

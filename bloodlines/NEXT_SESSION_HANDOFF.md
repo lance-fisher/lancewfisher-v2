@@ -2912,6 +2912,52 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
 
+## 2026-04-22 Player Captive Ransom Dispatch Slice
+
+- Branch in flight: `codex/unity-player-captive-ransom-dispatch`.
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerCaptiveRansomRequestComponent.cs`,
+  `PlayerCaptiveRansomDispatchSystem.cs`,
+  `PlayerCaptiveDispatchUtility.cs`,
+  and
+  `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerDiplomacy.cs`
+  now port the browser player-side captive ransom dispatch seam under the
+  existing `PlayerDiplomacy/**` lane without widening `AI/**`.
+- The player ransom flow now validates kingdom state, verifies the requested
+  dynasty member is currently `Captured`, resolves the holding faction through
+  the AI-owned `CapturedMemberElement` buffers, rejects duplicate active ransom
+  ops, reuses the AI diplomat/merchant operator priorities, rejects hostile
+  captors, deducts canonical `gold=70` / `influence=18`, creates
+  `DynastyOperationComponent` plus
+  `DynastyOperationCaptiveRansomComponent`,
+  and emits a ransom narrative line.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRansomSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityPlayerCaptiveRansomSmokeValidation.ps1`
+  now prove three phases: ransom success, insufficient-gold rejection, and
+  hostile-captor rejection.
+- The worktree had no local `unity/Library`, so
+  `unity/Assembly-CSharp.csproj`
+  and
+  `unity/Assembly-CSharp-Editor.csproj`
+  were narrowed to the canonical
+  `D:\ProjectsHome\Bloodlines\unity\Library\...` cache so the governed
+  `dotnet build` gates can execute here.
+- Governed validation is green on the branch: runtime build, editor build,
+  bootstrap runtime smoke, combat smoke, canonical scene shell validation,
+  fortification smoke, siege smoke, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated
+  player captive ransom smoke.
+
+### Immediate Next Action
+
+1. Finish the governed 10-gate chain for the captive-ransom slice with the
+   updated contract and continuity files.
+2. Stage only the player captive ransom slice files plus continuity / contract
+   updates, commit them on `codex/unity-player-captive-ransom-dispatch`, and
+   push to `origin`.
+3. Continue with the next unblocked Codex priority after landing: renown /
+   prestige scoring or the HUD victory leaderboard follow-up.
+
 ## Codex Player Marriage Diplomacy Sub-Slice 2B: Acceptance And Effects (2026-04-21)
 
 ### Status: COMPLETE on branch `codex/unity-player-marriage-acceptance`

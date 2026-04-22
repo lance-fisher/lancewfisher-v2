@@ -99,6 +99,24 @@ namespace Bloodlines.PlayerDiplomacy
             return id;
         }
 
+        internal static FixedString64Bytes BuildRansomOperationId(
+            FixedString32Bytes sourceFactionId,
+            FixedString32Bytes targetFactionId,
+            FixedString64Bytes captiveMemberId,
+            float inWorldDays,
+            int requestIndex)
+        {
+            var id = new FixedString64Bytes("player-ransom-");
+            id.Append(sourceFactionId);
+            id.Append("-");
+            id.Append(targetFactionId);
+            id.Append("-d");
+            id.Append((int)inWorldDays);
+            id.Append("-");
+            id.Append(requestIndex);
+            return id;
+        }
+
         internal static void PushRescueNarrative(
             EntityManager entityManager,
             FixedString32Bytes sourceFactionId,
@@ -110,6 +128,27 @@ namespace Bloodlines.PlayerDiplomacy
             message.Append((FixedString64Bytes)" dispatches covert agents to recover ");
             message.Append(captiveMemberTitle);
             message.Append((FixedString32Bytes)" from ");
+            message.Append(captorFactionId);
+            message.Append((FixedString32Bytes)".");
+            NarrativeMessageBridge.Push(
+                entityManager,
+                message,
+                sourceFactionId.Equals(new FixedString32Bytes("player"))
+                    ? NarrativeMessageTone.Info
+                    : NarrativeMessageTone.Good);
+        }
+
+        internal static void PushRansomNarrative(
+            EntityManager entityManager,
+            FixedString32Bytes sourceFactionId,
+            FixedString64Bytes captiveMemberTitle,
+            FixedString32Bytes captorFactionId)
+        {
+            var message = new FixedString128Bytes();
+            message.Append(sourceFactionId);
+            message.Append((FixedString64Bytes)" opens ransom terms for ");
+            message.Append(captiveMemberTitle);
+            message.Append((FixedString32Bytes)" with ");
             message.Append(captorFactionId);
             message.Append((FixedString32Bytes)".");
             NarrativeMessageBridge.Push(
