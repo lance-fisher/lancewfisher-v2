@@ -18,11 +18,13 @@ using UnityDebug = UnityEngine.Debug;
 namespace Bloodlines.EditorTools
 {
     /// <summary>
-    /// Dedicated smoke validator for player covert ops foundation. Proves:
+    /// Dedicated smoke validator for player covert ops. Proves:
     /// 1. baseline no player covert ops
     /// 2. successful espionage dispatch creates an op and deducts cost
     /// 3. insufficient influence blocks dispatch
     /// 4. total active operations do not exceed the canonical limit of 6
+    /// 5. assassination targets a live enemy dynasty member
+    /// 6. sabotage targets a live enemy building entity
     /// </summary>
     public static class BloodlinesPlayerCovertOpsSmokeValidation
     {
@@ -76,6 +78,8 @@ namespace Bloodlines.EditorTools
             ok &= RunSuccessfulDispatchPhase(lines);
             ok &= RunInsufficientInfluencePhase(lines);
             ok &= RunOperationCapPhase(lines);
+            ok &= RunAssassinationTargetPhase(lines);
+            ok &= RunSabotageTargetPhase(lines);
             report = lines.ToString();
             return ok;
         }
@@ -247,6 +251,113 @@ namespace Bloodlines.EditorTools
             return true;
         }
 
+        private static bool RunAssassinationTargetPhase(System.Text.StringBuilder lines)
+        {
+            using var world = CreateValidationWorld("player-covert-ops-phase5");
+            using var debugScope = new DebugCommandSurfaceScope(world);
+            var entityManager = world.EntityManager;
+
+            SeedDualClock(entityManager, 36f);
+            var playerFaction = SeedFaction(entityManager, "player", gold: 300f, influence: 180f, spymasterRenown: 24f);
+            var enemyFaction = SeedFaction(entityManager, "enemy", gold: 90f, influence: 25f, spymasterRenown: 4f, fortificationTier: 2);
+            var resourcesBefore = entityManager.GetComponentData<ResourceStockpileComponent>(playerFaction);
+            string targetMemberId = GetMemberIdByRole(entityManager, enemyFaction, DynastyRole.Commander);
+
+            if (!debugScope.CommandSurface.TryDebugIssuePlayerAssassination("player", "enemy", targetMemberId))
+            {
+                lines.AppendLine("Phase 5 FAIL: could not queue assassination request.");
+                return false;
+            }
+
+            TickOnce(world);
+
+            if (!TryGetSingleActiveOperation(entityManager, "player", CovertOpKindPlayer.Assassination, out var op) ||
+                !debugScope.CommandSurface.TryDebugGetPlayerCovertOps("player", out var readout))
+            {
+                lines.AppendLine("Phase 5 FAIL: assassination op missing after dispatch.");
+                return false;
+            }
+
+            var resourcesAfter = entityManager.GetComponentData<ResourceStockpileComponent>(playerFaction);
+            if (!op.TargetMemberId.Equals(new FixedString64Bytes(targetMemberId)) ||
+                op.TargetLabel.Length == 0 ||
+                !readout.Contains("Kind=Assassination", StringComparison.Ordinal) ||
+                !readout.Contains("TargetMemberId=" + targetMemberId, StringComparison.Ordinal))
+            {
+                lines.AppendLine($"Phase 5 FAIL: assassination target metadata incorrect. readout='{readout}'.");
+                return false;
+            }
+
+            if (resourcesAfter.Gold != resourcesBefore.Gold - PlayerCovertOpsSystem.AssassinationCostGold ||
+                resourcesAfter.Influence != resourcesBefore.Influence - PlayerCovertOpsSystem.AssassinationCostInfluence)
+            {
+                lines.AppendLine(
+                    $"Phase 5 FAIL: assassination cost deduction wrong. gold={resourcesAfter.Gold} influence={resourcesAfter.Influence}.");
+                return false;
+            }
+
+            lines.AppendLine(
+                $"Phase 5 PASS: assassination targeted memberId={targetMemberId}, title={op.TargetLabel}, gold={resourcesAfter.Gold}, influence={resourcesAfter.Influence}.");
+            return true;
+        }
+
+        private static bool RunSabotageTargetPhase(System.Text.StringBuilder lines)
+        {
+            using var world = CreateValidationWorld("player-covert-ops-phase6");
+            using var debugScope = new DebugCommandSurfaceScope(world);
+            var entityManager = world.EntityManager;
+
+            SeedDualClock(entityManager, 40f);
+            var playerFaction = SeedFaction(entityManager, "player", gold: 260f, influence: 120f, spymasterRenown: 20f);
+            SeedFaction(entityManager, "enemy", gold: 90f, influence: 25f, spymasterRenown: 5f, fortificationTier: 2);
+            var gatehouse = CreateBuilding(
+                entityManager,
+                "enemy",
+                "gatehouse",
+                new float3(104f, 0f, 100f),
+                FortificationRole.Gate);
+            var resourcesBefore = entityManager.GetComponentData<ResourceStockpileComponent>(playerFaction);
+
+            if (!debugScope.CommandSurface.TryDebugIssuePlayerSabotage("player", "gate_opening", "enemy", gatehouse.Index))
+            {
+                lines.AppendLine("Phase 6 FAIL: could not queue sabotage request.");
+                return false;
+            }
+
+            TickOnce(world);
+
+            if (!TryGetSingleActiveOperation(entityManager, "player", CovertOpKindPlayer.Sabotage, out var op) ||
+                !debugScope.CommandSurface.TryDebugGetPlayerCovertOps("player", out var readout))
+            {
+                lines.AppendLine("Phase 6 FAIL: sabotage op missing after dispatch.");
+                return false;
+            }
+
+            var resourcesAfter = entityManager.GetComponentData<ResourceStockpileComponent>(playerFaction);
+            if (!op.Subtype.Equals(new FixedString32Bytes("gate_opening")) ||
+                op.TargetEntityIndex != gatehouse.Index ||
+                !op.TargetLabel.Equals(new FixedString64Bytes("gatehouse")) ||
+                !readout.Contains("Kind=Sabotage", StringComparison.Ordinal) ||
+                !readout.Contains("Subtype=gate_opening", StringComparison.Ordinal) ||
+                !readout.Contains("TargetEntityIndex=" + gatehouse.Index, StringComparison.Ordinal))
+            {
+                lines.AppendLine($"Phase 6 FAIL: sabotage target metadata incorrect. readout='{readout}'.");
+                return false;
+            }
+
+            if (resourcesAfter.Gold != resourcesBefore.Gold - 60f ||
+                resourcesAfter.Influence != resourcesBefore.Influence - 18f)
+            {
+                lines.AppendLine(
+                    $"Phase 6 FAIL: sabotage cost deduction wrong. gold={resourcesAfter.Gold} influence={resourcesAfter.Influence}.");
+                return false;
+            }
+
+            lines.AppendLine(
+                $"Phase 6 PASS: sabotage targeted entityIndex={gatehouse.Index}, subtype={op.Subtype}, gold={resourcesAfter.Gold}, influence={resourcesAfter.Influence}.");
+            return true;
+        }
+
         private static World CreateValidationWorld(string worldName)
         {
             var world = new World(worldName);
@@ -326,7 +437,9 @@ namespace Bloodlines.EditorTools
         {
             var settlementEntity = entityManager.CreateEntity(
                 typeof(FactionComponent),
-                typeof(SettlementComponent));
+                typeof(SettlementComponent),
+                typeof(PositionComponent),
+                typeof(PrimaryKeepTag));
             entityManager.SetComponentData(settlementEntity, new FactionComponent { FactionId = factionId });
             entityManager.SetComponentData(settlementEntity, new SettlementComponent
             {
@@ -335,6 +448,70 @@ namespace Bloodlines.EditorTools
                 FortificationTier = fortificationTier,
                 FortificationCeiling = math.max(1, fortificationTier + 1),
             });
+            entityManager.SetComponentData(settlementEntity, new PositionComponent
+            {
+                Value = ResolveSettlementPosition(factionId),
+            });
+        }
+
+        private static float3 ResolveSettlementPosition(string factionId)
+        {
+            if (string.Equals(factionId, "player", StringComparison.Ordinal))
+            {
+                return new float3(20f, 0f, 20f);
+            }
+
+            if (string.Equals(factionId, "enemy", StringComparison.Ordinal))
+            {
+                return new float3(100f, 0f, 100f);
+            }
+
+            if (factionId.StartsWith("enemy", StringComparison.Ordinal) &&
+                int.TryParse(factionId.Substring(5), out int suffix))
+            {
+                return new float3(100f + suffix * 12f, 0f, 100f + suffix * 4f);
+            }
+
+            return new float3(60f, 0f, 60f);
+        }
+
+        private static Entity CreateBuilding(
+            EntityManager entityManager,
+            string factionId,
+            string buildingId,
+            float3 position,
+            FortificationRole fortificationRole = FortificationRole.None,
+            bool supportsSiegeLogistics = false)
+        {
+            var entity = entityManager.CreateEntity(
+                typeof(FactionComponent),
+                typeof(PositionComponent),
+                typeof(HealthComponent),
+                typeof(BuildingTypeComponent));
+            entityManager.SetComponentData(entity, new FactionComponent
+            {
+                FactionId = new FixedString32Bytes(factionId),
+            });
+            entityManager.SetComponentData(entity, new PositionComponent
+            {
+                Value = position,
+            });
+            entityManager.SetComponentData(entity, new HealthComponent
+            {
+                Current = 400f,
+                Max = 400f,
+            });
+            entityManager.SetComponentData(entity, new BuildingTypeComponent
+            {
+                TypeId = new FixedString64Bytes(buildingId),
+                FortificationRole = fortificationRole,
+                StructuralDamageMultiplier = fortificationRole == FortificationRole.Gate ? 0.3f : 0.1f,
+                PopulationCapBonus = 0,
+                BlocksPassage = fortificationRole == FortificationRole.Wall,
+                SupportsSiegePreparation = false,
+                SupportsSiegeLogistics = supportsSiegeLogistics,
+            });
+            return entity;
         }
 
         private static void SetSpymasterRenown(
@@ -428,6 +605,40 @@ namespace Bloodlines.EditorTools
             }
 
             return count;
+        }
+
+        private static bool TryGetSingleActiveOperation(
+            EntityManager entityManager,
+            string factionId,
+            CovertOpKindPlayer kind,
+            out PlayerCovertOpsResolutionComponent operation)
+        {
+            operation = default;
+            var factionKey = new FixedString32Bytes(factionId);
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<PlayerCovertOpsResolutionComponent>());
+            if (query.IsEmpty)
+            {
+                query.Dispose();
+                return false;
+            }
+
+            using var operations = query.ToComponentDataArray<PlayerCovertOpsResolutionComponent>(Allocator.Temp);
+            query.Dispose();
+            for (int i = 0; i < operations.Length; i++)
+            {
+                if (!operations[i].Active ||
+                    operations[i].Kind != kind ||
+                    !operations[i].SourceFactionId.Equals(factionKey))
+                {
+                    continue;
+                }
+
+                operation = operations[i];
+                return true;
+            }
+
+            return false;
         }
 
         private sealed class DebugCommandSurfaceScope : IDisposable
