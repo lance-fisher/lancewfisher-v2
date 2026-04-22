@@ -2959,3 +2959,34 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Stage the player covert ops 3C files plus continuity/contract updates and commit them on `codex/unity-player-counter-intelligence`.
 2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
 3. After the landing continuity pass, close the player covert ops lane and claim the player HUD / realm-condition legibility lane.
+
+## 2026-04-21 Player Covert Ops Sub-Slice 3C Landing
+
+- Merged branch: `codex/unity-player-counter-intelligence`
+- Merge commit on `master`: `661fea5b`
+- Landing handoff:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-counter-intelligence-landing.md`
+- The player covert ops lane is now fully landed on canonical `master`:
+  - `IntelligenceReportElement`, `PlayerCounterIntelligenceComponent`, and
+    `PlayerCounterIntelligenceSystem` now canonically provide player-owned
+    watch/report state, dossier interception, and defended-op resolution.
+  - `PlayerCovertOpsSystem` now canonically dispatches player
+    counter-intelligence alongside espionage, assassination, and sabotage.
+  - `BloodlinesDebugCommandSurface.PlayerCovertOps.cs` now canonically exposes
+    counter-intelligence issue/readout and intelligence-report readout.
+  - `BloodlinesPlayerCounterIntelligenceSmokeValidation` plus wrapper now
+    prove the 3C lifecycle phases on `master`.
+  - The slice-discovered faction-root binding bug is fixed on `master`, so
+    watches and reports bind to the owning faction root instead of same-faction
+    settlement shells.
+- Merged `master` re-passed runtime build, editor build, bootstrap runtime,
+  combat, scene shells, fortification, siege, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated player
+  counter-intelligence smoke in `D:\BLM13\bloodlines\bloodlines`.
+- With 3C landed, the player covert ops lane is now closed through its planned
+  directive scope. There is no follow-up covert-ops branch currently in flight.
+
+### Recommended Next Follow-Up
+1. Claim the player HUD / realm-condition legibility lane in the concurrent-session contract before writing code.
+2. Create a fresh Codex branch for that HUD lane from current `master`.
+3. Keep using the worktree-local bootstrap-runtime and scene-shell wrapper copies until the checked-in path-pinned wrappers are repaired.

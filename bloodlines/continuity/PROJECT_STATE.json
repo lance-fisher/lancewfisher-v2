@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-21T22:45:00-06:00",
+  "updated_at": "2026-04-21T23:20:00-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -471,7 +471,7 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-counter-intelligence.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-counter-intelligence-landing.md",
   "latest_unity_ai_strategic_layer_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-bundle-2-holy-war-and-divine-right-execution.md",
   "latest_unity_fortification_siege_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-sealing-recovery.md",
   "latest_unity_graphics_handoff": "docs/unity/session-handoffs/2026-04-17-unity-graphics-infrastructure-foundation.md",
@@ -486,9 +486,9 @@
   "latest_browser_to_unity_migration_plan": "docs/plans/2026-04-17-browser-to-unity-migration-plan.md",
   "concurrent_session_contract": {
     "path": "docs/unity/CONCURRENT_SESSION_CONTRACT.md",
-    "revision": 64,
+    "revision": 65,
     "last_updated": "2026-04-21",
-    "last_updated_by": "codex-player-counter-intelligence-2026-04-21",
+    "last_updated_by": "codex-player-covert-ops-landing-2026-04-21",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
     "active_lanes": [
       "ai-strategic-layer",
@@ -1820,6 +1820,15 @@
       "description": "Player covert ops sub-slice 3C is now complete on branch. `IntelligenceReportElement`, `PlayerCounterIntelligenceComponent`, and `PlayerCounterIntelligenceSystem` land the player-owned watch/report state, expiry, dossier interception, and defended espionage / assassination resolution seam under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/`. `PlayerCovertOpsResolutionComponent` now carries watch duration, watch strength, ward label, guarded-role summary, and loyalty telemetry, while `PlayerCovertOpsSystem` now dispatches player counter-intelligence with canonical `gold=60` / `influence=18`, 18-second activation delay, 150-second watch duration, operator order `Spymaster -> Diplomat -> HeadOfBloodline`, and defended projected-chance penalties. `BloodlinesDebugCommandSurface.PlayerCovertOps` now exposes counter-intelligence issue/readout plus intelligence-report readout, and the new `BloodlinesPlayerCounterIntelligenceSmokeValidation` proves baseline, watch activation/expiry, report lifecycle, and defended hostile espionage dossier generation. A slice-discovered faction-root bug was also fixed by preferring the owning faction root over same-faction settlement entities when binding watches and reports. The full governed 10-gate chain is green in D:\\BLM13\\bloodlines\\bloodlines using worktree-local wrapper copies only for the still-root-pinned bootstrap-runtime and canonical scene-shell validators. Contract rev 63->64.",
       "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-counter-intelligence.md",
       "validation_gates": "all 10 green plus player counter-intelligence smoke"
+    },
+    {
+      "lane": "player-covert-ops-sub-slice-3c-counter-intelligence-and-intelligence-reports-landing",
+      "date": "2026-04-21",
+      "branch": "master",
+      "status": "complete",
+      "description": "The validated `codex/unity-player-counter-intelligence` branch is now merged to master via `661fea5b`. `IntelligenceReportElement`, `PlayerCounterIntelligenceComponent`, and `PlayerCounterIntelligenceSystem` now canonically land player-owned report/watch state, dossier interception, and defended-op resolution on master; `PlayerCovertOpsSystem` now canonically dispatches player counter-intelligence alongside espionage, assassination, and sabotage; `BloodlinesDebugCommandSurface.PlayerCovertOps` now exposes counter-intelligence issue/readout and intelligence-report readout; and `BloodlinesPlayerCounterIntelligenceSmokeValidation` plus wrapper now prove the 3C watch/report lifecycle on canonical master. The slice-discovered faction-root binding bug is fixed on master, the full governed 10-gate chain re-passed green in D:\\BLM13\\bloodlines\\bloodlines, and contract rev 64->65 records the player-covert-ops lane as fully landed with no branch in flight.",
+      "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-counter-intelligence-landing.md",
+      "validation_gates": "all 10 green plus player counter-intelligence smoke on merged master"
     }
   ]
 }

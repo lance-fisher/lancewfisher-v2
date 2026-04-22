@@ -3331,3 +3331,49 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   rather than the outer worktree root `D:\BLM13\bloodlines`.
 - Snapshot/save-load integration for retained report/watch state remains
   deferred, and sabotage resolution still remains outside the scope of 3C.
+
+## Codex Player Covert Ops Sub-Slice 3C Landing (2026-04-21)
+
+### Status: MERGED to `master` via `661fea5b`
+
+### What Landed
+- `codex/unity-player-counter-intelligence` is now merged, so the player covert
+  ops lane is complete through its planned directive scope.
+- `unity/Assets/_Bloodlines/Code/PlayerCovertOps/IntelligenceReportElement.cs`,
+  `PlayerCounterIntelligenceComponent.cs`, and
+  `PlayerCounterIntelligenceSystem.cs` now canonically land player-owned
+  report/watch state, dossier interception, and defended-op resolution.
+- `unity/Assets/_Bloodlines/Code/PlayerCovertOps/PlayerCovertOpsSystem.cs`
+  now canonically dispatches player counter-intelligence alongside espionage,
+  assassination, and sabotage.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerCovertOps.cs`
+  now canonically exposes counter-intelligence issue/readout and
+  intelligence-report readout.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCounterIntelligenceSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityPlayerCounterIntelligenceSmokeValidation.ps1`
+  now prove the 3C watch/report lifecycle on `master`.
+- The slice-discovered faction-root bug is fixed on `master`, so player
+  covert-op watches and reports bind to the owning faction root rather than a
+  same-faction settlement shell.
+- Merged `master` re-passed runtime build, editor build, bootstrap runtime,
+  combat, scene shells, fortification, siege, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated player
+  counter-intelligence smoke.
+
+### Immediate Next Action
+1. Claim the player HUD / realm-condition legibility lane in `docs/unity/CONCURRENT_SESSION_CONTRACT.md`.
+2. Create a fresh Codex branch for that HUD lane from current `master`.
+3. Keep `unity/Assets/_Bloodlines/Code/AI/**` read-only and continue using worktree-local wrapper copies for the still-root-pinned bootstrap-runtime and scene-shell validators.
+
+### Context Notes
+- The checked-in bootstrap-runtime and canonical scene-shell wrappers are still
+  pinned to `D:\ProjectsHome\Bloodlines`; continue using temporary worktree-safe
+  copies when validating this clean worktree.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
+- Node validations for this worktree must run from `D:\BLM13\bloodlines\bloodlines`
+  rather than the outer worktree root `D:\BLM13\bloodlines`.
+- Snapshot/save-load integration for retained report/watch state remains
+  deferred, and sabotage resolution still remains outside the landed
+  player-covert-ops scope.

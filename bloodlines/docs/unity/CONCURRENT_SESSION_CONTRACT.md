@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 64
+- Revision: 65
 - Last Updated: 2026-04-21
-- Last Updated By: codex-player-counter-intelligence-2026-04-21
-- Supersedes: revision 63 (Player covert ops sub-slice 3C is now complete on branch `codex/unity-player-counter-intelligence`. Counter-intelligence watches, intelligence-report buffers, dossier interception, and the dedicated `BloodlinesPlayerCounterIntelligenceSmokeValidation` proof surface are green in `D:\BLM13\bloodlines\bloodlines`; merge to `master` is the next action. `unity/Assets/_Bloodlines/Code/AI/**` remains Claude-owned and read-only from this Codex lane.)
+- Last Updated By: codex-player-covert-ops-landing-2026-04-21
+- Supersedes: revision 64 (The validated `codex/unity-player-counter-intelligence` branch is now merged to `master` via `661fea5b`. Player covert ops sub-slice 3C is landed on canonical master content, the merged-master governed validation gate plus the dedicated player counter-intelligence smoke are green in `D:\BLM13\bloodlines\bloodlines`, and the player covert ops lane is now closed through its planned directive scope. `unity/Assets/_Bloodlines/Code/AI/**` remains Claude-owned and read-only from this Codex lane.)
 
 
 ## Purpose
@@ -620,7 +620,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: player-covert-ops
 
-- Status: active (sub-slice 3C complete on branch `codex/unity-player-counter-intelligence`, pending merge to `master`)
+- Status: complete (sub-slices 3A-3C landed on `master`; lane closed)
 - Branch Prefix: `codex/unity-player-covert-ops-*`
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -655,14 +655,14 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `src/game/core/simulation.js` `getActiveCounterIntelligence` (4104-4111), `getCounterIntelligenceRoleGuardBonus` (4143-4157), `createDynastyIntelligenceReport` (5348-5368), `storeDynastyIntelligenceReport` (5370-5386), `recordCounterIntelligenceInterception` (10121-10171), `createCounterIntelligenceWatch` (10173-10203), `getCounterIntelligenceTerms` (10309-10360), `startCounterIntelligenceOperation` (10836-10874)
   - `tests/runtime-bridge.mjs` sabotage assertions (1378-1412), espionage + assassination assertions (3490-3628)
   - `tests/runtime-bridge.mjs` counter-intelligence watch + dossier assertions (4130-4240, 4884-4970)
-- Current Branch In Flight: `codex/unity-player-counter-intelligence`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-counter-intelligence.md`
+- Current Branch In Flight: none (merged into master via `661fea5b`; next clean Codex pickup is the player HUD / realm-condition legibility lane)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-counter-intelligence-landing.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the `fortification-siege-imminent-engagement` lane is paused unless Lance explicitly defines a fresh fortification sub-slice 14. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation is already landed on master, and player covert ops sub-slice 3C is now actively in flight on `codex/unity-player-counter-intelligence`. After that branch lands, the next clean Codex pickup under the directive order is the player HUD / realm-condition legibility lane.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the `fortification-siege-imminent-engagement` lane is paused unless Lance explicitly defines a fresh fortification sub-slice 14. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is the player HUD / realm-condition legibility lane.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 
