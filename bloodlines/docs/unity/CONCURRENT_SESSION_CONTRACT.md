@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 79
+- Revision: 80
 - Last Updated: 2026-04-22
-- Last Updated By: codex-player-hud-fortification-rerun-2026-04-22
-- Supersedes: revision 78 (The preserved player-HUD fortification slice was rerun on `codex/unity-player-hud-fortification-legibility-rerun` atop the current canonical `origin/master` after a local Unity compile refreshed stale `Assembly-CSharp*.csproj` metadata that still pointed at another worktree's `Library\PackageCache`. `FortificationHUDComponent` and `FortificationHUDSystem` still project settlement fortification, reserve, breach, and repair-progress telemetry into a HUD-owned read-model without widening the paused fortification lane. `BloodlinesDebugCommandSurface.HUD.cs` still exposes a parseable `FortificationHUD|...` readout, and `BloodlinesFortificationHUDSmokeValidation` plus wrapper still prove intact baseline, threat+muster, sealing progress, and recovery progress. Runtime build, editor build, bootstrap runtime smoke, combat smoke, canonical scene-shell validation, fortification smoke, siege smoke, `node tests/data-validation.mjs`, `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated fortification HUD smoke reran green in this worktree, with local wrapper copies used only for the still-root-pinned bootstrap-runtime and canonical scene-shell validators.)
+- Last Updated By: codex-player-hud-victory-readout-2026-04-22
+- Supersedes: revision 79 (The player-HUD lane now carries the additive victory-distance follow-up on `codex/unity-hud-victory-distance-readout`. `VictoryConditionReadoutComponent` and `VictoryConditionReadoutSystem` add a per-faction HUD-owned DynamicBuffer read-model for `TerritorialGovernance`, `DivineRight`, and `CommandHallFall`, refreshed on an in-world-day cadence without widening the retired `Victory/**` lane. `BloodlinesDebugCommandSurface.HUD.cs` now exposes parseable multi-line `VictoryReadout|...` debug output, and `BloodlinesVictoryReadoutSmokeValidation` plus wrapper prove partial governance progress, positive divine-right progress, terminal command-hall-fall completion, and per-condition leader flags. The local `Assembly-CSharp*.csproj` files were also repaired so stale analyzer/source-generator paths no longer point at another Codex worktree's `Library\PackageCache`.)
 
 
 ## Purpose
@@ -717,10 +717,12 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMatchProgressionHUDSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationHUDSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesVictoryReadoutSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityRealmConditionHUDSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityMatchProgressionHUDSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityFortificationHUDSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityVictoryReadoutSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/RealmConditionHUDComponent.cs`, `Code/HUD/RealmConditionHUDSystem.cs`, and `Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
@@ -728,6 +730,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesMatchProgressionHUDSmokeValidation.cs`
   - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/FortificationHUDComponent.cs` and `Code/HUD/FortificationHUDSystem.cs`
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesFortificationHUDSmokeValidation.cs`
+  - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/VictoryConditionReadoutComponent.cs` and `Code/HUD/VictoryConditionReadoutSystem.cs`; stale analyzer/source-generator paths were corrected back to this worktree's `unity/Library/PackageCache`
+  - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesVictoryReadoutSmokeValidation.cs`; stale analyzer/source-generator paths were corrected back to this worktree's `unity/Library/PackageCache`
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve HUD snapshots by `FactionId`
   - `unity/Assets/_Bloodlines/Code/Components/RealmConditionComponent.cs` -- read realm cycle accumulator, cycle count, strain streaks, and realm legibility thresholds
@@ -749,6 +753,11 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Fortification/FortificationReserveAssignmentComponent.cs` -- read mustered-vs-ready reserve duty state without widening the fortification lane
   - `unity/Assets/_Bloodlines/Code/Fortification/FortificationSettlementLinkComponent.cs` -- resolve linked defenders back to each settlement HUD row
   - `unity/Assets/_Bloodlines/Code/Victory/VictoryComponents.cs` -- reserved for follow-up victory readout slice inside this same lane
+  - `unity/Assets/_Bloodlines/Code/Victory/VictoryConditionEvaluationSystem.cs` -- reuse canonical thresholds and the player sovereignty-hold timer already tracked by the retired victory lane
+  - `unity/Assets/_Bloodlines/Code/Components/ControlPointComponent.cs` -- read control-point owner and loyalty for Territorial Governance progress
+  - `unity/Assets/_Bloodlines/Code/Components/BuildingTypeComponent.cs` -- read command-hall identity for Command Hall Fall progress
+  - `unity/Assets/_Bloodlines/Code/Components/HealthComponent.cs` -- read `DeadTag` on command halls for Command Hall Fall completion
+  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- read in-world-day cadence plus days-per-real-second for the HUD throttle and sovereignty ETA
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility-landing.md`
@@ -756,11 +765,12 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-match-progression-landing.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification-rerun.md`
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-distance-readout.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `getRealmConditionSnapshot` (14291-14764), `getMatchProgressionSnapshot` (13650-13658)
   - `tests/runtime-bridge.mjs` realm-condition snapshot assertions (1344-1364), match-progression assertions (7521, 7773-7871, 7923-7975, 8133, 8185), fortification/readout assertions (1438-1444), hostile-post-repulse world-pressure assertions (1718-1733)
-- Current Branch In Flight: `codex/unity-player-hud-fortification-legibility-rerun`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification-rerun.md`
+- Current Branch In Flight: `codex/unity-hud-victory-distance-readout`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-distance-readout.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
