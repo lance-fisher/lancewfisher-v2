@@ -101,6 +101,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAIMarriageInboxAcceptSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesCaptiveStateAndMissionaryExecutionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPlayerMissionaryDispatchSmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPlayerPactSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesDynastySmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesBreachSealingWorkerLocalitySmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesMatchProgressionSmokeValidation.cs" />

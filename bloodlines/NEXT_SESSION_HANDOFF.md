@@ -1,6 +1,6 @@
 # NEXT_SESSION_HANDOFF
 
-Last updated: 2026-04-22 (the validated conviction-band wiring landing branch `codex/overnight-land-conviction-2026-04-22` re-passed the full governed 10-gate chain in `D:\BLAICD\bloodlines`: runtime build and editor build green, bootstrap runtime / combat / canonical scene-shell / fortification / siege validators green through local clean-checkout Unity batch invocations, node validations green, contract staleness green at revision 75, and the conviction-band-wiring lane is now retired after landing the commander-only `CaptureMultiplier` seam plus starvation/cap-pressure conviction protection.)
+Last updated: 2026-04-22 (player pact proposal and break are now validated on branch `codex/unity-player-pact-proposal`: `PlayerPactProposalRequestComponent`, `PlayerPactBreakRequestComponent`, `PlayerPactUtility`, `PlayerPactProposalSystem`, and `PlayerPactBreakSystem` now port browser non-aggression pact semantics under `PlayerDiplomacy/**`, `BloodlinesDebugCommandSurface.PlayerDiplomacy` now exposes pact issue/readout hooks, `BloodlinesPlayerPactSmokeValidation` plus wrapper now prove the four pact phases, and the full governed 10-gate chain reran green in the clean `D:\BLAICD\bloodlines` checkout with local clean-checkout wrapper equivalents again used only for the still-root-pinned bootstrap runtime and canonical scene-shell validators; contract revision 75 -> 76.)
 Previous entry: Last updated: 2026-04-21 (scout raids and logistics interdiction landed on `master` via merge commit `dda7c25e`: the scout runtime surface, dedicated smoke validator, and revision-50/51 lane governance all landed cleanly; full governed validation gate reran green on detached merged `master` in `D:\BLAICD\bloodlines`; next Codex pickup should be the player-facing marriage diplomacy lane unless Lance reprioritizes another non-AI lane.)
 Previous entry: Last updated: 2026-04-20 (dynasty lesser-house loyalty parity slice complete on branch `codex/unity-dynasty-lesser-house-loyalty-parity`: `LesserHouseElement` now tracks mixed-bloodline, marital-anchor, world-pressure, and defection timing state, `LesserHouseLoyaltyDriftSystem` now applies browser-style loyalty drift with a 5-day zero-loyalty grace window plus hostile breakaway spawning, dedicated 3-phase lesser-house parity smoke PASS, full governed gate chain green in `D:\BLAICD\bloodlines`, contract revision 44 -> 45. Next: continue the active `codex/unity-dynasty-*` lane with minor-house levy and breakaway-spawn parity hardening.)
 Previous entry: Last updated: 2026-04-20 (dynasty marriage parity slice complete on branch `codex/unity-dynasty-marriage-parity`: marriage proposal expiration now matches the browser 90-day window, marriage gestation now matches the browser 280-day window and records mixed-bloodline child provenance, new `MarriageDeathDissolutionSystem` ports death-driven dissolution with legitimacy and oathkeeping effects, dedicated 4-phase marriage parity smoke PASS, full governed gate chain green in `D:\BLDMP\bloodlines`, contract revision 43 -> 44. Next: continue the new `codex/unity-dynasty-*` lane with lesser-house loyalty drift and minor-house levy parity follow-ups rather than opening a duplicate zero-code marriages lane.)
@@ -9,7 +9,39 @@ Previous entry: Last updated: 2026-04-18 (Session 130: All 3 items complete. Vic
 Previous entry: Last updated: 2026-04-18 (Session 129: AI strategic layer sub-slice 1 complete -- EnemyAIStrategySystem ISystem live, 4-phase smoke PASS, contract revision 10. Next sub-slices: supply chain/convoy mgmt (ai.js ~1100), siege staging. Also pending: Tier 2 batch systems (marriage, lesser house defection, minor house levies, renown scoring) and Victory Conditions system.)
 Previous entry: Last updated: 2026-04-17 (state-snapshot-restore lane complete on master 2026-04-17: 3 sub-slices merged, BloodlinesSnapshotPayload/Writer/Restorer, 6-phase smoke, ProbeSnapshotIntegrity in bootstrap runtime smoke, all 10 gates green, contract Revision 5. 10 Claude Code skills merged to master. Concurrent session contract revision 5. Browser-to-Unity migration plan drafted and three Tier 1 slices landed on master the same day: Conviction scoring + bands + 4-phase governed validator, Dynasty core with eight-member template set + aging + heir succession + interregnum + 4-phase validator, Faith commitment + exposure threshold + five-tier intensity resolution + 4-phase validator. AI barracks observability and bootstrap runtime smoke startup timeout bump 120s to 240s also on master. Codex group-movement and combat-stances slice is now rebased, green, and pushed on `codex/unity-group-movement-and-stances` with all eight combat smoke phases passing, full governed gate chain green, `Assembly-CSharp.csproj` compile includes restored for the new runtime files, and governed wrapper hardening landed for bootstrap runtime, scene-shell, and graphics validations. Workspace `HANDOFF.md` archived to `HANDOFF_ARCHIVE_2026-04-17_session-125-attack-orders.md`; the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md` is now the authoritative forward-work map; Session 127: Unity passive target-acquisition throttling and sight-loss cleanup green on stacked branch `codex/unity-target-acquisition-los`; Session 126: Unity explicit attack orders and first attack-move command layer green on branch `codex/unity-attack-move`; all prior lanes preserved)
 Previous author: Claude
-Next recommended action: claim the player-diplomacy `codex/unity-player-pact-proposal` branch next, add the active branch and handoff to the concurrent-session contract, and port the browser `proposeNonAggressionPact` / `breakNonAggressionPact` player-side seam with dedicated smoke validation before returning to lower-priority fortification HUD follow-up work.
+Next recommended action: push the validated `codex/unity-player-pact-proposal` branch, merge it through the governed flow, rerun the full 10-gate chain on merged `master`, and then return to lower-priority fortification or victory HUD follow-up work.
+
+## 2026-04-22 Player Pact Proposal And Break
+
+- Branch lane: `codex/unity-player-pact-proposal`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-pact-proposal.md`
+- Completed in this slice:
+  - `PlayerPactProposalRequestComponent` and `PlayerPactBreakRequestComponent`
+    now define the player-owned pact issue and explicit-break request surfaces
+  - `PlayerPactUtility`, `PlayerPactProposalSystem`, and
+    `PlayerPactBreakSystem` now port the browser non-aggression pact seam under
+    `PlayerDiplomacy/**`: proposal validates kingdom/self/hostility/existing
+    pact/resource gates, deducts canonical `influence=50` and `gold=80`,
+    removes hostility both ways, and creates the AI-owned `PactComponent`;
+    break marks the pact broken, restores hostility, applies dynasty
+    legitimacy `-8`, applies conviction oathkeeping `-2`, and emits the
+    browser-parity early-break narrative suffix
+  - `BloodlinesDebugCommandSurface.PlayerDiplomacy` now exposes pact issue and
+    readout methods, and `BloodlinesPlayerPactSmokeValidation` plus wrapper now
+    prove proposal success, duplicate rejection, early-break penalties, and
+    insufficient-resource rejection
+- Validation state:
+  - dedicated pact smoke green in `D:\BLAICD\bloodlines`
+  - all 10 required governed gates green in `D:\BLAICD\bloodlines`
+  - bootstrap runtime and canonical scene-shell gates again used local
+    clean-checkout wrapper equivalents because the checked-in wrappers remain
+    pinned to `D:\ProjectsHome\Bloodlines`
+- Immediate next action:
+  - commit and push `codex/unity-player-pact-proposal`
+  - then merge it through the governed flow
+  - then resume the Codex HUD backlog, with fortification or victory-distance
+    readout the cleanest next pickup
 
 ## 2026-04-20 Dynasty Minor-House Levy Parity
 

@@ -1,6 +1,6 @@
 # CURRENT_PROJECT_STATE
 
-Last updated: 2026-04-22 (conviction band wiring landed on validated merge branch `codex/overnight-land-conviction-2026-04-22` at `38796f83`: starvation and cap-pressure loyalty loss now consume conviction protection, the narrower commander-only capture seam now consumes `CaptureMultiplier`, `PendingCommanderCaptureComponent` bridges lethal commander defeats into `CapturedMemberElement` plus dynasty-member `Captured` state, `BloodlinesConvictionSmokeValidation` now proves starvation protection, cap-pressure protection, and deterministic commander capture, and the full 10-gate chain reran green against the clean `D:\BLAICD\bloodlines` checkout with local Unity batch invocations for the still-root-pinned bootstrap and scene-shell validators; contract revision 74 -> 75 and the conviction-band-wiring lane is retired.)
+Last updated: 2026-04-22 (player pact proposal and break are now validated on branch `codex/unity-player-pact-proposal`: `PlayerPactProposalRequestComponent`, `PlayerPactBreakRequestComponent`, `PlayerPactUtility`, `PlayerPactProposalSystem`, and `PlayerPactBreakSystem` now port browser non-aggression pact proposal/break semantics under `PlayerDiplomacy/**`, `BloodlinesDebugCommandSurface.PlayerDiplomacy` now exposes pact issue/readout hooks, `BloodlinesPlayerPactSmokeValidation` plus wrapper now prove proposal success, duplicate block, early-break penalties, and insufficient-resource rejection, and the full 10-gate chain reran green against the clean `D:\BLAICD\bloodlines` checkout with local Unity batch invocations for the still-root-pinned bootstrap and scene-shell validators; contract revision 75 -> 76 and the player-marriage-diplomacy lane now points at the validated pact branch.)
 Previous entry: Last updated: 2026-04-21 (scout raids and logistics interdiction landed on `master` via merge commit `dda7c25e`: `ScoutRaidCommandComponent`, `BuildingRaidStateComponent`, `ScoutRaidCanon`, and `ScoutRaidResolutionSystem` now port building raids plus supply-wagon interdiction; trickle, worker drop-off, field-water, and siege-support consumers now respect active raid state; dedicated 4-phase scout smoke PASS; full governed validation chain rerun green on detached merged `master` in `D:\BLAICD\bloodlines`; contract revision 50 -> 51)
 Previous entry: Last updated: 2026-04-19 (fortification-siege sub-slice 5 wall-segment destruction resolution complete on branch `codex/unity-fortification-wall-segment-destruction`: live fortification-role buildings now auto-link to their nearest same-faction settlement, destroyed wall/tower/gate/keep counts plus `OpenBreachCount` now resolve onto `FortificationComponent`, `FortificationReserveSystem` now runs after destruction accounting so breached walls reduce reserve frontage immediately, dedicated 4-phase wall-destruction smoke PASS, full governed gate chain rerun green on the rebased `origin/master` `0a0e122f` base, contract revision 30 -> 31)
 Previous entry: Last updated: 2026-04-18 (Session 130: Victory Conditions System complete on branch codex/unity-fortification-siege: VictoryStateComponent singleton, VictoryConditionEvaluationSystem (CommandHallFall/TerritorialGovernance/DivinRight), 4-phase smoke PASS, all 8 gates green, contract revision 11 → 12. Tier 2 batch dynasty systems also complete: Tier 2 batch dynasty systems complete on branch codex/unity-fortification-siege: RenownAwardSystem (Commander priority routing, RENOWN_CAP=100), MarriageProposalExpirationSystem (30-day DualClock expiration), MarriageGestationSystem (60-day gestation, HeirDesignate child spawn), LesserHouseLoyaltyDriftSystem (DualClock-gated drift, deferred spawn NativeList structural-change fix, SpawnDefectedMinorFaction), MinorHouseLevySystem (0.001f interval floor, levy_militia unit spawn), MarriageComponents + RenownAwardRequestComponent, BloodlinesTier2BatchSmokeValidation 5-phase validator all green, MinorHouse=3 added to FactionKind enum, all 8 validation gates green, tier2 batch smoke PASS, contract revision 10 → 11; Session 129: AI strategic layer sub-slice 1 complete on branch codex/unity-fortification-siege: EnemyAIStrategySystem ISystem (territory expansion, scout/harass, world-pressure posture conditioning, reinforcement routing), AIStrategyComponent, AIStrategicPosture enum, BloodlinesAIStrategySmokeValidation 4-phase validator all green, BloodlinesDebugCommandSurface.AIStrategy.cs slimmed to debug-read-only API, SkirmishBootstrapSystem seeds AIStrategyComponent on non-player Kingdom factions, TickAIStrategyFactions MonoBehaviour tick removed from Update() in favor of ISystem, all 8 validation gates green, AI strategy smoke PASS, contract revision 9 → 10; Session 128: world-pressure escalation lane complete on branch codex/unity-world-pressure (merged); WorldPressureComponent, WorldPressureCycleTrackerComponent, WorldPressureEscalationSystem, 4-phase smoke validator all green, MatchProgressionEvaluationSystem stage-5 convergence signal wired, BloodlinesBootstrapRuntimeSmokeValidation ProbeWorldPressureIntegrity probe added, contract revision 8 → 9)
@@ -38,6 +38,42 @@ Previous entry: Last updated: 2026-04-17 (state-snapshot-restore lane complete: 
   - siege smoke
   - `node tests/data-validation.mjs`
   - `node tests/runtime-bridge.mjs`
+
+## 2026-04-22 Player Pact Proposal And Break
+
+- Branch lane: `codex/unity-player-pact-proposal`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-pact-proposal.md`
+- Completed in this slice:
+  - `PlayerPactProposalRequestComponent` and `PlayerPactBreakRequestComponent`
+    now define the player-owned pact issue and break request surfaces under
+    `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/`
+  - `PlayerPactUtility`, `PlayerPactProposalSystem`, and
+    `PlayerPactBreakSystem` now port the browser non-aggression pact seam:
+    proposal applies kingdom/self/hostility/existing-pact/resource gates,
+    deducts canonical `influence=50` and `gold=80`, removes hostility both
+    ways, and creates the AI-owned `PactComponent`; break marks the pact
+    broken, restores hostility, applies dynasty legitimacy `-8`, applies
+    conviction oathkeeping `-2`, and emits the browser-parity early-break
+    narrative suffix
+  - `BloodlinesDebugCommandSurface.PlayerDiplomacy` now exposes
+    `TryDebugIssuePlayerPactProposal(...)`,
+    `TryDebugIssuePlayerPactBreak(...)`, and
+    `TryDebugGetPlayerPacts(...)`
+  - `BloodlinesPlayerPactSmokeValidation` and
+    `scripts/Invoke-BloodlinesUnityPlayerPactSmokeValidation.ps1`
+    now prove proposal success, duplicate-pact rejection, early-break penalty
+    application, and insufficient-resource rejection
+- Validation state:
+  - dedicated pact smoke PASS in `D:\BLAICD\bloodlines`
+  - full governed 10-gate chain PASS in `D:\BLAICD\bloodlines`
+  - bootstrap runtime and canonical scene-shell gates again required local
+    clean-checkout wrapper equivalents because the checked-in wrappers remain
+    pinned to `D:\ProjectsHome\Bloodlines`
+- Immediate next action:
+  - commit and push `codex/unity-player-pact-proposal`
+  - then merge it through the governed flow and return to the lower-priority
+    fortification / victory HUD backlog
   - contract staleness check
   - dedicated marriage parity smoke
   - all green in `D:\BLDMP\bloodlines`
