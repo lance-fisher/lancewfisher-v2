@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 76
+- Revision: 77
 - Last Updated: 2026-04-22
-- Last Updated By: codex-player-pact-proposal-2026-04-22
-- Supersedes: revision 75 (The player-marriage-diplomacy lane now has a validated `codex/unity-player-pact-proposal` branch. PlayerPactProposalRequestComponent, PlayerPactBreakRequestComponent, PlayerPactUtility, PlayerPactProposalSystem, PlayerPactBreakSystem, debug issuance/readout for pacts, and BloodlinesPlayerPactSmokeValidation plus wrapper now port browser non-aggression pact proposal and break semantics from simulation.js 5126-5224 without widening Claude's AI-owned `AI/**` path. Proposal ports kingdom/self/hostility/existing-pact/resource gates, deducts canonical influence=50 and gold=80, drops hostility both ways, and creates the AI-owned single-entity PactComponent with minimum duration 180 in-world days. Break ports explicit active-pact lookup, `Broken=true` plus `BrokenByFactionId`, restores hostility both ways, applies dynasty legitimacy -8 and conviction oathkeeping -2, and emits the browser-parity early-break narrative suffix. Dedicated 4-phase pact smoke PASS: proposal success, duplicate block, early-break penalties, insufficient-resource block. Full governed 10-gate chain reran green in clean checkout `D:\BLAICD\bloodlines`; local clean-checkout wrapper equivalents were again required only for the still-root-pinned bootstrap-runtime and canonical scene-shell validators.)
+- Last Updated By: codex-player-pact-landing-2026-04-22
+- Supersedes: revision 76 (The validated `codex/unity-player-pact-proposal` slice is now landed on canonical master via merge commit `10ec1e2a`, and the merged result has been revalidated in this worktree after a local Unity project refresh regenerated stale `.csproj` metadata that still pointed at another checkout's `Library\PackageCache`. Runtime build, editor build, bootstrap runtime smoke, combat smoke, canonical scene-shell validation, fortification smoke, siege smoke, `node tests/data-validation.mjs`, `node tests/runtime-bridge.mjs`, contract staleness, and dedicated player-pact smoke all reran green on the merged master result. The player-marriage-diplomacy lane now has no branch in flight and returns to the lower-priority HUD follow-up backlog.)
 
 
 ## Purpose
@@ -177,7 +177,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `AttackResolutionSystem`, `ProjectileImpactSystem`, and `DeathResolutionSystem` now consume the canonical conviction `CaptureMultiplier` on the narrower commander-only seam: lethal commander defeats can become captives, write `CapturedMemberElement`, and mark the matching dynasty member `Captured`.
   - `BloodlinesConvictionSmokeValidation` now proves starvation protection, cap-pressure protection, and deterministic commander capture in dedicated ECS validation worlds.
 - Immediate Next Action:
-  - claim the player-diplomacy `codex/unity-player-pact-proposal` branch next and port the player-side non-aggression pact proposal/break seam before returning to lower-priority fortification HUD follow-up work
+  - return to the lower-priority HUD backlog next, with fortification legibility or victory-distance readout the cleanest Codex pickup after the player pact landing
 
 ### Lane: dynasty-core
 
@@ -663,7 +663,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `src/game/core/simulation.js` `getMissionaryTerms` (~10362-10421), `startMissionaryOperation` (~10523-10563)
   - `src/game/core/simulation.js` `getHolyWarDeclarationTerms` (~10424-10471), `startHolyWarDeclaration` (~10565-10602), `getDivineRightDeclarationTerms` (~10604-10653), `startDivineRightDeclaration` (~10784-10835)
   - `src/game/core/simulation.js` `NON_AGGRESSION_PACT_INFLUENCE_COST` (5126), `NON_AGGRESSION_PACT_GOLD_COST` (5127), `NON_AGGRESSION_PACT_MINIMUM_DURATION_IN_WORLD_DAYS` (5128), `NON_AGGRESSION_PACT_BREAK_LEGITIMACY_COST` (5129), `getNonAggressionPactTerms` (5150-5183), `proposeNonAggressionPact` (5185-5222), `breakNonAggressionPact` (5224-5257)
-- Current Branch In Flight: `codex/unity-player-pact-proposal`
+- Current Branch In Flight: none (merged into master via `10ec1e2a`; next clean pickup is HUD follow-up work)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-pact-proposal.md`
 
 ### Lane: player-covert-ops

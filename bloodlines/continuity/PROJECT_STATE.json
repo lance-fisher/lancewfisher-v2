@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-22T06:20:21.4502056-06:00",
+  "updated_at": "2026-04-22T10:52:00-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -1919,6 +1919,15 @@
       "description": "Player-side non-aggression pact proposal and break are now complete on branch under the existing `PlayerDiplomacy/**` lane. `PlayerPactProposalRequestComponent`, `PlayerPactBreakRequestComponent`, `PlayerPactUtility`, `PlayerPactProposalSystem`, and `PlayerPactBreakSystem` port the browser `getNonAggressionPactTerms`, `proposeNonAggressionPact`, and `breakNonAggressionPact` seam from `src/game/core/simulation.js` 5126-5257 without widening Claude's AI-owned `AI/**` path: proposal now validates kingdom-only state, self-targeting, hostility, active-pact duplication, and canonical `influence=50` / `gold=80` costs, then clears hostility and creates the AI-owned single-entity `PactComponent` with the canonical minimum duration; break now resolves the active pact, marks it broken, restores hostility both ways, applies dynasty legitimacy `-8` and conviction oathkeeping `-2`, and emits the browser-parity early-break suffix. `BloodlinesDebugCommandSurface.PlayerDiplomacy.cs` adds pact issuance and readout helpers, while `BloodlinesPlayerPactSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPlayerPactSmokeValidation.ps1` prove proposal success, duplicate rejection, early-break penalties, and insufficient-resource rejection. The full governed 10-gate chain is green in the clean `D:\\BLAICD\\bloodlines` checkout, with local wrapper equivalents used only for the still-root-pinned bootstrap-runtime and canonical scene-shell validators. Contract rev 75->76.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-pact-proposal.md",
       "validation_gates": "all 10 green plus player pact smoke"
+    },
+    {
+      "lane": "player-marriage-diplomacy-sub-slice-2f-pact-proposal-break-landing",
+      "date": "2026-04-22",
+      "branch": "master",
+      "status": "complete",
+      "description": "The validated `codex/unity-player-pact-proposal` branch is now merged to canonical master via `10ec1e2a`. `PlayerPactProposalRequestComponent`, `PlayerPactBreakRequestComponent`, `PlayerPactUtility`, `PlayerPactProposalSystem`, and `PlayerPactBreakSystem` now land the full player-side non-aggression pact proposal/break seam on master, `BloodlinesDebugCommandSurface.PlayerDiplomacy` exposes pact issue/readout hooks on canonical master, and `BloodlinesPlayerPactSmokeValidation` plus wrapper remain green after the merge. The first merged-master runtime build failed only because this worktree's generated `.csproj` metadata still pointed at another checkout's `Library\\PackageCache`; a local Unity project refresh regenerated the metadata for this worktree, after which runtime build, editor build, bootstrap runtime smoke, combat smoke, canonical scene-shell validation, fortification smoke, siege smoke, `node tests/data-validation.mjs`, `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated player pact smoke all passed green. Contract rev 76->77 records the player-marriage-diplomacy lane with no branch in flight and points the next Codex pickup at the HUD follow-up backlog.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-pact-proposal.md",
+      "validation_gates": "all 10 green plus player pact smoke on merged master"
     }
   ]
 }
