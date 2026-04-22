@@ -3624,3 +3624,26 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   - fix or regenerate the worktree C# project-reference state so the two
     `dotnet build` gates pass, then rerun the full 10-gate chain and commit /
     push `codex/unity-player-hud-fortification-readout`
+
+## 2026-04-22 Player HUD Fortification Readout Validation Recovery
+
+- Branch lane: `codex/unity-player-hud-fortification-readout-rerun`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification-readout.md`
+- The previously blocked fortification HUD slice is now validated end-to-end:
+  - `FortificationHUDComponent`, `FortificationHUDSystem`,
+    `TryDebugGetFortificationHUDSnapshot(...)`, and
+    `BloodlinesFortificationHUDSmokeValidation` were already implemented on the
+    original branch
+  - the actual blocker was missing worktree-local Unity package hydration, not
+    the HUD runtime; running Unity batch validation in this worktree created
+    `unity/Library/PackageCache`, after which both canonical `dotnet build`
+    gates passed cleanly
+  - dedicated fortification HUD smoke still passes all four phases and the full
+    governed 10-gate chain is now green in this rerun branch worktree
+- Contract revision advanced `71 -> 72` and now records the rerun branch as
+  validated and ready to push.
+
+### Immediate next action
+1. Push `codex/unity-player-hud-fortification-readout-rerun`.
+2. Then continue the same player-HUD lane with the remaining victory-distance readout follow-up on a fresh Codex branch.

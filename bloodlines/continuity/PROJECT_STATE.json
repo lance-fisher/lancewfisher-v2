@@ -1874,6 +1874,15 @@
       "description": "The third player HUD slice is now implemented on branch but not yet commit-ready. `FortificationHUDComponent` and `FortificationHUDSystem` project settlement fortification legibility into the active Codex HUD lane: tier/ceiling, open breaches, destroyed counters, reserve frontage, mustered defenders, reserve buckets, and breach-sealing / destroyed-counter recovery telemetry. `BloodlinesDebugCommandSurface.HUD.cs` now exposes a parseable `FortHUD|Key=Value|...` readout via `TryDebugGetFortificationHUDSnapshot`, and `BloodlinesFortificationHUDSmokeValidation` plus `scripts/Invoke-BloodlinesUnityFortificationHUDSmokeValidation.ps1` prove reserve frontage, breach sealing, wall recovery, and keep recovery. Unity smoke, bootstrap runtime, combat, scene-shell, fortification, siege, node validation, and contract staleness are green in this worktree, but both canonical `dotnet build unity/Assembly-CSharp*.csproj -nologo` gates remain blocked by worktree-wide unresolved Unity assembly references before slice-specific compilation. Contract rev 70->71 records the new HUD sub-slice and the active blocker.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification-readout.md",
       "validation_gates": "dedicated fortification HUD smoke plus Unity/node gates green; dotnet build gates blocked by worktree project-reference resolution"
+    },
+    {
+      "lane": "player-hud-realm-condition-legibility-slice-3-fortification-readout-validation-recovery",
+      "date": "2026-04-22",
+      "branch": "codex/unity-player-hud-fortification-readout-rerun",
+      "status": "active",
+      "description": "The third player HUD slice is now fully validated on rerun branch. The existing `FortificationHUDComponent`, `FortificationHUDSystem`, `BloodlinesDebugCommandSurface.HUD.cs` fortification readout, and `BloodlinesFortificationHUDSmokeValidation` remained behaviorally unchanged; the actual blocker was worktree-local Unity project hydration. Running Unity batch validation in the rerun worktree created `unity/Library/PackageCache`, restored valid generated-project references, and cleared both canonical `dotnet build unity/Assembly-CSharp*.csproj -nologo` gates. Dedicated fortification HUD smoke still passes reserve-frontage, breach-sealing, wall-recovery, and keep-recovery proof phases, and the full 10 governed gates are now green. Contract rev 71->72.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification-readout.md",
+      "validation_gates": "all 10 green plus fortification HUD smoke after local Unity library hydration"
     }
   ]
 }

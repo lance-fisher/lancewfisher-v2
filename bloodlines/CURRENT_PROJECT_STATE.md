@@ -3027,6 +3027,33 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
     full 10-gate chain, then commit and push this HUD slice if the two build
     gates go green
 
+## 2026-04-22 Player HUD Fortification Readout Validation Recovery
+
+- Branch: `codex/unity-player-hud-fortification-readout-rerun`
+- Lane: `player-hud-realm-condition-legibility`
+- Status: fully validated on branch
+- Validation recovery completed in this pass:
+  - the slice implementation itself stayed intact: `FortificationHUDComponent`,
+    `FortificationHUDSystem`, `TryDebugGetFortificationHUDSnapshot(...)`, and
+    `BloodlinesFortificationHUDSmokeValidation` remained behaviorally unchanged
+  - the real blocker was worktree-local Unity project hydration rather than HUD
+    runtime code; after Unity batch execution created
+    `unity/Library/PackageCache` in this worktree, both canonical
+    `dotnet build unity/Assembly-CSharp*.csproj -nologo` gates passed cleanly
+  - dedicated fortification HUD smoke still passes all four proof phases:
+    reserve frontage, breach sealing, wall recovery, and keep recovery
+- Governed validation is now fully green in this worktree:
+  - runtime build: `Build succeeded.` / `0 Warning(s)` / `0 Error(s)`
+  - editor build: `Build succeeded.` / `0 Warning(s)` / `0 Error(s)`
+  - bootstrap runtime, combat, canonical scene shells, fortification, siege,
+    `node tests/data-validation.mjs`, `node tests/runtime-bridge.mjs`, and
+    contract staleness all re-passed after local Unity library hydration
+- Contract revision advanced `71 -> 72`.
+
+### Recommended Next Follow-Up
+1. Push `codex/unity-player-hud-fortification-readout-rerun` as the validated branch for slice 3.
+2. Keep the player-HUD lane active and start the remaining victory-distance readout follow-up on a fresh Codex branch.
+
 ## 2026-04-21 Player HUD Realm-Condition Legibility Slice 1
 
 - Branch lane: `codex/unity-player-hud-realm-condition-legibility`

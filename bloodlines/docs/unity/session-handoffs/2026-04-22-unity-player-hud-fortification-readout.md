@@ -1,9 +1,9 @@
 # Unity Player HUD Fortification Readout
 
 Date: 2026-04-22
-Branch: `codex/unity-player-hud-fortification-readout`
+Branch: `codex/unity-player-hud-fortification-readout-rerun`
 Lane: `player-hud-realm-condition-legibility`
-Status: branch-complete, blocked on worktree `dotnet build` gate
+Status: complete on branch, all governed gates green
 
 ## Goal
 
@@ -58,7 +58,7 @@ Port the fortification legibility block from the browser's realm-condition snaps
 - `scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1`
   - `Bootstrap runtime smoke validation passed.`
 - `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`
-  - Unity wrapper exited `0`; existing combat smoke remained green.
+  - `Unity exited with code 0`
 - `scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1`
   - `Bootstrap scene shell validation passed.`
   - `Gameplay scene shell validation passed.`
@@ -71,14 +71,28 @@ Port the fortification legibility block from the browser's realm-condition snaps
 - `node tests/runtime-bridge.mjs`
   - `Bloodlines runtime bridge validation passed.`
 - `scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1`
-  - `STALENESS CHECK PASSED: Contract revision=70, last-updated=2026-04-21 is current.`
-
-### Blocker
-
+  - `STALENESS CHECK PASSED: Contract revision=71, last-updated=2026-04-22 is current.`
 - `dotnet build unity/Assembly-CSharp.csproj -nologo`
+  - `Build succeeded.`
+  - `0 Warning(s)`
+  - `0 Error(s)`
 - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`
+  - `Build succeeded.`
+  - `0 Warning(s)`
+  - `0 Error(s)`
 
-Both `dotnet build` gates fail in this worktree before slice-specific compilation, with broad unresolved Unity assembly references (`Unity.Entities`, `Unity.Mathematics`, etc.) across many pre-existing files. Unity's own compile path is green for this slice, but the canonical branch gate remains red until the worktree's generated C# project references build cleanly under `dotnet`.
+### Worktree Repair Note
+
+- The original blocked branch carried generated Unity project files whose
+  analyzer paths still pointed at another Codex worktree
+  (`...worktrees\\b6c2\\...`) and this worktree had not yet hydrated
+  `unity/Library/PackageCache`.
+- Running Unity batch validation in the current worktree materialized the local
+  `Library` / `PackageCache` state, after which both canonical
+  `dotnet build unity/Assembly-CSharp*.csproj -nologo` gates passed cleanly
+  without runtime-code changes.
+- This rerun branch supersedes the earlier blocked state and is the
+  commit-ready continuation of the fortification HUD slice.
 
 ## Unity-Side Simplifications Deferred
 
@@ -88,6 +102,6 @@ Both `dotnet build` gates fail in this worktree before slice-specific compilatio
 
 ## Immediate Next Action
 
-1. Repair or regenerate the worktree `dotnet` project-reference state so `unity/Assembly-CSharp*.csproj` builds stop failing on unresolved Unity assemblies.
-2. Re-run the full 10-gate chain on `codex/unity-player-hud-fortification-readout`.
-3. If the branch goes fully green, commit and push this fortification HUD slice; otherwise preserve it as WIP and continue with the same blocker documented.
+1. Commit and push `codex/unity-player-hud-fortification-readout-rerun` as the validated fortification HUD slice.
+2. After push, keep the player-HUD lane active and start the remaining victory-distance readout follow-up on a fresh Codex branch.
+3. Continue treating `unity/Assets/_Bloodlines/Code/AI/**` as read-only while the HUD lane consumes those systems only through cross-lane reads.

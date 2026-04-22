@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 71
+- Revision: 72
 - Last Updated: 2026-04-22
-- Last Updated By: codex-player-hud-fortification-2026-04-22
-- Supersedes: revision 70 (Codex opened HUD follow-up branch `codex/unity-player-hud-fortification-readout` and added the fortification legibility read-model under `unity/Assets/_Bloodlines/Code/HUD/`. `FortificationHUDComponent` and `FortificationHUDSystem` now project settlement tier/ceiling, breach state, reserve frontage, mustered defenders, reserve buckets, and sealing/recovery telemetry into a player-owned HUD surface; `BloodlinesDebugCommandSurface.HUD.cs` now exposes `TryDebugGetFortificationHUDSnapshot`; and `BloodlinesFortificationHUDSmokeValidation` plus `scripts/Invoke-BloodlinesUnityFortificationHUDSmokeValidation.ps1` prove four phases (reserve frontage, breach sealing, wall recovery, keep recovery). Unity smoke, bootstrap, combat, scene-shell, fortification, siege, node validation, and staleness checks are green in this worktree, but the canonical `dotnet build unity/Assembly-CSharp*.csproj -nologo` gates are currently blocked by worktree-wide unresolved Unity assembly references, so the branch remains in flight rather than landed.)
+- Last Updated By: codex-player-hud-fortification-landing-2026-04-22
+- Supersedes: revision 71 (Codex completed the fortification HUD follow-up on rerun branch `codex/unity-player-hud-fortification-readout-rerun`. The slice itself was already implemented, but the branch-level blocker was resolved by hydrating this worktree's Unity `Library/PackageCache`, which restored valid generated-project references and allowed both canonical `dotnet build unity/Assembly-CSharp*.csproj -nologo` gates to pass. `FortificationHUDComponent`, `FortificationHUDSystem`, `BloodlinesDebugCommandSurface.HUD.cs`, `BloodlinesFortificationHUDSmokeValidation`, and `scripts/Invoke-BloodlinesUnityFortificationHUDSmokeValidation.ps1` are now validated together with the full 10 governed gates, so the player-HUD lane can move on to the remaining victory-distance readout follow-up.)
 
 
 ## Purpose
@@ -712,7 +712,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - Browser Reference:
   - `src/game/core/simulation.js` `getRealmConditionSnapshot` (14291-14764), `getMatchProgressionSnapshot` (13650-13658), fortification block (`14568-14654`)
   - `tests/runtime-bridge.mjs` realm-condition snapshot assertions (1344-1364), match-progression assertions (7521, 7773-7871, 7923-7975, 8133, 8185), fortification/readout assertions (1438-1444), reserve snapshot assertions (710-713), imminent-engagement fortification assertions (8006-8053, 8075-8084), hostile-post-repulse world-pressure assertions (1718-1733)
-- Current Branch In Flight: `codex/unity-player-hud-fortification-readout` (branch-complete, blocked on the worktree `dotnet build unity/Assembly-CSharp*.csproj -nologo` gates)
+- Current Branch In Flight: `codex/unity-player-hud-fortification-readout-rerun` (validated; ready to push as the fortification readout slice)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification-readout.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
