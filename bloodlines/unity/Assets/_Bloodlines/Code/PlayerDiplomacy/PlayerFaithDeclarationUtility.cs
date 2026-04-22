@@ -58,8 +58,24 @@ namespace Bloodlines.PlayerDiplomacy
             out FixedString64Bytes operatorMemberId,
             out FixedString64Bytes operatorTitle)
         {
+            return TryGetFaithOperator(
+                entityManager,
+                factionEntity,
+                out operatorMemberId,
+                out operatorTitle,
+                out _);
+        }
+
+        internal static bool TryGetFaithOperator(
+            EntityManager entityManager,
+            Entity factionEntity,
+            out FixedString64Bytes operatorMemberId,
+            out FixedString64Bytes operatorTitle,
+            out float operatorRenown)
+        {
             operatorMemberId = default;
             operatorTitle = default;
+            operatorRenown = 0f;
 
             if (factionEntity == Entity.Null || !entityManager.HasBuffer<DynastyMemberRef>(factionEntity))
             {
@@ -86,6 +102,7 @@ namespace Bloodlines.PlayerDiplomacy
 
                 operatorMemberId = member.MemberId;
                 operatorTitle = member.Title;
+                operatorRenown = member.Renown;
                 return true;
             }
 
@@ -188,6 +205,22 @@ namespace Bloodlines.PlayerDiplomacy
             message.Append(durationInWorldDays);
             message.Append((FixedString32Bytes)" in-world days.");
             NarrativeMessageBridge.Push(entityManager, message, NarrativeMessageTone.Warn);
+        }
+
+        internal static void PushMissionaryNarrative(
+            EntityManager entityManager,
+            FixedString32Bytes sourceFactionId,
+            FixedString32Bytes targetFactionId,
+            FixedString64Bytes sourceFaithId)
+        {
+            var message = new FixedString128Bytes();
+            message.Append(sourceFactionId);
+            message.Append((FixedString32Bytes)" dispatches missionaries of ");
+            message.Append(sourceFaithId);
+            message.Append((FixedString32Bytes)" toward ");
+            message.Append(targetFactionId);
+            message.Append((FixedString32Bytes)".");
+            NarrativeMessageBridge.Push(entityManager, message, NarrativeMessageTone.Info);
         }
 
         private static bool IsFaithOperatorRole(DynastyRole role)

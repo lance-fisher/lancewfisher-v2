@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 71
+- Revision: 72
 - Last Updated: 2026-04-22
-- Last Updated By: codex-2026-04-22
-- Supersedes: revision 70 (The player-faith declaration slice is now active on branch `codex/unity-player-holy-war-divine-right`; revision 71 reopens the existing `player-marriage-diplomacy` lane as the broader `PlayerDiplomacy/**` surface, adds the holy-war and divine-right smoke ownership, and records the current branch in flight.)
+- Last Updated By: codex-player-diplomacy-2026-04-22
+- Supersedes: revision 71 (The player missionary dispatch slice is now active on branch `codex/unity-player-missionary-dispatch`; revision 72 extends the `player-marriage-diplomacy` lane with missionary dispatch ownership, the dedicated smoke surface, the missionary browser reference, and the new branch in flight.)
 
 
 ## Purpose
@@ -579,7 +579,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: player-marriage-diplomacy
 
 - Status: active
-- Branch Prefix: `codex/unity-player-marriage-*`, `codex/unity-player-holy-war-divine-right`
+- Branch Prefix: `codex/unity-player-marriage-*`, `codex/unity-player-holy-war-divine-right`, `codex/unity-player-missionary-dispatch`
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/**`
@@ -588,11 +588,13 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMarriageAcceptanceSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMarriageDissolutionSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerHolyWarDivineRightSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMissionaryDispatchSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityPlayerMarriageProposalSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityPlayerMarriageAcceptanceSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityPlayerMarriageDissolutionSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityPlayerHolyWarDivineRightSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityPlayerMissionaryDispatchSmokeValidation.ps1`
 - Shared-File Narrow Edits Planned:
   - `unity/Assembly-CSharp.csproj` -- add compile includes for new `PlayerDiplomacy/**` runtime files only if the local generated project file does not already pick them up
   - `unity/Assembly-CSharp-Editor.csproj` -- add compile includes for the lane's dedicated player-diplomacy smoke validators only if the local generated project file does not already pick them up
@@ -608,6 +610,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/AI/DynastyOperationComponent.cs` -- read-only dependency for the AI-owned dynasty-operation entity shape consumed by player holy war and divine right dispatch
   - `unity/Assets/_Bloodlines/Code/AI/DynastyOperationHolyWarComponent.cs` -- read-only holy-war operation payload shape reused by the player-faith declaration slice
   - `unity/Assets/_Bloodlines/Code/AI/DynastyOperationDivineRightComponent.cs` -- read-only divine-right operation payload shape reused by the player-faith declaration slice
+  - `unity/Assets/_Bloodlines/Code/AI/DynastyOperationMissionaryComponent.cs` -- read-only missionary operation payload shape reused by the player missionary dispatch slice
   - `unity/Assets/_Bloodlines/Code/AI/DynastyOperationLimits.cs` -- read-only active-operation cap helper reused by the player-faith declaration slice
   - `unity/Assets/_Bloodlines/Code/Narrative/NarrativeMessageBridge.cs` -- shared message bridge used for player declaration messaging without widening the AI-owned lane
   - `unity/Assets/_Bloodlines/Code/Conviction/ConvictionScoring.cs` -- apply proposal and acceptance-side stewardship/oathkeeping conviction events
@@ -620,12 +623,14 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-acceptance.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-dissolution.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-holy-war-divine-right.md`
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-missionary-dispatch.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `MARRIAGE_REGENCY_LEGITIMACY_COSTS` (6091), `getMarriageAuthorityProfile` (6134), `getMarriageEnvoyProfile` (6192), `buildMarriageGovernanceStatus` (6217), `applyMarriageGovernanceLegitimacyCost` (6232), `getMarriageProposalContext` (6247), `getMarriageProposalTerms` (6296), `getMarriageAcceptanceTerms` (6327), `memberHasActiveMarriage` (7260), `proposeMarriage` (7340), `acceptMarriage` (7388), `tickMarriageDissolutionFromDeath` (7471), `tickMarriageGestation` (7496)
   - `tests/runtime-bridge.mjs` marriage proposal and acceptance assertions (2072-2113, 2240-2308), death-driven dissolution assertions (3234-3298)
+  - `src/game/core/simulation.js` `getMissionaryTerms` (~10362-10421), `startMissionaryOperation` (~10523-10563)
   - `src/game/core/simulation.js` `getHolyWarDeclarationTerms` (~10424-10471), `startHolyWarDeclaration` (~10565-10602), `getDivineRightDeclarationTerms` (~10604-10653), `startDivineRightDeclaration` (~10784-10835)
-- Current Branch In Flight: `codex/unity-player-holy-war-divine-right`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-holy-war-divine-right.md`
+- Current Branch In Flight: `codex/unity-player-missionary-dispatch`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-missionary-dispatch.md`
 
 ### Lane: player-covert-ops
 

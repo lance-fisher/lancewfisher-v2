@@ -114,6 +114,33 @@ namespace Bloodlines.Debug
             return true;
         }
 
+        public bool TryDebugIssuePlayerMissionaryDispatch(string sourceFactionId, string targetFactionId)
+        {
+            if (string.IsNullOrWhiteSpace(sourceFactionId) ||
+                string.IsNullOrWhiteSpace(targetFactionId) ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var sourceFactionKey = new FixedString32Bytes(sourceFactionId);
+            var targetFactionKey = new FixedString32Bytes(targetFactionId);
+            if (sourceFactionKey.Equals(targetFactionKey) ||
+                FindFactionEntity(entityManager, sourceFactionKey) == Entity.Null ||
+                FindFactionEntity(entityManager, targetFactionKey) == Entity.Null)
+            {
+                return false;
+            }
+
+            var requestEntity = entityManager.CreateEntity(typeof(PlayerMissionaryDispatchRequestComponent));
+            entityManager.SetComponentData(requestEntity, new PlayerMissionaryDispatchRequestComponent
+            {
+                SourceFactionId = sourceFactionKey,
+                TargetFactionId = targetFactionKey,
+            });
+            return true;
+        }
+
         public bool TryDebugGetPlayerMarriageProposals(string factionId, out string readout)
         {
             readout = string.Empty;
@@ -204,7 +231,8 @@ namespace Bloodlines.Debug
                 if (!operations[i].Active ||
                     !operations[i].SourceFactionId.Equals(factionKey) ||
                     (operations[i].OperationKind != DynastyOperationKind.HolyWar &&
-                     operations[i].OperationKind != DynastyOperationKind.DivineRight))
+                     operations[i].OperationKind != DynastyOperationKind.DivineRight &&
+                     operations[i].OperationKind != DynastyOperationKind.Missionary))
                 {
                     continue;
                 }
@@ -218,7 +246,8 @@ namespace Bloodlines.Debug
                 if (!operations[i].Active ||
                     !operations[i].SourceFactionId.Equals(factionKey) ||
                     (operations[i].OperationKind != DynastyOperationKind.HolyWar &&
-                     operations[i].OperationKind != DynastyOperationKind.DivineRight))
+                     operations[i].OperationKind != DynastyOperationKind.DivineRight &&
+                     operations[i].OperationKind != DynastyOperationKind.Missionary))
                 {
                     continue;
                 }
@@ -247,6 +276,17 @@ namespace Bloodlines.Debug
                     builder.Append("|ResolveAt=").Append(divineRight.ResolveAtInWorldDays.ToString("0.00", CultureInfo.InvariantCulture))
                         .Append("|SourceFaithId=").Append(divineRight.SourceFaithId)
                         .Append("|DoctrinePath=").Append(divineRight.DoctrinePath);
+                }
+
+                if (operations[i].OperationKind == DynastyOperationKind.Missionary &&
+                    entityManager.HasComponent<DynastyOperationMissionaryComponent>(entities[i]))
+                {
+                    var missionary = entityManager.GetComponentData<DynastyOperationMissionaryComponent>(entities[i]);
+                    builder.Append("|ResolveAt=").Append(missionary.ResolveAtInWorldDays.ToString("0.00", CultureInfo.InvariantCulture))
+                        .Append("|SourceFaithId=").Append(missionary.SourceFaithId)
+                        .Append("|ExposureGain=").Append(missionary.ExposureGain.ToString("0.00", CultureInfo.InvariantCulture))
+                        .Append("|IntensityErosion=").Append(missionary.IntensityErosion.ToString("0.00", CultureInfo.InvariantCulture))
+                        .Append("|LoyaltyPressure=").Append(missionary.LoyaltyPressure.ToString("0.00", CultureInfo.InvariantCulture));
                 }
             }
 

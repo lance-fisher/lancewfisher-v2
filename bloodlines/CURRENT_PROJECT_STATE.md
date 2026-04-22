@@ -3191,3 +3191,64 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Stage the holy-war/divine-right slice files plus continuity/contract updates and commit them on `codex/unity-player-holy-war-divine-right`.
 2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
 3. After the landing continuity pass, continue the next directive item from the current player-facing priority stack on a fresh Codex branch.
+
+## 2026-04-22 Player Diplomacy Missionary Dispatch Slice
+
+- Branch lane: `codex/unity-player-missionary-dispatch`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-missionary-dispatch.md`
+- The next `PlayerDiplomacy/**` slice is now complete on branch:
+  - `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerMissionaryDispatchRequestComponent.cs`
+    now defines the player-owned request surface for missionary dispatch.
+  - `PlayerMissionaryDispatchSystem.cs`
+    now ports the browser missionary dispatch seam: source/target faction
+    validation, committed-faith validation, same-faith rejection,
+    duplicate-active-op rejection, faith-operator lookup, canonical
+    `influence=14` / `intensity=12` deduction, `DynastyOperationLimits`
+    enforcement, AI-owned `DynastyOperationComponent` +
+    `DynastyOperationMissionaryComponent` creation, and missionary narrative
+    emission.
+  - `PlayerFaithDeclarationUtility.cs`
+    now exposes a renown-returning faith-operator lookup overload and a
+    missionary narrative helper so the player-faith slices share one lane-local
+    utility surface.
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerDiplomacy.cs`
+    now exposes missionary issuance and missionary payload fields in the
+    structured faith-operations readout.
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMissionaryDispatchSmokeValidation.cs`
+    plus
+    `scripts/Invoke-BloodlinesUnityPlayerMissionaryDispatchSmokeValidation.ps1`
+    now prove missionary success, insufficient-influence rejection, and
+    active-cap rejection.
+  - `unity/Assembly-CSharp.csproj`
+    and
+    `unity/Assembly-CSharp-Editor.csproj`
+    now include the new player-diplomacy runtime and editor files.
+- Governed validation is green in `D:\BLM14\bloodlines\bloodlines`:
+  - `dotnet build bloodlines/unity/Assembly-CSharp.csproj -nologo`:
+    `Build succeeded.` / `0 Error(s)`
+  - `dotnet build bloodlines/unity/Assembly-CSharp-Editor.csproj -nologo`:
+    `Build succeeded.` / `0 Error(s)`
+  - `powershell -ExecutionPolicy Bypass -File bloodlines/scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1`:
+    `Bootstrap runtime smoke validation passed.`
+  - `powershell -ExecutionPolicy Bypass -File bloodlines/scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`:
+    Unity exit `0`
+  - `powershell -ExecutionPolicy Bypass -File bloodlines/scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1`:
+    bootstrap and gameplay scene shell validation passed
+  - `powershell -ExecutionPolicy Bypass -File bloodlines/scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1`:
+    `Fortification smoke validation passed.`
+  - `powershell -ExecutionPolicy Bypass -File bloodlines/scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`:
+    Unity exit `0`
+  - `node tests/data-validation.mjs`:
+    `Bloodlines data validation passed.`
+  - `node tests/runtime-bridge.mjs`:
+    `Bloodlines runtime bridge validation passed.`
+  - `powershell -ExecutionPolicy Bypass -File scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1`:
+    `STALENESS CHECK PASSED: Contract revision=72, last-updated=2026-04-22 is current.`
+  - dedicated missionary smoke:
+    `Player missionary dispatch smoke validation passed.`
+
+### Recommended Next Follow-Up
+1. Stage the player missionary dispatch slice files plus continuity and contract updates and commit them on `codex/unity-player-missionary-dispatch`.
+2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
+3. After the landing continuity pass, continue the next priority item: conviction-band wiring on a fresh Codex branch.

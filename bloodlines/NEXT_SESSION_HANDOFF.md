@@ -3669,3 +3669,66 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 - Holy-war compatibility is still a simplified identical `(faith, doctrine)`
   gate rather than the browser's fuller compatibility ladder because the
   covenant covariance surface is not yet ported.
+
+## Codex Player Diplomacy Missionary Dispatch Slice (2026-04-22)
+
+### Status: VALIDATED on branch `codex/unity-player-missionary-dispatch`
+
+### What Landed On Branch
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerMissionaryDispatchRequestComponent.cs`
+  now provides the player-owned request surface for missionary dispatch.
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerMissionaryDispatchSystem.cs`
+  now ports player-side missionary dispatch using the browser
+  `getMissionaryTerms` / `startMissionaryOperation` parity subset: source and
+  target validation, committed faith validation, same-faith rejection,
+  duplicate-active-op rejection, canonical `influence=14` and `intensity=12`
+  deduction, active-cap enforcement through read-only `DynastyOperationLimits`,
+  AI-owned `DynastyOperationComponent` + `DynastyOperationMissionaryComponent`
+  creation, and missionary narrative emission through `NarrativeMessageBridge`.
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerFaithDeclarationUtility.cs`
+  now exposes a renown-returning faith-operator lookup overload and a
+  missionary narrative helper so the player-faith slices reuse one utility
+  surface.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerDiplomacy.cs`
+  now exposes:
+  - `TryDebugIssuePlayerMissionaryDispatch(...)`
+  - missionary payload fields in `TryDebugGetPlayerFaithDeclarationOperations(...)`
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMissionaryDispatchSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityPlayerMissionaryDispatchSmokeValidation.ps1`
+  now prove three phases:
+  1. missionary success creates the AI-owned operation payload and deducts canonical influence/intensity
+  2. insufficient influence blocks creation and preserves stockpile
+  3. active-cap at six blocks dispatch
+- Narrow shared-file edits were applied to
+  `unity/Assembly-CSharp.csproj`
+  and
+  `unity/Assembly-CSharp-Editor.csproj`
+  so the initialized local projects compile the new player-diplomacy files.
+
+### Validation Proof
+- Runtime build: `Build succeeded.` / `0 Error(s)`
+- Editor build: `Build succeeded.` / `0 Error(s)`
+- Bootstrap runtime: `Bootstrap runtime smoke validation passed.`
+- Combat smoke: Unity exit code `0`
+- Scene shells: bootstrap and gameplay scene shell validation both passed
+- Fortification smoke: `Fortification smoke validation passed.`
+- Siege smoke: Unity exit code `0`
+- Data validation: `Bloodlines data validation passed.`
+- Runtime bridge: `Bloodlines runtime bridge validation passed.`
+- Contract staleness: `STALENESS CHECK PASSED: Contract revision=72, last-updated=2026-04-22 is current.`
+- Dedicated smoke: `Player missionary dispatch smoke validation passed.`
+
+### Immediate Next Action
+1. Stage the player missionary dispatch slice files plus continuity/contract updates and commit them on `codex/unity-player-missionary-dispatch`.
+2. Push the branch to `origin`, merge it to `master`, and rerun the full governed validation gate on merged `master`.
+3. After the landing continuity pass, continue the next directive item on a fresh Codex branch: conviction-band wiring.
+
+### Context Notes
+- `unity/Assets/_Bloodlines/Code/AI/**` remained read-only throughout the slice;
+  the new system only reuses the AI-owned missionary payload shape.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged for this slice.
+- Missionary defense still uses the same simplified parity already used by the
+  AI missionary dispatch slice; target-operator renown and ward bonuses remain
+  deferred.
