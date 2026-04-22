@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-21T20:54:00-06:00",
+  "updated_at": "2026-04-21T22:28:00-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -1757,6 +1757,15 @@
       "description": "The validated `codex/unity-player-marriage-acceptance` branch is now merged to master via `00223fa9`. PlayerMarriageAcceptRequestComponent, PlayerMarriageAcceptSystem, the extended player-diplomacy debug seam, and BloodlinesPlayerMarriageAcceptanceSmokeValidation are now canonical master content. Merged master re-passed runtime build, editor build, bootstrap runtime, combat, scene shells, fortification, siege, node validation, contract staleness, and the dedicated player marriage acceptance smoke in D:\\BLM13\\bloodlines\\bloodlines. Contract rev 55->56 records sub-slice 2B as landed-on-master while the player-marriage-diplomacy lane remains active for sub-slice 2C dissolution.",
       "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-marriage-acceptance-landing.md",
       "validation_gates": "all 10 green plus player marriage acceptance smoke on merged master"
+    },
+    {
+      "lane": "player-marriage-diplomacy-sub-slice-2c-dissolution-validation",
+      "date": "2026-04-21",
+      "branch": "codex/unity-player-marriage-dissolution",
+      "status": "active",
+      "description": "The remaining player-marriage diplomacy proof gap is now closed on branch without duplicating runtime. BloodlinesPlayerMarriageDissolutionSmokeValidation and scripts/Invoke-BloodlinesUnityPlayerMarriageDissolutionSmokeValidation.ps1 reuse the already-landed MarriageDeathDissolutionSystem from the paused dynasty-house-parity lane and prove three player-facing outcomes: accepted marriages stay active while spouses live, ruler death dissolves the mirrored marriage and promotes the heir through DynastySuccessionSystem, and active marriages still gestate a child when no death intervenes. The full governed validation gate is green in D:\\BLM13\\bloodlines\\bloodlines, with temporary worktree-local copies again used for the still-root-pinned bootstrap-runtime and canonical scene-shell wrappers. Contract rev 56->57.",
+      "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-marriage-dissolution.md",
+      "validation_gates": "all 10 green plus player marriage dissolution smoke"
     }
   ]
 }
