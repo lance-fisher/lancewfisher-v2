@@ -1,4 +1,5 @@
 using Bloodlines.Components;
+using Bloodlines.Conviction;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -47,11 +48,12 @@ namespace Bloodlines.Systems
             float famineLoyaltyDelta = cfg.FamineLoyaltyDeltaPerCycle;
             float waterCrisisLoyaltyDelta = cfg.WaterCrisisLoyaltyDeltaPerCycle;
 
-            foreach (var (realmRw, populationRw, loyaltyRw) in
+            foreach (var (realmRw, populationRw, loyaltyRw, conviction) in
                 SystemAPI.Query<
                     RefRW<RealmConditionComponent>,
                     RefRW<PopulationComponent>,
-                    RefRW<FactionLoyaltyComponent>>())
+                    RefRW<FactionLoyaltyComponent>,
+                    RefRO<ConvictionComponent>>())
             {
                 ref var realm = ref realmRw.ValueRW;
 
@@ -83,7 +85,10 @@ namespace Bloodlines.Systems
                 if (totalPopulationDecline > 0)
                 {
                     ref var population = ref populationRw.ValueRW;
-                    int newTotal = math.max(0, population.Total - totalPopulationDecline);
+                    int adjustedDecline = ApplyPopulationProtection(
+                        totalPopulationDecline,
+                        conviction.ValueRO.Band);
+                    int newTotal = math.max(0, population.Total - adjustedDecline);
                     int appliedDecline = population.Total - newTotal;
                     population.Total = newTotal;
                     population.Available = math.max(0, population.Available - appliedDecline);
@@ -92,11 +97,35 @@ namespace Bloodlines.Systems
                 if (totalLoyaltyDelta != 0f)
                 {
                     ref var loyalty = ref loyaltyRw.ValueRW;
-                    float newLoyalty = loyalty.Current + totalLoyaltyDelta;
+                    float adjustedDelta = ApplyLoyaltyProtection(totalLoyaltyDelta, conviction.ValueRO.Band);
+                    float newLoyalty = loyalty.Current + adjustedDelta;
                     float max = loyalty.Max > 0f ? loyalty.Max : 100f;
                     loyalty.Current = math.clamp(newLoyalty, loyalty.Floor, max);
                 }
             }
+        }
+
+        private static int ApplyPopulationProtection(int totalPopulationDecline, ConvictionBand band)
+        {
+            if (totalPopulationDecline <= 0)
+            {
+                return 0;
+            }
+
+            float protection = math.max(1f, ConvictionBandEffects.ForBand(band).PopulationGrowthMultiplier);
+            int adjustedDecline = (int)math.floor(totalPopulationDecline / protection);
+            return math.clamp(adjustedDecline, 1, totalPopulationDecline);
+        }
+
+        private static float ApplyLoyaltyProtection(float loyaltyDelta, ConvictionBand band)
+        {
+            if (loyaltyDelta >= 0f)
+            {
+                return loyaltyDelta;
+            }
+
+            float protection = math.max(1f, ConvictionBandEffects.ForBand(band).LoyaltyProtectionMultiplier);
+            return loyaltyDelta / protection;
         }
     }
 }

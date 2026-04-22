@@ -3732,3 +3732,43 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 - Missionary defense still uses the same simplified parity already used by the
   AI missionary dispatch slice; target-operator renown and ward bonuses remain
   deferred.
+
+## Codex Conviction Band Wiring Checkpoint (2026-04-22)
+
+### Branch
+
+- `codex/unity-conviction-band-wiring`
+
+### What Changed So Far
+
+- `unity/Assets/_Bloodlines/Code/Economy/StarvationResponseSystem.cs`
+  now reads `ConvictionComponent` and applies starvation-side conviction protection:
+  negative loyalty deltas are divided by `max(1, LoyaltyProtectionMultiplier)` and famine population decline is reduced
+  by `PopulationGrowthMultiplier` with a minimum decline floor of one.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesConvictionSmokeValidation.cs`
+  now includes a fifth starvation-protection phase proving an `ApexMoral` faction loses less loyalty and population
+  than a `Neutral` faction under identical famine conditions.
+- `docs/unity/CONCURRENT_SESSION_CONTRACT.md`
+  bumped revision `72 -> 73` and claims the new `conviction-band-wiring` lane with this branch as the active owner.
+
+### Validation Completed
+
+- Runtime build: `Build succeeded.` / `0 Error(s)`
+- Editor build: `Build succeeded.` / `0 Error(s)`
+- Conviction smoke: `Conviction smoke validation passed.`
+
+### Immediate Next Action
+
+1. Resolve the combat-side `CaptureMultiplier` seam before touching `unity/Assets/_Bloodlines/Code/Combat/AttackResolutionSystem.cs`.
+2. The core decision is whether conviction-based capture should apply only to commander / bloodline-backed combatants
+   (the only units with stable member identity today) or whether a broader unit-to-dynasty captive bridge must land
+   first.
+3. After that decision, wire the combat hook, extend the smoke surface, run the full 10-gate chain, and then land the
+   slice.
+
+### Context Notes
+
+- `CapturedMemberElement` requires `MemberId` and `MemberTitle`. Those exist on `DynastyMemberComponent` and
+  `CommanderComponent`, not on ordinary militia / worker units.
+- The existing branch still has the usual unstaged Unity churn at
+  `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`; keep it out of any commit.
