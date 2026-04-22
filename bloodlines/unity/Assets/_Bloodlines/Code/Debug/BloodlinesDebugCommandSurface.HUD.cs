@@ -320,5 +320,51 @@ namespace Bloodlines.Debug
             readout = builder.ToString();
             return true;
         }
+
+        public bool TryDebugGetPlayerCommandDeckHUDSnapshot(out string readout)
+        {
+            readout = string.Empty;
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var playerEntity = FindFactionRootEntity(entityManager, new FixedString32Bytes("player"));
+            if (playerEntity == Entity.Null ||
+                !entityManager.HasComponent<PlayerCommandDeckHUDComponent>(playerEntity))
+            {
+                return false;
+            }
+
+            var hud = entityManager.GetComponentData<PlayerCommandDeckHUDComponent>(playerEntity);
+            var builder = new StringBuilder(512);
+            builder.Append("PlayerCommandDeckHUD")
+                .Append("|FactionId=").Append(hud.FactionId)
+                .Append("|StageLabel=").Append(hud.StageLabel)
+                .Append("|PhaseLabel=").Append(hud.PhaseLabel)
+                .Append("|WorldPressureLabel=").Append(hud.WorldPressureLabel)
+                .Append("|WorldPressureLevel=").Append(hud.WorldPressureLevel)
+                .Append("|GreatReckoningActive=").Append(hud.GreatReckoningActive ? "true" : "false")
+                .Append("|LeadingVictoryConditionId=").Append(hud.LeadingVictoryConditionId)
+                .Append("|LeadingVictoryProgressPct=").Append(hud.LeadingVictoryProgressPct.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|LeadingVictoryEtaInWorldDays=")
+                .Append(float.IsNaN(hud.LeadingVictoryEtaInWorldDays)
+                    ? "NaN"
+                    : hud.LeadingVictoryEtaInWorldDays.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|VictoryRank=").Append(hud.VictoryRank)
+                .Append("|VictoryLeaderFactionId=").Append(hud.VictoryLeaderFactionId)
+                .Append("|RenownRank=").Append(hud.RenownRank)
+                .Append("|RenownScore=").Append(hud.RenownScore.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|RenownBandLabel=").Append(hud.RenownBandLabel)
+                .Append("|PopulationBand=").Append(hud.PopulationBand)
+                .Append("|LoyaltyBand=").Append(hud.LoyaltyBand)
+                .Append("|FaithBand=").Append(hud.FaithBand)
+                .Append("|FortificationThreatActive=").Append(hud.FortificationThreatActive ? "true" : "false")
+                .Append("|PrimaryAlertLabel=").Append(hud.PrimaryAlertLabel)
+                .Append("|LastRefreshInWorldDays=").Append(hud.LastRefreshInWorldDays.ToString("0.000", CultureInfo.InvariantCulture));
+
+            readout = builder.ToString();
+            return true;
+        }
     }
 }

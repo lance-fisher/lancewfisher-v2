@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 87
+- Revision: 88
 - Last Updated: 2026-04-22
-- Last Updated By: codex-hud-dynasty-renown-panel-landing-2026-04-22
-- Supersedes: revision 86 (The `player-hud-realm-condition-legibility` lane's `codex/unity-hud-dynasty-renown-panel` slice is now merged to canonical `master` via `a80fef7a`. `DynastyRenownLeaderboardHUDComponent`, `DynastyRenownLeaderboardHUDSystem`, the dedicated smoke validator/wrapper, and the analyzer-path / Library repair now live on canonical `master`. This revision clears the in-flight branch marker and records the landing handoff.)
+- Last Updated By: codex-player-hud-command-deck-2026-04-22
+- Supersedes: revision 87 (The `player-hud-realm-condition-legibility` lane now has a fresh in-flight branch `codex/unity-player-hud-command-deck-summary` for a consolidated player command-deck HUD summary. `PlayerCommandDeckHUDComponent`, `PlayerCommandDeckHUDSystem`, and the dedicated smoke validator/wrapper are now owned by the lane, and the lane handoff stack records the branch validation state.)
 
 
 ## Purpose
@@ -763,6 +763,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesVictoryLeaderboardHUDSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyRenownHUDSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyRenownLeaderboardHUDSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCommandDeckHUDSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityRealmConditionHUDSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityMatchProgressionHUDSmokeValidation.ps1`
@@ -771,6 +772,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnityVictoryLeaderboardHUDSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityDynastyRenownHUDSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityDynastyRenownLeaderboardHUDSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityPlayerCommandDeckHUDSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/RealmConditionHUDComponent.cs`, `Code/HUD/RealmConditionHUDSystem.cs`, and `Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
@@ -786,6 +788,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesDynastyRenownHUDSmokeValidation.cs`
   - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/DynastyRenownLeaderboardHUDComponent.cs` and `Code/HUD/DynastyRenownLeaderboardHUDSystem.cs`; stale analyzer/source-generator paths were corrected from the dead `c946` worktree to `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesDynastyRenownLeaderboardHUDSmokeValidation.cs`; stale analyzer/source-generator paths were corrected from the dead `c946` worktree to `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
+  - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/PlayerCommandDeckHUDComponent.cs` and `Code/HUD/PlayerCommandDeckHUDSystem.cs`
+  - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesPlayerCommandDeckHUDSmokeValidation.cs`
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve HUD snapshots by `FactionId`
   - `unity/Assets/_Bloodlines/Code/Components/RealmConditionComponent.cs` -- read realm cycle accumulator, cycle count, strain streaks, and realm legibility thresholds
@@ -816,6 +820,9 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Components/DynastyMemberComponent.cs` -- resolve the current ruling member id/title for dynasty HUD legibility
   - `unity/Assets/_Bloodlines/Code/Components/DynastyStateComponent.cs` -- read legitimacy and interregnum status for dynasty HUD legibility
   - `unity/Assets/_Bloodlines/Code/HUD/DynastyRenownHUDComponent.cs` -- consume the already-landed per-faction renown HUD snapshot rather than duplicating dynasty ranking logic
+  - `unity/Assets/_Bloodlines/Code/HUD/MatchProgressionHUDComponent.cs` -- consume the already-landed match stage / world-pressure / Great Reckoning HUD snapshot for the command-deck summary
+  - `unity/Assets/_Bloodlines/Code/HUD/VictoryLeaderboardHUDComponent.cs` -- consume the already-landed leading victory condition and ETA per faction
+  - `unity/Assets/_Bloodlines/Code/HUD/FortificationHUDComponent.cs` -- consume fortification threat state without reopening the paused fortification lane
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility-landing.md`
@@ -828,11 +835,12 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-readout.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-panel.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-panel-landing.md`
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `getRealmConditionSnapshot` (14291-14764), `getMatchProgressionSnapshot` (13650-13658)
   - `tests/runtime-bridge.mjs` realm-condition snapshot assertions (1344-1364), match-progression assertions (7521, 7773-7871, 7923-7975, 8133, 8185), fortification/readout assertions (1438-1444), hostile-post-repulse world-pressure assertions (1718-1733)
-- Current Branch In Flight: none (merged to canonical `master` via `a80fef7a`)
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-panel-landing.md`
+- Current Branch In Flight: `codex/unity-player-hud-command-deck-summary`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 

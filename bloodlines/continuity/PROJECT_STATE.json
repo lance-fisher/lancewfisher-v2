@@ -2018,6 +2018,15 @@
       "description": "The validated `codex/unity-hud-dynasty-renown-panel` branch is now merged to canonical `master` via `a80fef7a`. `DynastyRenownLeaderboardHUDComponent`, `DynastyRenownLeaderboardHUDSystem`, `BloodlinesDebugCommandSurface.HUD` dynasty leaderboard readout support, and `BloodlinesDynastyRenownLeaderboardHUDSmokeValidation` plus wrapper now live on canonical `master`. The full governed 10-gate chain reran green on the merge result in this worktree, the dedicated dynasty renown leaderboard HUD smoke also reran green, and contract rev 86->87 now clears the HUD lane branch in flight while preserving the canonical Unity Library analyzer-path repair.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-panel-landing.md",
       "validation_gates": "all 10 green plus dynasty renown leaderboard HUD smoke on merged master"
+    },
+    {
+      "lane": "player-hud-realm-condition-legibility-slice-8-command-deck-summary",
+      "date": "2026-04-22",
+      "branch": "codex/unity-player-hud-command-deck-summary",
+      "status": "active",
+      "description": "The eighth player-HUD slice is now complete on branch. `PlayerCommandDeckHUDComponent` and `PlayerCommandDeckHUDSystem` add a faction-scoped command-deck summary under `HUD/**` that consumes the already-landed match progression, victory leaderboard, dynasty renown, and fortification HUD seams, derives command-deck population/loyalty/faith bands, and resolves one `PrimaryAlertLabel` with precedence across Great Reckoning, fortification threat, loyalty crisis, victory-imminent pressure, and world pressure without widening `AI/**`. `BloodlinesDebugCommandSurface.HUD` now exposes a parseable `PlayerCommandDeckHUD|FactionId=...|StageLabel=...|LeadingVictoryConditionId=...|PrimaryAlertLabel=...` snapshot, and `BloodlinesPlayerCommandDeckHUDSmokeValidation` plus its wrapper prove summary projection plus Great Reckoning, fortification threat, and victory-imminent alert precedence. The full governed 10-gate chain is green on the branch and contract rev 87->88.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary.md",
+      "validation_gates": "all 10 green plus player command-deck HUD smoke"
     }
   ]
 }
