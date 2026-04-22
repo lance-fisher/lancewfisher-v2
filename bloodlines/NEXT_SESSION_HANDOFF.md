@@ -2909,3 +2909,33 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   copies when validating this clean worktree.
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
+
+## Codex Player Marriage Diplomacy Sub-Slice 2B Landing (2026-04-21)
+
+### Status: MERGED to `master` via `00223fa9`
+
+### What Landed
+- `codex/unity-player-marriage-acceptance` is now merged, so player-side
+  marriage acceptance is part of canonical `master`.
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/` now contains the landed
+  acceptance request and execution systems alongside the previously landed
+  proposal path.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerDiplomacy.cs`
+  and
+  `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMarriageAcceptanceSmokeValidation.cs`
+  are now canonical debug and validation surfaces on `master`.
+- Merged `master` re-passed runtime build, editor build, bootstrap runtime,
+  combat, scene shells, fortification, siege, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, and the dedicated acceptance smoke.
+
+### Immediate Next Action
+1. Create fresh branch `codex/unity-player-marriage-dissolution` from current `master`.
+2. Port the browser's death-driven marriage dissolution behavior under the player-marriage lane.
+3. Add the dedicated dissolution smoke before attempting any later player-marriage or covert-ops slice.
+
+### Context Notes
+- The checked-in bootstrap-runtime and canonical scene-shell wrappers are still
+  pinned to `D:\ProjectsHome\Bloodlines`; continue using temporary worktree-safe
+  copies when validating this clean worktree.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.

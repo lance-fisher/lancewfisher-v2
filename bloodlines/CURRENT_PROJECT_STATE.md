@@ -2636,3 +2636,27 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Merge `codex/unity-player-marriage-acceptance` to `master` and rerun the governed gate on merged `master`.
 2. After landing 2B, start sub-slice 2C on fresh branch `codex/unity-player-marriage-dissolution`.
 3. Keep the player-marriage lane inside `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/` plus narrow continuity/contract updates; do not reopen `unity/Assets/_Bloodlines/Code/AI/**`.
+
+## 2026-04-21 Player Marriage Diplomacy Sub-Slice 2B Landing
+
+- Merged branch: `codex/unity-player-marriage-acceptance`
+- Merge commit on `master`: `00223fa9`
+- Landing handoff:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-acceptance-landing.md`
+- The player marriage acceptance slice is now canonical master content:
+  - `PlayerMarriageAcceptRequestComponent` and `PlayerMarriageAcceptSystem`
+    are now landed under `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/`.
+  - `BloodlinesDebugCommandSurface.PlayerDiplomacy.cs` now carries the landed
+    player-accept debug seam and proposal-entity index readout.
+  - `BloodlinesPlayerMarriageAcceptanceSmokeValidation` and
+    `scripts/Invoke-BloodlinesUnityPlayerMarriageAcceptanceSmokeValidation.ps1`
+    are now part of the canonical validation surface on `master`.
+- Merged `master` re-passed runtime build, editor build, bootstrap runtime,
+  combat, scene shells, fortification, siege, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, and the dedicated acceptance smoke in
+  `D:\BLM13\bloodlines\bloodlines`.
+
+### Recommended Next Follow-Up
+1. Start sub-slice 2C from merged `master` on fresh branch `codex/unity-player-marriage-dissolution`.
+2. Port death-driven marriage dissolution while keeping the marriage audit entity alive.
+3. Keep all writes inside `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/` plus continuity/contract updates; do not reopen `unity/Assets/_Bloodlines/Code/AI/**`.

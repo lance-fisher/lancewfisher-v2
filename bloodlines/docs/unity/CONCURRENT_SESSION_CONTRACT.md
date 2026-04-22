@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 55
+- Revision: 56
 - Last Updated: 2026-04-21
-- Last Updated By: codex-player-marriage-acceptance-2026-04-21
-- Supersedes: revision 54 (Codex has now completed player-facing marriage diplomacy sub-slice 2B on `codex/unity-player-marriage-acceptance`: acceptance execution, proposal-index debug issuance, and the dedicated acceptance smoke are green on the feature branch. The lane remains active for merge-to-master and then sub-slice 2C dissolution work; `dynasty-house-parity` stays paused and `unity/Assets/_Bloodlines/Code/AI/**` remains Claude-owned.)
+- Last Updated By: codex-player-marriage-acceptance-landing-2026-04-21
+- Supersedes: revision 55 (Codex has now merged player-facing marriage diplomacy sub-slice 2B onto `master` via `00223fa9`: acceptance execution, proposal-index debug issuance/readout, and the dedicated acceptance smoke are green on merged master. The lane remains active for sub-slice 2C dissolution work; `dynasty-house-parity` stays paused and `unity/Assets/_Bloodlines/Code/AI/**` remains Claude-owned.)
 
 
 ## Purpose
@@ -578,7 +578,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: player-marriage-diplomacy
 
-- Status: active (sub-slice 2B acceptance is complete on branch `codex/unity-player-marriage-acceptance`; merge-to-master and sub-slice 2C dissolution are next)
+- Status: active (sub-slices 2A and 2B are landed on master; sub-slice 2C dissolution is next)
 - Branch Prefix: `codex/unity-player-marriage-*`
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -609,8 +609,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - Browser Reference:
   - `src/game/core/simulation.js` `MARRIAGE_REGENCY_LEGITIMACY_COSTS` (6091), `getMarriageAuthorityProfile` (6134), `getMarriageEnvoyProfile` (6192), `buildMarriageGovernanceStatus` (6217), `applyMarriageGovernanceLegitimacyCost` (6232), `getMarriageProposalContext` (6247), `getMarriageProposalTerms` (6296), `getMarriageAcceptanceTerms` (6327), `memberHasActiveMarriage` (7260), `proposeMarriage` (7340), `acceptMarriage` (7388)
   - `tests/runtime-bridge.mjs` marriage proposal and acceptance assertions (2072-2113, 2240-2308)
-- Current Branch In Flight: `codex/unity-player-marriage-acceptance`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-acceptance.md`
+- Current Branch In Flight: none (merged into master via `00223fa9`; next slice should start from fresh branch `codex/unity-player-marriage-dissolution`)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-acceptance-landing.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
