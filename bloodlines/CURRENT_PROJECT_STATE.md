@@ -2991,6 +2991,42 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 2. Create a fresh Codex branch for that HUD lane from current `master`.
 3. Keep using the worktree-local bootstrap-runtime and scene-shell wrapper copies until the checked-in path-pinned wrappers are repaired.
 
+## 2026-04-22 Player HUD Fortification Readout (Branch State)
+
+- Branch: `codex/unity-player-hud-fortification-readout`
+- Lane: `player-hud-realm-condition-legibility`
+- Status: implementation complete on branch, blocked on the worktree `dotnet build` gates
+- Completed in this slice:
+  - `unity/Assets/_Bloodlines/Code/HUD/FortificationHUDComponent.cs`
+    and
+    `FortificationHUDSystem.cs`
+    now project settlement-level fortification legibility: tier, ceiling,
+    breach state, destroyed counters, reserve frontage, mustered defenders,
+    reserve buckets, and sealing/recovery progress.
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+    now exposes the parseable
+    `TryDebugGetFortificationHUDSnapshot(string settlementId, out string readout)`
+    seam with `FortHUD|Key=Value|...` output.
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationHUDSmokeValidation.cs`
+    plus
+    `scripts/Invoke-BloodlinesUnityFortificationHUDSmokeValidation.ps1`
+    now prove four phases: reserve frontage, breach sealing, wall recovery,
+    and keep recovery.
+- Validation state:
+  - dedicated fortification HUD smoke: `BLOODLINES_FORTIFICATION_HUD_SMOKE PASS`
+  - bootstrap runtime, combat, canonical scene shells, fortification, siege,
+    `node tests/data-validation.mjs`, `node tests/runtime-bridge.mjs`, and
+    contract staleness all re-passed green in this worktree
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo` and
+    `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`
+    remain red before slice-specific compilation because the worktree project
+    references are not resolving `Unity.Entities` / `Unity.Mathematics` under
+    `dotnet`
+- Immediate next action:
+  - repair or regenerate the worktree `dotnet` project references, rerun the
+    full 10-gate chain, then commit and push this HUD slice if the two build
+    gates go green
+
 ## 2026-04-21 Player HUD Realm-Condition Legibility Slice 1
 
 - Branch lane: `codex/unity-player-hud-realm-condition-legibility`
