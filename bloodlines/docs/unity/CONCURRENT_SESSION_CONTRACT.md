@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 54
+- Revision: 55
 - Last Updated: 2026-04-21
-- Last Updated By: codex-player-marriage-proposal-landing-2026-04-21
-- Supersedes: revision 53 (Codex has now merged player-facing marriage diplomacy sub-slice 2A onto `master` via `21550da3`: proposal execution, debug issuance/readout, and the dedicated proposal smoke are green on merged master. The lane remains active for sub-slice 2B acceptance work; `dynasty-house-parity` stays paused and `unity/Assets/_Bloodlines/Code/AI/**` remains Claude-owned.)
+- Last Updated By: codex-player-marriage-acceptance-2026-04-21
+- Supersedes: revision 54 (Codex has now completed player-facing marriage diplomacy sub-slice 2B on `codex/unity-player-marriage-acceptance`: acceptance execution, proposal-index debug issuance, and the dedicated acceptance smoke are green on the feature branch. The lane remains active for merge-to-master and then sub-slice 2C dissolution work; `dynasty-house-parity` stays paused and `unity/Assets/_Bloodlines/Code/AI/**` remains Claude-owned.)
 
 
 ## Purpose
@@ -578,33 +578,39 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: player-marriage-diplomacy
 
-- Status: active (sub-slice 2A landed on master; sub-slice 2B acceptance is next)
+- Status: active (sub-slice 2B acceptance is complete on branch `codex/unity-player-marriage-acceptance`; merge-to-master and sub-slice 2C dissolution are next)
 - Branch Prefix: `codex/unity-player-marriage-*`
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/**`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerDiplomacy.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMarriageProposalSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMarriageAcceptanceSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityPlayerMarriageProposalSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityPlayerMarriageAcceptanceSmokeValidation.ps1`
 - Shared-File Narrow Edits Planned:
   - `unity/Assembly-CSharp.csproj` -- add compile includes for new `PlayerDiplomacy/**` runtime files only if the local generated project file does not already pick them up
-  - `unity/Assembly-CSharp-Editor.csproj` -- add compile includes for `BloodlinesPlayerMarriageProposalSmokeValidation.cs` only if the local generated project file does not already pick it up
+  - `unity/Assembly-CSharp-Editor.csproj` -- add compile includes for `BloodlinesPlayerMarriageProposalSmokeValidation.cs` and `BloodlinesPlayerMarriageAcceptanceSmokeValidation.cs` only if the local generated project file does not already pick them up
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageComponents.cs` -- reuse `MarriageProposalComponent`, `MarriageComponent`, and `MarriageProposalStatus` without widening the retired dynasty parity lane
   - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageProposalExpirationSystem.cs` -- read `ExpirationInWorldDays` so proposal expiry stays aligned with the canonical 90-day window
+  - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageGestationSystem.cs` -- read `GestationInWorldDays` so accepted marriages schedule child timing on the same 280-day cadence as the canonical dynasty lane
   - `unity/Assets/_Bloodlines/Code/Components/DynastyMemberComponent.cs` -- read member roster, role, and status when resolving proposal candidates and governance authority
   - `unity/Assets/_Bloodlines/Code/Components/FaithComponent.cs` -- read committed covenant to enforce the browser polygamy gate
-  - `unity/Assets/_Bloodlines/Code/Conviction/ConvictionScoring.cs` -- apply the source-side stewardship penalty when a proposal is sanctioned through regency
-  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- read `InWorldDays` for proposal timestamps
+  - `unity/Assets/_Bloodlines/Code/Conviction/ConvictionScoring.cs` -- apply proposal and acceptance-side stewardship/oathkeeping conviction events
+  - `unity/Assets/_Bloodlines/Code/Combat/HostilityComponent.cs` -- remove reciprocal hostility on successful acceptance
+  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- read `InWorldDays` for proposal timestamps and acceptance timing
+  - `unity/Assets/_Bloodlines/Code/Time/DeclareInWorldTimeRequest.cs` -- enqueue the browser-matching 30-day declaration jump after accept
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-proposal.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-proposal-landing.md`
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-acceptance.md`
 - Browser Reference:
-  - `src/game/core/simulation.js` `getMarriageAuthorityProfile` (6134), `getMarriageEnvoyProfile` (6192), `buildMarriageGovernanceStatus` (6217), `applyMarriageGovernanceLegitimacyCost` (6232), `getMarriageProposalContext` (6247), `getMarriageProposalTerms` (6296), `memberHasActiveMarriage` (7260), `proposeMarriage` (7340)
+  - `src/game/core/simulation.js` `MARRIAGE_REGENCY_LEGITIMACY_COSTS` (6091), `getMarriageAuthorityProfile` (6134), `getMarriageEnvoyProfile` (6192), `buildMarriageGovernanceStatus` (6217), `applyMarriageGovernanceLegitimacyCost` (6232), `getMarriageProposalContext` (6247), `getMarriageProposalTerms` (6296), `getMarriageAcceptanceTerms` (6327), `memberHasActiveMarriage` (7260), `proposeMarriage` (7340), `acceptMarriage` (7388)
   - `tests/runtime-bridge.mjs` marriage proposal and acceptance assertions (2072-2113, 2240-2308)
-- Current Branch In Flight: none (sub-slice 2A is landed on master; next slice should start from fresh branch `codex/unity-player-marriage-acceptance`)
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-proposal-landing.md`
+- Current Branch In Flight: `codex/unity-player-marriage-acceptance`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-acceptance.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
