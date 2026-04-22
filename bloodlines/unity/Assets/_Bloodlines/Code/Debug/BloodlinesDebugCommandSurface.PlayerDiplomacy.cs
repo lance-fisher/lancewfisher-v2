@@ -165,6 +165,40 @@ namespace Bloodlines.Debug
             return true;
         }
 
+        public bool TryDebugDispatchCaptiveRansom(string sourceFactionId, string captiveMemberId, int goldAmount)
+        {
+            if (string.IsNullOrWhiteSpace(sourceFactionId) ||
+                string.IsNullOrWhiteSpace(captiveMemberId) ||
+                goldAmount <= 0 ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var sourceFactionKey = new FixedString32Bytes(sourceFactionId);
+            var sourceFactionEntity = FindFactionEntity(entityManager, sourceFactionKey);
+            if (sourceFactionEntity == Entity.Null ||
+                !PlayerCaptiveDispatchUtility.TryFindHeldCaptive(
+                    entityManager,
+                    sourceFactionKey,
+                    new FixedString64Bytes(captiveMemberId),
+                    out _,
+                    out var captorFactionId))
+            {
+                return false;
+            }
+
+            var requestEntity = entityManager.CreateEntity(typeof(PlayerCaptiveRansomRequestComponent));
+            entityManager.SetComponentData(requestEntity, new PlayerCaptiveRansomRequestComponent
+            {
+                SourceFactionId = sourceFactionKey,
+                CaptiveMemberId = new FixedString64Bytes(captiveMemberId),
+                TargetFactionId = captorFactionId,
+                RansomGoldAmount = goldAmount,
+            });
+            return true;
+        }
+
         public bool TryDebugIssuePlayerPactProposal(string sourceFactionId, string targetFactionId)
         {
             if (string.IsNullOrWhiteSpace(sourceFactionId) ||

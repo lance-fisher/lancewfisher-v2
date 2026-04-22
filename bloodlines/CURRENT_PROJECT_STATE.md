@@ -3488,3 +3488,34 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   player captive rescue smoke.
 - Contract revision advanced `80 -> 81` and now records the player-diplomacy
   lane with this branch in flight.
+
+## 2026-04-22 Player Captive Ransom Dispatch Slice
+
+- Branch in flight: `codex/unity-player-captive-ransom-followup`.
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerCaptiveRansomRequestComponent.cs`
+  and
+  `PlayerCaptiveRansomDispatchSystem.cs`
+  now port the browser player-side captive ransom seam without widening the
+  AI-owned `AI/**` lane. The player dispatch validates kingdom state, confirms
+  the requested dynasty member is currently `Captured`, resolves the captor
+  faction through `CapturedMemberElement`, rejects hostile captors and duplicate
+  active ops, reuses the AI ransom operator priorities, enforces the canonical
+  ransom floor plus fixed influence escrow, creates the AI-owned ransom
+  operation payload, and emits a ransom narrative line.
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerCaptiveDispatchUtility.cs`
+  now also centralizes player ransom operation id construction and ransom
+  narrative emission.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerDiplomacy.cs`
+  now exposes `TryDebugDispatchCaptiveRansom(...)`.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRansomSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityPlayerCaptiveRansomSmokeValidation.ps1`
+  now prove ransom success, insufficient-gold rejection, and hostile-captor
+  rejection.
+- Governed validation is green on the branch: runtime build, editor build,
+  bootstrap runtime smoke, combat smoke, canonical scene shell validation,
+  fortification smoke, siege smoke, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated
+  player captive ransom smoke.
+- Contract revision advanced `81 -> 82` and now records the player-diplomacy
+  lane with the ransom follow-up branch in flight.

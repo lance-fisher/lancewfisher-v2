@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 81
+- Revision: 82
 - Last Updated: 2026-04-22
-- Last Updated By: codex-2026-04-22
-- Supersedes: revision 80 (The player-marriage-diplomacy lane now carries the additive captive-rescue follow-up on `codex/unity-player-captive-rescue`. `PlayerCaptiveRescueRequestComponent`, `PlayerCaptiveDispatchUtility`, and `PlayerCaptiveRescueDispatchSystem` add the player-owned rescue request seam without widening `AI/**`, reusing the AI-owned `CapturedMemberElement` and `DynastyOperationCaptiveRescueComponent` shapes. `BloodlinesDebugCommandSurface.PlayerDiplomacy.cs` now exposes a captive rescue dispatch hook, and `BloodlinesPlayerCaptiveRescueSmokeValidation` plus wrapper prove success, missing-operator rejection, and missing-captive rejection.)
+- Last Updated By: codex-player-marriage-diplomacy-2026-04-22
+- Supersedes: revision 81 (The player-marriage-diplomacy lane now carries the additive captive-ransom follow-up on `codex/unity-player-captive-ransom-followup`. `PlayerCaptiveRansomRequestComponent` and `PlayerCaptiveRansomDispatchSystem` add the player-owned ransom request seam without widening `AI/**`, reusing the AI-owned `CapturedMemberElement` and `DynastyOperationCaptiveRansomComponent` shapes while adding a Unity-side hostile-captor block per the active Codex directive. `PlayerCaptiveDispatchUtility` now centralizes ransom operation ids and narrative emission, `BloodlinesDebugCommandSurface.PlayerDiplomacy.cs` now exposes a captive ransom dispatch hook, and `BloodlinesPlayerCaptiveRansomSmokeValidation` plus wrapper prove success, insufficient-gold rejection, and hostile-captor rejection.)
 
 
 ## Purpose
@@ -607,26 +607,28 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: player-marriage-diplomacy
 
 - Status: active
-- Branch Prefix: `codex/unity-player-marriage-*`, `codex/unity-player-holy-war-divine-right`, `codex/unity-player-missionary-dispatch`, `codex/unity-player-pact-proposal`, `codex/unity-player-captive-rescue`
+- Branch Prefix: `codex/unity-player-marriage-*`, `codex/unity-player-holy-war-divine-right`, `codex/unity-player-missionary-dispatch`, `codex/unity-player-pact-proposal`, `codex/unity-player-captive-rescue`, `codex/unity-player-captive-ransom-*`
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/**`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerDiplomacy.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMarriageProposalSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMarriageAcceptanceSmokeValidation.cs`
-  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMarriageDissolutionSmokeValidation.cs`
-  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerHolyWarDivineRightSmokeValidation.cs`
-  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMissionaryDispatchSmokeValidation.cs`
-  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerPactSmokeValidation.cs`
-  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRescueSmokeValidation.cs`
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMarriageDissolutionSmokeValidation.cs`
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerHolyWarDivineRightSmokeValidation.cs`
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMissionaryDispatchSmokeValidation.cs`
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerPactSmokeValidation.cs`
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRescueSmokeValidation.cs`
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRansomSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityPlayerMarriageProposalSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityPlayerMarriageAcceptanceSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityPlayerMarriageDissolutionSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityPlayerHolyWarDivineRightSmokeValidation.ps1`
-  - `scripts/Invoke-BloodlinesUnityPlayerMissionaryDispatchSmokeValidation.ps1`
-  - `scripts/Invoke-BloodlinesUnityPlayerPactSmokeValidation.ps1`
-  - `scripts/Invoke-BloodlinesUnityPlayerCaptiveRescueSmokeValidation.ps1`
+- `scripts/Invoke-BloodlinesUnityPlayerMissionaryDispatchSmokeValidation.ps1`
+- `scripts/Invoke-BloodlinesUnityPlayerPactSmokeValidation.ps1`
+- `scripts/Invoke-BloodlinesUnityPlayerCaptiveRescueSmokeValidation.ps1`
+- `scripts/Invoke-BloodlinesUnityPlayerCaptiveRansomSmokeValidation.ps1`
 - Shared-File Narrow Edits Planned:
   - `unity/Assembly-CSharp.csproj` -- add compile includes for new `PlayerDiplomacy/**` runtime files only if the local generated project file does not already pick them up
   - `unity/Assembly-CSharp-Editor.csproj` -- add compile includes for the lane's dedicated player-diplomacy smoke validators only if the local generated project file does not already pick them up
@@ -672,8 +674,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `src/game/core/simulation.js` `NON_AGGRESSION_PACT_INFLUENCE_COST` (5126), `NON_AGGRESSION_PACT_GOLD_COST` (5127), `NON_AGGRESSION_PACT_MINIMUM_DURATION_IN_WORLD_DAYS` (5128), `NON_AGGRESSION_PACT_BREAK_LEGITIMACY_COST` (5129), `getNonAggressionPactTerms` (5150-5183), `proposeNonAggressionPact` (5185-5222), `breakNonAggressionPact` (5224-5257)
   - `src/game/core/simulation.js` `getCapturedMemberRescueTerms` (~11153-11234), `startRescueOperation` (~11236-11341)
   - `src/game/core/ai.js` captive recovery contest / operator selection logic (~2550-2760)
-- Current Branch In Flight: `codex/unity-player-captive-rescue`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-captive-rescue.md`
+- Current Branch In Flight: `codex/unity-player-captive-ransom-followup`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-captive-ransom.md`
 
 ### Lane: player-covert-ops
 
