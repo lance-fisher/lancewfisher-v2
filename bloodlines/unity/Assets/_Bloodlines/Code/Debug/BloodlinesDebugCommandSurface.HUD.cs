@@ -143,5 +143,52 @@ namespace Bloodlines.Debug
             readout = builder.ToString();
             return true;
         }
+
+        public bool TryDebugGetVictoryReadout(string factionId, out string readout)
+        {
+            readout = string.Empty;
+            if (string.IsNullOrWhiteSpace(factionId) ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var factionEntity = FindFactionRootEntity(entityManager, new FixedString32Bytes(factionId));
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasBuffer<VictoryConditionReadoutComponent>(factionEntity))
+            {
+                return false;
+            }
+
+            DynamicBuffer<VictoryConditionReadoutComponent> buffer =
+                entityManager.GetBuffer<VictoryConditionReadoutComponent>(factionEntity);
+            if (buffer.Length == 0)
+            {
+                return false;
+            }
+
+            var builder = new StringBuilder(384);
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                var entry = buffer[i];
+                if (i > 0)
+                {
+                    builder.AppendLine();
+                }
+
+                builder.Append("VictoryReadout")
+                    .Append("|FactionId=").Append(factionId)
+                    .Append("|ConditionId=").Append(entry.ConditionId)
+                    .Append("|ProgressPct=").Append(entry.ProgressPct.ToString("0.000", CultureInfo.InvariantCulture))
+                    .Append("|IsLeading=").Append(entry.IsLeading ? "true" : "false")
+                    .Append("|TimeRemainingEstimateInWorldDays=")
+                    .Append(float.IsNaN(entry.TimeRemainingEstimateInWorldDays)
+                        ? "NaN"
+                        : entry.TimeRemainingEstimateInWorldDays.ToString("0.000", CultureInfo.InvariantCulture));
+            }
+
+            readout = builder.ToString();
+            return true;
+        }
     }
 }

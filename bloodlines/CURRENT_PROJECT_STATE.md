@@ -3428,3 +3428,34 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   fortification HUD smoke.
 - Contract revision advanced `78 -> 79` and now records the rerun branch as the
   active HUD branch in flight.
+
+## 2026-04-22 Player HUD Victory Distance Readout
+
+- Branch in flight: `codex/unity-hud-victory-distance-readout`.
+- `unity/Assets/_Bloodlines/Code/HUD/VictoryConditionReadoutComponent.cs`
+  and
+  `unity/Assets/_Bloodlines/Code/HUD/VictoryConditionReadoutSystem.cs`
+  now add a per-faction HUD-owned DynamicBuffer read-model for
+  `TerritorialGovernance`, `DivineRight`, and `CommandHallFall`. The system
+  refreshes on an in-world-day cadence, surfaces leader flags per condition,
+  and reports an in-world ETA only where the current ECS state can compute one
+  safely.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes parseable multi-line
+  `VictoryReadout|FactionId=...|ConditionId=...|ProgressPct=...|IsLeading=...|TimeRemainingEstimateInWorldDays=...`
+  output for smoke and later HUD wiring.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesVictoryReadoutSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityVictoryReadoutSmokeValidation.ps1`
+  now prove partial Territorial Governance progress, positive Divine Right
+  progress from high faith intensity, terminal Command Hall Fall completion, and
+  per-condition leader selection.
+- The local `unity/Assembly-CSharp.csproj`
+  and
+  `unity/Assembly-CSharp-Editor.csproj`
+  metadata were also repaired so stale analyzer/source-generator references no
+  longer point at another Codex worktree's `unity/Library/PackageCache`.
+- Dedicated smoke is already green in this worktree:
+  - `Victory readout smoke validation passed.`
+- Contract revision advanced `79 -> 80` and now records the new HUD branch in
+  flight.

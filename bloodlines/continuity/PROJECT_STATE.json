@@ -1946,6 +1946,15 @@
       "description": "The preserved fortification HUD slice has been replayed onto current canonical `origin/master` and revalidated in this worktree. `FortificationHUDComponent`, `FortificationHUDSystem`, `BloodlinesDebugCommandSurface.HUD.cs`, and `BloodlinesFortificationHUDSmokeValidation` plus wrapper still provide the entire settlement-scoped fortification read-model, parseable `FortificationHUD|...` debug seam, and four-phase reserve/breach/repair proof surface without widening the paused fortification lane. A local Unity compile pass regenerated `Assembly-CSharp*.csproj` after stale analyzer references still pointed at another worktree's `Library\\\\PackageCache`, and the full governed 10-gate chain plus dedicated fortification HUD smoke reran green with local wrapper copies used only for the still-root-pinned bootstrap-runtime and canonical scene-shell validators. Contract rev 78->79.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification-rerun.md",
       "validation_gates": "all 10 green plus fortification HUD smoke on rerun branch"
+    },
+    {
+      "lane": "player-hud-realm-condition-legibility-slice-4-victory-distance-readout",
+      "date": "2026-04-22",
+      "branch": "codex/unity-hud-victory-distance-readout",
+      "status": "active",
+      "description": "The fourth player-HUD slice is now complete on branch. `VictoryConditionReadoutComponent` and `VictoryConditionReadoutSystem` add a per-faction HUD-owned DynamicBuffer read-model for `TerritorialGovernance`, `DivineRight`, and `CommandHallFall`, refreshed on an in-world-day cadence without widening the retired `Victory/**` lane. `BloodlinesDebugCommandSurface.HUD.cs` now exposes parseable multi-line `VictoryReadout|FactionId=...|ConditionId=...|ProgressPct=...|IsLeading=...|TimeRemainingEstimateInWorldDays=...` output, and `BloodlinesVictoryReadoutSmokeValidation` plus `Invoke-BloodlinesUnityVictoryReadoutSmokeValidation.ps1` prove partial governance progress, positive divine-right progress, terminal command-hall-fall completion, and per-condition leader selection. The local `Assembly-CSharp*.csproj` metadata was also repaired so stale analyzer/source-generator references no longer point at another Codex worktree's `Library\\\\PackageCache`. Contract rev 79->80.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-distance-readout.md",
+      "validation_gates": "dedicated victory readout smoke green; full 10-gate chain pending final serial rerun"
     }
   ]
 }

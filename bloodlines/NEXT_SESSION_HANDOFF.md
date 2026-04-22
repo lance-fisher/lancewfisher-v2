@@ -3992,3 +3992,65 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   consumes the shared fortification, reserve, and repair-progress read seams.
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
+
+## Codex Player HUD Victory Distance Readout (2026-04-22)
+
+### Branch
+
+- `codex/unity-hud-victory-distance-readout`
+
+### What Landed On Branch
+
+- `unity/Assets/_Bloodlines/Code/HUD/VictoryConditionReadoutComponent.cs`
+  and
+  `VictoryConditionReadoutSystem.cs`
+  now attach a per-faction HUD-owned DynamicBuffer read-model for
+  `TerritorialGovernance`, `DivineRight`, and `CommandHallFall`.
+- The readout system refreshes on an in-world-day cadence, uses the canonical
+  thresholds already defined in the retired victory lane, marks the leading
+  faction for each condition, and exposes an ETA only when the current ECS state
+  can compute one safely.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes a parseable multi-line
+  `VictoryReadout|FactionId=...|ConditionId=...|ProgressPct=...|IsLeading=...|TimeRemainingEstimateInWorldDays=...`
+  seam for smoke and later HUD panel wiring.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesVictoryReadoutSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityVictoryReadoutSmokeValidation.ps1`
+  now prove majority-loyal Territorial Governance progress, positive Divine
+  Right progress from high intensity, terminal Command Hall Fall completion, and
+  per-condition leader flags.
+- `unity/Assembly-CSharp.csproj`
+  and
+  `unity/Assembly-CSharp-Editor.csproj`
+  were locally repaired so stale analyzer/source-generator paths no longer point
+  at another Codex worktree's `unity/Library/PackageCache`.
+
+### Validation Proof
+
+- Dedicated smoke:
+  - `Victory readout smoke validation passed.`
+- Runtime build:
+  - `Build succeeded.`
+  - `0 Error(s)`
+- Editor build:
+  - `Build succeeded.`
+  - `0 Error(s)` with existing editor warnings only
+
+### Immediate Next Action
+
+1. Run the full governed 10-gate chain with the updated contract and continuity
+   files.
+2. Stage only the victory-readout slice files plus continuity / contract
+   updates, commit them on `codex/unity-hud-victory-distance-readout`, and push
+   to `origin`.
+3. Continue the HUD lane with the victory-condition leaderboard panel or the
+   next player-diplomacy captive dispatch slice.
+
+### Context Notes
+
+- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched; the slice only reads
+  retired victory definitions plus shared faction, control-point, building, and
+  dual-clock state.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
