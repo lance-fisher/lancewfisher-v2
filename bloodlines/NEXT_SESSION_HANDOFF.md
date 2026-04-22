@@ -2790,3 +2790,34 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
    `docs/unity/CONCURRENT_SESSION_CONTRACT.md` and re-read the browser
    references for `proposeMarriage`, `getMarriageAuthorityProfile`, and
    `getMarriageAcceptanceTerms`.
+
+## Codex Player Marriage Diplomacy Sub-Slice 2A: Proposal Execution (2026-04-21)
+
+### Status: COMPLETE on branch `codex/unity-player-marriage-proposal`
+
+### What Was Done
+- Claimed the new `player-marriage-diplomacy` lane in `docs/unity/CONCURRENT_SESSION_CONTRACT.md` without reopening the paused `dynasty-house-parity` lane and without writing into Claude's AI-owned `unity/Assets/_Bloodlines/Code/AI/**` path.
+- Added `PlayerMarriageProposalRequestComponent`, `PlayerMarriageAuthorityEvaluator`, and `PlayerMarriageProposalSystem` under `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/`.
+- Ported the browser proposal gate chain: dynasty presence, same-faction rejection, candidate availability, active-marriage + non-polygamy rejection, source authority + envoy governance requirement, duplicate pending-pair block, 90-day expiration seed, and source-side regency legitimacy cost.
+- Added `BloodlinesDebugCommandSurface.PlayerDiplomacy.cs` with `TryDebugIssuePlayerMarriageProposal` and `TryDebugGetPlayerMarriageProposals`.
+- Added `BloodlinesPlayerMarriageProposalSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPlayerMarriageProposalSmokeValidation.ps1`.
+- Ran the full governed 10-step gate green in `D:\BLM13\bloodlines\bloodlines`, using temporary worktree-local copies only for the still-root-pinned bootstrap-runtime and scene-shell wrapper scripts.
+
+### Validation Proof Lines
+- Runtime build: `Build succeeded.` / `0 Error(s)`
+- Editor build: `0 Error(s)` with existing warnings
+- Bootstrap runtime smoke: `Bootstrap runtime smoke validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity on map ironmark_frontier. ...`
+- Combat smoke: `Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True, groupMovementPhase=True, separationPhase=True, stancePhase=True.`
+- Bootstrap scene shell: `Bootstrap scene shell validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity with canonical map Assets/_Bloodlines/Data/MapDefinitions/ironmark_frontier.asset.`
+- Gameplay scene shell: `Gameplay scene shell validation passed for Assets/_Bloodlines/Scenes/Gameplay/IronmarkFrontier.unity.`
+- Fortification smoke: `Fortification smoke validation passed: baselinePhase=True, tierAdvancePhase=True, reserveMusterPhase=True, reserveRecoveryPhase=True.`
+- Siege smoke: `Siege smoke validation passed: baselinePhase=True, strainPhase=True, recoveryPhase=True, supportPhase=True. ...`
+- Data validation: `Bloodlines data validation passed.`
+- Runtime bridge: `Bloodlines runtime bridge validation passed.`
+- Contract staleness: `STALENESS CHECK PASSED: Contract revision=52, last-updated=2026-04-21 is current. ...`
+- Dedicated smoke: `BLOODLINES_PLAYER_MARRIAGE_PROPOSAL_SMOKE PASS`
+
+### Exact Next Action
+1. Start sub-slice 2B on fresh branch `codex/unity-player-marriage-acceptance`.
+2. Port `acceptMarriage` and `getMarriageAcceptanceTerms` into `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/`.
+3. Add a dedicated acceptance smoke proving marriage creation, legitimacy delta, no-pending-proposal rejection, and heir-regency cost deduction.

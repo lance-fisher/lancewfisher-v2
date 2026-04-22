@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 51
+- Revision: 53
 - Last Updated: 2026-04-21
-- Last Updated By: codex-scout-raids-logistics-interdiction-landing-2026-04-21
-- Supersedes: revision 50 (Codex has now merged `codex/unity-scout-raids-logistics-interdiction` to `master` via `dda7c25e`, rerun the governed validation gate on the merged master content, and updated continuity so the scout-raids lane remains active but no longer claims an in-flight branch. Fortification stays paused after the landed sub-slice-13 wrap, `dynasty-house-parity` stays paused after the landed parity stack, and the next Codex pickup should be a fresh player-facing diplomacy or other unclaimed non-AI lane.)
+- Last Updated By: codex-player-marriage-proposal-2026-04-21
+- Supersedes: revision 52 (Codex has completed player-facing marriage diplomacy sub-slice 2A on `codex/unity-player-marriage-proposal`: player proposal execution, debug issuance/readout, and a dedicated smoke validator are now validated. The lane remains active for sub-slice 2B acceptance work; `dynasty-house-parity` stays paused and `unity/Assets/_Bloodlines/Code/AI/**` remains Claude-owned.)
 
 
 ## Purpose
@@ -575,6 +575,35 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `src/game/core/simulation.js` `SCOUT_RAID_TARGET_RANGE` (35), `SCOUT_RAID_RETREAT_DISTANCE` (36), `SCOUT_RAID_LOYALTY_RADIUS` (37), `isBuildingUnderScoutRaid` (2046), `getRaidRetreatCommand` (2349), `executeScoutRaid` (2362), `executeScoutLogisticsInterdiction` (2515)
 - Current Branch In Flight: none (merged into master via `dda7c25e`; future scout follow-ups should start from a fresh branch)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-scout-raids-logistics-interdiction-landing.md`
+
+### Lane: player-marriage-diplomacy
+
+- Status: active (sub-slice 2A complete; sub-slice 2B acceptance is next)
+- Branch Prefix: `codex/unity-player-marriage-*`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/**`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerDiplomacy.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMarriageProposalSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityPlayerMarriageProposalSmokeValidation.ps1`
+- Shared-File Narrow Edits Planned:
+  - `unity/Assembly-CSharp.csproj` -- add compile includes for new `PlayerDiplomacy/**` runtime files only if the local generated project file does not already pick them up
+  - `unity/Assembly-CSharp-Editor.csproj` -- add compile includes for `BloodlinesPlayerMarriageProposalSmokeValidation.cs` only if the local generated project file does not already pick it up
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageComponents.cs` -- reuse `MarriageProposalComponent`, `MarriageComponent`, and `MarriageProposalStatus` without widening the retired dynasty parity lane
+  - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageProposalExpirationSystem.cs` -- read `ExpirationInWorldDays` so proposal expiry stays aligned with the canonical 90-day window
+  - `unity/Assets/_Bloodlines/Code/Components/DynastyMemberComponent.cs` -- read member roster, role, and status when resolving proposal candidates and governance authority
+  - `unity/Assets/_Bloodlines/Code/Components/FaithComponent.cs` -- read committed covenant to enforce the browser polygamy gate
+  - `unity/Assets/_Bloodlines/Code/Conviction/ConvictionScoring.cs` -- apply the source-side stewardship penalty when a proposal is sanctioned through regency
+  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- read `InWorldDays` for proposal timestamps
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-proposal.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `getMarriageAuthorityProfile` (6134), `getMarriageEnvoyProfile` (6192), `buildMarriageGovernanceStatus` (6217), `applyMarriageGovernanceLegitimacyCost` (6232), `getMarriageProposalContext` (6247), `getMarriageProposalTerms` (6296), `memberHasActiveMarriage` (7260), `proposeMarriage` (7340)
+  - `tests/runtime-bridge.mjs` marriage proposal and acceptance assertions (2072-2113, 2240-2308)
+- Current Branch In Flight: none (sub-slice 2A complete; next slice should start from fresh branch `codex/unity-player-marriage-acceptance`)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-proposal.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 

@@ -2531,3 +2531,34 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
    diplomacy lane next and start with the proposal-execution sub-slice.
 2. If Lance reprioritizes raids before diplomacy, continue the scout lane on a
    fresh branch rather than reopening the merged landing branch.
+
+## 2026-04-21 Player Marriage Diplomacy Sub-Slice 2A: Proposal Execution
+
+- Branch lane: `codex/unity-player-marriage-proposal`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-proposal.md`
+- The landed proposal-execution slice now ports the browser's player-side proposal seam under `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/`:
+  - `PlayerMarriageProposalRequestComponent`, `PlayerMarriageAuthorityEvaluator`, and `PlayerMarriageProposalSystem`
+    cover player-issued proposal requests, source-governance gating, active-marriage
+    / polygamy checks, duplicate blocking, and source-side regency legitimacy cost.
+  - `BloodlinesDebugCommandSurface.PlayerDiplomacy.cs` adds proposal issuance and
+    readout helpers for governed smoke coverage and future player-surface work.
+  - `BloodlinesPlayerMarriageProposalSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityPlayerMarriageProposalSmokeValidation.ps1`
+    prove baseline, success, duplicate block, and already-married block.
+- Full governed validation is green in `D:\BLM13\bloodlines\bloodlines`:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`: `Build succeeded.` / `0 Error(s)`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: `0 Error(s)` with existing editor warnings
+  - bootstrap runtime smoke: `Bootstrap runtime smoke validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity ...`
+  - combat smoke: `Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True, groupMovementPhase=True, separationPhase=True, stancePhase=True.`
+  - scene shells: `Bootstrap scene shell validation passed ...` and `Gameplay scene shell validation passed ...`
+  - fortification smoke: `Fortification smoke validation passed: baselinePhase=True, tierAdvancePhase=True, reserveMusterPhase=True, reserveRecoveryPhase=True.`
+  - siege smoke: `Siege smoke validation passed: baselinePhase=True, strainPhase=True, recoveryPhase=True, supportPhase=True.`
+  - `node tests/data-validation.mjs`: PASS
+  - `node tests/runtime-bridge.mjs`: PASS
+  - contract staleness check: PASS
+  - dedicated player-marriage proposal smoke: `BLOODLINES_PLAYER_MARRIAGE_PROPOSAL_SMOKE PASS`
+
+### Recommended Next Follow-Up
+1. Start player-marriage sub-slice 2B on fresh branch `codex/unity-player-marriage-acceptance`.
+2. Port `acceptMarriage` plus `getMarriageAcceptanceTerms`, including legitimacy deltas, hostility drop, oathkeeping gain, 30-day declaration jump, and gestation-ready `MarriageComponent` creation.
