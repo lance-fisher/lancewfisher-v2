@@ -3480,3 +3480,76 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 - The first HUD slice is still intentionally a read-model + proof seam only; the
   on-screen player HUD surface and the broader match/fortification/world/victory
   HUD blocks remain follow-up work inside this same lane.
+
+## Codex Player HUD Match Progression Slice (2026-04-21)
+
+### Status: VALIDATED on branch `codex/unity-player-hud-match-progression`
+
+### What Landed On Branch
+- `unity/Assets/_Bloodlines/Code/HUD/MatchProgressionHUDComponent.cs` and
+  `MatchProgressionHUDSystem.cs` now project the browser's
+  `getMatchProgressionSnapshot` shape into a Unity ECS HUD read-model:
+  - stage number / id / label
+  - phase id / label
+  - readiness and next-stage label
+  - in-world days / years and declaration count
+  - dominant-leader faction telemetry
+  - Great Reckoning target telemetry
+  - resolved world-pressure level / label / score / targeted flag
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes `TryDebugGetMatchHUDSnapshot(...)` as a structured
+  `MatchHUD|Key=Value|...` readout for smoke assertions.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMatchProgressionHUDSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityMatchProgressionHUDSmokeValidation.ps1`
+  now prove four phases:
+  1. founding baseline
+  2. Stage 4 commitment projection
+  3. dominant-leader pressure
+  4. Great Reckoning convergence
+- Narrow shared-file edits were applied to
+  `unity/Assembly-CSharp.csproj`
+  and
+  `unity/Assembly-CSharp-Editor.csproj`
+  so the new match-HUD files compile in the clean worktree.
+
+### Validation Proof
+- Runtime build: `Build succeeded.` / `0 Error(s)`
+- Editor build: `113 Warning(s)` / `0 Error(s)`
+- Dedicated HUD smoke:
+  - `BLOODLINES_MATCH_PROGRESSION_HUD_SMOKE PASS`
+  - `Phase 1 PASS: founding stage surfaces emergence phase, quiet world pressure, and InWorldDays=12.0.`
+  - `Phase 2 PASS: stage-4 commitment snapshot surfaces readiness, next-stage label, and declaration count.`
+  - `Phase 3 PASS: dominant leader 'player' surfaces overwhelming world pressure level 2 and score 6.`
+  - `Phase 4 PASS: Great Reckoning target 'enemy' surfaces convergence pressure level 3 at share 0.720.`
+- Bootstrap runtime:
+  - `Bootstrap runtime smoke validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity on map ironmark_frontier. Counts: factions=3, buildings=13, units=19, resourceNodes=13, controlPoints=4, settlements=2. ...`
+- Combat:
+  - `Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True, groupMovementPhase=True, separationPhase=True, stancePhase=True.`
+- Scene shells:
+  - `Bootstrap scene shell validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity with canonical map Assets/_Bloodlines/Data/MapDefinitions/ironmark_frontier.asset.`
+  - `Gameplay scene shell validation passed for Assets/_Bloodlines/Scenes/Gameplay/IronmarkFrontier.unity.`
+- Fortification:
+  - `Fortification smoke validation passed: baselinePhase=True, tierAdvancePhase=True, reserveMusterPhase=True, reserveRecoveryPhase=True. ...`
+- Siege:
+  - `Siege smoke validation passed: baselinePhase=True, strainPhase=True, recoveryPhase=True, supportPhase=True. ...`
+- Data validation:
+  - `Bloodlines data validation passed.`
+- Runtime bridge:
+  - `Bloodlines runtime bridge validation passed.`
+
+### Immediate Next Action
+1. Stage the match-progression HUD slice files plus continuity/contract updates and commit them on `codex/unity-player-hud-match-progression`.
+2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
+3. After the landing continuity pass, continue the lane with the fortification-legibility or victory-readout HUD follow-up slice.
+
+### Context Notes
+- The checked-in bootstrap-runtime and canonical scene-shell wrappers are still
+  pinned to `D:\ProjectsHome\Bloodlines`; continue using the worktree-local
+  copies under `artifacts/validation-temp/scripts` for those two validators in
+  clean worktrees.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
+- This slice is still intentionally a read-model + proof seam only; the
+  on-screen HUD and the remaining fortification / victory readouts are follow-up
+  work inside the same player-HUD lane.

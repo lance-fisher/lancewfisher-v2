@@ -66,5 +66,47 @@ namespace Bloodlines.Debug
             readout = builder.ToString();
             return true;
         }
+
+        public bool TryDebugGetMatchHUDSnapshot(out string readout)
+        {
+            readout = string.Empty;
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            using var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<MatchProgressionHUDComponent>());
+            if (query.IsEmptyIgnoreFilter)
+            {
+                return false;
+            }
+
+            var hud = query.GetSingleton<MatchProgressionHUDComponent>();
+            var builder = new StringBuilder(384);
+            builder.Append("MatchHUD")
+                .Append("|StageNumber=").Append(hud.StageNumber)
+                .Append("|StageId=").Append(hud.StageId)
+                .Append("|StageLabel=").Append(hud.StageLabel)
+                .Append("|PhaseId=").Append(hud.PhaseId)
+                .Append("|PhaseLabel=").Append(hud.PhaseLabel)
+                .Append("|StageReadiness=").Append(hud.StageReadiness.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|NextStageId=").Append(hud.NextStageId)
+                .Append("|NextStageLabel=").Append(hud.NextStageLabel)
+                .Append("|InWorldDays=").Append(hud.InWorldDays.ToString("0.0", CultureInfo.InvariantCulture))
+                .Append("|InWorldYears=").Append(hud.InWorldYears.ToString("0.00", CultureInfo.InvariantCulture))
+                .Append("|DeclarationCount=").Append(hud.DeclarationCount)
+                .Append("|WorldPressureLevel=").Append(hud.WorldPressureLevel)
+                .Append("|WorldPressureLabel=").Append(hud.WorldPressureLabel)
+                .Append("|WorldPressureScore=").Append(hud.WorldPressureScore)
+                .Append("|WorldPressureTargeted=").Append(hud.WorldPressureTargeted ? "true" : "false")
+                .Append("|DominantLeaderFactionId=").Append(hud.DominantLeaderFactionId)
+                .Append("|DominantTerritoryShare=").Append(hud.DominantLeaderTerritoryShare.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|GreatReckoningActive=").Append(hud.GreatReckoningActive ? "true" : "false")
+                .Append("|GreatReckoningTargetFactionId=").Append(hud.GreatReckoningTargetFactionId)
+                .Append("|GreatReckoningShare=").Append(hud.GreatReckoningShare.ToString("0.000", CultureInfo.InvariantCulture));
+
+            readout = builder.ToString();
+            return true;
+        }
     }
 }
