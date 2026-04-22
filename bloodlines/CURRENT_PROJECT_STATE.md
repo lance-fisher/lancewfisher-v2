@@ -2562,3 +2562,27 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 ### Recommended Next Follow-Up
 1. Start player-marriage sub-slice 2B on fresh branch `codex/unity-player-marriage-acceptance`.
 2. Port `acceptMarriage` plus `getMarriageAcceptanceTerms`, including legitimacy deltas, hostility drop, oathkeeping gain, 30-day declaration jump, and gestation-ready `MarriageComponent` creation.
+
+## 2026-04-21 Player Marriage Diplomacy Sub-Slice 2A Landing
+
+- Merged branch: `codex/unity-player-marriage-proposal`
+- Merge commit on `master`: `21550da3`
+- Landing handoff:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-proposal-landing.md`
+- The player marriage proposal slice is now landed on `master`, not just
+  validated on its feature branch:
+  - `PlayerMarriageProposalRequestComponent`,
+    `PlayerMarriageAuthorityEvaluator`, and `PlayerMarriageProposalSystem` are
+    in the canonical runtime under
+    `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/`.
+  - `BloodlinesDebugCommandSurface.PlayerDiplomacy.cs` and
+    `BloodlinesPlayerMarriageProposalSmokeValidation` are now part of the
+    canonical debug and validation surfaces.
+  - Merged `master` re-passed runtime build, editor build, bootstrap runtime,
+    combat, scene-shell, fortification, siege, Node validation, and the
+    dedicated proposal smoke in `D:\BLM13\bloodlines\bloodlines`.
+
+### Recommended Next Follow-Up
+1. Start sub-slice 2B from merged `master` on fresh branch `codex/unity-player-marriage-acceptance`.
+2. Keep all work under `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/` plus a
+   new acceptance debug/validator seam; do not reopen `unity/Assets/_Bloodlines/Code/AI/**`.

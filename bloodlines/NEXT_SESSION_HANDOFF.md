@@ -2821,3 +2821,31 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 1. Start sub-slice 2B on fresh branch `codex/unity-player-marriage-acceptance`.
 2. Port `acceptMarriage` and `getMarriageAcceptanceTerms` into `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/`.
 3. Add a dedicated acceptance smoke proving marriage creation, legitimacy delta, no-pending-proposal rejection, and heir-regency cost deduction.
+
+## Codex Player Marriage Diplomacy Sub-Slice 2A Landing (2026-04-21)
+
+### Status: MERGED to `master` via `21550da3`
+
+### What Landed
+- `codex/unity-player-marriage-proposal` is now merged, so proposal execution
+  is part of canonical `master` rather than a pending feature branch.
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/` now contains the landed
+  proposal request, authority evaluation, and execution systems.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerDiplomacy.cs`
+  and `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMarriageProposalSmokeValidation.cs`
+  are now canonical validation/debug surfaces on `master`.
+- Merged `master` re-passed runtime build, editor build, bootstrap runtime,
+  combat, scene shells, fortification, siege, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, and the dedicated proposal smoke.
+
+### Immediate Next Action
+1. Create fresh branch `codex/unity-player-marriage-acceptance` from current `master`.
+2. Port `acceptMarriage` and `getMarriageAcceptanceTerms` under `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/`.
+3. Add the dedicated acceptance smoke and wrapper before attempting any later marriage-diplomacy slice.
+
+### Context Notes
+- The checked-in bootstrap-runtime and canonical scene-shell wrappers are still
+  pinned to `D:\ProjectsHome\Bloodlines`; continue using temporary worktree-safe
+  copies when validating a clean worktree.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.

@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 53
+- Revision: 54
 - Last Updated: 2026-04-21
-- Last Updated By: codex-player-marriage-proposal-2026-04-21
-- Supersedes: revision 52 (Codex has completed player-facing marriage diplomacy sub-slice 2A on `codex/unity-player-marriage-proposal`: player proposal execution, debug issuance/readout, and a dedicated smoke validator are now validated. The lane remains active for sub-slice 2B acceptance work; `dynasty-house-parity` stays paused and `unity/Assets/_Bloodlines/Code/AI/**` remains Claude-owned.)
+- Last Updated By: codex-player-marriage-proposal-landing-2026-04-21
+- Supersedes: revision 53 (Codex has now merged player-facing marriage diplomacy sub-slice 2A onto `master` via `21550da3`: proposal execution, debug issuance/readout, and the dedicated proposal smoke are green on merged master. The lane remains active for sub-slice 2B acceptance work; `dynasty-house-parity` stays paused and `unity/Assets/_Bloodlines/Code/AI/**` remains Claude-owned.)
 
 
 ## Purpose
@@ -578,7 +578,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: player-marriage-diplomacy
 
-- Status: active (sub-slice 2A complete; sub-slice 2B acceptance is next)
+- Status: active (sub-slice 2A landed on master; sub-slice 2B acceptance is next)
 - Branch Prefix: `codex/unity-player-marriage-*`
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -599,11 +599,12 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- read `InWorldDays` for proposal timestamps
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-proposal.md`
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-proposal-landing.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `getMarriageAuthorityProfile` (6134), `getMarriageEnvoyProfile` (6192), `buildMarriageGovernanceStatus` (6217), `applyMarriageGovernanceLegitimacyCost` (6232), `getMarriageProposalContext` (6247), `getMarriageProposalTerms` (6296), `memberHasActiveMarriage` (7260), `proposeMarriage` (7340)
   - `tests/runtime-bridge.mjs` marriage proposal and acceptance assertions (2072-2113, 2240-2308)
-- Current Branch In Flight: none (sub-slice 2A complete; next slice should start from fresh branch `codex/unity-player-marriage-acceptance`)
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-proposal.md`
+- Current Branch In Flight: none (sub-slice 2A is landed on master; next slice should start from fresh branch `codex/unity-player-marriage-acceptance`)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-proposal-landing.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
