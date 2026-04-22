@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-21T23:48:25.4048658-06:00",
+  "updated_at": "2026-04-22T05:14:52.1037047-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -1901,6 +1901,15 @@
       "description": "The conviction-band downstream wiring slice is now complete on branch. `StarvationResponseSystem` keeps the checkpointed starvation-side conviction protection, `CapPressureResponseSystem` now applies the same loyalty-protection multiplier to negative cap-pressure loss, and the new commander-only capture seam in `PendingCommanderCaptureComponent`, `AttackResolutionSystem`, `ProjectileImpactSystem`, and `DeathResolutionSystem` consumes the canonical conviction `CaptureMultiplier` without widening generic militia identity. Lethal commander defeats can now emit `CapturedMemberElement` to the captor faction root and mark the matching dynasty member `Captured`. `BloodlinesConvictionSmokeValidation` now proves starvation protection, cap-pressure protection, and deterministic commander capture. The full governed 10-gate chain is green in the worktree using local wrapper copies only for the still-root-pinned bootstrap-runtime and canonical scene-shell validators. Contract rev 73->74.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-conviction-band-wiring.md",
       "validation_gates": "all 10 green plus conviction smoke"
+    },
+    {
+      "lane": "conviction-band-wiring-landing",
+      "date": "2026-04-22",
+      "branch": "codex/overnight-land-conviction-2026-04-22",
+      "status": "complete",
+      "description": "The validated conviction-band wiring landing branch is now ready to advance canonical master from merge commit `38796f83`. The slice retires the lane after landing starvation and cap-pressure conviction protection plus the commander-only `CaptureMultiplier` seam. The full governed 10-gate chain re-passed green in the clean `D:\\BLAICD\\bloodlines` checkout: runtime build, editor build, bootstrap runtime smoke, combat smoke, bootstrap and gameplay scene-shell validation, fortification smoke, siege smoke, `node tests/data-validation.mjs`, `node tests/runtime-bridge.mjs`, and contract staleness at revision 75. Local Unity batch invocations were used for the still-root-pinned bootstrap/runtime and scene-shell validators so the clean checkout, not the dirty canonical root, was the validated surface.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-conviction-band-wiring.md",
+      "validation_gates": "all 10 green plus conviction smoke on validated landing branch"
     }
   ]
 }
