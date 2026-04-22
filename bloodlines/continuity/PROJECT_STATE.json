@@ -1946,6 +1946,15 @@
       "description": "The preserved fortification HUD slice has been replayed onto current canonical `origin/master` and revalidated in this worktree. `FortificationHUDComponent`, `FortificationHUDSystem`, `BloodlinesDebugCommandSurface.HUD.cs`, and `BloodlinesFortificationHUDSmokeValidation` plus wrapper still provide the entire settlement-scoped fortification read-model, parseable `FortificationHUD|...` debug seam, and four-phase reserve/breach/repair proof surface without widening the paused fortification lane. A local Unity compile pass regenerated `Assembly-CSharp*.csproj` after stale analyzer references still pointed at another worktree's `Library\\\\PackageCache`, and the full governed 10-gate chain plus dedicated fortification HUD smoke reran green with local wrapper copies used only for the still-root-pinned bootstrap-runtime and canonical scene-shell validators. Contract rev 78->79.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification-rerun.md",
       "validation_gates": "all 10 green plus fortification HUD smoke on rerun branch"
+    },
+    {
+      "lane": "player-hud-realm-condition-legibility-slice-4-victory-readout",
+      "date": "2026-04-22",
+      "branch": "codex/unity-player-hud-victory-readout",
+      "status": "active",
+      "description": "The next player HUD follow-up is now complete on branch. `VictoryReadoutComponent` and `VictoryReadoutSystem` project command-hall fall distance, territorial-governance integration plus hold-countdown state, and divine-right readiness into a faction-scoped HUD read-model without mutating source victory systems or widening the retired `victory-conditions` lane. `BloodlinesDebugCommandSurface.HUD.cs` now exposes parseable `VictoryReadout|...` lines, and `BloodlinesVictoryReadoutHUDSmokeValidation` plus `Invoke-BloodlinesUnityVictoryReadoutHUDSmokeValidation.ps1` prove command-hall distance, territorial-governance hold countdown in in-world days, partial divine-right readiness, and completed territorial-governance victory state. The full governed 10-gate chain is green in this worktree, with local wrapper copies used only for the still-root-pinned bootstrap-runtime and canonical scene-shell validators. Contract rev 79->80.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-readout.md",
+      "validation_gates": "all 10 green plus victory readout HUD smoke"
     }
   ]
 }

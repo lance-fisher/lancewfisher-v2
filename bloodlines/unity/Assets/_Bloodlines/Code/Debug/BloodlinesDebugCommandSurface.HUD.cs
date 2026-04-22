@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using Bloodlines.HUD;
+using Bloodlines.Victory;
 using Unity.Collections;
 using Unity.Entities;
 
@@ -139,6 +140,51 @@ namespace Bloodlines.Debug
                 .Append("|ThreatActive=").Append(hud.ThreatActive ? "true" : "false")
                 .Append("|SealingProgress01=").Append(hud.SealingProgress01.ToString("0.000", CultureInfo.InvariantCulture))
                 .Append("|RecoveryProgress01=").Append(hud.RecoveryProgress01.ToString("0.000", CultureInfo.InvariantCulture));
+
+            readout = builder.ToString();
+            return true;
+        }
+
+        public bool TryDebugGetVictoryReadout(string factionId, out string readout)
+        {
+            readout = string.Empty;
+            if (string.IsNullOrWhiteSpace(factionId) ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var factionKey = new FixedString32Bytes(factionId);
+            var factionEntity = FindFactionRootEntity(entityManager, factionKey);
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<VictoryReadoutComponent>(factionEntity) ||
+                !entityManager.HasBuffer<VictoryConditionReadoutElement>(factionEntity))
+            {
+                return false;
+            }
+
+            var summary = entityManager.GetComponentData<VictoryReadoutComponent>(factionEntity);
+            var buffer = entityManager.GetBuffer<VictoryConditionReadoutElement>(factionEntity);
+            var builder = new StringBuilder(384);
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                if (i > 0)
+                {
+                    builder.AppendLine();
+                }
+
+                builder.Append("VictoryReadout")
+                    .Append("|FactionId=").Append(summary.FactionId)
+                    .Append("|ConditionId=").Append(buffer[i].ConditionId)
+                    .Append("|Status=").Append(buffer[i].Status)
+                    .Append("|Progress01=").Append(buffer[i].Progress01.ToString("0.000", CultureInfo.InvariantCulture))
+                    .Append("|TimeRemainingInWorldDays=").Append(buffer[i].TimeRemainingInWorldDays.ToString("0.000", CultureInfo.InvariantCulture))
+                    .Append("|CurrentCount=").Append(buffer[i].CurrentCount)
+                    .Append("|RequiredCount=").Append(buffer[i].RequiredCount)
+                    .Append("|MatchStatus=").Append(summary.MatchStatus)
+                    .Append("|ResolvedVictoryType=").Append(summary.ResolvedVictoryType)
+                    .Append("|IsWinner=").Append(summary.IsWinner ? "true" : "false");
+            }
 
             readout = builder.ToString();
             return true;

@@ -3428,3 +3428,29 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   fortification HUD smoke.
 - Contract revision advanced `78 -> 79` and now records the rerun branch as the
   active HUD branch in flight.
+
+## 2026-04-22 Player HUD Victory Distance Readout
+
+- Branch in flight: `codex/unity-player-hud-victory-readout`.
+- `unity/Assets/_Bloodlines/Code/HUD/VictoryReadoutComponent.cs`
+  and
+  `unity/Assets/_Bloodlines/Code/HUD/VictoryReadoutSystem.cs`
+  now project faction-scoped victory-distance telemetry for command-hall fall,
+  territorial governance, and divine right into a HUD-owned read-model without
+  mutating the source victory systems.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes a parseable `VictoryReadout|Key=Value|...` seam for command
+  surface inspection and smoke use.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesVictoryReadoutHUDSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityVictoryReadoutHUDSmokeValidation.ps1`
+  now prove command-hall distance, territorial-governance hold countdown in
+  in-world days, partial divine-right readiness, and completed
+  territorial-governance victory state in a dedicated ECS validation world.
+- Governed validation is green on the branch: runtime build, editor build,
+  bootstrap runtime smoke, combat smoke, canonical scene shell validation,
+  fortification smoke, siege smoke, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated
+  victory readout HUD smoke.
+- Contract revision advanced `79 -> 80` and records the HUD lane with this
+  victory-readout branch in flight.

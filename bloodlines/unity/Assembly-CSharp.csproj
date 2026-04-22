@@ -63,6 +63,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Combat\HostilityComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Definitions\HouseDefinition.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.PlayerDiplomacy.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\HUD\VictoryReadoutComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Systems\ConstructionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\PactComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Economy\CapPressureResponseSystem.cs" />
@@ -251,6 +252,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Components\ControlPointComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Fortification\FortificationCombatantTag.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Conviction\ConvictionScoring.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\HUD\VictoryReadoutSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerFaithDeclarationUtility.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Stances.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\ProjectileImpactSystem.cs" />
