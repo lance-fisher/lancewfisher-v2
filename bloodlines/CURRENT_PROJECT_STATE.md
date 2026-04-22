@@ -2713,3 +2713,24 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Merge `codex/unity-player-marriage-dissolution` to `master` and rerun the governed gate on merged `master`.
 2. After landing 2C, move to Priority 3 on fresh branch `codex/unity-player-covert-ops-foundation`.
 3. Keep the player-marriage lane additive only; do not reopen `unity/Assets/_Bloodlines/Code/Dynasties/MarriageDeathDissolutionSystem.cs` unless the contract is explicitly widened.
+
+## 2026-04-21 Player Marriage Diplomacy Sub-Slice 2C Landing
+
+- Merged branch: `codex/unity-player-marriage-dissolution`
+- Merge commit on `master`: `f5bfef1d`
+- Landing handoff:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-dissolution-landing.md`
+- The player-marriage diplomacy stack is now fully canonical on `master`:
+  - proposal execution is landed
+  - acceptance and effects are landed
+  - the dedicated dissolution proof surface is landed and green against the
+    already-mastered dynasty-parity dissolution runtime
+- Merged `master` re-passed runtime build, editor build, bootstrap runtime,
+  combat, scene shells, fortification, siege, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated
+  player-marriage dissolution smoke in `D:\BLM13\bloodlines\bloodlines`.
+
+### Recommended Next Follow-Up
+1. Start Priority 3 on fresh branch `codex/unity-player-covert-ops-foundation`.
+2. Port `startEspionageOperation` under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/`.
+3. Keep `unity/Assets/_Bloodlines/Code/AI/**` untouched; Claude still owns the AI strategic lane.

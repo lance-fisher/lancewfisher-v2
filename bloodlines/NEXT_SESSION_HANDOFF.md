@@ -2999,3 +2999,35 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   still dirties during Unity validation and should remain unstaged.
 - Node validations for this worktree must run from `D:\BLM13\bloodlines\bloodlines`
   rather than the outer worktree root `D:\BLM13\bloodlines`.
+
+## Codex Player Marriage Diplomacy Sub-Slice 2C Landing (2026-04-21)
+
+### Status: MERGED to `master` via `f5bfef1d`
+
+### What Landed
+- `codex/unity-player-marriage-dissolution` is now merged, so the
+  player-marriage diplomacy stack is fully landed on canonical `master`.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMarriageDissolutionSmokeValidation.cs`
+  and
+  `scripts/Invoke-BloodlinesUnityPlayerMarriageDissolutionSmokeValidation.ps1`
+  are now part of the canonical player-diplomacy validation surface.
+- The dedicated dissolution proof still reuses the already-landed
+  `MarriageDeathDissolutionSystem` from the paused dynasty-house-parity lane;
+  no duplicate runtime was introduced under `PlayerDiplomacy/`.
+- Merged `master` re-passed runtime build, editor build, bootstrap runtime,
+  combat, scene shells, fortification, siege, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, and the dedicated dissolution smoke.
+
+### Immediate Next Action
+1. Create fresh branch `codex/unity-player-covert-ops-foundation` from current `master`.
+2. Port the browser's `startEspionageOperation` gate chain and operation creation under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/`.
+3. Add the dedicated player covert ops smoke and wrapper before starting assassination or sabotage follow-ups.
+
+### Context Notes
+- The checked-in bootstrap-runtime and canonical scene-shell wrappers are still
+  pinned to `D:\ProjectsHome\Bloodlines`; continue using temporary worktree-safe
+  copies when validating this clean worktree.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
+- Node validations for this worktree must run from `D:\BLM13\bloodlines\bloodlines`
+  rather than the outer worktree root `D:\BLM13\bloodlines`.
