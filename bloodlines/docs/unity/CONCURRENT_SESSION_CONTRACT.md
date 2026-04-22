@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 84
+- Revision: 85
 - Last Updated: 2026-04-22
-- Last Updated By: codex-hud-legibility-2026-04-22
-- Supersedes: revision 83 (The `player-hud-realm-condition-legibility` lane now carries `codex/unity-hud-victory-panel`. `VictoryLeaderboardHUDComponent` and `VictoryLeaderboardHUDSystem` add a singleton ordered leaderboard surface that consumes the per-faction victory readout buffers, while `BloodlinesDebugCommandSurface.HUD.cs` now exposes a parseable victory leaderboard readout. `BloodlinesVictoryLeaderboardHUDSmokeValidation` plus wrapper prove row population, human-player flagging, and ordered ranking. This revision also clears the already-landed `codex/unity-player-captive-ransom-followup` and `codex/unity-dynasty-renown-prestige` branch markers.)
+- Last Updated By: codex-2026-04-22
+- Supersedes: revision 84 (The `player-hud-realm-condition-legibility` lane now carries `codex/unity-player-hud-command-deck-summary-followup`. `BloodlinesDebugCommandSurface.cs` now renders a consolidated player command-deck summary over the existing HUD read-models, `BloodlinesDebugCommandSurface.HUD.cs` exposes a parseable `CommandDeckSummary|...` seam, and `BloodlinesBattlefieldCommandDeckSmokeValidation` plus wrapper prove both the baseline and Great Reckoning command-deck states.)
 
 
 ## Purpose
@@ -767,6 +767,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnityFortificationHUDSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityVictoryReadoutSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityVictoryLeaderboardHUDSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityBattlefieldCommandDeckSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/RealmConditionHUDComponent.cs`, `Code/HUD/RealmConditionHUDSystem.cs`, and `Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
@@ -778,6 +779,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesVictoryReadoutSmokeValidation.cs`; stale analyzer/source-generator paths were corrected back to this worktree's `unity/Library/PackageCache`
   - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/VictoryLeaderboardHUDComponent.cs` and `Code/HUD/VictoryLeaderboardHUDSystem.cs`; stale analyzer/source-generator paths were corrected back to this worktree's `unity/Library/PackageCache`
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesVictoryLeaderboardHUDSmokeValidation.cs`; stale analyzer/source-generator paths were corrected back to this worktree's `unity/Library/PackageCache`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.cs` -- additive battlefield command-deck summary rendering that consumes existing HUD read-models without widening runtime ownership beyond the player command shell
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBattlefieldCommandDeckSmokeValidation.cs` -- dedicated validator for the unified command-deck summary seam
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve HUD snapshots by `FactionId`
   - `unity/Assets/_Bloodlines/Code/Components/RealmConditionComponent.cs` -- read realm cycle accumulator, cycle count, strain streaks, and realm legibility thresholds
@@ -813,11 +816,12 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification-rerun.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-distance-readout.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-panel.md`
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `getRealmConditionSnapshot` (14291-14764), `getMatchProgressionSnapshot` (13650-13658)
   - `tests/runtime-bridge.mjs` realm-condition snapshot assertions (1344-1364), match-progression assertions (7521, 7773-7871, 7923-7975, 8133, 8185), fortification/readout assertions (1438-1444), hostile-post-repulse world-pressure assertions (1718-1733)
-- Current Branch In Flight: `codex/unity-hud-victory-panel`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-panel.md`
+- Current Branch In Flight: `codex/unity-player-hud-command-deck-summary-followup`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 

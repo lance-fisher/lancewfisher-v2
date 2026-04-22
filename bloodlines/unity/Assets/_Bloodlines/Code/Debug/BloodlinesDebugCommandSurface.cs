@@ -287,8 +287,8 @@ namespace Bloodlines.Debug
 
             EnsureHudStyles();
 
-            string hudText = BuildHudText(factionSnapshot, territorySnapshot, selectionSnapshot);
-            float height = 188f;
+            string hudText = BuildHudText(entityManager, factionSnapshot, territorySnapshot, selectionSnapshot);
+            float height = 276f;
             var panelRect = new Rect(hudMargin.x, hudMargin.y, hudWidth, height);
             var headerRect = new Rect(panelRect.x, panelRect.y, panelRect.width, 28f);
             var bodyRect = new Rect(panelRect.x + 12f, panelRect.y + 38f, panelRect.width - 24f, panelRect.height - 48f);
@@ -3338,9 +3338,13 @@ namespace Bloodlines.Debug
             }
         }
 
-        private string BuildHudText(FactionHudSnapshot factionSnapshot, TerritoryHudSnapshot territorySnapshot, SelectionHudSnapshot selectionSnapshot)
+        private string BuildHudText(
+            EntityManager entityManager,
+            FactionHudSnapshot factionSnapshot,
+            TerritoryHudSnapshot territorySnapshot,
+            SelectionHudSnapshot selectionSnapshot)
         {
-            var builder = new StringBuilder(512);
+            var builder = new StringBuilder(896);
             builder.Append("<b>Faction</b>: ").Append(controlledFactionId);
 
             if (factionSnapshot.Found)
@@ -3416,6 +3420,68 @@ namespace Bloodlines.Debug
                 .Append("  hostile ").Append(territorySnapshot.Hostile)
                 .Append("  neutral ").Append(territorySnapshot.Neutral)
                 .Append("  contested ").Append(territorySnapshot.Contested);
+
+            builder.AppendLine();
+            if (TryBuildBattlefieldCommandDeckSummary(entityManager, controlledFactionId, out var commandDeckSummary))
+            {
+                builder.Append("<b>Match</b>: stage ")
+                    .Append(commandDeckSummary.StageNumber)
+                    .Append(' ')
+                    .Append(commandDeckSummary.PhaseLabel)
+                    .Append("  |  year ")
+                    .Append(commandDeckSummary.InWorldYears.ToString("0.00"))
+                    .Append("  |  declarations ")
+                    .Append(commandDeckSummary.DeclarationCount)
+                    .Append("  |  pressure ")
+                    .Append(commandDeckSummary.WorldPressureLabel);
+                if (commandDeckSummary.WorldPressureLevel > 0)
+                {
+                    builder.Append(" (lvl ").Append(commandDeckSummary.WorldPressureLevel).Append(')');
+                }
+
+                if (commandDeckSummary.GreatReckoningActive)
+                {
+                    builder.Append("  |  Reckoning ")
+                        .Append(commandDeckSummary.GreatReckoningTargetFactionId)
+                        .Append(' ')
+                        .Append(Mathf.RoundToInt(commandDeckSummary.GreatReckoningShare * 100f))
+                        .Append('%');
+                }
+
+                builder.AppendLine();
+                builder.Append("<b>Realm</b>: cycle ")
+                    .Append(commandDeckSummary.CycleCount)
+                    .Append("  |  pop ").Append(commandDeckSummary.PopulationBand)
+                    .Append("  |  food ").Append(commandDeckSummary.FoodBand)
+                    .Append("  |  water ").Append(commandDeckSummary.WaterBand)
+                    .Append("  |  loyalty ").Append(commandDeckSummary.LoyaltyBand)
+                    .AppendLine();
+                builder.Append("<b>Conviction/Faith</b>: ")
+                    .Append(commandDeckSummary.ConvictionLabel)
+                    .Append("  |  ")
+                    .Append(commandDeckSummary.FaithLabel);
+                if (!string.IsNullOrWhiteSpace(commandDeckSummary.FaithTier))
+                {
+                    builder.Append(' ').Append(commandDeckSummary.FaithTier);
+                }
+
+                builder.Append("  |  band ").Append(commandDeckSummary.FaithBand)
+                    .AppendLine();
+                builder.Append("<b>Victory</b>: player #")
+                    .Append(commandDeckSummary.PlayerVictoryRank)
+                    .Append(' ')
+                    .Append(FormatIdentifier(commandDeckSummary.PlayerVictoryConditionId))
+                    .Append(' ')
+                    .Append(Mathf.RoundToInt(commandDeckSummary.PlayerVictoryProgressPct * 100f))
+                    .Append("%  |  leader ")
+                    .Append(commandDeckSummary.TopFactionId)
+                    .Append(' ')
+                    .Append(FormatIdentifier(commandDeckSummary.TopVictoryConditionId))
+                    .Append(' ')
+                    .Append(Mathf.RoundToInt(commandDeckSummary.TopVictoryProgressPct * 100f))
+                    .Append('%')
+                    .AppendLine();
+            }
 
             builder.AppendLine();
             builder.Append("<b>Groups</b>: ");
@@ -3582,6 +3648,129 @@ namespace Bloodlines.Debug
             return snapshot;
         }
 
+        private bool TryBuildBattlefieldCommandDeckSummary(
+            EntityManager entityManager,
+            string factionId,
+            out BattlefieldCommandDeckSummary summary)
+        {
+            summary = default;
+            if (!TryGetRealmConditionHudSnapshot(entityManager, factionId, out var realmHud) ||
+                !TryGetMatchProgressionHudSnapshot(entityManager, out var matchHud) ||
+                !TryGetVictoryLeaderboardSummary(entityManager, factionId, out var victoryHud))
+            {
+                return false;
+            }
+
+            summary = new BattlefieldCommandDeckSummary
+            {
+                FactionId = factionId,
+                StageNumber = matchHud.StageNumber,
+                PhaseLabel = matchHud.PhaseLabel.ToString(),
+                InWorldYears = matchHud.InWorldYears,
+                DeclarationCount = matchHud.DeclarationCount,
+                WorldPressureLevel = matchHud.WorldPressureLevel,
+                WorldPressureLabel = matchHud.WorldPressureLabel.ToString(),
+                GreatReckoningActive = matchHud.GreatReckoningActive,
+                GreatReckoningTargetFactionId = matchHud.GreatReckoningTargetFactionId.ToString(),
+                GreatReckoningShare = matchHud.GreatReckoningShare,
+                CycleCount = realmHud.CycleCount,
+                PopulationBand = realmHud.PopulationBand.ToString(),
+                FoodBand = realmHud.FoodBand.ToString(),
+                WaterBand = realmHud.WaterBand.ToString(),
+                LoyaltyBand = realmHud.LoyaltyBand.ToString(),
+                ConvictionLabel = realmHud.ConvictionBandLabel.ToString(),
+                FaithLabel = realmHud.FaithCommitted
+                    ? realmHud.FaithLabel.ToString()
+                    : "Uncommitted",
+                FaithTier = realmHud.FaithCommitted
+                    ? realmHud.FaithTierLabel.ToString()
+                    : string.Empty,
+                FaithBand = realmHud.FaithBand.ToString(),
+                PlayerVictoryRank = victoryHud.PlayerVictoryRank,
+                PlayerVictoryConditionId = victoryHud.PlayerVictoryConditionId,
+                PlayerVictoryProgressPct = victoryHud.PlayerVictoryProgressPct,
+                TopFactionId = victoryHud.TopFactionId,
+                TopVictoryConditionId = victoryHud.TopVictoryConditionId,
+                TopVictoryProgressPct = victoryHud.TopVictoryProgressPct,
+            };
+            return true;
+        }
+
+        private bool TryGetRealmConditionHudSnapshot(
+            EntityManager entityManager,
+            string factionId,
+            out Bloodlines.HUD.RealmConditionHUDComponent hud)
+        {
+            hud = default;
+            var factionEntity = FindFactionRootEntity(entityManager, new FixedString32Bytes(factionId));
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<Bloodlines.HUD.RealmConditionHUDComponent>(factionEntity))
+            {
+                return false;
+            }
+
+            hud = entityManager.GetComponentData<Bloodlines.HUD.RealmConditionHUDComponent>(factionEntity);
+            return true;
+        }
+
+        private bool TryGetMatchProgressionHudSnapshot(
+            EntityManager entityManager,
+            out Bloodlines.HUD.MatchProgressionHUDComponent hud)
+        {
+            hud = default;
+            using var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Bloodlines.HUD.MatchProgressionHUDComponent>());
+            if (query.IsEmptyIgnoreFilter)
+            {
+                return false;
+            }
+
+            hud = query.GetSingleton<Bloodlines.HUD.MatchProgressionHUDComponent>();
+            return true;
+        }
+
+        private bool TryGetVictoryLeaderboardSummary(
+            EntityManager entityManager,
+            string factionId,
+            out VictoryLeaderboardSummarySnapshot summary)
+        {
+            summary = default;
+            using var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<Bloodlines.HUD.VictoryLeaderboardHUDSingleton>(),
+                ComponentType.ReadOnly<Bloodlines.HUD.VictoryLeaderboardHUDComponent>());
+            if (query.IsEmptyIgnoreFilter)
+            {
+                return false;
+            }
+
+            var buffer = entityManager.GetBuffer<Bloodlines.HUD.VictoryLeaderboardHUDComponent>(query.GetSingletonEntity());
+            if (buffer.Length == 0)
+            {
+                return false;
+            }
+
+            summary.TopFactionId = buffer[0].FactionId.ToString();
+            summary.TopVictoryConditionId = buffer[0].LeadingConditionId.ToString();
+            summary.TopVictoryProgressPct = buffer[0].ProgressPct;
+            summary.PlayerVictoryRank = 1;
+            summary.PlayerVictoryConditionId = summary.TopVictoryConditionId;
+            summary.PlayerVictoryProgressPct = summary.TopVictoryProgressPct;
+
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                if (!buffer[i].FactionId.Equals(factionId))
+                {
+                    continue;
+                }
+
+                summary.PlayerVictoryRank = i + 1;
+                summary.PlayerVictoryConditionId = buffer[i].LeadingConditionId.ToString();
+                summary.PlayerVictoryProgressPct = buffer[i].ProgressPct;
+                return true;
+            }
+
+            return true;
+        }
+
         private struct CommandUnit
         {
             public Entity Entity;
@@ -3628,6 +3817,45 @@ namespace Bloodlines.Debug
             public int Siege;
             public int Support;
             public int Other;
+        }
+
+        private struct BattlefieldCommandDeckSummary
+        {
+            public string FactionId;
+            public int StageNumber;
+            public string PhaseLabel;
+            public float InWorldYears;
+            public int DeclarationCount;
+            public int WorldPressureLevel;
+            public string WorldPressureLabel;
+            public bool GreatReckoningActive;
+            public string GreatReckoningTargetFactionId;
+            public float GreatReckoningShare;
+            public int CycleCount;
+            public string PopulationBand;
+            public string FoodBand;
+            public string WaterBand;
+            public string LoyaltyBand;
+            public string ConvictionLabel;
+            public string FaithLabel;
+            public string FaithTier;
+            public string FaithBand;
+            public int PlayerVictoryRank;
+            public string PlayerVictoryConditionId;
+            public float PlayerVictoryProgressPct;
+            public string TopFactionId;
+            public string TopVictoryConditionId;
+            public float TopVictoryProgressPct;
+        }
+
+        private struct VictoryLeaderboardSummarySnapshot
+        {
+            public int PlayerVictoryRank;
+            public string PlayerVictoryConditionId;
+            public float PlayerVictoryProgressPct;
+            public string TopFactionId;
+            public string TopVictoryConditionId;
+            public float TopVictoryProgressPct;
         }
 
         private struct SelectedProductionBuildingSnapshot

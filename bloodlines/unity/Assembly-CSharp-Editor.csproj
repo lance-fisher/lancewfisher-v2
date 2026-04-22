@@ -63,6 +63,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesMatchProgressionHUDSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesWorldPressureSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\GraphicsVisualTestbedPopulate.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesBattlefieldCommandDeckSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAIStrategicPressureSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesNarrativeMessageBridgeSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesBreachSealingRecoverySmokeValidation.cs" />

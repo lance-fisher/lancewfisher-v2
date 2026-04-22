@@ -3578,3 +3578,30 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Contract revision advanced `83 -> 84` and now records the HUD lane with the
   victory leaderboard follow-up branch in flight while clearing the already
   landed player-captive-ransom and dynasty-renown branch markers.
+
+## 2026-04-22 Battlefield Command Deck Summary Slice
+
+- Branch in flight: `codex/unity-player-hud-command-deck-summary-followup`.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.cs`
+  now renders an additive player-facing command-deck summary block that
+  consumes the already-landed match-progression, realm-condition,
+  conviction/faith, and victory HUD read-models instead of leaving them as
+  isolated debug getters.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes a parseable
+  `CommandDeckSummary|FactionId=...|StageNumber=...|...|TopVictoryProgressPct=...`
+  seam for smoke validation and future UI consumers.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBattlefieldCommandDeckSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityBattlefieldCommandDeckSmokeValidation.ps1`
+  now prove both a stable baseline command deck and a Great Reckoning follow-up
+  where convergence pressure, player strain bands, and trailing victory rank
+  surface together.
+- Governed validation is green on the branch: dedicated battlefield command
+  deck smoke, runtime build, editor build, bootstrap runtime smoke, combat
+  smoke, canonical scene shell validation, fortification smoke, siege smoke,
+  `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`,
+  and contract staleness.
+- Contract revision advanced `84 -> 85` and now records the HUD lane with the
+  command-deck summary follow-up branch in flight.

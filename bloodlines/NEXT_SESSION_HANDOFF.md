@@ -4348,3 +4348,69 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   rather than rebuilding a separate match-summary object.
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
+
+## Codex Battlefield Command Deck Summary (2026-04-22)
+
+### Branch
+
+- `codex/unity-player-hud-command-deck-summary-followup`
+
+### What Landed On Branch
+
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.cs`
+  now renders a consolidated player-facing command-deck summary block that
+  surfaces match stage/phase/year/declarations, world pressure / Great
+  Reckoning status, realm-condition bands, conviction-faith state, and the
+  player's live victory standing versus the overall leader.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes `TryDebugGetBattlefieldCommandDeckSummary(...)` with a parseable
+  `CommandDeckSummary|...` seam for future UI consumers and editor smoke
+  validators.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBattlefieldCommandDeckSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityBattlefieldCommandDeckSmokeValidation.ps1`
+  now prove both a stable baseline summary and a Great Reckoning follow-up
+  summary with convergence pressure and player strain.
+
+### Validation Proof
+
+- Dedicated smoke:
+  - `Battlefield command deck smoke validation passed.`
+- Runtime build:
+  - `Build succeeded.`
+  - `0 Error(s)`
+- Editor build:
+  - `Build succeeded.`
+  - `0 Error(s)` with existing repo-wide warnings only
+- Bootstrap runtime:
+  - `Bootstrap runtime smoke validation passed.`
+- Combat smoke:
+  - `Unity exited with code 0`
+- Scene shells:
+  - `Bootstrap scene shell validation passed.`
+  - `Gameplay scene shell validation passed.`
+- Fortification smoke:
+  - `Fortification smoke validation passed.`
+- Siege smoke:
+  - `Unity exited with code 0`
+- Data validation:
+  - `Bloodlines data validation passed.`
+- Runtime bridge:
+  - `Bloodlines runtime bridge validation passed.`
+- Contract staleness:
+  - `STALENESS CHECK PASSED: Contract revision=85, last-updated=2026-04-22 is current.`
+
+### Immediate Next Action
+
+1. Push `codex/unity-player-hud-command-deck-summary-followup`, then continue
+   the next player-HUD follow-up on the same unified command-deck surface.
+2. The cleanest next additive pickup is a dynasty-renown/prestige consumer or
+   another on-screen summary block that reuses existing ECS HUD read-models.
+
+### Context Notes
+
+- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
+- The new command-deck line intentionally reuses existing HUD read-models
+  rather than inventing another parallel match-summary object.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.

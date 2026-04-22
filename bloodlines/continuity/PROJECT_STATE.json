@@ -1991,6 +1991,15 @@
       "description": "The fifth player-HUD slice is now complete on branch. `VictoryLeaderboardHUDComponent` and `VictoryLeaderboardHUDSystem` add a singleton ordered HUD leaderboard under `HUD/**` that consumes the per-faction `VictoryConditionReadoutComponent` buffers, resolves each faction's leading victory condition, sorts factions by highest progress, and projects the human-player flag without widening the retired `Victory/**` lane. `BloodlinesDebugCommandSurface.HUD` now exposes a parseable multi-line `VictoryLeaderboard|Rank=...|FactionId=...|LeadingConditionId=...|ProgressPct=...|IsHumanPlayer=...` readout, and `BloodlinesVictoryLeaderboardHUDSmokeValidation` plus its wrapper prove leaderboard population, human-player projection, and descending ordering. The full governed 10-gate chain is green in this worktree and the contract is current at revision 84.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-panel.md",
       "validation_gates": "all 10 green plus victory leaderboard HUD smoke"
+    },
+    {
+      "lane": "player-hud-realm-condition-legibility-slice-6-command-deck-summary",
+      "date": "2026-04-22",
+      "branch": "codex/unity-player-hud-command-deck-summary-followup",
+      "status": "active",
+      "description": "The sixth player-HUD slice is now complete on branch. `BloodlinesDebugCommandSurface.cs` now renders a consolidated battlefield command-deck summary that consumes the already-landed match-progression, realm-condition, conviction/faith, and victory HUD read-models to surface match state, world pressure / Great Reckoning status, realm bands, and player-vs-leader victory standing without widening retired runtime lanes. `BloodlinesDebugCommandSurface.HUD.cs` now exposes a parseable `CommandDeckSummary|FactionId=...|StageNumber=...|...|TopVictoryProgressPct=...` seam, and `BloodlinesBattlefieldCommandDeckSmokeValidation` plus its wrapper prove both a stable baseline command deck and a Great Reckoning follow-up where convergence pressure, player strain, and trailing victory rank surface together. The full governed 10-gate chain is green in this worktree and the contract is current at revision 85.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary.md",
+      "validation_gates": "all 10 green plus battlefield command deck smoke"
     }
   ]
 }
