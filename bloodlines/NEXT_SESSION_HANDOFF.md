@@ -3205,3 +3205,44 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   rather than the outer worktree root `D:\BLM13\bloodlines`.
 - Counter-intelligence defense, dossiers, retaliation metadata, and
   intelligence-report buffers remain deferred to sub-slice 3C.
+
+## Codex Player Covert Ops Sub-Slice 3B Landing (2026-04-21)
+
+### Status: MERGED to `master` via `2892c583`
+
+### What Landed
+- `codex/unity-player-assassination-sabotage` is now merged, so player-facing
+  assassination and sabotage dispatch are part of canonical `master`.
+- `unity/Assets/_Bloodlines/Code/PlayerCovertOps/PlayerCovertOpsSystem.cs`
+  now lands the player-side assassination and sabotage dispatch seams
+  alongside the previously landed espionage path.
+- `unity/Assets/_Bloodlines/Code/PlayerCovertOps/PlayerCovertOpsRequestComponent.cs`
+  and
+  `unity/Assets/_Bloodlines/Code/PlayerCovertOps/PlayerCovertOpsResolutionComponent.cs`
+  now carry subtype and structured covert-op telemetry on `master`.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerCovertOps.cs`
+  now exposes player assassination and sabotage issuance plus richer structured
+  readout.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCovertOpsSmokeValidation.cs`
+  now includes the 3B assassination-target and sabotage-target phases on
+  canonical `master`.
+- Merged `master` re-passed runtime build, editor build, bootstrap runtime,
+  combat, scene shells, fortification, siege, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, and the extended dedicated player covert ops
+  smoke.
+
+### Immediate Next Action
+1. Create fresh branch `codex/unity-player-counter-intelligence` from current `master`.
+2. Port `tickDynastyCounterIntelligence` and `tickDynastyIntelligenceReports` under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/`.
+3. Extend the dedicated player covert ops smoke with counter-intelligence and intelligence-report assertions.
+
+### Context Notes
+- The checked-in bootstrap-runtime and canonical scene-shell wrappers are still
+  pinned to `D:\ProjectsHome\Bloodlines`; continue using temporary worktree-safe
+  copies when validating this clean worktree.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
+- Node validations for this worktree must run from `D:\BLM13\bloodlines\bloodlines`
+  rather than the outer worktree root `D:\BLM13\bloodlines`.
+- Counter-intelligence watch, dossiers, retaliation metadata, and explicit
+  bloodline-guard defense remain the next open player-covert-ops slice.

@@ -2871,3 +2871,31 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Merge `codex/unity-player-assassination-sabotage` to `master` and rerun the governed gate on merged `master`.
 2. After landing 3B, start sub-slice 3C on a fresh player counter-intelligence branch.
 3. Keep all writes under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/` plus continuity/contract surfaces; do not reopen `unity/Assets/_Bloodlines/Code/AI/**`.
+
+## 2026-04-21 Player Covert Ops Sub-Slice 3B Landing
+
+- Merged branch: `codex/unity-player-assassination-sabotage`
+- Merge commit on `master`: `2892c583`
+- Landing handoff:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-assassination-sabotage-landing.md`
+- The player covert ops lane now has assassination and sabotage dispatch
+  canonically on `master`:
+  - `PlayerCovertOpsSystem` now handles player espionage, assassination, and
+    sabotage in one lane-local dispatcher.
+  - `PlayerCovertOpsRequestComponent` and
+    `PlayerCovertOpsResolutionComponent` now carry the structured subtype,
+    target, location, and defense telemetry needed for player covert-op
+    assertions.
+  - `BloodlinesDebugCommandSurface.PlayerCovertOps.cs` now supports player
+    assassination and sabotage issuance plus richer covert-op readout.
+  - `BloodlinesPlayerCovertOpsSmokeValidation` now proves the 3B
+    assassination-target and sabotage-target phases on canonical `master`.
+- Merged `master` re-passed runtime build, editor build, bootstrap runtime,
+  combat, scene shells, fortification, siege, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, and the extended dedicated player covert ops
+  smoke in `D:\BLM13\bloodlines\bloodlines`.
+
+### Recommended Next Follow-Up
+1. Start sub-slice 3C on fresh branch `codex/unity-player-counter-intelligence`.
+2. Port `tickDynastyCounterIntelligence` and `tickDynastyIntelligenceReports` under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/`.
+3. Keep `unity/Assets/_Bloodlines/Code/AI/**` read-only and continue using worktree-local wrapper copies for the still-root-pinned bootstrap-runtime and scene-shell validators.
