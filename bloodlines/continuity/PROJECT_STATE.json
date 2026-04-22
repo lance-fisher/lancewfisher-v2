@@ -1838,6 +1838,15 @@
       "description": "The first player HUD slice is now complete on branch. `unity/Assets/_Bloodlines/Code/HUD/RealmConditionHUDComponent.cs` and `RealmConditionHUDSystem.cs` project cycle progress, population pressure, food/water ratios plus strain streaks, faction loyalty band, conviction band/label/color, and faith covenant/doctrine/tier/band into a per-faction HUD read-model without mutating the source ECS state. `BloodlinesDebugCommandSurface.HUD.cs` adds a parseable `RealmHUD|Key=Value|...` readout, and `BloodlinesRealmConditionHUDSmokeValidation` plus `scripts/Invoke-BloodlinesUnityRealmConditionHUDSmokeValidation.ps1` prove stable baseline, red realm strain, Apex Moral conviction, and committed Fervent faith. The governed branch-side gate is green in D:\\BLM13\\bloodlines\\bloodlines: runtime build, editor build, dedicated HUD smoke, bootstrap runtime, combat, canonical scene shells, fortification, siege, `node tests/data-validation.mjs`, and `node tests/runtime-bridge.mjs`. Contract rev 66->67.",
       "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility.md",
       "validation_gates": "all 10 green plus realm-condition HUD smoke"
+    },
+    {
+      "lane": "player-hud-realm-condition-legibility-slice-1-landing",
+      "date": "2026-04-21",
+      "branch": "master",
+      "status": "complete",
+      "description": "The validated `codex/unity-player-hud-realm-condition-legibility` branch is now merged to master via `dfcbcec9`. `RealmConditionHUDComponent`, `RealmConditionHUDSystem`, `BloodlinesDebugCommandSurface.HUD.cs`, and `BloodlinesRealmConditionHUDSmokeValidation` plus wrapper are now canonical master content for the first player-HUD slice. Merged master re-passed runtime build, editor build, dedicated HUD smoke, bootstrap runtime, combat, canonical scene shells, fortification, siege, `node tests/data-validation.mjs`, `node tests/runtime-bridge.mjs`, and contract staleness at revision 67 in D:\\BLM13\\bloodlines\\bloodlines. Contract rev 67->68 records the lane as still active with no branch currently in flight and points the next pickup at the match-progression HUD slice.",
+      "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility-landing.md",
+      "validation_gates": "all 10 green plus realm-condition HUD smoke on merged master"
     }
   ]
 }

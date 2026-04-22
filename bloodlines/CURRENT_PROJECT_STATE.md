@@ -3032,3 +3032,28 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Stage the HUD slice files plus continuity/contract updates and commit them on `codex/unity-player-hud-realm-condition-legibility`.
 2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
 3. After landing, continue the same lane with the match progression HUD slice.
+
+## 2026-04-21 Player HUD Realm-Condition Legibility Slice 1 Landing
+
+- Merged branch: `codex/unity-player-hud-realm-condition-legibility`
+- Merge commit on `master`: `dfcbcec9`
+- Landing handoff:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility-landing.md`
+- The first player HUD slice is now canonical on `master`:
+  - `RealmConditionHUDComponent` and `RealmConditionHUDSystem` now provide the
+    canonical player-HUD read-model for cycle, population pressure, food,
+    water, loyalty, conviction, and faith.
+  - `BloodlinesDebugCommandSurface.HUD.cs` now canonically exposes the
+    parseable `RealmHUD|Key=Value|...` readout.
+  - `BloodlinesRealmConditionHUDSmokeValidation` plus wrapper now canonically
+    prove the first HUD slice on `master`.
+- Merged `master` re-passed runtime build, editor build, bootstrap runtime,
+  combat, canonical scene shells, fortification, siege, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness at revision `67`, and
+  the dedicated realm-condition HUD smoke in `D:\BLM13\bloodlines\bloodlines`.
+- The player HUD lane remains active, but there is now no HUD branch in flight.
+
+### Recommended Next Follow-Up
+1. Create a fresh Codex branch from current `master` for the next player-HUD slice.
+2. Implement `MatchProgressionHUDComponent`, `MatchProgressionHUDSystem`, and `TryDebugGetMatchHUDSnapshot`.
+3. Keep using the worktree-local bootstrap-runtime and scene-shell wrapper copies until the checked-in path-pinned wrappers are repaired.

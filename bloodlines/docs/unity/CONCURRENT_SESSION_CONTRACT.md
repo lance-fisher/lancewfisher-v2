@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 67
+- Revision: 68
 - Last Updated: 2026-04-21
 - Last Updated By: codex-player-hud-2026-04-21
-- Supersedes: revision 66 (The player HUD / realm-condition legibility lane was claimed on branch `codex/unity-player-hud-realm-condition-legibility`; revision 67 records the completed first slice on branch, including the new `HUD/**` read-model, parseable HUD debug seam, dedicated HUD smoke validator, and governed branch-side validation pass in `D:\BLM13\bloodlines\bloodlines`.)
+- Supersedes: revision 67 (The first player HUD slice was completed on branch `codex/unity-player-hud-realm-condition-legibility`; revision 68 records that slice as landed on canonical `master` via `dfcbcec9`, with the governed merged-master validation gate re-run green in `D:\BLM13\bloodlines\bloodlines` and the lane still active for follow-up HUD slices.)
 
 
 ## Purpose
@@ -689,11 +689,12 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Victory/VictoryComponents.cs` -- reserved for follow-up victory readout slice inside this same lane
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility.md`
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility-landing.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `getRealmConditionSnapshot` (14291-14764), `getMatchProgressionSnapshot` (13650-13658)
   - `tests/runtime-bridge.mjs` realm-condition snapshot assertions (1344-1364), fortification/readout assertions (1438-1444), hostile-post-repulse world-pressure assertions (1718-1733)
-- Current Branch In Flight: `codex/unity-player-hud-realm-condition-legibility`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility.md`
+- Current Branch In Flight: none
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility-landing.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 

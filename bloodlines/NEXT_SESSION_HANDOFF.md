@@ -3448,3 +3448,35 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 - The first HUD slice is intentionally a read-model + proof seam only; the
   on-screen player HUD surface and the broader match/fortification/world/victory
   HUD blocks remain follow-up work inside this same lane.
+
+## Codex Player HUD Realm-Condition Legibility Slice 1 Landing (2026-04-21)
+
+### Status: MERGED to `master` via `dfcbcec9`
+
+### What Landed
+- `codex/unity-player-hud-realm-condition-legibility` is now merged, so the
+  first player-HUD slice is canonical on `master`.
+- `unity/Assets/_Bloodlines/Code/HUD/RealmConditionHUDComponent.cs` and
+  `RealmConditionHUDSystem.cs` now canonically project cycle, population,
+  food, water, loyalty, conviction, and faith into a per-faction HUD read-model.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now canonically exposes the parseable `RealmHUD|Key=Value|...` readout.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityRealmConditionHUDSmokeValidation.ps1`
+  now canonically prove the first HUD slice on `master`.
+- Merged `master` re-passed runtime build, editor build, bootstrap runtime,
+  combat, canonical scene shells, fortification, siege,
+  `node tests/data-validation.mjs`, `node tests/runtime-bridge.mjs`, contract
+  staleness, and the dedicated realm-condition HUD smoke.
+
+### Immediate Next Action
+1. Create a fresh Codex branch from current `master` for the next player-HUD slice.
+2. Implement `MatchProgressionHUDComponent`, `MatchProgressionHUDSystem`, and `TryDebugGetMatchHUDSnapshot`.
+3. Keep `unity/Assets/_Bloodlines/Code/AI/**` read-only and keep using the worktree-local bootstrap-runtime and scene-shell wrapper copies.
+
+### Context Notes
+- The player HUD lane remains active, but there is currently no HUD branch in flight.
+- The first HUD slice is still intentionally a read-model + proof seam only; the
+  on-screen player HUD surface and the broader match/fortification/world/victory
+  HUD blocks remain follow-up work inside this same lane.
