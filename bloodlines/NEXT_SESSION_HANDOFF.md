@@ -4278,3 +4278,73 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 - `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
+
+## Codex Victory Leaderboard HUD (2026-04-22)
+
+### Branch
+
+- `codex/unity-hud-victory-panel`
+
+### What Landed On Branch
+
+- `unity/Assets/_Bloodlines/Code/HUD/VictoryLeaderboardHUDComponent.cs`
+  and
+  `VictoryLeaderboardHUDSystem.cs`
+  now add a single ordered HUD leaderboard that consumes the per-faction
+  `VictoryConditionReadoutComponent` buffers, resolves the leading victory
+  condition per faction, sorts by highest progress, and flags the human player.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes `TryDebugGetVictoryLeaderboard()` with parseable multi-line
+  `VictoryLeaderboard|Rank=...|FactionId=...|LeadingConditionId=...|ProgressPct=...|IsHumanPlayer=...`
+  output for later UI/HUD consumers.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesVictoryLeaderboardHUDSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityVictoryLeaderboardHUDSmokeValidation.ps1`
+  now prove two-faction row population, human-player projection, and descending
+  ordering.
+- `unity/Assembly-CSharp.csproj` and `unity/Assembly-CSharp-Editor.csproj`
+  now include the new runtime/editor files for this worktree's generated
+  project metadata.
+
+### Validation Proof
+
+- Dedicated smoke:
+  - `Victory leaderboard HUD smoke validation passed.`
+- Runtime build:
+  - `Build succeeded.`
+  - `0 Error(s)`
+- Editor build:
+  - `Build succeeded.`
+  - `0 Error(s)` with existing repo-wide warnings only
+- Bootstrap runtime:
+  - `Bootstrap runtime smoke validation passed.`
+- Combat smoke:
+  - `Unity exited with code 0`
+- Scene shells:
+  - `Bootstrap scene shell validation passed.`
+  - `Gameplay scene shell validation passed.`
+- Fortification smoke:
+  - `Fortification smoke validation passed.`
+- Siege smoke:
+  - `Unity exited with code 0`
+- Data validation:
+  - `Bloodlines data validation passed.`
+- Runtime bridge:
+  - `Bloodlines runtime bridge validation passed.`
+- Contract staleness:
+  - `STALENESS CHECK PASSED: Contract revision=84, last-updated=2026-04-22 is current.`
+
+### Immediate Next Action
+
+1. Push `codex/unity-hud-victory-panel`, merge it to `master`, and rerun the
+   governed 10-gate chain on the merge result.
+2. Continue the next player-facing follow-up after landing: the cleanest pickup
+   is a dynasty-renown HUD consumer or another directive-selected HUD surface.
+
+### Context Notes
+
+- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
+- The leaderboard intentionally reuses the existing victory readout buffers
+  rather than rebuilding a separate match-summary object.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
