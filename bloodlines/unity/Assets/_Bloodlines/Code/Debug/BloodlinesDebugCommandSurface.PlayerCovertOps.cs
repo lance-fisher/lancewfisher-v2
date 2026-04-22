@@ -21,8 +21,8 @@ namespace Bloodlines.Debug
             var sourceFactionKey = new FixedString32Bytes(sourceFactionId);
             var targetFactionKey = new FixedString32Bytes(targetFactionId);
             if (sourceFactionKey.Equals(targetFactionKey) ||
-                FindFactionEntity(entityManager, sourceFactionKey) == Entity.Null ||
-                FindFactionEntity(entityManager, targetFactionKey) == Entity.Null)
+                FindFactionRootEntity(entityManager, sourceFactionKey) == Entity.Null ||
+                FindFactionRootEntity(entityManager, targetFactionKey) == Entity.Null)
             {
                 return false;
             }
@@ -59,8 +59,8 @@ namespace Bloodlines.Debug
                 return false;
             }
 
-            var sourceFactionEntity = FindFactionEntity(entityManager, sourceFactionKey);
-            var targetFactionEntity = FindFactionEntity(entityManager, targetFactionKey);
+            var sourceFactionEntity = FindFactionRootEntity(entityManager, sourceFactionKey);
+            var targetFactionEntity = FindFactionRootEntity(entityManager, targetFactionKey);
             if (sourceFactionEntity == Entity.Null ||
                 targetFactionEntity == Entity.Null ||
                 !TargetFactionHasMember(entityManager, targetFactionEntity, targetMemberKey))
@@ -97,8 +97,8 @@ namespace Bloodlines.Debug
             var sourceFactionKey = new FixedString32Bytes(sourceFactionId);
             var targetFactionKey = new FixedString32Bytes(targetFactionId);
             if (sourceFactionKey.Equals(targetFactionKey) ||
-                FindFactionEntity(entityManager, sourceFactionKey) == Entity.Null ||
-                FindFactionEntity(entityManager, targetFactionKey) == Entity.Null ||
+                FindFactionRootEntity(entityManager, sourceFactionKey) == Entity.Null ||
+                FindFactionRootEntity(entityManager, targetFactionKey) == Entity.Null ||
                 !BuildingEntityExists(entityManager, targetBuildingEntityIndex))
             {
                 return false;
@@ -112,6 +112,31 @@ namespace Bloodlines.Debug
                 TargetFactionId = targetFactionKey,
                 TargetMemberId = default,
                 TargetEntityIndex = targetBuildingEntityIndex,
+            });
+        }
+
+        public bool TryDebugIssuePlayerCounterIntelligence(string sourceFactionId)
+        {
+            if (string.IsNullOrWhiteSpace(sourceFactionId) ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var sourceFactionKey = new FixedString32Bytes(sourceFactionId);
+            if (FindFactionRootEntity(entityManager, sourceFactionKey) == Entity.Null)
+            {
+                return false;
+            }
+
+            return TryQueuePlayerCovertRequest(entityManager, new PlayerCovertOpsRequestComponent
+            {
+                Kind = CovertOpKindPlayer.CounterIntelligence,
+                Subtype = default,
+                SourceFactionId = sourceFactionKey,
+                TargetFactionId = default,
+                TargetMemberId = default,
+                TargetEntityIndex = -1,
             });
         }
 
@@ -171,8 +196,113 @@ namespace Bloodlines.Debug
                     .Append("|CounterIntelligenceActive=").Append(operation.CounterIntelligenceActive ? "true" : "false")
                     .Append("|CounterIntelligenceDefense=").Append(operation.CounterIntelligenceDefense.ToString("0.00", CultureInfo.InvariantCulture))
                     .Append("|BloodlineGuardBonus=").Append(operation.BloodlineGuardBonus.ToString("0.00", CultureInfo.InvariantCulture))
+                    .Append("|WatchDuration=").Append(operation.WatchDurationInWorldDays.ToString("0.000000", CultureInfo.InvariantCulture))
+                    .Append("|WatchStrength=").Append(operation.WatchStrength.ToString("0.00", CultureInfo.InvariantCulture))
+                    .Append("|WardLabel=").Append(operation.WardLabel)
+                    .Append("|GuardedRoles=").Append(operation.GuardedRoles)
+                    .Append("|AverageLoyalty=").Append(operation.AverageLoyalty.ToString("0.00", CultureInfo.InvariantCulture))
+                    .Append("|WeakestLoyalty=").Append(operation.WeakestLoyalty.ToString("0.00", CultureInfo.InvariantCulture))
                     .Append("|EscrowGold=").Append(operation.EscrowGold.ToString("0.##", CultureInfo.InvariantCulture))
                     .Append("|EscrowInfluence=").Append(operation.EscrowInfluence.ToString("0.##", CultureInfo.InvariantCulture));
+            }
+
+            readout = builder.ToString();
+            return true;
+        }
+
+        public bool TryDebugGetPlayerCounterIntelligence(string factionId, out string readout)
+        {
+            readout = string.Empty;
+            if (string.IsNullOrWhiteSpace(factionId) || !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var factionKey = new FixedString32Bytes(factionId);
+            var factionEntity = FindFactionRootEntity(entityManager, factionKey);
+            if (factionEntity == Entity.Null)
+            {
+                return false;
+            }
+
+            var builder = new StringBuilder();
+            if (!entityManager.HasComponent<PlayerCounterIntelligenceComponent>(factionEntity))
+            {
+                builder.Append("CounterIntelligenceActive=false");
+                readout = builder.ToString();
+                return true;
+            }
+
+            var watch = entityManager.GetComponentData<PlayerCounterIntelligenceComponent>(factionEntity);
+            builder.Append("CounterIntelligenceActive=true")
+                .Append("|WatchId=").Append(watch.WatchId)
+                .Append("|ActivatedAt=").Append(watch.ActivatedAtInWorldDays.ToString("0.000000", CultureInfo.InvariantCulture))
+                .Append("|ExpiresAt=").Append(watch.ExpiresAtInWorldDays.ToString("0.000000", CultureInfo.InvariantCulture))
+                .Append("|OperatorMemberId=").Append(watch.OperatorMemberId)
+                .Append("|OperatorTitle=").Append(watch.OperatorTitle)
+                .Append("|WatchStrength=").Append(watch.WatchStrength.ToString("0.00", CultureInfo.InvariantCulture))
+                .Append("|WardLabel=").Append(watch.WardLabel)
+                .Append("|GuardedRoles=").Append(watch.GuardedRoles)
+                .Append("|AverageLoyalty=").Append(watch.AverageLoyalty.ToString("0.00", CultureInfo.InvariantCulture))
+                .Append("|WeakestLoyalty=").Append(watch.WeakestLoyalty.ToString("0.00", CultureInfo.InvariantCulture))
+                .Append("|Interceptions=").Append(watch.Interceptions)
+                .Append("|FoiledEspionage=").Append(watch.FoiledEspionage)
+                .Append("|FoiledAssassinations=").Append(watch.FoiledAssassinations)
+                .Append("|LastInterceptAt=").Append(watch.LastInterceptAtInWorldDays.ToString("0.000000", CultureInfo.InvariantCulture))
+                .Append("|LastInterceptType=").Append(watch.LastInterceptType)
+                .Append("|LastSourceFactionId=").Append(watch.LastSourceFactionId)
+                .Append("|LastTargetMemberId=").Append(watch.LastTargetMemberId)
+                .Append("|LastSourceInterceptions=").Append(watch.LastSourceInterceptions)
+                .Append("|LastSourceFoiledEspionage=").Append(watch.LastSourceFoiledEspionage)
+                .Append("|LastSourceFoiledAssassinations=").Append(watch.LastSourceFoiledAssassinations)
+                .Append("|LastDossierAt=").Append(watch.LastDossierAtInWorldDays.ToString("0.000000", CultureInfo.InvariantCulture));
+            readout = builder.ToString();
+            return true;
+        }
+
+        public bool TryDebugGetIntelligenceReports(string factionId, out string readout)
+        {
+            readout = string.Empty;
+            if (string.IsNullOrWhiteSpace(factionId) || !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var factionKey = new FixedString32Bytes(factionId);
+            var factionEntity = FindFactionRootEntity(entityManager, factionKey);
+            if (factionEntity == Entity.Null)
+            {
+                return false;
+            }
+
+            var builder = new StringBuilder();
+            if (!entityManager.HasBuffer<IntelligenceReportElement>(factionEntity))
+            {
+                builder.Append("IntelligenceReportCount=0");
+                readout = builder.ToString();
+                return true;
+            }
+
+            var reports = entityManager.GetBuffer<IntelligenceReportElement>(factionEntity);
+            builder.Append("IntelligenceReportCount=").Append(reports.Length);
+            for (int i = 0; i < reports.Length; i++)
+            {
+                builder.AppendLine();
+                builder.Append("IntelligenceReport|Index=").Append(i)
+                    .Append("|Id=").Append(reports[i].ReportId)
+                    .Append("|SourceFactionId=").Append(reports[i].SourceFactionId)
+                    .Append("|TargetFactionId=").Append(reports[i].TargetFactionId)
+                    .Append("|SourceType=").Append(reports[i].SourceType)
+                    .Append("|ReportLabel=").Append(reports[i].ReportLabel)
+                    .Append("|InterceptType=").Append(reports[i].InterceptType)
+                    .Append("|InterceptCount=").Append(reports[i].InterceptCount)
+                    .Append("|CreatedAt=").Append(reports[i].CreatedAtInWorldDays.ToString("0.000000", CultureInfo.InvariantCulture))
+                    .Append("|ExpiresAt=").Append(reports[i].ExpiresAtInWorldDays.ToString("0.000000", CultureInfo.InvariantCulture))
+                    .Append("|TargetLegitimacy=").Append(reports[i].TargetLegitimacy)
+                    .Append("|TargetActiveOperations=").Append(reports[i].TargetActiveOperations)
+                    .Append("|TargetCaptiveCount=").Append(reports[i].TargetCaptiveCount)
+                    .Append("|TargetLesserHouseCount=").Append(reports[i].TargetLesserHouseCount)
+                    .Append("|MemberSummary=").Append(reports[i].MemberSummary);
             }
 
             readout = builder.ToString();
@@ -186,6 +316,42 @@ namespace Bloodlines.Debug
             var requestEntity = entityManager.CreateEntity(typeof(PlayerCovertOpsRequestComponent));
             entityManager.SetComponentData(requestEntity, request);
             return true;
+        }
+
+        private static Entity FindFactionRootEntity(
+            EntityManager entityManager,
+            FixedString32Bytes factionId)
+        {
+            var fallback = FindFactionEntity(entityManager, factionId);
+            if (fallback != Entity.Null &&
+                (entityManager.HasComponent<FactionKindComponent>(fallback) ||
+                 entityManager.HasComponent<ResourceStockpileComponent>(fallback) ||
+                 entityManager.HasComponent<DynastyStateComponent>(fallback)))
+            {
+                return fallback;
+            }
+
+            var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<FactionComponent>());
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            query.Dispose();
+
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(factionId))
+                {
+                    continue;
+                }
+
+                if (entityManager.HasComponent<FactionKindComponent>(entities[i]) ||
+                    entityManager.HasComponent<ResourceStockpileComponent>(entities[i]) ||
+                    entityManager.HasComponent<DynastyStateComponent>(entities[i]))
+                {
+                    return entities[i];
+                }
+            }
+
+            return fallback;
         }
 
         private static bool TargetFactionHasMember(

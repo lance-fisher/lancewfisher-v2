@@ -3246,3 +3246,88 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   rather than the outer worktree root `D:\BLM13\bloodlines`.
 - Counter-intelligence watch, dossiers, retaliation metadata, and explicit
   bloodline-guard defense remain the next open player-covert-ops slice.
+
+## Codex Player Covert Ops Sub-Slice 3C: Counter-Intelligence And Intelligence Reports (2026-04-21)
+
+### Status: COMPLETE on branch `codex/unity-player-counter-intelligence`
+
+### What Was Done
+- Added `unity/Assets/_Bloodlines/Code/PlayerCovertOps/IntelligenceReportElement.cs`,
+  `PlayerCounterIntelligenceComponent.cs`, and
+  `PlayerCounterIntelligenceSystem.cs` to land player-owned report/watch state,
+  expiry, dossier interception, and defended-op resolution.
+- Extended
+  `unity/Assets/_Bloodlines/Code/PlayerCovertOps/PlayerCovertOpsResolutionComponent.cs`
+  with watch duration, watch strength, ward label, guarded-role summary, and
+  loyalty telemetry.
+- Reworked
+  `unity/Assets/_Bloodlines/Code/PlayerCovertOps/PlayerCovertOpsSystem.cs`
+  so it now dispatches player counter-intelligence with canonical
+  `gold=60` / `influence=18`, 18-second activation delay, 150-second watch
+  duration, operator order `Spymaster -> Diplomat -> HeadOfBloodline`, and
+  defended espionage / assassination projected-chance penalties.
+- Extended
+  `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerCovertOps.cs`
+  with `TryDebugIssuePlayerCounterIntelligence(...)`,
+  `TryDebugGetPlayerCounterIntelligence(...)`,
+  `TryDebugGetIntelligenceReports(...)`, and richer structured watch/readout
+  fields.
+- Added dedicated validator +
+  wrapper:
+  `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCounterIntelligenceSmokeValidation.cs`
+  and
+  `scripts/Invoke-BloodlinesUnityPlayerCounterIntelligenceSmokeValidation.ps1`.
+- Fixed the slice-discovered faction-root bug by preferring the actual faction
+  entity over same-faction settlement entities when binding player covert-op
+  watches and reports.
+- Removed invalid `UpdateBefore(...)` attributes from
+  `PlayerCounterIntelligenceSystem` after Unity correctly warned they targeted
+  systems outside the same update group.
+- Recorded the branch-side contract and continuity pass:
+  - `docs/unity/CONCURRENT_SESSION_CONTRACT.md` revision `63 -> 64`
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-counter-intelligence.md`
+  - `CURRENT_PROJECT_STATE.md`
+  - `NEXT_SESSION_HANDOFF.md`
+  - `continuity/PROJECT_STATE.json`
+
+### Validation Proof
+- Runtime build: `Build succeeded.` / `0 Error(s)`
+- Editor build: `113 Warning(s)` / `0 Error(s)`
+- Bootstrap runtime smoke:
+  `Bootstrap runtime smoke validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity on map ironmark_frontier. ...`
+- Combat smoke:
+  `Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True, groupMovementPhase=True, separationPhase=True, stancePhase=True.`
+- Bootstrap scene shell:
+  `Bootstrap scene shell validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity with canonical map Assets/_Bloodlines/Data/MapDefinitions/ironmark_frontier.asset.`
+- Gameplay scene shell:
+  `Gameplay scene shell validation passed for Assets/_Bloodlines/Scenes/Gameplay/IronmarkFrontier.unity.`
+- Fortification smoke:
+  `Fortification smoke validation passed: baselinePhase=True, tierAdvancePhase=True, reserveMusterPhase=True, reserveRecoveryPhase=True. ...`
+- Siege smoke:
+  `Siege smoke validation passed: baselinePhase=True, strainPhase=True, recoveryPhase=True, supportPhase=True. ...`
+- Data validation: `Bloodlines data validation passed.`
+- Runtime bridge: `Bloodlines runtime bridge validation passed.`
+- Contract staleness before branch continuity:
+  `STALENESS CHECK PASSED: Contract revision=63, last-updated=2026-04-21 is current. Latest handoff: 2026-04-21-unity-fortification-repair-narrative.md (2026-04-21).`
+- Dedicated smoke:
+  `BLOODLINES_PLAYER_COUNTER_INTELLIGENCE_SMOKE PASS`
+  with
+  `Phase 2 PASS: watchId=dynastyCounter-player-player-2073627-25, strength=34, opId=player-counter-intel-player-to-player-25, lapsed cleanly.`
+  and
+  `Phase 4 PASS: baselineChance=0.651, defendedChance=0.331, watchId=dynastyCounter-player-player-2764827-25, legitimacy 70->71.`
+
+### Immediate Next Action
+1. Stage the player covert ops 3C files plus continuity/contract updates and commit them on `codex/unity-player-counter-intelligence`.
+2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
+3. After the landing continuity pass, close the player covert ops lane and claim the player HUD / realm-condition legibility lane.
+
+### Context Notes
+- The checked-in bootstrap-runtime and canonical scene-shell wrappers are still
+  pinned to `D:\ProjectsHome\Bloodlines`; continue using temporary worktree-safe
+  copies when validating this clean worktree.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
+- Node validations for this worktree must run from `D:\BLM13\bloodlines\bloodlines`
+  rather than the outer worktree root `D:\BLM13\bloodlines`.
+- Snapshot/save-load integration for retained report/watch state remains
+  deferred, and sabotage resolution still remains outside the scope of 3C.

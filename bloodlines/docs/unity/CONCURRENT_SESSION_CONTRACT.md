@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 63
+- Revision: 64
 - Last Updated: 2026-04-21
-- Last Updated By: codex-player-covert-ops-landing-2026-04-21
-- Supersedes: revision 62 (The validated `codex/unity-player-assassination-sabotage` branch is now merged to `master` via `2892c583`. Player covert ops sub-slice 3B is landed on canonical master content, the merged-master governed validation gate plus the extended dedicated player covert ops smoke are green in `D:\BLM13\bloodlines\bloodlines`, and the next clean Codex pickup is sub-slice 3C on a fresh counter-intelligence branch. `unity/Assets/_Bloodlines/Code/AI/**` remains Claude-owned and read-only from this Codex lane.)
+- Last Updated By: codex-player-counter-intelligence-2026-04-21
+- Supersedes: revision 63 (Player covert ops sub-slice 3C is now complete on branch `codex/unity-player-counter-intelligence`. Counter-intelligence watches, intelligence-report buffers, dossier interception, and the dedicated `BloodlinesPlayerCounterIntelligenceSmokeValidation` proof surface are green in `D:\BLM13\bloodlines\bloodlines`; merge to `master` is the next action. `unity/Assets/_Bloodlines/Code/AI/**` remains Claude-owned and read-only from this Codex lane.)
 
 
 ## Purpose
@@ -620,15 +620,17 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: player-covert-ops
 
-- Status: active (sub-slice 3B landed on master; no follow-up branch currently in flight)
+- Status: active (sub-slice 3C complete on branch `codex/unity-player-counter-intelligence`, pending merge to `master`)
 - Branch Prefix: `codex/unity-player-covert-ops-*`
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/PlayerCovertOps/**`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerCovertOps.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCovertOpsSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCounterIntelligenceSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityPlayerCovertOpsSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityPlayerCounterIntelligenceSmokeValidation.ps1`
 - Shared-File Narrow Edits Planned:
   - `unity/Assembly-CSharp.csproj` -- add compile includes for new `PlayerCovertOps/**` runtime files only if the local generated project file does not already pick them up
   - `unity/Assembly-CSharp-Editor.csproj` -- add compile includes for `BloodlinesPlayerCovertOpsSmokeValidation.cs` only if the local generated project file does not already pick it up
@@ -650,15 +652,17 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - Browser Reference:
   - `src/game/core/simulation.js` `DYNASTY_OPERATION_ACTIVE_LIMIT` (17), `getActiveDynastyOperationForTargetFaction` (4084), `getActiveIntelligenceReport` (4097), `tickDynastyIntelligenceReports` (4106), `getEspionageContest` (10187), `getEspionageTerms` (10248), `startEspionageOperation` (10876)
   - `src/game/core/simulation.js` `SABOTAGE_COSTS` (9739-9744), `SABOTAGE_DURATIONS` (9746-9751), `ASSASSINATION_COST` (9765), `ASSASSINATION_DURATION_SECONDS` (9769), `validateSabotageTarget` (9795-9815), `getSabotageTerms` (9900-9958), `getAssassinationContest` (10214-10282), `getAssassinationTerms` (10284-10323), `startAssassinationOperation` (10912-10950), `startSabotageOperation` (10952-10991)
+  - `src/game/core/simulation.js` `getActiveCounterIntelligence` (4104-4111), `getCounterIntelligenceRoleGuardBonus` (4143-4157), `createDynastyIntelligenceReport` (5348-5368), `storeDynastyIntelligenceReport` (5370-5386), `recordCounterIntelligenceInterception` (10121-10171), `createCounterIntelligenceWatch` (10173-10203), `getCounterIntelligenceTerms` (10309-10360), `startCounterIntelligenceOperation` (10836-10874)
   - `tests/runtime-bridge.mjs` sabotage assertions (1378-1412), espionage + assassination assertions (3490-3628)
-- Current Branch In Flight: none (merged into master via `2892c583`; next clean Codex pickup is `codex/unity-player-counter-intelligence`)
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-assassination-sabotage-landing.md`
+  - `tests/runtime-bridge.mjs` counter-intelligence watch + dossier assertions (4130-4240, 4884-4970)
+- Current Branch In Flight: `codex/unity-player-counter-intelligence`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-counter-intelligence.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the `fortification-siege-imminent-engagement` lane is paused unless Lance explicitly defines a fresh fortification sub-slice 14. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation is now landed on master; future raid follow-ups should start from a fresh scout branch. Under the current multi-day directive, the next clean Codex pickup is `player-covert-ops` sub-slice 3C on fresh branch `codex/unity-player-counter-intelligence`.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the `fortification-siege-imminent-engagement` lane is paused unless Lance explicitly defines a fresh fortification sub-slice 14. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation is already landed on master, and player covert ops sub-slice 3C is now actively in flight on `codex/unity-player-counter-intelligence`. After that branch lands, the next clean Codex pickup under the directive order is the player HUD / realm-condition legibility lane.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 
