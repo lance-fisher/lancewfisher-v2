@@ -3519,3 +3519,32 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   player captive ransom smoke.
 - Contract revision advanced `81 -> 82` and now records the player-diplomacy
   lane with the ransom follow-up branch in flight.
+
+## 2026-04-22 Dynasty Renown Prestige Slice
+
+- Branch in flight: `codex/unity-dynasty-renown-prestige`.
+- `unity/Assets/_Bloodlines/Code/Dynasties/DynastyRenownComponent.cs`
+  and
+  `DynastyRenownAccumulationSystem.cs`
+  now add a dedicated dynasty-facing renown/prestige read-model under
+  `Dynasties/**` without widening `AI/**`. The runtime projects daily score from
+  territory held above map-average control, high faith intensity, victory
+  momentum, and legitimate succession, then applies daily decay while tracking
+  peak renown.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.DynastyRenown.cs`
+  now exposes a parseable
+  `DynastyRenown|FactionId=...|Score=...|PeakRenown=...|DecayRate=...|LastUpdatedInWorldDays=...`
+  readout for later HUD and smoke consumers.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyRenownSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityDynastyRenownSmokeValidation.ps1`
+  now prove accumulation, decay, territory scaling, and peak tracking in a
+  dedicated ECS validation world.
+- Governed validation is green on the branch: dedicated renown smoke, runtime
+  build, editor build, bootstrap runtime smoke, combat smoke, canonical scene
+  shell validation, fortification smoke, siege smoke,
+  `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`,
+  and contract staleness.
+- Contract revision advanced `82 -> 83` and now records the new
+  `dynasty-renown-prestige` lane in flight.

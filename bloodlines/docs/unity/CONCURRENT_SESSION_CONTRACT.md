@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 82
+- Revision: 83
 - Last Updated: 2026-04-22
-- Last Updated By: codex-player-marriage-diplomacy-2026-04-22
-- Supersedes: revision 81 (The player-marriage-diplomacy lane now carries the additive captive-ransom follow-up on `codex/unity-player-captive-ransom-followup`. `PlayerCaptiveRansomRequestComponent` and `PlayerCaptiveRansomDispatchSystem` add the player-owned ransom request seam without widening `AI/**`, reusing the AI-owned `CapturedMemberElement` and `DynastyOperationCaptiveRansomComponent` shapes while adding a Unity-side hostile-captor block per the active Codex directive. `PlayerCaptiveDispatchUtility` now centralizes ransom operation ids and narrative emission, `BloodlinesDebugCommandSurface.PlayerDiplomacy.cs` now exposes a captive ransom dispatch hook, and `BloodlinesPlayerCaptiveRansomSmokeValidation` plus wrapper prove success, insufficient-gold rejection, and hostile-captor rejection.)
+- Last Updated By: codex-2026-04-22
+- Supersedes: revision 82 (The new `codex/unity-dynasty-renown-prestige` lane is now active. `DynastyRenownComponent` and `DynastyRenownAccumulationSystem` add a dynasty-facing renown/prestige surface under `Dynasties/**`, deriving score from territorial advantage, committed-faith intensity, victory momentum, and legitimate succession while tracking decay and peak renown. `BloodlinesDebugCommandSurface.DynastyRenown.cs` adds a parseable read seam, and `BloodlinesDynastyRenownSmokeValidation` plus wrapper prove accumulation, decay, territory scaling, and peak tracking.)
 
 
 ## Purpose
@@ -195,6 +195,37 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-17-unity-dynasty-core.md`
 - Current Branch In Flight: none
 - Follow-Up (next dynasty slice): wire `DynastyBootstrap.AttachDynasty` into `SkirmishBootstrapSystem`; extend `BloodlinesBootstrapRuntimeSmokeValidation` to assert 8 members per playable faction.
+
+### Lane: dynasty-renown-prestige
+
+- Status: active
+- Branch Prefix: `codex/unity-dynasty-renown-prestige`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyRenownComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyRenownAccumulationSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.DynastyRenown.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyRenownSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityDynastyRenownSmokeValidation.ps1`
+- Shared-File Narrow Edits Planned:
+  - `unity/Assembly-CSharp.csproj` -- add compile includes for the renown runtime files only if the local generated project file does not already pick them up
+  - `unity/Assembly-CSharp-Editor.csproj` -- add compile includes for the dedicated renown validator only if the local generated project file does not already pick it up
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve faction roots by `FactionId`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyStateComponent.cs` -- reuse dynasty legitimacy/interregnum state without reopening the retired dynasty-core lane
+  - `unity/Assets/_Bloodlines/Code/Components/DynastyMemberComponent.cs` -- resolve the current ruling member for succession-aware prestige changes
+  - `unity/Assets/_Bloodlines/Code/GameTime/DualClockComponent.cs` -- read `InWorldDays` for deterministic whole-day scoring cadence
+  - `unity/Assets/_Bloodlines/Code/Components/ControlPointComponent.cs` -- read held and loyal territory counts for territorial prestige advantage
+  - `unity/Assets/_Bloodlines/Code/Faith/FaithStateComponent.cs` -- read committed-faith intensity and level for covenant prestige contribution
+  - `unity/Assets/_Bloodlines/Code/Victory/VictoryStateComponent.cs` -- read live win state and victory momentum
+  - `unity/Assets/_Bloodlines/Code/Victory/VictoryConditionEvaluationSystem.cs` -- reuse canonical thresholds for territorial governance and divine-right progress
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-22-unity-dynasty-renown-prestige.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` per-member renown state only; no dynasty-level prestige ledger exists in browser runtime, so this lane lifts the design-bible dynasty prestige surface onto Unity ECS state
+- Current Branch In Flight: `codex/unity-dynasty-renown-prestige`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-dynasty-renown-prestige.md`
 
 ### Lane: faith-commitment
 
