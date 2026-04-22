@@ -3057,3 +3057,47 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Create a fresh Codex branch from current `master` for the next player-HUD slice.
 2. Implement `MatchProgressionHUDComponent`, `MatchProgressionHUDSystem`, and `TryDebugGetMatchHUDSnapshot`.
 3. Keep using the worktree-local bootstrap-runtime and scene-shell wrapper copies until the checked-in path-pinned wrappers are repaired.
+
+## 2026-04-21 Player HUD Match Progression Slice
+
+- Branch lane: `codex/unity-player-hud-match-progression`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-match-progression.md`
+- The second player HUD slice is now complete on branch:
+  - `unity/Assets/_Bloodlines/Code/HUD/MatchProgressionHUDComponent.cs`
+    and
+    `MatchProgressionHUDSystem.cs`
+    now project stage, phase, readiness, next-stage, declaration count,
+    in-world time, dominant-leader telemetry, Great Reckoning telemetry, and
+    resolved world-pressure state into a singleton HUD read-model without
+    mutating match progression or world-pressure source state.
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+    now exposes `TryDebugGetMatchHUDSnapshot(out string readout)` as a single
+    parseable `MatchHUD|Key=Value|...` readout.
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMatchProgressionHUDSmokeValidation.cs`
+    plus
+    `scripts/Invoke-BloodlinesUnityMatchProgressionHUDSmokeValidation.ps1`
+    now prove four phases: founding baseline, Stage 4 commitment projection,
+    dominant-leader pressure projection, and Great Reckoning convergence
+    projection.
+  - `unity/Assembly-CSharp.csproj`
+    and
+    `unity/Assembly-CSharp-Editor.csproj`
+    now include the new match-HUD runtime and editor files.
+- Governed validation is green in `D:\BLM14\bloodlines\bloodlines`:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`: `Build succeeded.` / `0 Error(s)`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: `113 Warning(s)` / `0 Error(s)`
+  - dedicated match HUD smoke:
+    `BLOODLINES_MATCH_PROGRESSION_HUD_SMOKE PASS`
+    with
+    `Phase 1 PASS: founding stage surfaces emergence phase, quiet world pressure, and InWorldDays=12.0.`
+    and
+    `Phase 4 PASS: Great Reckoning target 'enemy' surfaces convergence pressure level 3 at share 0.720.`
+  - bootstrap runtime, combat, canonical scene shells, fortification, siege,
+    `node tests/data-validation.mjs`, and `node tests/runtime-bridge.mjs`
+    all re-passed green in the clean worktree.
+
+### Recommended Next Follow-Up
+1. Stage the match-progression HUD slice files plus continuity/contract updates and commit them on `codex/unity-player-hud-match-progression`.
+2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
+3. After landing, continue the same lane with the fortification-legibility or victory-readout HUD follow-up slice.

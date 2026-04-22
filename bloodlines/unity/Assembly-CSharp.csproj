@@ -46,18 +46,18 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.13f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.13f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.13f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
-    <Analyzer Include="D:\BLM13\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\AspectGenerator.dll" />
-    <Analyzer Include="D:\BLM13\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\JobEntityGenerator.dll" />
-    <Analyzer Include="D:\BLM13\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.dll" />
-    <Analyzer Include="D:\BLM13\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.dll" />
-    <Analyzer Include="D:\BLM13\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.LambdaJobs.dll" />
-    <Analyzer Include="D:\BLM13\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.QueryBuilder.dll" />
-    <Analyzer Include="D:\BLM13\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.dll" />
-    <Analyzer Include="D:\BLM13\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.Query.dll" />
-    <Analyzer Include="D:\BLM13\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.Common.dll" />
-    <Analyzer Include="D:\BLM13\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\Common.dll" />
-    <Analyzer Include="D:\BLM13\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.EntityQueryBulkOperations.dll" />
-    <Analyzer Include="D:\BLM13\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.CodeFixes.dll" />
+    <Analyzer Include="D:\BLM14\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\AspectGenerator.dll" />
+    <Analyzer Include="D:\BLM14\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\JobEntityGenerator.dll" />
+    <Analyzer Include="D:\BLM14\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.dll" />
+    <Analyzer Include="D:\BLM14\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.dll" />
+    <Analyzer Include="D:\BLM14\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.LambdaJobs.dll" />
+    <Analyzer Include="D:\BLM14\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.QueryBuilder.dll" />
+    <Analyzer Include="D:\BLM14\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.dll" />
+    <Analyzer Include="D:\BLM14\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.Query.dll" />
+    <Analyzer Include="D:\BLM14\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.Common.dll" />
+    <Analyzer Include="D:\BLM14\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\Common.dll" />
+    <Analyzer Include="D:\BLM14\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.EntityQueryBulkOperations.dll" />
+    <Analyzer Include="D:\BLM14\bloodlines\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.CodeFixes.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\_Bloodlines\Code\Combat\HostilityComponent.cs" />
@@ -104,11 +104,13 @@
     <Compile Include="Assets\_Bloodlines\Code\Time\DualClockDeclarationSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\CombatStatsComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\CommanderComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\HUD\MatchProgressionHUDComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Siege\SiegeSupportRefreshSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.SaveLoad.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Systems\ControlPointCaptureSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Rendering\BloodlinesVisualCatalog.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\UnitSeparationSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\HUD\MatchProgressionHUDSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AIMissionaryExecutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Authoring\BloodlinesMapBootstrapAuthoring.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Raids\ScoutRaidCanon.cs" />

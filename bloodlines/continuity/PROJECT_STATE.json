@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-21T23:20:00-06:00",
+  "updated_at": "2026-04-21T23:39:59.9787958-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -1847,6 +1847,15 @@
       "description": "The validated `codex/unity-player-hud-realm-condition-legibility` branch is now merged to master via `dfcbcec9`. `RealmConditionHUDComponent`, `RealmConditionHUDSystem`, `BloodlinesDebugCommandSurface.HUD.cs`, and `BloodlinesRealmConditionHUDSmokeValidation` plus wrapper are now canonical master content for the first player-HUD slice. Merged master re-passed runtime build, editor build, dedicated HUD smoke, bootstrap runtime, combat, canonical scene shells, fortification, siege, `node tests/data-validation.mjs`, `node tests/runtime-bridge.mjs`, and contract staleness at revision 67 in D:\\BLM13\\bloodlines\\bloodlines. Contract rev 67->68 records the lane as still active with no branch currently in flight and points the next pickup at the match-progression HUD slice.",
       "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility-landing.md",
       "validation_gates": "all 10 green plus realm-condition HUD smoke on merged master"
+    },
+    {
+      "lane": "player-hud-realm-condition-legibility-slice-2-match-progression",
+      "date": "2026-04-21",
+      "branch": "codex/unity-player-hud-match-progression",
+      "status": "active",
+      "description": "The second player HUD slice is now complete on branch. `MatchProgressionHUDComponent` and `MatchProgressionHUDSystem` project stage number / id / label, phase id / label, readiness, next-stage label, in-world days / years, declaration count, dominant-leader telemetry, Great Reckoning telemetry, and resolved world-pressure state into a singleton HUD read-model without mutating match progression or world-pressure source state. `BloodlinesDebugCommandSurface.HUD.cs` now exposes a parseable `MatchHUD|Key=Value|...` readout, and `BloodlinesMatchProgressionHUDSmokeValidation` plus `scripts/Invoke-BloodlinesUnityMatchProgressionHUDSmokeValidation.ps1` prove founding baseline, Stage 4 commitment projection, dominant-leader pressure projection, and Great Reckoning convergence projection. The governed branch-side gate is green in D:\\BLM14\\bloodlines\\bloodlines: runtime build, editor build, dedicated match-HUD smoke, bootstrap runtime, combat, canonical scene shells, fortification, siege, `node tests/data-validation.mjs`, and `node tests/runtime-bridge.mjs`. Contract rev 68->69.",
+      "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-hud-match-progression.md",
+      "validation_gates": "all 10 green plus match-progression HUD smoke"
     }
   ]
 }

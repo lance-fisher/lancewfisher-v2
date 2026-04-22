@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 68
+- Revision: 69
 - Last Updated: 2026-04-21
-- Last Updated By: codex-player-hud-2026-04-21
-- Supersedes: revision 67 (The first player HUD slice was completed on branch `codex/unity-player-hud-realm-condition-legibility`; revision 68 records that slice as landed on canonical `master` via `dfcbcec9`, with the governed merged-master validation gate re-run green in `D:\BLM13\bloodlines\bloodlines` and the lane still active for follow-up HUD slices.)
+- Last Updated By: codex-player-hud-match-2026-04-21
+- Supersedes: revision 68 (The first player HUD slice was already canonical on `master`; revision 69 records the validated follow-up branch `codex/unity-player-hud-match-progression`, adds the match-progression HUD files and dedicated validator to the active HUD lane, and captures the branch-side governed validation proof in `D:\BLM14\bloodlines\bloodlines` before landing continuity.)
 
 
 ## Purpose
@@ -667,11 +667,15 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/HUD/**`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMatchProgressionHUDSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityRealmConditionHUDSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityMatchProgressionHUDSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/RealmConditionHUDComponent.cs`, `Code/HUD/RealmConditionHUDSystem.cs`, and `Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
+  - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/MatchProgressionHUDComponent.cs` and `Code/HUD/MatchProgressionHUDSystem.cs`
+  - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesMatchProgressionHUDSmokeValidation.cs`
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve HUD snapshots by `FactionId`
   - `unity/Assets/_Bloodlines/Code/Components/RealmConditionComponent.cs` -- read realm cycle accumulator, cycle count, strain streaks, and realm legibility thresholds
@@ -684,17 +688,18 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Economy/CapPressureResponseSystem.cs` -- update ordering only; HUD must observe post-response state
   - `unity/Assets/_Bloodlines/Code/Economy/StabilitySurplusResponseSystem.cs` -- update ordering only; HUD must observe post-response state
   - `unity/Assets/_Bloodlines/Code/Faith/FaithIntensityResolveSystem.cs` -- update ordering only; HUD must observe resolved faith levels
-  - `unity/Assets/_Bloodlines/Code/Time/MatchProgressionComponent.cs` -- reserved for follow-up match HUD slice inside this same lane
-  - `unity/Assets/_Bloodlines/Code/WorldPressure/WorldPressureComponent.cs` -- reserved for follow-up match HUD and victory legibility slices inside this same lane
+  - `unity/Assets/_Bloodlines/Code/Time/MatchProgressionComponent.cs` -- read stage, phase, readiness, declaration, and Great Reckoning state for the match HUD read-model
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/WorldPressureComponent.cs` -- read dominant-leader or Great Reckoning target pressure state for the match HUD read-model
   - `unity/Assets/_Bloodlines/Code/Victory/VictoryComponents.cs` -- reserved for follow-up victory readout slice inside this same lane
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility-landing.md`
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-match-progression.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `getRealmConditionSnapshot` (14291-14764), `getMatchProgressionSnapshot` (13650-13658)
-  - `tests/runtime-bridge.mjs` realm-condition snapshot assertions (1344-1364), fortification/readout assertions (1438-1444), hostile-post-repulse world-pressure assertions (1718-1733)
-- Current Branch In Flight: none
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility-landing.md`
+  - `tests/runtime-bridge.mjs` realm-condition snapshot assertions (1344-1364), match-progression assertions (7521, 7773-7871, 7923-7975, 8133, 8185), fortification/readout assertions (1438-1444), hostile-post-repulse world-pressure assertions (1718-1733)
+- Current Branch In Flight: `codex/unity-player-hud-match-progression`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-hud-match-progression.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
