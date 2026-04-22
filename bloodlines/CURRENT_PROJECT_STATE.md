@@ -3689,3 +3689,33 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   command-deck HUD smoke.
 - Contract revision advanced `88 -> 89` and now clears the HUD lane branch in
   flight after the landing pass.
+
+## 2026-04-22 Player Command-Deck Overlay Slice
+
+- Branch in flight: `codex/unity-player-hud-command-deck-overlay`.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.cs`
+  now expands the battlefield shell height when a command-deck snapshot is
+  present and appends a visible command-deck block under the existing shell
+  summary without disturbing the production or construction panels.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now builds a shared battlefield overlay snapshot from
+  `PlayerCommandDeckHUDComponent`, exposes parseable
+  `BattlefieldCommandDeckOverlay|FactionId=...|StageLine=...|AlertLine=...|VictoryLine=...|DynastyLine=...|PressureLine=...`
+  output, and formats the live IMGUI command-deck overlay lines from the
+  already-landed HUD read-model.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCommandDeckOverlaySmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityPlayerCommandDeckOverlaySmokeValidation.ps1`
+  now prove on-screen overlay rendering for summary, Great Reckoning alert,
+  fortification-threat alert, and pressure-band projection.
+- `unity/Assembly-CSharp.csproj` and `unity/Assembly-CSharp-Editor.csproj`
+  now point stale analyzer/source-generator entries back to this worktree's
+  `unity/Library/PackageCache`, and this worktree's `unity/Library` junction is
+  restored to `D:\ProjectsHome\Bloodlines\unity\Library`.
+- Governed validation is green on the branch: runtime build, editor build,
+  bootstrap runtime smoke, combat smoke, canonical scene shell validation,
+  fortification smoke, siege smoke, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated player
+  command-deck overlay smoke.
+- Contract revision advanced `89 -> 90` and now records the HUD lane with the
+  command-deck overlay branch in flight.

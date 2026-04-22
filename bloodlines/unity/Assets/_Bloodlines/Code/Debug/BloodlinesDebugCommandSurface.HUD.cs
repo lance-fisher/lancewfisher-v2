@@ -3,11 +3,15 @@ using System.Text;
 using Bloodlines.HUD;
 using Unity.Collections;
 using Unity.Entities;
+using UnityEngine;
 
 namespace Bloodlines.Debug
 {
     public sealed partial class BloodlinesDebugCommandSurface
     {
+        private const float BattlefieldHudBaseHeight = 188f;
+        private const float BattlefieldHudCommandDeckHeight = 92f;
+
         public bool TryDebugGetRealmConditionHUDSnapshot(string factionId, out string readout)
         {
             readout = string.Empty;
@@ -365,6 +369,160 @@ namespace Bloodlines.Debug
 
             readout = builder.ToString();
             return true;
+        }
+
+        public bool TryDebugGetBattlefieldCommandDeckOverlay(out string readout)
+        {
+            readout = string.Empty;
+            if (!TryGetEntityManager(out var entityManager) ||
+                !TryBuildBattlefieldCommandDeckOverlaySnapshot(entityManager, out var snapshot))
+            {
+                return false;
+            }
+
+            var builder = new StringBuilder(512);
+            builder.Append("BattlefieldCommandDeckOverlay")
+                .Append("|FactionId=").Append(snapshot.FactionId)
+                .Append("|StageLine=").Append(snapshot.StageLine)
+                .Append("|AlertLine=").Append(snapshot.AlertLine)
+                .Append("|VictoryLine=").Append(snapshot.VictoryLine)
+                .Append("|DynastyLine=").Append(snapshot.DynastyLine)
+                .Append("|PressureLine=").Append(snapshot.PressureLine)
+                .Append("|PrimaryAlertLabel=").Append(snapshot.PrimaryAlertLabel)
+                .Append("|VictoryConditionId=").Append(snapshot.VictoryConditionId)
+                .Append("|VictoryRank=").Append(snapshot.VictoryRank)
+                .Append("|RenownRank=").Append(snapshot.RenownRank)
+                .Append("|GreatReckoningActive=").Append(snapshot.GreatReckoningActive ? "true" : "false")
+                .Append("|FortificationThreatActive=").Append(snapshot.FortificationThreatActive ? "true" : "false");
+
+            readout = builder.ToString();
+            return true;
+        }
+
+        private float GetBattlefieldHudPanelHeight(EntityManager entityManager)
+        {
+            return TryBuildBattlefieldCommandDeckOverlaySnapshot(entityManager, out _)
+                ? BattlefieldHudBaseHeight + BattlefieldHudCommandDeckHeight
+                : BattlefieldHudBaseHeight;
+        }
+
+        private bool TryBuildBattlefieldCommandDeckOverlayText(
+            EntityManager entityManager,
+            out string overlayText)
+        {
+            overlayText = string.Empty;
+            if (!TryBuildBattlefieldCommandDeckOverlaySnapshot(entityManager, out var snapshot))
+            {
+                return false;
+            }
+
+            var builder = new StringBuilder(256);
+            builder.Append("<b>Command Deck</b>: ").Append(snapshot.StageLine).AppendLine();
+            builder.Append("<b>Alert</b>: ").Append(snapshot.AlertLine).AppendLine();
+            builder.Append("<b>Victory</b>: ").Append(snapshot.VictoryLine).AppendLine();
+            builder.Append("<b>Dynasty</b>: ").Append(snapshot.DynastyLine).AppendLine();
+            builder.Append("<b>Pressure</b>: ").Append(snapshot.PressureLine);
+            overlayText = builder.ToString();
+            return true;
+        }
+
+        private bool TryBuildBattlefieldCommandDeckOverlaySnapshot(
+            EntityManager entityManager,
+            out BattlefieldCommandDeckOverlaySnapshot snapshot)
+        {
+            snapshot = default;
+            var factionEntity = FindFactionRootEntity(entityManager, new FixedString32Bytes(controlledFactionId));
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<PlayerCommandDeckHUDComponent>(factionEntity))
+            {
+                return false;
+            }
+
+            var hud = entityManager.GetComponentData<PlayerCommandDeckHUDComponent>(factionEntity);
+            string alertLabel = FormatBattlefieldHudLabel(hud.PrimaryAlertLabel.ToString());
+            string stageLine = string.Format(
+                CultureInfo.InvariantCulture,
+                "{0} / {1}",
+                hud.StageLabel,
+                FormatBattlefieldHudLabel(hud.PhaseLabel.ToString()));
+
+            string alertLine = alertLabel;
+            if (hud.GreatReckoningActive)
+            {
+                alertLine += ", Great Reckoning active";
+            }
+            else if (hud.FortificationThreatActive)
+            {
+                alertLine += ", fortifications threatened";
+            }
+
+            string victoryLine = string.Format(
+                CultureInfo.InvariantCulture,
+                "{0} {1}% , rank {2}",
+                FormatBattlefieldHudLabel(hud.LeadingVictoryConditionId.ToString()),
+                Mathf.RoundToInt(hud.LeadingVictoryProgressPct * 100f),
+                hud.VictoryRank > 0 ? hud.VictoryRank : 0);
+            if (!float.IsNaN(hud.LeadingVictoryEtaInWorldDays))
+            {
+                victoryLine += string.Format(
+                    CultureInfo.InvariantCulture,
+                    ", ETA {0:0.0}d",
+                    hud.LeadingVictoryEtaInWorldDays);
+            }
+
+            string dynastyLine = string.Format(
+                CultureInfo.InvariantCulture,
+                "Renown {0:0.0} ({1}), rank {2}",
+                hud.RenownScore,
+                FormatBattlefieldHudLabel(hud.RenownBandLabel.ToString()),
+                hud.RenownRank > 0 ? hud.RenownRank : 0);
+
+            string pressureLine = string.Format(
+                CultureInfo.InvariantCulture,
+                "{0} {1}; pop {2}; loyalty {3}; faith {4}",
+                FormatBattlefieldHudLabel(hud.WorldPressureLabel.ToString()),
+                hud.WorldPressureLevel,
+                FormatBattlefieldHudLabel(hud.PopulationBand.ToString()),
+                FormatBattlefieldHudLabel(hud.LoyaltyBand.ToString()),
+                FormatBattlefieldHudLabel(hud.FaithBand.ToString()));
+
+            snapshot = new BattlefieldCommandDeckOverlaySnapshot
+            {
+                FactionId = hud.FactionId.ToString(),
+                StageLine = stageLine,
+                AlertLine = alertLine,
+                VictoryLine = victoryLine,
+                DynastyLine = dynastyLine,
+                PressureLine = pressureLine,
+                PrimaryAlertLabel = hud.PrimaryAlertLabel.ToString(),
+                VictoryConditionId = hud.LeadingVictoryConditionId.ToString(),
+                VictoryRank = hud.VictoryRank,
+                RenownRank = hud.RenownRank,
+                GreatReckoningActive = hud.GreatReckoningActive,
+                FortificationThreatActive = hud.FortificationThreatActive,
+            };
+            return true;
+        }
+
+        private static string FormatBattlefieldHudLabel(string value)
+        {
+            return FormatIdentifier(value).Trim();
+        }
+
+        private struct BattlefieldCommandDeckOverlaySnapshot
+        {
+            public string FactionId;
+            public string StageLine;
+            public string AlertLine;
+            public string VictoryLine;
+            public string DynastyLine;
+            public string PressureLine;
+            public string PrimaryAlertLabel;
+            public string VictoryConditionId;
+            public int VictoryRank;
+            public int RenownRank;
+            public bool GreatReckoningActive;
+            public bool FortificationThreatActive;
         }
     }
 }

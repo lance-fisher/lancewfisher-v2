@@ -287,8 +287,8 @@ namespace Bloodlines.Debug
 
             EnsureHudStyles();
 
-            string hudText = BuildHudText(factionSnapshot, territorySnapshot, selectionSnapshot);
-            float height = 188f;
+            string hudText = BuildHudText(entityManager, factionSnapshot, territorySnapshot, selectionSnapshot);
+            float height = GetBattlefieldHudPanelHeight(entityManager);
             var panelRect = new Rect(hudMargin.x, hudMargin.y, hudWidth, height);
             var headerRect = new Rect(panelRect.x, panelRect.y, panelRect.width, 28f);
             var bodyRect = new Rect(panelRect.x + 12f, panelRect.y + 38f, panelRect.width - 24f, panelRect.height - 48f);
@@ -319,7 +319,7 @@ namespace Bloodlines.Debug
             EnsureHudStyles();
             var options = BuildProductionOptions(entityManager, in buildingSnapshot);
             var queueEntries = BuildProductionQueueEntries(entityManager, buildingSnapshot.Entity);
-            float panelY = hudMargin.y + 188f + productionPanelSpacing;
+            float panelY = hudMargin.y + GetBattlefieldHudPanelHeight(entityManager) + productionPanelSpacing;
             float queueHeight = queueEntries.Count > 0 ? 30f + (queueEntries.Count * 30f) : 20f;
             float feedbackHeight = HasActiveProductionFeedback() ? 28f : 0f;
             float height = 68f + queueHeight + (options.Count * (productionButtonHeight + 6f)) + feedbackHeight;
@@ -488,7 +488,7 @@ namespace Bloodlines.Debug
             }
 
             EnsureHudStyles();
-            float panelY = hudMargin.y + 188f + constructionProgressPanelSpacing;
+            float panelY = hudMargin.y + GetBattlefieldHudPanelHeight(entityManager) + constructionProgressPanelSpacing;
             float height = 120f;
             var panelRect = new Rect(hudMargin.x, panelY, hudWidth, height);
             var headerRect = new Rect(panelRect.x, panelRect.y, panelRect.width, 28f);
@@ -3338,7 +3338,7 @@ namespace Bloodlines.Debug
             }
         }
 
-        private string BuildHudText(FactionHudSnapshot factionSnapshot, TerritoryHudSnapshot territorySnapshot, SelectionHudSnapshot selectionSnapshot)
+        private string BuildHudText(EntityManager entityManager, FactionHudSnapshot factionSnapshot, TerritoryHudSnapshot territorySnapshot, SelectionHudSnapshot selectionSnapshot)
         {
             var builder = new StringBuilder(512);
             builder.Append("<b>Faction</b>: ").Append(controlledFactionId);
@@ -3426,6 +3426,13 @@ namespace Bloodlines.Debug
 
             builder.AppendLine();
             builder.Append("<b>Controls</b>: LMB unit/building select  |  Shift add  |  RMB move  |  1 select all  |  Ctrl+2-5 save  |  2-5 recall  |  F frame  |  Esc clear");
+
+            if (TryBuildBattlefieldCommandDeckOverlayText(entityManager, out string commandDeckOverlay))
+            {
+                builder.AppendLine();
+                builder.AppendLine();
+                builder.Append(commandDeckOverlay);
+            }
 
             return builder.ToString();
         }
