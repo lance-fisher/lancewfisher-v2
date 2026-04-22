@@ -4054,3 +4054,82 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   dual-clock state.
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
+
+## Codex Player Captive Rescue Dispatch (2026-04-22)
+
+### Branch
+
+- `codex/unity-player-captive-rescue`
+
+### What Landed On Branch
+
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerCaptiveRescueRequestComponent.cs`,
+  `PlayerCaptiveDispatchUtility.cs`,
+  and
+  `PlayerCaptiveRescueDispatchSystem.cs`
+  now port the browser's player-side captive rescue dispatch seam under the
+  existing `PlayerDiplomacy/**` lane without widening `AI/**`.
+- The player rescue flow now validates kingdom state, verifies the requested
+  dynasty member is currently `Captured`, resolves the holding faction from
+  the AI-owned `CapturedMemberElement` buffers, rejects duplicate active rescue
+  ops, reuses the AI rescue operator priorities, deducts canonical
+  `gold=42` / `influence=26`, creates
+  `DynastyOperationComponent` plus
+  `DynastyOperationCaptiveRescueComponent`,
+  and emits a rescue narrative line.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerDiplomacy.cs`
+  now exposes `TryDebugDispatchCaptiveRescue(...)`.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRescueSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityPlayerCaptiveRescueSmokeValidation.ps1`
+  now prove three phases: rescue success, no-operator rejection, and
+  missing-captive rejection.
+- `unity/Assembly-CSharp.csproj`
+  and
+  `unity/Assembly-CSharp-Editor.csproj`
+  now include the new player-diplomacy runtime and smoke files for this local
+  initialized Unity project.
+
+### Validation Proof
+
+- Runtime build:
+  - `Build succeeded.`
+  - `0 Error(s)`
+- Editor build:
+  - `Build succeeded.`
+  - `0 Error(s)` with existing repo-wide warnings only
+- Bootstrap runtime:
+  - `Bootstrap runtime smoke validation passed.`
+- Combat smoke:
+  - `Unity exited with code 0`
+- Scene shells:
+  - `Bootstrap scene shell validation passed.`
+  - `Gameplay scene shell validation passed.`
+- Fortification smoke:
+  - `Fortification smoke validation passed.`
+- Siege smoke:
+  - `Unity exited with code 0`
+- Data validation:
+  - `Bloodlines data validation passed.`
+- Runtime bridge:
+  - `Bloodlines runtime bridge validation passed.`
+- Contract staleness:
+  - `STALENESS CHECK PASSED: Contract revision=80, last-updated=2026-04-22 is current.`
+- Dedicated smoke:
+  - `Player captive rescue smoke validation passed.`
+
+### Immediate Next Action
+
+1. Stage the player captive rescue slice files plus contract and continuity
+   updates, commit them on `codex/unity-player-captive-rescue`, and push to
+   `origin`.
+2. Continue the next player-diplomacy captive follow-up on a fresh branch:
+   player captive ransom dispatch.
+
+### Context Notes
+
+- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched; this slice only
+  reads captive holding buffers, rescue operation payloads, and rescue helper
+  constants.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.

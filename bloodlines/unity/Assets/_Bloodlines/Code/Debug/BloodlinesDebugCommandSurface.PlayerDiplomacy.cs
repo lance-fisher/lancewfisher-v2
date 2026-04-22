@@ -141,6 +141,30 @@ namespace Bloodlines.Debug
             return true;
         }
 
+        public bool TryDebugDispatchCaptiveRescue(string sourceFactionId, string captiveMemberId)
+        {
+            if (string.IsNullOrWhiteSpace(sourceFactionId) ||
+                string.IsNullOrWhiteSpace(captiveMemberId) ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var sourceFactionKey = new FixedString32Bytes(sourceFactionId);
+            if (FindFactionEntity(entityManager, sourceFactionKey) == Entity.Null)
+            {
+                return false;
+            }
+
+            var requestEntity = entityManager.CreateEntity(typeof(PlayerCaptiveRescueRequestComponent));
+            entityManager.SetComponentData(requestEntity, new PlayerCaptiveRescueRequestComponent
+            {
+                SourceFactionId = sourceFactionKey,
+                CaptiveMemberId = new FixedString64Bytes(captiveMemberId),
+            });
+            return true;
+        }
+
         public bool TryDebugIssuePlayerPactProposal(string sourceFactionId, string targetFactionId)
         {
             if (string.IsNullOrWhiteSpace(sourceFactionId) ||

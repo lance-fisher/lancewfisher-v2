@@ -3459,3 +3459,32 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   - `Victory readout smoke validation passed.`
 - Contract revision advanced `79 -> 80` and now records the new HUD branch in
   flight.
+
+## 2026-04-22 Player Captive Rescue Dispatch Slice
+
+- Branch in flight: `codex/unity-player-captive-rescue`.
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerCaptiveRescueRequestComponent.cs`,
+  `PlayerCaptiveDispatchUtility.cs`,
+  and
+  `PlayerCaptiveRescueDispatchSystem.cs`
+  now port the browser player-side captive rescue seam without widening the
+  AI-owned `AI/**` lane. The player dispatch validates kingdom state, confirms
+  the member is actually captured, resolves the holding faction from
+  `CapturedMemberElement`, reuses the AI rescue operator priorities, deducts
+  canonical `gold=42` / `influence=26`, creates the AI-owned rescue operation
+  payload, and emits a rescue narrative line.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerDiplomacy.cs`
+  now exposes `TryDebugDispatchCaptiveRescue(...)` for command-surface
+  issuance.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRescueSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityPlayerCaptiveRescueSmokeValidation.ps1`
+  now prove rescue success, missing-operator rejection, and missing-captive
+  rejection in a dedicated ECS validation world.
+- Governed validation is green on the branch: runtime build, editor build,
+  bootstrap runtime smoke, combat smoke, canonical scene shell validation,
+  fortification smoke, siege smoke, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated
+  player captive rescue smoke.
+- Contract revision advanced `80 -> 81` and now records the player-diplomacy
+  lane with this branch in flight.
