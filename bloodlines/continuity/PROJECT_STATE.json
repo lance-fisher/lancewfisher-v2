@@ -1928,6 +1928,24 @@
       "description": "The validated `codex/unity-player-pact-proposal` branch is now merged to canonical master via `10ec1e2a`. `PlayerPactProposalRequestComponent`, `PlayerPactBreakRequestComponent`, `PlayerPactUtility`, `PlayerPactProposalSystem`, and `PlayerPactBreakSystem` now land the full player-side non-aggression pact proposal/break seam on master, `BloodlinesDebugCommandSurface.PlayerDiplomacy` exposes pact issue/readout hooks on canonical master, and `BloodlinesPlayerPactSmokeValidation` plus wrapper remain green after the merge. The first merged-master runtime build failed only because this worktree's generated `.csproj` metadata still pointed at another checkout's `Library\\PackageCache`; a local Unity project refresh regenerated the metadata for this worktree, after which runtime build, editor build, bootstrap runtime smoke, combat smoke, canonical scene-shell validation, fortification smoke, siege smoke, `node tests/data-validation.mjs`, `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated player pact smoke all passed green. Contract rev 76->77 records the player-marriage-diplomacy lane with no branch in flight and points the next Codex pickup at the HUD follow-up backlog.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-pact-proposal.md",
       "validation_gates": "all 10 green plus player pact smoke on merged master"
+    },
+    {
+      "lane": "player-hud-realm-condition-legibility-slice-3-fortification",
+      "date": "2026-04-22",
+      "branch": "codex/unity-player-hud-fortification",
+      "status": "active",
+      "description": "The third player HUD slice is now complete on branch. `FortificationHUDComponent` and `FortificationHUDSystem` project settlement-scoped fortification tier, breach count, reserve frontage, mustered defenders, ready / recovering reserve counts, threat state, and sealing / recovery progress into a player-facing HUD read-model without mutating source ECS state. `BloodlinesDebugCommandSurface.HUD.cs` now exposes a parseable `FortificationHUD|Key=Value|...` readout, and `BloodlinesFortificationHUDSmokeValidation` plus `Invoke-BloodlinesUnityFortificationHUDSmokeValidation.ps1` prove baseline reserve state, active breach / threat projection, and sealing / recovery progress transitions in a dedicated ECS validation world. The full governed 10-gate chain is green on the branch and contract revision advanced 77->78.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification.md",
+      "validation_gates": "all 10 green plus fortification HUD smoke"
+    },
+    {
+      "lane": "player-hud-realm-condition-legibility-slice-3-fortification-rerun",
+      "date": "2026-04-22",
+      "branch": "codex/unity-player-hud-fortification-legibility-rerun",
+      "status": "active",
+      "description": "The preserved fortification HUD slice has been replayed onto current canonical `origin/master` and revalidated in this worktree. `FortificationHUDComponent`, `FortificationHUDSystem`, `BloodlinesDebugCommandSurface.HUD.cs`, and `BloodlinesFortificationHUDSmokeValidation` plus wrapper still provide the entire settlement-scoped fortification read-model, parseable `FortificationHUD|...` debug seam, and four-phase reserve/breach/repair proof surface without widening the paused fortification lane. A local Unity compile pass regenerated `Assembly-CSharp*.csproj` after stale analyzer references still pointed at another worktree's `Library\\\\PackageCache`, and the full governed 10-gate chain plus dedicated fortification HUD smoke reran green with local wrapper copies used only for the still-root-pinned bootstrap-runtime and canonical scene-shell validators. Contract rev 78->79.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification-rerun.md",
+      "validation_gates": "all 10 green plus fortification HUD smoke on rerun branch"
     }
   ]
 }

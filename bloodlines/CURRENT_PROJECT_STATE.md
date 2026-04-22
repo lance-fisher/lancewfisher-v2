@@ -3382,3 +3382,49 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   - dedicated conviction smoke via local worktree wrapper under lock: PASS
 - Contract revision advanced `73 -> 74` to record the completed commander-only capture interpretation and the validated
   branch now in flight.
+
+## 2026-04-22 Player HUD Fortification Legibility Slice
+
+- Branch in flight: `codex/unity-player-hud-fortification`.
+- `unity/Assets/_Bloodlines/Code/HUD/FortificationHUDComponent.cs`
+  and
+  `unity/Assets/_Bloodlines/Code/HUD/FortificationHUDSystem.cs`
+  now project settlement-scoped fortification tier, breach count, reserve frontage, mustered defenders, ready /
+  recovering reserve counts, threat state, and sealing / recovery progress into a player-facing HUD read-model without
+  mutating source ECS state.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes a parseable `FortificationHUD|Key=Value|...` readout for command-surface inspection and smoke use.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationHUDSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityFortificationHUDSmokeValidation.ps1`
+  now prove baseline reserve state, active breach / threat projection, and sealing / recovery progress transitions in a
+  dedicated ECS validation world.
+- Governed validation is green on the branch: runtime build, editor build, bootstrap runtime smoke, combat smoke,
+  canonical scene shell validation, fortification smoke, siege smoke, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated fortification HUD smoke.
+- Contract revision advanced `77 -> 78` and records the player-HUD lane with this branch in flight.
+
+## 2026-04-22 Player HUD Fortification Legibility Rerun
+
+- Branch in flight: `codex/unity-player-hud-fortification-legibility-rerun`.
+- The preserved fortification HUD slice was replayed onto current canonical
+  `origin/master` without widening the HUD or fortification lane scope:
+  `FortificationHUDComponent`,
+  `FortificationHUDSystem`,
+  `BloodlinesDebugCommandSurface.HUD.cs`,
+  `BloodlinesFortificationHUDSmokeValidation.cs`,
+  and
+  `Invoke-BloodlinesUnityFortificationHUDSmokeValidation.ps1`
+  remain the full code surface.
+- A local Unity compile pass regenerated `unity/Assembly-CSharp.csproj`
+  and
+  `unity/Assembly-CSharp-Editor.csproj`
+  after this worktree surfaced stale analyzer/package-cache references to another
+  checkout.
+- Governed validation reran green in this worktree: runtime build, editor build,
+  bootstrap runtime smoke, combat smoke, canonical scene-shell validation,
+  fortification smoke, siege smoke, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated
+  fortification HUD smoke.
+- Contract revision advanced `78 -> 79` and now records the rerun branch as the
+  active HUD branch in flight.

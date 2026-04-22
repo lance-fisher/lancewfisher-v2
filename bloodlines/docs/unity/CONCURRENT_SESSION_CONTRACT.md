@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 77
+- Revision: 79
 - Last Updated: 2026-04-22
-- Last Updated By: codex-player-pact-landing-2026-04-22
-- Supersedes: revision 76 (The validated `codex/unity-player-pact-proposal` slice is now landed on canonical master via merge commit `10ec1e2a`, and the merged result has been revalidated in this worktree after a local Unity project refresh regenerated stale `.csproj` metadata that still pointed at another checkout's `Library\PackageCache`. Runtime build, editor build, bootstrap runtime smoke, combat smoke, canonical scene-shell validation, fortification smoke, siege smoke, `node tests/data-validation.mjs`, `node tests/runtime-bridge.mjs`, contract staleness, and dedicated player-pact smoke all reran green on the merged master result. The player-marriage-diplomacy lane now has no branch in flight and returns to the lower-priority HUD follow-up backlog.)
+- Last Updated By: codex-player-hud-fortification-rerun-2026-04-22
+- Supersedes: revision 78 (The preserved player-HUD fortification slice was rerun on `codex/unity-player-hud-fortification-legibility-rerun` atop the current canonical `origin/master` after a local Unity compile refreshed stale `Assembly-CSharp*.csproj` metadata that still pointed at another worktree's `Library\PackageCache`. `FortificationHUDComponent` and `FortificationHUDSystem` still project settlement fortification, reserve, breach, and repair-progress telemetry into a HUD-owned read-model without widening the paused fortification lane. `BloodlinesDebugCommandSurface.HUD.cs` still exposes a parseable `FortificationHUD|...` readout, and `BloodlinesFortificationHUDSmokeValidation` plus wrapper still prove intact baseline, threat+muster, sealing progress, and recovery progress. Runtime build, editor build, bootstrap runtime smoke, combat smoke, canonical scene-shell validation, fortification smoke, siege smoke, `node tests/data-validation.mjs`, `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated fortification HUD smoke reran green in this worktree, with local wrapper copies used only for the still-root-pinned bootstrap-runtime and canonical scene-shell validators.)
 
 
 ## Purpose
@@ -716,14 +716,18 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMatchProgressionHUDSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationHUDSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityRealmConditionHUDSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityMatchProgressionHUDSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityFortificationHUDSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/RealmConditionHUDComponent.cs`, `Code/HUD/RealmConditionHUDSystem.cs`, and `Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
   - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/MatchProgressionHUDComponent.cs` and `Code/HUD/MatchProgressionHUDSystem.cs`
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesMatchProgressionHUDSmokeValidation.cs`
+  - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/FortificationHUDComponent.cs` and `Code/HUD/FortificationHUDSystem.cs`
+  - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesFortificationHUDSmokeValidation.cs`
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve HUD snapshots by `FactionId`
   - `unity/Assets/_Bloodlines/Code/Components/RealmConditionComponent.cs` -- read realm cycle accumulator, cycle count, strain streaks, and realm legibility thresholds
@@ -738,17 +742,25 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Faith/FaithIntensityResolveSystem.cs` -- update ordering only; HUD must observe resolved faith levels
   - `unity/Assets/_Bloodlines/Code/Time/MatchProgressionComponent.cs` -- read stage, phase, readiness, declaration, and Great Reckoning state for the match HUD read-model
   - `unity/Assets/_Bloodlines/Code/WorldPressure/WorldPressureComponent.cs` -- read dominant-leader or Great Reckoning target pressure state for the match HUD read-model
+  - `unity/Assets/_Bloodlines/Code/Components/FortificationComponent.cs` -- read settlement tier and live breach counts for the fortification HUD read-model
+  - `unity/Assets/_Bloodlines/Code/Components/FortificationReserveComponent.cs` -- read reserve readiness, recovery, and threat state for the fortification HUD read-model
+  - `unity/Assets/_Bloodlines/Code/Components/BreachSealingProgressComponent.cs` -- read normalized sealing progress for breached settlements
+  - `unity/Assets/_Bloodlines/Code/Components/DestroyedCounterRecoveryProgressComponent.cs` -- read normalized rebuild progress after sealing completes
+  - `unity/Assets/_Bloodlines/Code/Fortification/FortificationReserveAssignmentComponent.cs` -- read mustered-vs-ready reserve duty state without widening the fortification lane
+  - `unity/Assets/_Bloodlines/Code/Fortification/FortificationSettlementLinkComponent.cs` -- resolve linked defenders back to each settlement HUD row
   - `unity/Assets/_Bloodlines/Code/Victory/VictoryComponents.cs` -- reserved for follow-up victory readout slice inside this same lane
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility-landing.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-match-progression.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-match-progression-landing.md`
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification.md`
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification-rerun.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `getRealmConditionSnapshot` (14291-14764), `getMatchProgressionSnapshot` (13650-13658)
   - `tests/runtime-bridge.mjs` realm-condition snapshot assertions (1344-1364), match-progression assertions (7521, 7773-7871, 7923-7975, 8133, 8185), fortification/readout assertions (1438-1444), hostile-post-repulse world-pressure assertions (1718-1733)
-- Current Branch In Flight: none
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-hud-match-progression-landing.md`
+- Current Branch In Flight: `codex/unity-player-hud-fortification-legibility-rerun`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification-rerun.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 

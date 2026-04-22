@@ -108,5 +108,40 @@ namespace Bloodlines.Debug
             readout = builder.ToString();
             return true;
         }
+
+        public bool TryDebugGetFortificationHUDSnapshot(string settlementId, out string readout)
+        {
+            readout = string.Empty;
+            if (string.IsNullOrWhiteSpace(settlementId) ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var settlementEntity = FindSettlementEntity(entityManager, settlementId);
+            if (settlementEntity == Entity.Null ||
+                !entityManager.HasComponent<FortificationHUDComponent>(settlementEntity))
+            {
+                return false;
+            }
+
+            var hud = entityManager.GetComponentData<FortificationHUDComponent>(settlementEntity);
+            var builder = new StringBuilder(256);
+            builder.Append("FortificationHUD")
+                .Append("|SettlementId=").Append(hud.SettlementId)
+                .Append("|OwnerFactionId=").Append(hud.OwnerFactionId)
+                .Append("|Tier=").Append(hud.Tier)
+                .Append("|OpenBreachCount=").Append(hud.OpenBreachCount)
+                .Append("|ReserveFrontage=").Append(hud.ReserveFrontage)
+                .Append("|MusteredDefenders=").Append(hud.MusteredDefenderCount)
+                .Append("|ReadyReserves=").Append(hud.ReadyReserveCount)
+                .Append("|RecoveringReserves=").Append(hud.RecoveringReserveCount)
+                .Append("|ThreatActive=").Append(hud.ThreatActive ? "true" : "false")
+                .Append("|SealingProgress01=").Append(hud.SealingProgress01.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|RecoveryProgress01=").Append(hud.RecoveryProgress01.ToString("0.000", CultureInfo.InvariantCulture));
+
+            readout = builder.ToString();
+            return true;
+        }
     }
 }
