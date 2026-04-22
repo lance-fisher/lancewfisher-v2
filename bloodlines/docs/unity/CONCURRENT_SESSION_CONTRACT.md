@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 65
+- Revision: 67
 - Last Updated: 2026-04-21
-- Last Updated By: codex-player-covert-ops-landing-2026-04-21
-- Supersedes: revision 64 (The validated `codex/unity-player-counter-intelligence` branch is now merged to `master` via `661fea5b`. Player covert ops sub-slice 3C is landed on canonical master content, the merged-master governed validation gate plus the dedicated player counter-intelligence smoke are green in `D:\BLM13\bloodlines\bloodlines`, and the player covert ops lane is now closed through its planned directive scope. `unity/Assets/_Bloodlines/Code/AI/**` remains Claude-owned and read-only from this Codex lane.)
+- Last Updated By: codex-player-hud-2026-04-21
+- Supersedes: revision 66 (The player HUD / realm-condition legibility lane was claimed on branch `codex/unity-player-hud-realm-condition-legibility`; revision 67 records the completed first slice on branch, including the new `HUD/**` read-model, parseable HUD debug seam, dedicated HUD smoke validator, and governed branch-side validation pass in `D:\BLM13\bloodlines\bloodlines`.)
 
 
 ## Purpose
@@ -657,6 +657,43 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `tests/runtime-bridge.mjs` counter-intelligence watch + dossier assertions (4130-4240, 4884-4970)
 - Current Branch In Flight: none (merged into master via `661fea5b`; next clean Codex pickup is the player HUD / realm-condition legibility lane)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-counter-intelligence-landing.md`
+
+### Lane: player-hud-realm-condition-legibility
+
+- Status: active
+- Branch Prefix: `codex/unity-player-hud-*`, `codex/unity-player-hud-realm-condition-legibility`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/HUD/**`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityRealmConditionHUDSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/RealmConditionHUDComponent.cs`, `Code/HUD/RealmConditionHUDSystem.cs`, and `Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve HUD snapshots by `FactionId`
+  - `unity/Assets/_Bloodlines/Code/Components/RealmConditionComponent.cs` -- read realm cycle accumulator, cycle count, strain streaks, and realm legibility thresholds
+  - `unity/Assets/_Bloodlines/Code/Components/PopulationComponent.cs` -- read total and cap for population-pressure readout
+  - `unity/Assets/_Bloodlines/Code/Economy/FactionLoyaltyComponent.cs` -- read current/max/floor loyalty for the player-facing loyalty band
+  - `unity/Assets/_Bloodlines/Code/Components/FaithComponent.cs` -- read covenant, doctrine path, intensity, and level for faith readout
+  - `unity/Assets/_Bloodlines/Code/Components/ConvictionComponent.cs` -- read the already-resolved conviction band for conviction readout
+  - `unity/Assets/_Bloodlines/Code/Conviction/ConvictionScoring.cs` -- reuse canonical band-label mapping helpers rather than duplicating conviction text rules
+  - `unity/Assets/_Bloodlines/Code/Economy/StarvationResponseSystem.cs` -- update ordering only; HUD must observe post-response state
+  - `unity/Assets/_Bloodlines/Code/Economy/CapPressureResponseSystem.cs` -- update ordering only; HUD must observe post-response state
+  - `unity/Assets/_Bloodlines/Code/Economy/StabilitySurplusResponseSystem.cs` -- update ordering only; HUD must observe post-response state
+  - `unity/Assets/_Bloodlines/Code/Faith/FaithIntensityResolveSystem.cs` -- update ordering only; HUD must observe resolved faith levels
+  - `unity/Assets/_Bloodlines/Code/Time/MatchProgressionComponent.cs` -- reserved for follow-up match HUD slice inside this same lane
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/WorldPressureComponent.cs` -- reserved for follow-up match HUD and victory legibility slices inside this same lane
+  - `unity/Assets/_Bloodlines/Code/Victory/VictoryComponents.cs` -- reserved for follow-up victory readout slice inside this same lane
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `getRealmConditionSnapshot` (14291-14764), `getMatchProgressionSnapshot` (13650-13658)
+  - `tests/runtime-bridge.mjs` realm-condition snapshot assertions (1344-1364), fortification/readout assertions (1438-1444), hostile-post-repulse world-pressure assertions (1718-1733)
+- Current Branch In Flight: `codex/unity-player-hud-realm-condition-legibility`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
