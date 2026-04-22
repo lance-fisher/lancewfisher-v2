@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-21T17:33:05.2472858-06:00",
+  "updated_at": "2026-04-21T19:05:00-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -471,7 +471,7 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-sealing-recovery.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-marriage-proposal.md",
   "latest_unity_ai_strategic_layer_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-bundle-2-holy-war-and-divine-right-execution.md",
   "latest_unity_fortification_siege_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-sealing-recovery.md",
   "latest_unity_graphics_handoff": "docs/unity/session-handoffs/2026-04-17-unity-graphics-infrastructure-foundation.md",
@@ -479,20 +479,20 @@
   "latest_unity_attack_move_handoff": "docs/unity/session-handoffs/2026-04-17-unity-attack-orders-and-attack-move.md",
   "latest_unity_target_acquisition_handoff": "docs/unity/session-handoffs/2026-04-17-unity-target-acquisition-throttling-and-sight-loss.md",
   "latest_unity_conviction_handoff": "docs/unity/session-handoffs/2026-04-17-unity-conviction-scoring-and-bands.md",
-  "latest_unity_dynasty_handoff": "docs/unity/session-handoffs/2026-04-17-unity-dynasty-core.md",
+  "latest_unity_dynasty_handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-marriage-proposal.md",
   "latest_unity_faith_handoff": "docs/unity/session-handoffs/2026-04-17-unity-faith-commitment-and-intensity.md",
   "latest_unity_fortification_handoff": "docs/unity/session-handoffs/2026-04-21-unity-fortification-siege-sealing-cost-tier-scaling.md",
   "latest_governance_handoff": "docs/unity/session-handoffs/2026-04-17-governance-contract-source-of-truth.md",
   "latest_browser_to_unity_migration_plan": "docs/plans/2026-04-17-browser-to-unity-migration-plan.md",
   "concurrent_session_contract": {
     "path": "docs/unity/CONCURRENT_SESSION_CONTRACT.md",
-    "revision": 51,
+    "revision": 53,
     "last_updated": "2026-04-21",
-    "last_updated_by": "codex-scout-raids-logistics-interdiction-landing-2026-04-21",
+    "last_updated_by": "codex-player-marriage-proposal-2026-04-21",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
     "active_lanes": [
       "ai-strategic-layer",
-      "scout-raids-logistics-interdiction"
+      "player-marriage-diplomacy"
     ],
     "paused_lanes": [
       "fortification-siege-imminent-engagement",
@@ -1721,6 +1721,15 @@
       "description": "The rebased `codex/unity-scout-raids-logistics-interdiction` lane is now merged to master via `dda7c25e`. `ScoutRaidCommandComponent`, `BuildingRaidStateComponent`, `ScoutRaidCanon`, and `ScoutRaidResolutionSystem` land the browser scout-raid and supply-wagon interdiction execution seams on master, while `ResourceTrickleBuildingSystem`, `WorkerGatherSystem`, `FieldWaterSupportScanSystem`, and `SiegeSupportRefreshSystem` now all respect active raid state. The full governed validation gate reran green on detached merged master in D:\\BLAICD\\bloodlines; temporary worktree-local wrapper copies were again used for the root-pinned bootstrap runtime and scene-shell validators, and the dedicated scout validator stayed green. Contract rev 50->51 records the lane as landed-on-master with no branch currently in flight.",
       "handoff": "docs/unity/session-handoffs/2026-04-21-unity-scout-raids-logistics-interdiction-landing.md",
       "validation_gates": "all 10 green plus scout raid and interdiction smoke on merged master"
+    },
+    {
+      "lane": "player-marriage-diplomacy-sub-slice-2a-proposal-execution",
+      "date": "2026-04-21",
+      "branch": "codex/unity-player-marriage-proposal",
+      "status": "active",
+      "description": "PlayerMarriageProposalRequestComponent, PlayerMarriageAuthorityEvaluator, and PlayerMarriageProposalSystem now port the browser's player-facing proposeMarriage flow under unity/Assets/_Bloodlines/Code/PlayerDiplomacy/. The slice enforces dynasty presence, same-faction rejection, active/ruling member availability, active-marriage plus non-polygamy blocking on both sides, source authority plus envoy governance requirements, exact duplicate pending-pair blocking, proposal expiration seeding from MarriageProposalExpirationSystem, and source-side regency legitimacy cost on successful creation. BloodlinesDebugCommandSurface.PlayerDiplomacy adds proposal issuance and pending-proposal readout for smoke coverage, and BloodlinesPlayerMarriageProposalSmokeValidation proves baseline, success, duplicate block, and already-married block. Full governed 10-gate validation is green in D:\\BLM13\\bloodlines\\bloodlines; temporary worktree-local wrapper copies were used only for the still-root-pinned bootstrap runtime and scene-shell validators. Contract rev 52->53.",
+      "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-marriage-proposal.md",
+      "validation_gates": "all 10 green plus player marriage proposal smoke"
     }
   ]
 }
