@@ -2811,3 +2811,63 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Start sub-slice 3B from merged `master` on fresh branch `codex/unity-player-assassination-sabotage`.
 2. Port `startAssassinationOperation` and `startSabotageOperation` under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/`.
 3. Extend the player covert ops smoke to prove assassination target validation and sabotage target validation without reopening `unity/Assets/_Bloodlines/Code/AI/**`.
+
+## 2026-04-21 Player Covert Ops Sub-Slice 3B: Assassination And Sabotage
+
+- Branch lane: `codex/unity-player-assassination-sabotage`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-assassination-sabotage.md`
+- The player-side covert-ops lane now ports the browser's assassination and
+  sabotage dispatch seams under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/`:
+  - `PlayerCovertOpsRequestComponent` now carries subtype input and
+    `PlayerCovertOpsResolutionComponent` now exposes subtype, target labels,
+    location labels, and defense telemetry for richer debug assertions.
+  - `PlayerCovertOpsSystem` now handles all three player-issued covert op
+    kinds in one lane-local dispatcher: existing espionage, new assassination,
+    and new sabotage.
+  - Assassination now validates a live enemy dynasty target, blocks duplicate
+    active cells on the same target member, resolves operators in browser order
+    (`Spymaster` -> `Diplomat` -> `Merchant`), deducts the canonical
+    `gold=85` / `influence=28` cost, and creates a live op with location,
+    projected chance, and target metadata.
+  - Sabotage now validates browser subtype legality against live enemy
+    buildings, supports `gate_opening`, `fire_raising`, `supply_poisoning`,
+    and `well_poisoning`, deducts the canonical subtype-specific
+    gold/influence cost, and creates a live op with subtype and target
+    building telemetry.
+  - `BloodlinesDebugCommandSurface.PlayerCovertOps.cs` now exposes
+    player-issued assassination and sabotage commands and returns a structured
+    readout that the smoke validator can parse.
+  - `BloodlinesPlayerCovertOpsSmokeValidation` now proves six phases:
+    baseline, espionage success, insufficient influence block, cap-at-6,
+    assassination target validation, and sabotage target validation.
+- Full governed validation is green in `D:\BLM13\bloodlines\bloodlines`,
+  using temporary worktree-local copies only for the still-root-pinned
+  bootstrap-runtime and canonical scene-shell wrappers:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`: `Build succeeded.` / `0 Error(s)`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: `0 Error(s)` with existing editor warnings
+  - bootstrap runtime smoke:
+    `Bootstrap runtime smoke validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity on map ironmark_frontier. ...`
+  - combat smoke:
+    `Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True, groupMovementPhase=True, separationPhase=True, stancePhase=True.`
+  - scene shells:
+    `Bootstrap scene shell validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity with canonical map Assets/_Bloodlines/Data/MapDefinitions/ironmark_frontier.asset.`
+    and
+    `Gameplay scene shell validation passed for Assets/_Bloodlines/Scenes/Gameplay/IronmarkFrontier.unity.`
+  - fortification smoke:
+    `Fortification smoke validation passed: baselinePhase=True, tierAdvancePhase=True, reserveMusterPhase=True, reserveRecoveryPhase=True. ...`
+  - siege smoke:
+    `Siege smoke validation passed: baselinePhase=True, strainPhase=True, recoveryPhase=True, supportPhase=True. ...`
+  - `node tests/data-validation.mjs`: PASS
+  - `node tests/runtime-bridge.mjs`: PASS
+  - dedicated player covert ops smoke:
+    `BLOODLINES_PLAYER_COVERT_OPS_SMOKE PASS`
+    with
+    `Phase 5 PASS: assassination targeted memberId=enemy-bloodline-marshal, title=War Captain, gold=215, influence=152.`
+    and
+    `Phase 6 PASS: sabotage targeted entityIndex=22, subtype=gate_opening, gold=200, influence=102.`
+
+### Recommended Next Follow-Up
+1. Merge `codex/unity-player-assassination-sabotage` to `master` and rerun the governed gate on merged `master`.
+2. After landing 3B, start sub-slice 3C on a fresh player counter-intelligence branch.
+3. Keep all writes under `unity/Assets/_Bloodlines/Code/PlayerCovertOps/` plus continuity/contract surfaces; do not reopen `unity/Assets/_Bloodlines/Code/AI/**`.

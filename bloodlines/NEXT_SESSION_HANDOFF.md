@@ -3129,3 +3129,79 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   rather than the outer worktree root `D:\BLM13\bloodlines`.
 - The player covert ops lane remains active for 3B and 3C, but there is no
   current feature branch in flight after this landing pass.
+
+## Codex Player Covert Ops Sub-Slice 3B: Assassination And Sabotage (2026-04-21)
+
+### Status: COMPLETE on branch `codex/unity-player-assassination-sabotage`
+
+### What Was Done
+- Extended `unity/Assets/_Bloodlines/Code/PlayerCovertOps/PlayerCovertOpsRequestComponent.cs`
+  with subtype input so one request path can carry sabotage subtype selection.
+- Extended `unity/Assets/_Bloodlines/Code/PlayerCovertOps/PlayerCovertOpsResolutionComponent.cs`
+  with subtype, target label, location label, intelligence-support, and
+  defense telemetry fields.
+- Reworked `unity/Assets/_Bloodlines/Code/PlayerCovertOps/PlayerCovertOpsSystem.cs`
+  so it now dispatches player espionage, assassination, and sabotage from one
+  lane-local system while preserving the browser active-op cap against the
+  shared `DynastyOperationLimits` helper.
+- Added assassination dispatch gates:
+  live enemy dynasty member target, duplicate-target blocking, canonical
+  `gold=85` / `influence=28` cost deduction, operator selection
+  `Spymaster` -> `Diplomat` -> `Merchant`, and live op creation with location
+  and projected-chance telemetry.
+- Added sabotage dispatch gates:
+  canonical subtype legality checks from `BuildingTypeComponent`,
+  live-building validation, subtype-specific canonical costs and durations, and
+  live op creation with subtype plus target-building telemetry.
+- Extended `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerCovertOps.cs`
+  with `TryDebugIssuePlayerAssassination(...)`,
+  `TryDebugIssuePlayerSabotage(...)`, and richer structured readout fields.
+- Extended `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCovertOpsSmokeValidation.cs`
+  from 4 phases to 6 so it now proves assassination target validation and
+  sabotage target validation in addition to the existing 3A coverage.
+- Recorded the branch-side contract and continuity pass:
+  - `docs/unity/CONCURRENT_SESSION_CONTRACT.md` revision `61 -> 62`
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-assassination-sabotage.md`
+  - `CURRENT_PROJECT_STATE.md`
+  - `NEXT_SESSION_HANDOFF.md`
+  - `continuity/PROJECT_STATE.json`
+
+### Validation Proof
+- Runtime build: `Build succeeded.` / `0 Error(s)`
+- Editor build: `113 Warning(s)` / `0 Error(s)`
+- Bootstrap runtime smoke:
+  `Bootstrap runtime smoke validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity on map ironmark_frontier. ...`
+- Combat smoke:
+  `Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True, groupMovementPhase=True, separationPhase=True, stancePhase=True.`
+- Bootstrap scene shell:
+  `Bootstrap scene shell validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity with canonical map Assets/_Bloodlines/Data/MapDefinitions/ironmark_frontier.asset.`
+- Gameplay scene shell:
+  `Gameplay scene shell validation passed for Assets/_Bloodlines/Scenes/Gameplay/IronmarkFrontier.unity.`
+- Fortification smoke:
+  `Fortification smoke validation passed: baselinePhase=True, tierAdvancePhase=True, reserveMusterPhase=True, reserveRecoveryPhase=True. ...`
+- Siege smoke:
+  `Siege smoke validation passed: baselinePhase=True, strainPhase=True, recoveryPhase=True, supportPhase=True. ...`
+- Data validation: `Bloodlines data validation passed.`
+- Runtime bridge: `Bloodlines runtime bridge validation passed.`
+- Dedicated smoke:
+  `BLOODLINES_PLAYER_COVERT_OPS_SMOKE PASS`
+  with
+  `Phase 5 PASS: assassination targeted memberId=enemy-bloodline-marshal, title=War Captain, gold=215, influence=152.`
+  and
+  `Phase 6 PASS: sabotage targeted entityIndex=22, subtype=gate_opening, gold=200, influence=102.`
+
+### Immediate Next Action
+1. Stage the player covert ops 3B files plus continuity/contract updates and commit them on `codex/unity-player-assassination-sabotage`.
+2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
+3. After the landing continuity pass, start sub-slice 3C on a fresh player counter-intelligence branch.
+
+### Context Notes
+- The checked-in bootstrap-runtime and canonical scene-shell wrappers are still
+  pinned to `D:\ProjectsHome\Bloodlines`; continue using temporary worktree-safe
+  copies when validating this clean worktree.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
+- Node validations for this worktree must run from `D:\BLM13\bloodlines\bloodlines`
+  rather than the outer worktree root `D:\BLM13\bloodlines`.
+- Counter-intelligence defense, dossiers, retaliation metadata, and
+  intelligence-report buffers remain deferred to sub-slice 3C.

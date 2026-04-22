@@ -1793,6 +1793,15 @@
       "description": "The validated `codex/unity-player-covert-ops-foundation` branch is now merged to master via `c18966d6`. `unity/Assets/_Bloodlines/Code/PlayerCovertOps/` now contains the canonical player covert-op enum, request component, resolution component, and espionage dispatch system, while `BloodlinesDebugCommandSurface.PlayerCovertOps` and `BloodlinesPlayerCovertOpsSmokeValidation` are now canonical master debug/validation surfaces. Merged master re-passed runtime build, editor build, bootstrap runtime, combat, scene shells, fortification, siege, node validation, contract staleness, and the dedicated player covert ops smoke in D:\\BLM13\\bloodlines\\bloodlines. Contract rev 60->61 records sub-slice 3A as landed-on-master while the player-covert-ops lane remains active for 3B assassination/sabotage and 3C counter-intelligence.",
       "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-covert-ops-foundation-landing.md",
       "validation_gates": "all 10 green plus player covert ops smoke on merged master"
+    },
+    {
+      "lane": "player-covert-ops-sub-slice-3b-assassination-and-sabotage",
+      "date": "2026-04-21",
+      "branch": "codex/unity-player-assassination-sabotage",
+      "status": "active",
+      "description": "Player covert ops sub-slice 3B is now complete on branch. `PlayerCovertOpsRequestComponent` gains subtype input and `PlayerCovertOpsResolutionComponent` gains subtype, target, location, and defense telemetry so the player-owned covert-op lane can carry structured assassination and sabotage metadata without widening Claude's AI-owned dynasty-operation graph. `PlayerCovertOpsSystem` now dispatches player espionage, assassination, and sabotage in one lane-local system: assassination validates live enemy dynasty targets, blocks duplicate active cells on the same target member, resolves operators with `Spymaster -> Diplomat -> Merchant`, deducts canonical `gold=85` / `influence=28`, and creates a live op with location/projection metadata; sabotage validates live enemy building targets, enforces browser subtype legality for `gate_opening`, `fire_raising`, `supply_poisoning`, and `well_poisoning`, deducts canonical subtype costs, and creates a live op with subtype and target-building telemetry. `BloodlinesDebugCommandSurface.PlayerCovertOps` now exposes player assassination and sabotage issue paths plus richer structured readout, and `BloodlinesPlayerCovertOpsSmokeValidation` expands from 4 phases to 6 to prove assassination target validation and sabotage target validation. The full governed 10-gate chain is green in D:\\BLM13\\bloodlines\\bloodlines using worktree-local wrapper copies only for the still-root-pinned bootstrap-runtime and canonical scene-shell validators. Contract rev 61->62.",
+      "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-assassination-sabotage.md",
+      "validation_gates": "all 10 green plus extended player covert ops smoke"
     }
   ]
 }
