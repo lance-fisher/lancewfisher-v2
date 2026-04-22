@@ -3,7 +3,7 @@ You are continuing unattended development work on Bloodlines, a grand dynastic c
 MANDATORY FIRST STEPS (do these before writing any code):
 1. Read D:\ProjectsHome\Bloodlines\NEXT_SESSION_HANDOFF.md (first 80 lines minimum). The "Last updated" line and "Immediate next action" line tell you exactly where to resume.
 2. Read D:\ProjectsHome\Bloodlines\docs\unity\CONCURRENT_SESSION_CONTRACT.md in full. This tells you which files you own, which files are forbidden, and the exact 10-step validation gate you must run before every commit.
-3. Read D:\ProjectsHome\Bloodlines\03_PROMPTS\CODEX_MULTI_DAY_DIRECTIVE_2026-04-22.md in full. This is the priority stack for this development window.
+3. Read D:\ProjectsHome\Bloodlines\03_PROMPTS\CODEX_MULTI_DAY_DIRECTIVE_2026-04-23.md in full. This is the priority stack for this development window.
 
 EXECUTION LOOP (repeat until session capacity runs out):
 1. Find the next incomplete item in the priority stack from the directive. If the handoff says "immediate next action: X", do X first.
