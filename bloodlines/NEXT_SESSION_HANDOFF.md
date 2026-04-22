@@ -4562,3 +4562,72 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 - `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
+
+## Codex Player Command-Deck HUD Summary (2026-04-22)
+
+### Branch Status
+
+- Branch: `codex/unity-player-hud-command-deck-summary`
+- Status: validated on branch and ready to stage/commit/push
+
+### What Changed
+
+- `unity/Assets/_Bloodlines/Code/HUD/PlayerCommandDeckHUDComponent.cs`
+  and
+  `PlayerCommandDeckHUDSystem.cs`
+  now project a faction-scoped command-deck summary that consumes the already
+  landed match progression, victory leaderboard, dynasty renown, and
+  fortification HUD read-models, derives realm population/loyalty/faith bands,
+  and resolves a single `PrimaryAlertLabel` with strict precedence.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes `TryDebugGetPlayerCommandDeckHUDSnapshot()` for parseable command
+  deck readouts.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCommandDeckHUDSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityPlayerCommandDeckHUDSmokeValidation.ps1`
+  now prove summary projection, Great Reckoning alert precedence, fortification
+  threat alerting, and victory-imminent alerting.
+
+### Validation Proof
+
+- Dedicated smoke:
+  - `Player command-deck HUD smoke validation passed.`
+- Runtime build:
+  - `Build succeeded.`
+  - `0 Error(s)`
+- Editor build:
+  - `Build succeeded.`
+  - `0 Error(s)` with existing repo-wide warnings only
+- Bootstrap runtime:
+  - `Bootstrap runtime smoke validation passed.`
+- Combat smoke:
+  - `Unity exited with code 0`
+- Scene shells:
+  - `Bootstrap scene shell validation passed.`
+  - `Gameplay scene shell validation passed.`
+- Fortification smoke:
+  - `Fortification smoke validation passed.`
+- Siege smoke:
+  - `Unity exited with code 0`
+- Data validation:
+  - `Bloodlines data validation passed.`
+- Runtime bridge:
+  - `Bloodlines runtime bridge validation passed.`
+- Contract staleness before contract bump:
+  - `STALENESS CHECK PASSED: Contract revision=87, last-updated=2026-04-22 is current.`
+
+### Immediate Next Action
+
+1. Stage the command-deck HUD slice files plus contract and continuity updates,
+   commit them on `codex/unity-player-hud-command-deck-summary`, and push to
+   `origin`.
+2. Merge the branch to `master`, rerun the full governed 10-gate chain on the
+   merge result, and then continue the next on-screen HUD binding follow-up.
+
+### Context Notes
+
+- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
+- The temporary local wrapper copies used to rerun root-pinned validation gates
+  are not part of the slice and should remain unstaged.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.

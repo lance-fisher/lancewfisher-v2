@@ -3647,3 +3647,32 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   dynasty renown leaderboard HUD smoke.
 - Contract revision advanced `86 -> 87` and now clears the HUD lane branch in
   flight after the landing pass.
+
+## 2026-04-22 Player Command-Deck HUD Summary Slice
+
+- Branch in flight: `codex/unity-player-hud-command-deck-summary`.
+- `unity/Assets/_Bloodlines/Code/HUD/PlayerCommandDeckHUDComponent.cs`
+  and
+  `PlayerCommandDeckHUDSystem.cs`
+  now add a faction-scoped command-deck summary under `HUD/**` that consumes
+  the already-landed match progression, victory leaderboard, dynasty renown,
+  and fortification HUD seams, derives realm population/loyalty/faith bands,
+  and resolves a single `PrimaryAlertLabel` with precedence across Great
+  Reckoning, fortification threat, loyalty crisis, victory-imminent pressure,
+  and world pressure.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes parseable
+  `PlayerCommandDeckHUD|FactionId=...|StageLabel=...|PhaseLabel=...|LeadingVictoryConditionId=...|PrimaryAlertLabel=...`
+  output for smoke and later on-screen panel consumers.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCommandDeckHUDSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityPlayerCommandDeckHUDSmokeValidation.ps1`
+  now prove summary projection plus Great Reckoning, fortification threat, and
+  victory-imminent alert precedence in a dedicated ECS validation world.
+- Governed validation is green on the branch: dedicated player command-deck HUD
+  smoke, runtime build, editor build, bootstrap runtime smoke, combat smoke,
+  canonical scene shell validation, fortification smoke, siege smoke,
+  `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, and contract staleness.
+- Contract revision advanced `87 -> 88` and now records the HUD lane with the
+  command-deck summary branch in flight.
