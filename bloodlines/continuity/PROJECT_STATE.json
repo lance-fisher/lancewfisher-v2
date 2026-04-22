@@ -1865,6 +1865,15 @@
       "description": "The validated `codex/unity-player-hud-match-progression` branch is now merged to master via `ed22484c`. `MatchProgressionHUDComponent`, `MatchProgressionHUDSystem`, `BloodlinesDebugCommandSurface.HUD.cs`, and `BloodlinesMatchProgressionHUDSmokeValidation` plus wrapper are now canonical master content for the second player-HUD slice. Merged master re-passed runtime build, editor build, the dedicated match-progression HUD smoke, bootstrap runtime, combat, canonical scene shells, fortification, siege, `node tests/data-validation.mjs`, `node tests/runtime-bridge.mjs`, and contract staleness at revision 69 in D:\\BLM13\\bloodlines\\bloodlines. Contract rev 69->70 records the lane as still active with no branch currently in flight and points the next pickup at fortification-legibility or victory-readout follow-up work.",
       "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-hud-match-progression-landing.md",
       "validation_gates": "all 10 green plus match-progression HUD smoke on merged master"
+    },
+    {
+      "lane": "player-marriage-diplomacy-sub-slice-2d-holy-war-and-divine-right",
+      "date": "2026-04-22",
+      "branch": "codex/unity-player-holy-war-divine-right",
+      "status": "active",
+      "description": "Player-facing faith declarations are now complete on branch under the existing `PlayerDiplomacy/**` lane. `PlayerHolyWarDeclarationRequestComponent`, `PlayerDivineRightDeclarationRequestComponent`, `PlayerFaithDeclarationUtility`, `PlayerHolyWarDeclarationSystem`, and `PlayerDivineRightDeclarationSystem` port the browser's player-side holy-war and divine-right dispatch seams without widening the AI-owned `AI/**` lane: holy war now validates kingdom and committed-faith state, rejects harmonious identical `(faith, doctrine)` targets, resolves a faith operator, deducts canonical `influence=24` / `intensity=18`, enforces `DynastyOperationLimits`, creates AI-owned `DynastyOperationComponent` + `DynastyOperationHolyWarComponent`, and emits a narrative line; divine right now validates committed faith, `intensity >= 80`, `level >= 5`, and no existing active declaration before creating `DynastyOperationComponent` + `DynastyOperationDivineRightComponent` and emitting its declaration line. `BloodlinesDebugCommandSurface.PlayerDiplomacy` now exposes holy-war issuance, divine-right issuance, and a structured faith-operation readout, while `BloodlinesPlayerHolyWarDivineRightSmokeValidation` plus its wrapper prove holy-war success, harmonious rejection, divine-right success, and threshold rejection. The full governed 10-gate chain is green and the contract is current at revision 71.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-holy-war-divine-right.md",
+      "validation_gates": "all 10 green plus player holy-war/divine-right smoke"
     }
   ]
 }

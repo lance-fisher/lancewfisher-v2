@@ -3128,3 +3128,66 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Create a fresh Codex branch from current `master` for the next player-HUD slice.
 2. Implement either the fortification-legibility HUD readout or the victory-distance readout next.
 3. Keep using the worktree-local bootstrap-runtime and scene-shell wrapper copies until the checked-in path-pinned wrappers are repaired.
+
+## 2026-04-22 Player Diplomacy Holy War And Divine Right Slice
+
+- Branch lane: `codex/unity-player-holy-war-divine-right`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-holy-war-divine-right.md`
+- The next `PlayerDiplomacy/**` slice is now complete on branch:
+  - `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerHolyWarDeclarationRequestComponent.cs`
+    and
+    `PlayerDivineRightDeclarationRequestComponent.cs`
+    now define the player-owned request surfaces for faith declarations.
+  - `PlayerFaithDeclarationUtility.cs`
+    now centralizes faction-root resolution, kingdom gating, active-operation
+    scans, faith-operator selection, doctrine compatibility checks, and
+    declaration narrative helpers.
+  - `PlayerHolyWarDeclarationSystem.cs`
+    now ports player-side holy-war dispatch: kingdom and committed-faith gates,
+    harmonious same-faith rejection, duplicate-active-op rejection, operator
+    lookup, canonical `influence=24` / `intensity=18` deduction,
+    `DynastyOperationLimits` capacity enforcement, AI-owned
+    `DynastyOperationComponent` + `DynastyOperationHolyWarComponent` creation,
+    and narrative emission.
+  - `PlayerDivineRightDeclarationSystem.cs`
+    now ports player-side divine-right dispatch: committed faith, `intensity >= 80`,
+    `level >= 5`, duplicate-active-op rejection, capacity enforcement,
+    AI-owned `DynastyOperationComponent` + `DynastyOperationDivineRightComponent`
+    creation, and declaration narrative emission.
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerDiplomacy.cs`
+    now exposes holy-war issuance, divine-right issuance, and a structured
+    player-faith-operations readout.
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerHolyWarDivineRightSmokeValidation.cs`
+    plus
+    `scripts/Invoke-BloodlinesUnityPlayerHolyWarDivineRightSmokeValidation.ps1`
+    now prove holy-war success, harmonious rejection, divine-right success,
+    and threshold rejection.
+  - `unity/Assembly-CSharp.csproj`
+    and
+    `unity/Assembly-CSharp-Editor.csproj`
+    now include the new player-diplomacy runtime and editor files.
+- Governed validation is green in this worktree and the canonical root:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`: `Build succeeded.` / `0 Error(s)`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: `Build succeeded.` / `0 Error(s)`
+  - `scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1`:
+    `Bootstrap runtime smoke validation passed.`
+  - `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`: Unity exit `0`
+  - `scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1`:
+    bootstrap and gameplay scene shell validation passed
+  - `scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1`:
+    `Fortification smoke validation passed.`
+  - `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`: Unity exit `0`
+  - `node tests/data-validation.mjs`:
+    `Bloodlines data validation passed.`
+  - `node tests/runtime-bridge.mjs`:
+    `Bloodlines runtime bridge validation passed.`
+  - `scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1`:
+    `STALENESS CHECK PASSED: Contract revision=71, last-updated=2026-04-22 is current.`
+  - dedicated player-faith smoke:
+    `Player holy war/divine right smoke validation passed.`
+
+### Recommended Next Follow-Up
+1. Stage the holy-war/divine-right slice files plus continuity/contract updates and commit them on `codex/unity-player-holy-war-divine-right`.
+2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
+3. After the landing continuity pass, continue the next directive item from the current player-facing priority stack on a fresh Codex branch.

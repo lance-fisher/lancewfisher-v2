@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using Bloodlines.AI;
 using Bloodlines.Components;
 using Bloodlines.Dynasties;
 using Bloodlines.PlayerDiplomacy;
@@ -61,6 +62,54 @@ namespace Bloodlines.Debug
             entityManager.SetComponentData(requestEntity, new PlayerMarriageAcceptRequestComponent
             {
                 ProposalEntityIndex = proposalEntityIndex,
+            });
+            return true;
+        }
+
+        public bool TryDebugIssuePlayerHolyWarDeclaration(string sourceFactionId, string targetFactionId)
+        {
+            if (string.IsNullOrWhiteSpace(sourceFactionId) ||
+                string.IsNullOrWhiteSpace(targetFactionId) ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var sourceFactionKey = new FixedString32Bytes(sourceFactionId);
+            var targetFactionKey = new FixedString32Bytes(targetFactionId);
+            if (sourceFactionKey.Equals(targetFactionKey) ||
+                FindFactionEntity(entityManager, sourceFactionKey) == Entity.Null ||
+                FindFactionEntity(entityManager, targetFactionKey) == Entity.Null)
+            {
+                return false;
+            }
+
+            var requestEntity = entityManager.CreateEntity(typeof(PlayerHolyWarDeclarationRequestComponent));
+            entityManager.SetComponentData(requestEntity, new PlayerHolyWarDeclarationRequestComponent
+            {
+                SourceFactionId = sourceFactionKey,
+                TargetFactionId = targetFactionKey,
+            });
+            return true;
+        }
+
+        public bool TryDebugIssuePlayerDivineRightDeclaration(string sourceFactionId)
+        {
+            if (string.IsNullOrWhiteSpace(sourceFactionId) || !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var sourceFactionKey = new FixedString32Bytes(sourceFactionId);
+            if (FindFactionEntity(entityManager, sourceFactionKey) == Entity.Null)
+            {
+                return false;
+            }
+
+            var requestEntity = entityManager.CreateEntity(typeof(PlayerDivineRightDeclarationRequestComponent));
+            entityManager.SetComponentData(requestEntity, new PlayerDivineRightDeclarationRequestComponent
+            {
+                SourceFactionId = sourceFactionKey,
             });
             return true;
         }
@@ -129,6 +178,76 @@ namespace Bloodlines.Debug
                     .Append("|Status=").Append(proposal.Status)
                     .Append("|ProposedAt=").Append(proposal.ProposedAtInWorldDays.ToString("0.00", CultureInfo.InvariantCulture))
                     .Append("|ExpiresAt=").Append(proposal.ExpiresAtInWorldDays.ToString("0.00", CultureInfo.InvariantCulture));
+            }
+
+            readout = builder.ToString();
+            return true;
+        }
+
+        public bool TryDebugGetPlayerFaithDeclarationOperations(string factionId, out string readout)
+        {
+            readout = string.Empty;
+            if (string.IsNullOrWhiteSpace(factionId) || !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var factionKey = new FixedString32Bytes(factionId);
+            using var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<DynastyOperationComponent>());
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var operations = query.ToComponentDataArray<DynastyOperationComponent>(Allocator.Temp);
+
+            var builder = new StringBuilder();
+            int count = 0;
+            for (int i = 0; i < operations.Length; i++)
+            {
+                if (!operations[i].Active ||
+                    !operations[i].SourceFactionId.Equals(factionKey) ||
+                    (operations[i].OperationKind != DynastyOperationKind.HolyWar &&
+                     operations[i].OperationKind != DynastyOperationKind.DivineRight))
+                {
+                    continue;
+                }
+
+                count++;
+            }
+
+            builder.Append("FaithDeclarationCount=").Append(count);
+            for (int i = 0; i < operations.Length; i++)
+            {
+                if (!operations[i].Active ||
+                    !operations[i].SourceFactionId.Equals(factionKey) ||
+                    (operations[i].OperationKind != DynastyOperationKind.HolyWar &&
+                     operations[i].OperationKind != DynastyOperationKind.DivineRight))
+                {
+                    continue;
+                }
+
+                builder.AppendLine();
+                builder.Append("FaithDeclaration|EntityIndex=").Append(entities[i].Index)
+                    .Append("|Kind=").Append(operations[i].OperationKind)
+                    .Append("|TargetFactionId=").Append(operations[i].TargetFactionId)
+                    .Append("|StartedAt=").Append(operations[i].StartedAtInWorldDays.ToString("0.00", CultureInfo.InvariantCulture))
+                    .Append("|Active=").Append(operations[i].Active);
+
+                if (operations[i].OperationKind == DynastyOperationKind.HolyWar &&
+                    entityManager.HasComponent<DynastyOperationHolyWarComponent>(entities[i]))
+                {
+                    var holyWar = entityManager.GetComponentData<DynastyOperationHolyWarComponent>(entities[i]);
+                    builder.Append("|ResolveAt=").Append(holyWar.ResolveAtInWorldDays.ToString("0.00", CultureInfo.InvariantCulture))
+                        .Append("|WarExpiresAt=").Append(holyWar.WarExpiresAtInWorldDays.ToString("0.00", CultureInfo.InvariantCulture))
+                        .Append("|SourceFaithOperator=").Append(holyWar.OperatorMemberId)
+                        .Append("|CompatibilityLabel=").Append(holyWar.CompatibilityLabel);
+                }
+
+                if (operations[i].OperationKind == DynastyOperationKind.DivineRight &&
+                    entityManager.HasComponent<DynastyOperationDivineRightComponent>(entities[i]))
+                {
+                    var divineRight = entityManager.GetComponentData<DynastyOperationDivineRightComponent>(entities[i]);
+                    builder.Append("|ResolveAt=").Append(divineRight.ResolveAtInWorldDays.ToString("0.00", CultureInfo.InvariantCulture))
+                        .Append("|SourceFaithId=").Append(divineRight.SourceFaithId)
+                        .Append("|DoctrinePath=").Append(divineRight.DoctrinePath);
+                }
             }
 
             readout = builder.ToString();
