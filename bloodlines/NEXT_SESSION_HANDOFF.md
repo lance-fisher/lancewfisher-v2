@@ -4133,3 +4133,79 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   constants.
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
+
+## Codex Player Captive Ransom Dispatch (2026-04-22)
+
+### Branch
+
+- `codex/unity-player-captive-ransom-followup`
+
+### What Landed On Branch
+
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerCaptiveRansomRequestComponent.cs`
+  and
+  `PlayerCaptiveRansomDispatchSystem.cs`
+  now port the browser's player-side captive ransom dispatch seam under the
+  existing `PlayerDiplomacy/**` lane without widening `AI/**`.
+- The player ransom flow now validates kingdom state, verifies the requested
+  dynasty member is currently `Captured`, resolves the captor faction from the
+  AI-owned `CapturedMemberElement` buffers, rejects hostile captors and
+  duplicate active ransom ops, reuses the AI diplomat/merchant operator
+  priorities, enforces a player-specified gold offer with the canonical
+  `gold>=70` floor plus fixed `influence=18`, creates
+  `DynastyOperationComponent` plus
+  `DynastyOperationCaptiveRansomComponent`,
+  and emits a ransom narrative line.
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerCaptiveDispatchUtility.cs`
+  now centralizes ransom operation id creation and ransom narrative emission.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerDiplomacy.cs`
+  now exposes `TryDebugDispatchCaptiveRansom(...)`.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRansomSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityPlayerCaptiveRansomSmokeValidation.ps1`
+  now prove three phases: ransom success, insufficient-gold rejection, and
+  hostile-captor rejection.
+
+### Validation Proof
+
+- Runtime build:
+  - `Build succeeded.`
+  - `0 Error(s)`
+- Editor build:
+  - `Build succeeded.`
+  - `0 Error(s)` with existing repo-wide warnings only
+- Bootstrap runtime:
+  - `Bootstrap runtime smoke validation passed.`
+- Combat smoke:
+  - `Unity exited with code 0`
+- Scene shells:
+  - `Bootstrap scene shell validation passed.`
+  - `Gameplay scene shell validation passed.`
+- Fortification smoke:
+  - `Fortification smoke validation passed.`
+- Siege smoke:
+  - `Unity exited with code 0`
+- Data validation:
+  - `Bloodlines data validation passed.`
+- Runtime bridge:
+  - `Bloodlines runtime bridge validation passed.`
+- Contract staleness:
+  - `STALENESS CHECK PASSED: Contract revision=81, last-updated=2026-04-22 is current.`
+- Dedicated smoke:
+  - `Player captive ransom smoke validation passed.`
+
+### Immediate Next Action
+
+1. Stage the player captive ransom slice files plus contract and continuity
+   updates, commit them on `codex/unity-player-captive-ransom-followup`, and
+   push to `origin`.
+2. Merge the validated ransom branch onto `master`, then continue with the next
+   directive item: the renown and prestige scoring surface.
+
+### Context Notes
+
+- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched; this slice only
+  reads captive holding buffers, ransom operation payloads, and ransom helper
+  constants.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.

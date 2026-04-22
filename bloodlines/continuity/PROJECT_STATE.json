@@ -1964,6 +1964,15 @@
       "description": "Player captive rescue dispatch is now complete on branch under the existing `PlayerDiplomacy/**` lane. `PlayerCaptiveRescueRequestComponent`, `PlayerCaptiveDispatchUtility`, and `PlayerCaptiveRescueDispatchSystem` port the browser `getCapturedMemberRescueTerms` / `startRescueOperation` seam without widening the AI-owned `AI/**` lane: the player rescue dispatch now validates source faction and kingdom state, confirms the requested dynasty member is currently `Captured`, resolves the holding faction through the AI-owned `CapturedMemberElement` buffers, rejects duplicate active rescue operations, reuses the AI rescue operator priorities, deducts canonical `gold=42` / `influence=26`, creates AI-owned `DynastyOperationComponent` + `DynastyOperationCaptiveRescueComponent`, and emits a rescue narrative line. `BloodlinesDebugCommandSurface.PlayerDiplomacy` now exposes captive rescue issuance, and `BloodlinesPlayerCaptiveRescueSmokeValidation` plus its wrapper prove rescue success, missing-operator rejection, and missing-captive rejection. The full governed 10-gate chain is green in this worktree and the contract is current at revision 81.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-captive-rescue.md",
       "validation_gates": "all 10 green plus player captive rescue smoke"
+    },
+    {
+      "lane": "player-marriage-diplomacy-sub-slice-2h-captive-ransom-dispatch",
+      "date": "2026-04-22",
+      "branch": "codex/unity-player-captive-ransom-followup",
+      "status": "active",
+      "description": "Player captive ransom dispatch is now complete on branch under the existing `PlayerDiplomacy/**` lane. `PlayerCaptiveRansomRequestComponent`, `PlayerCaptiveRansomDispatchSystem`, and additive updates to `PlayerCaptiveDispatchUtility` port the browser `getCapturedMemberRansomTerms` / `startRansomNegotiation` seam without widening the AI-owned `AI/**` lane: the player ransom dispatch now validates source faction and kingdom state, confirms the requested dynasty member is currently `Captured`, resolves the captor through the AI-owned `CapturedMemberElement` buffers, rejects hostile captors and duplicate active ransom operations, reuses the AI ransom operator priorities, enforces a player-specified gold offer with the canonical `gold>=70` floor plus fixed `influence=18`, creates AI-owned `DynastyOperationComponent` + `DynastyOperationCaptiveRansomComponent`, and emits a ransom narrative line. `BloodlinesDebugCommandSurface.PlayerDiplomacy` now exposes captive ransom issuance, and `BloodlinesPlayerCaptiveRansomSmokeValidation` plus its wrapper prove ransom success, insufficient-gold rejection, and hostile-captor rejection. The full governed 10-gate chain is green in this worktree and the contract is current at revision 82.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-captive-ransom.md",
+      "validation_gates": "all 10 green plus player captive ransom smoke"
     }
   ]
 }
