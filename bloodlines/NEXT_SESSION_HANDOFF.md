@@ -2849,3 +2849,63 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   copies when validating a clean worktree.
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
+
+## Codex Player Marriage Diplomacy Sub-Slice 2B: Acceptance And Effects (2026-04-21)
+
+### Status: COMPLETE on branch `codex/unity-player-marriage-acceptance`
+
+### What Was Done
+- Added `PlayerMarriageAcceptRequestComponent` and `PlayerMarriageAcceptSystem`
+  under `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/`.
+- Ported the player-facing `acceptMarriage` execution path:
+  pending-proposal lookup, source/target dynasty and member resolution,
+  target-side authority validation, primary + mirror marriage creation,
+  target legitimacy-cost deduction, hostility drop, oathkeeping +2, legitimacy
+  +2 on both sides, and the 30-day declaration jump.
+- Extended
+  `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerDiplomacy.cs`
+  with `TryDebugIssuePlayerMarriageAccept(proposalEntityIndex)` and proposal
+  `EntityIndex=...` readout support.
+- Added
+  `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMarriageAcceptanceSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityPlayerMarriageAcceptanceSmokeValidation.ps1`.
+- Full governed validation is green in `D:\BLM13\bloodlines\bloodlines` with
+  temporary worktree-local copies used only for the still-root-pinned
+  bootstrap-runtime and canonical scene-shell wrappers.
+
+### Validation Proof
+- Runtime build: `Build succeeded.` / `0 Error(s)`
+- Editor build: `0 Error(s)` with existing warnings
+- Bootstrap runtime smoke:
+  `Bootstrap runtime smoke validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity on map ironmark_frontier. ...`
+- Combat smoke:
+  `Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True, groupMovementPhase=True, separationPhase=True, stancePhase=True.`
+- Bootstrap scene shell:
+  `Bootstrap scene shell validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity with canonical map Assets/_Bloodlines/Data/MapDefinitions/ironmark_frontier.asset.`
+- Gameplay scene shell:
+  `Gameplay scene shell validation passed for Assets/_Bloodlines/Scenes/Gameplay/IronmarkFrontier.unity.`
+- Fortification smoke:
+  `Fortification smoke validation passed: baselinePhase=True, tierAdvancePhase=True, reserveMusterPhase=True, reserveRecoveryPhase=True. ...`
+- Siege smoke:
+  `Siege smoke validation passed: baselinePhase=True, strainPhase=True, recoveryPhase=True, supportPhase=True. ...`
+- Data validation: `Bloodlines data validation passed.`
+- Runtime bridge: `Bloodlines runtime bridge validation passed.`
+- Dedicated smoke:
+  `BLOODLINES_PLAYER_MARRIAGE_ACCEPTANCE_SMOKE PASS`
+  with
+  `Phase 2 PASS: proposal accepted, marriageCount=2, legitimacy=82/72, oathkeeping=5/3, dualClockDays=50`
+  and
+  `Phase 4 PASS: heir-regency cost applied, legitimacy=81, stewardship=2`
+
+### Immediate Next Action
+1. Stage the acceptance slice files plus continuity updates and commit them on `codex/unity-player-marriage-acceptance`.
+2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
+3. After the landing continuity pass, begin sub-slice 2C on fresh branch `codex/unity-player-marriage-dissolution`.
+
+### Context Notes
+- The checked-in bootstrap-runtime and canonical scene-shell wrappers are still
+  pinned to `D:\ProjectsHome\Bloodlines`; continue using temporary worktree-safe
+  copies when validating this clean worktree.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.

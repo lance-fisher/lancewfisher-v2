@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-21T19:41:04-06:00",
+  "updated_at": "2026-04-21T20:19:00-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -1739,6 +1739,15 @@
       "description": "The validated `codex/unity-player-marriage-proposal` branch is now merged to master via `21550da3`. PlayerMarriageProposalRequestComponent, PlayerMarriageAuthorityEvaluator, PlayerMarriageProposalSystem, BloodlinesDebugCommandSurface.PlayerDiplomacy, and BloodlinesPlayerMarriageProposalSmokeValidation are now canonical master content. Merged master re-passed runtime build, editor build, bootstrap runtime, combat, scene shells, fortification, siege, node validation, contract staleness, and the dedicated player marriage proposal smoke in D:\\BLM13\\bloodlines\\bloodlines. Contract rev 53->54 records sub-slice 2A as landed-on-master while the player-marriage-diplomacy lane remains active for sub-slice 2B acceptance.",
       "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-marriage-proposal-landing.md",
       "validation_gates": "all 10 green plus player marriage proposal smoke on merged master"
+    },
+    {
+      "lane": "player-marriage-diplomacy-sub-slice-2b-acceptance-and-effects",
+      "date": "2026-04-21",
+      "branch": "codex/unity-player-marriage-acceptance",
+      "status": "active",
+      "description": "PlayerMarriageAcceptRequestComponent and PlayerMarriageAcceptSystem now port the browser's player-facing acceptMarriage flow under unity/Assets/_Bloodlines/Code/PlayerDiplomacy/. The slice resolves pending proposals by proposal entity index, validates source and target dynasties plus active members, resolves target-side governance authority via the player-owned authority evaluator, flips the proposal to Accepted, creates primary + mirror MarriageComponent records, applies target-side legitimacy cost before the +2 marriage bonus, records oathkeeping +2 on both factions, removes hostility both ways, and enqueues the canonical 30-day DeclareInWorldTimeRequest. BloodlinesDebugCommandSurface.PlayerDiplomacy now exposes TryDebugIssuePlayerMarriageAccept plus EntityIndex in the pending-proposal readout, and BloodlinesPlayerMarriageAcceptanceSmokeValidation proves baseline, valid acceptance, no-pending rejection, and heir-regency cost deduction. Full governed 10-gate validation is green in D:\\BLM13\\bloodlines\\bloodlines with temporary worktree-local wrapper copies used only for the still-root-pinned bootstrap-runtime and scene-shell validators. Contract rev 54->55.",
+      "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-marriage-acceptance.md",
+      "validation_gates": "all 10 green plus player marriage acceptance smoke"
     }
   ]
 }

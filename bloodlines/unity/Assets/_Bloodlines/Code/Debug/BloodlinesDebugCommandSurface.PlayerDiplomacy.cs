@@ -50,6 +50,21 @@ namespace Bloodlines.Debug
             return true;
         }
 
+        public bool TryDebugIssuePlayerMarriageAccept(int proposalEntityIndex)
+        {
+            if (proposalEntityIndex < 0 || !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var requestEntity = entityManager.CreateEntity(typeof(PlayerMarriageAcceptRequestComponent));
+            entityManager.SetComponentData(requestEntity, new PlayerMarriageAcceptRequestComponent
+            {
+                ProposalEntityIndex = proposalEntityIndex,
+            });
+            return true;
+        }
+
         public bool TryDebugGetPlayerMarriageProposals(string factionId, out string readout)
         {
             readout = string.Empty;
@@ -60,6 +75,7 @@ namespace Bloodlines.Debug
 
             var factionKey = new FixedString32Bytes(factionId);
             var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<MarriageProposalComponent>());
+            using var proposalEntities = query.ToEntityArray(Allocator.Temp);
             using var proposals = query.ToComponentDataArray<MarriageProposalComponent>(Allocator.Temp);
             query.Dispose();
 
@@ -104,7 +120,8 @@ namespace Bloodlines.Debug
                 }
 
                 builder.AppendLine();
-                builder.Append("Proposal|Id=").Append(proposal.ProposalId)
+                builder.Append("Proposal|EntityIndex=").Append(proposalEntities[i].Index)
+                    .Append("|Id=").Append(proposal.ProposalId)
                     .Append("|SourceFactionId=").Append(proposal.SourceFactionId)
                     .Append("|SourceMemberId=").Append(proposal.SourceMemberId)
                     .Append("|TargetFactionId=").Append(proposal.TargetFactionId)

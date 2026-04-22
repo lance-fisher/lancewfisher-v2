@@ -2586,3 +2586,53 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Start sub-slice 2B from merged `master` on fresh branch `codex/unity-player-marriage-acceptance`.
 2. Keep all work under `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/` plus a
    new acceptance debug/validator seam; do not reopen `unity/Assets/_Bloodlines/Code/AI/**`.
+
+## 2026-04-21 Player Marriage Diplomacy Sub-Slice 2B: Acceptance And Effects
+
+- Branch lane: `codex/unity-player-marriage-acceptance`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-acceptance.md`
+- The player-side acceptance slice now ports the browser's incoming-marriage accept seam under `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/`:
+  - `PlayerMarriageAcceptRequestComponent` and `PlayerMarriageAcceptSystem`
+    cover pending-proposal lookup, source/target dynasty + member resolution,
+    target-side authority validation, proposal acceptance, mirror marriage
+    creation, legitimacy cost resolution, hostility drop, oathkeeping +2, and
+    the 30-day `DeclareInWorldTimeRequest`.
+  - `BloodlinesDebugCommandSurface.PlayerDiplomacy.cs` now exposes
+    `TryDebugIssuePlayerMarriageAccept(proposalEntityIndex)` and includes
+    `EntityIndex=...` in the proposal readout so the debug and validator seams
+    can target the exact pending proposal entity.
+  - `BloodlinesPlayerMarriageAcceptanceSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityPlayerMarriageAcceptanceSmokeValidation.ps1`
+    prove baseline, valid acceptance, no-pending gate rejection, and
+    heir-regency legitimacy-cost deduction.
+- Full governed validation is green in `D:\BLM13\bloodlines\bloodlines`,
+  using temporary worktree-local copies only for the still-root-pinned
+  bootstrap-runtime and scene-shell wrapper scripts:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`: `Build succeeded.` / `0 Error(s)`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: `0 Error(s)` with existing editor warnings
+  - bootstrap runtime smoke:
+    `Bootstrap runtime smoke validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity on map ironmark_frontier. ...`
+  - combat smoke:
+    `Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True, groupMovementPhase=True, separationPhase=True, stancePhase=True.`
+  - scene shells:
+    `Bootstrap scene shell validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity with canonical map Assets/_Bloodlines/Data/MapDefinitions/ironmark_frontier.asset.`
+    and
+    `Gameplay scene shell validation passed for Assets/_Bloodlines/Scenes/Gameplay/IronmarkFrontier.unity.`
+  - fortification smoke:
+    `Fortification smoke validation passed: baselinePhase=True, tierAdvancePhase=True, reserveMusterPhase=True, reserveRecoveryPhase=True. ...`
+  - siege smoke:
+    `Siege smoke validation passed: baselinePhase=True, strainPhase=True, recoveryPhase=True, supportPhase=True. ...`
+  - `node tests/data-validation.mjs`: PASS
+  - `node tests/runtime-bridge.mjs`: PASS
+  - dedicated player-marriage acceptance smoke:
+    `BLOODLINES_PLAYER_MARRIAGE_ACCEPTANCE_SMOKE PASS`
+    with
+    `Phase 2 PASS: proposal accepted, marriageCount=2, legitimacy=82/72, oathkeeping=5/3, dualClockDays=50`
+    and
+    `Phase 4 PASS: heir-regency cost applied, legitimacy=81, stewardship=2`
+
+### Recommended Next Follow-Up
+1. Merge `codex/unity-player-marriage-acceptance` to `master` and rerun the governed gate on merged `master`.
+2. After landing 2B, start sub-slice 2C on fresh branch `codex/unity-player-marriage-dissolution`.
+3. Keep the player-marriage lane inside `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/` plus narrow continuity/contract updates; do not reopen `unity/Assets/_Bloodlines/Code/AI/**`.
