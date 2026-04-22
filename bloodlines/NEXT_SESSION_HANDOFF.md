@@ -3594,3 +3594,33 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   those files unstaged unless a slice explicitly needs to own them.
 - The on-screen HUD and the remaining fortification / victory readouts are
   still follow-up work inside this same lane.
+
+## 2026-04-22 Player HUD Fortification Readout (WIP)
+
+- Branch lane: `codex/unity-player-hud-fortification-readout`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification-readout.md`
+- Completed in this slice:
+  - Added `FortificationHUDComponent` and `FortificationHUDSystem` under
+    `unity/Assets/_Bloodlines/Code/HUD/` to project settlement fortification
+    legibility: tier/ceiling, open breaches, destroyed counters, reserve
+    frontage, mustered defenders, reserve buckets, and sealing/recovery
+    telemetry.
+  - Extended `BloodlinesDebugCommandSurface.HUD.cs` with
+    `TryDebugGetFortificationHUDSnapshot(...)` and a parseable
+    `FortHUD|Key=Value|...` readout.
+  - Added `BloodlinesFortificationHUDSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityFortificationHUDSmokeValidation.ps1`.
+- Validation state:
+  - `BLOODLINES_FORTIFICATION_HUD_SMOKE PASS`
+  - bootstrap runtime, combat, canonical scene shells, fortification, siege,
+    `node tests/data-validation.mjs`, `node tests/runtime-bridge.mjs`, and
+    contract staleness are green
+  - the two canonical `dotnet build unity/Assembly-CSharp*.csproj -nologo`
+    gates are red in this worktree before slice-specific compilation because
+    `dotnet` is not resolving Unity assemblies (`Unity.Entities`,
+    `Unity.Mathematics`, etc.) across many pre-existing files
+- Immediate next action:
+  - fix or regenerate the worktree C# project-reference state so the two
+    `dotnet build` gates pass, then rerun the full 10-gate chain and commit /
+    push `codex/unity-player-hud-fortification-readout`

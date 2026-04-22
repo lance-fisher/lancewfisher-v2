@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using Bloodlines.Components;
 using Bloodlines.HUD;
 using Unity.Collections;
 using Unity.Entities;
@@ -107,6 +108,75 @@ namespace Bloodlines.Debug
 
             readout = builder.ToString();
             return true;
+        }
+
+        public bool TryDebugGetFortificationHUDSnapshot(string settlementId, out string readout)
+        {
+            readout = string.Empty;
+            if (string.IsNullOrWhiteSpace(settlementId) ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var settlementKey = new FixedString64Bytes(settlementId);
+            using var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FortificationHUDComponent>(),
+                ComponentType.ReadOnly<SettlementComponent>());
+            using var entities = query.ToEntityArray(Allocator.Temp);
+
+            for (int i = 0; i < entities.Length; i++)
+            {
+                var entity = entities[i];
+                var settlement = entityManager.GetComponentData<SettlementComponent>(entity);
+                if (!settlement.SettlementId.Equals(settlementKey))
+                {
+                    continue;
+                }
+
+                var hud = entityManager.GetComponentData<FortificationHUDComponent>(entity);
+                var builder = new StringBuilder(512);
+                builder.Append("FortHUD")
+                    .Append("|SettlementId=").Append(hud.SettlementId)
+                    .Append("|SettlementClassId=").Append(hud.SettlementClassId)
+                    .Append("|OwnerFactionId=").Append(hud.OwnerFactionId)
+                    .Append("|IsPrimaryKeep=").Append(hud.IsPrimaryKeep ? "true" : "false")
+                    .Append("|Tier=").Append(hud.Tier)
+                    .Append("|Ceiling=").Append(hud.Ceiling)
+                    .Append("|OpenBreachCount=").Append(hud.OpenBreachCount)
+                    .Append("|DestroyedWallSegmentCount=").Append(hud.DestroyedWallSegmentCount)
+                    .Append("|DestroyedTowerCount=").Append(hud.DestroyedTowerCount)
+                    .Append("|DestroyedGateCount=").Append(hud.DestroyedGateCount)
+                    .Append("|DestroyedKeepCount=").Append(hud.DestroyedKeepCount)
+                    .Append("|ReserveFrontage=").Append(hud.ReserveFrontage)
+                    .Append("|MusteredDefenders=").Append(hud.MusteredDefenders)
+                    .Append("|ReadyReserveCount=").Append(hud.ReadyReserveCount)
+                    .Append("|MusteringReserveCount=").Append(hud.MusteringReserveCount)
+                    .Append("|RecoveringReserveCount=").Append(hud.RecoveringReserveCount)
+                    .Append("|FallbackReserveCount=").Append(hud.FallbackReserveCount)
+                    .Append("|LastCommittedCount=").Append(hud.LastCommittedCount)
+                    .Append("|ThreatActive=").Append(hud.ThreatActive ? "true" : "false")
+                    .Append("|SealingEligible=").Append(hud.SealingEligible ? "true" : "false")
+                    .Append("|SealingTracked=").Append(hud.SealingTracked ? "true" : "false")
+                    .Append("|SealingProgress01=").Append(hud.SealingProgress01.ToString("0.000", CultureInfo.InvariantCulture))
+                    .Append("|SealingAccumulatedWorkerHours=").Append(hud.SealingAccumulatedWorkerHours.ToString("0.0", CultureInfo.InvariantCulture))
+                    .Append("|SealingRequiredWorkerHours=").Append(hud.SealingRequiredWorkerHours.ToString("0.0", CultureInfo.InvariantCulture))
+                    .Append("|SealingReservedStone=").Append(hud.SealingReservedStone.ToString("0.0", CultureInfo.InvariantCulture))
+                    .Append("|SealingRequiredStone=").Append(hud.SealingRequiredStone.ToString("0.0", CultureInfo.InvariantCulture))
+                    .Append("|RecoveryEligible=").Append(hud.RecoveryEligible ? "true" : "false")
+                    .Append("|RecoveryTracked=").Append(hud.RecoveryTracked ? "true" : "false")
+                    .Append("|RecoveryTargetCounter=").Append(hud.RecoveryTargetCounter)
+                    .Append("|RecoveryProgress01=").Append(hud.RecoveryProgress01.ToString("0.000", CultureInfo.InvariantCulture))
+                    .Append("|RecoveryAccumulatedWorkerHours=").Append(hud.RecoveryAccumulatedWorkerHours.ToString("0.0", CultureInfo.InvariantCulture))
+                    .Append("|RecoveryRequiredWorkerHours=").Append(hud.RecoveryRequiredWorkerHours.ToString("0.0", CultureInfo.InvariantCulture))
+                    .Append("|RecoveryReservedStone=").Append(hud.RecoveryReservedStone.ToString("0.0", CultureInfo.InvariantCulture))
+                    .Append("|RecoveryRequiredStone=").Append(hud.RecoveryRequiredStone.ToString("0.0", CultureInfo.InvariantCulture));
+
+                readout = builder.ToString();
+                return true;
+            }
+
+            return false;
         }
     }
 }

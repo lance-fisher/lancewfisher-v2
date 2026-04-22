@@ -1865,6 +1865,15 @@
       "description": "The validated `codex/unity-player-hud-match-progression` branch is now merged to master via `ed22484c`. `MatchProgressionHUDComponent`, `MatchProgressionHUDSystem`, `BloodlinesDebugCommandSurface.HUD.cs`, and `BloodlinesMatchProgressionHUDSmokeValidation` plus wrapper are now canonical master content for the second player-HUD slice. Merged master re-passed runtime build, editor build, the dedicated match-progression HUD smoke, bootstrap runtime, combat, canonical scene shells, fortification, siege, `node tests/data-validation.mjs`, `node tests/runtime-bridge.mjs`, and contract staleness at revision 69 in D:\\BLM13\\bloodlines\\bloodlines. Contract rev 69->70 records the lane as still active with no branch currently in flight and points the next pickup at fortification-legibility or victory-readout follow-up work.",
       "handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-hud-match-progression-landing.md",
       "validation_gates": "all 10 green plus match-progression HUD smoke on merged master"
+    },
+    {
+      "lane": "player-hud-realm-condition-legibility-slice-3-fortification-readout",
+      "date": "2026-04-22",
+      "branch": "codex/unity-player-hud-fortification-readout",
+      "status": "blocked",
+      "description": "The third player HUD slice is now implemented on branch but not yet commit-ready. `FortificationHUDComponent` and `FortificationHUDSystem` project settlement fortification legibility into the active Codex HUD lane: tier/ceiling, open breaches, destroyed counters, reserve frontage, mustered defenders, reserve buckets, and breach-sealing / destroyed-counter recovery telemetry. `BloodlinesDebugCommandSurface.HUD.cs` now exposes a parseable `FortHUD|Key=Value|...` readout via `TryDebugGetFortificationHUDSnapshot`, and `BloodlinesFortificationHUDSmokeValidation` plus `scripts/Invoke-BloodlinesUnityFortificationHUDSmokeValidation.ps1` prove reserve frontage, breach sealing, wall recovery, and keep recovery. Unity smoke, bootstrap runtime, combat, scene-shell, fortification, siege, node validation, and contract staleness are green in this worktree, but both canonical `dotnet build unity/Assembly-CSharp*.csproj -nologo` gates remain blocked by worktree-wide unresolved Unity assembly references before slice-specific compilation. Contract rev 70->71 records the new HUD sub-slice and the active blocker.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-fortification-readout.md",
+      "validation_gates": "dedicated fortification HUD smoke plus Unity/node gates green; dotnet build gates blocked by worktree project-reference resolution"
     }
   ]
 }
