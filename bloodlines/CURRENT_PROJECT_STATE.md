@@ -3634,3 +3634,16 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   `Assembly-CSharp*.csproj` metadata plus `unity/Library` access were repaired
   so the governed build gates resolve against the canonical Unity Library
   instead of the dead `c946` worktree.
+
+## 2026-04-22 Dynasty Renown Leaderboard HUD Landing
+
+- Canonical `master` advanced via merge commit `a80fef7a`, landing the
+  dynasty-renown leaderboard HUD slice on top of the prior renown HUD and
+  renown runtime surfaces.
+- Merge-result governed validation is green: runtime build, editor build,
+  bootstrap runtime smoke, combat smoke, canonical scene shell validation,
+  fortification smoke, siege smoke, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, contract staleness, and the dedicated
+  dynasty renown leaderboard HUD smoke.
+- Contract revision advanced `86 -> 87` and now clears the HUD lane branch in
+  flight after the landing pass.

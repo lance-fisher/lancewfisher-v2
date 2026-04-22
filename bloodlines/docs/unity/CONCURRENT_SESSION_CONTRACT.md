@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 86
+- Revision: 87
 - Last Updated: 2026-04-22
-- Last Updated By: codex-hud-dynasty-renown-panel-2026-04-22
-- Supersedes: revision 85 (The `player-hud-realm-condition-legibility` lane now carries `codex/unity-hud-dynasty-renown-panel`. `DynastyRenownLeaderboardHUDComponent` and `DynastyRenownLeaderboardHUDSystem` add a singleton ordered prestige panel that consumes the already-landed `DynastyRenownHUDComponent` snapshots, sorts factions by renown score plus peak-renown tie-breaking, and exposes a parseable multi-line panel snapshot via `BloodlinesDebugCommandSurface.HUD.cs`. `BloodlinesDynastyRenownLeaderboardHUDSmokeValidation` plus wrapper prove row population, player/interregnum projection, and ordering. This revision records the new HUD follow-up branch in flight and the generated project metadata repair needed for this worktree.)
+- Last Updated By: codex-hud-dynasty-renown-panel-landing-2026-04-22
+- Supersedes: revision 86 (The `player-hud-realm-condition-legibility` lane's `codex/unity-hud-dynasty-renown-panel` slice is now merged to canonical `master` via `a80fef7a`. `DynastyRenownLeaderboardHUDComponent`, `DynastyRenownLeaderboardHUDSystem`, the dedicated smoke validator/wrapper, and the analyzer-path / Library repair now live on canonical `master`. This revision clears the in-flight branch marker and records the landing handoff.)
 
 
 ## Purpose
@@ -827,11 +827,12 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-panel.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-readout.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-panel.md`
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-panel-landing.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `getRealmConditionSnapshot` (14291-14764), `getMatchProgressionSnapshot` (13650-13658)
   - `tests/runtime-bridge.mjs` realm-condition snapshot assertions (1344-1364), match-progression assertions (7521, 7773-7871, 7923-7975, 8133, 8185), fortification/readout assertions (1438-1444), hostile-post-repulse world-pressure assertions (1718-1733)
-- Current Branch In Flight: `codex/unity-hud-dynasty-renown-panel`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-panel.md`
+- Current Branch In Flight: none (merged to canonical `master` via `a80fef7a`)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-dynasty-renown-panel-landing.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
