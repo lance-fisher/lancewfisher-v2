@@ -2939,3 +2939,63 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   copies when validating this clean worktree.
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
+
+## Codex Player Marriage Diplomacy Sub-Slice 2C: Dissolution Validation (2026-04-21)
+
+### Status: COMPLETE on branch `codex/unity-player-marriage-dissolution`
+
+### What Was Done
+- Added `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerMarriageDissolutionSmokeValidation.cs`.
+- Added `scripts/Invoke-BloodlinesUnityPlayerMarriageDissolutionSmokeValidation.ps1`.
+- Closed the remaining player-marriage proof gap without duplicating runtime:
+  the validator intentionally reuses the already-landed
+  `unity/Assets/_Bloodlines/Code/Dynasties/MarriageDeathDissolutionSystem.cs`
+  from the paused `dynasty-house-parity` lane.
+- The dedicated 3-phase smoke now proves:
+  - accepted marriages remain active while both spouses live
+  - ruler death dissolves both mirror records and promotes the heir through
+    `DynastySuccessionSystem`
+  - active marriages still gestate a child when no death intervenes
+- Full governed validation is green in `D:\BLM13\bloodlines\bloodlines`, with
+  temporary worktree-local copies used only for the still-root-pinned
+  bootstrap-runtime and canonical scene-shell wrappers.
+
+### Validation Proof
+- Runtime build: `Build succeeded.` / `0 Error(s)`
+- Editor build: `0 Error(s)` with existing warnings
+- Bootstrap runtime smoke:
+  `Bootstrap runtime smoke validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity on map ironmark_frontier. ...`
+- Combat smoke:
+  `Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True, groupMovementPhase=True, separationPhase=True, stancePhase=True.`
+- Bootstrap scene shell:
+  `Bootstrap scene shell validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity with canonical map Assets/_Bloodlines/Data/MapDefinitions/ironmark_frontier.asset.`
+- Gameplay scene shell:
+  `Gameplay scene shell validation passed for Assets/_Bloodlines/Scenes/Gameplay/IronmarkFrontier.unity.`
+- Fortification smoke:
+  `Fortification smoke validation passed: baselinePhase=True, tierAdvancePhase=True, reserveMusterPhase=True, reserveRecoveryPhase=True. ...`
+- Siege smoke:
+  `Siege smoke validation passed: baselinePhase=True, strainPhase=True, recoveryPhase=True, supportPhase=True. ...`
+- Data validation: `Bloodlines data validation passed.`
+- Runtime bridge: `Bloodlines runtime bridge validation passed.`
+- Dedicated smoke:
+  `BLOODLINES_PLAYER_MARRIAGE_DISSOLUTION_SMOKE PASS`
+  with
+  `Phase 1 PASS: alive marriage remained active with MarriageId=marriage-11210497115101494597108105118101451099711411410597`
+  and
+  `Phase 2 PASS: ruler death dissolved MarriageId=marriage-1121049711510150451141171081011144510010197116104 at day=50.00 and promoted player-bloodline-heir`
+  and
+  `Phase 3 PASS: live marriage gestated childId=child-marriage-11210497115101514510310111511697116105111110 for headFaction=enemy`
+
+### Immediate Next Action
+1. Stage the dissolution validator, wrapper, and continuity updates and commit them on `codex/unity-player-marriage-dissolution`.
+2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
+3. After the landing continuity pass, start Priority 3 on fresh branch `codex/unity-player-covert-ops-foundation`.
+
+### Context Notes
+- The checked-in bootstrap-runtime and canonical scene-shell wrappers are still
+  pinned to `D:\ProjectsHome\Bloodlines`; continue using temporary worktree-safe
+  copies when validating this clean worktree.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
+- Node validations for this worktree must run from `D:\BLM13\bloodlines\bloodlines`
+  rather than the outer worktree root `D:\BLM13\bloodlines`.

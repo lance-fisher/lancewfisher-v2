@@ -2660,3 +2660,56 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Start sub-slice 2C from merged `master` on fresh branch `codex/unity-player-marriage-dissolution`.
 2. Port death-driven marriage dissolution while keeping the marriage audit entity alive.
 3. Keep all writes inside `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/` plus continuity/contract updates; do not reopen `unity/Assets/_Bloodlines/Code/AI/**`.
+
+## 2026-04-21 Player Marriage Diplomacy Sub-Slice 2C: Dissolution Validation
+
+- Branch lane: `codex/unity-player-marriage-dissolution`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-marriage-dissolution.md`
+- Repo-reality correction for this slice:
+  - the actual death-driven dissolution runtime was already landed on `master`
+    under `unity/Assets/_Bloodlines/Code/Dynasties/MarriageDeathDissolutionSystem.cs`
+    via the paused `dynasty-house-parity` lane
+  - this player-marriage slice therefore closes the remaining marriage-diplomacy
+    requirement by adding the dedicated player-facing proof surface instead of
+    cloning a second dissolution system under `PlayerDiplomacy/`
+- Added the dedicated player-marriage dissolution validator surface:
+  - `BloodlinesPlayerMarriageDissolutionSmokeValidation`
+  - `scripts/Invoke-BloodlinesUnityPlayerMarriageDissolutionSmokeValidation.ps1`
+- The 3-phase validator proves:
+  - accepted marriages stay active while both spouses live
+  - ruler death dissolves both mirror records and promotes the heir through
+    `DynastySuccessionSystem`
+  - active marriages still gestate a child when no death intervenes
+- Full governed validation is green in `D:\BLM13\bloodlines\bloodlines`,
+  using temporary worktree-local copies only for the still-root-pinned
+  bootstrap-runtime and scene-shell wrappers:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`: `Build succeeded.` / `0 Error(s)`
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: `0 Error(s)` with existing editor warnings
+  - bootstrap runtime smoke:
+    `Bootstrap runtime smoke validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity on map ironmark_frontier. ...`
+  - combat smoke:
+    `Combat smoke validation passed: meleePhase=True, projectilePhase=True, explicitAttackPhase=True, attackMovePhase=True, targetVisibilityPhase=True, groupMovementPhase=True, separationPhase=True, stancePhase=True.`
+  - scene shells:
+    `Bootstrap scene shell validation passed for Assets/_Bloodlines/Scenes/Bootstrap/Bootstrap.unity with canonical map Assets/_Bloodlines/Data/MapDefinitions/ironmark_frontier.asset.`
+    and
+    `Gameplay scene shell validation passed for Assets/_Bloodlines/Scenes/Gameplay/IronmarkFrontier.unity.`
+  - fortification smoke:
+    `Fortification smoke validation passed: baselinePhase=True, tierAdvancePhase=True, reserveMusterPhase=True, reserveRecoveryPhase=True. ...`
+  - siege smoke:
+    `Siege smoke validation passed: baselinePhase=True, strainPhase=True, recoveryPhase=True, supportPhase=True. ...`
+  - `node tests/data-validation.mjs`: PASS
+  - `node tests/runtime-bridge.mjs`: PASS
+  - dedicated player-marriage dissolution smoke:
+    `BLOODLINES_PLAYER_MARRIAGE_DISSOLUTION_SMOKE PASS`
+    with
+    `Phase 1 PASS: alive marriage remained active with MarriageId=marriage-11210497115101494597108105118101451099711411410597`
+    and
+    `Phase 2 PASS: ruler death dissolved MarriageId=marriage-1121049711510150451141171081011144510010197116104 at day=50.00 and promoted player-bloodline-heir`
+    and
+    `Phase 3 PASS: live marriage gestated childId=child-marriage-11210497115101514510310111511697116105111110 for headFaction=enemy`
+
+### Recommended Next Follow-Up
+1. Merge `codex/unity-player-marriage-dissolution` to `master` and rerun the governed gate on merged `master`.
+2. After landing 2C, move to Priority 3 on fresh branch `codex/unity-player-covert-ops-foundation`.
+3. Keep the player-marriage lane additive only; do not reopen `unity/Assets/_Bloodlines/Code/Dynasties/MarriageDeathDissolutionSystem.cs` unless the contract is explicitly widened.
