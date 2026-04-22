@@ -141,6 +141,60 @@ namespace Bloodlines.Debug
             return true;
         }
 
+        public bool TryDebugIssuePlayerPactProposal(string sourceFactionId, string targetFactionId)
+        {
+            if (string.IsNullOrWhiteSpace(sourceFactionId) ||
+                string.IsNullOrWhiteSpace(targetFactionId) ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var sourceFactionKey = new FixedString32Bytes(sourceFactionId);
+            var targetFactionKey = new FixedString32Bytes(targetFactionId);
+            if (sourceFactionKey.Equals(targetFactionKey) ||
+                FindFactionEntity(entityManager, sourceFactionKey) == Entity.Null ||
+                FindFactionEntity(entityManager, targetFactionKey) == Entity.Null)
+            {
+                return false;
+            }
+
+            var requestEntity = entityManager.CreateEntity(typeof(PlayerPactProposalRequestComponent));
+            entityManager.SetComponentData(requestEntity, new PlayerPactProposalRequestComponent
+            {
+                SourceFactionId = sourceFactionKey,
+                TargetFactionId = targetFactionKey,
+            });
+            return true;
+        }
+
+        public bool TryDebugIssuePlayerPactBreak(string sourceFactionId, string targetFactionId)
+        {
+            if (string.IsNullOrWhiteSpace(sourceFactionId) ||
+                string.IsNullOrWhiteSpace(targetFactionId) ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var sourceFactionKey = new FixedString32Bytes(sourceFactionId);
+            var targetFactionKey = new FixedString32Bytes(targetFactionId);
+            if (sourceFactionKey.Equals(targetFactionKey) ||
+                FindFactionEntity(entityManager, sourceFactionKey) == Entity.Null ||
+                FindFactionEntity(entityManager, targetFactionKey) == Entity.Null)
+            {
+                return false;
+            }
+
+            var requestEntity = entityManager.CreateEntity(typeof(PlayerPactBreakRequestComponent));
+            entityManager.SetComponentData(requestEntity, new PlayerPactBreakRequestComponent
+            {
+                RequestingFactionId = sourceFactionKey,
+                TargetFactionId = targetFactionKey,
+            });
+            return true;
+        }
+
         public bool TryDebugGetPlayerMarriageProposals(string factionId, out string readout)
         {
             readout = string.Empty;
@@ -288,6 +342,52 @@ namespace Bloodlines.Debug
                         .Append("|IntensityErosion=").Append(missionary.IntensityErosion.ToString("0.00", CultureInfo.InvariantCulture))
                         .Append("|LoyaltyPressure=").Append(missionary.LoyaltyPressure.ToString("0.00", CultureInfo.InvariantCulture));
                 }
+            }
+
+            readout = builder.ToString();
+            return true;
+        }
+
+        public bool TryDebugGetPlayerPacts(string factionId, out string readout)
+        {
+            readout = string.Empty;
+            if (string.IsNullOrWhiteSpace(factionId) || !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var factionKey = new FixedString32Bytes(factionId);
+            using var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<PactComponent>());
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var pacts = query.ToComponentDataArray<PactComponent>(Allocator.Temp);
+
+            var builder = new StringBuilder();
+            int count = 0;
+            for (int i = 0; i < pacts.Length; i++)
+            {
+                if (pacts[i].FactionAId.Equals(factionKey) || pacts[i].FactionBId.Equals(factionKey))
+                {
+                    count++;
+                }
+            }
+
+            builder.Append("PactCount=").Append(count);
+            for (int i = 0; i < pacts.Length; i++)
+            {
+                if (!pacts[i].FactionAId.Equals(factionKey) && !pacts[i].FactionBId.Equals(factionKey))
+                {
+                    continue;
+                }
+
+                builder.AppendLine();
+                builder.Append("Pact|EntityIndex=").Append(entities[i].Index)
+                    .Append("|PactId=").Append(pacts[i].PactId)
+                    .Append("|FactionAId=").Append(pacts[i].FactionAId)
+                    .Append("|FactionBId=").Append(pacts[i].FactionBId)
+                    .Append("|StartedAt=").Append(pacts[i].StartedAtInWorldDays.ToString("0.00", CultureInfo.InvariantCulture))
+                    .Append("|MinimumExpiresAt=").Append(pacts[i].MinimumExpiresAtInWorldDays.ToString("0.00", CultureInfo.InvariantCulture))
+                    .Append("|Broken=").Append(pacts[i].Broken)
+                    .Append("|BrokenByFactionId=").Append(pacts[i].BrokenByFactionId);
             }
 
             readout = builder.ToString();

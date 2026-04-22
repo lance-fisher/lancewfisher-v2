@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-22T05:14:52.1037047-06:00",
+  "updated_at": "2026-04-22T06:20:21.4502056-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -1910,6 +1910,15 @@
       "description": "The validated conviction-band wiring landing branch is now ready to advance canonical master from merge commit `38796f83`. The slice retires the lane after landing starvation and cap-pressure conviction protection plus the commander-only `CaptureMultiplier` seam. The full governed 10-gate chain re-passed green in the clean `D:\\BLAICD\\bloodlines` checkout: runtime build, editor build, bootstrap runtime smoke, combat smoke, bootstrap and gameplay scene-shell validation, fortification smoke, siege smoke, `node tests/data-validation.mjs`, `node tests/runtime-bridge.mjs`, and contract staleness at revision 75. Local Unity batch invocations were used for the still-root-pinned bootstrap/runtime and scene-shell validators so the clean checkout, not the dirty canonical root, was the validated surface.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-conviction-band-wiring.md",
       "validation_gates": "all 10 green plus conviction smoke on validated landing branch"
+    },
+    {
+      "lane": "player-marriage-diplomacy-sub-slice-2f-pact-proposal-break",
+      "date": "2026-04-22",
+      "branch": "codex/unity-player-pact-proposal",
+      "status": "active",
+      "description": "Player-side non-aggression pact proposal and break are now complete on branch under the existing `PlayerDiplomacy/**` lane. `PlayerPactProposalRequestComponent`, `PlayerPactBreakRequestComponent`, `PlayerPactUtility`, `PlayerPactProposalSystem`, and `PlayerPactBreakSystem` port the browser `getNonAggressionPactTerms`, `proposeNonAggressionPact`, and `breakNonAggressionPact` seam from `src/game/core/simulation.js` 5126-5257 without widening Claude's AI-owned `AI/**` path: proposal now validates kingdom-only state, self-targeting, hostility, active-pact duplication, and canonical `influence=50` / `gold=80` costs, then clears hostility and creates the AI-owned single-entity `PactComponent` with the canonical minimum duration; break now resolves the active pact, marks it broken, restores hostility both ways, applies dynasty legitimacy `-8` and conviction oathkeeping `-2`, and emits the browser-parity early-break suffix. `BloodlinesDebugCommandSurface.PlayerDiplomacy.cs` adds pact issuance and readout helpers, while `BloodlinesPlayerPactSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPlayerPactSmokeValidation.ps1` prove proposal success, duplicate rejection, early-break penalties, and insufficient-resource rejection. The full governed 10-gate chain is green in the clean `D:\\BLAICD\\bloodlines` checkout, with local wrapper equivalents used only for the still-root-pinned bootstrap-runtime and canonical scene-shell validators. Contract rev 75->76.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-pact-proposal.md",
+      "validation_gates": "all 10 green plus player pact smoke"
     }
   ]
 }
