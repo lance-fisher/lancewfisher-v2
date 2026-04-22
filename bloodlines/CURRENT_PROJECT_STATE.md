@@ -3101,3 +3101,30 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Stage the match-progression HUD slice files plus continuity/contract updates and commit them on `codex/unity-player-hud-match-progression`.
 2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
 3. After landing, continue the same lane with the fortification-legibility or victory-readout HUD follow-up slice.
+
+## 2026-04-21 Player HUD Match Progression Slice Landing
+
+- Merged branch: `codex/unity-player-hud-match-progression`
+- Merge commit on `master`: `ed22484c`
+- Landing handoff:
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-match-progression-landing.md`
+- The second player HUD slice is now canonical on `master`:
+  - `MatchProgressionHUDComponent` and `MatchProgressionHUDSystem` now provide
+    the canonical player-HUD read-model for stage, phase, readiness,
+    declaration count, dominant-leader telemetry, Great Reckoning telemetry,
+    and resolved world-pressure state.
+  - `BloodlinesDebugCommandSurface.HUD.cs` now canonically exposes the
+    parseable `MatchHUD|Key=Value|...` readout.
+  - `BloodlinesMatchProgressionHUDSmokeValidation` plus wrapper now
+    canonically prove the second HUD slice on `master`.
+- Merged `master` re-passed runtime build, editor build, the dedicated
+  match-progression HUD smoke, bootstrap runtime, combat, canonical scene
+  shells, fortification, siege, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, and contract staleness at revision `69` in
+  `D:\BLM13\bloodlines\bloodlines`.
+- The player HUD lane remains active, but there is now no HUD branch in flight.
+
+### Recommended Next Follow-Up
+1. Create a fresh Codex branch from current `master` for the next player-HUD slice.
+2. Implement either the fortification-legibility HUD readout or the victory-distance readout next.
+3. Keep using the worktree-local bootstrap-runtime and scene-shell wrapper copies until the checked-in path-pinned wrappers are repaired.

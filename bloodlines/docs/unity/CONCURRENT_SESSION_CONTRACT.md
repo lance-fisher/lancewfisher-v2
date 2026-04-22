@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 69
+- Revision: 70
 - Last Updated: 2026-04-21
-- Last Updated By: codex-player-hud-match-2026-04-21
-- Supersedes: revision 68 (The first player HUD slice was already canonical on `master`; revision 69 records the validated follow-up branch `codex/unity-player-hud-match-progression`, adds the match-progression HUD files and dedicated validator to the active HUD lane, and captures the branch-side governed validation proof in `D:\BLM14\bloodlines\bloodlines` before landing continuity.)
+- Last Updated By: codex-player-hud-match-landing-2026-04-21
+- Supersedes: revision 69 (The match-progression HUD slice was completed and validated on branch `codex/unity-player-hud-match-progression`; revision 70 records its landing on canonical `master` via `ed22484c`, with the governed merged-master validation gate and dedicated match-HUD smoke re-run green in `D:\BLM13\bloodlines\bloodlines` and the HUD lane still active for follow-up slices.)
 
 
 ## Purpose
@@ -695,11 +695,12 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility-landing.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-match-progression.md`
+  - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-match-progression-landing.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `getRealmConditionSnapshot` (14291-14764), `getMatchProgressionSnapshot` (13650-13658)
   - `tests/runtime-bridge.mjs` realm-condition snapshot assertions (1344-1364), match-progression assertions (7521, 7773-7871, 7923-7975, 8133, 8185), fortification/readout assertions (1438-1444), hostile-post-repulse world-pressure assertions (1718-1733)
-- Current Branch In Flight: `codex/unity-player-hud-match-progression`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-hud-match-progression.md`
+- Current Branch In Flight: none
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-hud-match-progression-landing.md`
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 

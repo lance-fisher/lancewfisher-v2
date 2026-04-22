@@ -3553,3 +3553,44 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 - This slice is still intentionally a read-model + proof seam only; the
   on-screen HUD and the remaining fortification / victory readouts are follow-up
   work inside the same player-HUD lane.
+
+## Codex Player HUD Match Progression Slice Landing (2026-04-21)
+
+### Status: MERGED to `master` via `ed22484c`
+
+### What Landed
+- `codex/unity-player-hud-match-progression` is now merged, so the second
+  player-HUD slice is canonical on `master`.
+- `unity/Assets/_Bloodlines/Code/HUD/MatchProgressionHUDComponent.cs` and
+  `MatchProgressionHUDSystem.cs` now canonically project stage, phase,
+  readiness, next-stage, declaration count, in-world time, dominant-leader
+  telemetry, Great Reckoning telemetry, and resolved world-pressure state into
+  a singleton HUD read-model.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now canonically exposes the parseable `MatchHUD|Key=Value|...` readout via
+  `TryDebugGetMatchHUDSnapshot(...)`.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMatchProgressionHUDSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityMatchProgressionHUDSmokeValidation.ps1`
+  now canonically prove the match-progression HUD slice on `master`.
+- Merged `master` re-passed runtime build, editor build, the dedicated
+  match-progression HUD smoke, bootstrap runtime, combat, canonical scene
+  shells, fortification, siege, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, and contract staleness.
+
+### Immediate Next Action
+1. Create a fresh Codex branch from current `master` for the next player-HUD slice.
+2. Implement either the fortification-legibility HUD readout or the victory-distance readout next.
+3. Keep `unity/Assets/_Bloodlines/Code/AI/**` read-only and keep using the worktree-local bootstrap-runtime and scene-shell wrapper copies.
+
+### Context Notes
+- The player HUD lane remains active, but there is currently no HUD branch in flight.
+- The merged-master worktree now has expected local churn in
+  `unity/Assembly-CSharp.csproj`,
+  `unity/Assembly-CSharp-Editor.csproj`,
+  and
+  `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  from worktree-specific analyzer-path regeneration and Unity validation; leave
+  those files unstaged unless a slice explicitly needs to own them.
+- The on-screen HUD and the remaining fortification / victory readouts are
+  still follow-up work inside this same lane.
