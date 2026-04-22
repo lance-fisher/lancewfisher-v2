@@ -1883,6 +1883,24 @@
       "description": "Player missionary dispatch is now complete on branch under the existing `PlayerDiplomacy/**` lane. `PlayerMissionaryDispatchRequestComponent`, `PlayerMissionaryDispatchSystem`, and additive helper/debug updates port the browser's `getMissionaryTerms` / `startMissionaryOperation` seam without widening the AI-owned `AI/**` lane: the player dispatch now validates source/target factions, committed faith, same-faith rejection, duplicate-active-op rejection, faith-operator availability, canonical `influence=14` / `intensity=12` costs, and active-op capacity through read-only `DynastyOperationLimits`, then creates AI-owned `DynastyOperationComponent` + `DynastyOperationMissionaryComponent` and emits a missionary narrative line. `BloodlinesDebugCommandSurface.PlayerDiplomacy` now exposes missionary issuance and missionary payload readout, and `BloodlinesPlayerMissionaryDispatchSmokeValidation` plus its wrapper prove missionary success, insufficient-influence rejection, and active-cap rejection. The full governed 10-gate chain is green in D:\\BLM14\\bloodlines\\bloodlines and the contract is current at revision 72.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-missionary-dispatch.md",
       "validation_gates": "all 10 green plus player missionary dispatch smoke"
+    },
+    {
+      "lane": "conviction-band-wiring-checkpoint",
+      "date": "2026-04-22",
+      "branch": "codex/unity-conviction-band-wiring",
+      "status": "in_progress",
+      "description": "A new narrow Codex lane is now active for conviction-band downstream wiring. `StarvationResponseSystem` reads `ConvictionComponent` and reduces starvation-side loyalty loss via `LoyaltyProtectionMultiplier` plus famine population decline via `PopulationGrowthMultiplier`. `BloodlinesConvictionSmokeValidation` now includes a starvation-protection phase proving `ApexMoral` loses less loyalty and population than `Neutral` under identical famine conditions. Runtime build, editor build, and conviction smoke are green on the branch. `AttackResolutionSystem` is intentionally untouched so far because the combat-side `CaptureMultiplier` seam still needs a scope decision: only commander / bloodline-backed units currently carry captive-ready member identity.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-conviction-band-wiring.md",
+      "validation_gates": "runtime build, editor build, and conviction smoke green; full 10-gate chain pending after combat-hook decision"
+    },
+    {
+      "lane": "conviction-band-wiring-completion",
+      "date": "2026-04-22",
+      "branch": "codex/unity-conviction-band-wiring-finish",
+      "status": "active",
+      "description": "The conviction-band downstream wiring slice is now complete on branch. `StarvationResponseSystem` keeps the checkpointed starvation-side conviction protection, `CapPressureResponseSystem` now applies the same loyalty-protection multiplier to negative cap-pressure loss, and the new commander-only capture seam in `PendingCommanderCaptureComponent`, `AttackResolutionSystem`, `ProjectileImpactSystem`, and `DeathResolutionSystem` consumes the canonical conviction `CaptureMultiplier` without widening generic militia identity. Lethal commander defeats can now emit `CapturedMemberElement` to the captor faction root and mark the matching dynasty member `Captured`. `BloodlinesConvictionSmokeValidation` now proves starvation protection, cap-pressure protection, and deterministic commander capture. The full governed 10-gate chain is green in the worktree using local wrapper copies only for the still-root-pinned bootstrap-runtime and canonical scene-shell validators. Contract rev 73->74.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-conviction-band-wiring.md",
+      "validation_gates": "all 10 green plus conviction smoke"
     }
   ]
 }

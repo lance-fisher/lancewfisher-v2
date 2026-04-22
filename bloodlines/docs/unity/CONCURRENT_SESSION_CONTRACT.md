@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 72
+- Revision: 74
 - Last Updated: 2026-04-22
-- Last Updated By: codex-player-diplomacy-2026-04-22
-- Supersedes: revision 71 (The player missionary dispatch slice is now active on branch `codex/unity-player-missionary-dispatch`; revision 72 extends the `player-marriage-diplomacy` lane with missionary dispatch ownership, the dedicated smoke surface, the missionary browser reference, and the new branch in flight.)
+- Last Updated By: codex-2026-04-22
+- Supersedes: revision 73 (The conviction-band wiring slice now closes the commander-only capture interpretation of `CaptureMultiplier`, records the full governed green gate, and keeps the lane active only for landing this validated branch.)
 
 
 ## Purpose
@@ -150,6 +150,34 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-17-unity-conviction-scoring-and-bands.md`
 - Current Branch In Flight: none
 - Follow-Up (pending operator design call): wire `ConvictionBandEffects.LoyaltyProtectionMultiplier` into loyalty decline, `PopulationGrowthMultiplier` into population growth, `CaptureMultiplier` into capture speed. Browser never applied these multipliers, so wiring is a design decision not an automatic port.
+
+### Lane: conviction-band-wiring
+
+- Status: active
+- Branch Prefix: `codex/unity-conviction-band-wiring`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code\Economy\StarvationResponseSystem.cs`
+  - `unity/Assets/_Bloodlines/Code\Economy\CapPressureResponseSystem.cs`
+  - `unity/Assets/_Bloodlines/Code\Combat\AttackResolutionSystem.cs`
+  - `unity/Assets/_Bloodlines/Code\Combat\ProjectileImpactSystem.cs`
+  - `unity/Assets/_Bloodlines/Code\Combat\DeathResolutionSystem.cs`
+  - `unity/Assets/_Bloodlines/Code\Combat\PendingCommanderCaptureComponent.cs`
+  - `unity/Assets/_Bloodlines/Code\Editor\BloodlinesConvictionSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityConvictionSmokeValidation.ps1`
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-22-unity-conviction-band-wiring.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `CONVICTION_BAND_EFFECTS` (~1849), `getProtectedLoyaltyDelta` (~4511), `tickPopulationGrowth` (~7938), and territorial `captureMultiplier` consumption (~8134)
+- Current Branch In Flight: `codex/unity-conviction-band-wiring-finish`
+- Current Slice State:
+  - `StarvationResponseSystem` now applies conviction-aware protection to negative loyalty deltas and famine population decline using the canonical multiplier table.
+  - `CapPressureResponseSystem` now applies the same conviction loyalty protection to negative cap-pressure loyalty loss.
+  - `AttackResolutionSystem`, `ProjectileImpactSystem`, and `DeathResolutionSystem` now consume the canonical conviction `CaptureMultiplier` on the narrower commander-only seam: lethal commander defeats can become captives, write `CapturedMemberElement`, and mark the matching dynasty member `Captured`.
+  - `BloodlinesConvictionSmokeValidation` now proves starvation protection, cap-pressure protection, and deterministic commander capture in dedicated ECS validation worlds.
+- Immediate Next Action:
+  - land the validated branch, rerun the full governed gate on merged `master`, then continue the next Codex player-HUD follow-up slice (fortification legibility or victory-distance readout)
 
 ### Lane: dynasty-core
 

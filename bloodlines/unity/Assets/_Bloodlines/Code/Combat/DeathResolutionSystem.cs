@@ -1,4 +1,5 @@
 using Bloodlines.Components;
+using Bloodlines.GameTime;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -29,6 +30,7 @@ namespace Bloodlines.Systems
 
             using var attackTargetEntities = attackTargetQuery.ToEntityArray(Allocator.Temp);
             using var attackTargets = attackTargetQuery.ToComponentDataArray<AttackTargetComponent>(Allocator.Temp);
+            EnsurePendingCaptureBuffers(entityManager);
 
             foreach (var (health, entity) in SystemAPI.Query<RefRO<HealthComponent>>()
                 .WithNone<DeadTag>()
@@ -39,6 +41,7 @@ namespace Bloodlines.Systems
                     continue;
                 }
 
+                TryCaptureCommander(ref state, entity);
                 ecb.AddComponent<DeadTag>(entity);
                 if (entityManager.HasComponent<AttackTargetComponent>(entity))
                 {
@@ -153,6 +156,156 @@ namespace Bloodlines.Systems
             }
 
             entityManager.SetComponentData(attackerEntity, moveCommand);
+        }
+
+        private static void EnsurePendingCaptureBuffers(EntityManager entityManager)
+        {
+            var pendingCaptureQuery = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<PendingCommanderCaptureComponent>());
+
+            using var pendingCaptures = pendingCaptureQuery.ToComponentDataArray<PendingCommanderCaptureComponent>(Allocator.Temp);
+            for (int i = 0; i < pendingCaptures.Length; i++)
+            {
+                if (!TryFindFactionEntity(entityManager, pendingCaptures[i].CaptorFactionId, out var factionEntity))
+                {
+                    continue;
+                }
+
+                if (!entityManager.HasBuffer<Bloodlines.AI.CapturedMemberElement>(factionEntity))
+                {
+                    entityManager.AddBuffer<Bloodlines.AI.CapturedMemberElement>(factionEntity);
+                }
+            }
+        }
+
+        private static void TryCaptureCommander(ref SystemState state, Entity defeatedEntity)
+        {
+            var entityManager = state.EntityManager;
+            if (!entityManager.HasComponent<PendingCommanderCaptureComponent>(defeatedEntity) ||
+                !entityManager.HasComponent<CommanderComponent>(defeatedEntity) ||
+                !entityManager.HasComponent<FactionComponent>(defeatedEntity))
+            {
+                return;
+            }
+
+            var pendingCapture = entityManager.GetComponentData<PendingCommanderCaptureComponent>(defeatedEntity);
+            var defeatedFaction = entityManager.GetComponentData<FactionComponent>(defeatedEntity).FactionId;
+            var commander = entityManager.GetComponentData<CommanderComponent>(defeatedEntity);
+
+            if (!TryFindDynastyMember(
+                    entityManager,
+                    defeatedFaction,
+                    commander.MemberId,
+                    out var memberEntity,
+                    out var member))
+            {
+                return;
+            }
+
+            if (member.Status == DynastyMemberStatus.Captured ||
+                member.Status == DynastyMemberStatus.Fallen)
+            {
+                return;
+            }
+
+            if (!TryFindFactionEntity(entityManager, pendingCapture.CaptorFactionId, out var captorFactionEntity) ||
+                !entityManager.HasBuffer<Bloodlines.AI.CapturedMemberElement>(captorFactionEntity))
+            {
+                return;
+            }
+
+            var captiveBuffer = entityManager.GetBuffer<Bloodlines.AI.CapturedMemberElement>(captorFactionEntity);
+            captiveBuffer.Add(new Bloodlines.AI.CapturedMemberElement
+            {
+                MemberId = member.MemberId,
+                MemberTitle = member.Title,
+                OriginFactionId = defeatedFaction,
+                CapturedAtInWorldDays = GetInWorldDays(entityManager),
+                RansomCost = 0f,
+                Status = Bloodlines.AI.CapturedMemberStatus.Held,
+            });
+
+            member.Status = DynastyMemberStatus.Captured;
+            entityManager.SetComponentData(memberEntity, member);
+            entityManager.RemoveComponent<PendingCommanderCaptureComponent>(defeatedEntity);
+        }
+
+        private static bool TryFindDynastyMember(
+            EntityManager entityManager,
+            FixedString32Bytes factionId,
+            FixedString64Bytes memberId,
+            out Entity memberEntity,
+            out DynastyMemberComponent member)
+        {
+            if (!TryFindFactionEntity(entityManager, factionId, out var factionEntity) ||
+                !entityManager.HasBuffer<DynastyMemberRef>(factionEntity))
+            {
+                memberEntity = Entity.Null;
+                member = default;
+                return false;
+            }
+
+            var roster = entityManager.GetBuffer<DynastyMemberRef>(factionEntity);
+            for (int j = 0; j < roster.Length; j++)
+            {
+                var candidateEntity = roster[j].Member;
+                if (!entityManager.Exists(candidateEntity) ||
+                    !entityManager.HasComponent<DynastyMemberComponent>(candidateEntity))
+                {
+                    continue;
+                }
+
+                var candidate = entityManager.GetComponentData<DynastyMemberComponent>(candidateEntity);
+                if (!candidate.MemberId.Equals(memberId))
+                {
+                    continue;
+                }
+
+                memberEntity = candidateEntity;
+                member = candidate;
+                return true;
+            }
+
+            memberEntity = Entity.Null;
+            member = default;
+            return false;
+        }
+
+        private static bool TryFindFactionEntity(
+            EntityManager entityManager,
+            FixedString32Bytes factionId,
+            out Entity factionEntity)
+        {
+            var factionQuery = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<PopulationComponent>());
+            using var factionEntities = factionQuery.ToEntityArray(Allocator.Temp);
+            using var factionIds = factionQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+
+            for (int i = 0; i < factionEntities.Length; i++)
+            {
+                if (!factionIds[i].FactionId.Equals(factionId))
+                {
+                    continue;
+                }
+
+                factionEntity = factionEntities[i];
+                return true;
+            }
+
+            factionEntity = Entity.Null;
+            return false;
+        }
+
+        private static float GetInWorldDays(EntityManager entityManager)
+        {
+            var clockQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<DualClockComponent>());
+            if (clockQuery.IsEmpty)
+            {
+                return 0f;
+            }
+
+            return clockQuery.GetSingleton<DualClockComponent>().InWorldDays;
         }
     }
 }

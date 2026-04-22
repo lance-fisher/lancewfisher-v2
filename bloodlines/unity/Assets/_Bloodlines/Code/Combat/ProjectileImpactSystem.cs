@@ -1,4 +1,5 @@
 using Bloodlines.Components;
+using Bloodlines.Conviction;
 using Unity.Entities;
 using Unity.Mathematics;
 
@@ -44,6 +45,20 @@ namespace Bloodlines.Systems
                     if (targetHealth.Current > 0f)
                     {
                         targetHealth.Current = math.max(0f, targetHealth.Current - math.max(0f, projectile.ValueRO.Damage));
+                        if (targetHealth.Current <= 0f &&
+                            CommanderCaptureUtility.TryGetFactionConvictionBand(
+                                entityManager,
+                                projectile.ValueRO.OwnerFactionId,
+                                out var convictionBand))
+                        {
+                            CommanderCaptureUtility.TryMarkPendingCommanderCapture(
+                                entityManager,
+                                projectile.ValueRO.OwnerEntity,
+                                projectile.ValueRO.OwnerFactionId,
+                                projectile.ValueRO.TargetEntity,
+                                convictionBand);
+                        }
+
                         entityManager.SetComponentData(projectile.ValueRO.TargetEntity, targetHealth);
 
                         if (entityManager.HasComponent<RecentImpactComponent>(projectile.ValueRO.TargetEntity))

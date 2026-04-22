@@ -3252,3 +3252,57 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 1. Stage the player missionary dispatch slice files plus continuity and contract updates and commit them on `codex/unity-player-missionary-dispatch`.
 2. Push the branch, merge it to `master`, and rerun the full governed validation gate on merged `master`.
 3. After the landing continuity pass, continue the next priority item: conviction-band wiring on a fresh Codex branch.
+
+## 2026-04-22 Conviction Band Wiring Checkpoint
+
+- New branch in flight: `codex/unity-conviction-band-wiring`.
+- Narrow additive wiring is now in progress for the retired conviction-scoring follow-up seam:
+  `unity/Assets/_Bloodlines/Code/Economy/StarvationResponseSystem.cs`
+  now reads `ConvictionComponent` and reduces starvation-side loyalty loss via `LoyaltyProtectionMultiplier` plus famine
+  population decline via `PopulationGrowthMultiplier`.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesConvictionSmokeValidation.cs`
+  now carries a fifth starvation-protection phase that seeds identical famine conditions for `ApexMoral` and `Neutral`
+  factions and proves the higher conviction band loses less loyalty and population.
+- Validation completed at checkpoint:
+  - `dotnet build bloodlines/unity/Assembly-CSharp.csproj -nologo`: PASS
+  - `dotnet build bloodlines/unity/Assembly-CSharp-Editor.csproj -nologo`: PASS
+  - `powershell -ExecutionPolicy Bypass -File scripts/Invoke-BloodlinesUnityConvictionSmokeValidation.ps1`: PASS
+- The combat-side `CaptureMultiplier` hook is still unresolved. `CapturedMemberElement` needs stable member identity, but
+  generic combat units do not yet carry captive-ready dynasty data. `AttackResolutionSystem` has not been mutated on
+  this branch yet.
+- Contract revision advanced `72 -> 73` to claim the new `conviction-band-wiring` lane and record the in-flight branch.
+
+## 2026-04-22 Conviction Band Wiring Completion
+
+- Branch in flight: `codex/unity-conviction-band-wiring-finish`.
+- The conviction-band downstream wiring slice is now complete on branch:
+  `unity/Assets/_Bloodlines/Code/Economy/StarvationResponseSystem.cs`
+  keeps the checkpointed starvation-side conviction protection,
+  `unity/Assets/_Bloodlines/Code/Economy/CapPressureResponseSystem.cs`
+  now applies the same loyalty-protection multiplier to negative cap-pressure deltas, and
+  `unity/Assets/_Bloodlines/Code/Combat/PendingCommanderCaptureComponent.cs`
+  plus additive updates in
+  `AttackResolutionSystem.cs`,
+  `ProjectileImpactSystem.cs`,
+  and
+  `DeathResolutionSystem.cs`
+  land a narrow commander-only conviction capture seam. Lethal commander defeats can now resolve into
+  `CapturedMemberElement` on the captor faction root and mark the matching dynasty member `Captured` without widening
+  generic militia identity.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesConvictionSmokeValidation.cs`
+  now proves three conviction downstream effects in dedicated ECS worlds: starvation protection, cap-pressure
+  protection, and deterministic commander capture.
+- Governed validation is green in this worktree:
+  - `dotnet build unity/Assembly-CSharp.csproj -nologo`: PASS
+  - `dotnet build unity/Assembly-CSharp-Editor.csproj -nologo`: PASS
+  - bootstrap runtime smoke via local worktree wrapper under lock: PASS
+  - combat smoke under lock: PASS
+  - canonical scene shells via local worktree wrapper under lock: PASS
+  - fortification smoke under lock: PASS
+  - siege smoke under lock: PASS
+  - `node tests/data-validation.mjs`: PASS
+  - `node tests/runtime-bridge.mjs`: PASS
+  - contract staleness: PASS
+  - dedicated conviction smoke via local worktree wrapper under lock: PASS
+- Contract revision advanced `73 -> 74` to record the completed commander-only capture interpretation and the validated
+  branch now in flight.

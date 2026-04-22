@@ -1,4 +1,5 @@
 using Bloodlines.Components;
+using Bloodlines.Conviction;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -43,11 +44,12 @@ namespace Bloodlines.Systems
             float threshold = cfg.PopulationCapPressureRatio > 0f ? cfg.PopulationCapPressureRatio : 0.95f;
             float loyaltyDelta = cfg.CapPressureLoyaltyDeltaPerCycle;
 
-            foreach (var (realmRw, populationRo, loyaltyRw) in
+            foreach (var (realmRw, populationRo, loyaltyRw, conviction) in
                 SystemAPI.Query<
                     RefRW<RealmConditionComponent>,
                     RefRO<PopulationComponent>,
-                    RefRW<FactionLoyaltyComponent>>())
+                    RefRW<FactionLoyaltyComponent>,
+                    RefRO<ConvictionComponent>>())
             {
                 ref var realm = ref realmRw.ValueRW;
 
@@ -78,8 +80,20 @@ namespace Bloodlines.Systems
 
                 ref var loyalty = ref loyaltyRw.ValueRW;
                 float max = loyalty.Max > 0f ? loyalty.Max : 100f;
-                loyalty.Current = math.clamp(loyalty.Current + loyaltyDelta, loyalty.Floor, max);
+                float adjustedDelta = ApplyLoyaltyProtection(loyaltyDelta, conviction.ValueRO.Band);
+                loyalty.Current = math.clamp(loyalty.Current + adjustedDelta, loyalty.Floor, max);
             }
+        }
+
+        private static float ApplyLoyaltyProtection(float loyaltyDelta, ConvictionBand band)
+        {
+            if (loyaltyDelta >= 0f)
+            {
+                return loyaltyDelta;
+            }
+
+            float protection = math.max(1f, ConvictionBandEffects.ForBand(band).LoyaltyProtectionMultiplier);
+            return loyaltyDelta / protection;
         }
     }
 }

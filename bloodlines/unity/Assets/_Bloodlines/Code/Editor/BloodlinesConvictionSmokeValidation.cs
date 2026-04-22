@@ -4,9 +4,11 @@ using System.IO;
 using Bloodlines.Components;
 using Bloodlines.Conviction;
 using Bloodlines.Debug;
+using Bloodlines.Systems;
 using Unity.Collections;
 using Unity.Core;
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using UnityDebug = UnityEngine.Debug;
@@ -83,9 +85,27 @@ namespace Bloodlines.EditorTools
                 return false;
             }
 
+            if (!RunStarvationProtectionPhase(out string starvationMessage))
+            {
+                message = starvationMessage;
+                return false;
+            }
+
+            if (!RunCapPressureProtectionPhase(out string capPressureMessage))
+            {
+                message = capPressureMessage;
+                return false;
+            }
+
+            if (!RunCommanderCapturePhase(out string commanderCaptureMessage))
+            {
+                message = commanderCaptureMessage;
+                return false;
+            }
+
             message =
-                "Conviction smoke validation passed: neutralPhase=True, moralAscentPhase=True, cruelDescentPhase=True, bandEffectsPhase=True. " +
-                neutralMessage + " " + moralMessage + " " + cruelMessage + " " + effectsMessage;
+                "Conviction smoke validation passed: neutralPhase=True, moralAscentPhase=True, cruelDescentPhase=True, bandEffectsPhase=True, starvationProtectionPhase=True, capPressureProtectionPhase=True, commanderCapturePhase=True. " +
+                neutralMessage + " " + moralMessage + " " + cruelMessage + " " + effectsMessage + " " + starvationMessage + " " + capPressureMessage + " " + commanderCaptureMessage;
             return true;
         }
 
@@ -230,6 +250,65 @@ namespace Bloodlines.EditorTools
             return true;
         }
 
+        private static bool RunStarvationProtectionPhase(out string message)
+        {
+            using var world = CreateStarvationValidationWorld("BloodlinesConvictionSmokeValidation_Starvation");
+            var entityManager = world.EntityManager;
+
+            CreateStarvationFaction(
+                entityManager,
+                factionId: "apex",
+                band: ConvictionBand.ApexMoral,
+                totalPopulation: 30,
+                availablePopulation: 24,
+                loyalty: 70f);
+            CreateStarvationFaction(
+                entityManager,
+                factionId: "neutral",
+                band: ConvictionBand.Neutral,
+                totalPopulation: 30,
+                availablePopulation: 24,
+                loyalty: 70f);
+
+            world.SetTime(new TimeData(0d, 0.05f));
+            world.Update();
+
+            if (!TryGetFactionState(entityManager, "apex", out var apexPopulation, out var apexLoyalty) ||
+                !TryGetFactionState(entityManager, "neutral", out var neutralPopulation, out var neutralLoyalty))
+            {
+                message = "Conviction smoke validation failed: starvation protection phase could not resolve both faction states.";
+                return false;
+            }
+
+            int apexPopulationLoss = 30 - apexPopulation.Total;
+            int neutralPopulationLoss = 30 - neutralPopulation.Total;
+            float apexLoyaltyLoss = 70f - apexLoyalty.Current;
+            float neutralLoyaltyLoss = 70f - neutralLoyalty.Current;
+
+            if (apexPopulationLoss >= neutralPopulationLoss)
+            {
+                message =
+                    "Conviction smoke validation failed: Apex Moral famine protection did not reduce population loss. " +
+                    "apexLoss=" + apexPopulationLoss + ", neutralLoss=" + neutralPopulationLoss + ".";
+                return false;
+            }
+
+            if (apexLoyaltyLoss >= neutralLoyaltyLoss)
+            {
+                message =
+                    "Conviction smoke validation failed: Apex Moral loyalty protection did not reduce loyalty loss. " +
+                    "apexLoss=" + apexLoyaltyLoss + ", neutralLoss=" + neutralLoyaltyLoss + ".";
+                return false;
+            }
+
+            message =
+                "Starvation protection: apexPopulationLoss=" + apexPopulationLoss +
+                ", neutralPopulationLoss=" + neutralPopulationLoss +
+                ", apexLoyaltyLoss=" + apexLoyaltyLoss +
+                ", neutralLoyaltyLoss=" + neutralLoyaltyLoss + ".";
+            return true;
+        }
+
         private static World CreateValidationWorld(string worldName)
         {
             var world = new World(worldName);
@@ -237,6 +316,57 @@ namespace Bloodlines.EditorTools
             var simulationGroup = world.GetOrCreateSystemManaged<SimulationSystemGroup>();
             world.GetOrCreateSystemManaged<PresentationSystemGroup>();
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<ConvictionScoringSystem>());
+            return world;
+        }
+
+        private static World CreateStarvationValidationWorld(string worldName)
+        {
+            var world = new World(worldName);
+            world.GetOrCreateSystemManaged<InitializationSystemGroup>();
+            var simulationGroup = world.GetOrCreateSystemManaged<SimulationSystemGroup>();
+            world.GetOrCreateSystemManaged<PresentationSystemGroup>();
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<StarvationResponseSystem>());
+
+            var configEntity = world.EntityManager.CreateEntity();
+            world.EntityManager.AddComponentData(configEntity, new RealmCycleConfig
+            {
+                FoodFamineConsecutiveCycles = 1,
+                WaterCrisisConsecutiveCycles = 99,
+                FaminePopulationDeclinePerCycle = 6,
+                WaterCrisisOutmigrationPerCycle = 0,
+                FamineLoyaltyDeltaPerCycle = -8,
+                WaterCrisisLoyaltyDeltaPerCycle = 0,
+            });
+
+            return world;
+        }
+
+        private static World CreateCapPressureValidationWorld(string worldName)
+        {
+            var world = new World(worldName);
+            world.GetOrCreateSystemManaged<InitializationSystemGroup>();
+            var simulationGroup = world.GetOrCreateSystemManaged<SimulationSystemGroup>();
+            world.GetOrCreateSystemManaged<PresentationSystemGroup>();
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<CapPressureResponseSystem>());
+
+            var configEntity = world.EntityManager.CreateEntity();
+            world.EntityManager.AddComponentData(configEntity, new RealmCycleConfig
+            {
+                PopulationCapPressureRatio = 0.95f,
+                CapPressureLoyaltyDeltaPerCycle = -10,
+            });
+
+            return world;
+        }
+
+        private static World CreateCommanderCaptureValidationWorld(string worldName)
+        {
+            var world = new World(worldName);
+            world.GetOrCreateSystemManaged<InitializationSystemGroup>();
+            var simulationGroup = world.GetOrCreateSystemManaged<SimulationSystemGroup>();
+            world.GetOrCreateSystemManaged<PresentationSystemGroup>();
+            world.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>();
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<DeathResolutionSystem>());
             return world;
         }
 
@@ -255,6 +385,300 @@ namespace Bloodlines.EditorTools
                 Band = ConvictionBand.Neutral,
             });
             return entity;
+        }
+
+        private static void CreateStarvationFaction(
+            EntityManager entityManager,
+            string factionId,
+            ConvictionBand band,
+            int totalPopulation,
+            int availablePopulation,
+            float loyalty)
+        {
+            var entity = entityManager.CreateEntity();
+            entityManager.AddComponentData(entity, new FactionComponent { FactionId = factionId });
+            entityManager.AddComponentData(entity, new ConvictionComponent
+            {
+                Band = band,
+            });
+            entityManager.AddComponentData(entity, new PopulationComponent
+            {
+                Total = totalPopulation,
+                Available = availablePopulation,
+                Cap = totalPopulation + 10,
+                BaseCap = totalPopulation + 10,
+                CapBonus = 0,
+                GrowthAccumulator = 0f,
+            });
+            entityManager.AddComponentData(entity, new ResourceStockpileComponent
+            {
+                Food = 0f,
+                Water = 30f,
+            });
+            entityManager.AddComponentData(entity, new FactionLoyaltyComponent
+            {
+                Current = loyalty,
+                Max = 100f,
+                Floor = 0f,
+            });
+            entityManager.AddComponentData(entity, new RealmConditionComponent
+            {
+                CycleCount = 1,
+                LastStarvationResponseCycle = 0,
+                FoodStrainStreak = 1,
+                WaterStrainStreak = 0,
+            });
+        }
+
+        private static bool RunCapPressureProtectionPhase(out string message)
+        {
+            using var world = CreateCapPressureValidationWorld("BloodlinesConvictionSmokeValidation_CapPressure");
+            var entityManager = world.EntityManager;
+
+            CreateCapPressureFaction(entityManager, "apex", ConvictionBand.ApexMoral, 96, 100, 70f);
+            CreateCapPressureFaction(entityManager, "neutral", ConvictionBand.Neutral, 96, 100, 70f);
+
+            world.SetTime(new TimeData(0d, 0.05f));
+            world.Update();
+
+            if (!TryGetFactionState(entityManager, "apex", out _, out var apexLoyalty) ||
+                !TryGetFactionState(entityManager, "neutral", out _, out var neutralLoyalty))
+            {
+                message = "Conviction smoke validation failed: cap-pressure phase could not resolve both faction states.";
+                return false;
+            }
+
+            float apexLoyaltyLoss = 70f - apexLoyalty.Current;
+            float neutralLoyaltyLoss = 70f - neutralLoyalty.Current;
+
+            if (apexLoyaltyLoss >= neutralLoyaltyLoss)
+            {
+                message =
+                    "Conviction smoke validation failed: Apex Moral cap-pressure protection did not reduce loyalty loss. " +
+                    "apexLoss=" + apexLoyaltyLoss + ", neutralLoss=" + neutralLoyaltyLoss + ".";
+                return false;
+            }
+
+            message =
+                "Cap pressure protection: apexLoyaltyLoss=" + apexLoyaltyLoss +
+                ", neutralLoyaltyLoss=" + neutralLoyaltyLoss + ".";
+            return true;
+        }
+
+        private static bool RunCommanderCapturePhase(out string message)
+        {
+            using var world = CreateCommanderCaptureValidationWorld("BloodlinesConvictionSmokeValidation_CommanderCapture");
+            var entityManager = world.EntityManager;
+
+            var attackerFaction = CreateDynastyFaction(entityManager, "attacker", ConvictionBand.ApexCruel);
+            var defenderFaction = CreateDynastyFaction(entityManager, "defender", ConvictionBand.Neutral);
+            var defenderMember = CreateDynastyMember(
+                entityManager,
+                defenderFaction,
+                "defender-commander",
+                "War Captain",
+                DynastyRole.Commander,
+                DynastyMemberStatus.Active);
+
+            float captureChance = CommanderCaptureUtility.ResolveCommanderCaptureChance(ConvictionBand.ApexCruel);
+            if (captureChance <= 0f)
+            {
+                message = "Conviction smoke validation failed: Apex Cruel capture chance resolved to zero.";
+                return false;
+            }
+
+            bool syntheticRollFound = false;
+            for (int attackerIndex = 1; attackerIndex <= 32 && !syntheticRollFound; attackerIndex++)
+            {
+                for (int targetIndex = 1; targetIndex <= 32; targetIndex++)
+                {
+                    if (CommanderCaptureUtility.ShouldCaptureCommander(attackerIndex, targetIndex, captureChance))
+                    {
+                        syntheticRollFound = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!syntheticRollFound)
+            {
+                message = "Conviction smoke validation failed: synthetic commander-capture roll probe never succeeded for Apex Cruel chance.";
+                return false;
+            }
+
+            var attackerEntity = entityManager.CreateEntity();
+            entityManager.AddComponentData(attackerEntity, new FactionComponent { FactionId = "attacker" });
+
+            var defenderEntity = entityManager.CreateEntity();
+            entityManager.AddComponentData(defenderEntity, new FactionComponent { FactionId = "defender" });
+            entityManager.AddComponentData(defenderEntity, new CommanderComponent
+            {
+                MemberId = "defender-commander",
+                Role = "commander",
+                Renown = 14f,
+            });
+            entityManager.AddComponentData(defenderEntity, new HealthComponent
+            {
+                Current = 0f,
+                Max = 20f,
+            });
+            entityManager.AddComponentData(defenderEntity, new PendingCommanderCaptureComponent
+            {
+                CaptorFactionId = "attacker",
+            });
+
+            world.SetTime(new TimeData(0d, 0.05f));
+            world.Update();
+
+            if (!entityManager.HasBuffer<Bloodlines.AI.CapturedMemberElement>(attackerFaction))
+            {
+                message = "Conviction smoke validation failed: commander-capture phase produced no captive buffer on the attacker faction.";
+                return false;
+            }
+
+            var captiveBuffer = entityManager.GetBuffer<Bloodlines.AI.CapturedMemberElement>(attackerFaction);
+            if (captiveBuffer.Length != 1 ||
+                !captiveBuffer[0].MemberId.Equals(new FixedString64Bytes("defender-commander")))
+            {
+                message =
+                    "Conviction smoke validation failed: commander-capture phase produced the wrong captive ledger entry. " +
+                    "count=" + captiveBuffer.Length + ".";
+                return false;
+            }
+
+            var updatedMember = entityManager.GetComponentData<DynastyMemberComponent>(defenderMember);
+            if (updatedMember.Status != DynastyMemberStatus.Captured)
+            {
+                message =
+                    "Conviction smoke validation failed: commander-capture phase did not mark the dynasty member captured. " +
+                    "status=" + updatedMember.Status + ".";
+                return false;
+            }
+
+            message =
+                "Commander capture: captiveMemberId=" + captiveBuffer[0].MemberId +
+                ", status=" + updatedMember.Status +
+                ", apexCruelChance=" + captureChance + ".";
+            return true;
+        }
+
+        private static Entity CreateDynastyFaction(
+            EntityManager entityManager,
+            string factionId,
+            ConvictionBand band)
+        {
+            var entity = entityManager.CreateEntity();
+            entityManager.AddComponentData(entity, new FactionComponent { FactionId = factionId });
+            entityManager.AddComponentData(entity, new ConvictionComponent { Band = band });
+            entityManager.AddComponentData(entity, new PopulationComponent
+            {
+                Total = 24,
+                Available = 18,
+                Cap = 32,
+                BaseCap = 32,
+                CapBonus = 0,
+                GrowthAccumulator = 0f,
+            });
+            entityManager.AddBuffer<DynastyMemberRef>(entity);
+            return entity;
+        }
+
+        private static Entity CreateDynastyMember(
+            EntityManager entityManager,
+            Entity factionEntity,
+            string memberId,
+            string title,
+            DynastyRole role,
+            DynastyMemberStatus status)
+        {
+            var memberEntity = entityManager.CreateEntity();
+            entityManager.AddComponentData(memberEntity, new DynastyMemberComponent
+            {
+                MemberId = memberId,
+                Title = title,
+                Role = role,
+                Path = DynastyPath.MilitaryCommand,
+                AgeYears = 28f,
+                Status = status,
+                Renown = 14f,
+                Order = 2,
+                FallenAtWorldSeconds = -1f,
+            });
+
+            entityManager.GetBuffer<DynastyMemberRef>(factionEntity).Add(new DynastyMemberRef
+            {
+                Member = memberEntity,
+            });
+
+            return memberEntity;
+        }
+
+        private static void CreateCapPressureFaction(
+            EntityManager entityManager,
+            string factionId,
+            ConvictionBand band,
+            int totalPopulation,
+            int cap,
+            float loyalty)
+        {
+            var entity = entityManager.CreateEntity();
+            entityManager.AddComponentData(entity, new FactionComponent { FactionId = factionId });
+            entityManager.AddComponentData(entity, new ConvictionComponent
+            {
+                Band = band,
+            });
+            entityManager.AddComponentData(entity, new PopulationComponent
+            {
+                Total = totalPopulation,
+                Available = math.max(0, totalPopulation - 8),
+                Cap = cap,
+                BaseCap = cap,
+                CapBonus = 0,
+                GrowthAccumulator = 0f,
+            });
+            entityManager.AddComponentData(entity, new FactionLoyaltyComponent
+            {
+                Current = loyalty,
+                Max = 100f,
+                Floor = 0f,
+            });
+            entityManager.AddComponentData(entity, new RealmConditionComponent
+            {
+                CycleCount = 1,
+                LastCapPressureResponseCycle = 0,
+            });
+        }
+
+        private static bool TryGetFactionState(
+            EntityManager entityManager,
+            string factionId,
+            out PopulationComponent population,
+            out FactionLoyaltyComponent loyalty)
+        {
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<PopulationComponent>(),
+                ComponentType.ReadOnly<FactionLoyaltyComponent>());
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+
+            var key = new FixedString32Bytes(factionId);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(key))
+                {
+                    continue;
+                }
+
+                population = entityManager.GetComponentData<PopulationComponent>(entities[i]);
+                loyalty = entityManager.GetComponentData<FactionLoyaltyComponent>(entities[i]);
+                return true;
+            }
+
+            population = default;
+            loyalty = default;
+            return false;
         }
 
         private static void WriteResult(bool batchMode, bool success, string message)
