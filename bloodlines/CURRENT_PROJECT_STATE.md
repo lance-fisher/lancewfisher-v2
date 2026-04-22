@@ -3605,3 +3605,32 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   dynasty renown HUD smoke.
 - Contract revision advanced `84 -> 85` and now records the HUD lane with the
   dynasty-renown follow-up branch in flight.
+
+## 2026-04-22 Dynasty Renown Leaderboard HUD Slice
+
+- Branch in flight: `codex/unity-hud-dynasty-renown-panel`.
+- `unity/Assets/_Bloodlines/Code/HUD/DynastyRenownLeaderboardHUDComponent.cs`
+  and
+  `DynastyRenownLeaderboardHUDSystem.cs`
+  now add a singleton ordered dynasty prestige panel under `HUD/**` that
+  consumes the already-landed `DynastyRenownHUDComponent` snapshots, sorts
+  factions by renown score with peak-renown tie-breaking, and carries
+  player/interregnum/ruler identity state in one consolidated read-model.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes parseable
+  `DynastyRenownLeaderboard|Rank=...|FactionId=...|Score=...|PeakRenown=...|...`
+  output for later UI consumers.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyRenownLeaderboardHUDSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityDynastyRenownLeaderboardHUDSmokeValidation.ps1`
+  now prove row population, human/interregnum projection, and prestige
+  ordering in a dedicated ECS validation world.
+- Governed validation is green on the branch: dedicated dynasty renown
+  leaderboard HUD smoke, runtime build, editor build, bootstrap runtime smoke,
+  combat smoke, canonical scene shell validation, fortification smoke, siege
+  smoke, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, and contract staleness.
+- Contract revision advanced `85 -> 86`, and this worktree's generated
+  `Assembly-CSharp*.csproj` metadata plus `unity/Library` access were repaired
+  so the governed build gates resolve against the canonical Unity Library
+  instead of the dead `c946` worktree.

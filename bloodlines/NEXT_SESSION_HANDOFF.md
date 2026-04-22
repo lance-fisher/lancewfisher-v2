@@ -4422,3 +4422,78 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   rather than rebuilding a separate match-summary object.
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
+
+## Codex Dynasty Renown Leaderboard HUD (2026-04-22)
+
+### Branch
+
+- `codex/unity-hud-dynasty-renown-panel`
+
+### What Landed On Branch
+
+- `unity/Assets/_Bloodlines/Code/HUD/DynastyRenownLeaderboardHUDComponent.cs`
+  and
+  `DynastyRenownLeaderboardHUDSystem.cs`
+  now add a singleton ordered dynasty prestige panel that consumes the
+  per-faction `DynastyRenownHUDComponent` snapshots, sorts by renown score with
+  peak-renown tie-breaking, and carries player/interregnum/ruler identity state
+  into one consolidated HUD read surface.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+  now exposes `TryDebugGetDynastyRenownLeaderboard()` with parseable multi-line
+  `DynastyRenownLeaderboard|Rank=...|FactionId=...|Score=...|PeakRenown=...|...`
+  output.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyRenownLeaderboardHUDSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityDynastyRenownLeaderboardHUDSmokeValidation.ps1`
+  now prove row population, human/interregnum projection, and prestige
+  ordering.
+- `unity/Assembly-CSharp.csproj` and `unity/Assembly-CSharp-Editor.csproj`
+  now include the new runtime/editor files and retarget the stale analyzer
+  paths away from the dead `c946` worktree to
+  `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`.
+
+### Validation Proof
+
+- Dedicated smoke:
+  - `Dynasty renown leaderboard HUD smoke validation passed.`
+- Runtime build:
+  - `Build succeeded.`
+  - `0 Error(s)`
+- Editor build:
+  - `Build succeeded.`
+  - `0 Error(s)` with existing repo-wide warnings only
+- Bootstrap runtime:
+  - `Bootstrap runtime smoke validation passed.`
+- Combat smoke:
+  - `Unity exited with code 0`
+- Scene shells:
+  - `Bootstrap scene shell validation passed.`
+  - `Gameplay scene shell validation passed.`
+- Fortification smoke:
+  - `Fortification smoke validation passed.`
+- Siege smoke:
+  - `Unity exited with code 0`
+- Data validation:
+  - `Bloodlines data validation passed.`
+- Runtime bridge:
+  - `Bloodlines runtime bridge validation passed.`
+- Contract staleness before contract bump:
+  - `STALENESS CHECK PASSED: Contract revision=85, last-updated=2026-04-22 is current.`
+
+### Immediate Next Action
+
+1. Stage the dynasty-renown panel slice files plus contract and continuity
+   updates, commit them on `codex/unity-hud-dynasty-renown-panel`, and push to
+   `origin`.
+2. Merge the branch to `master`, rerun the full governed 10-gate chain on the
+   merge result, and then continue the next player-facing dynasty consumer or
+   on-screen HUD binding.
+
+### Context Notes
+
+- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
+- The worktree needed a `unity/Library` junction back to
+  `D:\ProjectsHome\Bloodlines\unity\Library` plus analyzer-path repair before
+  the governed build gates would go green again.
+- `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+  still dirties during Unity validation and should remain unstaged.
