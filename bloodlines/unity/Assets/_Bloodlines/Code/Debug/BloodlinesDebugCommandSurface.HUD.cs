@@ -270,5 +270,55 @@ namespace Bloodlines.Debug
             readout = builder.ToString();
             return true;
         }
+
+        public bool TryDebugGetDynastyRenownLeaderboard(out string readout)
+        {
+            readout = string.Empty;
+            if (!TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            using var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<DynastyRenownLeaderboardHUDSingleton>(),
+                ComponentType.ReadOnly<DynastyRenownLeaderboardHUDComponent>());
+            if (query.IsEmptyIgnoreFilter)
+            {
+                return false;
+            }
+
+            DynamicBuffer<DynastyRenownLeaderboardHUDComponent> buffer =
+                entityManager.GetBuffer<DynastyRenownLeaderboardHUDComponent>(query.GetSingletonEntity());
+            if (buffer.Length == 0)
+            {
+                return false;
+            }
+
+            var builder = new StringBuilder(768);
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                if (i > 0)
+                {
+                    builder.AppendLine();
+                }
+
+                builder.Append("DynastyRenownLeaderboard")
+                    .Append("|Rank=").Append(i + 1)
+                    .Append("|FactionId=").Append(buffer[i].FactionId)
+                    .Append("|Score=").Append(buffer[i].RenownScore.ToString("0.000", CultureInfo.InvariantCulture))
+                    .Append("|PeakRenown=").Append(buffer[i].PeakRenown.ToString("0.000", CultureInfo.InvariantCulture))
+                    .Append("|RenownRank=").Append(buffer[i].RenownRank)
+                    .Append("|IsHumanPlayer=").Append(buffer[i].IsHumanPlayer ? "true" : "false")
+                    .Append("|IsLeadingDynasty=").Append(buffer[i].IsLeadingDynasty ? "true" : "false")
+                    .Append("|Interregnum=").Append(buffer[i].Interregnum ? "true" : "false")
+                    .Append("|RulerMemberId=").Append(buffer[i].RulerMemberId)
+                    .Append("|RulerTitle=").Append(buffer[i].RulerTitle)
+                    .Append("|BandLabel=").Append(buffer[i].BandLabel)
+                    .Append("|StatusLabel=").Append(buffer[i].StatusLabel);
+            }
+
+            readout = builder.ToString();
+            return true;
+        }
     }
 }
