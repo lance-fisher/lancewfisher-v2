@@ -46,18 +46,18 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.13f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.13f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.3.13f1\Editor\Data\Tools\BuildPipeline\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
-    <Analyzer Include="C:\Users\lance\.codex\worktrees\5b50\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\AspectGenerator.dll" />
-    <Analyzer Include="C:\Users\lance\.codex\worktrees\5b50\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\JobEntityGenerator.dll" />
-    <Analyzer Include="C:\Users\lance\.codex\worktrees\5b50\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.dll" />
-    <Analyzer Include="C:\Users\lance\.codex\worktrees\5b50\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.dll" />
-    <Analyzer Include="C:\Users\lance\.codex\worktrees\5b50\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.LambdaJobs.dll" />
-    <Analyzer Include="C:\Users\lance\.codex\worktrees\5b50\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.QueryBuilder.dll" />
-    <Analyzer Include="C:\Users\lance\.codex\worktrees\5b50\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.dll" />
-    <Analyzer Include="C:\Users\lance\.codex\worktrees\5b50\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.Query.dll" />
-    <Analyzer Include="C:\Users\lance\.codex\worktrees\5b50\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.Common.dll" />
-    <Analyzer Include="C:\Users\lance\.codex\worktrees\5b50\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\Common.dll" />
-    <Analyzer Include="C:\Users\lance\.codex\worktrees\5b50\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.EntityQueryBulkOperations.dll" />
-    <Analyzer Include="C:\Users\lance\.codex\worktrees\5b50\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.CodeFixes.dll" />
+    <Analyzer Include="C:\Users\lance\.codex\worktrees\0cae\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\AspectGenerator.dll" />
+    <Analyzer Include="C:\Users\lance\.codex\worktrees\0cae\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\JobEntityGenerator.dll" />
+    <Analyzer Include="C:\Users\lance\.codex\worktrees\0cae\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.dll" />
+    <Analyzer Include="C:\Users\lance\.codex\worktrees\0cae\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.dll" />
+    <Analyzer Include="C:\Users\lance\.codex\worktrees\0cae\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.LambdaJobs.dll" />
+    <Analyzer Include="C:\Users\lance\.codex\worktrees\0cae\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.QueryBuilder.dll" />
+    <Analyzer Include="C:\Users\lance\.codex\worktrees\0cae\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.dll" />
+    <Analyzer Include="C:\Users\lance\.codex\worktrees\0cae\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.Query.dll" />
+    <Analyzer Include="C:\Users\lance\.codex\worktrees\0cae\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.Common.dll" />
+    <Analyzer Include="C:\Users\lance\.codex\worktrees\0cae\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\Common.dll" />
+    <Analyzer Include="C:\Users\lance\.codex\worktrees\0cae\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\SystemGenerator.EntityQueryBulkOperations.dll" />
+    <Analyzer Include="C:\Users\lance\.codex\worktrees\0cae\lancewfisher-v2\bloodlines\unity\Library\PackageCache\com.unity.entities@42c4e852ffb4\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.CodeFixes.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\_Bloodlines\Code\Combat\HostilityComponent.cs" />
@@ -152,6 +152,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Components\SnapshotVersionComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\MovementStatsComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastySuccessionSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerCaptiveDispatchUtility.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Rendering\FactionTintPalette.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Faith.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.AttackOrders.cs" />
@@ -210,6 +211,7 @@
     <Compile Include="Assets\_Bloodlines\Code\AI\AIStrategyComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Time\DualClockComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Systems\UnitProductionSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerCaptiveRescueRequestComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugEntityPresentationBridge.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Fortification\BreachSealingSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Definitions\SettlementClassDefinition.cs" />
@@ -294,6 +296,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Siege.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\MarriageAuthorityEvaluator.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\FactionComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerCaptiveRescueDispatchSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerCovertOps\PlayerCovertOpsSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\ProjectileComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AIMarriageInboxAcceptSystem.cs" />
