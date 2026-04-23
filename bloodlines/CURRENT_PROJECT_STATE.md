@@ -3999,3 +3999,31 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   `faith-exposure-walker` lane with no branch in flight. The next additive
   pickup from the directive stack is Priority 9 Faith Structure Intensity
   Regen.
+
+## 2026-04-23 Faith Structure Regen Slice
+
+- Branch lane: `codex/unity-faith-structure-regen`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-faith-structure-regen.md`.
+- Completed in this slice:
+  - `FaithStructureRegenComponent`,
+    `FaithStructureRegenRules`,
+    and
+    `FaithStructureRegenSystem`
+    now sum completed same-faction `wayshrine`, `covenant_hall`,
+    `grand_sanctuary`, and `apex_covenant` structures, clamp the total at the
+    browser `1.4` per-second ceiling, and apply the passive gain to committed
+    faction intensity on whole in-world days while preserving browser
+    per-second scaling through `DualClockComponent.DaysPerRealSecond`
+  - `BloodlinesFaithStructureRegenSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityFaithStructureRegenSmokeValidation.ps1`
+    now prove richer faith infrastructure outpaces a single shrine and the
+    cap holds regardless of completed building count
+  - local `Assembly-CSharp*.csproj` metadata now explicitly includes the new
+    regen runtime and editor files
+- Validation state:
+  - dedicated faith structure regen smoke green
+  - all 10 required governed gates green after contract revision `100`
+- Contract revision advanced `99 -> 100` and now records the active
+  `faith-structure-regen` lane with no branch in flight. The next additive
+  pickup from the directive stack is Priority 10 Captive Ransom Trickle.

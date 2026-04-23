@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 99
+- Revision: 100
 - Last Updated: 2026-04-23
-- Last Updated By: codex-faith-exposure-walker-2026-04-23
-- Supersedes: revision 98 (Records the validated `faith-exposure-walker` slice on the current master line and advances the next clean Codex pickup to Priority 9 faith structure intensity regen.)
+- Last Updated By: codex-faith-structure-regen-2026-04-23
+- Supersedes: revision 99 (Records the validated `faith-structure-regen` slice on the current master line and advances the next clean Codex pickup to Priority 10 captive ransom trickle.)
 
 
 ## Purpose
@@ -552,6 +552,38 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - completed wayshrines, covenant halls, and grand sanctuaries now auto-tag into the multiplier seam and amplify same-faction sacred-site exposure up to the canonical `4.0x` / four-contributor cap
   - `BloodlinesDebugCommandSurface.Faith.ExposureWalker` and `BloodlinesFaithExposureWalkerSmokeValidation` prove base gain, wayshrine amplification, under-construction ignore, kingdom-only filtering, and the stacked multiplier cap
   - next Codex pickup should move to Priority 9 `faith-structure-regen`
+
+### Lane: faith-structure-regen
+
+- Status: active
+- Branch Prefix: `codex/unity-faith-structure-regen`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Faith/FaithStructureRegenComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Faith/FaithStructureRegenSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFaithStructureRegenSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityFaithStructureRegenSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assembly-CSharp.csproj` -- additive compile includes for the faith structure regen runtime files only
+  - `unity/Assembly-CSharp-Editor.csproj` -- additive compile include for the dedicated faith structure regen validator only
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/FaithComponent.cs` -- read committed faith and mutate the existing intensity field only
+  - `unity/Assets/_Bloodlines/Code/Components/BuildingTypeComponent.cs` -- resolve canonical faith-building ids only
+  - `unity/Assets/_Bloodlines/Code/Components/HealthComponent.cs` -- ignore destroyed faith structures only
+  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- batch regen on whole in-world days while preserving browser per-second scaling
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-23-unity-faith-structure-regen.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `getCompletedFaithBuildings`, `getFaithStructureIntensityRegenRate`, and `updateFaithStructureIntensity`
+- Current Branch In Flight: none (validated implementation landed onto canonical `master` in this session)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-faith-structure-regen.md`
+- Last Slice State:
+  - completed `wayshrine`, `covenant_hall`, `grand_sanctuary`, and `apex_covenant` buildings now contribute their browser `faithIntensityRegenBonus` values to committed faction intensity
+  - the total regen rate now clamps at the canonical `1.4` per-second ceiling and applies on whole in-world days through `DualClockComponent`
+  - `FaithStructureRegenComponent` caches current rate, counted structure total, and last applied delta so the seam is directly inspectable in ECS validation worlds
+  - `BloodlinesFaithStructureRegenSmokeValidation` proves richer faith infrastructure outpaces a single shrine and the cap holds regardless of building count
+  - next Codex pickup should move to Priority 10 `player-captive-ransom-trickle`
 
 ### Lane: combat-group-movement-and-stances
 
@@ -1137,7 +1169,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is Priority 8 `faith-exposure-walker`.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is Priority 10 `player-captive-ransom-trickle`.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 

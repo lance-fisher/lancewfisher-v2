@@ -4735,6 +4735,46 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     unstaged; Unity dirties it during validation and it is unrelated to this
     slice
 
+## 2026-04-23 Faith Structure Regen
+
+- Branch lane:
+  - `codex/unity-faith-structure-regen`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-faith-structure-regen.md`
+- Completed in this slice:
+  - `FaithStructureRegenComponent`,
+    `FaithStructureRegenRules`,
+    and
+    `FaithStructureRegenSystem`
+    now port the browser passive faith-building regen seam by summing
+    completed `wayshrine`, `covenant_hall`, `grand_sanctuary`, and
+    `apex_covenant` bonuses, clamping at `1.4` per second, and applying the
+    resulting gain to committed faction intensity on whole in-world days
+  - `BloodlinesFaithStructureRegenSmokeValidation` plus its wrapper now prove
+    higher completed faith-building counts regenerate intensity faster than a
+    single shrine and the canonical cap holds under overbuilt faith stacks
+- Validation state:
+  - dedicated faith structure regen smoke green
+  - all 10 required governed gates green after contract revision `100`
+- Immediate next action:
+  - claim Priority 10 from
+    `D:\\ProjectsHome\\Bloodlines\\03_PROMPTS\\CODEX_MULTI_DAY_DIRECTIVE_2026-04-23.md`
+  - open `codex/unity-player-captive-ransom-trickle` from updated `master`
+  - port passive captive influence / renown trickle with a dedicated smoke
+    validator
+- Environment note:
+  - this short-path worktree still required a local `unity/Library` junction
+    to `D:\\ProjectsHome\\Bloodlines\\unity\\Library` so generated
+    `Assembly-CSharp*.csproj` builds could resolve `Library\\ScriptAssemblies`
+  - checked-in Unity wrappers remain mixed between worktree-relative and
+    canonical-root project paths, so the governed rerun continued through
+    `scripts/Invoke-BloodlinesUnityWrapperWithLock.ps1`
+- Staging note:
+  - keep
+    `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+    unstaged; Unity dirties it during validation and it is unrelated to this
+    slice
+
 ## 2026-04-23 Faith Verdant Warden Rerun Follow-Up
 
 - Branch lane:
