@@ -4663,3 +4663,38 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   - open `codex/unity-fortification-postures` from updated `master`
   - port imminent-engagement fortification postures plus dedicated smoke
     validation
+
+## 2026-04-23 Fortification Postures
+
+- Branch lane:
+  - `codex/unity-fortification-postures`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-fortification-postures.md`
+- Completed in this slice:
+  - `ImminentEngagementPostureComponent`,
+    `PlayerImminentEngagementPostureRequestComponent`,
+    and
+    `ImminentEngagementPostureSystem`
+    now materialize live brace / steady / counterstroke posture state on
+    active imminent-engagement settlements
+  - `ImminentEngagementWarningSystem`,
+    `FortificationReserveSystem`,
+    `AttackResolutionSystem`,
+    and
+    `CombatStanceResolutionSystem`
+    now preserve player-selected postures and consume the posture heal,
+    frontline attack, muster-tempo, and retreat-threshold effects on narrow
+    additive seams only
+  - `BloodlinesDebugCommandSurface.Fortification.Posture` now exposes
+    `TryDebugSetImminentEngagementPosture`, and
+    `BloodlinesImminentEngagementPostureSmokeValidation` plus wrapper now
+    prove debug posture selection, one-shot player requests, damage/heal
+    deltas, and cleanup after threat resolution
+- Validation state:
+  - dedicated fortification posture smoke green
+  - all 10 required governed gates green after contract revision `96`
+- Immediate next action:
+  - claim Priority 7 from
+    `D:\\ProjectsHome\\Bloodlines\\03_PROMPTS\\CODEX_MULTI_DAY_DIRECTIVE_2026-04-23.md`
+  - open `codex/unity-faith-verdant-warden` from updated `master`
+  - port Verdant Warden faith unit support plus dedicated smoke validation

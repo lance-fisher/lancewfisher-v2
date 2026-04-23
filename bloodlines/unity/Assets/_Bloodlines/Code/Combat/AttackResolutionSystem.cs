@@ -1,6 +1,7 @@
 using Bloodlines.Components;
 using Bloodlines.Conviction;
 using Bloodlines.Dynasties;
+using Bloodlines.Fortification;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -157,7 +158,17 @@ namespace Bloodlines.Systems
                         out var politicalAggregate)
                         ? math.max(0.1f, politicalAggregate.AttackMultiplier)
                         : 1f;
-                    float attackDamage = combat.AttackDamage * politicalAttackMultiplier;
+                    float fortificationAttackMultiplier =
+                        ImminentEngagementPostureUtility.TryGetFrontlineCombatantPosture(
+                            entityManager,
+                            entity,
+                            out var fortificationPosture)
+                            ? math.max(0.1f, fortificationPosture.FrontlineBonusMultiplier)
+                            : 1f;
+                    float attackDamage =
+                        combat.AttackDamage *
+                        politicalAttackMultiplier *
+                        fortificationAttackMultiplier;
 
                     if (entityManager.HasComponent<ProjectileFactoryComponent>(entity))
                     {

@@ -3813,3 +3813,39 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Contract revision advanced `94 -> 95` and now records the active
   `combat-commander-aura` lane with no branch in flight. The next additive
   pickup from the directive stack is Priority 6 fortification postures.
+
+## 2026-04-23 Fortification Postures Slice
+
+- Branch lane: `codex/unity-fortification-postures`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-fortification-postures.md`.
+- Completed in this slice:
+  - `ImminentEngagementPostureComponent`,
+    `PlayerImminentEngagementPostureRequestComponent`,
+    and
+    `ImminentEngagementPostureSystem`
+    now materialize live brace / steady / counterstroke posture state on
+    active imminent-engagement settlements while preserving player-selected
+    response ids
+  - `FortificationReserveSystem`,
+    `AttackResolutionSystem`,
+    and
+    `CombatStanceResolutionSystem`
+    now consume posture heal, muster, frontline attack, and retreat-threshold
+    effects through narrow additive seams only
+  - `BloodlinesDebugCommandSurface.Fortification.Posture` now exposes
+    `TryDebugSetImminentEngagementPosture`, and
+    `BloodlinesImminentEngagementPostureSmokeValidation` plus wrapper now
+    prove brace healing, counterstroke frontline damage, player request
+    cleanup, and posture removal after threat resolution
+  - local `Assembly-CSharp*.csproj` metadata now explicitly includes the new
+    fortification posture runtime and editor files, and this worktree now
+    links `unity/Library` to the canonical
+    `D:\ProjectsHome\Bloodlines\unity\Library` surface so governed builds
+    resolve Unity `ScriptAssemblies`
+- Validation state:
+  - dedicated fortification posture smoke green
+  - all 10 required governed gates green after the final serial rerun
+- Contract revision advanced `95 -> 96` and now records the active
+  `fortification-postures` lane with no branch in flight. The next additive
+  pickup from the directive stack is Priority 7 Verdant Warden faith support.

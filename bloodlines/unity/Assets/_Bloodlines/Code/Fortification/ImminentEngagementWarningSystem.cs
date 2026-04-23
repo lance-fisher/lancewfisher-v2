@@ -15,7 +15,10 @@ namespace Bloodlines.Fortification
     public partial struct ImminentEngagementWarningSystem : ISystem
     {
         private static readonly FixedString32Bytes PrimaryDynasticKeepClassId = new("primary_dynastic_keep");
+        private static readonly FixedString32Bytes BraceId = new("brace");
+        private static readonly FixedString32Bytes CounterstrokeId = new("counterstroke");
         private static readonly FixedString32Bytes SteadyId = new("steady");
+        private static readonly FixedString32Bytes PlayerFactionId = new("player");
         private static readonly FixedString32Bytes HeadOfBloodlineRole = new("head_of_bloodline");
         private static readonly FixedString32Bytes HeirDesignateRole = new("heir_designate");
         private static readonly FixedString32Bytes CommanderRole = new("commander");
@@ -147,8 +150,11 @@ namespace Bloodlines.Fortification
 
                 if (!engagement.Active && !engagement.WindowConsumed)
                 {
-                    string responseId = ChooseResponse(engagement, reserve.ValueRO);
-                    var posture = ImminentEngagementCanon.GetPosture(responseId);
+                    var responseId = ChooseResponseId(
+                        faction.ValueRO.FactionId,
+                        engagement,
+                        reserve.ValueRO);
+                    var posture = ImminentEngagementCanon.GetPosture(responseId.ToString());
 
                     engagement.Active = true;
                     engagement.WindowConsumed = false;
@@ -163,10 +169,13 @@ namespace Bloodlines.Fortification
 
                 if (engagement.Active)
                 {
-                    string desiredResponseId = ChooseResponse(engagement, reserve.ValueRO);
+                    var desiredResponseId = ChooseResponseId(
+                        faction.ValueRO.FactionId,
+                        engagement,
+                        reserve.ValueRO);
                     if (!engagement.SelectedResponseId.Equals(desiredResponseId))
                     {
-                        var posture = ImminentEngagementCanon.GetPosture(desiredResponseId);
+                        var posture = ImminentEngagementCanon.GetPosture(desiredResponseId.ToString());
                         engagement.SelectedResponseId = desiredResponseId;
                         engagement.SelectedResponseLabel = posture.Label;
                     }
@@ -342,23 +351,30 @@ namespace Bloodlines.Fortification
             return 50f;
         }
 
-        private static string ChooseResponse(
+        private static FixedString32Bytes ChooseResponseId(
+            FixedString32Bytes factionId,
             in ImminentEngagementComponent engagement,
             in FortificationReserveComponent reserve)
         {
+            if (factionId.Equals(PlayerFactionId))
+            {
+                return ImminentEngagementPostureUtility.ResolveResponseId(
+                    ImminentEngagementPostureUtility.ResolvePostureId(engagement.SelectedResponseId));
+            }
+
             if (engagement.BloodlineAtRisk ||
                 engagement.HostileCount > math.max(1, reserve.ReadyReserveCount + 1))
             {
-                return "brace";
+                return BraceId;
             }
 
             if (engagement.CommanderPresent &&
                 engagement.HostileCount <= math.max(3, reserve.ReadyReserveCount + 1))
             {
-                return "counterstroke";
+                return CounterstrokeId;
             }
 
-            return "steady";
+            return SteadyId;
         }
 
         private static ImminentEngagementComponent ResetState(

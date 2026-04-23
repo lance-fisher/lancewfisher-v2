@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 95
-- Last Updated: 2026-04-22
-- Last Updated By: codex-combat-commander-aura-2026-04-22
-- Supersedes: revision 94 (Records the validated `combat-commander-aura` slice, adds the commander-aura lane, and points the next Codex pickup at Priority 6 fortification postures.)
+- Revision: 96
+- Last Updated: 2026-04-23
+- Last Updated By: codex-fortification-postures-2026-04-23
+- Supersedes: revision 95 (Records the validated `fortification-postures` slice, adds the fortification-postures lane, and points the next Codex pickup at Priority 7 Verdant Warden faith support.)
 
 
 ## Purpose
@@ -425,6 +425,45 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - in-range allies now receive live attack, sight, speed, and morale-retreat buffs that cleanly restore when they leave range or the commander dies
   - `BloodlinesDebugCommandSurface.CommanderAura` and `BloodlinesCommanderAuraSmokeValidation` prove readout, in-range buffing, out-of-range non-application, and death cleanup
   - next Codex pickup should move to Priority 6 `fortification-postures`
+
+### Lane: fortification-postures
+
+- Status: active
+- Branch Prefix: `codex/unity-fortification-postures`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Fortification/ImminentEngagementPostureComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Fortification/PlayerImminentEngagementPostureRequestComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Fortification/ImminentEngagementPostureSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Fortification.Posture.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesImminentEngagementPostureSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityImminentEngagementPostureSmokeValidation.ps1`
+- Coordinated Same-Agent Edits On Fortification-Owned Paths:
+  - `unity/Assets/_Bloodlines/Code/Fortification/ImminentEngagementWarningSystem.cs` -- preserve player-selected posture ids during active warning windows while AI settlements still auto-resolve posture choice
+  - `unity/Assets/_Bloodlines/Code/Fortification/FortificationReserveSystem.cs` -- consume posture heal, muster, frontline-target, and retreat-threshold hooks only
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Combat/AttackResolutionSystem.cs` -- additive frontline attack bonus seam only
+  - `unity/Assets/_Bloodlines/Code/Combat/CombatStanceResolutionSystem.cs` -- additive retreat-threshold seam only
+  - `unity/Assembly-CSharp.csproj` -- additive compile includes for fortification posture runtime and debug files only
+  - `unity/Assembly-CSharp-Editor.csproj` -- additive compile include for the fortification posture validator only
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/ImminentEngagementComponent.cs` -- reuse the existing settlement-side warning window state only
+  - `unity/Assets/_Bloodlines/Code/Fortification/ImminentEngagementCanon.cs` -- reuse the browser-aligned posture tuning table only
+  - `unity/Assets/_Bloodlines/Code/Fortification/FortificationReserveAssignmentComponent.cs` -- resolve frontline defenders and reserve duty state only
+  - `unity/Assets/_Bloodlines/Code/Fortification/FortificationSettlementLinkComponent.cs` -- resolve fortification-linked defenders back to their settlement anchor only
+  - `unity/Assets/_Bloodlines/Code/Components/SettlementComponent.cs` -- resolve settlement ids and keep classes only
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-23-unity-fortification-postures.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `IMMINENT_ENGAGEMENT_POSTURES` (~271-308) and `tickImminentEngagementWarnings` (~11742-11873)
+- Current Branch In Flight: none (validated implementation landed onto canonical `master` in this session)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-fortification-postures.md`
+- Last Slice State:
+  - active imminent-engagement windows now materialize brace / steady / counterstroke posture state for player and AI settlements
+  - reserve healing, muster tempo, frontline attack bonus, and retreat thresholds now consume live posture data through narrow additive hooks only
+  - `BloodlinesDebugCommandSurface.Fortification.Posture` and `BloodlinesImminentEngagementPostureSmokeValidation` prove debug selection, one-shot player request application, damage/heal deltas, and cleanup after threat resolution
+  - next Codex pickup should move to Priority 7 `faith-verdant-warden`
 
 ### Lane: combat-group-movement-and-stances
 
@@ -1010,7 +1049,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the `fortification-siege-imminent-engagement` lane is paused unless Lance explicitly defines a fresh fortification sub-slice 14. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is the player HUD / realm-condition legibility lane.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is Priority 7 `faith-verdant-warden`.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 
