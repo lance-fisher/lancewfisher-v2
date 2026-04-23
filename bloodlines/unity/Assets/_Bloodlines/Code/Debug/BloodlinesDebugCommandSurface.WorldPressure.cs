@@ -8,6 +8,53 @@ namespace Bloodlines.Debug
 {
     public partial class BloodlinesDebugCommandSurface
     {
+        public bool TryDebugGetContestState(
+            string controlPointId,
+            out Unity.Collections.FixedString512Bytes readout)
+        {
+            readout = default;
+            if (string.IsNullOrWhiteSpace(controlPointId))
+            {
+                return false;
+            }
+
+            var world = World.DefaultGameObjectInjectionWorld;
+            if (world == null) return false;
+
+            var entityManager = world.EntityManager;
+            using var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<ControlPointComponent>(),
+                ComponentType.ReadOnly<ContestedTerritoryComponent>());
+            using var controlPoints =
+                query.ToComponentDataArray<ControlPointComponent>(Unity.Collections.Allocator.Temp);
+            using var contestedTerritories =
+                query.ToComponentDataArray<ContestedTerritoryComponent>(Unity.Collections.Allocator.Temp);
+
+            var targetId = new Unity.Collections.FixedString32Bytes(controlPointId);
+            for (int i = 0; i < controlPoints.Length; i++)
+            {
+                if (!controlPoints[i].ControlPointId.Equals(targetId))
+                {
+                    continue;
+                }
+
+                var controlPoint = controlPoints[i];
+                var contested = contestedTerritories[i];
+                readout = new Unity.Collections.FixedString512Bytes(
+                    $"ContestedTerritory|ControlPointId={controlPoint.ControlPointId}" +
+                    $"|ContestingFactionCount={contested.ContestingFactionCount}" +
+                    $"|StabilityPenaltyPerDay={math.round(contested.StabilityPenaltyPerDay * 100f) / 100f}" +
+                    $"|LoyaltyVolatilityMultiplier={math.round(contested.LoyaltyVolatilityMultiplier * 100f) / 100f}" +
+                    $"|ContestStartedAtInWorldDays={math.round(contested.ContestStartedAtInWorldDays * 100f) / 100f}" +
+                    $"|CurrentLoyalty={math.round(controlPoint.Loyalty * 100f) / 100f}" +
+                    $"|ControlState={controlPoint.ControlState}" +
+                    $"|CaptureContested={(controlPoint.IsContested ? "true" : "false")}");
+                return true;
+            }
+
+            return false;
+        }
+
         public static bool TryDebugGetWorldPressure(string factionId, out WorldPressureComponent wp)
         {
             wp = default;

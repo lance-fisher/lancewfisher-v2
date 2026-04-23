@@ -27,6 +27,7 @@ namespace Bloodlines.Systems
     [UpdateBefore(typeof(ControlPointResourceTrickleSystem))]
     public partial struct ControlPointCaptureSystem : ISystem
     {
+        const float DefaultDaysPerRealSecond = 2f;
         const float CaptureDecayPerSecond = 2.5f;
         const float OpposingCaptureResetPerSecond = 6f;
         const float ActiveCapturePerSecond = 1f;
@@ -48,6 +49,7 @@ namespace Bloodlines.Systems
         {
             float dt = SystemAPI.Time.DeltaTime;
             var entityManager = state.EntityManager;
+            float inWorldDayDelta = ResolveInWorldDayDelta(entityManager, dt);
             var unitQuery = SystemAPI.QueryBuilder()
                 .WithAll<UnitTypeComponent, PositionComponent, FactionComponent, HealthComponent>()
                 .Build();
@@ -62,6 +64,11 @@ namespace Bloodlines.Systems
                     .WithEntityAccess())
             {
                 ref var controlPoint = ref controlPointRw.ValueRW;
+                bool hasContestedTerritory =
+                    entityManager.HasComponent<ContestedTerritoryComponent>(controlPointEntity);
+                ContestedTerritoryComponent contestedTerritory = hasContestedTerritory
+                    ? entityManager.GetComponentData<ContestedTerritoryComponent>(controlPointEntity)
+                    : default;
 
                 FixedString32Bytes claimantFactionId = default;
                 bool multipleClaimants = false;
@@ -119,6 +126,30 @@ namespace Bloodlines.Systems
                     if (!claimantPresent)
                     {
                         controlPoint.CaptureFactionId = default;
+                    }
+
+                    if (hasContestedTerritory && controlPoint.OwnerFactionId.Length > 0)
+                    {
+                        float contestedLoyaltyDelta =
+                            -contestedTerritory.StabilityPenaltyPerDay * inWorldDayDelta;
+                        contestedLoyaltyDelta = ApplyContestedLoyaltyVolatility(
+                            contestedTerritory,
+                            contestedLoyaltyDelta);
+                        contestedLoyaltyDelta = ResolveGovernorLoyaltyDelta(
+                            entityManager,
+                            controlPointEntity,
+                            contestedLoyaltyDelta);
+                        contestedLoyaltyDelta = ApplyVerdantWardenLoyaltyProtection(
+                            controlPointRw.ValueRO,
+                            contestedLoyaltyDelta);
+                        controlPoint.Loyalty = math.max(
+                            0f,
+                            controlPoint.Loyalty + contestedLoyaltyDelta);
+                        if (controlPoint.ControlState == ControlState.Stabilized &&
+                            controlPoint.Loyalty < StabilizedLoyaltyThreshold)
+                        {
+                            controlPoint.ControlState = ControlState.Occupied;
+                        }
                     }
 
                     continue;
@@ -261,6 +292,32 @@ namespace Bloodlines.Systems
             }
 
             return loyaltyDelta / support.LoyaltyProtectionMultiplier;
+        }
+
+        static float ApplyContestedLoyaltyVolatility(
+            in ContestedTerritoryComponent contestedTerritory,
+            float loyaltyDelta)
+        {
+            if (loyaltyDelta >= 0f || contestedTerritory.LoyaltyVolatilityMultiplier <= 1f)
+            {
+                return loyaltyDelta;
+            }
+
+            return loyaltyDelta * contestedTerritory.LoyaltyVolatilityMultiplier;
+        }
+
+        static float ResolveInWorldDayDelta(EntityManager entityManager, float dt)
+        {
+            using var clockQuery =
+                entityManager.CreateEntityQuery(ComponentType.ReadOnly<Bloodlines.GameTime.DualClockComponent>());
+            if (clockQuery.IsEmpty)
+            {
+                return dt * DefaultDaysPerRealSecond;
+            }
+
+            float daysPerRealSecond =
+                clockQuery.GetSingleton<Bloodlines.GameTime.DualClockComponent>().DaysPerRealSecond;
+            return dt * math.max(0f, daysPerRealSecond > 0f ? daysPerRealSecond : DefaultDaysPerRealSecond);
         }
     }
 }

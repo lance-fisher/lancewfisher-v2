@@ -2249,6 +2249,15 @@
       "description": "The player covenant-test dispatch slice has now been merged onto canonical `master` via merge commit `de39a803`. `PlayerCovenantTestDispatchStateComponent`, `PlayerCovenantTestDispatchSystem`, the widened `BloodlinesDebugCommandSurface.Faith` covenant-dispatch helpers, and `BloodlinesPlayerCovenantTestDispatchSmokeValidation` plus `Invoke-BloodlinesUnityPlayerCovenantTestDispatchSmokeValidation.ps1` now live on the merged master-compatible line. The landing pass reran the full governed 10-gate chain and the dedicated player covenant-test dispatch smoke green on the merged result, re-canonicalized `unity/Assembly-CSharp*.csproj` analyzer roots back to `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache` after the landing builds rewrote them, and contract rev 113->114 cleared the faith-covenant-test branch-in-flight marker while pointing the next Codex pickup at Priority 19 `contested-territory-pressure`.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-player-covenant-test-dispatch-landing.md",
       "validation_gates": "all 10 green plus player covenant-test dispatch smoke on merged master"
+    },
+    {
+      "lane": "world-contested-territory",
+      "date": "2026-04-23",
+      "branch": "codex/unity-contested-territory-pressure",
+      "status": "complete",
+      "description": "The contested-territory pressure slice is now complete on branch. `ContestedTerritoryComponent` and `ContestedTerritoryEvaluationSystem` add a live contested-frontier seam under `WorldPressure/**`: owned control points now count distinct hostile factions inside claim radius, materialize contested pressure only at two-or-more hostile factions, persist the contest start day while pressure remains active, and clear the component when the hostile front withdraws. `ControlPointCaptureSystem` now consumes that state through narrow additive hooks only by applying contested per-day loyalty loss plus contested volatility before the existing governor and Verdant Warden protection seams reduce the final loss, `BloodlinesDebugCommandSurface.WorldPressure` now exposes `TryDebugGetContestState(controlPointId)`, and `BloodlinesContestedTerritoryPressureSmokeValidation` plus `scripts/Invoke-BloodlinesUnityContestedTerritoryPressureSmokeValidation.ps1` prove hostile-flank detection, stability divergence against an uncontested peer, and hostile-withdrawal clearing. The frozen browser runtime had no direct contested-territory pressure function, so this slice follows the 2026-04-24 directive canon while preserving browser-aligned control-point capture structure. The first nine governed gates are green and contract rev 114->115 records the in-flight lane for the final staleness check.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-world-contested-territory-pressure.md",
+      "validation_gates": "dedicated contested-territory smoke green plus governed gates 1-9 green; final staleness recheck pending"
     }
   ]
 }

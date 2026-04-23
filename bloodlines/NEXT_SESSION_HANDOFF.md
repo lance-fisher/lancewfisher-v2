@@ -5417,3 +5417,40 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     surfaces
   - port the next additive non-AI slice with a dedicated smoke validator and
     matching PowerShell wrapper
+
+## 2026-04-23 Contested Territory Pressure
+
+- Branch lane:
+  - `codex/unity-contested-territory-pressure`
+- Slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-contested-territory-pressure.md`
+- Completed in this slice:
+  - added `ContestedTerritoryComponent` and
+    `ContestedTerritoryEvaluationSystem` so owned frontier control points now
+    enter a live contested state whenever two or more hostile factions project
+    units into the same claim radius
+  - extended `ControlPointCaptureSystem` with contested loyalty loss and
+    contested volatility while preserving governor and Verdant Warden
+    protection hooks
+  - added `TryDebugGetContestState(controlPointId)` and the dedicated
+    `BloodlinesContestedTerritoryPressureSmokeValidation` /
+    `Invoke-BloodlinesUnityContestedTerritoryPressureSmokeValidation.ps1`
+    proof surface
+  - documented the browser divergence: no direct contested-territory pressure
+    function was present in the frozen browser runtime, so this slice follows
+    the design canon from the current directive
+- Validation state:
+  - dedicated contested-territory pressure smoke green
+  - all first nine governed gates green
+  - post-append contract staleness recheck pending revision `115`
+- Immediate next action:
+  - run `scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1`
+  - commit and push `codex/unity-contested-territory-pressure`
+  - merge it to canonical `master` with `git merge --no-ff`, rerun the full
+    governed validation chain plus the dedicated contested-territory smoke on
+    the merged result, then move to Priority 20
+- Staging note:
+  - keep
+    `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+    unstaged; Unity dirties it during validation and it is unrelated to this
+    slice

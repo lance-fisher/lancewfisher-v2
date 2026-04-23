@@ -4519,3 +4519,52 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Immediate next action:
   - start Priority 19 `codex/unity-contested-territory-pressure` from the
     updated canonical `master`
+
+## 2026-04-23 Contested Territory Pressure
+
+- Branch lane:
+  - `codex/unity-contested-territory-pressure`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-contested-territory-pressure.md`
+- Completed in this slice:
+  - added `ContestedTerritoryComponent` and
+    `ContestedTerritoryEvaluationSystem` under
+    `unity/Assets/_Bloodlines/Code/WorldPressure/` so owned control points now
+    accumulate live contested-frontier pressure whenever two or more distinct
+    hostile factions project units into the same claim radius
+  - extended
+    `unity/Assets/_Bloodlines/Code/Systems/ControlPointCaptureSystem.cs` to
+    turn contested pressure into per-day loyalty loss and higher loyalty
+    volatility through the existing governor and Verdant Warden protection
+    seams without widening into `unity/Assets/_Bloodlines/Code/AI/**`
+  - extended
+    `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.WorldPressure.cs`
+    with `TryDebugGetContestState(controlPointId)` and added
+    `unity/Assets/_Bloodlines/Code/Editor/BloodlinesContestedTerritoryPressureSmokeValidation.cs`
+    plus
+    `scripts/Invoke-BloodlinesUnityContestedTerritoryPressureSmokeValidation.ps1`
+    to prove contested detection, stability divergence, and hostile-withdrawal
+    clearing
+  - documented the browser divergence explicitly: no direct contested-territory
+    pressure function was present in the frozen `src/game/core/simulation.js`
+    surface, so the ECS slice follows the 2026-04-24 directive canon while
+    preserving the browser control-point capture structure
+- Validation state:
+  - dedicated contested-territory pressure smoke green
+  - runtime build green
+  - editor build green with existing repo-wide warnings only
+  - bootstrap runtime smoke green
+  - combat smoke green
+  - canonical scene-shell validation green
+  - fortification smoke green
+  - siege smoke green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - post-append contract staleness recheck pending revision `115`
+- Contract revision advanced `114 -> 115`.
+- Immediate next action:
+  - commit and push `codex/unity-contested-territory-pressure`
+  - merge it to canonical `master` with `git merge --no-ff`
+  - rerun the governed validation chain plus the dedicated contested-territory
+    smoke on the merged result
+  - move next to Priority 20 `codex/unity-player-succession-influence`

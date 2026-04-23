@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 114
+- Revision: 115
 - Last Updated: 2026-04-23
-- Last Updated By: codex-faith-covenant-test-2026-04-23
-- Supersedes: revision 113 (Records the landed player covenant-test dispatch slice on canonical `master` and clears the faith-covenant-test branch-in-flight marker.)
+- Last Updated By: codex-world-contested-territory-2026-04-23
+- Supersedes: revision 114 (Claims the in-flight contested-territory pressure slice on `codex/unity-contested-territory-pressure` and records its dedicated validator surface.)
 
 
 ## Purpose
@@ -694,6 +694,34 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - Current Branch In Flight: none (validated slice landed onto canonical `master` in this session)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-governance-coalition-pressure.md`
 
+### Lane: world-contested-territory
+
+- Status: active
+- Branch Prefix: `codex/unity-contested-territory-pressure`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/ContestedTerritoryComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/ContestedTerritoryEvaluationSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesContestedTerritoryPressureSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityContestedTerritoryPressureSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Systems/ControlPointCaptureSystem.cs` -- contested-frontier loyalty loss and volatility feed through the existing control-point stabilization / capture seam only
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.WorldPressure.cs` -- additive contested-state readout only
+  - `unity/Assembly-CSharp.csproj` -- compile includes for the new runtime files only
+  - `unity/Assembly-CSharp-Editor.csproj` -- compile include for the dedicated contested-territory validator only
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-contested-territory-pressure.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` search `CONTESTED_TERRITORY_STABILITY_PENALTY`, `getContestScore`, `updateContestedTerritories`, `isContested`, and `contestedTerritory`
+  - No direct contested-territory pressure function was present in the frozen browser runtime surface, so this lane follows the directive canon while preserving the browser-aligned control-point capture/stabilization topology.
+- Current Branch In Flight: `codex/unity-contested-territory-pressure`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-world-contested-territory-pressure.md`
+- Last Slice State:
+  - `ContestedTerritoryComponent` and `ContestedTerritoryEvaluationSystem` now materialize live contested-frontier pressure when two or more distinct hostile factions project units into the same owned claim radius
+  - `ControlPointCaptureSystem` now consumes that state through narrow additive hooks only: contested owned points lose loyalty by the contested stability penalty per in-world day and apply the contested volatility multiplier before governor and Verdant Warden protection reduce the final loss
+  - `BloodlinesDebugCommandSurface.WorldPressure` now exposes `TryDebugGetContestState(controlPointId)`, and `BloodlinesContestedTerritoryPressureSmokeValidation` plus `scripts/Invoke-BloodlinesUnityContestedTerritoryPressureSmokeValidation.ps1` prove detection, peer-stability divergence, and hostile-withdrawal clearing on this validated branch
+
 ### Lane: world-trueborn-rise
 
 - Status: active (validated Trueborn rise-arc sub-slices 1-3 and the recognized-pressure follow-up are now landed on canonical `master`; no branch currently in flight)
@@ -1314,7 +1342,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation, player covert ops, non-AI Trueborn follow-up slices through recognized-pressure, the HUD political-state panels landing, and the player covenant-test dispatch landing are now on canonical `master`. Under the current directive order, the next clean Codex pickup is Priority 19 `contested-territory-pressure`.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation, player covert ops, non-AI Trueborn follow-up slices through recognized-pressure, the HUD political-state panels landing, and the player covenant-test dispatch landing are now on canonical `master`, while Priority 19 `contested-territory-pressure` is actively claimed on `codex/unity-contested-territory-pressure`. After that lane lands, the next clean Codex pickup becomes Priority 20 `player-succession-influence`.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 
