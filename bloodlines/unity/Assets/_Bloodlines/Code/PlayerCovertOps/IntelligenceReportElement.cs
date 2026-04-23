@@ -25,5 +25,7 @@ namespace Bloodlines.PlayerCovertOps
         public int TargetCaptiveCount;
         public int TargetLesserHouseCount;
         public FixedString512Bytes MemberSummary;
+        public FixedString512Bytes BuildingSummary;
+        public FixedString512Bytes ResourceSummary;
     }
 }

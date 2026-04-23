@@ -4775,6 +4775,36 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     unstaged; Unity dirties it during validation and it is unrelated to this
     slice
 
+## 2026-04-23 Player Covert Ops Resolution Effects Slice
+
+- Branch lane: `codex/unity-player-covert-ops-resolution-effects`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-covert-ops-resolution-effects.md`
+- Completed in this slice:
+  - `EspionageResolutionSystem`, `AssassinationResolutionSystem`,
+    `SabotageResolutionSystem`, and `PlayerSabotageStatusComponent` now split
+    ready covert-op resolution out of `PlayerCounterIntelligenceSystem` so
+    dossier creation, sabotage timers / production halts, commander and
+    governor fallout, and ruler death ripples resolve against live dynasty,
+    death, and production state without touching `AI/**`
+  - `IntelligenceReportElement` now carries building/resource summaries, and
+    `BloodlinesDebugCommandSurface.PlayerCovertOps` now exposes dossier plus
+    sabotage-status readouts for live inspection
+  - `BloodlinesPlayerCovertOpsResolutionSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityPlayerCovertOpsResolutionSmokeValidation.ps1`
+    now prove assassination succession fallout, sabotage production freeze,
+    richer espionage dossiers, and deterministic failure penalties
+- Validation state:
+  - dedicated player covert-ops resolution smoke green
+  - all 10 required governed gates green after contract revision `102`
+  - fortification smoke required one automatic rerun after transient Unity
+    compile/import churn, then passed green without source changes
+- Immediate next action:
+  - claim Priority 12 `governance-coalition-pressure`
+  - branch from the updated canonical `master`
+  - port the coalition-pressure seam with a dedicated smoke validator and full
+    governed rerun
+
 ## 2026-04-23 Player Captive Ransom Trickle
 
 - Branch lane:

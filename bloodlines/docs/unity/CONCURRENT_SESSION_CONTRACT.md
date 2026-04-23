@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 101
+- Revision: 102
 - Last Updated: 2026-04-23
-- Last Updated By: codex-player-captive-ransom-trickle-2026-04-23
-- Supersedes: revision 100 (Records the validated `player-captive-ransom-trickle` slice on the current master line and advances the next clean Codex pickup to Priority 11 covert-ops resolution effects.)
+- Last Updated By: codex-player-covert-ops-2026-04-23
+- Supersedes: revision 101 (Records the validated `player-covert-ops-resolution-effects` slice on the current master line and advances the next clean Codex pickup to Priority 12 governance coalition pressure.)
 
 
 ## Purpose
@@ -1062,7 +1062,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: player-covert-ops
 
-- Status: complete (sub-slices 3A-3C landed on `master`; lane closed)
+- Status: active (resolution-effects slice landed on `master`; no branch currently in flight)
 - Branch Prefix: `codex/unity-player-covert-ops-*`
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -1070,12 +1070,14 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.PlayerCovertOps.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCovertOpsSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCounterIntelligenceSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCovertOpsResolutionSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityPlayerCovertOpsSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityPlayerCounterIntelligenceSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityPlayerCovertOpsResolutionSmokeValidation.ps1`
 - Shared-File Narrow Edits Planned:
   - `unity/Assembly-CSharp.csproj` -- add compile includes for new `PlayerCovertOps/**` runtime files only if the local generated project file does not already pick them up
-  - `unity/Assembly-CSharp-Editor.csproj` -- add compile includes for `BloodlinesPlayerCovertOpsSmokeValidation.cs` only if the local generated project file does not already pick it up
+  - `unity/Assembly-CSharp-Editor.csproj` -- add compile includes for new player-covert-ops editor validators only if the local generated project file does not already pick them up
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/AI/DynastyOperationLimits.cs` -- reuse the canonical dynasty-operation active-cap constant/helper without widening Claude's AI-owned operation surfaces
   - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve source/target faction entities by `FactionId`
@@ -1085,20 +1087,37 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Components/HealthComponent.cs` -- require live sabotage targets and live assassination targets
   - `unity/Assets/_Bloodlines/Code/Components/PositionComponent.cs` -- resolve nearest hostile settlement context for sabotage and assassination telemetry
   - `unity/Assets/_Bloodlines/Code/Components/SettlementComponent.cs` -- derive fortification tier and keep-tier simplifications for sabotage and assassination contests without widening the fortification lane
+  - `unity/Assets/_Bloodlines/Code/Components/CommanderComponent.cs` -- resolve commander-attached battlefield units for assassination death fallout without reopening the combat lane
+  - `unity/Assets/_Bloodlines/Code/TerritoryGovernance/GovernorSeatAssignmentComponent.cs` -- clear dead-governor seat occupancy without editing the territorial-governance lane
+  - `unity/Assets/_Bloodlines/Code/TerritoryGovernance/GovernorSpecializationComponent.cs` -- remove dead-governor specialization state without editing the territorial-governance lane
+  - `unity/Assets/_Bloodlines/Code/Systems/UnitProductionSystem.cs` -- compensate queue time after production updates so sabotage can freeze output without mutating the shared runtime file
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastySuccessionSystem.cs` -- same-frame ruler death fallout relies on the existing succession seam to consume fallen heads of bloodline
+  - `unity/Assets/_Bloodlines/Code/Dynasties/SuccessionCrisisEvaluationSystem.cs` -- reuse the landed succession-crisis seam after successful ruler assassinations
+  - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageDeathDissolutionSystem.cs` -- keep assassination-driven family fallout aligned with the existing dynasty death seam
+  - `unity/Assets/_Bloodlines/Code/Systems/DeathResolutionSystem.cs` -- keep sabotage burn / commander death cleanup ordered with the existing death-resolution seam
+  - `unity/Assets/_Bloodlines/Code/Components/RealmConditionComponent.cs` -- apply well-poisoning water-strain fallout without widening the economy lane
   - `unity/Assets/_Bloodlines/Code/Combat/HostilityComponent.cs` -- reserved for later player assassination/sabotage follow-ups that trigger hostility without widening the AI lane
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-21-unity-player-covert-ops-foundation.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-player-covert-ops-foundation-landing.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-player-assassination-sabotage.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-player-assassination-sabotage-landing.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-covert-ops-resolution-effects.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `DYNASTY_OPERATION_ACTIVE_LIMIT` (17), `getActiveDynastyOperationForTargetFaction` (4084), `getActiveIntelligenceReport` (4097), `tickDynastyIntelligenceReports` (4106), `getEspionageContest` (10187), `getEspionageTerms` (10248), `startEspionageOperation` (10876)
   - `src/game/core/simulation.js` `SABOTAGE_COSTS` (9739-9744), `SABOTAGE_DURATIONS` (9746-9751), `ASSASSINATION_COST` (9765), `ASSASSINATION_DURATION_SECONDS` (9769), `validateSabotageTarget` (9795-9815), `getSabotageTerms` (9900-9958), `getAssassinationContest` (10214-10282), `getAssassinationTerms` (10284-10323), `startAssassinationOperation` (10912-10950), `startSabotageOperation` (10952-10991)
   - `src/game/core/simulation.js` `getActiveCounterIntelligence` (4104-4111), `getCounterIntelligenceRoleGuardBonus` (4143-4157), `createDynastyIntelligenceReport` (5348-5368), `storeDynastyIntelligenceReport` (5370-5386), `recordCounterIntelligenceInterception` (10121-10171), `createCounterIntelligenceWatch` (10173-10203), `getCounterIntelligenceTerms` (10309-10360), `startCounterIntelligenceOperation` (10836-10874)
+  - `src/game/core/simulation.js` search `applyAssassinationEffect`, `tickBuildingStatusEffects`, `LEGITIMACY_LOSS_HEAD_FALL`, `LEGITIMACY_LOSS_COMMANDER_KILL`, `LEGITIMACY_LOSS_GOVERNOR_LOSS`, `LEGITIMACY_LOSS_INTERREGNUM`, and `LEGITIMACY_RECOVERY_ON_SUCCESSION` for the resolution-effects fallout constants and burn/status tick behavior
   - `tests/runtime-bridge.mjs` sabotage assertions (1378-1412), espionage + assassination assertions (3490-3628)
   - `tests/runtime-bridge.mjs` counter-intelligence watch + dossier assertions (4130-4240, 4884-4970)
-- Current Branch In Flight: none (merged into master via `661fea5b`; next clean Codex pickup is the player HUD / realm-condition legibility lane)
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-21-unity-player-counter-intelligence-landing.md`
+- Current Branch In Flight: none (resolution-effects slice merged onto canonical `master` in this session)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-player-covert-ops-resolution-effects.md`
+- Last Slice State:
+  - `EspionageResolutionSystem`, `AssassinationResolutionSystem`, `SabotageResolutionSystem`, and `PlayerSabotageStatusComponent` now split ready covert-op resolution out of `PlayerCounterIntelligenceSystem` and apply dossier, bloodline-fall, and sabotage fallout against live dynasty, death, and production state without touching `AI/**`
+  - `IntelligenceReportElement` now carries building/resource summaries, and `BloodlinesDebugCommandSurface.PlayerCovertOps` exposes dossier plus sabotage-status readouts for live validation
+  - `BloodlinesPlayerCovertOpsResolutionSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPlayerCovertOpsResolutionSmokeValidation.ps1` prove assassination succession fallout, sabotage production freeze, richer espionage dossiers, and deterministic failure penalties
+  - local `Assembly-CSharp*.csproj` metadata now explicitly includes the new player-covert-ops runtime and editor files
+  - next Codex pickup should move to Priority 12 `governance-coalition-pressure`
 
 ### Lane: player-hud-realm-condition-legibility
 
@@ -1179,7 +1198,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is Priority 11 `covert-ops-resolution-effects`.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is Priority 12 `governance-coalition-pressure`.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 

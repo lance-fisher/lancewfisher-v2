@@ -4061,3 +4061,37 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   `player-marriage-diplomacy` lane with no branch in flight. The next additive
   pickup from the directive stack is Priority 11 Covert Ops Full Resolution
   Effects.
+
+## 2026-04-23 Player Covert Ops Resolution Effects Slice
+
+- Branch lane: `codex/unity-player-covert-ops-resolution-effects`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-player-covert-ops-resolution-effects.md`.
+- Completed in this slice:
+  - `EspionageResolutionSystem`,
+    `AssassinationResolutionSystem`,
+    `SabotageResolutionSystem`,
+    and
+    `PlayerSabotageStatusComponent`
+    now split ready covert-op resolution out of
+    `PlayerCounterIntelligenceSystem` so dossier creation, sabotage timers /
+    production halts, commander and governor fallout, and ruler death ripples
+    resolve against live dynasty, death, and production state without touching
+    `AI/**`
+  - `IntelligenceReportElement` now carries building/resource summaries, and
+    `BloodlinesDebugCommandSurface.PlayerCovertOps` now exposes dossier plus
+    sabotage-status readouts for live inspection
+  - `BloodlinesPlayerCovertOpsResolutionSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityPlayerCovertOpsResolutionSmokeValidation.ps1`
+    now prove assassination succession fallout, sabotage production freeze,
+    richer espionage dossiers, and deterministic failure penalties
+  - local `Assembly-CSharp*.csproj` metadata now explicitly includes the new
+    player-covert-ops runtime and editor files
+- Validation state:
+  - dedicated player covert-ops resolution smoke green
+  - all 10 required governed gates green after contract revision `102`
+  - fortification smoke required one automatic rerun after transient Unity
+    compile/import churn, then passed green without source changes
+- Contract revision advanced `101 -> 102` and now records the reopened
+  `player-covert-ops` lane with no branch in flight. The next additive pickup
+  from the directive stack is Priority 12 Governance Coalition Pressure.

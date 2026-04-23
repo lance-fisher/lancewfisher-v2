@@ -64,7 +64,9 @@
     <Compile Include="Assets\_Bloodlines\Code\Definitions\HouseDefinition.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\SuccessionCrisisComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyRenownComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\PlayerCovertOps\PlayerSabotageStatusComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.PlayerDiplomacy.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\PlayerCovertOps\EspionageResolutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerCaptiveRansomDispatchSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Systems\ConstructionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\PactComponent.cs" />
@@ -177,6 +179,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\MarriageProposalExpirationSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\CombatStanceResolutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Camera\BloodlinesBattlefieldCameraController.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\PlayerCovertOps\AssassinationResolutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyAgingSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\MarriageComponents.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\MarriageAcceptEffectsPendingTag.cs" />
@@ -316,6 +319,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Combat\DeathResolutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerMarriageAcceptSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Fortification\FortificationReserveAssignmentComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\PlayerCovertOps\SabotageResolutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\MarriageDeathDissolutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\WorldPressure\WorldPressureComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Systems\WorkerGatherSystem.cs" />

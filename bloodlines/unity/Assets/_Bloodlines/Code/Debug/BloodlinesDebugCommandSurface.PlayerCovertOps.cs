@@ -260,6 +260,64 @@ namespace Bloodlines.Debug
             return true;
         }
 
+        public bool TryDebugGetPlayerSabotageStatus(int buildingEntityIndex, out string readout)
+        {
+            readout = string.Empty;
+            if (buildingEntityIndex < 0 || !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            if (!TryFindBuildingEntity(entityManager, buildingEntityIndex, out var buildingEntity))
+            {
+                return false;
+            }
+
+            var builder = new StringBuilder();
+            if (!entityManager.HasComponent<PlayerSabotageStatusComponent>(buildingEntity))
+            {
+                builder.Append("SabotageStatusActive=false");
+                readout = builder.ToString();
+                return true;
+            }
+
+            var status = entityManager.GetComponentData<PlayerSabotageStatusComponent>(buildingEntity);
+            builder.Append("SabotageStatusActive=true")
+                .Append("|Subtype=").Append(status.Subtype)
+                .Append("|AppliedAt=").Append(status.AppliedAtInWorldDays.ToString("0.000000", CultureInfo.InvariantCulture))
+                .Append("|EffectExpiresAt=").Append(status.EffectExpiresAtInWorldDays.ToString("0.000000", CultureInfo.InvariantCulture))
+                .Append("|ProductionHaltUntil=").Append(status.ProductionHaltExpiresAtInWorldDays.ToString("0.000000", CultureInfo.InvariantCulture))
+                .Append("|GateExposureUntil=").Append(status.GateExposureExpiresAtInWorldDays.ToString("0.000000", CultureInfo.InvariantCulture))
+                .Append("|BurnExpiresAt=").Append(status.BurnExpiresAtInWorldDays.ToString("0.000000", CultureInfo.InvariantCulture))
+                .Append("|BurnDamagePerSecond=").Append(status.BurnDamagePerSecond.ToString("0.00", CultureInfo.InvariantCulture))
+                .Append("|DamageFloorRatio=").Append(status.DamageFloorRatio.ToString("0.00", CultureInfo.InvariantCulture));
+
+            if (entityManager.HasComponent<HealthComponent>(buildingEntity))
+            {
+                var health = entityManager.GetComponentData<HealthComponent>(buildingEntity);
+                builder.Append("|Health=").Append(health.Current.ToString("0.##", CultureInfo.InvariantCulture))
+                    .Append("/").Append(health.Max.ToString("0.##", CultureInfo.InvariantCulture));
+            }
+
+            if (entityManager.HasBuffer<ProductionQueueItemElement>(buildingEntity))
+            {
+                var queue = entityManager.GetBuffer<ProductionQueueItemElement>(buildingEntity);
+                builder.Append("|QueueLength=").Append(queue.Length);
+                if (queue.Length > 0)
+                {
+                    builder.Append("|QueueUnit=").Append(queue[0].UnitId)
+                        .Append("|QueueRemaining=").Append(queue[0].RemainingSeconds.ToString("0.000", CultureInfo.InvariantCulture));
+                }
+            }
+            else
+            {
+                builder.Append("|QueueLength=0");
+            }
+
+            readout = builder.ToString();
+            return true;
+        }
+
         public bool TryDebugGetIntelligenceReports(string factionId, out string readout)
         {
             readout = string.Empty;
@@ -302,7 +360,9 @@ namespace Bloodlines.Debug
                     .Append("|TargetActiveOperations=").Append(reports[i].TargetActiveOperations)
                     .Append("|TargetCaptiveCount=").Append(reports[i].TargetCaptiveCount)
                     .Append("|TargetLesserHouseCount=").Append(reports[i].TargetLesserHouseCount)
-                    .Append("|MemberSummary=").Append(reports[i].MemberSummary);
+                    .Append("|MemberSummary=").Append(reports[i].MemberSummary)
+                    .Append("|BuildingSummary=").Append(reports[i].BuildingSummary)
+                    .Append("|ResourceSummary=").Append(reports[i].ResourceSummary);
             }
 
             readout = builder.ToString();
@@ -385,6 +445,14 @@ namespace Bloodlines.Debug
 
         private static bool BuildingEntityExists(EntityManager entityManager, int entityIndex)
         {
+            return TryFindBuildingEntity(entityManager, entityIndex, out _);
+        }
+
+        private static bool TryFindBuildingEntity(
+            EntityManager entityManager,
+            int entityIndex,
+            out Entity buildingEntity)
+        {
             var query = entityManager.CreateEntityQuery(
                 ComponentType.ReadOnly<BuildingTypeComponent>(),
                 ComponentType.ReadOnly<FactionComponent>());
@@ -393,12 +461,16 @@ namespace Bloodlines.Debug
 
             for (int i = 0; i < entities.Length; i++)
             {
-                if (entities[i].Index == entityIndex)
+                if (entities[i].Index != entityIndex)
                 {
-                    return true;
+                    continue;
                 }
+
+                buildingEntity = entities[i];
+                return true;
             }
 
+            buildingEntity = Entity.Null;
             return false;
         }
     }
