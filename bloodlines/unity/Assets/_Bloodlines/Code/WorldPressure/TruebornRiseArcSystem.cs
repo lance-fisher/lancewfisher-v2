@@ -14,9 +14,8 @@ namespace Bloodlines.Systems
     /// plus base loyalty / legitimacy pressure. Two intentional follow-up seams remain:
     /// - browser trade-relationship standing is not yet available on the Unity master
     ///   line, so stage-0 challenge only counts kingdom territory size and hostility
-    /// - recognized kingdoms are fully exempt here, matching the current directive's
-    ///   "skip recognized factions" wording; the browser's reduced-pressure nuance can
-    ///   widen in the later recognition slice if Lance keeps it
+    /// - recognized kingdoms now take the browser Session 95 reduced-pressure
+    ///   multiplier (`0.25x`) rather than a full exemption
     /// </summary>
     [BurstCompile]
     [UpdateInGroup(typeof(SimulationSystemGroup))]
@@ -33,6 +32,7 @@ namespace Bloodlines.Systems
         private const float TruebornRiseStage2LegitimacyPressure = 0.6f;
         private const float TruebornRiseStage3LegitimacyPressure = 1.4f;
         private const int TruebornRiseChallengeThreshold = 5;
+        private const float RecognizedPressureMultiplier = 0.25f;
         private static readonly FixedString32Bytes TruebornCityFactionId =
             new FixedString32Bytes("trueborn_city");
 
@@ -340,17 +340,23 @@ namespace Bloodlines.Systems
                 {
                     ControlPointComponent controlPoint = controlPoints[i];
                     if (controlPoint.OwnerFactionId.Length == 0 ||
-                        !kingdomLookup.ContainsKey(controlPoint.OwnerFactionId) ||
-                        TruebornRecognitionUtility.IsRecognized(
+                        !kingdomLookup.ContainsKey(controlPoint.OwnerFactionId))
+                    {
+                        continue;
+                    }
+
+                    float loyaltyPressure = arc.LoyaltyErosionPerDay *
+                        GetRecognitionPressureMultiplier(
                             recognitionSlots,
                             arc.RecognizedFactionsBitmask,
-                            controlPoint.OwnerFactionId))
+                            controlPoint.OwnerFactionId);
+                    if (loyaltyPressure <= 0f)
                     {
                         continue;
                     }
 
                     controlPoint.Loyalty = math.clamp(
-                        controlPoint.Loyalty - arc.LoyaltyErosionPerDay,
+                        controlPoint.Loyalty - loyaltyPressure,
                         0f,
                         100f);
                     entityManager.SetComponentData(controlPointEntities[i], controlPoint);
@@ -364,11 +370,17 @@ namespace Bloodlines.Systems
                 for (int i = 0; i < factionEntities.Length; i++)
                 {
                     if (factionKinds[i].Kind != FactionKind.Kingdom ||
-                        TruebornRecognitionUtility.IsRecognized(
+                        !entityManager.HasComponent<DynastyStateComponent>(factionEntities[i]))
+                    {
+                        continue;
+                    }
+
+                    float legitimacyPressure = arc.GlobalPressurePerDay *
+                        GetRecognitionPressureMultiplier(
                             recognitionSlots,
                             arc.RecognizedFactionsBitmask,
-                            factions[i].FactionId) ||
-                        !entityManager.HasComponent<DynastyStateComponent>(factionEntities[i]))
+                            factions[i].FactionId);
+                    if (legitimacyPressure <= 0f)
                     {
                         continue;
                     }
@@ -376,7 +388,7 @@ namespace Bloodlines.Systems
                     DynastyStateComponent dynastyState =
                         entityManager.GetComponentData<DynastyStateComponent>(factionEntities[i]);
                     dynastyState.Legitimacy = math.clamp(
-                        dynastyState.Legitimacy - arc.GlobalPressurePerDay,
+                        dynastyState.Legitimacy - legitimacyPressure,
                         0f,
                         100f);
                     entityManager.SetComponentData(factionEntities[i], dynastyState);
@@ -389,6 +401,19 @@ namespace Bloodlines.Systems
                     kingdomLookup.Dispose();
                 }
             }
+        }
+
+        private static float GetRecognitionPressureMultiplier(
+            DynamicBuffer<TruebornRiseFactionRecognitionSlotElement> recognitionSlots,
+            ulong recognizedBitmask,
+            in FixedString32Bytes factionId)
+        {
+            return TruebornRecognitionUtility.IsRecognized(
+                recognitionSlots,
+                recognizedBitmask,
+                factionId)
+                ? RecognizedPressureMultiplier
+                : 1f;
         }
     }
 }

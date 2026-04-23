@@ -5226,3 +5226,27 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     Trueborn behavior directly and pick the cleanest non-AI follow-up
   - keep `unity/Assets/_Bloodlines/Code/AI/**` untouched unless the
     `ai-strategic-layer` lane explicitly claims the next AI-facing piece
+
+## 2026-04-23 Trueborn Rise Recognized Pressure Follow-Up
+
+- Branch lane:
+  - `codex/unity-world-trueborn-recognized-pressure`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-recognized-pressure.md`
+- Completed in this slice:
+  - `TruebornRiseArcSystem` now applies the browser Session 95
+    `recognizedPressureMultiplier` rule so recognized kingdoms take only
+    quarter-strength base Trueborn rise pressure instead of full exemption
+  - `BloodlinesTruebornRiseArcSmokeValidation` now proves the reduced-pressure
+    parity directly while preserving the duplicate-recognition no-op check
+- Validation state:
+  - runtime build green
+  - editor build green
+  - all 10 required governed gates green
+  - dedicated Trueborn rise smoke green
+  - post-append staleness recheck green at contract revision `110`
+- Immediate next action:
+  - run the remaining governed gates on this branch state
+  - commit and push `codex/unity-world-trueborn-recognized-pressure`
+  - merge the branch to canonical `master` with `--no-ff`, rerun the governed
+    validation chain there, and continue the next non-AI Trueborn follow-up
