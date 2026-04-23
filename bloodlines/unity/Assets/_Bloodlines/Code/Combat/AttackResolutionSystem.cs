@@ -1,6 +1,7 @@
 using Bloodlines.Components;
 using Bloodlines.Conviction;
 using Bloodlines.Dynasties;
+using Bloodlines.Faith;
 using Bloodlines.Fortification;
 using Unity.Collections;
 using Unity.Entities;
@@ -165,10 +166,18 @@ namespace Bloodlines.Systems
                             out var fortificationPosture)
                             ? math.max(0.1f, fortificationPosture.FrontlineBonusMultiplier)
                             : 1f;
+                    float verdantWardenAttackMultiplier =
+                        VerdantWardenRules.TryGetFrontlineSupport(
+                            entityManager,
+                            entity,
+                            out var verdantWardenSupport)
+                            ? math.max(0.1f, verdantWardenSupport.DefenderAttackMultiplier)
+                            : 1f;
                     float attackDamage =
                         combat.AttackDamage *
                         politicalAttackMultiplier *
-                        fortificationAttackMultiplier;
+                        fortificationAttackMultiplier *
+                        verdantWardenAttackMultiplier;
 
                     if (entityManager.HasComponent<ProjectileFactoryComponent>(entity))
                     {

@@ -3889,3 +3889,41 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   - claim Priority 7 from the superseding 2026-04-24 directive
   - open `codex/unity-faith-verdant-warden` from updated `master`
   - port Verdant Warden faith unit support plus dedicated smoke validation
+
+## 2026-04-23 Faith Verdant Warden Slice
+
+- Branch lane: `codex/unity-faith-verdant-warden`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-faith-verdant-warden.md`.
+- Completed in this slice:
+  - `VerdantWardenComponent`,
+    `VerdantWardenCoverageProfile`,
+    `VerdantWardenRules`,
+    and
+    `VerdantWardenSupportSystem`
+    now materialize browser-aligned Verdant Warden support around owned control
+    points and fortified settlements, with capped stacking and explicit cached
+    multiplier fields on the receiving ECS components
+  - `ControlPointCaptureSystem`,
+    `FortificationReserveSystem`,
+    and
+    `AttackResolutionSystem`
+    now consume the cached Verdant Warden loyalty/stabilization,
+    reserve-healing/muster, and frontline defender attack bonuses through
+    narrow additive seams only
+  - `BloodlinesDebugCommandSurface.Faith.VerdantWarden` now exposes
+    `TryDebugGetVerdantWardenCoverage`, and
+    `BloodlinesVerdantWardenSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityVerdantWardenSmokeValidation.ps1`
+    now prove single-stack coverage, control-point loyalty uplift, reserve
+    healing uplift, and the canonical three-stack cap on stored multipliers and
+    frontline damage
+  - local `Assembly-CSharp*.csproj` metadata now explicitly includes the new
+    Verdant Warden runtime, debug, and editor files
+- Validation state:
+  - dedicated Verdant Warden smoke green
+  - all 10 required governed gates green after the final serial rerun
+- Contract revision advanced `97 -> 98` and now records the active
+  `faith-verdant-warden` lane with no branch in flight. The next additive
+  pickup from the directive stack is Priority 8 sacred-site exposure walker +
+  wayshrine amplification.

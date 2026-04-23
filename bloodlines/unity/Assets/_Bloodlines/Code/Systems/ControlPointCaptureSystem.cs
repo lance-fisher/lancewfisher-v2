@@ -1,5 +1,6 @@
 using Bloodlines.Components;
 using Bloodlines.Dynasties;
+using Bloodlines.Faith;
 using Bloodlines.TerritoryGovernance;
 using Unity.Burst;
 using Unity.Collections;
@@ -97,9 +98,13 @@ namespace Bloodlines.Systems
 
                 if (controlPoint.OwnerFactionId.Length > 0 && !controlPoint.IsContested)
                 {
+                    VerdantWardenCoverageProfile verdantWardenSupport =
+                        VerdantWardenRules.ResolveControlPointSupport(controlPointRw.ValueRO);
                     float passiveStabilization = PassiveStabilizationPerSecond *
                         ResolveStabilizationMultiplier(entityManager, controlPoint.OwnerFactionId) *
-                        ResolveGovernorStabilizationMultiplier(entityManager, controlPointRw.ValueRO, controlPointEntity);
+                        ResolveGovernorStabilizationMultiplier(entityManager, controlPointRw.ValueRO, controlPointEntity) *
+                        math.max(1f, verdantWardenSupport.StabilizationMultiplier) *
+                        math.max(1f, verdantWardenSupport.LoyaltyGainMultiplier);
                     controlPoint.Loyalty = math.min(100f, controlPoint.Loyalty + dt * passiveStabilization);
                     if (controlPoint.ControlState == ControlState.Occupied &&
                         controlPoint.Loyalty >= StabilizedLoyaltyThreshold)
@@ -123,9 +128,13 @@ namespace Bloodlines.Systems
                 {
                     controlPoint.CaptureFactionId = default;
                     controlPoint.CaptureProgress = 0f;
+                    VerdantWardenCoverageProfile verdantWardenSupport =
+                        VerdantWardenRules.ResolveControlPointSupport(controlPointRw.ValueRO);
                     float activeStabilization = ActiveStabilizationPerSecond *
                         ResolveStabilizationMultiplier(entityManager, claimantFactionId) *
-                        ResolveGovernorStabilizationMultiplier(entityManager, controlPointRw.ValueRO, controlPointEntity);
+                        ResolveGovernorStabilizationMultiplier(entityManager, controlPointRw.ValueRO, controlPointEntity) *
+                        math.max(1f, verdantWardenSupport.StabilizationMultiplier) *
+                        math.max(1f, verdantWardenSupport.LoyaltyGainMultiplier);
                     controlPoint.Loyalty = math.min(100f, controlPoint.Loyalty + dt * activeStabilization);
                     if (controlPoint.ControlState == ControlState.Occupied &&
                         controlPoint.Loyalty >= StabilizedLoyaltyThreshold)
@@ -161,6 +170,7 @@ namespace Bloodlines.Systems
                     entityManager,
                     controlPointEntity,
                     -dt * LoyaltyDrainPerSecond);
+                loyaltyDelta = ApplyVerdantWardenLoyaltyProtection(controlPointRw.ValueRO, loyaltyDelta);
                 controlPoint.Loyalty = math.max(0f, controlPoint.Loyalty + loyaltyDelta);
 
                 if (controlPoint.ControlState == ControlState.Stabilized &&
@@ -238,6 +248,19 @@ namespace Bloodlines.Systems
             return GovernorSpecializationCanon.ApplyLoyaltyProtection(
                 loyaltyDelta,
                 specialization.LoyaltyProtectionMultiplier);
+        }
+
+        static float ApplyVerdantWardenLoyaltyProtection(
+            in ControlPointComponent controlPoint,
+            float loyaltyDelta)
+        {
+            VerdantWardenCoverageProfile support = VerdantWardenRules.ResolveControlPointSupport(controlPoint);
+            if (loyaltyDelta >= 0f || support.LoyaltyProtectionMultiplier <= 1f)
+            {
+                return loyaltyDelta;
+            }
+
+            return loyaltyDelta / support.LoyaltyProtectionMultiplier;
         }
     }
 }

@@ -4734,3 +4734,44 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
     unstaged; Unity dirties it during validation and it is unrelated to this
     slice
+
+## 2026-04-23 Faith Verdant Warden
+
+- Branch lane:
+  - `codex/unity-faith-verdant-warden`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-faith-verdant-warden.md`
+- Completed in this slice:
+  - `VerdantWardenComponent`,
+    `VerdantWardenCoverageProfile`,
+    `VerdantWardenRules`,
+    and
+    `VerdantWardenSupportSystem`
+    now auto-tag living `verdant_warden` units and project capped support
+    coverage onto nearby owned control points and fortified settlements
+  - `ControlPointCaptureSystem`,
+    `FortificationReserveSystem`,
+    and
+    `AttackResolutionSystem`
+    now consume the cached Verdant Warden control-point loyalty/stabilization,
+    reserve-heal/muster, and frontline defender attack bonuses through narrow
+    additive seams only
+  - `BloodlinesDebugCommandSurface.Faith.VerdantWarden` now exposes
+    `TryDebugGetVerdantWardenCoverage`, and
+    `BloodlinesVerdantWardenSmokeValidation` plus its wrapper now prove
+    single-stack coverage, reserve-heal uplift, and the canonical three-stack
+    cap on stored support multipliers and frontline damage
+- Validation state:
+  - dedicated Verdant Warden smoke green
+  - all 10 required governed gates green after contract revision `98`
+- Immediate next action:
+  - claim Priority 8 from
+    `D:\\ProjectsHome\\Bloodlines\\03_PROMPTS\\CODEX_MULTI_DAY_DIRECTIVE_2026-04-24.md`
+  - open `codex/unity-faith-exposure-walker` from updated `master`
+  - port sacred-site exposure spread plus wayshrine amplification with a
+    dedicated smoke validator
+- Staging note:
+  - keep
+    `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+    unstaged; Unity dirties it during validation and it is unrelated to this
+    slice

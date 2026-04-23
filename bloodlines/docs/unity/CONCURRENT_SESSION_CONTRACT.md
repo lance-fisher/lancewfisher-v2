@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 97
+- Revision: 98
 - Last Updated: 2026-04-23
-- Last Updated By: codex-dynasty-succession-crisis-rerun-2026-04-23
-- Supersedes: revision 96 (Preserves the validated `fortification-postures` slice, records the validated dynasty succession-crisis rerun on the current master line, and keeps the next Codex pickup at Priority 7 Verdant Warden faith support.)
+- Last Updated By: codex-faith-verdant-warden-2026-04-23
+- Supersedes: revision 97 (Records the validated `faith-verdant-warden` slice on the current master line and advances the next clean Codex pickup to Priority 8 sacred-site exposure plus wayshrine amplification.)
 
 
 ## Purpose
@@ -472,6 +472,46 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - reserve healing, muster tempo, frontline attack bonus, and retreat thresholds now consume live posture data through narrow additive hooks only
   - `BloodlinesDebugCommandSurface.Fortification.Posture` and `BloodlinesImminentEngagementPostureSmokeValidation` prove debug selection, one-shot player request application, damage/heal deltas, and cleanup after threat resolution
   - next Codex pickup should move to Priority 7 `faith-verdant-warden`
+
+### Lane: faith-verdant-warden
+
+- Status: active
+- Branch Prefix: `codex/unity-faith-verdant-warden`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Faith/VerdantWardenComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Faith/VerdantWardenSupportSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Faith.VerdantWarden.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesVerdantWardenSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityVerdantWardenSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Systems/ControlPointCaptureSystem.cs` -- additive Verdant Warden stabilization and loyalty-protection hooks only
+  - `unity/Assets/_Bloodlines/Code/Fortification/FortificationReserveSystem.cs` -- additive Verdant Warden reserve-heal, reserve-muster, and desired-frontline hooks only
+  - `unity/Assets/_Bloodlines/Code/Combat/AttackResolutionSystem.cs` -- additive Verdant Warden frontline defender attack seam only
+  - `unity/Assets/_Bloodlines/Code/Components/ControlPointComponent.cs` -- additive cached Verdant Warden control-point coverage fields only
+  - `unity/Assets/_Bloodlines/Code/Components/FortificationComponent.cs` -- additive cached Verdant Warden fortification coverage fields only
+  - `unity/Assembly-CSharp.csproj` -- additive compile includes for the Verdant Warden runtime and debug files only
+  - `unity/Assembly-CSharp-Editor.csproj` -- additive compile include for the Verdant Warden validator only
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/UnitTypeComponent.cs` -- identify `verdant_warden` units and keep the browser support seam keyed to unit type only
+  - `unity/Assets/_Bloodlines/Code/Components/PositionComponent.cs` -- resolve live support radius against control points and fortified settlements only
+  - `unity/Assets/_Bloodlines/Code/Components/HealthComponent.cs` -- ignore dead wardens and dead linked defenders only
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve same-faction support ownership only
+  - `unity/Assets/_Bloodlines/Code/Components/MapBootstrapComponents.cs` -- reuse tile size when translating control-point support radius into world-space distance only
+  - `unity/Assets/_Bloodlines/Code/Fortification/FortificationReserveAssignmentComponent.cs` -- resolve engaged or mustering frontline defenders only
+  - `unity/Assets/_Bloodlines/Code/Fortification/FortificationSettlementLinkComponent.cs` -- resolve linked defenders back to their fortified settlement anchor only
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-23-unity-faith-verdant-warden.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `isVerdantWardenUnit`, `getVerdantWardenSupportProfile`, `getVerdantWardenZoneSupportProfile`, and `DEFAULT_VERDANT_WARDEN_SUPPORT`
+- Current Branch In Flight: none (validated implementation landed onto canonical `master` in this session)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-faith-verdant-warden.md`
+- Last Slice State:
+  - same-faction living Verdant Warden units now auto-materialize capped control-point and fortification support coverage each simulation tick
+  - control-point stabilization / loyalty protection, reserve healing / muster tempo, and frontline defender attack now consume cached Verdant Warden support through narrow additive hooks only
+  - `BloodlinesDebugCommandSurface.Faith.VerdantWarden` and `BloodlinesVerdantWardenSmokeValidation` prove single-stack coverage, debug readout, reserve-heal uplift, and the canonical three-stack cap on stored multipliers and frontline damage
+  - next Codex pickup should move to Priority 8 `faith-exposure-walker`
 
 ### Lane: combat-group-movement-and-stances
 
@@ -1057,7 +1097,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is Priority 7 `faith-verdant-warden`.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is Priority 8 `faith-exposure-walker`.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 

@@ -117,6 +117,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesMatchProgressionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAINarrativeBackWireSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAIBuildOrderSmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesVerdantWardenSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPlayerMarriageProposalSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPlaceholderMeshGenerator.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAILesserHousePromotionSmokeValidation.cs" />

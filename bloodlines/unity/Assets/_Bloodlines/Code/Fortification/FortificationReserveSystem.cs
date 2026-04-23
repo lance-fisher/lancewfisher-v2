@@ -1,4 +1,5 @@
 using Bloodlines.Components;
+using Bloodlines.Faith;
 using Bloodlines.TerritoryGovernance;
 using Unity.Collections;
 using Unity.Entities;
@@ -67,6 +68,8 @@ namespace Bloodlines.Fortification
                 var reserve = reserveRw.ValueRO;
                 GovernorSpecializationComponent settlementGovernorProfile =
                     GovernorSpecializationCanon.GetSettlementProfile(entityManager, settlementEntity);
+                VerdantWardenCoverageProfile verdantWardenSupport =
+                    VerdantWardenRules.ResolveFortificationSupport(fortification);
                 var posture = ImminentEngagementPostureUtility.ResolveComponent(
                     (byte)ImminentEngagementPostureId.Steady);
                 ImminentEngagementPostureUtility.TryGetSettlementPosture(
@@ -127,6 +130,7 @@ namespace Bloodlines.Fortification
                             health.Current +
                             reserve.ReserveHealPerSecond *
                             settlementGovernorProfile.HealRegenMultiplier *
+                            verdantWardenSupport.ReserveHealMultiplier *
                             posture.ReserveHealMultiplier *
                             dt);
                         healthRatio = health.Current / health.Max;
@@ -209,12 +213,19 @@ namespace Bloodlines.Fortification
                 {
                     int desiredFrontline = math.min(
                         activeDefenderCount,
-                        math.max(1, 1 + fortification.Tier + (int)math.round(posture.DesiredFrontlineBonus)));
+                        math.max(
+                            1,
+                            1 +
+                            fortification.Tier +
+                            verdantWardenSupport.DesiredFrontlineBonus +
+                            (int)math.round(posture.DesiredFrontlineBonus)));
                     int neededReserves = math.max(0, desiredFrontline - engagedCount);
                     float musterIntervalSeconds = reserve.MusterIntervalSeconds /
                         math.max(
                             0.1f,
-                            settlementGovernorProfile.ReserveRegenMultiplier * posture.MusteringSpeedMultiplier);
+                            settlementGovernorProfile.ReserveRegenMultiplier *
+                            verdantWardenSupport.ReserveMusterMultiplier *
+                            posture.MusteringSpeedMultiplier);
                     if (neededReserves > 0 &&
                         (elapsed - reserve.LastCommitAt) >= musterIntervalSeconds)
                     {
