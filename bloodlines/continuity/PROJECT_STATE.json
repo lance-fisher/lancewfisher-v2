@@ -2000,6 +2000,15 @@
       "description": "The sixth player-HUD slice is now complete on branch. `BloodlinesDebugCommandSurface.cs` now renders a consolidated battlefield command-deck summary that consumes the already-landed match-progression, realm-condition, conviction/faith, and victory HUD read-models to surface match state, world pressure / Great Reckoning status, realm bands, and player-vs-leader victory standing without widening retired runtime lanes. `BloodlinesDebugCommandSurface.HUD.cs` now exposes a parseable `CommandDeckSummary|FactionId=...|StageNumber=...|...|TopVictoryProgressPct=...` seam, and `BloodlinesBattlefieldCommandDeckSmokeValidation` plus its wrapper prove both a stable baseline command deck and a Great Reckoning follow-up where convergence pressure, player strain, and trailing victory rank surface together. The full governed 10-gate chain is green in this worktree and the contract is current at revision 85.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary.md",
       "validation_gates": "all 10 green plus battlefield command deck smoke"
+    },
+    {
+      "lane": "dynasty-succession-crisis-slice-1",
+      "date": "2026-04-22",
+      "branch": "codex/unity-dynasty-succession-crisis",
+      "status": "active",
+      "description": "The first Unity succession-crisis slice is now complete on branch. `SuccessionCrisisComponent`, `SuccessionCrisisEvaluationSystem`, and `SuccessionCrisisRecoverySystem` add a dynasty-owned crisis surface that watches ruler changes after `DynastySuccessionSystem`, resolves browser-style severity from the new ruler's maturity and rival-claim pressure, applies an opening loyalty shock to all owned control points, drains legitimacy and loyalty on whole in-world days, and advances conviction-aware recovery until the crisis is removed. `ControlPointResourceTrickleSystem` now consumes the crisis `ResourceTrickleFactor` as a narrow additive territorial income penalty, `BloodlinesDebugCommandSurface.Dynasty` exposes `TryDebugGetSuccessionCrisis(...)`, and `BloodlinesSuccessionCrisisSmokeValidation` plus its wrapper prove trigger, loyalty shock, recovery removal, and catastrophic-vs-minor legitimacy drain. The full governed 10-gate chain is green in this worktree after a Unity project refresh repaired stale generated `.csproj` metadata. Contract rev 85->90.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-dynasty-succession-crisis.md",
+      "validation_gates": "all 10 green plus succession crisis smoke"
     }
   ]
 }

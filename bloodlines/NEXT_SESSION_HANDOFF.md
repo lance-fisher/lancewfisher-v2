@@ -2912,6 +2912,79 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
 
+## Codex Dynasty Succession Crisis (2026-04-22)
+
+### Branch
+
+- `codex/unity-dynasty-succession-crisis`
+
+### What Landed On Branch
+
+- `unity/Assets/_Bloodlines/Code/Dynasties/SuccessionCrisisComponent.cs`
+  plus
+  `SuccessionCrisisEvaluationSystem.cs`
+  and
+  `SuccessionCrisisRecoverySystem.cs`
+  now add the first Unity ECS succession-crisis slice: the runtime watches
+  ruler changes after `DynastySuccessionSystem`, resolves browser-style crisis
+  severity from the new ruler's maturity and rival claimant pressure, applies
+  an opening loyalty shock across owned control points, and then ticks
+  severity-scaled legitimacy/loyalty drain plus conviction-aware recovery on
+  whole in-world days.
+- `unity/Assets/_Bloodlines/Code/Systems/ControlPointResourceTrickleSystem.cs`
+  now consumes the crisis `ResourceTrickleFactor` as a narrow additive income
+  penalty.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Dynasty.cs`
+  now exposes `TryDebugGetSuccessionCrisis(...)`, and
+  `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSuccessionCrisisSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnitySuccessionCrisisSmokeValidation.ps1`
+  now prove trigger, opening loyalty shock, recovery removal, and
+  catastrophic-vs-minor legitimacy drain in isolated ECS worlds.
+
+### Validation Proof
+
+- Dedicated smoke:
+  - `Succession crisis smoke validation passed.`
+- Runtime build:
+  - `Build succeeded.`
+  - `0 Error(s)`
+- Editor build:
+  - `Build succeeded.`
+  - `0 Error(s)` with existing repo-wide warnings only
+- Bootstrap runtime:
+  - `Bootstrap runtime smoke validation passed.`
+- Combat smoke:
+  - `Unity exited with code 0`
+- Scene shells:
+  - `Bootstrap scene shell validation passed.`
+  - `Gameplay scene shell validation passed.`
+- Fortification smoke:
+  - `Fortification smoke validation passed.`
+- Siege smoke:
+  - `Unity exited with code 0`
+- Data validation:
+  - `Bloodlines data validation passed.`
+- Runtime bridge:
+  - `Bloodlines runtime bridge validation passed.`
+- Contract staleness:
+  - `STALENESS CHECK PASSED: Contract revision=90, last-updated=2026-04-22 is current.`
+
+### Immediate Next Action
+
+1. Push `codex/unity-dynasty-succession-crisis`.
+2. Start directive Priority 2 on a fresh
+   `codex/unity-dynasty-political-events` branch.
+3. Reuse the new crisis timing seam when wiring the generalized dynastic
+   political-event buffer.
+
+### Context Notes
+
+- `unity/Assets/_Bloodlines/Code/AI/**` remained untouched.
+- This worktree needed a Unity project refresh before the first `dotnet build`
+  because generated `.csproj` metadata was stale; after refresh the build and
+  full governed gate chain stayed green.
+
 ## Codex Player Marriage Diplomacy Sub-Slice 2B: Acceptance And Effects (2026-04-21)
 
 ### Status: COMPLETE on branch `codex/unity-player-marriage-acceptance`

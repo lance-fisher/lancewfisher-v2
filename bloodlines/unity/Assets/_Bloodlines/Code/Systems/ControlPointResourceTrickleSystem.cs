@@ -1,4 +1,5 @@
 using Bloodlines.Components;
+using Bloodlines.Dynasties;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -71,14 +72,20 @@ namespace Bloodlines.Systems
                 }
 
                 var factionEntity = factionEntities[factionIndex];
+                float politicalYieldMultiplier =
+                    entityManager.HasComponent<SuccessionCrisisComponent>(factionEntity)
+                        ? entityManager.GetComponentData<SuccessionCrisisComponent>(factionEntity).ResourceTrickleFactor
+                        : 1f;
+                float finalYield = territoryYield * politicalYieldMultiplier;
+
                 var resources = entityManager.GetComponentData<ResourceStockpileComponent>(factionEntity);
-                resources.Gold += controlPoint.ValueRO.GoldTrickle * dt * territoryYield;
-                resources.Food += controlPoint.ValueRO.FoodTrickle * dt * territoryYield;
-                resources.Water += controlPoint.ValueRO.WaterTrickle * dt * territoryYield;
-                resources.Wood += controlPoint.ValueRO.WoodTrickle * dt * territoryYield;
-                resources.Stone += controlPoint.ValueRO.StoneTrickle * dt * territoryYield;
-                resources.Iron += controlPoint.ValueRO.IronTrickle * dt * territoryYield;
-                resources.Influence += controlPoint.ValueRO.InfluenceTrickle * dt * territoryYield;
+                resources.Gold += controlPoint.ValueRO.GoldTrickle * dt * finalYield;
+                resources.Food += controlPoint.ValueRO.FoodTrickle * dt * finalYield;
+                resources.Water += controlPoint.ValueRO.WaterTrickle * dt * finalYield;
+                resources.Wood += controlPoint.ValueRO.WoodTrickle * dt * finalYield;
+                resources.Stone += controlPoint.ValueRO.StoneTrickle * dt * finalYield;
+                resources.Iron += controlPoint.ValueRO.IronTrickle * dt * finalYield;
+                resources.Influence += controlPoint.ValueRO.InfluenceTrickle * dt * finalYield;
                 entityManager.SetComponentData(factionEntity, resources);
             }
         }
