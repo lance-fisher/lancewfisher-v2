@@ -4135,3 +4135,38 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Contract revision advanced `102 -> 103` and keeps the `player-covert-ops`
   lane clear on canonical `master`. The next additive pickup remains Priority
   12 Governance Coalition Pressure.
+
+## 2026-04-23 Governance Coalition Pressure Slice
+
+- Branch lane: `codex/unity-governance-coalition-pressure`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-governance-coalition-pressure.md`.
+- Completed in this slice:
+  - `TerritorialGovernanceRecognitionComponent` and
+    `GovernanceCoalitionPressureSystem` now port the browser
+    territorial-governance recognition / acceptance / alliance-threshold
+    coalition-pressure seam under `WorldPressure/**`: kingdom faction roots now
+    auto-seed recognition state, acceptance seed/target/rise/fall terms,
+    sustain/victory timers, weakest-march tracking, and 90-second alliance
+    cycles that erode frontier loyalty, legitimacy, and acceptance momentum
+    when hostile kingdoms coordinate above the 60% threshold
+  - `WorldPressureComponent` and `WorldPressureEscalationSystem` now carry the
+    governance recognition contribution, `VictoryConditionEvaluationSystem` now
+    resolves Territorial Governance from live recognition state first with the
+    older fallback preserved, and
+    `BloodlinesDebugCommandSurface.WorldPressure` now exposes
+    `TryDebugGetGovernanceCoalitionState`
+  - `BloodlinesGovernanceCoalitionPressureSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityGovernanceCoalitionPressureSmokeValidation.ps1`
+    now prove bootstrap recognition issuance, alliance-threshold
+    loyalty/legitimacy pressure, below-threshold non-triggering, and
+    completed-recognition victory plus enemy governance observability
+  - local `Assembly-CSharp*.csproj` metadata now explicitly includes the new
+    world-pressure runtime and editor files
+- Validation state:
+  - dedicated governance coalition pressure smoke green
+  - all 10 required governed gates green, with the post-append contract
+    staleness recheck green after revision `104`
+- Contract revision advanced `103 -> 104` and records the new
+  `world-governance-coalition` lane on canonical `master`. The next additive
+  pickup is Priority 13 Minor House Levy Validation and Completion.

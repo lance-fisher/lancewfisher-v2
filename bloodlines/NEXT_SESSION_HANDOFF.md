@@ -4997,3 +4997,43 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
     unstaged; Unity dirties it during validation and it is unrelated to this
     follow-up
+
+## 2026-04-23 Governance Coalition Pressure
+
+- Branch lane:
+  - `codex/unity-governance-coalition-pressure`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-governance-coalition-pressure.md`
+- Completed in this slice:
+  - `TerritorialGovernanceRecognitionComponent` plus
+    `GovernanceCoalitionPressureSystem` now port the browser
+    territorial-governance recognition and alliance-threshold coalition
+    pressure seam into `WorldPressure/**`, including live acceptance
+    seed/target/rise/fall state, sustain/victory timers, weakest-march
+    tracking, and 90-second hostile-alliance loyalty / legitimacy / acceptance
+    drag cycles
+  - `WorldPressureComponent`, `WorldPressureEscalationSystem`, and
+    `VictoryConditionEvaluationSystem` now consume the live governance
+    recognition surface so territorial-governance progress contributes to world
+    pressure and victory resolution without reopening `AI/**`
+  - `BloodlinesDebugCommandSurface.WorldPressure` now exposes
+    `TryDebugGetGovernanceCoalitionState`, and the dedicated governance
+    coalition smoke proves bootstrap issuance, above-threshold pressure,
+    below-threshold non-triggering, and completed-recognition victory
+- Validation state:
+  - dedicated governance coalition pressure smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green at contract revision `104`
+- Immediate next action:
+  - claim Priority 13 from
+    `D:\ProjectsHome\Bloodlines\03_PROMPTS\CODEX_MULTI_DAY_DIRECTIVE_2026-04-23.md`
+  - open a fresh `codex/unity-dynasty-minor-house-levy-complete` branch from
+    updated canonical `master`
+  - verify the existing minor-house levy runtime against the browser decay,
+    claim-gate, and loyalty-tier profile rules, add any missing parity, and
+    rerun the full governed 10-gate chain
+- Staging note:
+  - keep
+    `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+    unstaged; Unity dirties it during validation and it is unrelated to this
+    slice
