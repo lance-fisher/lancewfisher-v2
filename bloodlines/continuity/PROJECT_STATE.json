@@ -2117,6 +2117,15 @@
       "description": "The player captive ransom trickle slice is now complete on branch. `CaptiveRansomTrickleComponent`, `CaptiveRansomTrickleRules`, and `CaptiveRansomTrickleSystem` add a passive captive-influence seam to `PlayerDiplomacy/**`: kingdom faction roots now resolve held captives, look up captive renown from the origin faction dynasty roster, and apply the browser `CAPTIVE_INFLUENCE_TRICKLE + captiveRenown * CAPTIVE_RENOWN_WEIGHT` signal on whole in-world day boundaries while also writing an additive Unity-side dynasty-renown drift from the same renown-weighted source. The runtime prefers a faction-root captive ledger when one exists and otherwise falls back to the current captive-holder entity with the same `FactionId`, preserving compatibility with the AI-owned capture helper behavior. `BloodlinesDebugCommandSurface.PlayerDiplomacy` now exposes `TryDebugGetCaptiveTrickle(...)`, `BloodlinesPlayerCaptiveRansomTrickleSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPlayerCaptiveRansomTrickleSmokeValidation.ps1` prove high-renown captives outpace low-renown captives and empty captors receive zero trickle, and the full governed 10-gate chain is green with contract rev 100->101.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-player-captive-ransom-trickle.md",
       "validation_gates": "all 10 green plus player captive ransom trickle smoke"
+    },
+    {
+      "lane": "player-covert-ops-resolution-effects-slice-1",
+      "date": "2026-04-23",
+      "branch": "codex/unity-player-covert-ops-resolution-effects",
+      "status": "complete",
+      "description": "The player covert-ops resolution-effects slice is now complete on branch. `EspionageResolutionSystem`, `AssassinationResolutionSystem`, `SabotageResolutionSystem`, and `PlayerSabotageStatusComponent` split ready covert-op resolution out of `PlayerCounterIntelligenceSystem` so dossier creation, sabotage timers and production halts, commander and governor fallout, and ruler death ripples resolve against live dynasty, death, and production state without touching `AI/**`. `IntelligenceReportElement` now carries building/resource summaries, `BloodlinesDebugCommandSurface.PlayerCovertOps` exposes dossier and sabotage-status readouts, and `BloodlinesPlayerCovertOpsResolutionSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPlayerCovertOpsResolutionSmokeValidation.ps1` prove assassination succession fallout, sabotage production freeze, richer espionage dossiers, and deterministic failure penalties. The full governed 10-gate chain is green with contract rev 101->102; fortification smoke required one automatic rerun after transient Unity compile/import churn, then passed without source changes.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-player-covert-ops-resolution-effects.md",
+      "validation_gates": "all 10 green plus player covert-ops resolution smoke"
     }
   ]
 }

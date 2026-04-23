@@ -84,6 +84,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Editor\GraphicsConceptSheetVectorImport.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesCombatSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAICommandDispatchSmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPlayerCovertOpsResolutionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesDynastyRenownHUDSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesTier2BatchSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPlayerCommandDeckOverlaySmokeValidation.cs" />

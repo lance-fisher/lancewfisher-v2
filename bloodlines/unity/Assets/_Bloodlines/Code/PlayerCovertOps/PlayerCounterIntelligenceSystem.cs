@@ -10,9 +10,10 @@ using Unity.Mathematics;
 namespace Bloodlines.PlayerCovertOps
 {
     /// <summary>
-    /// DualClock-driven covert-op resolution for player espionage, assassination,
-    /// and counter-intelligence watches. Also owns report/watch expiry pruning so
-    /// the player lane mirrors browser-side live surveillance windows.
+    /// DualClock-driven counter-intelligence watch resolution plus shared report/watch
+    /// expiry. Espionage, assassination, and sabotage resolution now live in their
+    /// dedicated systems so order-sensitive fallout can run against the broader
+    /// dynasty/runtime graph without widening foreign lanes.
     /// </summary>
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(PlayerCovertOpsSystem))]
@@ -59,22 +60,6 @@ namespace Bloodlines.PlayerCovertOps
                 {
                     case CovertOpKindPlayer.CounterIntelligence:
                         ResolveCounterIntelligenceOperation(
-                            entityManager,
-                            operationEntities[i],
-                            operation,
-                            inWorldDays);
-                        break;
-
-                    case CovertOpKindPlayer.Espionage:
-                        ResolveEspionageOperation(
-                            entityManager,
-                            operationEntities[i],
-                            operation,
-                            inWorldDays);
-                        break;
-
-                    case CovertOpKindPlayer.Assassination:
-                        ResolveAssassinationOperation(
                             entityManager,
                             operationEntities[i],
                             operation,
@@ -320,7 +305,7 @@ namespace Bloodlines.PlayerCovertOps
             }
         }
 
-        private static bool TryCreateIntelligenceReport(
+        internal static bool TryCreateIntelligenceReport(
             EntityManager entityManager,
             FixedString32Bytes sourceFactionId,
             FixedString32Bytes targetFactionId,
@@ -366,12 +351,14 @@ namespace Bloodlines.PlayerCovertOps
                     ? entityManager.GetBuffer<LesserHouseElement>(targetFactionEntity).Length
                     : 0,
                 MemberSummary = BuildMemberSummary(entityManager, targetFactionId, targetFactionEntity),
+                BuildingSummary = BuildBuildingSummary(entityManager, targetFactionId),
+                ResourceSummary = BuildResourceSummary(entityManager, targetFactionEntity),
             };
 
             return true;
         }
 
-        private static void StoreIntelligenceReport(
+        internal static void StoreIntelligenceReport(
             EntityManager entityManager,
             Entity factionEntity,
             in IntelligenceReportElement report)
@@ -399,7 +386,7 @@ namespace Bloodlines.PlayerCovertOps
             }
         }
 
-        private static bool RecordCounterIntelligenceInterception(
+        internal static bool RecordCounterIntelligenceInterception(
             EntityManager entityManager,
             FixedString32Bytes targetFactionId,
             FixedString32Bytes sourceFactionId,
@@ -465,7 +452,7 @@ namespace Bloodlines.PlayerCovertOps
             return true;
         }
 
-        private static void EnsureMutualHostility(
+        internal static void EnsureMutualHostility(
             EntityManager entityManager,
             FixedString32Bytes sourceFactionId,
             FixedString32Bytes targetFactionId)
@@ -530,7 +517,7 @@ namespace Bloodlines.PlayerCovertOps
             }
         }
 
-        private static void RefundDefenderInfluence(
+        internal static void RefundDefenderInfluence(
             EntityManager entityManager,
             Entity factionEntity,
             float escrowInfluence)
@@ -546,7 +533,7 @@ namespace Bloodlines.PlayerCovertOps
             entityManager.SetComponentData(factionEntity, stockpile);
         }
 
-        private static void AdjustLegitimacy(
+        internal static void AdjustLegitimacy(
             EntityManager entityManager,
             Entity factionEntity,
             float delta)
@@ -562,7 +549,7 @@ namespace Bloodlines.PlayerCovertOps
             entityManager.SetComponentData(factionEntity, dynasty);
         }
 
-        private static void ApplyStewardship(
+        internal static void ApplyStewardship(
             EntityManager entityManager,
             Entity factionEntity,
             float amount)
@@ -592,7 +579,26 @@ namespace Bloodlines.PlayerCovertOps
             }
         }
 
-        private static bool TryResolveMemberEntity(
+        internal static void ApplyRuthlessness(
+            EntityManager entityManager,
+            Entity factionEntity,
+            float amount)
+        {
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<ConvictionComponent>(factionEntity))
+            {
+                return;
+            }
+
+            var conviction = entityManager.GetComponentData<ConvictionComponent>(factionEntity);
+            ConvictionScoring.ApplyEvent(
+                ref conviction,
+                ConvictionBucket.Ruthlessness,
+                amount);
+            entityManager.SetComponentData(factionEntity, conviction);
+        }
+
+        internal static bool TryResolveMemberEntity(
             EntityManager entityManager,
             Entity factionEntity,
             FixedString64Bytes memberId,
@@ -653,6 +659,113 @@ namespace Bloodlines.PlayerCovertOps
             }
 
             return count;
+        }
+
+        private static FixedString512Bytes BuildBuildingSummary(
+            EntityManager entityManager,
+            FixedString32Bytes factionId)
+        {
+            var summary = new FixedString512Bytes();
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<BuildingTypeComponent>(),
+                ComponentType.ReadOnly<HealthComponent>());
+            if (query.IsEmpty)
+            {
+                query.Dispose();
+                return summary;
+            }
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var buildingTypes = query.ToComponentDataArray<BuildingTypeComponent>(Allocator.Temp);
+            using var healthValues = query.ToComponentDataArray<HealthComponent>(Allocator.Temp);
+            query.Dispose();
+
+            var typeIds = new NativeList<FixedString64Bytes>(Allocator.Temp);
+            var typeCounts = new NativeList<int>(Allocator.Temp);
+            try
+            {
+                for (int i = 0; i < entities.Length; i++)
+                {
+                    if (!factions[i].FactionId.Equals(factionId) ||
+                        healthValues[i].Current <= 0f ||
+                        entityManager.HasComponent<DeadTag>(entities[i]) ||
+                        entityManager.HasComponent<ConstructionStateComponent>(entities[i]))
+                    {
+                        continue;
+                    }
+
+                    int existingIndex = -1;
+                    for (int j = 0; j < typeIds.Length; j++)
+                    {
+                        if (!typeIds[j].Equals(buildingTypes[i].TypeId))
+                        {
+                            continue;
+                        }
+
+                        existingIndex = j;
+                        break;
+                    }
+
+                    if (existingIndex >= 0)
+                    {
+                        typeCounts[existingIndex] = typeCounts[existingIndex] + 1;
+                        continue;
+                    }
+
+                    typeIds.Add(buildingTypes[i].TypeId);
+                    typeCounts.Add(1);
+                }
+
+                for (int i = 0; i < typeIds.Length; i++)
+                {
+                    if (summary.Length > 0)
+                    {
+                        summary.Append(";");
+                    }
+
+                    summary.Append(typeIds[i]);
+                    summary.Append(":");
+                    summary.Append(typeCounts[i].ToString());
+                }
+            }
+            finally
+            {
+                typeCounts.Dispose();
+                typeIds.Dispose();
+            }
+
+            return summary;
+        }
+
+        private static FixedString512Bytes BuildResourceSummary(
+            EntityManager entityManager,
+            Entity factionEntity)
+        {
+            var summary = new FixedString512Bytes();
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<ResourceStockpileComponent>(factionEntity))
+            {
+                return summary;
+            }
+
+            var stockpile = entityManager.GetComponentData<ResourceStockpileComponent>(factionEntity);
+            summary.Append("gold=");
+            summary.Append(((int)math.round(stockpile.Gold)).ToString());
+            summary.Append(",food=");
+            summary.Append(((int)math.round(stockpile.Food)).ToString());
+            summary.Append(",water=");
+            summary.Append(((int)math.round(stockpile.Water)).ToString());
+            summary.Append(",wood=");
+            summary.Append(((int)math.round(stockpile.Wood)).ToString());
+            summary.Append(",stone=");
+            summary.Append(((int)math.round(stockpile.Stone)).ToString());
+            summary.Append(",iron=");
+            summary.Append(((int)math.round(stockpile.Iron)).ToString());
+            summary.Append(",influence=");
+            summary.Append(((int)math.round(stockpile.Influence)).ToString());
+            return summary;
         }
 
         private static FixedString512Bytes BuildMemberSummary(
