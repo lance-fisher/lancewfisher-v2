@@ -10,10 +10,10 @@ using Unity.Mathematics;
 namespace Bloodlines.PlayerCovertOps
 {
     /// <summary>
-    /// DualClock-driven counter-intelligence watch resolution plus shared report/watch
-    /// expiry. Espionage, assassination, and sabotage resolution now live in their
-    /// dedicated systems so order-sensitive fallout can run against the broader
-    /// dynasty/runtime graph without widening foreign lanes.
+    /// DualClock-driven counter-intelligence watch activation plus dossier/watch
+    /// expiry pruning. Shared dossier/interception helpers remain here so the
+    /// covert-op resolution lane can split espionage, assassination, and sabotage
+    /// into dedicated systems without duplicating browser-parity report logic.
     /// </summary>
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(PlayerCovertOpsSystem))]
@@ -120,137 +120,6 @@ namespace Bloodlines.PlayerCovertOps
             entityManager.DestroyEntity(operationEntity);
         }
 
-        private static void ResolveEspionageOperation(
-            EntityManager entityManager,
-            Entity operationEntity,
-            in PlayerCovertOpsResolutionComponent operation,
-            float inWorldDays)
-        {
-            var sourceFactionEntity = PlayerCovertOpsSystem.FindFactionEntity(entityManager, operation.SourceFactionId);
-            var targetFactionEntity = PlayerCovertOpsSystem.FindFactionEntity(entityManager, operation.TargetFactionId);
-            if (sourceFactionEntity == Entity.Null || targetFactionEntity == Entity.Null)
-            {
-                entityManager.DestroyEntity(operationEntity);
-                return;
-            }
-
-            float offenseRenown =
-                PlayerCovertOpsSystem.TrySelectOperator(entityManager, sourceFactionEntity, out var operatorMember)
-                    ? operatorMember.Renown
-                    : 0f;
-            var contest = PlayerCovertOpsSystem.BuildEspionageContest(
-                entityManager,
-                operation.SourceFactionId,
-                operation.TargetFactionId,
-                offenseRenown,
-                inWorldDays);
-
-            if (contest.SuccessScore >= 0f &&
-                TryCreateIntelligenceReport(
-                    entityManager,
-                    operation.SourceFactionId,
-                    operation.TargetFactionId,
-                    new FixedString32Bytes("espionage"),
-                    new FixedString64Bytes("Court report"),
-                    default,
-                    0,
-                    inWorldDays,
-                    operation.ReportExpiresAtInWorldDays,
-                    operationEntity.Index,
-                    out var report))
-            {
-                StoreIntelligenceReport(entityManager, sourceFactionEntity, report);
-                ApplyStewardship(entityManager, sourceFactionEntity, CounterIntelligenceStewardshipGain);
-            }
-            else
-            {
-                RecordCounterIntelligenceInterception(
-                    entityManager,
-                    operation.TargetFactionId,
-                    operation.SourceFactionId,
-                    new FixedString32Bytes("espionage"),
-                    default,
-                    inWorldDays);
-                EnsureMutualHostility(
-                    entityManager,
-                    operation.SourceFactionId,
-                    operation.TargetFactionId);
-                ApplyStewardship(entityManager, targetFactionEntity, CounterIntelligenceStewardshipGain);
-            }
-
-            entityManager.DestroyEntity(operationEntity);
-        }
-
-        private static void ResolveAssassinationOperation(
-            EntityManager entityManager,
-            Entity operationEntity,
-            in PlayerCovertOpsResolutionComponent operation,
-            float inWorldDays)
-        {
-            var sourceFactionEntity = PlayerCovertOpsSystem.FindFactionEntity(entityManager, operation.SourceFactionId);
-            var targetFactionEntity = PlayerCovertOpsSystem.FindFactionEntity(entityManager, operation.TargetFactionId);
-            if (sourceFactionEntity == Entity.Null ||
-                targetFactionEntity == Entity.Null ||
-                !TryResolveMemberEntity(
-                    entityManager,
-                    targetFactionEntity,
-                    operation.TargetMemberId,
-                    out var targetMemberEntity,
-                    out var targetMember) ||
-                !PlayerCovertOpsSystem.IsAvailable(targetMember.Status))
-            {
-                entityManager.DestroyEntity(operationEntity);
-                return;
-            }
-
-            EnsureMutualHostility(
-                entityManager,
-                operation.SourceFactionId,
-                operation.TargetFactionId);
-
-            float offenseRenown =
-                PlayerCovertOpsSystem.TrySelectOperator(entityManager, sourceFactionEntity, out var operatorMember)
-                    ? operatorMember.Renown
-                    : 0f;
-            bool intelSupport = PlayerCovertOpsSystem.HasActiveIntelligenceReport(
-                entityManager,
-                operation.SourceFactionId,
-                operation.TargetFactionId,
-                inWorldDays);
-            var contest = PlayerCovertOpsSystem.BuildAssassinationContest(
-                entityManager,
-                operation.SourceFactionId,
-                operation.TargetFactionId,
-                targetMember,
-                offenseRenown,
-                intelSupport,
-                inWorldDays);
-
-            if (contest.SuccessScore >= 0f)
-            {
-                ApplyAssassinationEffect(
-                    entityManager,
-                    targetFactionEntity,
-                    targetMemberEntity,
-                    targetMember,
-                    inWorldDays);
-            }
-            else
-            {
-                RecordCounterIntelligenceInterception(
-                    entityManager,
-                    operation.TargetFactionId,
-                    operation.SourceFactionId,
-                    new FixedString32Bytes("assassination"),
-                    operation.TargetMemberId,
-                    inWorldDays);
-                RefundDefenderInfluence(entityManager, targetFactionEntity, operation.EscrowInfluence);
-                ApplyStewardship(entityManager, targetFactionEntity, CounterIntelligenceStewardshipGain);
-            }
-
-            entityManager.DestroyEntity(operationEntity);
-        }
-
         private static void ExpireIntelligenceReports(
             EntityManager entityManager,
             float inWorldDays)
@@ -350,9 +219,9 @@ namespace Bloodlines.PlayerCovertOps
                 TargetLesserHouseCount = entityManager.HasBuffer<LesserHouseElement>(targetFactionEntity)
                     ? entityManager.GetBuffer<LesserHouseElement>(targetFactionEntity).Length
                     : 0,
+                TargetResourceSummary = ResolveTargetResourceSummary(entityManager, targetFactionEntity),
+                TargetBuildingSummary = ResolveTargetBuildingSummary(entityManager, targetFactionId),
                 MemberSummary = BuildMemberSummary(entityManager, targetFactionId, targetFactionEntity),
-                BuildingSummary = BuildBuildingSummary(entityManager, targetFactionId),
-                ResourceSummary = BuildResourceSummary(entityManager, targetFactionEntity),
             };
 
             return true;
@@ -493,30 +362,6 @@ namespace Bloodlines.PlayerCovertOps
             });
         }
 
-        private static void ApplyAssassinationEffect(
-            EntityManager entityManager,
-            Entity factionEntity,
-            Entity memberEntity,
-            DynastyMemberComponent member,
-            float inWorldDays)
-        {
-            member.Status = DynastyMemberStatus.Fallen;
-            member.FallenAtWorldSeconds = inWorldDays * 86400f;
-            entityManager.SetComponentData(memberEntity, member);
-
-            if (entityManager.HasBuffer<DynastyFallenLedger>(factionEntity))
-            {
-                var fallen = entityManager.GetBuffer<DynastyFallenLedger>(factionEntity);
-                fallen.Add(new DynastyFallenLedger
-                {
-                    MemberId = member.MemberId,
-                    Title = member.Title,
-                    Role = member.Role,
-                    FallenAtWorldSeconds = member.FallenAtWorldSeconds,
-                });
-            }
-        }
-
         internal static void RefundDefenderInfluence(
             EntityManager entityManager,
             Entity factionEntity,
@@ -549,9 +394,10 @@ namespace Bloodlines.PlayerCovertOps
             entityManager.SetComponentData(factionEntity, dynasty);
         }
 
-        internal static void ApplyStewardship(
+        internal static void ApplyConviction(
             EntityManager entityManager,
             Entity factionEntity,
+            ConvictionBucket bucket,
             float amount)
         {
             if (factionEntity == Entity.Null ||
@@ -561,11 +407,110 @@ namespace Bloodlines.PlayerCovertOps
             }
 
             var conviction = entityManager.GetComponentData<ConvictionComponent>(factionEntity);
-            ConvictionScoring.ApplyEvent(
-                ref conviction,
+            ConvictionScoring.ApplyEvent(ref conviction, bucket, amount);
+            entityManager.SetComponentData(factionEntity, conviction);
+        }
+
+        internal static void ApplyStewardship(
+            EntityManager entityManager,
+            Entity factionEntity,
+            float amount)
+        {
+            ApplyConviction(
+                entityManager,
+                factionEntity,
                 ConvictionBucket.Stewardship,
                 amount);
-            entityManager.SetComponentData(factionEntity, conviction);
+        }
+
+        private static FixedString128Bytes ResolveTargetResourceSummary(
+            EntityManager entityManager,
+            Entity targetFactionEntity)
+        {
+            var summary = new FixedString128Bytes();
+            if (targetFactionEntity == Entity.Null ||
+                !entityManager.HasComponent<ResourceStockpileComponent>(targetFactionEntity))
+            {
+                return summary;
+            }
+
+            var stockpile = entityManager.GetComponentData<ResourceStockpileComponent>(targetFactionEntity);
+            summary.Append("gold=");
+            summary.Append(((int)math.round(stockpile.Gold)).ToString());
+            summary.Append(";food=");
+            summary.Append(((int)math.round(stockpile.Food)).ToString());
+            summary.Append(";water=");
+            summary.Append(((int)math.round(stockpile.Water)).ToString());
+            summary.Append(";wood=");
+            summary.Append(((int)math.round(stockpile.Wood)).ToString());
+            summary.Append(";stone=");
+            summary.Append(((int)math.round(stockpile.Stone)).ToString());
+            summary.Append(";iron=");
+            summary.Append(((int)math.round(stockpile.Iron)).ToString());
+            summary.Append(";influence=");
+            summary.Append(((int)math.round(stockpile.Influence)).ToString());
+            return summary;
+        }
+
+        private static FixedString128Bytes ResolveTargetBuildingSummary(
+            EntityManager entityManager,
+            FixedString32Bytes targetFactionId)
+        {
+            var summary = new FixedString128Bytes();
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<BuildingTypeComponent>(),
+                ComponentType.ReadOnly<HealthComponent>());
+            if (query.IsEmpty)
+            {
+                query.Dispose();
+                return summary;
+            }
+
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var buildingTypes = query.ToComponentDataArray<BuildingTypeComponent>(Allocator.Temp);
+            using var healthValues = query.ToComponentDataArray<HealthComponent>(Allocator.Temp);
+            query.Dispose();
+
+            int aliveBuildings = 0;
+            int gateTargets = 0;
+            int logisticsTargets = 0;
+            int wellTargets = 0;
+            for (int i = 0; i < factions.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(targetFactionId) ||
+                    healthValues[i].Current <= 0f)
+                {
+                    continue;
+                }
+
+                aliveBuildings++;
+                if (buildingTypes[i].FortificationRole == FortificationRole.Gate)
+                {
+                    gateTargets++;
+                }
+
+                if (buildingTypes[i].SupportsSiegeLogistics ||
+                    buildingTypes[i].TypeId.Equals(new FixedString64Bytes("supply_camp")))
+                {
+                    logisticsTargets++;
+                }
+
+                if (buildingTypes[i].TypeId.Equals(new FixedString64Bytes("well")))
+                {
+                    wellTargets++;
+                }
+            }
+
+            summary.Append("alive=");
+            summary.Append(aliveBuildings.ToString());
+            summary.Append(";gates=");
+            summary.Append(gateTargets.ToString());
+            summary.Append(";logistics=");
+            summary.Append(logisticsTargets.ToString());
+            summary.Append(";wells=");
+            summary.Append(wellTargets.ToString());
+            return summary;
         }
 
         private static void EnsureIntelligenceReportBuffer(
@@ -577,25 +522,6 @@ namespace Bloodlines.PlayerCovertOps
             {
                 entityManager.AddBuffer<IntelligenceReportElement>(factionEntity);
             }
-        }
-
-        internal static void ApplyRuthlessness(
-            EntityManager entityManager,
-            Entity factionEntity,
-            float amount)
-        {
-            if (factionEntity == Entity.Null ||
-                !entityManager.HasComponent<ConvictionComponent>(factionEntity))
-            {
-                return;
-            }
-
-            var conviction = entityManager.GetComponentData<ConvictionComponent>(factionEntity);
-            ConvictionScoring.ApplyEvent(
-                ref conviction,
-                ConvictionBucket.Ruthlessness,
-                amount);
-            entityManager.SetComponentData(factionEntity, conviction);
         }
 
         internal static bool TryResolveMemberEntity(
@@ -659,113 +585,6 @@ namespace Bloodlines.PlayerCovertOps
             }
 
             return count;
-        }
-
-        private static FixedString512Bytes BuildBuildingSummary(
-            EntityManager entityManager,
-            FixedString32Bytes factionId)
-        {
-            var summary = new FixedString512Bytes();
-            var query = entityManager.CreateEntityQuery(
-                ComponentType.ReadOnly<FactionComponent>(),
-                ComponentType.ReadOnly<BuildingTypeComponent>(),
-                ComponentType.ReadOnly<HealthComponent>());
-            if (query.IsEmpty)
-            {
-                query.Dispose();
-                return summary;
-            }
-
-            using var entities = query.ToEntityArray(Allocator.Temp);
-            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
-            using var buildingTypes = query.ToComponentDataArray<BuildingTypeComponent>(Allocator.Temp);
-            using var healthValues = query.ToComponentDataArray<HealthComponent>(Allocator.Temp);
-            query.Dispose();
-
-            var typeIds = new NativeList<FixedString64Bytes>(Allocator.Temp);
-            var typeCounts = new NativeList<int>(Allocator.Temp);
-            try
-            {
-                for (int i = 0; i < entities.Length; i++)
-                {
-                    if (!factions[i].FactionId.Equals(factionId) ||
-                        healthValues[i].Current <= 0f ||
-                        entityManager.HasComponent<DeadTag>(entities[i]) ||
-                        entityManager.HasComponent<ConstructionStateComponent>(entities[i]))
-                    {
-                        continue;
-                    }
-
-                    int existingIndex = -1;
-                    for (int j = 0; j < typeIds.Length; j++)
-                    {
-                        if (!typeIds[j].Equals(buildingTypes[i].TypeId))
-                        {
-                            continue;
-                        }
-
-                        existingIndex = j;
-                        break;
-                    }
-
-                    if (existingIndex >= 0)
-                    {
-                        typeCounts[existingIndex] = typeCounts[existingIndex] + 1;
-                        continue;
-                    }
-
-                    typeIds.Add(buildingTypes[i].TypeId);
-                    typeCounts.Add(1);
-                }
-
-                for (int i = 0; i < typeIds.Length; i++)
-                {
-                    if (summary.Length > 0)
-                    {
-                        summary.Append(";");
-                    }
-
-                    summary.Append(typeIds[i]);
-                    summary.Append(":");
-                    summary.Append(typeCounts[i].ToString());
-                }
-            }
-            finally
-            {
-                typeCounts.Dispose();
-                typeIds.Dispose();
-            }
-
-            return summary;
-        }
-
-        private static FixedString512Bytes BuildResourceSummary(
-            EntityManager entityManager,
-            Entity factionEntity)
-        {
-            var summary = new FixedString512Bytes();
-            if (factionEntity == Entity.Null ||
-                !entityManager.HasComponent<ResourceStockpileComponent>(factionEntity))
-            {
-                return summary;
-            }
-
-            var stockpile = entityManager.GetComponentData<ResourceStockpileComponent>(factionEntity);
-            summary.Append("gold=");
-            summary.Append(((int)math.round(stockpile.Gold)).ToString());
-            summary.Append(",food=");
-            summary.Append(((int)math.round(stockpile.Food)).ToString());
-            summary.Append(",water=");
-            summary.Append(((int)math.round(stockpile.Water)).ToString());
-            summary.Append(",wood=");
-            summary.Append(((int)math.round(stockpile.Wood)).ToString());
-            summary.Append(",stone=");
-            summary.Append(((int)math.round(stockpile.Stone)).ToString());
-            summary.Append(",iron=");
-            summary.Append(((int)math.round(stockpile.Iron)).ToString());
-            summary.Append(",influence=");
-            summary.Append(((int)math.round(stockpile.Influence)).ToString());
-            return summary;
         }
 
         private static FixedString512Bytes BuildMemberSummary(

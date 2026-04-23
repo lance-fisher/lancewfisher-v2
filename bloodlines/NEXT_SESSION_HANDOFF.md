@@ -4958,3 +4958,42 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
     unstaged; Unity dirties it during validation and it is unrelated to this
     slice
+
+## 2026-04-23 Player Covert Ops Resolution Effects Follow-Up
+
+- Branch lane:
+  - `codex/unity-player-covert-ops-resolution-effects-followup`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-covert-ops-resolution-effects-followup.md`
+- Completed in this follow-up:
+  - `EspionageResolutionSystem`,
+    `AssassinationResolutionSystem`,
+    and
+    `SabotageResolutionSystem`
+    now resolve from the stored dispatch-time `SuccessScore`, keep active
+    sabotage windows on additive `PlayerSabotageEffectComponent` data, and
+    preserve the existing `PlayerSabotageStatusComponent` file as a
+    compatibility surface
+  - gate opening now exposes an immediate same-frame fortification breach,
+    fire raising burns over elapsed time, supply poisoning writes
+    `BuildingRaidStateComponent` raid windows, and successful well poisoning
+    raises `RealmConditionComponent.WaterStrainStreak`
+  - `BloodlinesDebugCommandSurface.PlayerCovertOps` now exposes richer
+    dossier/sabotage diagnostics, and the dedicated covert-ops resolution smoke
+    now proves richer espionage reports plus commander / governor / sabotage
+    fallout
+- Validation state:
+  - dedicated player covert-ops resolution smoke green
+  - all 10 required governed gates green after contract revision `103`
+- Immediate next action:
+  - claim Priority 12 from
+    `D:\ProjectsHome\Bloodlines\03_PROMPTS\CODEX_MULTI_DAY_DIRECTIVE_2026-04-23.md`
+  - open a fresh `codex/unity-governance-coalition-pressure` branch from the
+    updated canonical `master`
+  - port the governance coalition-pressure seam with a dedicated smoke
+    validator and rerun the full governed 10-gate chain
+- Staging note:
+  - keep
+    `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+    unstaged; Unity dirties it during validation and it is unrelated to this
+    follow-up

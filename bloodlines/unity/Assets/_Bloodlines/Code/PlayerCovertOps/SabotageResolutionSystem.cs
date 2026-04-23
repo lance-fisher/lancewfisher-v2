@@ -1,7 +1,8 @@
 using Bloodlines.Components;
 using Bloodlines.Conviction;
+using Bloodlines.Fortification;
 using Bloodlines.GameTime;
-using Bloodlines.Systems;
+using Bloodlines.Raids;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -9,91 +10,103 @@ using Unity.Mathematics;
 namespace Bloodlines.PlayerCovertOps
 {
     /// <summary>
-    /// Resolves ready sabotage operations and owns the additive live sabotage timers
-    /// on buildings. The production pause is implemented locally by compensating the
-    /// queue after UnitProductionSystem runs, so no foreign runtime files need edits.
+    /// Resolves sabotage operations and ticks the temporary gate-exposure and
+    /// burning windows they materialize on target buildings.
     /// </summary>
     [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateAfter(typeof(Bloodlines.Fortification.FortificationDestructionResolutionSystem))]
     [UpdateAfter(typeof(PlayerCounterIntelligenceSystem))]
-    [UpdateAfter(typeof(UnitProductionSystem))]
-    [UpdateBefore(typeof(DeathResolutionSystem))]
+    [UpdateBefore(typeof(Bloodlines.Siege.BreachAssaultPressureSystem))]
     public partial struct SabotageResolutionSystem : ISystem
     {
-        private const float SabotageFailureLegitimacyPenalty = 2f;
-        private const float FireDamagePerSecond = 8f;
+        private const double GateExposeDurationSeconds = 15d;
+        private const double BurnDurationSeconds = 10d;
+        private const double PoisonDurationSeconds = 20d;
+        private const float BurnDamagePerSecond = 8f;
+        private const float GateHealthFloorRatio = 0.2f;
+        private const float SabotageConvictionGain = 2f;
+        private const int WellPoisoningWaterStrainGain = 2;
 
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<DualClockComponent>();
-            state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         }
 
         public void OnUpdate(ref SystemState state)
         {
             var entityManager = state.EntityManager;
-            var clock = SystemAPI.GetSingleton<DualClockComponent>();
-            float inWorldDays = clock.InWorldDays;
-            float deltaTime = SystemAPI.Time.DeltaTime;
+            float inWorldDays = PlayerCovertOpsSystem.GetInWorldDays(entityManager);
+            double elapsed = SystemAPI.Time.ElapsedTime;
+            float dt = SystemAPI.Time.DeltaTime;
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            var ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
-                .CreateCommandBuffer(state.WorldUnmanaged);
-
-            TickActiveSabotageEffects(entityManager, ecb, inWorldDays, deltaTime);
-
-            var operationQuery = entityManager.CreateEntityQuery(
-                ComponentType.ReadOnly<PlayerCovertOpsResolutionComponent>());
-            if (operationQuery.IsEmpty)
+            try
             {
-                operationQuery.Dispose();
-                return;
-            }
+                TickActiveSabotageEffects(entityManager, ref ecb, elapsed, dt);
 
-            using var operationEntities = operationQuery.ToEntityArray(Allocator.Temp);
-            using var operations = operationQuery.ToComponentDataArray<PlayerCovertOpsResolutionComponent>(Allocator.Temp);
-            operationQuery.Dispose();
-
-            for (int i = 0; i < operationEntities.Length; i++)
-            {
-                var operation = operations[i];
-                if (!operation.Active ||
-                    operation.Kind != CovertOpKindPlayer.Sabotage ||
-                    operation.ResolveAtInWorldDays > inWorldDays)
+                var query = entityManager.CreateEntityQuery(
+                    ComponentType.ReadOnly<PlayerCovertOpsResolutionComponent>());
+                if (!query.IsEmpty)
                 {
-                    continue;
+                    using var entities = query.ToEntityArray(Allocator.Temp);
+                    using var operations = query.ToComponentDataArray<PlayerCovertOpsResolutionComponent>(Allocator.Temp);
+                    query.Dispose();
+
+                    for (int i = 0; i < entities.Length; i++)
+                    {
+                        var operation = operations[i];
+                        if (!operation.Active ||
+                            operation.Kind != CovertOpKindPlayer.Sabotage ||
+                            operation.ResolveAtInWorldDays > inWorldDays)
+                        {
+                            continue;
+                        }
+
+                        ResolveSabotageOperation(
+                            entityManager,
+                            ref ecb,
+                            entities[i],
+                            operation,
+                            elapsed);
+                    }
+                }
+                else
+                {
+                    query.Dispose();
                 }
 
-                ResolveOperation(
-                    entityManager,
-                    ecb,
-                    operationEntities[i],
-                    operation,
-                    inWorldDays,
-                    clock.DaysPerRealSecond,
-                    deltaTime);
+                ecb.Playback(entityManager);
+            }
+            finally
+            {
+                ecb.Dispose();
             }
         }
 
-        private static void ResolveOperation(
+        private static void ResolveSabotageOperation(
             EntityManager entityManager,
-            EntityCommandBuffer ecb,
+            ref EntityCommandBuffer ecb,
             Entity operationEntity,
             in PlayerCovertOpsResolutionComponent operation,
-            float inWorldDays,
-            float daysPerRealSecond,
-            float deltaTime)
+            double elapsed)
         {
-            var sourceFactionEntity = PlayerCovertOpsSystem.FindFactionEntity(entityManager, operation.SourceFactionId);
-            var targetFactionEntity = PlayerCovertOpsSystem.FindFactionEntity(entityManager, operation.TargetFactionId);
-
-            if (!TryResolveBuildingTarget(
+            if (!PlayerCovertOpsSystem.TryResolveBuildingTarget(
                     entityManager,
                     operation.TargetEntityIndex,
                     out var targetBuildingEntity,
+                    out _,
                     out var buildingFaction,
-                    out var buildingHealth) ||
-                !buildingFaction.FactionId.Equals(operation.TargetFactionId) ||
-                buildingHealth.Current <= 0f ||
-                entityManager.HasComponent<DeadTag>(targetBuildingEntity))
+                    out var buildingHealth,
+                    out _)
+                || buildingHealth.Current <= 0f)
+            {
+                ecb.DestroyEntity(operationEntity);
+                return;
+            }
+
+            var sourceFactionEntity = PlayerCovertOpsSystem.FindFactionEntity(entityManager, operation.SourceFactionId);
+            var targetFactionEntity = PlayerCovertOpsSystem.FindFactionEntity(entityManager, buildingFaction.FactionId);
+            if (targetFactionEntity == Entity.Null)
             {
                 ecb.DestroyEntity(operationEntity);
                 return;
@@ -101,278 +114,221 @@ namespace Bloodlines.PlayerCovertOps
 
             if (operation.SuccessScore >= 0f)
             {
-                var profile = ResolveSabotageProfile(operation.Subtype, daysPerRealSecond);
-                ApplySabotageSuccess(
+                ApplySabotageEffect(
                     entityManager,
                     targetBuildingEntity,
-                    operation.SourceFactionId,
-                    operation.TargetFactionId,
+                    sourceFactionEntity,
+                    targetFactionEntity,
                     operation.Subtype,
-                    inWorldDays,
-                    deltaTime,
-                    profile);
-
-                if (targetFactionEntity != Entity.Null &&
-                    operation.Subtype.Equals(new FixedString32Bytes("well_poisoning")) &&
-                    entityManager.HasComponent<RealmConditionComponent>(targetFactionEntity))
-                {
-                    var realm = entityManager.GetComponentData<RealmConditionComponent>(targetFactionEntity);
-                    realm.WaterStrainStreak += 2;
-                    entityManager.SetComponentData(targetFactionEntity, realm);
-                }
-
-                ApplySubtypeConviction(entityManager, sourceFactionEntity, operation.Subtype);
+                    elapsed);
             }
             else
             {
                 PlayerCounterIntelligenceSystem.ApplyStewardship(entityManager, targetFactionEntity, 1f);
-                PlayerCounterIntelligenceSystem.AdjustLegitimacy(
-                    entityManager,
-                    sourceFactionEntity,
-                    -SabotageFailureLegitimacyPenalty);
             }
 
             ecb.DestroyEntity(operationEntity);
         }
 
+        private static void ApplySabotageEffect(
+            EntityManager entityManager,
+            Entity targetBuildingEntity,
+            Entity sourceFactionEntity,
+            Entity targetFactionEntity,
+            FixedString32Bytes subtype,
+            double elapsed)
+        {
+            if (subtype.Equals(new FixedString32Bytes("gate_opening")))
+            {
+                var health = entityManager.GetComponentData<HealthComponent>(targetBuildingEntity);
+                float healthFloor = math.max(0f, health.Max * GateHealthFloorRatio);
+                health.Current = math.min(health.Current, healthFloor);
+                entityManager.SetComponentData(targetBuildingEntity, health);
+
+                SetSabotageEffect(
+                    entityManager,
+                    targetBuildingEntity,
+                    gateExposedUntil: elapsed + GateExposeDurationSeconds,
+                    burningUntil: 0d,
+                    burnDamagePerSecond: 0f);
+                PromoteTemporaryBreach(entityManager, targetBuildingEntity);
+                ApplySuccessConviction(entityManager, sourceFactionEntity, subtype);
+                return;
+            }
+
+            if (subtype.Equals(new FixedString32Bytes("fire_raising")))
+            {
+                SetSabotageEffect(
+                    entityManager,
+                    targetBuildingEntity,
+                    gateExposedUntil: 0d,
+                    burningUntil: elapsed + BurnDurationSeconds,
+                    burnDamagePerSecond: BurnDamagePerSecond);
+                ApplySuccessConviction(entityManager, sourceFactionEntity, subtype);
+                return;
+            }
+
+            if (subtype.Equals(new FixedString32Bytes("supply_poisoning")))
+            {
+                UpsertRaidState(
+                    entityManager,
+                    targetBuildingEntity,
+                    sourceFactionEntity,
+                    elapsed + PoisonDurationSeconds);
+                ApplySuccessConviction(entityManager, sourceFactionEntity, subtype);
+                return;
+            }
+
+            if (subtype.Equals(new FixedString32Bytes("well_poisoning")))
+            {
+                if (entityManager.HasComponent<RealmConditionComponent>(targetFactionEntity))
+                {
+                    var realm = entityManager.GetComponentData<RealmConditionComponent>(targetFactionEntity);
+                    realm.WaterStrainStreak += WellPoisoningWaterStrainGain;
+                    entityManager.SetComponentData(targetFactionEntity, realm);
+                }
+
+                ApplySuccessConviction(entityManager, sourceFactionEntity, subtype);
+            }
+        }
+
         private static void TickActiveSabotageEffects(
             EntityManager entityManager,
-            EntityCommandBuffer ecb,
-            float inWorldDays,
-            float deltaTime)
+            ref EntityCommandBuffer ecb,
+            double elapsed,
+            float dt)
         {
-            var statusQuery = entityManager.CreateEntityQuery(
-                ComponentType.ReadOnly<PlayerSabotageStatusComponent>());
-            if (statusQuery.IsEmpty)
-            {
-                statusQuery.Dispose();
-                return;
-            }
-
-            using var entities = statusQuery.ToEntityArray(Allocator.Temp);
-            using var statuses = statusQuery.ToComponentDataArray<PlayerSabotageStatusComponent>(Allocator.Temp);
-            statusQuery.Dispose();
-
-            for (int i = 0; i < entities.Length; i++)
-            {
-                var status = statuses[i];
-                bool stillActive =
-                    status.EffectExpiresAtInWorldDays > inWorldDays ||
-                    status.ProductionHaltExpiresAtInWorldDays > inWorldDays ||
-                    status.GateExposureExpiresAtInWorldDays > inWorldDays ||
-                    status.BurnExpiresAtInWorldDays > inWorldDays;
-
-                if (status.ProductionHaltExpiresAtInWorldDays > inWorldDays &&
-                    entityManager.HasBuffer<ProductionQueueItemElement>(entities[i]))
-                {
-                    var queue = entityManager.GetBuffer<ProductionQueueItemElement>(entities[i]);
-                    if (queue.Length > 0)
-                    {
-                        var queueItem = queue[0];
-                        queueItem.RemainingSeconds = math.min(queueItem.TotalSeconds, queueItem.RemainingSeconds + deltaTime);
-                        queue[0] = queueItem;
-                    }
-                }
-
-                if (status.BurnExpiresAtInWorldDays > inWorldDays &&
-                    status.BurnDamagePerSecond > 0f &&
-                    entityManager.HasComponent<HealthComponent>(entities[i]) &&
-                    !entityManager.HasComponent<DeadTag>(entities[i]))
-                {
-                    var health = entityManager.GetComponentData<HealthComponent>(entities[i]);
-                    if (health.Current > 0f)
-                    {
-                        health.Current = math.max(0f, health.Current - (status.BurnDamagePerSecond * deltaTime));
-                        entityManager.SetComponentData(entities[i], health);
-                    }
-                }
-
-                if (!stillActive)
-                {
-                    ecb.RemoveComponent<PlayerSabotageStatusComponent>(entities[i]);
-                }
-            }
-        }
-
-        private static void ApplySabotageSuccess(
-            EntityManager entityManager,
-            Entity buildingEntity,
-            FixedString32Bytes sourceFactionId,
-            FixedString32Bytes targetFactionId,
-            FixedString32Bytes subtype,
-            float inWorldDays,
-            float deltaTime,
-            in SabotageEffectProfile profile)
-        {
-            if (entityManager.HasComponent<HealthComponent>(buildingEntity))
-            {
-                var health = entityManager.GetComponentData<HealthComponent>(buildingEntity);
-                float damageFloor = math.max(1f, health.Max * profile.DamageFloorRatio);
-                health.Current = math.min(health.Current, damageFloor);
-                entityManager.SetComponentData(buildingEntity, health);
-            }
-
-            var status = new PlayerSabotageStatusComponent
-            {
-                SourceFactionId = sourceFactionId,
-                TargetFactionId = targetFactionId,
-                Subtype = subtype,
-                AppliedAtInWorldDays = inWorldDays,
-                EffectExpiresAtInWorldDays = inWorldDays + profile.EffectDurationInWorldDays,
-                ProductionHaltExpiresAtInWorldDays = inWorldDays + profile.ProductionHaltDurationInWorldDays,
-                GateExposureExpiresAtInWorldDays = inWorldDays + profile.GateExposureDurationInWorldDays,
-                BurnExpiresAtInWorldDays = inWorldDays + profile.BurnDurationInWorldDays,
-                BurnDamagePerSecond = profile.BurnDamagePerSecond,
-                DamageFloorRatio = profile.DamageFloorRatio,
-            };
-
-            if (entityManager.HasComponent<PlayerSabotageStatusComponent>(buildingEntity))
-            {
-                entityManager.SetComponentData(buildingEntity, status);
-            }
-            else
-            {
-                entityManager.AddComponentData(buildingEntity, status);
-            }
-
-            if (profile.ProductionHaltDurationInWorldDays > 0f &&
-                entityManager.HasBuffer<ProductionQueueItemElement>(buildingEntity))
-            {
-                var queue = entityManager.GetBuffer<ProductionQueueItemElement>(buildingEntity);
-                if (queue.Length > 0)
-                {
-                    var queueItem = queue[0];
-                    queueItem.RemainingSeconds = math.min(queueItem.TotalSeconds, queueItem.RemainingSeconds + deltaTime);
-                    queue[0] = queueItem;
-                }
-            }
-        }
-
-        private static void ApplySubtypeConviction(
-            EntityManager entityManager,
-            Entity factionEntity,
-            FixedString32Bytes subtype)
-        {
-            if (factionEntity == Entity.Null ||
-                !entityManager.HasComponent<ConvictionComponent>(factionEntity))
-            {
-                return;
-            }
-
-            var conviction = entityManager.GetComponentData<ConvictionComponent>(factionEntity);
-            var bucket =
-                subtype.Equals(new FixedString32Bytes("well_poisoning")) ||
-                subtype.Equals(new FixedString32Bytes("supply_poisoning"))
-                    ? ConvictionBucket.Desecration
-                    : ConvictionBucket.Ruthlessness;
-            ConvictionScoring.ApplyEvent(ref conviction, bucket, 2f);
-            entityManager.SetComponentData(factionEntity, conviction);
-        }
-
-        private static bool TryResolveBuildingTarget(
-            EntityManager entityManager,
-            int entityIndex,
-            out Entity targetEntity,
-            out FactionComponent buildingFaction,
-            out HealthComponent buildingHealth)
-        {
-            targetEntity = Entity.Null;
-            buildingFaction = default;
-            buildingHealth = default;
-
             var query = entityManager.CreateEntityQuery(
-                ComponentType.ReadOnly<FactionComponent>(),
-                ComponentType.ReadOnly<BuildingTypeComponent>(),
+                ComponentType.ReadOnly<PlayerSabotageEffectComponent>(),
                 ComponentType.ReadOnly<HealthComponent>());
             if (query.IsEmpty)
             {
                 query.Dispose();
-                return false;
+                return;
             }
 
             using var entities = query.ToEntityArray(Allocator.Temp);
-            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var effects = query.ToComponentDataArray<PlayerSabotageEffectComponent>(Allocator.Temp);
             using var healthValues = query.ToComponentDataArray<HealthComponent>(Allocator.Temp);
             query.Dispose();
 
             for (int i = 0; i < entities.Length; i++)
             {
-                if (entities[i].Index != entityIndex)
+                var effect = effects[i];
+                var health = healthValues[i];
+                bool keepEffect = false;
+
+                if (effect.BurningUntil > elapsed &&
+                    effect.BurnDamagePerSecond > 0f &&
+                    health.Current > 0f)
                 {
-                    continue;
+                    health.Current = math.max(0f, health.Current - (effect.BurnDamagePerSecond * dt));
+                    entityManager.SetComponentData(entities[i], health);
+                    keepEffect = true;
                 }
 
-                targetEntity = entities[i];
-                buildingFaction = factions[i];
-                buildingHealth = healthValues[i];
-                return true;
-            }
+                if (effect.GateExposedUntil > elapsed)
+                {
+                    keepEffect = true;
+                    PromoteTemporaryBreach(entityManager, entities[i]);
+                }
 
-            return false;
+                if (!keepEffect)
+                {
+                    ecb.RemoveComponent<PlayerSabotageEffectComponent>(entities[i]);
+                }
+            }
         }
 
-        private static SabotageEffectProfile ResolveSabotageProfile(
-            FixedString32Bytes subtype,
-            float daysPerRealSecond)
+        private static void SetSabotageEffect(
+            EntityManager entityManager,
+            Entity targetBuildingEntity,
+            double gateExposedUntil,
+            double burningUntil,
+            float burnDamagePerSecond)
         {
-            if (subtype.Equals(new FixedString32Bytes("gate_opening")))
-            {
-                float duration = SecondsToInWorldDays(15f, daysPerRealSecond);
-                return new SabotageEffectProfile
-                {
-                    DamageFloorRatio = 0.20f,
-                    EffectDurationInWorldDays = duration,
-                    ProductionHaltDurationInWorldDays = duration,
-                    GateExposureDurationInWorldDays = duration,
-                };
-            }
+            var effect = entityManager.HasComponent<PlayerSabotageEffectComponent>(targetBuildingEntity)
+                ? entityManager.GetComponentData<PlayerSabotageEffectComponent>(targetBuildingEntity)
+                : default;
 
-            if (subtype.Equals(new FixedString32Bytes("fire_raising")))
-            {
-                float duration = SecondsToInWorldDays(10f, daysPerRealSecond);
-                return new SabotageEffectProfile
-                {
-                    DamageFloorRatio = 0.70f,
-                    EffectDurationInWorldDays = duration,
-                    ProductionHaltDurationInWorldDays = duration,
-                    BurnDurationInWorldDays = duration,
-                    BurnDamagePerSecond = FireDamagePerSecond,
-                };
-            }
+            effect.GateExposedUntil = math.max(effect.GateExposedUntil, gateExposedUntil);
+            effect.BurningUntil = math.max(effect.BurningUntil, burningUntil);
+            effect.BurnDamagePerSecond = math.max(effect.BurnDamagePerSecond, burnDamagePerSecond);
 
-            if (subtype.Equals(new FixedString32Bytes("supply_poisoning")))
+            if (entityManager.HasComponent<PlayerSabotageEffectComponent>(targetBuildingEntity))
             {
-                float duration = SecondsToInWorldDays(20f, daysPerRealSecond);
-                return new SabotageEffectProfile
-                {
-                    DamageFloorRatio = 0.80f,
-                    EffectDurationInWorldDays = duration,
-                    ProductionHaltDurationInWorldDays = duration,
-                };
+                entityManager.SetComponentData(targetBuildingEntity, effect);
             }
-
-            float defaultDuration = SecondsToInWorldDays(20f, daysPerRealSecond);
-            return new SabotageEffectProfile
+            else
             {
-                DamageFloorRatio = 0.85f,
-                EffectDurationInWorldDays = defaultDuration,
-                ProductionHaltDurationInWorldDays = defaultDuration,
-            };
+                entityManager.AddComponentData(targetBuildingEntity, effect);
+            }
         }
 
-        private static float SecondsToInWorldDays(float seconds, float daysPerRealSecond)
+        private static void PromoteTemporaryBreach(
+            EntityManager entityManager,
+            Entity targetBuildingEntity)
         {
-            return seconds * math.max(0.0001f, daysPerRealSecond) / 86400f;
+            if (!entityManager.HasComponent<FortificationSettlementLinkComponent>(targetBuildingEntity))
+            {
+                return;
+            }
+
+            var link = entityManager.GetComponentData<FortificationSettlementLinkComponent>(targetBuildingEntity);
+            if (link.SettlementEntity == Entity.Null ||
+                !entityManager.Exists(link.SettlementEntity) ||
+                !entityManager.HasComponent<FortificationComponent>(link.SettlementEntity))
+            {
+                return;
+            }
+
+            var fortification = entityManager.GetComponentData<FortificationComponent>(link.SettlementEntity);
+            fortification.OpenBreachCount = math.max(fortification.OpenBreachCount, 1);
+            entityManager.SetComponentData(link.SettlementEntity, fortification);
         }
 
-        private struct SabotageEffectProfile
+        private static void UpsertRaidState(
+            EntityManager entityManager,
+            Entity targetBuildingEntity,
+            Entity sourceFactionEntity,
+            double poisonedUntil)
         {
-            public float DamageFloorRatio;
-            public float EffectDurationInWorldDays;
-            public float ProductionHaltDurationInWorldDays;
-            public float GateExposureDurationInWorldDays;
-            public float BurnDurationInWorldDays;
-            public float BurnDamagePerSecond;
+            var raidState = entityManager.HasComponent<BuildingRaidStateComponent>(targetBuildingEntity)
+                ? entityManager.GetComponentData<BuildingRaidStateComponent>(targetBuildingEntity)
+                : default;
+
+            raidState.RaidedUntil = math.max(raidState.RaidedUntil, poisonedUntil);
+            raidState.LastRaidedAt = math.max(raidState.LastRaidedAt, poisonedUntil - PoisonDurationSeconds);
+            raidState.RaidedByFactionId = sourceFactionEntity != Entity.Null &&
+                                          entityManager.HasComponent<FactionComponent>(sourceFactionEntity)
+                ? entityManager.GetComponentData<FactionComponent>(sourceFactionEntity).FactionId
+                : default;
+
+            if (entityManager.HasComponent<BuildingRaidStateComponent>(targetBuildingEntity))
+            {
+                entityManager.SetComponentData(targetBuildingEntity, raidState);
+            }
+            else
+            {
+                entityManager.AddComponentData(targetBuildingEntity, raidState);
+            }
+        }
+
+        private static void ApplySuccessConviction(
+            EntityManager entityManager,
+            Entity sourceFactionEntity,
+            FixedString32Bytes subtype)
+        {
+            var bucket =
+                subtype.Equals(new FixedString32Bytes("well_poisoning")) ||
+                subtype.Equals(new FixedString32Bytes("supply_poisoning"))
+                    ? ConvictionBucket.Desecration
+                    : ConvictionBucket.Ruthlessness;
+            PlayerCounterIntelligenceSystem.ApplyConviction(
+                entityManager,
+                sourceFactionEntity,
+                bucket,
+                SabotageConvictionGain);
         }
     }
 }

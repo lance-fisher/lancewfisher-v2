@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 102
+- Revision: 103
 - Last Updated: 2026-04-23
-- Last Updated By: codex-player-covert-ops-2026-04-23
-- Supersedes: revision 101 (Records the validated `player-covert-ops-resolution-effects` slice on the current master line and advances the next clean Codex pickup to Priority 12 governance coalition pressure.)
+- Last Updated By: codex-player-covert-ops-followup-2026-04-23
+- Supersedes: revision 102 (Records the validated `player-covert-ops-resolution-effects` follow-up on the current master line and keeps the next clean Codex pickup at Priority 12 governance coalition pressure.)
 
 
 ## Purpose
@@ -1062,7 +1062,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: player-covert-ops
 
-- Status: active (resolution-effects slice landed on `master`; no branch currently in flight)
+- Status: active (resolution-effects follow-up landed on `master`; no branch currently in flight)
 - Branch Prefix: `codex/unity-player-covert-ops-*`
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -1103,6 +1103,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-21-unity-player-assassination-sabotage.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-player-assassination-sabotage-landing.md`
   - `docs/unity/session-handoffs/2026-04-23-unity-player-covert-ops-resolution-effects.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-covert-ops-resolution-effects-followup.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `DYNASTY_OPERATION_ACTIVE_LIMIT` (17), `getActiveDynastyOperationForTargetFaction` (4084), `getActiveIntelligenceReport` (4097), `tickDynastyIntelligenceReports` (4106), `getEspionageContest` (10187), `getEspionageTerms` (10248), `startEspionageOperation` (10876)
   - `src/game/core/simulation.js` `SABOTAGE_COSTS` (9739-9744), `SABOTAGE_DURATIONS` (9746-9751), `ASSASSINATION_COST` (9765), `ASSASSINATION_DURATION_SECONDS` (9769), `validateSabotageTarget` (9795-9815), `getSabotageTerms` (9900-9958), `getAssassinationContest` (10214-10282), `getAssassinationTerms` (10284-10323), `startAssassinationOperation` (10912-10950), `startSabotageOperation` (10952-10991)
@@ -1110,13 +1111,14 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `src/game/core/simulation.js` search `applyAssassinationEffect`, `tickBuildingStatusEffects`, `LEGITIMACY_LOSS_HEAD_FALL`, `LEGITIMACY_LOSS_COMMANDER_KILL`, `LEGITIMACY_LOSS_GOVERNOR_LOSS`, `LEGITIMACY_LOSS_INTERREGNUM`, and `LEGITIMACY_RECOVERY_ON_SUCCESSION` for the resolution-effects fallout constants and burn/status tick behavior
   - `tests/runtime-bridge.mjs` sabotage assertions (1378-1412), espionage + assassination assertions (3490-3628)
   - `tests/runtime-bridge.mjs` counter-intelligence watch + dossier assertions (4130-4240, 4884-4970)
-- Current Branch In Flight: none (resolution-effects slice merged onto canonical `master` in this session)
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-player-covert-ops-resolution-effects.md`
+- Current Branch In Flight: none (resolution-effects follow-up merged onto canonical `master` in this session)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-player-covert-ops-resolution-effects-followup.md`
 - Last Slice State:
-  - `EspionageResolutionSystem`, `AssassinationResolutionSystem`, `SabotageResolutionSystem`, and `PlayerSabotageStatusComponent` now split ready covert-op resolution out of `PlayerCounterIntelligenceSystem` and apply dossier, bloodline-fall, and sabotage fallout against live dynasty, death, and production state without touching `AI/**`
-  - `IntelligenceReportElement` now carries building/resource summaries, and `BloodlinesDebugCommandSurface.PlayerCovertOps` exposes dossier plus sabotage-status readouts for live validation
-  - `BloodlinesPlayerCovertOpsResolutionSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPlayerCovertOpsResolutionSmokeValidation.ps1` prove assassination succession fallout, sabotage production freeze, richer espionage dossiers, and deterministic failure penalties
-  - local `Assembly-CSharp*.csproj` metadata now explicitly includes the new player-covert-ops runtime and editor files
+  - `EspionageResolutionSystem`, `AssassinationResolutionSystem`, and `SabotageResolutionSystem` now consume the stored dispatch-time `SuccessScore`; active gate/burn sabotage windows live on additive `PlayerSabotageEffectComponent` data while the earlier `PlayerSabotageStatusComponent` file remains preserved
+  - gate-opening sabotage now promotes a same-frame temporary breach, fire raising burns over elapsed time, supply poisoning writes `BuildingRaidStateComponent` windows, and successful well poisoning raises `RealmConditionComponent.WaterStrainStreak`
+  - `IntelligenceReportElement` now carries compact resource/building summaries, and `BloodlinesDebugCommandSurface.PlayerCovertOps` exposes richer dossier plus sabotage-effect readouts for live validation
+  - `BloodlinesPlayerCovertOpsResolutionSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPlayerCovertOpsResolutionSmokeValidation.ps1` prove enriched espionage, commander/governor assassination fallout, same-frame breach exposure, and the fire / supply / well sabotage variants
+  - local `Assembly-CSharp*.csproj` metadata now explicitly includes `PlayerSabotageEffectComponent` and points Unity.Entities analyzer roots back at the canonical `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache` surface
   - next Codex pickup should move to Priority 12 `governance-coalition-pressure`
 
 ### Lane: player-hud-realm-condition-legibility

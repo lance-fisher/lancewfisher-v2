@@ -53,7 +53,7 @@ function Invoke-UnityValidationPass {
     return $process.ExitCode
 }
 
-Write-Host 'Running Bloodlines Unity player covert-ops resolution smoke validation...'
+Write-Host 'Running Bloodlines Unity player covert ops resolution smoke validation...'
 Write-Host "Unity:   $unityPath"
 Write-Host "Project: $projectPath"
 Write-Host "Log:     $logPath"
@@ -71,14 +71,14 @@ if ($outcome -eq 'unknown') {
 }
 
 if ($outcome -eq 'passed') {
-    Write-Host 'Player covert-ops resolution smoke validation passed.'
+    Write-Host 'Player covert ops resolution smoke validation passed.'
     exit 0
 }
 
 if ($outcome -eq 'failed') {
-    Write-Host "Player covert-ops resolution smoke validation FAILED. Unity exit code $exitCode"
+    Write-Host "Player covert ops resolution smoke validation FAILED. Unity exit code $exitCode"
     exit 1
 }
 
-Write-Host 'Player covert-ops resolution smoke produced no pass/fail marker. Check the log.'
+Write-Host 'Player covert ops resolution smoke produced no pass/fail marker. Check the log.'
 exit 1

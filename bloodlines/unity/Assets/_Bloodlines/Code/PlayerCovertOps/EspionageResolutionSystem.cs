@@ -2,65 +2,72 @@ using Bloodlines.Components;
 using Bloodlines.GameTime;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 
 namespace Bloodlines.PlayerCovertOps
 {
     /// <summary>
-    /// Resolves ready espionage operations into richer dossier output or exposure
-    /// fallout. This stays lane-local so player covert intel can deepen without
-    /// widening the AI-owned dynasty operation graph.
+    /// Resolves player espionage operations once their in-world timer matures.
+    /// Browser parity keeps the dispatch-time success score authoritative so the
+    /// resulting report mirrors the originally projected operation window.
     /// </summary>
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(PlayerCounterIntelligenceSystem))]
     public partial struct EspionageResolutionSystem : ISystem
     {
-        private const float EspionageFailureLegitimacyPenalty = 1f;
-        private const float EspionageFailureCounterIntelligenceLoss = 2f;
-
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<DualClockComponent>();
-            state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         }
 
         public void OnUpdate(ref SystemState state)
         {
             var entityManager = state.EntityManager;
             float inWorldDays = PlayerCovertOpsSystem.GetInWorldDays(entityManager);
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            var operationQuery = entityManager.CreateEntityQuery(
-                ComponentType.ReadOnly<PlayerCovertOpsResolutionComponent>());
-            if (operationQuery.IsEmpty)
+            try
             {
-                operationQuery.Dispose();
-                return;
-            }
-
-            using var operationEntities = operationQuery.ToEntityArray(Allocator.Temp);
-            using var operations = operationQuery.ToComponentDataArray<PlayerCovertOpsResolutionComponent>(Allocator.Temp);
-            operationQuery.Dispose();
-
-            var ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
-                .CreateCommandBuffer(state.WorldUnmanaged);
-
-            for (int i = 0; i < operationEntities.Length; i++)
-            {
-                var operation = operations[i];
-                if (!operation.Active ||
-                    operation.Kind != CovertOpKindPlayer.Espionage ||
-                    operation.ResolveAtInWorldDays > inWorldDays)
+                var query = entityManager.CreateEntityQuery(
+                    ComponentType.ReadOnly<PlayerCovertOpsResolutionComponent>());
+                if (query.IsEmpty)
                 {
-                    continue;
+                    query.Dispose();
+                    return;
                 }
 
-                ResolveOperation(entityManager, ecb, operationEntities[i], operation, inWorldDays);
+                using var entities = query.ToEntityArray(Allocator.Temp);
+                using var operations = query.ToComponentDataArray<PlayerCovertOpsResolutionComponent>(Allocator.Temp);
+                query.Dispose();
+
+                for (int i = 0; i < entities.Length; i++)
+                {
+                    var operation = operations[i];
+                    if (!operation.Active ||
+                        operation.Kind != CovertOpKindPlayer.Espionage ||
+                        operation.ResolveAtInWorldDays > inWorldDays)
+                    {
+                        continue;
+                    }
+
+                    ResolveEspionageOperation(
+                        entityManager,
+                        ref ecb,
+                        entities[i],
+                        operation,
+                        inWorldDays);
+                }
+
+                ecb.Playback(entityManager);
+            }
+            finally
+            {
+                ecb.Dispose();
             }
         }
 
-        private static void ResolveOperation(
+        private static void ResolveEspionageOperation(
             EntityManager entityManager,
-            EntityCommandBuffer ecb,
+            ref EntityCommandBuffer ecb,
             Entity operationEntity,
             in PlayerCovertOpsResolutionComponent operation,
             float inWorldDays)
@@ -73,18 +80,7 @@ namespace Bloodlines.PlayerCovertOps
                 return;
             }
 
-            float offenseRenown =
-                PlayerCovertOpsSystem.TrySelectOperator(entityManager, sourceFactionEntity, out var operatorMember)
-                    ? operatorMember.Renown
-                    : 0f;
-            var contest = PlayerCovertOpsSystem.BuildEspionageContest(
-                entityManager,
-                operation.SourceFactionId,
-                operation.TargetFactionId,
-                offenseRenown,
-                inWorldDays);
-
-            if (contest.SuccessScore >= 0f &&
+            if (operation.SuccessScore >= 0f &&
                 PlayerCounterIntelligenceSystem.TryCreateIntelligenceReport(
                     entityManager,
                     operation.SourceFactionId,
@@ -115,40 +111,9 @@ namespace Bloodlines.PlayerCovertOps
                     operation.SourceFactionId,
                     operation.TargetFactionId);
                 PlayerCounterIntelligenceSystem.ApplyStewardship(entityManager, targetFactionEntity, 1f);
-                PlayerCounterIntelligenceSystem.AdjustLegitimacy(
-                    entityManager,
-                    sourceFactionEntity,
-                    -EspionageFailureLegitimacyPenalty);
-                ApplyCounterIntelligenceLoss(
-                    entityManager,
-                    sourceFactionEntity,
-                    inWorldDays,
-                    EspionageFailureCounterIntelligenceLoss);
             }
 
             ecb.DestroyEntity(operationEntity);
-        }
-
-        private static void ApplyCounterIntelligenceLoss(
-            EntityManager entityManager,
-            Entity factionEntity,
-            float inWorldDays,
-            float amount)
-        {
-            if (factionEntity == Entity.Null ||
-                !entityManager.HasComponent<PlayerCounterIntelligenceComponent>(factionEntity))
-            {
-                return;
-            }
-
-            var watch = entityManager.GetComponentData<PlayerCounterIntelligenceComponent>(factionEntity);
-            if (watch.ExpiresAtInWorldDays <= inWorldDays)
-            {
-                return;
-            }
-
-            watch.WatchStrength = math.max(0f, watch.WatchStrength - amount);
-            entityManager.SetComponentData(factionEntity, watch);
         }
     }
 }

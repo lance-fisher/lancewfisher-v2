@@ -1185,7 +1185,7 @@ namespace Bloodlines.PlayerCovertOps
             return false;
         }
 
-        private static bool TryResolveBuildingTarget(
+        internal static bool TryResolveBuildingTarget(
             EntityManager entityManager,
             int entityIndex,
             out Entity targetEntity,
