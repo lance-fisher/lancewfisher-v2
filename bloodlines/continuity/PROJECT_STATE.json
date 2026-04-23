@@ -2159,6 +2159,15 @@
       "description": "The dynasty minor-house levy completion follow-up is now complete on branch. The already-landed `MinorHouseLevySystem` was revalidated against the browser decay, loyalty gate, and levy-tier selection rules and required no core state-machine rewrite; this slice instead closes the remaining proof and observability gaps. `BloodlinesDebugCommandSurface.Dynasty` now exposes `TryDebugGetMinorHouseLevyState(...)`, `BloodlinesMinorHouseLevyParitySmokeValidation` now adds an explicit unsettled-claim phase proving loyalty-47 claims decay progress and stay blocked while surfacing the same status through the debug readout, `LesserHouseLoyaltyDriftSystem` now initializes `LastLevyUnitId` on spawned minor houses, and `scripts/Invoke-BloodlinesUnityMinorHouseLevyParitySmokeValidation.ps1` now treats explicit PASS markers as authoritative even when Unity batchmode exits before the log fully flushes. The full governed 10-gate chain is green with contract rev 104->105.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-dynasty-minor-house-levy-completion.md",
       "validation_gates": "all 10 green plus minor-house levy parity smoke"
+    },
+    {
+      "lane": "world-trueborn-rise-slice-1",
+      "date": "2026-04-23",
+      "branch": "codex/unity-world-trueborn-rise-arc-1",
+      "status": "complete",
+      "description": "The Trueborn rise-arc sub-slice 1 is now complete on branch. `TruebornRiseArcComponent`, `TruebornRiseFactionRecognitionSlotElement`, and `TruebornRiseArcSystem` add the browser late-game Trueborn pressure seam under `WorldPressure/**`: the Trueborn city now seeds a singleton arc state, counts unchallenged cycles against kingdom hostility and territory thresholds, advances across the canonical 8-year / 2-year / 3-year stage windows, and applies stage-scaled loyalty erosion plus dynasty legitimacy strain to non-recognizing kingdoms only. `BloodlinesDebugCommandSurface.WorldPressure` now exposes `TryDebugGetTruebornRiseArc(...)` and `TryDebugSetTruebornRecognition(...)`, `BloodlinesTruebornRiseArcSmokeValidation` plus `scripts/Invoke-BloodlinesUnityTruebornRiseArcSmokeValidation.ps1` prove stage advancement and recognition exemption, and the dedicated validator now uses a GameObject-backed debug surface with a separate summary artifact path so batchmode log locking no longer throws noise. The full governed 10-gate chain is green with contract rev 105->106.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-1.md",
+      "validation_gates": "all 10 green plus Trueborn rise arc smoke"
     }
   ]
 }
