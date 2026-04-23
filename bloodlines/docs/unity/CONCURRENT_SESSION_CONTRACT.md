@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 100
+- Revision: 101
 - Last Updated: 2026-04-23
-- Last Updated By: codex-faith-structure-regen-2026-04-23
-- Supersedes: revision 99 (Records the validated `faith-structure-regen` slice on the current master line and advances the next clean Codex pickup to Priority 10 captive ransom trickle.)
+- Last Updated By: codex-player-captive-ransom-trickle-2026-04-23
+- Supersedes: revision 100 (Records the validated `player-captive-ransom-trickle` slice on the current master line and advances the next clean Codex pickup to Priority 11 covert-ops resolution effects.)
 
 
 ## Purpose
@@ -980,7 +980,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: player-marriage-diplomacy
 
 - Status: active
-- Branch Prefix: `codex/unity-player-marriage-*`, `codex/unity-player-holy-war-divine-right`, `codex/unity-player-missionary-dispatch`, `codex/unity-player-pact-proposal`, `codex/unity-player-captive-rescue`, `codex/unity-player-captive-ransom-*`
+- Branch Prefix: `codex/unity-player-marriage-*`, `codex/unity-player-holy-war-divine-right`, `codex/unity-player-missionary-dispatch`, `codex/unity-player-pact-proposal`, `codex/unity-player-captive-rescue`, `codex/unity-player-captive-ransom-*`, `codex/unity-player-captive-ransom-trickle`
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/**`
@@ -993,6 +993,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerPactSmokeValidation.cs`
 - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRescueSmokeValidation.cs`
 - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRansomSmokeValidation.cs`
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRansomTrickleSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityPlayerMarriageProposalSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityPlayerMarriageAcceptanceSmokeValidation.ps1`
@@ -1002,6 +1003,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - `scripts/Invoke-BloodlinesUnityPlayerPactSmokeValidation.ps1`
 - `scripts/Invoke-BloodlinesUnityPlayerCaptiveRescueSmokeValidation.ps1`
 - `scripts/Invoke-BloodlinesUnityPlayerCaptiveRansomSmokeValidation.ps1`
+- `scripts/Invoke-BloodlinesUnityPlayerCaptiveRansomTrickleSmokeValidation.ps1`
 - Shared-File Narrow Edits Planned:
   - `unity/Assembly-CSharp.csproj` -- add compile includes for new `PlayerDiplomacy/**` runtime files only if the local generated project file does not already pick them up
   - `unity/Assembly-CSharp-Editor.csproj` -- add compile includes for the lane's dedicated player-diplomacy smoke validators only if the local generated project file does not already pick them up
@@ -1039,6 +1041,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-22-unity-player-missionary-dispatch.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-pact-proposal.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-captive-rescue.md`
+  - `docs/unity/session-handoffs/2026-04-22-unity-player-captive-ransom.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-captive-ransom-trickle.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `MARRIAGE_REGENCY_LEGITIMACY_COSTS` (6091), `getMarriageAuthorityProfile` (6134), `getMarriageEnvoyProfile` (6192), `buildMarriageGovernanceStatus` (6217), `applyMarriageGovernanceLegitimacyCost` (6232), `getMarriageProposalContext` (6247), `getMarriageProposalTerms` (6296), `getMarriageAcceptanceTerms` (6327), `memberHasActiveMarriage` (7260), `proposeMarriage` (7340), `acceptMarriage` (7388), `tickMarriageDissolutionFromDeath` (7471), `tickMarriageGestation` (7496)
   - `tests/runtime-bridge.mjs` marriage proposal and acceptance assertions (2072-2113, 2240-2308), death-driven dissolution assertions (3234-3298)
@@ -1046,9 +1050,15 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `src/game/core/simulation.js` `getHolyWarDeclarationTerms` (~10424-10471), `startHolyWarDeclaration` (~10565-10602), `getDivineRightDeclarationTerms` (~10604-10653), `startDivineRightDeclaration` (~10784-10835)
   - `src/game/core/simulation.js` `NON_AGGRESSION_PACT_INFLUENCE_COST` (5126), `NON_AGGRESSION_PACT_GOLD_COST` (5127), `NON_AGGRESSION_PACT_MINIMUM_DURATION_IN_WORLD_DAYS` (5128), `NON_AGGRESSION_PACT_BREAK_LEGITIMACY_COST` (5129), `getNonAggressionPactTerms` (5150-5183), `proposeNonAggressionPact` (5185-5222), `breakNonAggressionPact` (5224-5257)
   - `src/game/core/simulation.js` `getCapturedMemberRescueTerms` (~11153-11234), `startRescueOperation` (~11236-11341)
+  - `src/game/core/simulation.js` `getCapturedMemberRansomTerms` (~11343-11431), `startCaptiveRansomOperation` (~11433-11532), `updateCaptiveRansomTrickle` (~4885-4903), `CAPTIVE_INFLUENCE_TRICKLE`, `CAPTIVE_RENOWN_WEIGHT`
   - `src/game/core/ai.js` captive recovery contest / operator selection logic (~2550-2760)
-- Current Branch In Flight: none (player captive rescue + ransom dispatch now landed on canonical `master`)
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-captive-ransom.md`
+- Current Branch In Flight: none (player captive rescue, ransom dispatch, and passive captive ransom trickle are now landed on canonical `master`)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-player-captive-ransom-trickle.md`
+- Last Slice State:
+  - kingdom faction roots with held captives now receive passive influence and additive dynasty-renown trickle on whole in-world day boundaries through `CaptiveRansomTrickleComponent` and `CaptiveRansomTrickleSystem`
+  - the runtime now resolves the captive ledger from the faction root when present and otherwise falls back to the existing captive-holder entity so the slice remains compatible with current `CapturedMemberHelpers` buffer placement without touching the AI-owned lane
+  - `BloodlinesDebugCommandSurface.PlayerDiplomacy` exposes `TryDebugGetCaptiveTrickle(...)`, and `BloodlinesPlayerCaptiveRansomTrickleSmokeValidation` proves high-renown captives outpace low-renown captives while empty captors receive zero trickle
+  - next Codex pickup should move to Priority 11 `covert-ops-resolution-effects`
 
 ### Lane: player-covert-ops
 
@@ -1169,7 +1179,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is Priority 10 `player-captive-ransom-trickle`.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is Priority 11 `covert-ops-resolution-effects`.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 

@@ -2108,6 +2108,15 @@
       "description": "The faith structure regen slice is now complete on branch. `FaithStructureRegenComponent`, `FaithStructureRegenRules`, and `FaithStructureRegenSystem` port the browser passive faith-building regen seam into Unity ECS by summing completed same-faction `wayshrine`, `covenant_hall`, `grand_sanctuary`, and `apex_covenant` bonuses, clamping the total at the canonical `1.4` per-second ceiling, and applying the resulting gain to committed faction intensity on whole in-world days while preserving browser per-second scaling through `DualClockComponent.DaysPerRealSecond`. `BloodlinesFaithStructureRegenSmokeValidation` plus `scripts/Invoke-BloodlinesUnityFaithStructureRegenSmokeValidation.ps1` prove richer faith infrastructure outpaces a single shrine and the cap holds under overbuilt stacks, and the full governed 10-gate chain is green with contract rev 99->100.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-faith-structure-regen.md",
       "validation_gates": "all 10 green plus faith structure regen smoke"
+    },
+    {
+      "lane": "player-captive-ransom-trickle-slice-1",
+      "date": "2026-04-23",
+      "branch": "codex/unity-player-captive-ransom-trickle",
+      "status": "active",
+      "description": "The player captive ransom trickle slice is now complete on branch. `CaptiveRansomTrickleComponent`, `CaptiveRansomTrickleRules`, and `CaptiveRansomTrickleSystem` add a passive captive-influence seam to `PlayerDiplomacy/**`: kingdom faction roots now resolve held captives, look up captive renown from the origin faction dynasty roster, and apply the browser `CAPTIVE_INFLUENCE_TRICKLE + captiveRenown * CAPTIVE_RENOWN_WEIGHT` signal on whole in-world day boundaries while also writing an additive Unity-side dynasty-renown drift from the same renown-weighted source. The runtime prefers a faction-root captive ledger when one exists and otherwise falls back to the current captive-holder entity with the same `FactionId`, preserving compatibility with the AI-owned capture helper behavior. `BloodlinesDebugCommandSurface.PlayerDiplomacy` now exposes `TryDebugGetCaptiveTrickle(...)`, `BloodlinesPlayerCaptiveRansomTrickleSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPlayerCaptiveRansomTrickleSmokeValidation.ps1` prove high-renown captives outpace low-renown captives and empty captors receive zero trickle, and the full governed 10-gate chain is green with contract rev 100->101.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-player-captive-ransom-trickle.md",
+      "validation_gates": "all 10 green plus player captive ransom trickle smoke"
     }
   ]
 }

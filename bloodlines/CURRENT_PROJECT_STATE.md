@@ -4027,3 +4027,37 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Contract revision advanced `99 -> 100` and now records the active
   `faith-structure-regen` lane with no branch in flight. The next additive
   pickup from the directive stack is Priority 10 Captive Ransom Trickle.
+
+## 2026-04-23 Player Captive Ransom Trickle Slice
+
+- Branch lane: `codex/unity-player-captive-ransom-trickle`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-player-captive-ransom-trickle.md`.
+- Completed in this slice:
+  - `CaptiveRansomTrickleComponent`,
+    `CaptiveRansomTrickleRules`,
+    and
+    `CaptiveRansomTrickleSystem`
+    now cache held-captive count / highest captive renown / current rates and
+    apply passive captive influence plus additive dynasty-renown trickle to
+    kingdom faction roots on whole in-world day boundaries using
+    `DualClockComponent.DaysPerRealSecond`
+  - the runtime resolves captive renown from the origin faction dynasty roster
+    and prefers a faction-root captive ledger when present, while falling back
+    to the current captive-holder entity with the same `FactionId` so this
+    slice stays compatible with the AI-owned capture helper behavior
+  - `BloodlinesDebugCommandSurface.PlayerDiplomacy` now exposes
+    `TryDebugGetCaptiveTrickle`, and
+    `BloodlinesPlayerCaptiveRansomTrickleSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityPlayerCaptiveRansomTrickleSmokeValidation.ps1`
+    now prove high-renown captives outpace low-renown captives and empty
+    captors receive zero trickle
+  - local `Assembly-CSharp*.csproj` metadata now explicitly includes the new
+    player-diplomacy runtime and editor files
+- Validation state:
+  - dedicated player captive ransom trickle smoke green
+  - all 10 required governed gates green after contract revision `101`
+- Contract revision advanced `100 -> 101` and now records the updated
+  `player-marriage-diplomacy` lane with no branch in flight. The next additive
+  pickup from the directive stack is Priority 11 Covert Ops Full Resolution
+  Effects.
