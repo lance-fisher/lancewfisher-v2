@@ -1,4 +1,5 @@
 using Bloodlines.Components;
+using Bloodlines.Fortification;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -62,6 +63,15 @@ namespace Bloodlines.Systems
                     {
                         retreatThreshold = math.saturate(
                             retreatThreshold - entityManager.GetComponentData<CommanderAuraRecipientComponent>(entity).MoraleBonus);
+                    }
+                    if (ImminentEngagementPostureUtility.TryGetRetreatPosture(
+                            entityManager,
+                            entity,
+                            out var fortificationPosture))
+                    {
+                        retreatThreshold = ImminentEngagementPostureUtility.ApplyRetreatThreshold(
+                            retreatThreshold,
+                            fortificationPosture);
                     }
                     float healthFraction = healthValues[i].Max > 0f
                         ? healthValues[i].Current / healthValues[i].Max

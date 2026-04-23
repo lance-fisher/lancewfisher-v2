@@ -67,6 +67,12 @@ namespace Bloodlines.Fortification
                 var reserve = reserveRw.ValueRO;
                 GovernorSpecializationComponent settlementGovernorProfile =
                     GovernorSpecializationCanon.GetSettlementProfile(entityManager, settlementEntity);
+                var posture = ImminentEngagementPostureUtility.ResolveComponent(
+                    (byte)ImminentEngagementPostureId.Steady);
+                ImminentEngagementPostureUtility.TryGetSettlementPosture(
+                    entityManager,
+                    settlementEntity,
+                    out posture);
                 float3 settlementCenter = settlementPosition.ValueRO.Value;
 
                 int hostileCount = CountHostiles(
@@ -118,7 +124,11 @@ namespace Bloodlines.Fortification
 
                         health.Current = math.min(
                             health.Max,
-                            health.Current + reserve.ReserveHealPerSecond * settlementGovernorProfile.HealRegenMultiplier * dt);
+                            health.Current +
+                            reserve.ReserveHealPerSecond *
+                            settlementGovernorProfile.HealRegenMultiplier *
+                            posture.ReserveHealMultiplier *
+                            dt);
                         healthRatio = health.Current / health.Max;
                         entityManager.SetComponentData(linkedEntities[i], health);
 
@@ -130,8 +140,11 @@ namespace Bloodlines.Fortification
 
                     if (reserve.ThreatActive)
                     {
+                        float retreatThreshold = ImminentEngagementPostureUtility.ApplyRetreatThreshold(
+                            reserve.RetreatHealthRatio,
+                            posture);
                         float distanceToHostiles = math.distance(unitPosition, hostileCenter);
-                        if (healthRatio <= reserve.RetreatHealthRatio &&
+                        if (healthRatio <= retreatThreshold &&
                             distanceToHostiles <= fortification.ThreatRadiusTiles * 0.75f &&
                             assignment.Duty != ReserveDutyState.Fallback &&
                             assignment.Duty != ReserveDutyState.Recovering)
@@ -194,10 +207,14 @@ namespace Bloodlines.Fortification
 
                 if (reserve.ThreatActive)
                 {
-                    int desiredFrontline = math.min(activeDefenderCount, math.max(1, 1 + fortification.Tier));
+                    int desiredFrontline = math.min(
+                        activeDefenderCount,
+                        math.max(1, 1 + fortification.Tier + (int)math.round(posture.DesiredFrontlineBonus)));
                     int neededReserves = math.max(0, desiredFrontline - engagedCount);
                     float musterIntervalSeconds = reserve.MusterIntervalSeconds /
-                        math.max(0.1f, settlementGovernorProfile.ReserveRegenMultiplier);
+                        math.max(
+                            0.1f,
+                            settlementGovernorProfile.ReserveRegenMultiplier * posture.MusteringSpeedMultiplier);
                     if (neededReserves > 0 &&
                         (elapsed - reserve.LastCommitAt) >= musterIntervalSeconds)
                     {
