@@ -3747,3 +3747,36 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Contract revision advanced `92 -> 93` and now records the active
   `faith-covenant-test` lane with no branch in flight. The next additive pickup
   from the directive stack is Priority 4 governor specialization.
+
+## 2026-04-22 Territory Governor Specialization Slice
+
+- Branch lane: `codex/unity-territory-governor-specialization`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-22-unity-territory-governor-specialization.md`.
+- Completed in this slice:
+  - `GovernorSeatAssignmentComponent`,
+    `GovernorSpecializationComponent`,
+    `GovernorSpecializationCanon`,
+    and
+    `GovernorSpecializationSystem`
+    now materialize browser-aligned daily governor seat assignments and
+    specialization profiles for owned control points and settlements
+  - `ControlPointResourceTrickleSystem`,
+    `ControlPointCaptureSystem`,
+    and
+    `FortificationReserveSystem`
+    now consume governor trickle, stabilization, capture resistance,
+    loyalty-protection, and keep reserve-heal/muster bonuses through narrow
+    additive seams only
+  - `BloodlinesDebugCommandSurface.Governance` now exposes parseable governor
+    specialization and assignment readouts
+  - `BloodlinesGovernorSpecializationSmokeValidation` plus wrapper now prove
+    border assignment, live consumer gains, and ungoverned cleanup
+  - local `Assembly-CSharp*.csproj` metadata now includes the new
+    territory-governance runtime/editor files explicitly
+- Validation state:
+  - dedicated governor specialization smoke green
+  - all 10 required governed gates green after final loyalty-protection rerun
+- Contract revision advanced `93 -> 94` and now records the active
+  `territory-governor-specialization` lane with no branch in flight. The next
+  additive pickup from the directive stack is Priority 5 commander aura.
