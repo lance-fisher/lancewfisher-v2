@@ -1,13 +1,15 @@
 #if UNITY_EDITOR
 using System;
 using System.IO;
-using System.Text;
 using Bloodlines.Components;
+using Bloodlines.Conviction;
 using Bloodlines.Debug;
 using Bloodlines.Dynasties;
+using Bloodlines.Fortification;
 using Bloodlines.GameTime;
 using Bloodlines.PlayerCovertOps;
-using Bloodlines.Systems;
+using Bloodlines.Siege;
+using Bloodlines.TerritoryGovernance;
 using Unity.Collections;
 using Unity.Core;
 using Unity.Entities;
@@ -19,17 +21,17 @@ using UnityDebug = UnityEngine.Debug;
 namespace Bloodlines.EditorTools
 {
     /// <summary>
-    /// Dedicated covert-ops resolution validator. Proves:
-    /// 1. assassination success kills the ruling target and triggers same-frame succession fallout
-    /// 2. sabotage success damages a target building and freezes queued production
-    /// 3. espionage success writes a dossier containing member, building, and resource summaries
-    /// 4. assassination, sabotage, and espionage failures all apply the configured legitimacy / counter-intel penalties
+    /// Dedicated smoke validator for covert-op full resolution effects. Proves:
+    /// 1. successful espionage resolves into an enriched dossier with resource and building context
+    /// 2. commander assassination kills the target, drops legitimacy, clears commander links, and stains ruthlessness
+    /// 3. governor assassination clears seat assignments and applies governor-specific legitimacy/stewardship fallout
+    /// 4. gate-opening floors gate health and exposes a temporary breach window to hostile assault-pressure reads
+    /// 5. fire-raising burns over time, supply poisoning opens a raid-style disruption window, and well poisoning adds water strain
     /// </summary>
     public static class BloodlinesPlayerCovertOpsResolutionSmokeValidation
     {
         private const string ArtifactPath =
             "../artifacts/unity-player-covert-ops-resolution-smoke.log";
-        private const float StepSeconds = 0.05f;
 
         [MenuItem("Bloodlines/Player Covert Ops/Run Player Covert Ops Resolution Smoke Validation")]
         public static void RunInteractive() => RunInternal(batchMode: false);
@@ -48,7 +50,7 @@ namespace Bloodlines.EditorTools
             catch (Exception e)
             {
                 success = false;
-                message = "Player covert-ops resolution smoke validation errored: " + e;
+                message = "Player covert ops resolution smoke validation errored: " + e;
             }
 
             var artifact = "BLOODLINES_PLAYER_COVERT_OPS_RESOLUTION_SMOKE " +
@@ -72,338 +74,256 @@ namespace Bloodlines.EditorTools
 
         private static bool RunAllPhases(out string report)
         {
-            var lines = new StringBuilder();
+            var lines = new System.Text.StringBuilder();
             bool ok = true;
-            ok &= RunAssassinationSuccessionPhase(lines);
-            ok &= RunSabotageProductionHaltPhase(lines);
-            ok &= RunEspionageDossierPhase(lines);
-            ok &= RunFailurePenaltyPhase(lines);
+            ok &= RunEspionageResolutionPhase(lines);
+            ok &= RunCommanderAssassinationPhase(lines);
+            ok &= RunGovernorAssassinationPhase(lines);
+            ok &= RunGateOpeningSabotagePhase(lines);
+            ok &= RunFireAndPoisonSabotagePhase(lines);
             report = lines.ToString();
             return ok;
         }
 
-        private static bool RunAssassinationSuccessionPhase(StringBuilder lines)
+        private static bool RunEspionageResolutionPhase(System.Text.StringBuilder lines)
         {
             using var world = CreateValidationWorld("player-covert-resolution-phase1");
             using var debugScope = new DebugCommandSurfaceScope(world);
             var entityManager = world.EntityManager;
 
-            SeedDualClock(entityManager, 24f);
-            var playerFaction = SeedFaction(entityManager, "player", gold: 320f, influence: 180f, spymasterRenown: 50f, legitimacy: 72f);
-            var enemyFaction = SeedFaction(entityManager, "enemy", gold: 220f, influence: 120f, spymasterRenown: 0f, legitimacy: 84f);
-            SeedControlPoint(entityManager, "enemy-cp-1", "enemy", new float3(96f, 0f, 96f), 82f);
-            SeedControlPoint(entityManager, "enemy-cp-2", "enemy", new float3(104f, 0f, 96f), 78f);
-            SeedControlPoint(entityManager, "enemy-cp-3", "enemy", new float3(100f, 0f, 108f), 74f);
+            SeedDualClock(entityManager, 20f);
+            SeedFaction(entityManager, "player", gold: 320f, influence: 180f, spymasterRenown: 48f, legitimacy: 72f);
+            var enemyFaction = SeedFaction(entityManager, "enemy", gold: 180f, influence: 96f, spymasterRenown: 2f, legitimacy: 64f);
+            CreateSettlement(entityManager, "keep_enemy", "enemy", new float3(100f, 0f, 100f), fortificationTier: 2);
+            CreateBuilding(entityManager, "enemy", "command_hall", new float3(101f, 0f, 100f));
+            CreateBuilding(entityManager, "enemy", "gatehouse", new float3(102f, 0f, 100f), FortificationRole.Gate);
+            CreateBuilding(entityManager, "enemy", "supply_camp", new float3(103f, 0f, 100f), supportsSiegeLogistics: true);
 
-            string rulerId = GetMemberIdByRole(entityManager, enemyFaction, DynastyRole.HeadOfBloodline);
-            string successorId = GetMemberIdByRole(entityManager, enemyFaction, DynastyRole.HeirDesignate);
-            float successorRenownBefore = GetMemberById(entityManager, enemyFaction, successorId).Renown;
-            SetMemberAge(entityManager, enemyFaction, successorId, 16f);
-            float[] loyaltyBefore = GetOwnedControlPointLoyalties(entityManager, "enemy");
-            float legitimacyBefore = entityManager.GetComponentData<DynastyStateComponent>(enemyFaction).Legitimacy;
-
-            if (!debugScope.CommandSurface.TryDebugIssuePlayerAssassination("player", "enemy", rulerId))
-            {
-                lines.AppendLine("Phase 1 FAIL: could not queue assassination request.");
-                return false;
-            }
-
-            TickOnce(world);
-            AdvanceToResolvedOperation(entityManager, "player", CovertOpKindPlayer.Assassination);
-            TickOnce(world);
-
-            var fallenRuler = GetMemberById(entityManager, enemyFaction, rulerId);
-            var successorAfter = GetMemberById(entityManager, enemyFaction, successorId);
-            float[] loyaltyAfter = GetOwnedControlPointLoyalties(entityManager, "enemy");
-            float legitimacyAfter = entityManager.GetComponentData<DynastyStateComponent>(enemyFaction).Legitimacy;
-
-            if (fallenRuler.Status != DynastyMemberStatus.Fallen ||
-                successorAfter.Status != DynastyMemberStatus.Ruling ||
-                successorAfter.Role != DynastyRole.HeadOfBloodline ||
-                successorAfter.Renown <= successorRenownBefore ||
-                !entityManager.HasComponent<SuccessionCrisisComponent>(enemyFaction))
-            {
-                lines.AppendLine(
-                    $"Phase 1 FAIL: assassination fallout invalid. fallen={fallenRuler.Status} successorStatus={successorAfter.Status} successorRole={successorAfter.Role} successorRenown={successorAfter.Renown}.");
-                return false;
-            }
-
-            for (int i = 0; i < loyaltyBefore.Length; i++)
-            {
-                if (!(loyaltyAfter[i] < loyaltyBefore[i]))
-                {
-                    lines.AppendLine($"Phase 1 FAIL: expected loyalty shock on control point {i}, before={loyaltyBefore[i]:0.##} after={loyaltyAfter[i]:0.##}.");
-                    return false;
-                }
-            }
-
-            if (!(legitimacyAfter < legitimacyBefore))
-            {
-                lines.AppendLine($"Phase 1 FAIL: legitimacy should fall on ruler assassination, before={legitimacyBefore:0.##} after={legitimacyAfter:0.##}.");
-                return false;
-            }
-
-            lines.AppendLine(
-                $"Phase 1 PASS: ruler {rulerId} fell, successor {successorId} ascended, legitimacy {legitimacyBefore:0.##}->{legitimacyAfter:0.##}, loyalty {loyaltyBefore[0]:0.##}->{loyaltyAfter[0]:0.##}/{loyaltyBefore[1]:0.##}->{loyaltyAfter[1]:0.##}/{loyaltyBefore[2]:0.##}->{loyaltyAfter[2]:0.##}.");
-            return true;
-        }
-
-        private static bool RunSabotageProductionHaltPhase(StringBuilder lines)
-        {
-            using var world = CreateValidationWorld("player-covert-resolution-phase2");
-            using var debugScope = new DebugCommandSurfaceScope(world);
-            var entityManager = world.EntityManager;
-
-            SeedDualClock(entityManager, 30f);
-            SeedFaction(entityManager, "player", gold: 320f, influence: 180f, spymasterRenown: 24f, legitimacy: 72f);
-            SeedFaction(entityManager, "enemy", gold: 220f, influence: 120f, spymasterRenown: 0f, legitimacy: 70f);
-            var supplyCamp = CreateBuilding(
-                entityManager,
-                "enemy",
-                "supply_camp",
-                new float3(102f, 0f, 100f),
-                supportsSiegeLogistics: true);
-            QueueProductionItem(entityManager, supplyCamp, "levy-spears", 12f);
-
-            if (!debugScope.CommandSurface.TryDebugIssuePlayerSabotage("player", "supply_poisoning", "enemy", supplyCamp.Index))
-            {
-                lines.AppendLine("Phase 2 FAIL: could not queue sabotage request.");
-                return false;
-            }
-
-            TickOnce(world);
-            AdvanceToResolvedOperation(entityManager, "player", CovertOpKindPlayer.Sabotage);
-            TickOnce(world);
-
-            float frozenStart = entityManager.GetBuffer<ProductionQueueItemElement>(supplyCamp)[0].RemainingSeconds;
-            TickOnce(world);
-            float frozenEnd = entityManager.GetBuffer<ProductionQueueItemElement>(supplyCamp)[0].RemainingSeconds;
-            var health = entityManager.GetComponentData<HealthComponent>(supplyCamp);
-
-            if (!debugScope.CommandSurface.TryDebugGetPlayerSabotageStatus(supplyCamp.Index, out var sabotageReadout))
-            {
-                lines.AppendLine("Phase 2 FAIL: sabotage status readout unavailable.");
-                return false;
-            }
-
-            if (health.Current >= health.Max ||
-                math.abs(frozenEnd - frozenStart) > 0.0001f ||
-                !sabotageReadout.Contains("SabotageStatusActive=true", StringComparison.Ordinal) ||
-                !sabotageReadout.Contains("Subtype=supply_poisoning", StringComparison.Ordinal))
-            {
-                lines.AppendLine(
-                    $"Phase 2 FAIL: sabotage fallout invalid. health={health.Current:0.##}/{health.Max:0.##} frozenStart={frozenStart:0.000} frozenEnd={frozenEnd:0.000} readout='{sabotageReadout}'.");
-                return false;
-            }
-
-            lines.AppendLine(
-                $"Phase 2 PASS: supply camp damaged to {health.Current:0.##}/{health.Max:0.##} and queue froze at {frozenStart:0.000}s with readout '{sabotageReadout}'.");
-            return true;
-        }
-
-        private static bool RunEspionageDossierPhase(StringBuilder lines)
-        {
-            using var world = CreateValidationWorld("player-covert-resolution-phase3");
-            using var debugScope = new DebugCommandSurfaceScope(world);
-            var entityManager = world.EntityManager;
-
-            SeedDualClock(entityManager, 36f);
-            SeedFaction(entityManager, "player", gold: 320f, influence: 180f, spymasterRenown: 42f, legitimacy: 72f);
-            var enemyFaction = SeedFaction(entityManager, "enemy", gold: 321f, influence: 77f, spymasterRenown: 0f, legitimacy: 66f);
-            CreateBuilding(entityManager, "enemy", "gatehouse", new float3(100f, 0f, 100f), FortificationRole.Gate);
-            CreateBuilding(entityManager, "enemy", "supply_camp", new float3(106f, 0f, 100f), supportsSiegeLogistics: true);
-            string commanderId = GetMemberIdByRole(entityManager, enemyFaction, DynastyRole.Commander);
+            string enemyCommanderId = GetMemberIdByRole(entityManager, enemyFaction, DynastyRole.Commander);
 
             if (!debugScope.CommandSurface.TryDebugIssuePlayerEspionage("player", "enemy"))
             {
-                lines.AppendLine("Phase 3 FAIL: could not queue espionage request.");
+                lines.AppendLine("Phase 1 FAIL: could not queue espionage request.");
                 return false;
             }
 
-            TickOnce(world);
-            AdvanceToResolvedOperation(entityManager, "player", CovertOpKindPlayer.Espionage);
-            TickOnce(world);
+            Advance(world, 0.05d);
+            AdvanceInWorldDays(entityManager, PlayerCovertOpsSystem.EspionageDurationInWorldDays + 0.0001f);
+            Advance(world, 0.05d);
 
             if (!debugScope.CommandSurface.TryDebugGetIntelligenceReports("player", out var reportReadout))
             {
-                lines.AppendLine("Phase 3 FAIL: intelligence report readout unavailable.");
+                lines.AppendLine("Phase 1 FAIL: intelligence report readout unavailable.");
                 return false;
             }
 
             if (!reportReadout.Contains("IntelligenceReportCount=1", StringComparison.Ordinal) ||
                 !reportReadout.Contains("SourceType=espionage", StringComparison.Ordinal) ||
-                !reportReadout.Contains(commanderId, StringComparison.Ordinal) ||
-                !reportReadout.Contains("gatehouse:1", StringComparison.Ordinal) ||
-                !reportReadout.Contains("supply_camp:1", StringComparison.Ordinal) ||
-                !reportReadout.Contains("gold=321", StringComparison.Ordinal) ||
-                !reportReadout.Contains("influence=77", StringComparison.Ordinal))
+                !reportReadout.Contains(enemyCommanderId, StringComparison.Ordinal) ||
+                !reportReadout.Contains("TargetResourceSummary=gold=180", StringComparison.Ordinal) ||
+                !reportReadout.Contains("TargetBuildingSummary=alive=3;gates=1;logistics=1", StringComparison.Ordinal))
             {
-                lines.AppendLine($"Phase 3 FAIL: dossier content missing expected fields: '{reportReadout}'.");
+                lines.AppendLine($"Phase 1 FAIL: enriched espionage report drifted: '{reportReadout}'.");
                 return false;
             }
 
-            lines.AppendLine(
-                $"Phase 3 PASS: espionage dossier captured member {commanderId}, hostile buildings, and resource summary '{reportReadout}'.");
+            lines.AppendLine("Phase 1 PASS: espionage resolved into an enriched enemy-court dossier.");
             return true;
         }
 
-        private static bool RunFailurePenaltyPhase(StringBuilder lines)
+        private static bool RunCommanderAssassinationPhase(System.Text.StringBuilder lines)
         {
-            bool assassinationOk = RunAssassinationFailureSubphase(out string assassinationMessage);
-            bool espionageOk = RunEspionageFailureSubphase(out string espionageMessage);
-            bool sabotageOk = RunSabotageFailureSubphase(out string sabotageMessage);
-
-            if (!assassinationOk || !espionageOk || !sabotageOk)
-            {
-                lines.AppendLine("Phase 4 FAIL: " + assassinationMessage + " | " + espionageMessage + " | " + sabotageMessage);
-                return false;
-            }
-
-            lines.AppendLine("Phase 4 PASS: " + assassinationMessage + " | " + espionageMessage + " | " + sabotageMessage);
-            return true;
-        }
-
-        private static bool RunAssassinationFailureSubphase(out string message)
-        {
-            using var world = CreateValidationWorld("player-covert-resolution-phase4-assassination");
+            using var world = CreateValidationWorld("player-covert-resolution-phase2");
             using var debugScope = new DebugCommandSurfaceScope(world);
             var entityManager = world.EntityManager;
 
-            SeedDualClock(entityManager, 42f);
-            SeedFaction(entityManager, "player", gold: 320f, influence: 180f, spymasterRenown: 0f, legitimacy: 68f);
-            var enemyFaction = SeedFaction(entityManager, "enemy", gold: 220f, influence: 120f, spymasterRenown: 36f, legitimacy: 71f, fortificationTier: 3);
-            string targetMemberId = GetMemberIdByRole(entityManager, enemyFaction, DynastyRole.HeadOfBloodline);
+            SeedDualClock(entityManager, 24f);
+            var playerFaction = SeedFaction(entityManager, "player", gold: 420f, influence: 240f, spymasterRenown: 60f, legitimacy: 72f);
+            var enemyFaction = SeedFaction(entityManager, "enemy", gold: 220f, influence: 110f, spymasterRenown: 0f, legitimacy: 70f);
+            CreateSettlement(entityManager, "keep_enemy", "enemy", new float3(100f, 0f, 100f), fortificationTier: 1);
 
-            if (!RaiseCounterIntelligenceWatch(world, debugScope, "enemy", out var watchBefore))
+            string commanderId = GetMemberIdByRole(entityManager, enemyFaction, DynastyRole.Commander);
+            CreateCommanderUnit(entityManager, "enemy", commanderId, new float3(100f, 0f, 100f));
+            float legitimacyBefore = entityManager.GetComponentData<DynastyStateComponent>(enemyFaction).Legitimacy;
+            float ruthlessnessBefore = entityManager.GetComponentData<ConvictionComponent>(playerFaction).Ruthlessness;
+
+            if (!debugScope.CommandSurface.TryDebugIssuePlayerAssassination("player", "enemy", commanderId))
             {
-                message = "assassination failure could not establish defending watch";
+                lines.AppendLine("Phase 2 FAIL: could not queue commander assassination.");
                 return false;
             }
+
+            Advance(world, 0.05d);
+            AdvanceInWorldDays(entityManager, PlayerCovertOpsSystem.AssassinationDurationInWorldDays + 0.0001f);
+            Advance(world, 0.05d);
+
+            var targetMember = GetMemberById(entityManager, enemyFaction, commanderId);
+            float legitimacyAfter = entityManager.GetComponentData<DynastyStateComponent>(enemyFaction).Legitimacy;
+            float ruthlessnessAfter = entityManager.GetComponentData<ConvictionComponent>(playerFaction).Ruthlessness;
+            if (targetMember.Status != DynastyMemberStatus.Fallen ||
+                math.abs((legitimacyBefore - legitimacyAfter) - 9f) > 0.01f ||
+                ruthlessnessAfter <= ruthlessnessBefore ||
+                HasCommanderLink(entityManager, "enemy", commanderId) ||
+                !HasMutualHostility(entityManager, "player", "enemy"))
+            {
+                lines.AppendLine(
+                    $"Phase 2 FAIL: commander assassination fallout invalid. status={targetMember.Status} legitimacy={legitimacyBefore:0.##}->{legitimacyAfter:0.##} ruthlessness={ruthlessnessBefore:0.##}->{ruthlessnessAfter:0.##} commanderLink={HasCommanderLink(entityManager, "enemy", commanderId)} hostility={HasMutualHostility(entityManager, "player", "enemy")}.");
+                return false;
+            }
+
+            lines.AppendLine("Phase 2 PASS: commander assassination cleared battlefield links and applied bloodline fallout.");
+            return true;
+        }
+
+        private static bool RunGovernorAssassinationPhase(System.Text.StringBuilder lines)
+        {
+            using var world = CreateValidationWorld("player-covert-resolution-phase3");
+            using var debugScope = new DebugCommandSurfaceScope(world);
+            var entityManager = world.EntityManager;
+
+            SeedDualClock(entityManager, 28f);
+            SeedFaction(entityManager, "player", gold: 420f, influence: 240f, spymasterRenown: 58f, legitimacy: 72f);
+            var enemyFaction = SeedFaction(entityManager, "enemy", gold: 220f, influence: 110f, spymasterRenown: 0f, legitimacy: 72f, stewardship: 3f);
+            string governorId = GetMemberIdByRole(entityManager, enemyFaction, DynastyRole.Governor);
+            CreateGovernorSeat(entityManager, governorId);
 
             float legitimacyBefore = entityManager.GetComponentData<DynastyStateComponent>(enemyFaction).Legitimacy;
-            if (!debugScope.CommandSurface.TryDebugIssuePlayerAssassination("player", "enemy", targetMemberId))
+            float stewardshipBefore = entityManager.GetComponentData<ConvictionComponent>(enemyFaction).Stewardship;
+
+            if (!debugScope.CommandSurface.TryDebugIssuePlayerAssassination("player", "enemy", governorId))
             {
-                message = "assassination failure could not queue request";
+                lines.AppendLine("Phase 3 FAIL: could not queue governor assassination.");
                 return false;
             }
 
-            TickOnce(world);
-            AdvanceToResolvedOperation(entityManager, "player", CovertOpKindPlayer.Assassination);
-            TickOnce(world);
+            Advance(world, 0.05d);
+            AdvanceInWorldDays(entityManager, PlayerCovertOpsSystem.AssassinationDurationInWorldDays + 0.0001f);
+            Advance(world, 0.05d);
 
-            if (!TryGetWatch(entityManager, "enemy", out var watchAfter))
-            {
-                message = "assassination failure lost defending watch";
-                return false;
-            }
-
+            var governor = GetMemberById(entityManager, enemyFaction, governorId);
             float legitimacyAfter = entityManager.GetComponentData<DynastyStateComponent>(enemyFaction).Legitimacy;
-            if (watchAfter.WatchStrength <= watchBefore.WatchStrength ||
-                legitimacyAfter <= legitimacyBefore)
+            float stewardshipAfter = entityManager.GetComponentData<ConvictionComponent>(enemyFaction).Stewardship;
+            if (governor.Status != DynastyMemberStatus.Fallen ||
+                math.abs((legitimacyBefore - legitimacyAfter) - 5f) > 0.01f ||
+                math.abs((stewardshipBefore - stewardshipAfter) - 1f) > 0.01f ||
+                HasGovernorAssignment(entityManager, governorId) ||
+                HasGovernorSpecialization(entityManager, governorId))
             {
-                message = $"assassination failure expected stronger defense / legitimacy gain, got watch {watchBefore.WatchStrength:0.##}->{watchAfter.WatchStrength:0.##}, legitimacy {legitimacyBefore:0.##}->{legitimacyAfter:0.##}";
+                lines.AppendLine(
+                    $"Phase 3 FAIL: governor assassination fallout invalid. status={governor.Status} legitimacy={legitimacyBefore:0.##}->{legitimacyAfter:0.##} stewardship={stewardshipBefore:0.##}->{stewardshipAfter:0.##} assignment={HasGovernorAssignment(entityManager, governorId)} specialization={HasGovernorSpecialization(entityManager, governorId)}.");
                 return false;
             }
 
-            message = $"assassination legitimacy {legitimacyBefore:0.##}->{legitimacyAfter:0.##}, watch {watchBefore.WatchStrength:0.##}->{watchAfter.WatchStrength:0.##}";
+            lines.AppendLine("Phase 3 PASS: governor assassination cleared governance seats and applied legitimacy/stewardship loss.");
             return true;
         }
 
-        private static bool RunEspionageFailureSubphase(out string message)
+        private static bool RunGateOpeningSabotagePhase(System.Text.StringBuilder lines)
         {
-            using var world = CreateValidationWorld("player-covert-resolution-phase4-espionage");
+            using var world = CreateValidationWorld("player-covert-resolution-phase4");
             using var debugScope = new DebugCommandSurfaceScope(world);
             var entityManager = world.EntityManager;
 
-            SeedDualClock(entityManager, 46f);
-            var playerFaction = SeedFaction(entityManager, "player", gold: 320f, influence: 180f, spymasterRenown: 0f, legitimacy: 70f);
-            SeedFaction(entityManager, "enemy", gold: 220f, influence: 120f, spymasterRenown: 36f, legitimacy: 71f, fortificationTier: 3);
-            SetMemberRenown(entityManager, playerFaction, DynastyRole.Diplomat, 0f);
-            SetMemberRenown(entityManager, playerFaction, DynastyRole.Merchant, 0f);
+            SeedDualClock(entityManager, 32f);
+            SeedFaction(entityManager, "player", gold: 420f, influence: 240f, spymasterRenown: 48f);
+            SeedFaction(entityManager, "enemy", gold: 220f, influence: 110f, spymasterRenown: 0f);
+            CreateSettlement(entityManager, "keep_enemy", "enemy", new float3(100f, 0f, 100f), fortificationTier: 2);
+            var gatehouse = CreateBuilding(entityManager, "enemy", "gatehouse", new float3(101f, 0f, 100f), FortificationRole.Gate, currentHealth: 400f, maxHealth: 400f);
+            var attacker = CreateFieldWaterAttacker(entityManager, "player", new float3(104f, 0f, 100f));
 
-            if (!RaiseCounterIntelligenceWatch(world, debugScope, "player", out var watchBefore))
-            {
-                message = "espionage failure could not establish attacking watch";
-                return false;
-            }
+            Advance(world, 0.05d);
 
-            if (!RaiseCounterIntelligenceWatch(world, debugScope, "enemy", out _))
-            {
-                message = "espionage failure could not establish defending watch";
-                return false;
-            }
-
-            float legitimacyBefore = entityManager.GetComponentData<DynastyStateComponent>(playerFaction).Legitimacy;
-            if (!debugScope.CommandSurface.TryDebugIssuePlayerEspionage("player", "enemy"))
-            {
-                message = "espionage failure could not queue request";
-                return false;
-            }
-
-            TickOnce(world);
-            if (!TryGetSingleActiveOperation(entityManager, "player", CovertOpKindPlayer.Espionage, out var operation) ||
-                operation.SuccessScore >= 0f)
-            {
-                message = "espionage failure fixture did not produce a negative success score";
-                return false;
-            }
-
-            AdvanceToResolvedOperation(entityManager, "player", CovertOpKindPlayer.Espionage);
-            TickOnce(world);
-
-            if (!TryGetWatch(entityManager, "player", out var watchAfter))
-            {
-                message = "espionage failure lost attacking watch";
-                return false;
-            }
-
-            float legitimacyAfter = entityManager.GetComponentData<DynastyStateComponent>(playerFaction).Legitimacy;
-            if (watchAfter.WatchStrength >= watchBefore.WatchStrength ||
-                legitimacyAfter >= legitimacyBefore)
-            {
-                message = $"espionage failure expected weaker watch / legitimacy loss, got watch {watchBefore.WatchStrength:0.##}->{watchAfter.WatchStrength:0.##}, legitimacy {legitimacyBefore:0.##}->{legitimacyAfter:0.##}";
-                return false;
-            }
-
-            message = $"espionage legitimacy {legitimacyBefore:0.##}->{legitimacyAfter:0.##}, watch {watchBefore.WatchStrength:0.##}->{watchAfter.WatchStrength:0.##}";
-            return true;
-        }
-
-        private static bool RunSabotageFailureSubphase(out string message)
-        {
-            using var world = CreateValidationWorld("player-covert-resolution-phase4-sabotage");
-            using var debugScope = new DebugCommandSurfaceScope(world);
-            var entityManager = world.EntityManager;
-
-            SeedDualClock(entityManager, 50f);
-            var playerFaction = SeedFaction(entityManager, "player", gold: 320f, influence: 180f, spymasterRenown: 0f, legitimacy: 69f);
-            SeedFaction(entityManager, "enemy", gold: 220f, influence: 120f, spymasterRenown: 22f, legitimacy: 71f, fortificationTier: 4);
-            var gatehouse = CreateBuilding(
-                entityManager,
-                "enemy",
-                "gatehouse",
-                new float3(102f, 0f, 100f),
-                FortificationRole.Gate);
-
-            float legitimacyBefore = entityManager.GetComponentData<DynastyStateComponent>(playerFaction).Legitimacy;
             if (!debugScope.CommandSurface.TryDebugIssuePlayerSabotage("player", "gate_opening", "enemy", gatehouse.Index))
             {
-                message = "sabotage failure could not queue request";
+                lines.AppendLine("Phase 4 FAIL: could not queue gate-opening sabotage.");
                 return false;
             }
 
-            TickOnce(world);
-            AdvanceToResolvedOperation(entityManager, "player", CovertOpKindPlayer.Sabotage);
-            TickOnce(world);
+            Advance(world, 0.05d);
+            AdvanceInWorldDays(entityManager, (28f / 86400f) + 0.0001f);
+            Advance(world, 0.05d);
 
-            float legitimacyAfter = entityManager.GetComponentData<DynastyStateComponent>(playerFaction).Legitimacy;
-            if (legitimacyAfter >= legitimacyBefore)
+            if (!debugScope.CommandSurface.TryDebugGetPlayerSabotageState(gatehouse.Index, out var sabotageReadout))
             {
-                message = $"sabotage failure expected legitimacy loss, got {legitimacyBefore:0.##}->{legitimacyAfter:0.##}";
+                lines.AppendLine("Phase 4 FAIL: sabotage state readout unavailable.");
                 return false;
             }
 
-            message = $"sabotage legitimacy {legitimacyBefore:0.##}->{legitimacyAfter:0.##}";
+            var gateHealth = entityManager.GetComponentData<HealthComponent>(gatehouse);
+            var fieldWater = entityManager.GetComponentData<FieldWaterComponent>(attacker);
+            if (math.abs(gateHealth.Current - 80f) > 0.01f ||
+                !sabotageReadout.Contains("OpenBreachCount=1", StringComparison.Ordinal) ||
+                !fieldWater.BreachAssaultAdvantageActive)
+            {
+                lines.AppendLine(
+                    $"Phase 4 FAIL: gate-opening effect drifted. health={gateHealth.Current:0.##} readout='{sabotageReadout}' breachActive={fieldWater.BreachAssaultAdvantageActive}.");
+                return false;
+            }
+
+            Advance(world, 16d);
+            Advance(world, 0.05d);
+            fieldWater = entityManager.GetComponentData<FieldWaterComponent>(attacker);
+            if (fieldWater.BreachAssaultAdvantageActive)
+            {
+                lines.AppendLine("Phase 4 FAIL: gate exposure should have expired but breach pressure remained active.");
+                return false;
+            }
+
+            lines.AppendLine("Phase 4 PASS: gate-opening exposed a temporary breach window and then lapsed cleanly.");
+            return true;
+        }
+
+        private static bool RunFireAndPoisonSabotagePhase(System.Text.StringBuilder lines)
+        {
+            using var world = CreateValidationWorld("player-covert-resolution-phase5");
+            using var debugScope = new DebugCommandSurfaceScope(world);
+            var entityManager = world.EntityManager;
+
+            SeedDualClock(entityManager, 36f);
+            SeedFaction(entityManager, "player", gold: 520f, influence: 300f, spymasterRenown: 54f);
+            var enemyFaction = SeedFaction(entityManager, "enemy", gold: 220f, influence: 110f, spymasterRenown: 0f);
+            CreateSettlement(entityManager, "keep_enemy", "enemy", new float3(100f, 0f, 100f), fortificationTier: 1);
+            var commandHall = CreateBuilding(entityManager, "enemy", "command_hall", new float3(101f, 0f, 100f), currentHealth: 300f, maxHealth: 300f);
+            var supplyCamp = CreateBuilding(entityManager, "enemy", "supply_camp", new float3(102f, 0f, 100f), supportsSiegeLogistics: true, currentHealth: 280f, maxHealth: 280f);
+            var well = CreateBuilding(entityManager, "enemy", "well", new float3(103f, 0f, 100f), currentHealth: 260f, maxHealth: 260f);
+
+            Advance(world, 0.05d);
+
+            if (!debugScope.CommandSurface.TryDebugIssuePlayerSabotage("player", "fire_raising", "enemy", commandHall.Index) ||
+                !debugScope.CommandSurface.TryDebugIssuePlayerSabotage("player", "supply_poisoning", "enemy", supplyCamp.Index) ||
+                !debugScope.CommandSurface.TryDebugIssuePlayerSabotage("player", "well_poisoning", "enemy", well.Index))
+            {
+                lines.AppendLine("Phase 5 FAIL: could not queue fire/supply/well sabotage requests.");
+                return false;
+            }
+
+            Advance(world, 0.05d);
+            AdvanceInWorldDays(entityManager, (32f / 86400f) + 0.0001f);
+            Advance(world, 0.05d);
+
+            float healthAfterIgnition = entityManager.GetComponentData<HealthComponent>(commandHall).Current;
+            Advance(world, 5d);
+            float healthAfterBurn = entityManager.GetComponentData<HealthComponent>(commandHall).Current;
+
+            if (!debugScope.CommandSurface.TryDebugGetPlayerSabotageState(commandHall.Index, out var fireReadout) ||
+                !debugScope.CommandSurface.TryDebugGetPlayerSabotageState(supplyCamp.Index, out var poisonReadout))
+            {
+                lines.AppendLine("Phase 5 FAIL: sabotage readouts unavailable.");
+                return false;
+            }
+
+            int waterStrain = entityManager.GetComponentData<RealmConditionComponent>(enemyFaction).WaterStrainStreak;
+            if (healthAfterBurn >= healthAfterIgnition ||
+                !poisonReadout.Contains("RaidedUntil=", StringComparison.Ordinal) ||
+                poisonReadout.Contains("RaidedUntil=0.000", StringComparison.Ordinal) ||
+                waterStrain < 2)
+            {
+                lines.AppendLine(
+                    $"Phase 5 FAIL: fire/supply/well effects drifted. fire='{fireReadout}' supply='{poisonReadout}' health={healthAfterIgnition:0.##}->{healthAfterBurn:0.##} waterStrain={waterStrain}.");
+                return false;
+            }
+
+            lines.AppendLine("Phase 5 PASS: fire burned over time, supply poisoning opened a disruption window, and well poisoning raised water strain.");
             return true;
         }
 
@@ -412,28 +332,17 @@ namespace Bloodlines.EditorTools
             var world = new World(worldName);
             world.GetOrCreateSystemManaged<InitializationSystemGroup>();
             var simulationGroup = world.GetOrCreateSystemManaged<SimulationSystemGroup>();
-            var endSimulation = world.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>();
             world.GetOrCreateSystemManaged<PresentationSystemGroup>();
-
-            simulationGroup.AddSystemToUpdateList(endSimulation);
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<PlayerCovertOpsSystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<PlayerCounterIntelligenceSystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<EspionageResolutionSystem>());
-            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<UnitProductionSystem>());
-            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<SabotageResolutionSystem>());
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<AssassinationResolutionSystem>());
-            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<DynastySuccessionSystem>());
-            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<SuccessionCrisisEvaluationSystem>());
-            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<MarriageDeathDissolutionSystem>());
-            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<DeathResolutionSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<FortificationStructureLinkSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<FortificationDestructionResolutionSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<SabotageResolutionSystem>());
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<BreachAssaultPressureSystem>());
             simulationGroup.SortSystems();
             return world;
-        }
-
-        private static void TickOnce(World world)
-        {
-            world.SetTime(new TimeData(0d, StepSeconds));
-            world.Update();
         }
 
         private static void SeedDualClock(EntityManager entityManager, float inWorldDays)
@@ -458,18 +367,18 @@ namespace Bloodlines.EditorTools
             query.Dispose();
         }
 
-        private static void AdvanceToResolvedOperation(
-            EntityManager entityManager,
-            string factionId,
-            CovertOpKindPlayer kind)
+        private static void Advance(World world, double seconds, float maxStepSeconds = 0.05f)
         {
-            if (!TryGetSingleActiveOperation(entityManager, factionId, kind, out var operation))
+            double remaining = seconds;
+            double elapsed = world.Time.ElapsedTime;
+            while (remaining > 0.0001d)
             {
-                throw new InvalidOperationException("Expected active operation of kind " + kind + " for faction " + factionId);
+                float step = (float)math.min((float)remaining, maxStepSeconds);
+                elapsed += step;
+                world.SetTime(new TimeData(elapsed, step));
+                world.Update();
+                remaining -= step;
             }
-
-            float currentDays = GetInWorldDays(entityManager);
-            AdvanceInWorldDays(entityManager, math.max(0f, operation.ResolveAtInWorldDays - currentDays) + 0.0001f);
         }
 
         private static Entity SeedFaction(
@@ -478,8 +387,8 @@ namespace Bloodlines.EditorTools
             float gold,
             float influence,
             float spymasterRenown,
-            float legitimacy,
-            int fortificationTier = 0)
+            float legitimacy = 60f,
+            float stewardship = 0f)
         {
             var factionEntity = entityManager.CreateEntity(
                 typeof(FactionComponent),
@@ -487,196 +396,200 @@ namespace Bloodlines.EditorTools
                 typeof(ResourceStockpileComponent),
                 typeof(PopulationComponent),
                 typeof(RealmConditionComponent),
+                typeof(FactionLoyaltyComponent),
                 typeof(ConvictionComponent));
             entityManager.SetComponentData(factionEntity, new FactionComponent { FactionId = factionId });
             entityManager.SetComponentData(factionEntity, new FactionKindComponent { Kind = FactionKind.Kingdom });
             entityManager.SetComponentData(factionEntity, new ResourceStockpileComponent
             {
                 Gold = gold,
-                Food = 180f,
-                Water = 150f,
-                Wood = 60f,
-                Stone = 45f,
-                Iron = 22f,
+                Food = 120f,
+                Water = 120f,
+                Wood = 40f,
+                Stone = 35f,
+                Iron = 15f,
                 Influence = influence,
             });
             entityManager.SetComponentData(factionEntity, new PopulationComponent
             {
-                Total = 28,
-                Cap = 34,
-                BaseCap = 34,
+                Total = 24,
+                Available = 12,
+                Cap = 30,
+                BaseCap = 30,
                 CapBonus = 0,
-                Available = 16,
                 GrowthAccumulator = 0f,
             });
             entityManager.SetComponentData(factionEntity, new RealmConditionComponent());
-            entityManager.SetComponentData(factionEntity, new ConvictionComponent());
+            entityManager.SetComponentData(factionEntity, new FactionLoyaltyComponent
+            {
+                Current = 75f,
+                Max = 100f,
+                Floor = 0f,
+            });
+            entityManager.SetComponentData(factionEntity, new ConvictionComponent
+            {
+                Stewardship = stewardship,
+                Score = stewardship,
+                Band = ConvictionScoring.ResolveBand(stewardship),
+            });
             entityManager.AddBuffer<HostilityComponent>(factionEntity);
 
-            DynastyBootstrap.AttachDynasty(entityManager, factionEntity, new FixedString32Bytes(factionId));
+            DynastyBootstrap.AttachDynasty(entityManager, factionEntity, factionId);
             SetDynastyLegitimacy(entityManager, factionEntity, legitimacy);
-            SetMemberRenown(entityManager, factionEntity, DynastyRole.Spymaster, spymasterRenown);
-            SeedSettlement(entityManager, factionId, fortificationTier);
+            SetRoleRenown(entityManager, factionEntity, DynastyRole.Spymaster, spymasterRenown);
             return factionEntity;
         }
 
-        private static void SeedSettlement(
+        private static Entity CreateSettlement(
             EntityManager entityManager,
+            string settlementId,
             string factionId,
+            float3 position,
             int fortificationTier)
         {
             var settlementEntity = entityManager.CreateEntity(
                 typeof(FactionComponent),
                 typeof(SettlementComponent),
                 typeof(PositionComponent),
+                typeof(FortificationComponent),
                 typeof(PrimaryKeepTag));
             entityManager.SetComponentData(settlementEntity, new FactionComponent { FactionId = factionId });
             entityManager.SetComponentData(settlementEntity, new SettlementComponent
             {
-                SettlementId = new FixedString64Bytes("keep_" + factionId),
-                SettlementClassId = new FixedString32Bytes("military_fort"),
+                SettlementId = settlementId,
+                SettlementClassId = new FixedString32Bytes("primary_dynastic_keep"),
                 FortificationTier = fortificationTier,
                 FortificationCeiling = math.max(1, fortificationTier + 1),
             });
-            entityManager.SetComponentData(settlementEntity, new PositionComponent
+            entityManager.SetComponentData(settlementEntity, new PositionComponent { Value = position });
+            entityManager.SetComponentData(settlementEntity, new FortificationComponent
             {
-                Value = ResolveFactionPosition(factionId),
+                SettlementId = settlementId,
+                Tier = fortificationTier,
+                Ceiling = math.max(1, fortificationTier + 1),
+                EcosystemRadiusTiles = FortificationCanon.EcosystemRadiusTiles,
+                AuraRadiusTiles = FortificationCanon.AuraRadiusTiles,
+                ThreatRadiusTiles = FortificationCanon.ThreatRadiusTiles,
+                ReserveRadiusTiles = FortificationCanon.ReserveRadiusTiles,
+                KeepPresenceRadiusTiles = FortificationCanon.KeepPresenceRadiusTiles,
             });
-        }
-
-        private static void SeedControlPoint(
-            EntityManager entityManager,
-            string controlPointId,
-            string ownerFactionId,
-            float3 position,
-            float loyalty)
-        {
-            var entity = entityManager.CreateEntity(
-                typeof(ControlPointComponent),
-                typeof(PositionComponent));
-            entityManager.SetComponentData(entity, new ControlPointComponent
-            {
-                ControlPointId = new FixedString32Bytes(controlPointId),
-                OwnerFactionId = new FixedString32Bytes(ownerFactionId),
-                CaptureFactionId = default,
-                ContinentId = new FixedString32Bytes("continent-test"),
-                ControlState = ControlState.Stabilized,
-                IsContested = false,
-                Loyalty = loyalty,
-                CaptureProgress = 0f,
-                SettlementClassId = new FixedString32Bytes("border_settlement"),
-                FortificationTier = 1,
-                RadiusTiles = 8f,
-                CaptureTimeSeconds = 15f,
-                GoldTrickle = 2f,
-                FoodTrickle = 1f,
-                WaterTrickle = 1f,
-                WoodTrickle = 0f,
-                StoneTrickle = 0f,
-                IronTrickle = 0f,
-                InfluenceTrickle = 1f,
-            });
-            entityManager.SetComponentData(entity, new PositionComponent { Value = position });
+            return settlementEntity;
         }
 
         private static Entity CreateBuilding(
             EntityManager entityManager,
             string factionId,
-            string buildingId,
+            string typeId,
             float3 position,
             FortificationRole fortificationRole = FortificationRole.None,
-            bool supportsSiegeLogistics = false)
+            bool supportsSiegeLogistics = false,
+            float currentHealth = 240f,
+            float maxHealth = 240f)
+        {
+            var buildingEntity = entityManager.CreateEntity(
+                typeof(FactionComponent),
+                typeof(PositionComponent),
+                typeof(HealthComponent),
+                typeof(BuildingTypeComponent));
+            entityManager.SetComponentData(buildingEntity, new FactionComponent { FactionId = factionId });
+            entityManager.SetComponentData(buildingEntity, new PositionComponent { Value = position });
+            entityManager.SetComponentData(buildingEntity, new HealthComponent
+            {
+                Current = currentHealth,
+                Max = maxHealth,
+            });
+            entityManager.SetComponentData(buildingEntity, new BuildingTypeComponent
+            {
+                TypeId = typeId,
+                FortificationRole = fortificationRole,
+                SupportsSiegeLogistics = supportsSiegeLogistics,
+                StructuralDamageMultiplier = fortificationRole == FortificationRole.Gate ? 0.3f : 0.1f,
+                BlocksPassage = fortificationRole == FortificationRole.Wall,
+            });
+            return buildingEntity;
+        }
+
+        private static void CreateCommanderUnit(
+            EntityManager entityManager,
+            string factionId,
+            string memberId,
+            float3 position)
         {
             var entity = entityManager.CreateEntity(
                 typeof(FactionComponent),
                 typeof(PositionComponent),
                 typeof(HealthComponent),
-                typeof(BuildingTypeComponent));
-            entityManager.SetComponentData(entity, new FactionComponent
+                typeof(CommanderComponent),
+                typeof(CommanderAtKeepTag));
+            entityManager.SetComponentData(entity, new FactionComponent { FactionId = factionId });
+            entityManager.SetComponentData(entity, new PositionComponent { Value = position });
+            entityManager.SetComponentData(entity, new HealthComponent { Current = 90f, Max = 90f });
+            entityManager.SetComponentData(entity, new CommanderComponent
             {
-                FactionId = new FixedString32Bytes(factionId),
+                MemberId = memberId,
+                Role = new FixedString32Bytes("commander"),
+                Renown = 12f,
             });
-            entityManager.SetComponentData(entity, new PositionComponent
+        }
+
+        private static Entity CreateFieldWaterAttacker(
+            EntityManager entityManager,
+            string factionId,
+            float3 position)
+        {
+            var entity = entityManager.CreateEntity(
+                typeof(FactionComponent),
+                typeof(PositionComponent),
+                typeof(HealthComponent),
+                typeof(FieldWaterComponent));
+            entityManager.SetComponentData(entity, new FactionComponent { FactionId = factionId });
+            entityManager.SetComponentData(entity, new PositionComponent { Value = position });
+            entityManager.SetComponentData(entity, new HealthComponent { Current = 70f, Max = 70f });
+            entityManager.SetComponentData(entity, new FieldWaterComponent
             {
-                Value = position,
-            });
-            entityManager.SetComponentData(entity, new HealthComponent
-            {
-                Current = 400f,
-                Max = 400f,
-            });
-            entityManager.SetComponentData(entity, new BuildingTypeComponent
-            {
-                TypeId = new FixedString64Bytes(buildingId),
-                FortificationRole = fortificationRole,
-                StructuralDamageMultiplier = fortificationRole == FortificationRole.Gate ? 0.3f : 0.1f,
-                PopulationCapBonus = 0,
-                BlocksPassage = fortificationRole == FortificationRole.Wall,
-                SupportsSiegePreparation = false,
-                SupportsSiegeLogistics = supportsSiegeLogistics,
+                BaseAttackDamage = 10f,
+                BaseMaxSpeed = 5f,
+                OperationalAttackMultiplier = 1f,
+                OperationalSpeedMultiplier = 1f,
+                Status = FieldWaterStatus.Steady,
             });
             return entity;
         }
 
-        private static void QueueProductionItem(
-            EntityManager entityManager,
-            Entity buildingEntity,
-            string unitId,
-            float remainingSeconds)
+        private static void CreateGovernorSeat(EntityManager entityManager, string governorMemberId)
         {
-            if (!entityManager.HasComponent<ProductionFacilityComponent>(buildingEntity))
+            var settlementSeat = entityManager.CreateEntity(typeof(GovernorSeatAssignmentComponent));
+            entityManager.SetComponentData(settlementSeat, new GovernorSeatAssignmentComponent
             {
-                entityManager.AddComponentData(buildingEntity, new ProductionFacilityComponent());
-            }
-
-            if (!entityManager.HasBuffer<ProductionQueueItemElement>(buildingEntity))
-            {
-                entityManager.AddBuffer<ProductionQueueItemElement>(buildingEntity);
-            }
-
-            entityManager.GetBuffer<ProductionQueueItemElement>(buildingEntity).Add(new ProductionQueueItemElement
-            {
-                UnitId = new FixedString64Bytes(unitId),
-                DisplayName = new FixedString64Bytes(unitId),
-                RemainingSeconds = remainingSeconds,
-                TotalSeconds = remainingSeconds,
-                PopulationCost = 1,
-                BloodPrice = 0,
-                BloodLoadDelta = 0f,
-                MaxHealth = 80f,
-                MaxSpeed = 4f,
-                Role = UnitRole.Melee,
-                SiegeClass = SiegeClass.None,
-                Stage = 1,
-                GoldCost = 15,
-                FoodCost = 0,
-                WaterCost = 0,
-                WoodCost = 0,
-                StoneCost = 0,
-                IronCost = 0,
-                InfluenceCost = 0,
+                GovernorMemberId = governorMemberId,
+                SpecializationId = GovernorSpecializationId.KeepCastellan,
+                AnchorType = GovernanceAnchorType.Settlement,
+                PriorityScore = 40f,
+                LastSyncedInWorldDays = 0f,
             });
-        }
 
-        private static bool RaiseCounterIntelligenceWatch(
-            World world,
-            DebugCommandSurfaceScope debugScope,
-            string factionId,
-            out PlayerCounterIntelligenceComponent watch)
-        {
-            watch = default;
-            var entityManager = world.EntityManager;
-            if (!debugScope.CommandSurface.TryDebugIssuePlayerCounterIntelligence(factionId))
+            var controlPointSeat = entityManager.CreateEntity(
+                typeof(GovernorSeatAssignmentComponent),
+                typeof(GovernorSpecializationComponent));
+            entityManager.SetComponentData(controlPointSeat, new GovernorSeatAssignmentComponent
             {
-                return false;
-            }
-
-            TickOnce(world);
-            AdvanceInWorldDays(
-                entityManager,
-                PlayerCovertOpsSystem.CounterIntelligenceDurationInWorldDays + 0.0001f);
-            TickOnce(world);
-            return TryGetWatch(entityManager, factionId, out watch);
+                GovernorMemberId = governorMemberId,
+                SpecializationId = GovernorSpecializationId.BorderMarshal,
+                AnchorType = GovernanceAnchorType.ControlPoint,
+                PriorityScore = 64f,
+                LastSyncedInWorldDays = 0f,
+            });
+            entityManager.SetComponentData(controlPointSeat, new GovernorSpecializationComponent
+            {
+                GovernorMemberId = governorMemberId,
+                SpecializationId = GovernorSpecializationId.BorderMarshal,
+                ResourceTrickleMultiplier = 1.15f,
+                StabilizationMultiplier = 1.3f,
+                CaptureResistanceBonus = 0.2f,
+                LoyaltyProtectionMultiplier = 1.1f,
+                ReserveRegenMultiplier = 1f,
+                HealRegenMultiplier = 1f,
+            });
         }
 
         private static void SetDynastyLegitimacy(
@@ -689,34 +602,31 @@ namespace Bloodlines.EditorTools
             entityManager.SetComponentData(factionEntity, dynasty);
         }
 
-        private static void SetMemberRenown(
+        private static void SetRoleRenown(
             EntityManager entityManager,
             Entity factionEntity,
             DynastyRole role,
             float renown)
         {
-            if (!TryGetMemberEntityByRole(entityManager, factionEntity, role, out var memberEntity, out var member))
+            var members = entityManager.GetBuffer<DynastyMemberRef>(factionEntity);
+            for (int i = 0; i < members.Length; i++)
             {
-                throw new InvalidOperationException("Dynasty role not found when setting renown: " + role);
+                if (members[i].Member == Entity.Null ||
+                    !entityManager.HasComponent<DynastyMemberComponent>(members[i].Member))
+                {
+                    continue;
+                }
+
+                var member = entityManager.GetComponentData<DynastyMemberComponent>(members[i].Member);
+                if (member.Role != role)
+                {
+                    continue;
+                }
+
+                member.Renown = renown;
+                entityManager.SetComponentData(members[i].Member, member);
+                return;
             }
-
-            member.Renown = renown;
-            entityManager.SetComponentData(memberEntity, member);
-        }
-
-        private static void SetMemberAge(
-            EntityManager entityManager,
-            Entity factionEntity,
-            string memberId,
-            float ageYears)
-        {
-            if (!TryGetMemberEntityById(entityManager, factionEntity, memberId, out var memberEntity, out var member))
-            {
-                throw new InvalidOperationException("Dynasty member not found when setting age: " + memberId);
-            }
-
-            member.AgeYears = ageYears;
-            entityManager.SetComponentData(memberEntity, member);
         }
 
         private static string GetMemberIdByRole(
@@ -724,12 +634,23 @@ namespace Bloodlines.EditorTools
             Entity factionEntity,
             DynastyRole role)
         {
-            if (!TryGetMemberEntityByRole(entityManager, factionEntity, role, out _, out var member))
+            var members = entityManager.GetBuffer<DynastyMemberRef>(factionEntity);
+            for (int i = 0; i < members.Length; i++)
             {
-                throw new InvalidOperationException("Dynasty role not found: " + role);
+                if (members[i].Member == Entity.Null ||
+                    !entityManager.HasComponent<DynastyMemberComponent>(members[i].Member))
+                {
+                    continue;
+                }
+
+                var member = entityManager.GetComponentData<DynastyMemberComponent>(members[i].Member);
+                if (member.Role == role)
+                {
+                    return member.MemberId.ToString();
+                }
             }
 
-            return member.MemberId.ToString();
+            throw new InvalidOperationException("Dynasty role not found: " + role);
         }
 
         private static DynastyMemberComponent GetMemberById(
@@ -737,29 +658,8 @@ namespace Bloodlines.EditorTools
             Entity factionEntity,
             string memberId)
         {
-            if (!TryGetMemberEntityById(entityManager, factionEntity, memberId, out _, out var member))
-            {
-                throw new InvalidOperationException("Dynasty member not found: " + memberId);
-            }
-
-            return member;
-        }
-
-        private static bool TryGetMemberEntityByRole(
-            EntityManager entityManager,
-            Entity factionEntity,
-            DynastyRole role,
-            out Entity memberEntity,
-            out DynastyMemberComponent member)
-        {
-            memberEntity = Entity.Null;
-            member = default;
-            if (!entityManager.HasBuffer<DynastyMemberRef>(factionEntity))
-            {
-                return false;
-            }
-
             var members = entityManager.GetBuffer<DynastyMemberRef>(factionEntity);
+            var key = new FixedString64Bytes(memberId);
             for (int i = 0; i < members.Length; i++)
             {
                 if (members[i].Member == Entity.Null ||
@@ -768,196 +668,129 @@ namespace Bloodlines.EditorTools
                     continue;
                 }
 
-                var candidate = entityManager.GetComponentData<DynastyMemberComponent>(members[i].Member);
-                if (candidate.Role != role)
+                var member = entityManager.GetComponentData<DynastyMemberComponent>(members[i].Member);
+                if (member.MemberId.Equals(key))
                 {
-                    continue;
+                    return member;
                 }
-
-                memberEntity = members[i].Member;
-                member = candidate;
-                return true;
             }
 
-            return false;
+            throw new InvalidOperationException("Dynasty member not found: " + memberId);
         }
 
-        private static bool TryGetMemberEntityById(
+        private static bool HasMutualHostility(
             EntityManager entityManager,
-            Entity factionEntity,
-            string memberId,
-            out Entity memberEntity,
-            out DynastyMemberComponent member)
+            string sourceFactionId,
+            string targetFactionId)
         {
-            memberEntity = Entity.Null;
-            member = default;
-            if (!entityManager.HasBuffer<DynastyMemberRef>(factionEntity))
+            return HasHostility(entityManager, sourceFactionId, targetFactionId) &&
+                   HasHostility(entityManager, targetFactionId, sourceFactionId);
+        }
+
+        private static bool HasHostility(
+            EntityManager entityManager,
+            string sourceFactionId,
+            string targetFactionId)
+        {
+            var factionEntity = FindFactionEntity(entityManager, sourceFactionId);
+            if (factionEntity == Entity.Null || !entityManager.HasBuffer<HostilityComponent>(factionEntity))
             {
                 return false;
             }
 
-            var memberKey = new FixedString64Bytes(memberId);
-            var members = entityManager.GetBuffer<DynastyMemberRef>(factionEntity);
-            for (int i = 0; i < members.Length; i++)
+            var hostility = entityManager.GetBuffer<HostilityComponent>(factionEntity);
+            for (int i = 0; i < hostility.Length; i++)
             {
-                if (members[i].Member == Entity.Null ||
-                    !entityManager.HasComponent<DynastyMemberComponent>(members[i].Member))
+                if (hostility[i].HostileFactionId.Equals(new FixedString32Bytes(targetFactionId)))
                 {
-                    continue;
+                    return true;
                 }
-
-                var candidate = entityManager.GetComponentData<DynastyMemberComponent>(members[i].Member);
-                if (!candidate.MemberId.Equals(memberKey))
-                {
-                    continue;
-                }
-
-                memberEntity = members[i].Member;
-                member = candidate;
-                return true;
             }
 
             return false;
-        }
-
-        private static float[] GetOwnedControlPointLoyalties(
-            EntityManager entityManager,
-            string factionId)
-        {
-            var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<ControlPointComponent>());
-            using var controlPoints = query.ToComponentDataArray<ControlPointComponent>(Allocator.Temp);
-            query.Dispose();
-
-            using var values = new NativeList<float>(Allocator.Temp);
-            var factionKey = new FixedString32Bytes(factionId);
-            for (int i = 0; i < controlPoints.Length; i++)
-            {
-                if (controlPoints[i].OwnerFactionId.Equals(factionKey))
-                {
-                    values.Add(controlPoints[i].Loyalty);
-                }
-            }
-
-            var array = new float[values.Length];
-            for (int i = 0; i < values.Length; i++)
-            {
-                array[i] = values[i];
-            }
-
-            return array;
-        }
-
-        private static bool TryGetSingleActiveOperation(
-            EntityManager entityManager,
-            string factionId,
-            CovertOpKindPlayer kind,
-            out PlayerCovertOpsResolutionComponent operation)
-        {
-            operation = default;
-            var factionKey = new FixedString32Bytes(factionId);
-            var query = entityManager.CreateEntityQuery(
-                ComponentType.ReadOnly<PlayerCovertOpsResolutionComponent>());
-            if (query.IsEmpty)
-            {
-                query.Dispose();
-                return false;
-            }
-
-            using var operations = query.ToComponentDataArray<PlayerCovertOpsResolutionComponent>(Allocator.Temp);
-            query.Dispose();
-            for (int i = 0; i < operations.Length; i++)
-            {
-                if (!operations[i].Active ||
-                    operations[i].Kind != kind ||
-                    !operations[i].SourceFactionId.Equals(factionKey))
-                {
-                    continue;
-                }
-
-                operation = operations[i];
-                return true;
-            }
-
-            return false;
-        }
-
-        private static bool TryGetWatch(
-            EntityManager entityManager,
-            string factionId,
-            out PlayerCounterIntelligenceComponent watch)
-        {
-            watch = default;
-            var factionEntity = FindFactionEntity(entityManager, new FixedString32Bytes(factionId));
-            if (factionEntity == Entity.Null ||
-                !entityManager.HasComponent<PlayerCounterIntelligenceComponent>(factionEntity))
-            {
-                return false;
-            }
-
-            watch = entityManager.GetComponentData<PlayerCounterIntelligenceComponent>(factionEntity);
-            return true;
-        }
-
-        private static float GetInWorldDays(EntityManager entityManager)
-        {
-            var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<DualClockComponent>());
-            if (query.IsEmpty)
-            {
-                query.Dispose();
-                return 0f;
-            }
-
-            float inWorldDays = query.GetSingleton<DualClockComponent>().InWorldDays;
-            query.Dispose();
-            return inWorldDays;
         }
 
         private static Entity FindFactionEntity(
             EntityManager entityManager,
-            FixedString32Bytes factionId)
+            string factionId)
         {
             var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<FactionComponent>());
             using var entities = query.ToEntityArray(Allocator.Temp);
             using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
             query.Dispose();
 
-            Entity fallback = Entity.Null;
-            for (int i = 0; i < entities.Length; i++)
+            var key = new FixedString32Bytes(factionId);
+            for (int i = 0; i < factions.Length; i++)
             {
-                if (!factions[i].FactionId.Equals(factionId))
-                {
-                    continue;
-                }
-
-                if (entityManager.HasComponent<FactionKindComponent>(entities[i]) ||
-                    entityManager.HasComponent<ResourceStockpileComponent>(entities[i]) ||
-                    entityManager.HasComponent<DynastyStateComponent>(entities[i]))
+                if (factions[i].FactionId.Equals(key))
                 {
                     return entities[i];
                 }
+            }
 
-                if (fallback == Entity.Null)
+            return Entity.Null;
+        }
+
+        private static bool HasCommanderLink(
+            EntityManager entityManager,
+            string factionId,
+            string memberId)
+        {
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<CommanderComponent>());
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var commanders = query.ToComponentDataArray<CommanderComponent>(Allocator.Temp);
+            query.Dispose();
+
+            for (int i = 0; i < commanders.Length; i++)
+            {
+                if (factions[i].FactionId.Equals(new FixedString32Bytes(factionId)) &&
+                    commanders[i].MemberId.Equals(new FixedString64Bytes(memberId)))
                 {
-                    fallback = entities[i];
+                    return true;
                 }
             }
 
-            return fallback;
+            return false;
         }
 
-        private static float3 ResolveFactionPosition(string factionId)
+        private static bool HasGovernorAssignment(
+            EntityManager entityManager,
+            string governorMemberId)
         {
-            if (string.Equals(factionId, "player", StringComparison.Ordinal))
+            var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<GovernorSeatAssignmentComponent>());
+            using var assignments = query.ToComponentDataArray<GovernorSeatAssignmentComponent>(Allocator.Temp);
+            query.Dispose();
+
+            for (int i = 0; i < assignments.Length; i++)
             {
-                return new float3(20f, 0f, 20f);
+                if (assignments[i].GovernorMemberId.Equals(new FixedString64Bytes(governorMemberId)))
+                {
+                    return true;
+                }
             }
 
-            if (string.Equals(factionId, "enemy", StringComparison.Ordinal))
+            return false;
+        }
+
+        private static bool HasGovernorSpecialization(
+            EntityManager entityManager,
+            string governorMemberId)
+        {
+            var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<GovernorSpecializationComponent>());
+            using var specializations = query.ToComponentDataArray<GovernorSpecializationComponent>(Allocator.Temp);
+            query.Dispose();
+
+            for (int i = 0; i < specializations.Length; i++)
             {
-                return new float3(100f, 0f, 100f);
+                if (specializations[i].GovernorMemberId.Equals(new FixedString64Bytes(governorMemberId)))
+                {
+                    return true;
+                }
             }
 
-            return new float3(60f, 0f, 60f);
+            return false;
         }
 
         private sealed class DebugCommandSurfaceScope : IDisposable

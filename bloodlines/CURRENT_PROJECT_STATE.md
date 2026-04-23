@@ -4095,3 +4095,43 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Contract revision advanced `101 -> 102` and now records the reopened
   `player-covert-ops` lane with no branch in flight. The next additive pickup
   from the directive stack is Priority 12 Governance Coalition Pressure.
+
+## 2026-04-23 Player Covert Ops Resolution Effects Follow-Up
+
+- Branch lane: `codex/unity-player-covert-ops-resolution-effects-followup`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-player-covert-ops-resolution-effects-followup.md`.
+- Completed in this follow-up:
+  - `EspionageResolutionSystem`,
+    `AssassinationResolutionSystem`,
+    and
+    `SabotageResolutionSystem`
+    now honor the dispatch-time `SuccessScore` directly and move active gate /
+    burn sabotage windows onto additive `PlayerSabotageEffectComponent` state
+    while preserving the older `PlayerSabotageStatusComponent` file as a
+    compatibility surface
+  - `SabotageResolutionSystem` now promotes gate-opening breaches in the same
+    resolve frame, applies elapsed-time burn damage, writes
+    `BuildingRaidStateComponent` poison windows, and raises
+    `RealmConditionComponent.WaterStrainStreak` for successful well poisoning
+  - `AssassinationResolutionSystem` now clears commander and governor
+    attachments without widening foreign lanes, and
+    `IntelligenceReportElement` plus
+    `BloodlinesDebugCommandSurface.PlayerCovertOps`
+    now expose tighter resource/building dossier summaries plus richer
+    sabotage-effect readouts
+  - `BloodlinesPlayerCovertOpsResolutionSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityPlayerCovertOpsResolutionSmokeValidation.ps1`
+    now prove enriched espionage dossiers, commander/governor assassination
+    fallout, same-frame gate-opening breach exposure, and the fire / supply /
+    well sabotage variants
+  - local `Assembly-CSharp*.csproj` metadata now includes the new
+    `PlayerSabotageEffectComponent` file and points Unity.Entities analyzer
+    roots back at the canonical
+    `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache` surface
+- Validation state:
+  - dedicated player covert-ops resolution smoke green
+  - all 10 required governed gates green after contract revision `103`
+- Contract revision advanced `102 -> 103` and keeps the `player-covert-ops`
+  lane clear on canonical `master`. The next additive pickup remains Priority
+  12 Governance Coalition Pressure.

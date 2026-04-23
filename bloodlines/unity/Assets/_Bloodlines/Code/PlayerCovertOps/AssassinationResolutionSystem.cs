@@ -1,85 +1,81 @@
 using Bloodlines.Components;
+using Bloodlines.Combat;
 using Bloodlines.Conviction;
-using Bloodlines.Dynasties;
 using Bloodlines.GameTime;
-using Bloodlines.Systems;
 using Bloodlines.TerritoryGovernance;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 
 namespace Bloodlines.PlayerCovertOps
 {
     /// <summary>
-    /// Resolves ready assassination operations before dynasty follow-through systems
-    /// so fallen rulers, commanders, and governors push the same-frame succession and
-    /// fallout ripples expected by the canonical covert-ops spec.
+    /// Resolves player assassination operations and applies the immediate bloodline,
+    /// legitimacy, conviction, and attachment-clear follow-through that the browser
+    /// runtime lands when a covert kill succeeds.
     /// </summary>
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(PlayerCounterIntelligenceSystem))]
-    [UpdateBefore(typeof(DynastySuccessionSystem))]
-    [UpdateBefore(typeof(MarriageDeathDissolutionSystem))]
-    [UpdateBefore(typeof(DeathResolutionSystem))]
     public partial struct AssassinationResolutionSystem : ISystem
     {
-        private const float AttackerRuthlessnessGain = 2f;
-        private const float HeadLegitimacyPenalty = 18f;
-        private const float CommanderLegitimacyPenalty = 9f;
-        private const float GovernorLegitimacyPenalty = 5f;
-        private const float HeirLegitimacyPenalty = 8f;
-        private const float CourtOfficerLegitimacyPenalty = 4f;
-        private const float MerchantLegitimacyPenalty = 3f;
-        private const float InterregnumLegitimacyPenalty = 14f;
-        private const float SuccessionRecoveryLegitimacy = 7f;
-        private const float SuccessorRenownGain = 6f;
-        private const float HeadOathkeepingGain = 2f;
+        private const float CommanderLegitimacyLoss = 9f;
+        private const float GovernorLegitimacyLoss = 5f;
+        private const float AssassinationRuthlessnessGain = 2f;
         private const float GovernorStewardshipLoss = -1f;
-        private const float DefenderCounterIntelligenceBoost = 3f;
-        private const float FailedAssassinationLegitimacyGain = 1f;
 
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<DualClockComponent>();
-            state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         }
 
         public void OnUpdate(ref SystemState state)
         {
             var entityManager = state.EntityManager;
             float inWorldDays = PlayerCovertOpsSystem.GetInWorldDays(entityManager);
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            var operationQuery = entityManager.CreateEntityQuery(
-                ComponentType.ReadOnly<PlayerCovertOpsResolutionComponent>());
-            if (operationQuery.IsEmpty)
+            try
             {
-                operationQuery.Dispose();
-                return;
-            }
-
-            using var operationEntities = operationQuery.ToEntityArray(Allocator.Temp);
-            using var operations = operationQuery.ToComponentDataArray<PlayerCovertOpsResolutionComponent>(Allocator.Temp);
-            operationQuery.Dispose();
-
-            var ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
-                .CreateCommandBuffer(state.WorldUnmanaged);
-
-            for (int i = 0; i < operationEntities.Length; i++)
-            {
-                var operation = operations[i];
-                if (!operation.Active ||
-                    operation.Kind != CovertOpKindPlayer.Assassination ||
-                    operation.ResolveAtInWorldDays > inWorldDays)
+                var query = entityManager.CreateEntityQuery(
+                    ComponentType.ReadOnly<PlayerCovertOpsResolutionComponent>());
+                if (query.IsEmpty)
                 {
-                    continue;
+                    query.Dispose();
+                    return;
                 }
 
-                ResolveOperation(entityManager, ecb, operationEntities[i], operation, inWorldDays);
+                using var entities = query.ToEntityArray(Allocator.Temp);
+                using var operations = query.ToComponentDataArray<PlayerCovertOpsResolutionComponent>(Allocator.Temp);
+                query.Dispose();
+
+                for (int i = 0; i < entities.Length; i++)
+                {
+                    var operation = operations[i];
+                    if (!operation.Active ||
+                        operation.Kind != CovertOpKindPlayer.Assassination ||
+                        operation.ResolveAtInWorldDays > inWorldDays)
+                    {
+                        continue;
+                    }
+
+                    ResolveAssassinationOperation(
+                        entityManager,
+                        ref ecb,
+                        entities[i],
+                        operation,
+                        inWorldDays);
+                }
+
+                ecb.Playback(entityManager);
+            }
+            finally
+            {
+                ecb.Dispose();
             }
         }
 
-        private static void ResolveOperation(
+        private static void ResolveAssassinationOperation(
             EntityManager entityManager,
-            EntityCommandBuffer ecb,
+            ref EntityCommandBuffer ecb,
             Entity operationEntity,
             in PlayerCovertOpsResolutionComponent operation,
             float inWorldDays)
@@ -105,28 +101,13 @@ namespace Bloodlines.PlayerCovertOps
                 operation.SourceFactionId,
                 operation.TargetFactionId);
 
-            float offenseRenown =
-                PlayerCovertOpsSystem.TrySelectOperator(entityManager, sourceFactionEntity, out var operatorMember)
-                    ? operatorMember.Renown
-                    : 0f;
-            bool intelSupport = PlayerCovertOpsSystem.HasActiveIntelligenceReport(
-                entityManager,
-                operation.SourceFactionId,
-                operation.TargetFactionId,
-                inWorldDays);
-            var contest = PlayerCovertOpsSystem.BuildAssassinationContest(
-                entityManager,
-                operation.SourceFactionId,
-                operation.TargetFactionId,
-                targetMember,
-                offenseRenown,
-                intelSupport,
-                inWorldDays);
-
-            if (contest.SuccessScore >= 0f)
+            if (operation.SuccessScore >= 0f)
             {
                 ApplyAssassinationEffect(
                     entityManager,
+                    ref ecb,
+                    operation.SourceFactionId,
+                    operation.TargetFactionId,
                     sourceFactionEntity,
                     targetFactionEntity,
                     targetMemberEntity,
@@ -135,7 +116,7 @@ namespace Bloodlines.PlayerCovertOps
             }
             else
             {
-                bool intercepted = PlayerCounterIntelligenceSystem.RecordCounterIntelligenceInterception(
+                PlayerCounterIntelligenceSystem.RecordCounterIntelligenceInterception(
                     entityManager,
                     operation.TargetFactionId,
                     operation.SourceFactionId,
@@ -147,18 +128,6 @@ namespace Bloodlines.PlayerCovertOps
                     targetFactionEntity,
                     operation.EscrowInfluence);
                 PlayerCounterIntelligenceSystem.ApplyStewardship(entityManager, targetFactionEntity, 1f);
-                ApplyCounterIntelligenceBoost(
-                    entityManager,
-                    targetFactionEntity,
-                    inWorldDays,
-                    DefenderCounterIntelligenceBoost);
-                if (!intercepted)
-                {
-                    PlayerCounterIntelligenceSystem.AdjustLegitimacy(
-                        entityManager,
-                        targetFactionEntity,
-                        FailedAssassinationLegitimacyGain);
-                }
             }
 
             ecb.DestroyEntity(operationEntity);
@@ -166,265 +135,135 @@ namespace Bloodlines.PlayerCovertOps
 
         private static void ApplyAssassinationEffect(
             EntityManager entityManager,
+            ref EntityCommandBuffer ecb,
+            FixedString32Bytes sourceFactionId,
+            FixedString32Bytes targetFactionId,
             Entity sourceFactionEntity,
             Entity targetFactionEntity,
-            Entity memberEntity,
-            DynastyMemberComponent member,
+            Entity targetMemberEntity,
+            DynastyMemberComponent targetMember,
             float inWorldDays)
         {
-            member.Status = DynastyMemberStatus.Fallen;
-            member.FallenAtWorldSeconds = inWorldDays * 86400f;
-            entityManager.SetComponentData(memberEntity, member);
+            targetMember.Status = DynastyMemberStatus.Fallen;
+            targetMember.FallenAtWorldSeconds = inWorldDays * 86400f;
+            entityManager.SetComponentData(targetMemberEntity, targetMember);
 
-            if (!entityManager.HasBuffer<DynastyFallenLedger>(targetFactionEntity))
+            if (targetMember.Role == DynastyRole.Commander)
             {
-                entityManager.AddBuffer<DynastyFallenLedger>(targetFactionEntity);
+                PlayerCounterIntelligenceSystem.AdjustLegitimacy(entityManager, targetFactionEntity, -CommanderLegitimacyLoss);
             }
 
-            entityManager.GetBuffer<DynastyFallenLedger>(targetFactionEntity).Add(new DynastyFallenLedger
+            if (targetMember.Role == DynastyRole.Governor)
             {
-                MemberId = member.MemberId,
-                Title = member.Title,
-                Role = member.Role,
-                FallenAtWorldSeconds = member.FallenAtWorldSeconds,
-            });
-
-            switch (member.Role)
-            {
-                case DynastyRole.HeadOfBloodline:
-                    ApplyHeadOfBloodlineRipple(entityManager, targetFactionEntity, member.MemberId);
-                    break;
-
-                case DynastyRole.Commander:
-                    PlayerCounterIntelligenceSystem.AdjustLegitimacy(
-                        entityManager,
-                        targetFactionEntity,
-                        -CommanderLegitimacyPenalty);
-                    KillCommanderUnits(entityManager, member.MemberId);
-                    break;
-
-                case DynastyRole.Governor:
-                    PlayerCounterIntelligenceSystem.AdjustLegitimacy(
-                        entityManager,
-                        targetFactionEntity,
-                        -GovernorLegitimacyPenalty);
-                    ClearGovernorAssignments(entityManager, member.MemberId);
-                    ApplyConvictionEvent(
-                        entityManager,
-                        targetFactionEntity,
-                        ConvictionBucket.Stewardship,
-                        GovernorStewardshipLoss);
-                    break;
-
-                case DynastyRole.HeirDesignate:
-                    PlayerCounterIntelligenceSystem.AdjustLegitimacy(
-                        entityManager,
-                        targetFactionEntity,
-                        -HeirLegitimacyPenalty);
-                    break;
-
-                case DynastyRole.Diplomat:
-                case DynastyRole.IdeologicalLeader:
-                case DynastyRole.Spymaster:
-                    PlayerCounterIntelligenceSystem.AdjustLegitimacy(
-                        entityManager,
-                        targetFactionEntity,
-                        -CourtOfficerLegitimacyPenalty);
-                    break;
-
-                case DynastyRole.Merchant:
-                    PlayerCounterIntelligenceSystem.AdjustLegitimacy(
-                        entityManager,
-                        targetFactionEntity,
-                        -MerchantLegitimacyPenalty);
-                    break;
+                PlayerCounterIntelligenceSystem.AdjustLegitimacy(entityManager, targetFactionEntity, -GovernorLegitimacyLoss);
+                PlayerCounterIntelligenceSystem.ApplyStewardship(entityManager, targetFactionEntity, GovernorStewardshipLoss);
             }
 
-            PlayerCounterIntelligenceSystem.ApplyRuthlessness(
-                entityManager,
-                sourceFactionEntity,
-                AttackerRuthlessnessGain);
-        }
-
-        private static void ApplyHeadOfBloodlineRipple(
-            EntityManager entityManager,
-            Entity factionEntity,
-            FixedString64Bytes fallenMemberId)
-        {
-            PlayerCounterIntelligenceSystem.AdjustLegitimacy(
-                entityManager,
-                factionEntity,
-                -HeadLegitimacyPenalty);
-            ApplyConvictionEvent(
-                entityManager,
-                factionEntity,
-                ConvictionBucket.Oathkeeping,
-                HeadOathkeepingGain);
-
-            if (TryFindSuccessor(entityManager, factionEntity, fallenMemberId, out var successorEntity, out var successor))
+            if (sourceFactionEntity != Entity.Null)
             {
-                successor.Renown = math.min(60f, successor.Renown + SuccessorRenownGain);
-                entityManager.SetComponentData(successorEntity, successor);
-                PlayerCounterIntelligenceSystem.AdjustLegitimacy(
+                PlayerCounterIntelligenceSystem.ApplyConviction(
                     entityManager,
-                    factionEntity,
-                    SuccessionRecoveryLegitimacy);
-                return;
+                    sourceFactionEntity,
+                    ConvictionBucket.Ruthlessness,
+                    AssassinationRuthlessnessGain);
             }
 
-            if (entityManager.HasComponent<DynastyStateComponent>(factionEntity))
+            if (entityManager.HasBuffer<DynastyFallenLedger>(targetFactionEntity))
             {
-                var dynasty = entityManager.GetComponentData<DynastyStateComponent>(factionEntity);
-                dynasty.Interregnum = true;
-                entityManager.SetComponentData(factionEntity, dynasty);
-            }
-
-            PlayerCounterIntelligenceSystem.AdjustLegitimacy(
-                entityManager,
-                factionEntity,
-                -InterregnumLegitimacyPenalty);
-        }
-
-        private static bool TryFindSuccessor(
-            EntityManager entityManager,
-            Entity factionEntity,
-            FixedString64Bytes fallenMemberId,
-            out Entity successorEntity,
-            out DynastyMemberComponent successor)
-        {
-            successorEntity = Entity.Null;
-            successor = default;
-            if (factionEntity == Entity.Null ||
-                !entityManager.HasBuffer<DynastyMemberRef>(factionEntity))
-            {
-                return false;
-            }
-
-            int bestOrder = int.MaxValue;
-            var roster = entityManager.GetBuffer<DynastyMemberRef>(factionEntity);
-            for (int i = 0; i < roster.Length; i++)
-            {
-                var candidateEntity = roster[i].Member;
-                if (candidateEntity == Entity.Null ||
-                    !entityManager.HasComponent<DynastyMemberComponent>(candidateEntity))
+                var fallen = entityManager.GetBuffer<DynastyFallenLedger>(targetFactionEntity);
+                fallen.Add(new DynastyFallenLedger
                 {
-                    continue;
-                }
-
-                var candidate = entityManager.GetComponentData<DynastyMemberComponent>(candidateEntity);
-                if (candidate.MemberId.Equals(fallenMemberId) ||
-                    candidate.Status != DynastyMemberStatus.Active ||
-                    candidate.Order >= bestOrder)
-                {
-                    continue;
-                }
-
-                bestOrder = candidate.Order;
-                successorEntity = candidateEntity;
-                successor = candidate;
+                    MemberId = targetMember.MemberId,
+                    Title = targetMember.Title,
+                    Role = targetMember.Role,
+                    FallenAtWorldSeconds = targetMember.FallenAtWorldSeconds,
+                });
             }
 
-            return successorEntity != Entity.Null;
+            ClearCommanderLinks(entityManager, ref ecb, targetFactionId, targetMember.MemberId);
+            ClearGovernorLinks(entityManager, ref ecb, targetMember.MemberId);
         }
 
-        private static void ApplyCounterIntelligenceBoost(
+        private static void ClearCommanderLinks(
             EntityManager entityManager,
-            Entity factionEntity,
-            float inWorldDays,
-            float amount)
-        {
-            if (factionEntity == Entity.Null ||
-                !entityManager.HasComponent<PlayerCounterIntelligenceComponent>(factionEntity))
-            {
-                return;
-            }
-
-            var watch = entityManager.GetComponentData<PlayerCounterIntelligenceComponent>(factionEntity);
-            if (watch.ExpiresAtInWorldDays <= inWorldDays)
-            {
-                return;
-            }
-
-            watch.WatchStrength += amount;
-            entityManager.SetComponentData(factionEntity, watch);
-        }
-
-        private static void KillCommanderUnits(
-            EntityManager entityManager,
+            ref EntityCommandBuffer ecb,
+            FixedString32Bytes factionId,
             FixedString64Bytes memberId)
         {
             var query = entityManager.CreateEntityQuery(
-                ComponentType.ReadOnly<CommanderComponent>(),
-                ComponentType.ReadWrite<HealthComponent>());
-            if (query.IsEmpty)
-            {
-                query.Dispose();
-                return;
-            }
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<CommanderComponent>());
 
             using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
             using var commanders = query.ToComponentDataArray<CommanderComponent>(Allocator.Temp);
-            using var healthValues = query.ToComponentDataArray<HealthComponent>(Allocator.Temp);
             query.Dispose();
 
             for (int i = 0; i < entities.Length; i++)
             {
-                if (!commanders[i].MemberId.Equals(memberId) ||
-                    healthValues[i].Current <= 0f)
+                if (!factions[i].FactionId.Equals(factionId) ||
+                    !commanders[i].MemberId.Equals(memberId))
                 {
                     continue;
                 }
 
-                var health = healthValues[i];
-                health.Current = 0f;
-                entityManager.SetComponentData(entities[i], health);
+                ecb.RemoveComponent<CommanderComponent>(entities[i]);
+                if (entityManager.HasComponent<CommanderAuraComponent>(entities[i]))
+                {
+                    ecb.RemoveComponent<CommanderAuraComponent>(entities[i]);
+                }
+
+                if (entityManager.HasComponent<CommanderAuraRecipientComponent>(entities[i]))
+                {
+                    ecb.RemoveComponent<CommanderAuraRecipientComponent>(entities[i]);
+                }
+
+                if (entityManager.HasComponent<CommanderAtKeepTag>(entities[i]))
+                {
+                    ecb.RemoveComponent<CommanderAtKeepTag>(entities[i]);
+                }
             }
         }
 
-        private static void ClearGovernorAssignments(
+        private static void ClearGovernorLinks(
             EntityManager entityManager,
+            ref EntityCommandBuffer ecb,
             FixedString64Bytes memberId)
         {
-            var seatQuery = entityManager.CreateEntityQuery(
+            var assignmentQuery = entityManager.CreateEntityQuery(
                 ComponentType.ReadOnly<GovernorSeatAssignmentComponent>());
-            if (!seatQuery.IsEmpty)
+            if (!assignmentQuery.IsEmpty)
             {
-                using var entities = seatQuery.ToEntityArray(Allocator.Temp);
-                using var seats = seatQuery.ToComponentDataArray<GovernorSeatAssignmentComponent>(Allocator.Temp);
-                seatQuery.Dispose();
+                using var assignmentEntities = assignmentQuery.ToEntityArray(Allocator.Temp);
+                using var assignments = assignmentQuery.ToComponentDataArray<GovernorSeatAssignmentComponent>(Allocator.Temp);
+                assignmentQuery.Dispose();
 
-                for (int i = 0; i < entities.Length; i++)
+                for (int i = 0; i < assignmentEntities.Length; i++)
                 {
-                    if (!seats[i].GovernorMemberId.Equals(memberId))
+                    if (assignments[i].GovernorMemberId.Equals(memberId))
                     {
-                        continue;
-                    }
-
-                    entityManager.RemoveComponent<GovernorSeatAssignmentComponent>(entities[i]);
-                    if (entityManager.HasComponent<GovernorSpecializationComponent>(entities[i]))
-                    {
-                        entityManager.RemoveComponent<GovernorSpecializationComponent>(entities[i]);
+                        ecb.RemoveComponent<GovernorSeatAssignmentComponent>(assignmentEntities[i]);
                     }
                 }
             }
             else
             {
-                seatQuery.Dispose();
+                assignmentQuery.Dispose();
             }
 
             var specializationQuery = entityManager.CreateEntityQuery(
                 ComponentType.ReadOnly<GovernorSpecializationComponent>());
             if (!specializationQuery.IsEmpty)
             {
-                using var entities = specializationQuery.ToEntityArray(Allocator.Temp);
-                using var profiles = specializationQuery.ToComponentDataArray<GovernorSpecializationComponent>(Allocator.Temp);
+                using var specializationEntities = specializationQuery.ToEntityArray(Allocator.Temp);
+                using var specializations = specializationQuery.ToComponentDataArray<GovernorSpecializationComponent>(Allocator.Temp);
                 specializationQuery.Dispose();
 
-                for (int i = 0; i < entities.Length; i++)
+                for (int i = 0; i < specializationEntities.Length; i++)
                 {
-                    if (profiles[i].GovernorMemberId.Equals(memberId))
+                    if (specializations[i].GovernorMemberId.Equals(memberId))
                     {
-                        entityManager.RemoveComponent<GovernorSpecializationComponent>(entities[i]);
+                        ecb.RemoveComponent<GovernorSpecializationComponent>(specializationEntities[i]);
                     }
                 }
             }
@@ -432,23 +271,6 @@ namespace Bloodlines.PlayerCovertOps
             {
                 specializationQuery.Dispose();
             }
-        }
-
-        private static void ApplyConvictionEvent(
-            EntityManager entityManager,
-            Entity factionEntity,
-            ConvictionBucket bucket,
-            float amount)
-        {
-            if (factionEntity == Entity.Null ||
-                !entityManager.HasComponent<ConvictionComponent>(factionEntity))
-            {
-                return;
-            }
-
-            var conviction = entityManager.GetComponentData<ConvictionComponent>(factionEntity);
-            ConvictionScoring.ApplyEvent(ref conviction, bucket, amount);
-            entityManager.SetComponentData(factionEntity, conviction);
         }
     }
 }
