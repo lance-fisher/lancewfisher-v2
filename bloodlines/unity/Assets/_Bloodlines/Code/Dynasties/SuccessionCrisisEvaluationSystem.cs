@@ -225,7 +225,9 @@ namespace Bloodlines.Dynasties
 
         private static FixedString64Bytes FindCurrentRulerMemberId(EntityManager entityManager, Entity factionEntity)
         {
-            return TryGetCurrentRuler(entityManager, factionEntity, out FixedString64Bytes memberId, out _) ? memberId : default;
+            return TryGetCurrentRuler(entityManager, factionEntity, out FixedString64Bytes memberId, out _)
+                ? memberId
+                : default;
         }
 
         private static bool IsAvailable(DynastyMemberComponent member)

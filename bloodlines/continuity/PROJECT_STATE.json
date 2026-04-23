@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-22T10:52:00-06:00",
+  "updated_at": "2026-04-23T01:43:46.9063505-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -2063,6 +2063,15 @@
       "description": "The fortification posture slice is now complete on branch. `ImminentEngagementPostureComponent`, `PlayerImminentEngagementPostureRequestComponent`, and `ImminentEngagementPostureSystem` materialize brace / steady / counterstroke posture state on active imminent-engagement settlements while preserving player-selected response ids and labels. `ImminentEngagementWarningSystem`, `FortificationReserveSystem`, `AttackResolutionSystem`, and `CombatStanceResolutionSystem` now consume posture effects through narrow additive seams only: brace boosts reserve healing, counterstroke increases frontline defender damage, the active posture adjusts muster tempo and retreat thresholds, and posture state clears automatically when the threat window resolves. `BloodlinesDebugCommandSurface.Fortification.Posture` plus `BloodlinesImminentEngagementPostureSmokeValidation` and `scripts/Invoke-BloodlinesUnityImminentEngagementPostureSmokeValidation.ps1` prove debug posture selection, one-shot player request cleanup, heal/damage deltas, and posture removal. Contract rev 95->96.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-fortification-postures.md",
       "validation_gates": "all 10 green plus imminent-engagement posture smoke"
+    },
+    {
+      "lane": "dynasty-succession-crisis-rerun",
+      "date": "2026-04-23",
+      "branch": "codex/unity-dynasty-succession-crisis-rerun",
+      "status": "complete",
+      "description": "The succession-crisis slice has been replayed onto the current master-compatible line without merging the stale historical branch that carried unrelated backwards diffs. `SuccessionCrisisComponent`, `SuccessionCrisisEvaluationSystem`, and `SuccessionCrisisRecoverySystem` remain the dynasty-owned runtime seam for browser-aligned crisis severity, opening loyalty shock, legitimacy drain, territorial trickle throttling, and conviction-aware recovery; `BloodlinesSuccessionCrisisSmokeValidation` and its wrapper remain the dedicated proof surface, and the wrapper now waits for explicit Unity pass/fail markers and retries once if batchmode exits before the marker flushes. The local generated `Assembly-CSharp*.csproj` files were repaired so analyzer roots now point at the canonical `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache` surface, and this worktree required a local `unity/Library` junction to the canonical root before the governed `dotnet build` gates could resolve `Library\\ScriptAssemblies`. Contract rev 96->97 on merge with the already-landed fortification posture slice preserved.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-dynasty-succession-crisis-rerun.md",
+      "validation_gates": "all 10 green plus succession crisis smoke"
     }
   ]
 }

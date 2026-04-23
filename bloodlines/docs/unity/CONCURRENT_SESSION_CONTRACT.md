@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 96
+- Revision: 97
 - Last Updated: 2026-04-23
-- Last Updated By: codex-fortification-postures-2026-04-23
-- Supersedes: revision 95 (Records the validated `fortification-postures` slice, adds the fortification-postures lane, and points the next Codex pickup at Priority 7 Verdant Warden faith support.)
+- Last Updated By: codex-dynasty-succession-crisis-rerun-2026-04-23
+- Supersedes: revision 96 (Preserves the validated `fortification-postures` slice, records the validated dynasty succession-crisis rerun on the current master line, and keeps the next Codex pickup at Priority 7 Verdant Warden faith support.)
 
 
 ## Purpose
@@ -229,8 +229,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: dynasty-succession-crisis
 
-- Status: retired (validated slice complete; landed onto `codex/overnight-master-2026-04-22` pending human-coordinated canonical master merge)
-- Branch Prefix: `codex/unity-dynasty-succession-crisis`
+- Status: retired (validated rerun landed onto canonical `master` in this session)
+- Branch Prefix: `codex/unity-dynasty-succession-crisis`, `codex/unity-dynasty-succession-crisis-rerun`
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/Dynasties/SuccessionCrisisComponent.cs`
@@ -239,9 +239,11 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSuccessionCrisisSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnitySuccessionCrisisSmokeValidation.ps1`
-- Shared-File Narrow Edits Planned:
+- Shared-File Narrow Edits Applied:
   - `unity/Assets/_Bloodlines/Code/Systems/ControlPointResourceTrickleSystem.cs` -- multiply existing control-point trickle by the crisis `ResourceTrickleFactor` only; no unrelated economy rewrites
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Dynasty.cs` -- additive `TryDebugGetSuccessionCrisis` readout only
+  - `unity/Assembly-CSharp.csproj` -- succession-crisis runtime entries retained and stale analyzer roots canonicalized back to `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
+  - `unity/Assembly-CSharp-Editor.csproj` -- succession-crisis validator entry retained and stale analyzer roots canonicalized back to `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/Components/DynastyMemberComponent.cs` -- read dynasty legitimacy/interregnum/member roster state without reopening the retired dynasty-core lane
   - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve faction ids for loyalty and economy application
@@ -250,10 +252,16 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- tick crisis effects on whole in-world days
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-22-unity-dynasty-succession-crisis.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-dynasty-succession-crisis-rerun.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `SUCCESSION_CRISIS_SEVERITY_PROFILES`, `buildSuccessionCrisisTriggerProfile`, `startSuccessionCrisis`, `tickDynastyPoliticalEvents`, `getSuccessionCrisisTerms`, `consolidateSuccessionCrisis`
-- Current Branch In Flight: none (validated implementation merged onto `codex/overnight-master-2026-04-22` in this session)
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-dynasty-succession-crisis.md`
+- Current Branch In Flight: none (rerun branch validated and merged onto canonical `master` in this session)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-dynasty-succession-crisis-rerun.md`
+- Last Slice State:
+  - the succession-crisis watch/evaluation/recovery seam is now replayed on the current master line without dragging in the stale historical branch's unrelated diffs
+  - dedicated succession crisis smoke plus the full 10-step governed validation chain reran green after canonicalizing stale generated analyzer roots back to `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
+  - fresh automation worktrees may still need a local `unity/Library` junction to `D:\ProjectsHome\Bloodlines\unity\Library` before the governed `dotnet build` gate can resolve `Library\ScriptAssemblies`
+  - next Codex pickup should move to Priority 7 `faith-verdant-warden`
 
 ### Lane: dynasty-political-events
 

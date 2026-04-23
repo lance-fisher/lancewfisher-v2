@@ -4698,3 +4698,39 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     `D:\\ProjectsHome\\Bloodlines\\03_PROMPTS\\CODEX_MULTI_DAY_DIRECTIVE_2026-04-23.md`
   - open `codex/unity-faith-verdant-warden` from updated `master`
   - port Verdant Warden faith unit support plus dedicated smoke validation
+
+## 2026-04-23 Dynasty Succession Crisis Rerun
+
+- Branch lane:
+  - `codex/unity-dynasty-succession-crisis-rerun`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-dynasty-succession-crisis-rerun.md`
+- Completed in this slice:
+  - replayed the succession-crisis slice onto current master-compatible code
+    instead of merging the stale historical branch, preserving the existing
+    browser-aligned crisis trigger, loyalty shock, legitimacy drain, resource
+    penalty, and conviction-aware recovery seam
+  - hardened the succession-crisis PowerShell wrapper so batchmode runs poll
+    the Unity log for explicit pass/fail markers and retry once if Unity exits
+    before the marker flushes
+  - repaired local `Assembly-CSharp*.csproj` analyzer roots back to
+    `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache`; this
+    worktree also required a local `unity/Library` junction to the canonical
+    root before `dotnet build` could resolve `Library\\ScriptAssemblies`
+- Validation state:
+  - dedicated succession crisis smoke green
+  - all 10 required governed gates green after the cache-path repair
+- Directive note:
+  - `D:\\ProjectsHome\\Bloodlines\\03_PROMPTS\\CODEX_MULTI_DAY_DIRECTIVE_2026-04-23.md`
+    is absent in the canonical root; the superseding
+    `D:\\ProjectsHome\\Bloodlines\\03_PROMPTS\\CODEX_MULTI_DAY_DIRECTIVE_2026-04-24.md`
+    remains the operative stack
+- Immediate next action:
+  - claim Priority 7 from the superseding 2026-04-24 directive
+  - open `codex/unity-faith-verdant-warden` from updated `master`
+  - port Verdant Warden faith unit support plus dedicated smoke validation
+- Staging note:
+  - keep
+    `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+    unstaged; Unity dirties it during validation and it is unrelated to this
+    slice

@@ -3849,3 +3849,43 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Contract revision advanced `95 -> 96` and now records the active
   `fortification-postures` lane with no branch in flight. The next additive
   pickup from the directive stack is Priority 7 Verdant Warden faith support.
+
+## 2026-04-23 Dynasty Succession Crisis Rerun
+
+- Branch lane: `codex/unity-dynasty-succession-crisis-rerun`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-dynasty-succession-crisis-rerun.md`.
+- Completed in this slice:
+  - replayed the already-specified succession-crisis ECS slice onto the current
+    master line instead of merging the stale historical
+    `codex/unity-dynasty-succession-crisis` branch, which carried unrelated
+    backward diffs against current master
+  - kept the existing runtime seam centered on
+    `SuccessionCrisisComponent`,
+    `SuccessionCrisisEvaluationSystem`,
+    and
+    `SuccessionCrisisRecoverySystem`,
+    with opening loyalty shock, legitimacy drain, resource throttling, and
+    conviction-aware recovery intact
+  - hardened
+    `scripts/Invoke-BloodlinesUnitySuccessionCrisisSmokeValidation.ps1`
+    so it now waits for explicit Unity pass/fail markers and retries once if
+    batchmode exits before the marker is flushed
+  - repaired local `Assembly-CSharp*.csproj` analyzer roots back to the
+    canonical `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache`
+    surface and restored this worktree's missing `unity/Library` path through
+    a local junction to the canonical root so the governed `dotnet build` gate
+    could resolve `Library\\ScriptAssemblies`
+- Validation state:
+  - dedicated succession crisis smoke green
+  - all 10 required governed gates green after the canonical cache-path repair
+- Directive note:
+  - prompt-requested
+    `D:\\ProjectsHome\\Bloodlines\\03_PROMPTS\\CODEX_MULTI_DAY_DIRECTIVE_2026-04-23.md`
+    is absent; the superseding
+    `D:\\ProjectsHome\\Bloodlines\\03_PROMPTS\\CODEX_MULTI_DAY_DIRECTIVE_2026-04-24.md`
+    was the operative priority stack for this run
+- Immediate next action:
+  - claim Priority 7 from the superseding 2026-04-24 directive
+  - open `codex/unity-faith-verdant-warden` from updated `master`
+  - port Verdant Warden faith unit support plus dedicated smoke validation
