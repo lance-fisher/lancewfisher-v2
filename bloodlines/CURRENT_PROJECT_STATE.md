@@ -4486,3 +4486,36 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
     canonical `master` with `git merge --no-ff`, rerun the full validation
     chain plus the dedicated dispatch smoke on the merged result, then move to
     Priority 19 `codex/unity-contested-territory-pressure`
+
+## 2026-04-23 Player Covenant Test Dispatch Landing
+
+- Landing state:
+  - merged `codex/unity-player-covenant-test-dispatch` onto canonical
+    `master` via merge commit `de39a803` on a clean detached landing worktree
+- Landing handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-covenant-test-dispatch-landing.md`
+- Completed in this landing pass:
+  - reran the full governed 10-gate chain on the merged result
+  - reran the dedicated player covenant-test dispatch smoke on the merged
+    result
+  - re-canonicalized `unity/Assembly-CSharp*.csproj` analyzer roots back to
+    `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache` after the landing
+    builds rewrote them to the detached worktree path
+  - recorded the landing handoff and cleared the faith-covenant-test
+    branch-in-flight marker in the concurrent-session contract
+- Validation state:
+  - runtime build green
+  - editor build green with existing repo-wide warnings only
+  - bootstrap runtime smoke green
+  - combat smoke green
+  - canonical scene-shell validation green
+  - fortification smoke green
+  - siege smoke green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - dedicated player covenant-test dispatch smoke green
+  - final contract staleness recheck green at revision `114`
+- Contract revision advanced `113 -> 114`.
+- Immediate next action:
+  - start Priority 19 `codex/unity-contested-territory-pressure` from the
+    updated canonical `master`

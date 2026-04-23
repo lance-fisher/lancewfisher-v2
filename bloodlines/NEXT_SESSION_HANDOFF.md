@@ -5380,3 +5380,40 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
     unstaged; Unity dirties it during validation and it is unrelated to this
     slice
+
+## 2026-04-23 Player Covenant Test Dispatch Landing
+
+- Landing state:
+  - merged `codex/unity-player-covenant-test-dispatch` onto canonical
+    `master` via merge commit `de39a803` on a clean detached landing worktree
+- Landing handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-covenant-test-dispatch-landing.md`
+- Completed in this landing pass:
+  - reran the full governed 10-gate chain on the merged result
+  - reran the dedicated player covenant-test dispatch smoke on the merged
+    result
+  - re-canonicalized `unity/Assembly-CSharp*.csproj` analyzer roots back to
+    `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache` after the landing
+    builds rewrote them to the detached worktree path
+  - cleared the faith-covenant-test branch-in-flight marker in the contract
+    and pointed the next pickup at Priority 19
+- Validation state:
+  - runtime build green
+  - editor build green with existing repo-wide warnings only
+  - bootstrap runtime smoke green
+  - combat smoke green
+  - canonical scene-shell validation green
+  - fortification smoke green
+  - siege smoke green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - dedicated player covenant-test dispatch smoke green
+  - final contract staleness recheck green at revision `114`
+- Immediate next action:
+  - open a fresh `codex/unity-contested-territory-pressure` branch from
+    updated canonical `master`
+  - read the browser territorial pressure seam in
+    `src/game/core/simulation.js` plus the current Unity `WorldPressure/**`
+    surfaces
+  - port the next additive non-AI slice with a dedicated smoke validator and
+    matching PowerShell wrapper
