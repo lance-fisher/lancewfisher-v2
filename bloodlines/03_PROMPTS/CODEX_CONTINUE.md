@@ -10,17 +10,20 @@ EXECUTION LOOP (repeat until session capacity runs out):
 2. Read the browser reference source code in src/game/core/simulation.js and/or src/game/core/ai.js for the system you are porting (do not edit these files -- read only).
 3. Implement the Unity ECS sub-slice. Use ISystem, SystemAPI, EntityCommandBuffer, NativeArray. No MonoBehaviour runtime systems.
 4. Write a dedicated smoke validator in unity/Assets/_Bloodlines/Code/Editor/ with a matching PowerShell wrapper in scripts/.
-5. Run all 10 validation gates serially (Unity holds a project lock -- do not parallelize): dotnet build unity/Assembly-CSharp.csproj -nologo, dotnet build unity/Assembly-CSharp-Editor.csproj -nologo, scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1, scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1, scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1, scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1, scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1, node tests/data-validation.mjs, node tests/runtime-bridge.mjs, scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1.
-6. Write a per-slice handoff at docs/unity/session-handoffs/YYYY-MM-DD-unity-lane-slice.md.
-7. Update docs/unity/CONCURRENT_SESSION_CONTRACT.md: bump Revision, set Last Updated to today, set Last Updated By to claude-code-YYYY-MM-DD, update the lane subsection.
-8. Append (do not overwrite) new entries to CURRENT_PROJECT_STATE.md, NEXT_SESSION_HANDOFF.md, and continuity/PROJECT_STATE.json.
-9. Stage only the files belonging to this sub-slice. Commit with: git commit -m "Merge codex/unity-lane-description: one-line description". Push to origin. Do NOT skip the push -- git push is pre-authorized.
-10. Immediately begin the next sub-slice from the priority stack. Do not stop and wait. Chain as many sub-slices as session capacity allows.
+5. After creating any new .cs files, add <Compile Include="..."/> entries for them to unity/Assembly-CSharp.csproj (runtime files) or unity/Assembly-CSharp-Editor.csproj (Editor files). Do not skip this step -- the build will fail without it.
+6. Run all 10 validation gates serially (Unity holds a project lock -- do not parallelize): dotnet build unity/Assembly-CSharp.csproj -nologo, dotnet build unity/Assembly-CSharp-Editor.csproj -nologo, scripts/Invoke-BloodlinesUnityBootstrapRuntimeSmokeValidation.ps1, scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1, scripts/Invoke-BloodlinesUnityValidateCanonicalSceneShells.ps1, scripts/Invoke-BloodlinesUnityFortificationSmokeValidation.ps1, scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1, node tests/data-validation.mjs, node tests/runtime-bridge.mjs, scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1.
+7. Write a per-slice handoff at docs/unity/session-handoffs/YYYY-MM-DD-unity-lane-slice.md.
+8. Update docs/unity/CONCURRENT_SESSION_CONTRACT.md: bump Revision, set Last Updated to today, set Last Updated By to codex-<lane>-YYYY-MM-DD, update the lane subsection.
+9. Append (do not overwrite) new entries to CURRENT_PROJECT_STATE.md, NEXT_SESSION_HANDOFF.md, and continuity/PROJECT_STATE.json.
+10. Stage only the files belonging to this sub-slice. Push the branch to origin. Merge to master with git merge --no-ff. Push master. Do NOT skip the push or the merge -- git push is pre-authorized.
+11. Immediately begin the next sub-slice from the priority stack. Do not stop and wait. Chain as many sub-slices as session capacity allows.
 
 HARD RULES:
 - Do not touch files under unity/Assets/_Bloodlines/Code/AI/** -- that path is exclusively owned by the Claude Code ai-strategic-layer lane.
 - Do not edit src/, data/, tests/, or play.html -- these are frozen behavioral specification files.
 - Every sub-slice must pass all 10 validation gates before committing. Never commit on a red gate.
+- Every new .cs file must be added to the appropriate csproj (runtime vs Editor). Verify with: Select-String -Path unity/Assembly-CSharp.csproj -Pattern <NewFileName>. Missing csproj entries break the Assembly-CSharp build even if files exist on disk.
 - Append-only on CURRENT_PROJECT_STATE.md, NEXT_SESSION_HANDOFF.md, continuity/PROJECT_STATE.json -- never overwrite another lane's entries.
 - If a validation gate fails, fix the failure before moving on. Do not skip gates or commit broken code.
+- After pushing your branch, merge it to master with git merge --no-ff and push master. Leaving a branch unmerged means the next session branches from stale master and may duplicate your work.
 - If you run out of session capacity mid-slice, commit the WIP, push it, and update the handoff with exactly where you stopped and what the next action is.
