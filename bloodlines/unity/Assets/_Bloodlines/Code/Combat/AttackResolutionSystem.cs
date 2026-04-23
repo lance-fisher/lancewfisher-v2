@@ -1,5 +1,6 @@
 using Bloodlines.Components;
 using Bloodlines.Conviction;
+using Bloodlines.Dynasties;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -150,6 +151,14 @@ namespace Bloodlines.Systems
 
                 if (combat.AttackDamage > 0f && combat.CooldownRemaining <= 0f)
                 {
+                    float politicalAttackMultiplier = DynastyPoliticalEventUtility.TryGetAggregateByFactionId(
+                        entityManager,
+                        faction.ValueRO.FactionId,
+                        out var politicalAggregate)
+                        ? math.max(0.1f, politicalAggregate.AttackMultiplier)
+                        : 1f;
+                    float attackDamage = combat.AttackDamage * politicalAttackMultiplier;
+
                     if (entityManager.HasComponent<ProjectileFactoryComponent>(entity))
                     {
                         var projectileFactory = entityManager.GetComponentData<ProjectileFactoryComponent>(entity);
@@ -160,12 +169,12 @@ namespace Bloodlines.Systems
                             attackTarget.TargetEntity,
                             position.ValueRO.Value,
                             targetPosition.Value,
-                            combat.AttackDamage,
+                            attackDamage,
                             projectileFactory);
                     }
                     else
                     {
-                        targetHealth.Current = math.max(0f, targetHealth.Current - combat.AttackDamage);
+                        targetHealth.Current = math.max(0f, targetHealth.Current - attackDamage);
                         if (targetHealth.Current <= 0f &&
                             CommanderCaptureUtility.TryGetFactionConvictionBand(
                                 entityManager,

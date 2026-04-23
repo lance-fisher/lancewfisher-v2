@@ -118,6 +118,7 @@ Next recommended action: claim the next Codex HUD follow-up slice and land eithe
     fields plus explicit status enums
   - `LesserHouseLoyaltyDriftSystem` now mirrors the browser drift stack:
     legitimacy/oathkeeping/ruthlessness/fallen-ledger base delta,
+
     mixed-bloodline pressure, active-versus-fractured marriage-anchor effects,
     and world-pressure penalties
   - zero loyalty now starts a 5-day grace window before defection, and the
@@ -4487,3 +4488,70 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   rather than inventing another parallel match-summary object.
 - `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
   still dirties during Unity validation and should remain unstaged.
+
+## 2026-04-22 Dynasty Political Events
+
+- Branch lane:
+  - `codex/unity-dynasty-political-events`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-22-unity-dynasty-political-events.md`
+- Completed in this slice:
+  - `DynastyPoliticalEventComponent` plus
+    `DynastyPoliticalEventAggregateComponent`
+    now give faction roots a timed dynasty political-event buffer and a
+    composite read-model for attack, resource, and stabilization multipliers
+  - `DynastyPoliticalEventSystem` now expires old events, recomputes the
+    aggregate snapshot, and converts failed divine-right upkeep into a timed
+    `DivineRightFailedCooldown` event when an active declaration drops below
+    the required faith intensity or level
+  - `PlayerDivineRightDeclarationSystem` now blocks redeclaration while the
+    failed divine-right cooldown event is active, and the shared combat,
+    economy, and stabilization seams now consume the political-event aggregate
+  - `BloodlinesDebugCommandSurface.Dynasty` now exposes
+    `TryDebugGetPoliticalEvents(...)`, and
+    `BloodlinesDynastyPoliticalEventsSmokeValidation` plus wrapper now prove
+    aggregate application, cooldown creation, and expiry/reset behavior
+- Validation state:
+  - dedicated dynasty political events smoke green
+  - all 10 required governed gates green in this worktree
+  - the first combat wrapper pass exited before logging an explicit result
+    after import/compile churn; the mandated immediate rerun passed cleanly and
+    the full chain completed green
+- Immediate next action:
+  - keep `codex/unity-dynasty-political-events` pushed for review
+  - start Priority 3 on a fresh branch:
+    `codex/unity-faith-covenant-test`
+  - implement the covenant-test qualification and resolution loop, then wire
+    the existing political-event lane's covenant cooldown placeholder to the
+    real faith test failure path
+
+## 2026-04-22 Dynasty Political Events Landing
+
+- Landing branch:
+  - `codex/overnight-land-dynasty-political-events-2026-04-22`
+- What completed here:
+  - the already-finished `codex/unity-dynasty-political-events` branch was
+    discovered, merged forward onto current `origin/master`, and revalidated
+    instead of being duplicated from scratch
+  - `DynastyPoliticalEventComponent` and `DynastyPoliticalEventSystem` now land
+    on the current master line together with the dedicated editor smoke and
+    wrapper
+  - `PlayerDivineRightDeclarationSystem`,
+    `AttackResolutionSystem`,
+    `ResourceTrickleBuildingSystem`,
+    `ControlPointResourceTrickleSystem`,
+    `ControlPointCaptureSystem`, and
+    `BloodlinesDebugCommandSurface.Dynasty`
+    now carry the political-event aggregate through their narrow approved seams
+  - the generated `Assembly-CSharp*.csproj` files now include the new compile
+    entries and were canonicalized back to
+    `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache` analyzer paths
+- Validation state:
+  - dedicated dynasty political events smoke green
+  - all 10 required governed gates green in this worktree after the landing
+    merge
+- Immediate next action:
+  - open a fresh branch from updated `master` for
+    `codex/unity-faith-covenant-test`
+  - port the browser covenant-test qualification and resolution loop, then wire
+    `DynastyPoliticalEventTypes.CovenantTestCooldown` to the real failure path

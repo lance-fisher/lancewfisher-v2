@@ -3639,3 +3639,71 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   and contract staleness.
 - Contract revision advanced `85 -> 90` in this worktree and now records the
   active `dynasty-succession-crisis` lane plus the narrow shared-file edits.
+
+## 2026-04-22 Dynasty Political Events Slice
+
+- Branch in flight: `codex/unity-dynasty-political-events`.
+- `unity/Assets/_Bloodlines/Code/Dynasties/DynastyPoliticalEventComponent.cs`
+  and
+  `DynastyPoliticalEventSystem.cs`
+  now add the generalized timed dynasty political-event container under
+  `Dynasties/**`: faction roots can hold active timed event entries, expired
+  entries are culled on tick, and the system projects a composite aggregate for
+  resource trickle, attack damage, and loyalty stabilization multipliers.
+- `PlayerDivineRightDeclarationSystem.cs` now treats failed divine-right
+  recovery as a real timed block: when an active divine-right operation loses
+  the required faith intensity or level, the operation is shut down and a
+  `DivineRightFailedCooldown` event is written to the faction political-event
+  buffer; new declarations are rejected until the cooldown expires.
+- `AttackResolutionSystem.cs`,
+  `ResourceTrickleBuildingSystem.cs`,
+  `ControlPointResourceTrickleSystem.cs`,
+  and
+  `ControlPointCaptureSystem.cs`
+  now consume the political-event aggregate through narrow additive seams only.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyPoliticalEventsSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityDynastyPoliticalEventsSmokeValidation.ps1`
+  now prove aggregate application, divine-right failure cooldown creation, and
+  event expiry/reset in isolated ECS validation worlds.
+- Governed validation is green on the branch: dedicated dynasty political
+  events smoke, runtime build, editor build, bootstrap runtime smoke, combat
+  smoke, canonical scene-shell validation, fortification smoke, siege smoke,
+  `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`,
+  and contract staleness.
+- Contract revision advanced `90 -> 91` and now records the active
+  `dynasty-political-events` lane while retiring the implementation phase of
+  `dynasty-succession-crisis` after its validated landing onto
+  `codex/overnight-master-2026-04-22`.
+
+## 2026-04-22 Dynasty Political Events Landing
+
+- Landing branch: `codex/overnight-land-dynasty-political-events-2026-04-22`.
+- The validated `codex/unity-dynasty-political-events` slice has been replayed
+  and hardened on top of current canonical `origin/master` rather than
+  reimplemented from zero because the repo had advanced past the stale HUD-only
+  handoff and already contained the completed political-events branch off to
+  the side.
+- `DynastyPoliticalEventComponent`,
+  `DynastyPoliticalEventSystem`,
+  `BloodlinesDynastyPoliticalEventsSmokeValidation`,
+  and
+  `Invoke-BloodlinesUnityDynastyPoliticalEventsSmokeValidation.ps1`
+  now land together with the narrow shared-file seams that project political
+  event attack, resource, stabilization, and failed-divine-right cooldown
+  effects into the current Unity ECS runtime.
+- The generated `Assembly-CSharp*.csproj` files were also normalized during the
+  landing so the new compile includes are present and the analyzer references
+  point back at the canonical
+  `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache`
+  surface instead of this temporary Codex worktree path.
+- Governed validation reran green on the landing branch: dedicated dynasty
+  political events smoke, runtime build, editor build, bootstrap runtime smoke,
+  combat smoke, canonical scene-shell validation, fortification smoke, siege
+  smoke, `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`, and contract staleness.
+- Contract revision advanced `91 -> 92` and now records the dynasty political
+  events lane as landed with no branch in flight. The next additive pickup is
+  the faith covenant-test follow-up that should consume the existing
+  `CovenantTestCooldown` placeholder.
