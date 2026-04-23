@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-23T03:03:02.7135825-06:00",
+  "updated_at": "2026-04-23T07:59:03.1529503-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -357,7 +357,9 @@
     "alliance_threshold_pressure_and_population_acceptance_stage_5_sovereignty_follow_up",
     "broader_political_event_follow_up_after_succession_crisis_alliance_breaks_realm_shifts_and_stage_event_pressure",
     "world_pressure_follow_up_deeper_multi_kingdom_and_stage_structure_pressure",
-    "neutral_power_stage_presence_and_trueborn_return_condition_foundation"
+    "neutral_power_stage_presence_and_trueborn_return_condition_foundation",
+    "priority_13_minor_house_levy_validation_and_completion",
+    "priority_14_trueborn_city_rise_arc_subslice_1"
   ],
   "continuation_platform": {
     "status": "production_ready_chat_first_command_deck_with_governed_local_runner_task_loop_and_governed_write_flow_validated",
@@ -471,7 +473,7 @@
   "latest_doctrine_appendix": "02_SESSION_INGESTIONS/2026-04-14_design_doctrine_docx_ingestion/BLOODLINES_MASTER_DESIGN_DOCTRINE_RAW_INGESTION_APPENDIX_2026-04-14.md",
   "latest_environment_report": "ENVIRONMENT_REPORT_2026-04-14.md",
   "latest_wave_plan": "docs/plans/2026-04-14-fortification-siege-population-legibility-wave.md",
-  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-counter-intelligence-landing.md",
+  "latest_unity_session_handoff": "docs/unity/session-handoffs/2026-04-23-unity-governance-coalition-pressure.md",
   "latest_unity_ai_strategic_layer_handoff": "docs/unity/session-handoffs/2026-04-19-unity-ai-strategic-layer-bundle-2-holy-war-and-divine-right-execution.md",
   "latest_unity_fortification_siege_handoff": "docs/unity/session-handoffs/2026-04-19-unity-fortification-siege-breach-sealing-recovery.md",
   "latest_unity_graphics_handoff": "docs/unity/session-handoffs/2026-04-17-unity-graphics-infrastructure-foundation.md",
@@ -482,17 +484,21 @@
   "latest_unity_dynasty_handoff": "docs/unity/session-handoffs/2026-04-21-unity-player-marriage-proposal-landing.md",
   "latest_unity_faith_handoff": "docs/unity/session-handoffs/2026-04-17-unity-faith-commitment-and-intensity.md",
   "latest_unity_fortification_handoff": "docs/unity/session-handoffs/2026-04-21-unity-fortification-siege-sealing-cost-tier-scaling.md",
-  "latest_governance_handoff": "docs/unity/session-handoffs/2026-04-17-governance-contract-source-of-truth.md",
+  "latest_governance_handoff": "docs/unity/session-handoffs/2026-04-23-unity-governance-coalition-pressure.md",
   "latest_browser_to_unity_migration_plan": "docs/plans/2026-04-17-browser-to-unity-migration-plan.md",
   "concurrent_session_contract": {
     "path": "docs/unity/CONCURRENT_SESSION_CONTRACT.md",
-    "revision": 65,
-    "last_updated": "2026-04-21",
-    "last_updated_by": "codex-player-covert-ops-landing-2026-04-21",
+    "revision": 104,
+    "last_updated": "2026-04-23",
+    "last_updated_by": "codex-world-governance-coalition-2026-04-23",
     "staleness_check_script": "scripts/Invoke-BloodlinesUnityContractStalenessCheck.ps1",
     "active_lanes": [
       "ai-strategic-layer",
-      "player-marriage-diplomacy"
+      "dynasty-renown-prestige",
+      "player-diplomacy",
+      "player-covert-ops",
+      "hud-legibility",
+      "world-governance-coalition"
     ],
     "paused_lanes": [
       "fortification-siege-imminent-engagement",
@@ -516,8 +522,8 @@
       "tier2-batch-dynasty-systems"
     ],
     "next_unblocked_tier_1_lanes": [
-      "ai-strategic-layer-sub-slice-14-narrative-message-bridge",
-      "ai-strategic-layer-sub-slice-16-captive-recovery-execution"
+      "dynasty-minor-house-levy",
+      "world-trueborn-rise"
     ]
   },
   "latest_unity_economy_handoff": "docs/unity/session-handoffs/2026-04-17-unity-cap-pressure-response.md",
@@ -2135,6 +2141,15 @@
       "description": "A master-compatible follow-up corrected the already-landed covert-ops runtime without rewriting the historical slice branch. `EspionageResolutionSystem`, `AssassinationResolutionSystem`, and `SabotageResolutionSystem` now consume the stored dispatch-time `SuccessScore`, `PlayerSabotageEffectComponent` owns the active gate/burn timers while the earlier `PlayerSabotageStatusComponent` file remains preserved, gate opening now promotes a same-frame temporary breach, and fire/supply/well sabotage write the intended live ECS fallout (`BuildingRaidStateComponent`, `RealmConditionComponent`, and elapsed-time burn damage). `IntelligenceReportElement`, `BloodlinesDebugCommandSurface.PlayerCovertOps`, and `BloodlinesPlayerCovertOpsResolutionSmokeValidation` were tightened so richer dossiers, commander/governor fallout, and sabotage variants are all provable on the merged master-compatible line. The full governed 10-gate chain is green with contract rev 102->103.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-player-covert-ops-resolution-effects-followup.md",
       "validation_gates": "all 10 green plus player covert-ops resolution smoke"
+    },
+    {
+      "lane": "world-governance-coalition-slice-1",
+      "date": "2026-04-23",
+      "branch": "codex/unity-governance-coalition-pressure",
+      "status": "complete",
+      "description": "The governance coalition-pressure slice is now complete on branch. `TerritorialGovernanceRecognitionComponent` and `GovernanceCoalitionPressureSystem` add the browser territorial-governance recognition / acceptance / coalition-pressure seam under `WorldPressure/**`: kingdom faction roots now auto-seed live recognition state, acceptance seed/target/rise/fall terms, sustain and victory timers, weakest-march tracking, and 90-second hostile-alliance cycles that erode frontier loyalty, legitimacy, and acceptance momentum above the 60% alliance threshold. `WorldPressureComponent` plus `WorldPressureEscalationSystem` now carry the territorial-governance recognition contribution, `VictoryConditionEvaluationSystem` now resolves Territorial Governance from the live recognition surface first while preserving the prior fallback, and `BloodlinesDebugCommandSurface.WorldPressure` plus `BloodlinesGovernanceCoalitionPressureSmokeValidation` and its wrapper expose and prove bootstrap issuance, above-threshold pressure, below-threshold non-triggering, and completed-recognition victory. The full governed 10-gate chain is green with contract rev 103->104.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-governance-coalition-pressure.md",
+      "validation_gates": "all 10 green plus governance coalition pressure smoke"
     }
   ]
 }

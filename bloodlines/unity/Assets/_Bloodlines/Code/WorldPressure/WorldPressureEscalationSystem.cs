@@ -13,7 +13,12 @@ namespace Bloodlines.Systems
     ///
     /// Browser equivalent: updateWorldPressureEscalation (simulation.js:13709).
     ///
-    /// Score sources ported in this slice:
+    /// Score sources ported on the current master line:
+    ///   territorial governance recognition:
+    ///     0 / 3 / 5 / 6 / 7 depending on the live recognition state
+    ///     (simulation.js getTerritorialGovernanceWorldPressureContribution)
+    ///
+    /// Earlier score sources:
     ///   territoryExpansion = max(0, ownedTerritories - 2)  -- simulation.js:13193
     ///   greatReckoning     = 4 when faction is the Great Reckoning target  -- sim:13186
     ///
@@ -104,6 +109,7 @@ namespace Bloodlines.Systems
 
             // First pass: compute scores for all kingdom factions.
             var scores = new NativeArray<int>(factionEntities.Length, Allocator.Temp);
+            var governanceScores = new NativeArray<int>(factionEntities.Length, Allocator.Temp);
             var expansionScores = new NativeArray<int>(factionEntities.Length, Allocator.Temp);
             var grScores = new NativeArray<int>(factionEntities.Length, Allocator.Temp);
 
@@ -114,9 +120,13 @@ namespace Bloodlines.Systems
                 int territories = territoryMap.TryGetValue(factionId, out int t) ? t : 0;
                 int expansion = math.max(0, territories - 2);
                 int gr = (greatReckoningActive && greatReckoningTargetId == factionId) ? GreatReckoningPressureScore : 0;
+                int governance = em.HasComponent<TerritorialGovernanceRecognitionComponent>(factionEntities[i])
+                    ? em.GetComponentData<TerritorialGovernanceRecognitionComponent>(factionEntities[i]).WorldPressureContribution
+                    : 0;
+                governanceScores[i] = governance;
                 expansionScores[i] = expansion;
                 grScores[i] = gr;
-                scores[i] = expansion + gr;
+                scores[i] = expansion + gr + governance;
             }
             territoryMap.Dispose();
 
@@ -142,6 +152,7 @@ namespace Bloodlines.Systems
                 bool isLeader = (i == dominantIdx);
 
                 wp.Score = scores[i];
+                wp.TerritorialGovernanceRecognitionScore = governanceScores[i];
                 wp.TerritoryExpansionScore = expansionScores[i];
                 wp.GreatReckoningScore = grScores[i];
                 wp.Targeted = isLeader && scores[i] > 0;
@@ -168,6 +179,7 @@ namespace Bloodlines.Systems
             }
 
             scores.Dispose();
+            governanceScores.Dispose();
             expansionScores.Dispose();
             grScores.Dispose();
             factionEntities.Dispose();

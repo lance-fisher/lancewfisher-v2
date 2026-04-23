@@ -13,11 +13,11 @@ namespace Bloodlines.Victory
     ///   Any command_hall entity carrying DeadTag triggers immediate resolution.
     ///   Player command hall dead -> Lost. Enemy command hall dead -> Won.
     ///
-    /// Condition 2 -- Territorial Governance (browser: simulation.js ~1661, const line 151)
-    ///   All player-owned ControlPointComponent entities must have Loyalty >=
-    ///   TERRITORIAL_GOVERNANCE_VICTORY_LOYALTY_THRESHOLD (90). While that holds, accumulate
-    ///   real-time seconds. At TERRITORIAL_GOVERNANCE_VICTORY_SECONDS (120) trigger victory.
-    ///   If the condition ever breaks, reset the accumulator to 0.
+    /// Condition 2 -- Territorial Governance (browser: simulation.js ~1545, 1723, 1814)
+    ///   TerritorialGovernanceRecognitionComponent owns the live acceptance,
+    ///   integration, and victory-hold state. Once the recognition completes or the
+    ///   acceptance-gated victory hold reaches 120 seconds, player victory resolves.
+    ///   If the recognition surface is absent, the older loyalty-only fallback remains.
     ///
     /// Condition 3 -- Divine Right (browser: simulation.js ~10738, const line 9782)
     ///   A faction with FaithStateComponent.Level >= 5 and Intensity >=
@@ -83,42 +83,87 @@ namespace Bloodlines.Victory
             buildingFactions.Dispose();
 
             // --- Condition 2: Territorial Governance ---
-            var cpQuery    = em.CreateEntityQuery(
-                ComponentType.ReadOnly<ControlPointComponent>(),
-                ComponentType.ReadOnly<FactionComponent>());
-            var cpFactions  = cpQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp);
-            var cpComponents = cpQuery.ToComponentDataArray<ControlPointComponent>(Allocator.Temp);
-            cpQuery.Dispose();
-
-            int playerHeld  = 0;
-            int playerLoyal = 0;
-            for (int i = 0; i < cpComponents.Length; i++)
+            bool usedRecognitionPath = false;
+            var governanceQuery = em.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<TerritorialGovernanceRecognitionComponent>());
+            if (!governanceQuery.IsEmptyIgnoreFilter)
             {
-                if (!cpFactions[i].FactionId.Equals(PlayerFactionId))
-                    continue;
-                playerHeld++;
-                if (cpComponents[i].Loyalty >= TerritorialGovernanceLoyaltyThreshold)
-                    playerLoyal++;
-            }
-            cpComponents.Dispose();
-            cpFactions.Dispose();
+                var governanceFactions =
+                    governanceQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+                var governanceStates =
+                    governanceQuery.ToComponentDataArray<TerritorialGovernanceRecognitionComponent>(Allocator.Temp);
+                governanceQuery.Dispose();
 
-            if (playerHeld > 0 && playerLoyal == playerHeld)
-            {
-                victory.TerritorialGovernanceHoldSeconds += dt;
-                if (victory.TerritorialGovernanceHoldSeconds >= TerritorialGovernanceVictorySeconds)
+                for (int i = 0; i < governanceFactions.Length; i++)
                 {
-                    victory.Status      = MatchStatus.Won;
-                    victory.VictoryType = VictoryConditionId.TerritorialGovernance;
-                    victory.WinnerFactionId = PlayerFactionId;
-                    victory.VictoryReason   = new FixedString128Bytes("Territorial Governance victory.");
-                    SystemAPI.SetSingleton(victory);
-                    return;
+                    if (!governanceFactions[i].FactionId.Equals(PlayerFactionId))
+                    {
+                        continue;
+                    }
+
+                    usedRecognitionPath = true;
+                    victory.TerritorialGovernanceHoldSeconds = governanceStates[i].VictoryHoldSeconds;
+                    if (governanceStates[i].Completed ||
+                        governanceStates[i].VictoryHoldSeconds >= TerritorialGovernanceVictorySeconds)
+                    {
+                        victory.Status = MatchStatus.Won;
+                        victory.VictoryType = VictoryConditionId.TerritorialGovernance;
+                        victory.WinnerFactionId = PlayerFactionId;
+                        victory.VictoryReason =
+                            new FixedString128Bytes("Territorial Governance victory.");
+                        governanceFactions.Dispose();
+                        governanceStates.Dispose();
+                        SystemAPI.SetSingleton(victory);
+                        return;
+                    }
+
+                    break;
                 }
+
+                governanceFactions.Dispose();
+                governanceStates.Dispose();
             }
-            else
+
+            if (!usedRecognitionPath)
             {
-                victory.TerritorialGovernanceHoldSeconds = 0f;
+                var cpQuery = em.CreateEntityQuery(
+                    ComponentType.ReadOnly<ControlPointComponent>(),
+                    ComponentType.ReadOnly<FactionComponent>());
+                var cpFactions = cpQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+                var cpComponents = cpQuery.ToComponentDataArray<ControlPointComponent>(Allocator.Temp);
+                cpQuery.Dispose();
+
+                int playerHeld = 0;
+                int playerLoyal = 0;
+                for (int i = 0; i < cpComponents.Length; i++)
+                {
+                    if (!cpFactions[i].FactionId.Equals(PlayerFactionId))
+                        continue;
+                    playerHeld++;
+                    if (cpComponents[i].Loyalty >= TerritorialGovernanceLoyaltyThreshold)
+                        playerLoyal++;
+                }
+                cpComponents.Dispose();
+                cpFactions.Dispose();
+
+                if (playerHeld > 0 && playerLoyal == playerHeld)
+                {
+                    victory.TerritorialGovernanceHoldSeconds += dt;
+                    if (victory.TerritorialGovernanceHoldSeconds >= TerritorialGovernanceVictorySeconds)
+                    {
+                        victory.Status = MatchStatus.Won;
+                        victory.VictoryType = VictoryConditionId.TerritorialGovernance;
+                        victory.WinnerFactionId = PlayerFactionId;
+                        victory.VictoryReason = new FixedString128Bytes("Territorial Governance victory.");
+                        SystemAPI.SetSingleton(victory);
+                        return;
+                    }
+                }
+                else
+                {
+                    victory.TerritorialGovernanceHoldSeconds = 0f;
+                }
             }
 
             // --- Condition 3: Divine Right ---

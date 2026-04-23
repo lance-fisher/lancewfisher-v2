@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 103
+- Revision: 104
 - Last Updated: 2026-04-23
-- Last Updated By: codex-player-covert-ops-followup-2026-04-23
-- Supersedes: revision 102 (Records the validated `player-covert-ops-resolution-effects` follow-up on the current master line and keeps the next clean Codex pickup at Priority 12 governance coalition pressure.)
+- Last Updated By: codex-world-governance-coalition-2026-04-23
+- Supersedes: revision 103 (Records the validated `world-governance-coalition` slice on the current master line and advances the next clean Codex pickup to Priority 13 minor-house levy validation.)
 
 
 ## Purpose
@@ -647,6 +647,44 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - Current Branch In Flight: none (merged into master)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-world-pressure-escalation.md`
 
+### Lane: world-governance-coalition
+
+- Status: active (validated governance coalition-pressure slice landed on canonical `master`; no branch currently in flight)
+- Branch Prefix: `codex/unity-governance-coalition-pressure`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/TerritorialGovernanceRecognitionComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/GovernanceCoalitionPressureSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesGovernanceCoalitionPressureSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityGovernanceCoalitionPressureSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/WorldPressureComponent.cs` -- additive `TerritorialGovernanceRecognitionScore` read-model only
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/WorldPressureEscalationSystem.cs` -- consume governance recognition contribution without reopening the older escalation score sources
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.WorldPressure.cs` -- additive `TryDebugGetGovernanceCoalitionState` readout only
+  - `unity/Assets/_Bloodlines/Code/Victory/VictoryConditionEvaluationSystem.cs` -- consume the live recognition component first for Territorial Governance completion while preserving the prior fallback
+  - `unity/Assembly-CSharp.csproj` -- compile includes retained for the governance coalition runtime files
+  - `unity/Assembly-CSharp-Editor.csproj` -- compile include retained for the governance coalition validator
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve kingdom faction roots by `FactionId`
+  - `unity/Assets/_Bloodlines/Code/Components/FaithComponent.cs` -- reuse committed-faith selection/intensity for acceptance support without reopening the faith lane
+  - `unity/Assets/_Bloodlines/Code/Components/PopulationComponent.cs` -- scale prosperity support from live population against food/water stockpiles
+  - `unity/Assets/_Bloodlines/Code/Components/SettlementComponent.cs` -- verify dynastic primary-seat coverage and keep ownership for recognition readiness
+  - `unity/Assets/_Bloodlines/Code/Components/ControlPointComponent.cs` -- score territory share, loyal holdings, contested marches, and weakest-frontier loyalty
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyStateComponent.cs` -- reuse legitimacy and interregnum-adjacent dynasty state without reopening dynasty-owned source
+  - `unity/Assets/_Bloodlines/Code/Components/ConvictionComponent.cs` -- project conviction-band acceptance support without reopening the conviction lane
+  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- tick sustain/victory timers on deterministic in-world-day time
+  - `unity/Assets/_Bloodlines/Code/Time/MatchProgressionComponent.cs` -- enforce the stage-5 territorial-governance trigger floor
+  - `unity/Assets/_Bloodlines/Code/TerritoryGovernance/GovernorSeatAssignmentComponent.cs` -- verify governed territory and primary-seat coverage without widening the territory-governance lane
+  - `unity/Assets/_Bloodlines/Code/AI/DynastyOperationHolyWarComponent.cs` -- block recognition readiness while a faction is inside a live holy war window without touching `AI/**`
+  - `unity/Assets/_Bloodlines/Code/AI/AIStrategyComponent.cs` -- reuse the existing governance pressure booleans as AI-facing read-model outputs without editing Claude's AI-owned file
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-23-unity-governance-coalition-pressure.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `getTerritorialGovernanceAcceptanceProfile`, `shouldIssueTerritorialGovernanceRecognition`, `tickTerritorialGovernanceRecognition`, `getTerritorialGovernanceWorldPressureContribution`, governance-alliance pressure block inside `tickRealmConditionCycle`
+- Current Branch In Flight: none (validated slice landed onto canonical `master` in this session)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-governance-coalition-pressure.md`
+
 ### Lane: ai-strategic-layer
 
 - Status: active
@@ -1200,7 +1238,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is Priority 12 `governance-coalition-pressure`.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is Priority 13 `dynasty-minor-house-levy`.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 

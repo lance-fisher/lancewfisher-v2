@@ -17,8 +17,13 @@ namespace Bloodlines.Components
     ///   - territory expansion: max(0, ownedTerritories - 2)   -- simulation.js:13193
     ///   - great reckoning: GREAT_RECKONING_PRESSURE_SCORE = 4  -- simulation.js:406
     ///
-    /// Reserved sources (future slices): divineRightDeclaration, territorialGovernanceRecognition,
-    /// offHomeHoldings, holyWar, captives, hostileOperations, darkExtremes.
+    /// Additional ported source:
+    ///   - territorial governance recognition: 0 / 3 / 5 / 6 / 7 depending on
+    ///     live governance recognition, recognition establishment, alliance threshold,
+    ///     and victory readiness
+    ///
+    /// Reserved sources (future slices): divineRightDeclaration, offHomeHoldings,
+    /// holyWar, captives, hostileOperations, darkExtremes.
     /// </summary>
     public struct WorldPressureComponent : IComponentData
     {
@@ -30,6 +35,7 @@ namespace Bloodlines.Components
         // True when this faction is the global dominant pressure leader.
         public bool Targeted;
         // Breakdown components for HUD readout.
+        public int TerritorialGovernanceRecognitionScore;
         public int TerritoryExpansionScore;
         public int GreatReckoningScore;
     }
