@@ -1,6 +1,10 @@
 using System.Globalization;
 using System.Text;
+using Bloodlines.Components;
+using Bloodlines.Dynasties;
+using Bloodlines.Faith;
 using Bloodlines.HUD;
+using Bloodlines.Systems;
 using Unity.Collections;
 using Unity.Entities;
 
@@ -316,6 +320,150 @@ namespace Bloodlines.Debug
                     .Append("|BandLabel=").Append(buffer[i].BandLabel)
                     .Append("|StatusLabel=").Append(buffer[i].StatusLabel);
             }
+
+            readout = builder.ToString();
+            return true;
+        }
+
+        public bool TryDebugGetSuccessionCrisisHUDSnapshot(string factionId, out string readout)
+        {
+            readout = string.Empty;
+            if (string.IsNullOrWhiteSpace(factionId) ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var factionEntity = FindFactionRootEntity(entityManager, new FixedString32Bytes(factionId));
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<SuccessionCrisisHUDComponent>(factionEntity))
+            {
+                return false;
+            }
+
+            var hud = entityManager.GetComponentData<SuccessionCrisisHUDComponent>(factionEntity);
+            var builder = new StringBuilder(256);
+            builder.Append("SuccessionCrisisHUD")
+                .Append("|FactionId=").Append(hud.FactionId)
+                .Append("|CrisisActive=").Append(hud.CrisisActive ? "true" : "false")
+                .Append("|Severity=").Append(hud.CrisisSeverity)
+                .Append("|SeverityLabel=").Append(hud.SeverityLabel)
+                .Append("|SeverityColor=").Append(hud.SeverityColor)
+                .Append("|RecoveryProgressPct=").Append(hud.RecoveryProgressPct.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|ResourceTrickleFactor=").Append(hud.ResourceTrickleFactor.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|LegitimacyDrainRatePerDay=").Append(hud.LegitimacyDrainRatePerDay.ToString("0.000", CultureInfo.InvariantCulture));
+
+            readout = builder.ToString();
+            return true;
+        }
+
+        public bool TryDebugGetPoliticalEventsTraySnapshot(string factionId, out string readout)
+        {
+            readout = string.Empty;
+            if (string.IsNullOrWhiteSpace(factionId) ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var factionEntity = FindFactionRootEntity(entityManager, new FixedString32Bytes(factionId));
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<PoliticalEventsTrayHUDStateComponent>(factionEntity) ||
+                !entityManager.HasBuffer<PoliticalEventsTrayHUDComponent>(factionEntity))
+            {
+                return false;
+            }
+
+            var state = entityManager.GetComponentData<PoliticalEventsTrayHUDStateComponent>(factionEntity);
+            DynamicBuffer<PoliticalEventsTrayHUDComponent> tray =
+                entityManager.GetBuffer<PoliticalEventsTrayHUDComponent>(factionEntity);
+
+            var builder = new StringBuilder(512);
+            builder.Append("PoliticalEventsTrayState")
+                .Append("|FactionId=").Append(state.FactionId)
+                .Append("|LastRefreshInWorldDays=").Append(state.LastRefreshInWorldDays.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|ActiveEventCount=").Append(state.ActiveEventCount)
+                .Append("|DisplayedCount=").Append(tray.Length);
+
+            for (int i = 0; i < tray.Length; i++)
+            {
+                builder.AppendLine()
+                    .Append("PoliticalEventsTrayEntry")
+                    .Append("|Index=").Append(i + 1)
+                    .Append("|EventType=").Append(tray[i].EventType)
+                    .Append("|EventLabel=").Append(tray[i].EventLabel)
+                    .Append("|RemainingInWorldDays=")
+                    .Append(tray[i].RemainingInWorldDays.ToString("0.000", CultureInfo.InvariantCulture));
+            }
+
+            readout = builder.ToString();
+            return true;
+        }
+
+        public bool TryDebugGetCovenantTestProgressHUDSnapshot(string factionId, out string readout)
+        {
+            readout = string.Empty;
+            if (string.IsNullOrWhiteSpace(factionId) ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var factionEntity = FindFactionRootEntity(entityManager, new FixedString32Bytes(factionId));
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<CovenantTestProgressHUDComponent>(factionEntity))
+            {
+                return false;
+            }
+
+            var hud = entityManager.GetComponentData<CovenantTestProgressHUDComponent>(factionEntity);
+            var builder = new StringBuilder(320);
+            builder.Append("CovenantTestProgressHUD")
+                .Append("|FactionId=").Append(hud.FactionId)
+                .Append("|LastRefreshInWorldDays=").Append(hud.LastRefreshInWorldDays.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|FaithId=").Append(hud.FaithId)
+                .Append("|TestPhase=").Append(hud.TestPhase)
+                .Append("|PhaseLabel=").Append(hud.PhaseLabel)
+                .Append("|QualifyingDays=").Append(hud.QualifyingDays.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|RequiredDays=").Append(hud.RequiredDays.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|ProgressPct=").Append(hud.ProgressPct.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|CooldownRemainingInWorldDays=")
+                .Append(hud.CooldownRemainingInWorldDays.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|SuccessCount=").Append(hud.SuccessCount);
+
+            readout = builder.ToString();
+            return true;
+        }
+
+        public bool TryDebugGetTruebornRiseHUDSnapshot(string factionId, out string readout)
+        {
+            readout = string.Empty;
+            if (string.IsNullOrWhiteSpace(factionId) ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var factionEntity = FindFactionRootEntity(entityManager, new FixedString32Bytes(factionId));
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<TruebornRiseHUDComponent>(factionEntity))
+            {
+                return false;
+            }
+
+            var hud = entityManager.GetComponentData<TruebornRiseHUDComponent>(factionEntity);
+            var builder = new StringBuilder(320);
+            builder.Append("TruebornRiseHUD")
+                .Append("|FactionId=").Append(hud.FactionId)
+                .Append("|LastRefreshInWorldDays=").Append(hud.LastRefreshInWorldDays.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|CurrentStage=").Append(hud.CurrentStage)
+                .Append("|StageLabel=").Append(hud.StageLabel)
+                .Append("|RiseActive=").Append(hud.RiseActive ? "true" : "false")
+                .Append("|Recognized=").Append(hud.Recognized ? "true" : "false")
+                .Append("|RecognizedFactionCount=").Append(hud.RecognizedFactionCount)
+                .Append("|ChallengeLevel=").Append(hud.ChallengeLevel)
+                .Append("|GlobalPressurePerDay=").Append(hud.GlobalPressurePerDay.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|LoyaltyErosionPerDay=").Append(hud.LoyaltyErosionPerDay.ToString("0.000", CultureInfo.InvariantCulture));
 
             readout = builder.ToString();
             return true;

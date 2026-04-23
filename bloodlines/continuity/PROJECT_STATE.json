@@ -2213,6 +2213,15 @@
       "description": "The Trueborn rise recognized-pressure follow-up has now been merged onto canonical `master` via merge commit `71c19cde`. `TruebornRiseArcSystem` now keeps recognized kingdoms under the browser Session 95 `0.25x` reduced-pressure rule instead of a full exemption, and `BloodlinesTruebornRiseArcSmokeValidation` now proves that parity on the merged result. The full governed 10-gate chain plus the dedicated Trueborn rise smoke reran green on the merge result, the landing handoff was recorded, and contract rev 110->111 cleared the branch-in-flight marker while leaving the lane ready for the next remaining non-AI Trueborn follow-up.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-recognized-pressure-landing.md",
       "validation_gates": "all 10 green plus Trueborn rise smoke on merged master"
+    },
+    {
+      "lane": "hud-political-state-panels",
+      "date": "2026-04-23",
+      "branch": "codex/unity-hud-political-state-panels",
+      "status": "complete",
+      "description": "The HUD political-state panels slice is now complete on branch. `SuccessionCrisisHUDComponent` / `SuccessionCrisisHUDSystem`, `PoliticalEventsTrayHUDComponent` / `PoliticalEventsTrayHUDSystem`, `CovenantTestProgressHUDComponent` / `CovenantTestProgressHUDSystem`, and `TruebornRiseHUDComponent` / `TruebornRiseHUDSystem` now project the already-landed dynasty, faith, and world-pressure seams into faction-root player HUD state without touching `unity/Assets/_Bloodlines/Code/AI/**`. `BloodlinesDebugCommandSurface.HUD` now exposes parseable readouts for all four panel sections, `BloodlinesPoliticalStateHUDSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPoliticalStateHUDSmokeValidation.ps1` prove succession severity, event tray sorting/cap, covenant test phase/cooldown, and Trueborn rise recognition state, and the new smoke also surfaced and closed an invalidated-buffer bug in `TruebornRiseHUDSystem`. The worktree-local `unity/Library` junction and stale `Assembly-CSharp*.csproj` analyzer roots were repaired back to `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache`, and the full governed 10-gate chain is green with contract rev 111->112.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels.md",
+      "validation_gates": "all 10 green plus political state HUD smoke"
     }
   ]
 }
