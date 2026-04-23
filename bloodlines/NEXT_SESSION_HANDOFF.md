@@ -4775,6 +4775,44 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     unstaged; Unity dirties it during validation and it is unrelated to this
     slice
 
+## 2026-04-23 Player Captive Ransom Trickle
+
+- Branch lane:
+  - `codex/unity-player-captive-ransom-trickle`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-captive-ransom-trickle.md`
+- Completed in this slice:
+  - `CaptiveRansomTrickleComponent`,
+    `CaptiveRansomTrickleRules`,
+    and
+    `CaptiveRansomTrickleSystem`
+    now pay passive captive influence and additive dynasty-renown drift to
+    kingdom faction roots on whole in-world day boundaries using the browser
+    `CAPTIVE_INFLUENCE_TRICKLE` / `CAPTIVE_RENOWN_WEIGHT` seam
+  - the runtime resolves captive renown from the captive origin faction roster
+    and prefers a faction-root captive ledger when one exists, while falling
+    back to the current captive-holder entity with the same `FactionId` so the
+    slice remains compatible with existing capture helper behavior
+  - `BloodlinesDebugCommandSurface.PlayerDiplomacy` now exposes
+    `TryDebugGetCaptiveTrickle`, and
+    `BloodlinesPlayerCaptiveRansomTrickleSmokeValidation` plus its wrapper now
+    prove high-renown captives outpace low-renown captives and empty captors
+    receive zero trickle
+- Validation state:
+  - dedicated player captive ransom trickle smoke green
+  - all 10 required governed gates green after contract revision `101`
+- Immediate next action:
+  - claim Priority 11 from
+    `D:\\ProjectsHome\\Bloodlines\\03_PROMPTS\\CODEX_MULTI_DAY_DIRECTIVE_2026-04-24.md`
+  - open `codex/unity-covert-ops-resolution-effects` from updated `master`
+  - port covert-ops assassination / sabotage / espionage resolution effects
+    plus a dedicated smoke validator
+- Staging note:
+  - keep
+    `unity/Library.pre-junction-20260423-player-captive-ransom-trickle`
+    unstaged; it is a preserved local fallback copy of the pre-junction
+    worktree `Library/`
+
 ## 2026-04-23 Faith Verdant Warden Rerun Follow-Up
 
 - Branch lane:

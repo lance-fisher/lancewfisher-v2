@@ -199,6 +199,36 @@ namespace Bloodlines.Debug
             return true;
         }
 
+        public bool TryDebugGetCaptiveTrickle(string factionId, out string readout)
+        {
+            readout = string.Empty;
+            if (string.IsNullOrWhiteSpace(factionId) || !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var factionEntity = FindFactionRootEntity(entityManager, new FixedString32Bytes(factionId));
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<CaptiveRansomTrickleComponent>(factionEntity))
+            {
+                return false;
+            }
+
+            var tracker = entityManager.GetComponentData<CaptiveRansomTrickleComponent>(factionEntity);
+            var builder = new StringBuilder(192);
+            builder.Append("CaptiveTrickle")
+                .Append("|FactionId=").Append(factionId)
+                .Append("|HeldCaptives=").Append(tracker.HeldCaptiveCount.ToString(CultureInfo.InvariantCulture))
+                .Append("|InfluenceRatePerSecond=").Append(tracker.CurrentInfluenceRatePerSecond.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|DynastyRenownRatePerSecond=").Append(tracker.CurrentDynastyRenownRatePerSecond.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|LastInfluenceDelta=").Append(tracker.LastAppliedInfluenceDelta.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|LastDynastyRenownDelta=").Append(tracker.LastAppliedDynastyRenownDelta.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|HighestCaptiveRenown=").Append(tracker.HighestCaptiveRenown.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|LastAppliedInWorldDays=").Append(tracker.LastAppliedInWorldDays.ToString("0.000", CultureInfo.InvariantCulture));
+            readout = builder.ToString();
+            return true;
+        }
+
         public bool TryDebugIssuePlayerPactProposal(string sourceFactionId, string targetFactionId)
         {
             if (string.IsNullOrWhiteSpace(sourceFactionId) ||
