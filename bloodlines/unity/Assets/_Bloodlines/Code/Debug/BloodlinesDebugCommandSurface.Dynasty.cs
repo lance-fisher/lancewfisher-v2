@@ -1,4 +1,5 @@
 using Bloodlines.Components;
+using Bloodlines.Dynasties;
 using Unity.Collections;
 using Unity.Entities;
 
@@ -62,6 +63,32 @@ namespace Bloodlines.Debug
             }
 
             dynastyState = entityManager.GetComponentData<DynastyStateComponent>(factionEntity);
+            return true;
+        }
+
+        public bool TryDebugGetSuccessionCrisis(string factionId, out SuccessionCrisisComponent crisis)
+        {
+            crisis = default;
+            if (string.IsNullOrWhiteSpace(factionId))
+            {
+                return false;
+            }
+
+            var world = World.DefaultGameObjectInjectionWorld;
+            if (world == null || !world.IsCreated)
+            {
+                return false;
+            }
+
+            var entityManager = world.EntityManager;
+            var factionEntity = FindFactionEntityByDynasty(entityManager, factionId);
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<SuccessionCrisisComponent>(factionEntity))
+            {
+                return false;
+            }
+
+            crisis = entityManager.GetComponentData<SuccessionCrisisComponent>(factionEntity);
             return true;
         }
 

@@ -3605,3 +3605,37 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   and contract staleness.
 - Contract revision advanced `84 -> 85` and now records the HUD lane with the
   command-deck summary follow-up branch in flight.
+
+## 2026-04-22 Dynasty Succession Crisis Slice
+
+- Branch in flight: `codex/unity-dynasty-succession-crisis`.
+- `unity/Assets/_Bloodlines/Code/Dynasties/SuccessionCrisisComponent.cs`
+  plus
+  `SuccessionCrisisEvaluationSystem.cs`
+  and
+  `SuccessionCrisisRecoverySystem.cs`
+  now add the first Unity ECS succession-crisis runtime seam: ruler changes
+  after `DynastySuccessionSystem` are detected through a dedicated watch
+  component, browser-style maturity and rival-claim pressure resolve the crisis
+  severity, all owned control points take an opening loyalty shock, daily
+  legitimacy/loyalty drain now ticks on whole in-world days, and conviction
+  band changes the recovery tempo.
+- `unity/Assets/_Bloodlines/Code/Systems/ControlPointResourceTrickleSystem.cs`
+  now consumes the crisis `ResourceTrickleFactor` as a narrow additive
+  multiplier so active crises suppress territorial income without widening the
+  broader economy lane.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Dynasty.cs`
+  now exposes `TryDebugGetSuccessionCrisis(...)`, and
+  `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSuccessionCrisisSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnitySuccessionCrisisSmokeValidation.ps1`
+  now prove trigger, loyalty shock, recovery removal, and catastrophic-vs-minor
+  legitimacy drain in isolated ECS validation worlds.
+- Governed validation is green on the branch: dedicated succession-crisis
+  smoke, runtime build, editor build, bootstrap runtime smoke, combat smoke,
+  canonical scene shell validation, fortification smoke, siege smoke,
+  `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`,
+  and contract staleness.
+- Contract revision advanced `85 -> 90` in this worktree and now records the
+  active `dynasty-succession-crisis` lane plus the narrow shared-file edits.

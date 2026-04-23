@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 85
+- Revision: 90
 - Last Updated: 2026-04-22
-- Last Updated By: codex-2026-04-22
-- Supersedes: revision 84 (The `player-hud-realm-condition-legibility` lane now carries `codex/unity-player-hud-command-deck-summary-followup`. `BloodlinesDebugCommandSurface.cs` now renders a consolidated player command-deck summary over the existing HUD read-models, `BloodlinesDebugCommandSurface.HUD.cs` exposes a parseable `CommandDeckSummary|...` seam, and `BloodlinesBattlefieldCommandDeckSmokeValidation` plus wrapper prove both the baseline and Great Reckoning command-deck states.)
+- Last Updated By: codex-dynasty-succession-crisis-2026-04-22
+- Supersedes: revision 85 (Adds the new active `dynasty-succession-crisis` lane on branch `codex/unity-dynasty-succession-crisis`, records the dedicated succession-crisis validator/wrapper, and documents the narrow shared-file hooks into `ControlPointResourceTrickleSystem` and `BloodlinesDebugCommandSurface.Dynasty.cs`.)
 
 
 ## Purpose
@@ -226,6 +226,34 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `src/game/core/simulation.js` per-member renown state only; no dynasty-level prestige ledger exists in browser runtime, so this lane lifts the design-bible dynasty prestige surface onto Unity ECS state
 - Current Branch In Flight: none (landed on canonical `master` during the 2026-04-22 overnight build advance)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-dynasty-renown-prestige.md`
+
+### Lane: dynasty-succession-crisis
+
+- Status: active
+- Branch Prefix: `codex/unity-dynasty-succession-crisis`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Dynasties/SuccessionCrisisComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/SuccessionCrisisEvaluationSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/SuccessionCrisisRecoverySystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSuccessionCrisisSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnitySuccessionCrisisSmokeValidation.ps1`
+- Shared-File Narrow Edits Planned:
+  - `unity/Assets/_Bloodlines/Code/Systems/ControlPointResourceTrickleSystem.cs` -- multiply existing control-point trickle by the crisis `ResourceTrickleFactor` only; no unrelated economy rewrites
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Dynasty.cs` -- additive `TryDebugGetSuccessionCrisis` readout only
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/DynastyMemberComponent.cs` -- read dynasty legitimacy/interregnum/member roster state without reopening the retired dynasty-core lane
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve faction ids for loyalty and economy application
+  - `unity/Assets/_Bloodlines/Code/Components/ControlPointComponent.cs` -- apply opening loyalty shock and daily crisis loyalty drain to owned control points
+  - `unity/Assets/_Bloodlines/Code/Components/ConvictionComponent.cs` -- scale recovery speed by the canonical conviction band ladder
+  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- tick crisis effects on whole in-world days
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-22-unity-dynasty-succession-crisis.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `SUCCESSION_CRISIS_SEVERITY_PROFILES`, `buildSuccessionCrisisTriggerProfile`, `startSuccessionCrisis`, `tickDynastyPoliticalEvents`, `getSuccessionCrisisTerms`, `consolidateSuccessionCrisis`
+- Current Branch In Flight: `codex/unity-dynasty-succession-crisis`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-dynasty-succession-crisis.md`
 
 ### Lane: faith-commitment
 
