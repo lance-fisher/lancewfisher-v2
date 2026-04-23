@@ -86,6 +86,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Fortification\ImminentEngagementWarningSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Systems\SkirmishBootstrapSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Siege\SiegeComponentInitializationSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Faith\PlayerCovenantTestDispatchStateComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\VictoryConditionReadoutComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Siege\SiegeSupplyInterdictionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerPactUtility.cs" />
@@ -294,6 +295,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Siege\SiegeSupplyInterdictionCanon.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Faith.VerdantWarden.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Definitions\UnitDefinition.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Faith\PlayerCovenantTestDispatchSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\FortificationHUDSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\SettlementComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerMarriageProposalRequestComponent.cs" />

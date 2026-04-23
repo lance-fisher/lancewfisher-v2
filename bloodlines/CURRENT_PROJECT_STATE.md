@@ -4450,3 +4450,39 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Immediate next action:
   - start Priority 18 `codex/unity-player-covenant-test-dispatch` from the
     updated canonical `master`
+
+## 2026-04-23 Player Covenant Test Dispatch
+
+- Branch lane:
+  - `codex/unity-player-covenant-test-dispatch`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-covenant-test-dispatch.md`
+- Completed in this slice:
+  - added `PlayerCovenantTestDispatchStateComponent` and
+    `PlayerCovenantTestDispatchSystem` under
+    `unity/Assets/_Bloodlines/Code/Faith/` so the player faction root now
+    exposes covenant-test rite availability, affordability, queued/pending
+    state, and covenant-specific cost display without changing the existing
+    resolution request shape
+  - extended
+    `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Faith.cs`
+    with queue/readout helpers for the real dispatch path while preserving the
+    older force-trigger helper used by the legacy covenant-test smoke
+  - added
+    `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCovenantTestDispatchSmokeValidation.cs`
+    plus
+    `scripts/Invoke-BloodlinesUnityPlayerCovenantTestDispatchSmokeValidation.ps1`
+    to prove availability/cost display, request emission, resolution
+    consumption, and unaffordable blocking
+  - added the required `unity/Assembly-CSharp*.csproj` compile includes for
+    the new runtime/editor files
+- Validation state:
+  - dedicated player covenant-test dispatch smoke green
+  - all 10 required governed gates green
+  - post-append contract staleness recheck green at revision `113`
+- Contract revision advanced `112 -> 113`.
+- Immediate next action:
+  - commit and push `codex/unity-player-covenant-test-dispatch`, merge it to
+    canonical `master` with `git merge --no-ff`, rerun the full validation
+    chain plus the dedicated dispatch smoke on the merged result, then move to
+    Priority 19 `codex/unity-contested-territory-pressure`

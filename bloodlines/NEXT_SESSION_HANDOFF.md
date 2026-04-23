@@ -5348,3 +5348,35 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     plus the current Unity player-faith dispatch surfaces
   - port the next additive non-AI slice with a dedicated smoke validator and
     matching PowerShell wrapper
+
+## 2026-04-23 Player Covenant Test Dispatch
+
+- Branch lane:
+  - `codex/unity-player-covenant-test-dispatch`
+- Slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-covenant-test-dispatch.md`
+- Completed in this slice:
+  - added a player covenant-test dispatch-state surface on the player faction
+    root so the actual rite action now exposes availability, affordability,
+    labels/details, and queued/pending request state before the resolution
+    system consumes the request
+  - extended the faith debug surface with queue/readout helpers while
+    preserving the older direct trigger path for the legacy covenant-test
+    validator
+  - added the dedicated player covenant-test dispatch smoke validator/wrapper
+    pair and the required runtime/editor csproj compile includes
+- Validation state:
+  - dedicated player covenant-test dispatch smoke green
+  - all 10 required governed gates green
+  - post-append contract staleness recheck green at revision `113`
+- Immediate next action:
+  - commit and push `codex/unity-player-covenant-test-dispatch`
+  - merge the branch to canonical `master` with `git merge --no-ff`
+  - rerun the full governed 10-gate chain plus the dedicated player
+    covenant-test dispatch smoke on merged `master`
+  - move next to Priority 19 `codex/unity-contested-territory-pressure`
+- Staging note:
+  - keep
+    `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+    unstaged; Unity dirties it during validation and it is unrelated to this
+    slice
