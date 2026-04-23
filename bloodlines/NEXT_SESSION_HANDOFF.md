@@ -5246,7 +5246,36 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   - dedicated Trueborn rise smoke green
   - post-append staleness recheck green at contract revision `110`
 - Immediate next action:
-  - run the remaining governed gates on this branch state
   - commit and push `codex/unity-world-trueborn-recognized-pressure`
   - merge the branch to canonical `master` with `--no-ff`, rerun the governed
     validation chain there, and continue the next non-AI Trueborn follow-up
+
+## 2026-04-23 Trueborn Rise Recognized Pressure Landing
+
+- Landing commit:
+  - `71c19cde`
+- Completed in this landing pass:
+  - merged `codex/unity-world-trueborn-recognized-pressure` onto canonical
+    `master`
+  - reran the full governed 10-gate chain on the merged result
+  - reran the dedicated Trueborn rise smoke on the merged result
+  - recorded the landing handoff and cleared the
+    `world-trueborn-rise` branch-in-flight marker in the contract
+- Validation state:
+  - runtime build green
+  - editor build green
+  - bootstrap runtime smoke green
+  - combat smoke green
+  - canonical scene-shell validation green
+  - fortification smoke green
+  - siege smoke green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - contract staleness green at revision `111`
+  - dedicated Trueborn rise smoke green
+- Immediate next action:
+  - open a fresh `codex/unity-world-trueborn-rise-*` branch from updated
+    canonical `master`
+  - the next clean non-AI pickup is the remaining Trueborn trust /
+    contribution-history or coalition-response seam from
+    `11_MATCHFLOW/MATCH_STRUCTURE.md`, unless a newer directive supersedes it

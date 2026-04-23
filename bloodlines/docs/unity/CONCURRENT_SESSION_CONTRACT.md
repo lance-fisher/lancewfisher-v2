@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 110
+- Revision: 111
 - Last Updated: 2026-04-23
 - Last Updated By: codex-world-trueborn-rise-2026-04-23
-- Supersedes: revision 109 (Records the validated recognized-pressure follow-up on branch `codex/unity-world-trueborn-recognized-pressure` and reopens the world-trueborn-rise branch-in-flight marker.)
+- Supersedes: revision 110 (Records the merged recognized-pressure follow-up on canonical `master` and clears the world-trueborn-rise branch-in-flight marker again.)
 
 
 ## Purpose
@@ -687,7 +687,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: world-trueborn-rise
 
-- Status: active (validated Trueborn rise-arc sub-slices 1-3 are landed on canonical `master`; the recognized-pressure follow-up is validated on branch `codex/unity-world-trueborn-recognized-pressure`)
+- Status: active (validated Trueborn rise-arc sub-slices 1-3 and the recognized-pressure follow-up are now landed on canonical `master`; no branch currently in flight)
 - Branch Prefix: `codex/unity-world-trueborn-rise-arc-1`, `codex/unity-world-trueborn-rise-arc-2`, `codex/unity-world-trueborn-rise-arc-3`, `codex/unity-world-trueborn-recognized-pressure`
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -724,10 +724,11 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3.md`
   - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3-landing.md`
   - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-recognized-pressure.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-recognized-pressure-landing.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `tickTruebornRiseArc`, `getTruebornChallengeLevel`, `getTruebornRecognitionTerms`, `recognizeTruebornClaim`, `recognizedPressureMultiplier`, and `TRUEBORN_RISE_STAGE_*` constants
-- Current Branch In Flight: `codex/unity-world-trueborn-recognized-pressure`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-recognized-pressure.md`
+- Current Branch In Flight: none (merged to canonical `master` via `71c19cde` on 2026-04-23)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-recognized-pressure-landing.md`
 
 ### Lane: ai-strategic-layer
 

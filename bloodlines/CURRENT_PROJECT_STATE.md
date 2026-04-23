@@ -4359,3 +4359,30 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Contract revision advanced `109 -> 110` and records the
   `world-trueborn-rise` recognized-pressure follow-up as validated on branch
   `codex/unity-world-trueborn-recognized-pressure`.
+
+## 2026-04-23 Trueborn Rise Recognized Pressure Landing
+
+- Landing commit: `71c19cde`.
+- Completed in this landing pass:
+  - merged `codex/unity-world-trueborn-recognized-pressure` onto canonical
+    `master`
+  - reran the full governed 10-gate chain on the merged result
+  - reran the dedicated Trueborn rise smoke on the merged result
+  - recorded the landing handoff and cleared the
+    `world-trueborn-rise` branch-in-flight marker in the contract
+- Validation state:
+  - runtime build green
+  - editor build green
+  - bootstrap runtime smoke green
+  - combat smoke green
+  - canonical scene-shell validation green
+  - fortification smoke green
+  - siege smoke green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - contract staleness green at revision `111`
+  - dedicated Trueborn rise smoke green
+- Contract revision advanced `110 -> 111` and keeps the
+  `world-trueborn-rise` lane active on canonical `master` with no branch in
+  flight. The next additive pickup is the next remaining non-AI Trueborn
+  follow-up from a fresh branch.
