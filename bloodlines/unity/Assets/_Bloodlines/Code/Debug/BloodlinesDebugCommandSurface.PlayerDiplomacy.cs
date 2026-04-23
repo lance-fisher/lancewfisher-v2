@@ -199,6 +199,88 @@ namespace Bloodlines.Debug
             return true;
         }
 
+        public bool TryDebugSetSuccessionPreference(string factionId, string memberId)
+        {
+            if (string.IsNullOrWhiteSpace(factionId) ||
+                string.IsNullOrWhiteSpace(memberId) ||
+                !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var factionKey = new FixedString32Bytes(factionId);
+            var factionEntity = FindFactionRootEntity(entityManager, factionKey);
+            if (factionEntity == Entity.Null ||
+                !SuccessionPreferenceResolutionSystem.TryResolveFactionMember(
+                    entityManager,
+                    factionEntity,
+                    new FixedString64Bytes(memberId),
+                    out _,
+                    out var member) ||
+                !SuccessionPreferenceResolutionSystem.IsEligibleSuccessor(member))
+            {
+                return false;
+            }
+
+            var requestEntity = entityManager.CreateEntity(typeof(PlayerSuccessionPreferenceRequestComponent));
+            entityManager.SetComponentData(requestEntity, new PlayerSuccessionPreferenceRequestComponent
+            {
+                SourceFactionId = factionKey,
+                TargetMemberId = new FixedString64Bytes(memberId),
+            });
+            return true;
+        }
+
+        public bool TryDebugGetSuccessionPreferenceState(string factionId, out string readout)
+        {
+            readout = string.Empty;
+            if (string.IsNullOrWhiteSpace(factionId) || !TryGetEntityManager(out var entityManager))
+            {
+                return false;
+            }
+
+            var factionEntity = FindFactionRootEntity(entityManager, new FixedString32Bytes(factionId));
+            if (factionEntity == Entity.Null)
+            {
+                return false;
+            }
+
+            var builder = new StringBuilder(256);
+            builder.Append("SuccessionPreference")
+                .Append("|FactionId=").Append(factionId);
+
+            if (!entityManager.HasComponent<SuccessionPreferenceComponent>(factionEntity))
+            {
+                builder.Append("|Active=False");
+                readout = builder.ToString();
+                return true;
+            }
+
+            var preference = entityManager.GetComponentData<SuccessionPreferenceComponent>(factionEntity);
+            bool eligible = preference.PreferredHeirEntity != Entity.Null &&
+                            entityManager.Exists(preference.PreferredHeirEntity) &&
+                            entityManager.HasComponent<DynastyMemberComponent>(preference.PreferredHeirEntity) &&
+                            SuccessionPreferenceResolutionSystem.FactionContainsMember(
+                                entityManager,
+                                factionEntity,
+                                preference.PreferredHeirEntity) &&
+                            preference.PreferredHeirMemberId.Equals(
+                                entityManager.GetComponentData<DynastyMemberComponent>(preference.PreferredHeirEntity).MemberId) &&
+                            SuccessionPreferenceResolutionSystem.IsEligibleSuccessor(
+                                entityManager.GetComponentData<DynastyMemberComponent>(preference.PreferredHeirEntity));
+
+            builder.Append("|Active=True")
+                .Append("|PreferredHeirMemberId=").Append(preference.PreferredHeirMemberId)
+                .Append("|PreferredHeirEntityIndex=").Append(preference.PreferredHeirEntity.Index)
+                .Append("|DesignationCostPaid=").Append(preference.DesignationCostPaid == 0 ? "False" : "True")
+                .Append("|DesignationExpiresAtInWorldDays=").Append(
+                    preference.DesignationExpiresAtInWorldDays.ToString("0.000", CultureInfo.InvariantCulture))
+                .Append("|Eligible=").Append(eligible ? "True" : "False");
+
+            readout = builder.ToString();
+            return true;
+        }
+
         public bool TryDebugGetCaptiveTrickle(string factionId, out string readout)
         {
             readout = string.Empty;

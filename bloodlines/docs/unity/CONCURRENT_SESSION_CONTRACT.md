@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 117
+- Revision: 118
 - Last Updated: 2026-04-23
-- Last Updated By: codex-world-contested-territory-pressure-landing-2026-04-23
-- Supersedes: revision 116 (Records the contested-territory pressure landing on canonical `master` and clears the branch-in-flight marker.)
+- Last Updated By: codex-player-succession-influence-2026-04-23
+- Supersedes: revision 117 (Records the player succession influence slice and the narrow `DynastySuccessionSystem` override on the player-diplomacy lane.)
 
 
 ## Purpose
@@ -1114,7 +1114,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: player-marriage-diplomacy
 
 - Status: active
-- Branch Prefix: `codex/unity-player-marriage-*`, `codex/unity-player-holy-war-divine-right`, `codex/unity-player-missionary-dispatch`, `codex/unity-player-pact-proposal`, `codex/unity-player-captive-rescue`, `codex/unity-player-captive-ransom-*`, `codex/unity-player-captive-ransom-trickle`
+- Branch Prefix: `codex/unity-player-marriage-*`, `codex/unity-player-holy-war-divine-right`, `codex/unity-player-missionary-dispatch`, `codex/unity-player-pact-proposal`, `codex/unity-player-captive-rescue`, `codex/unity-player-captive-ransom-*`, `codex/unity-player-captive-ransom-trickle`, `codex/unity-player-succession-influence`
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/**`
@@ -1128,6 +1128,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRescueSmokeValidation.cs`
 - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRansomSmokeValidation.cs`
 - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCaptiveRansomTrickleSmokeValidation.cs`
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerSuccessionInfluenceSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityPlayerMarriageProposalSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityPlayerMarriageAcceptanceSmokeValidation.ps1`
@@ -1138,9 +1139,12 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - `scripts/Invoke-BloodlinesUnityPlayerCaptiveRescueSmokeValidation.ps1`
 - `scripts/Invoke-BloodlinesUnityPlayerCaptiveRansomSmokeValidation.ps1`
 - `scripts/Invoke-BloodlinesUnityPlayerCaptiveRansomTrickleSmokeValidation.ps1`
-- Shared-File Narrow Edits Planned:
-  - `unity/Assembly-CSharp.csproj` -- add compile includes for new `PlayerDiplomacy/**` runtime files only if the local generated project file does not already pick them up
-  - `unity/Assembly-CSharp-Editor.csproj` -- add compile includes for the lane's dedicated player-diplomacy smoke validators only if the local generated project file does not already pick them up
+- `scripts/Invoke-BloodlinesUnityPlayerSuccessionInfluenceSmokeValidation.ps1`
+- Coordinated Narrow Edit On Retired Dynasty-Owned Path:
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastySuccessionSystem.cs` -- additive preferred-heir override and preference-consumption seam only; no broader dynasty-core rewrite
+- Shared-File Narrow Edits Applied:
+  - `unity/Assembly-CSharp.csproj` -- additive compile includes for `PlayerSuccessionPreferenceRequestComponent.cs`, `SuccessionPreferenceComponent.cs`, and `SuccessionPreferenceResolutionSystem.cs`
+  - `unity/Assembly-CSharp-Editor.csproj` -- additive compile include for `BloodlinesPlayerSuccessionInfluenceSmokeValidation.cs`
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageComponents.cs` -- reuse `MarriageProposalComponent`, `MarriageComponent`, and `MarriageProposalStatus` without widening the retired dynasty parity lane
   - `unity/Assets/_Bloodlines/Code/Dynasties/MarriageProposalExpirationSystem.cs` -- read `ExpirationInWorldDays` so proposal expiry stays aligned with the canonical 90-day window
@@ -1177,6 +1181,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-22-unity-player-captive-rescue.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-captive-ransom.md`
   - `docs/unity/session-handoffs/2026-04-23-unity-player-captive-ransom-trickle.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-succession-influence.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `MARRIAGE_REGENCY_LEGITIMACY_COSTS` (6091), `getMarriageAuthorityProfile` (6134), `getMarriageEnvoyProfile` (6192), `buildMarriageGovernanceStatus` (6217), `applyMarriageGovernanceLegitimacyCost` (6232), `getMarriageProposalContext` (6247), `getMarriageProposalTerms` (6296), `getMarriageAcceptanceTerms` (6327), `memberHasActiveMarriage` (7260), `proposeMarriage` (7340), `acceptMarriage` (7388), `tickMarriageDissolutionFromDeath` (7471), `tickMarriageGestation` (7496)
   - `tests/runtime-bridge.mjs` marriage proposal and acceptance assertions (2072-2113, 2240-2308), death-driven dissolution assertions (3234-3298)
@@ -1185,14 +1190,15 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `src/game/core/simulation.js` `NON_AGGRESSION_PACT_INFLUENCE_COST` (5126), `NON_AGGRESSION_PACT_GOLD_COST` (5127), `NON_AGGRESSION_PACT_MINIMUM_DURATION_IN_WORLD_DAYS` (5128), `NON_AGGRESSION_PACT_BREAK_LEGITIMACY_COST` (5129), `getNonAggressionPactTerms` (5150-5183), `proposeNonAggressionPact` (5185-5222), `breakNonAggressionPact` (5224-5257)
   - `src/game/core/simulation.js` `getCapturedMemberRescueTerms` (~11153-11234), `startRescueOperation` (~11236-11341)
   - `src/game/core/simulation.js` `getCapturedMemberRansomTerms` (~11343-11431), `startCaptiveRansomOperation` (~11433-11532), `updateCaptiveRansomTrickle` (~4885-4903), `CAPTIVE_INFLUENCE_TRICKLE`, `CAPTIVE_RENOWN_WEIGHT`
+  - `src/game/core/simulation.js` `applySuccessionRipple` (~4550-4608) and `backfillHeir` (~4612-4649); no direct browser `PlayerSuccessionPreference` helper exists, so this slice uses the directive-canon seam to pre-select an eligible successor before the landed succession cascade runs
   - `src/game/core/ai.js` captive recovery contest / operator selection logic (~2550-2760)
-- Current Branch In Flight: none (player captive rescue, ransom dispatch, and passive captive ransom trickle are now landed on canonical `master`)
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-player-captive-ransom-trickle.md`
+- Current Branch In Flight: `codex/unity-player-succession-influence`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-player-succession-influence.md`
 - Last Slice State:
-  - kingdom faction roots with held captives now receive passive influence and additive dynasty-renown trickle on whole in-world day boundaries through `CaptiveRansomTrickleComponent` and `CaptiveRansomTrickleSystem`
-  - the runtime now resolves the captive ledger from the faction root when present and otherwise falls back to the existing captive-holder entity so the slice remains compatible with current `CapturedMemberHelpers` buffer placement without touching the AI-owned lane
-  - `BloodlinesDebugCommandSurface.PlayerDiplomacy` exposes `TryDebugGetCaptiveTrickle(...)`, and `BloodlinesPlayerCaptiveRansomTrickleSmokeValidation` proves high-renown captives outpace low-renown captives while empty captors receive zero trickle
-  - next Codex pickup should move to Priority 11 `covert-ops-resolution-effects`
+  - kingdom faction roots can now store a paid preferred-heir designation through `SuccessionPreferenceComponent`, and `SuccessionPreferenceResolutionSystem` consumes one-shot player requests while deducting 50 gold and 4 legitimacy
+  - `DynastySuccessionSystem` now checks for a live eligible preferred heir before falling back to default succession order, then clears the consumed or stale preference without widening the broader dynasty lane
+  - `BloodlinesDebugCommandSurface.PlayerDiplomacy` exposes `TryDebugSetSuccessionPreference(...)` and `TryDebugGetSuccessionPreferenceState(...)`, and `BloodlinesPlayerSuccessionInfluenceSmokeValidation` proves designation cost deduction, valid override, and invalid-preference fallback
+  - next Codex pickup should move to Priority 21 `siege-escalation-arc` after this branch lands on canonical `master`
 
 ### Lane: player-covert-ops
 

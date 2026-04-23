@@ -1,4 +1,5 @@
 using Bloodlines.Components;
+using Bloodlines.PlayerDiplomacy;
 using Unity.Collections;
 using Unity.Entities;
 
@@ -26,11 +27,13 @@ namespace Bloodlines.Dynasties
         public void OnUpdate(ref SystemState state)
         {
             var entityManager = state.EntityManager;
-            var factionQuery = entityManager.CreateEntityQuery(
-                ComponentType.ReadWrite<DynastyStateComponent>(),
-                ComponentType.ReadOnly<DynastyMemberRef>());
+            var factionQuery = SystemAPI.QueryBuilder()
+                .WithAllRW<DynastyStateComponent>()
+                .WithAll<DynastyMemberRef>()
+                .Build();
 
             using var factionEntities = factionQuery.ToEntityArray(Allocator.Temp);
+            using var ecb = new EntityCommandBuffer(Allocator.Temp);
             for (int f = 0; f < factionEntities.Length; f++)
             {
                 var factionEntity = factionEntities[f];
@@ -38,8 +41,10 @@ namespace Bloodlines.Dynasties
                 var memberBuffer = entityManager.GetBuffer<DynastyMemberRef>(factionEntity);
 
                 Entity rulingEntity = Entity.Null;
+                Entity preferredHeirEntity = Entity.Null;
                 Entity heirEntity = Entity.Null;
                 int heirOrder = int.MaxValue;
+                bool clearPreferenceAfterSuccession = false;
 
                 for (int i = 0; i < memberBuffer.Length; i++)
                 {
@@ -61,8 +66,39 @@ namespace Bloodlines.Dynasties
                     }
                 }
 
+                if (entityManager.HasComponent<SuccessionPreferenceComponent>(factionEntity))
+                {
+                    var preference = entityManager.GetComponentData<SuccessionPreferenceComponent>(factionEntity);
+                    if (preference.PreferredHeirEntity != Entity.Null &&
+                        entityManager.Exists(preference.PreferredHeirEntity) &&
+                        entityManager.HasComponent<DynastyMemberComponent>(preference.PreferredHeirEntity) &&
+                        SuccessionPreferenceResolutionSystem.FactionContainsMember(
+                            entityManager,
+                            factionEntity,
+                            preference.PreferredHeirEntity))
+                    {
+                        var preferredMember =
+                            entityManager.GetComponentData<DynastyMemberComponent>(preference.PreferredHeirEntity);
+                        if (preference.PreferredHeirMemberId.Equals(preferredMember.MemberId) &&
+                            SuccessionPreferenceResolutionSystem.IsEligibleSuccessor(preferredMember))
+                        {
+                            preferredHeirEntity = preference.PreferredHeirEntity;
+                        }
+                    }
+
+                    if (rulingEntity == Entity.Null || preferredHeirEntity == Entity.Null)
+                    {
+                        clearPreferenceAfterSuccession = true;
+                    }
+                }
+
                 if (rulingEntity == Entity.Null)
                 {
+                    if (preferredHeirEntity != Entity.Null)
+                    {
+                        heirEntity = preferredHeirEntity;
+                    }
+
                     if (heirEntity != Entity.Null)
                     {
                         var heir = entityManager.GetComponentData<DynastyMemberComponent>(heirEntity);
@@ -82,7 +118,14 @@ namespace Bloodlines.Dynasties
                 }
 
                 entityManager.SetComponentData(factionEntity, dynasty);
+                if (clearPreferenceAfterSuccession &&
+                    entityManager.HasComponent<SuccessionPreferenceComponent>(factionEntity))
+                {
+                    ecb.RemoveComponent<SuccessionPreferenceComponent>(factionEntity);
+                }
             }
+
+            ecb.Playback(entityManager);
         }
     }
 }
