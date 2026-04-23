@@ -5549,3 +5549,36 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     surfaces
   - port the next additive non-AI slice with a dedicated smoke validator and
     matching PowerShell wrapper
+
+## 2026-04-23 Player Succession Influence
+
+- Branch lane:
+  - `codex/unity-player-succession-influence`
+- Slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-succession-influence.md`
+- Completed in this slice:
+  - added the player-side succession designation seam through
+    `SuccessionPreferenceComponent`,
+    `PlayerSuccessionPreferenceRequestComponent`, and
+    `SuccessionPreferenceResolutionSystem`
+  - added a narrow override in `DynastySuccessionSystem` so an active
+    preferred heir is honored before default succession fallback and cleared
+    once consumed or invalid
+  - widened `BloodlinesDebugCommandSurface.PlayerDiplomacy` with succession
+    setter/state helpers and added the dedicated player succession influence
+    smoke validator plus wrapper
+  - restored the local `unity/Library` junction to
+    `D:\ProjectsHome\Bloodlines\unity\Library` so the governed build gates
+    succeed in this automation worktree
+- Validation state:
+  - all 10 required governed gates green
+  - dedicated player succession influence smoke green
+  - contract staleness recheck green at revision `118`
+- Immediate next action:
+  - commit and push `codex/unity-player-succession-influence`
+  - merge the branch to canonical `master` with `git merge --no-ff`
+  - rerun the full governed gate plus the dedicated succession smoke on the
+    merged result
+  - do not reopen the stale historical
+    `codex/unity-contested-territory-pressure` branch after landing; the next
+    non-AI Codex pickup is Priority 21 `siege-escalation-arc`

@@ -4663,3 +4663,47 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
     `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`
   - do not reopen the stale historical
     `codex/unity-contested-territory-pressure` branch
+
+## 2026-04-23 Player Succession Influence
+
+- Branch lane:
+  - `codex/unity-player-succession-influence`
+- Slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-succession-influence.md`
+- Completed in this slice:
+  - added `SuccessionPreferenceComponent`,
+    `PlayerSuccessionPreferenceRequestComponent`, and
+    `SuccessionPreferenceResolutionSystem` so the player kingdom can pay 50
+    gold and 4 legitimacy to designate a preferred eligible heir for up to
+    365 in-world days
+  - added the narrow player-preference override inside
+    `DynastySuccessionSystem` so a live preferred heir is consumed before the
+    existing fallback succession chain and is cleared when stale or spent
+  - widened `BloodlinesDebugCommandSurface.PlayerDiplomacy` with
+    `TryDebugSetSuccessionPreference(...)` and
+    `TryDebugGetSuccessionPreferenceState(...)` readouts for the new player
+    succession seam
+  - added `BloodlinesPlayerSuccessionInfluenceSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityPlayerSuccessionInfluenceSmokeValidation.ps1`
+    and the required `Assembly-CSharp*.csproj` compile includes
+  - restored the local `unity/Library` junction to
+    `D:\ProjectsHome\Bloodlines\unity\Library` so the governed build gates
+    could resolve `Library\ScriptAssemblies` in this worktree
+- Validation state:
+  - runtime build green
+  - editor build green with existing repo-wide warnings only
+  - bootstrap runtime smoke green
+  - combat smoke green
+  - canonical scene-shell validation green
+  - fortification smoke green
+  - siege smoke green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - dedicated player succession influence smoke green
+  - final contract staleness recheck green at revision `118`
+- Immediate next action:
+  - stage only the player succession influence slice files
+  - push `codex/unity-player-succession-influence`
+  - merge the branch onto canonical `master` with `git merge --no-ff`
+  - rerun the governed gate on the merged result and then move to Priority 21
+    `siege-escalation-arc`

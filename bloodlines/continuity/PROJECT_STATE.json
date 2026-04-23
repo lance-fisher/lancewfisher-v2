@@ -2285,6 +2285,15 @@
       "description": "The contested-territory pressure rerun has now been merged onto canonical `master` via merge commit `ea359daf`. `TerritorialPressureComponent`, `TerritorialPressureEvaluationSystem`, the widened `BloodlinesDebugCommandSurface.WorldPressure` contested readouts, and `BloodlinesContestedTerritoryPressureSmokeValidation` plus `Invoke-BloodlinesUnityContestedTerritoryPressureSmokeValidation.ps1` now live on the merged master-compatible line. The landing pass reran the full governed 10-gate chain and the dedicated contested-territory pressure smoke green on the merged result, and the landing worktree re-established a local `unity/Library` junction back to `D:\\ProjectsHome\\Bloodlines\\unity\\Library` so the governed build gates could resolve `Library\\ScriptAssemblies` cleanly.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-world-contested-territory-pressure-landing.md",
       "validation_gates": "all 10 green plus contested-territory pressure smoke on merged master"
+    },
+    {
+      "lane": "player-succession-influence",
+      "date": "2026-04-23",
+      "branch": "codex/unity-player-succession-influence",
+      "status": "complete",
+      "description": "The player succession influence slice is now complete on branch. SuccessionPreferenceComponent, PlayerSuccessionPreferenceRequestComponent, and SuccessionPreferenceResolutionSystem add a player-diplomacy succession-planning seam that lets the player kingdom pay 50 gold and 4 legitimacy to designate a preferred eligible heir for up to 365 in-world days even though the browser reference has no direct succession-preference helper. DynastySuccessionSystem now consumes that live preference before its existing fallback succession chain, BloodlinesDebugCommandSurface.PlayerDiplomacy exposes TryDebugSetSuccessionPreference(...) plus TryDebugGetSuccessionPreferenceState(...), and BloodlinesPlayerSuccessionInfluenceSmokeValidation with scripts/Invoke-BloodlinesUnityPlayerSuccessionInfluenceSmokeValidation.ps1 prove designation cost deduction, preferred-heir promotion, and invalid-preference fallback. The full governed 10-gate chain plus the dedicated succession influence smoke are green and the contract staleness recheck passed at revision 118.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-player-succession-influence.md",
+      "validation_gates": "all 10 green plus player succession influence smoke"
     }
   ]
 }
