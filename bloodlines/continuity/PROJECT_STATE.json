@@ -2267,6 +2267,15 @@
       "description": "The HUD political-state panels rerun has now been refreshed over the current canonical `master` lineage by merging `origin/master` into the landing branch via `db79f248`, preserving the original HUD landing history while proving the same HUD systems still validate on top of the already-landed player covenant-test dispatch line. No new HUD behavior was introduced; the refresh reran the full governed 10-gate chain plus the dedicated political-state HUD smoke and the dedicated player covenant-test dispatch smoke green on the merged result, re-preserved canonical `unity/Assembly-CSharp*.csproj` analyzer roots at `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache`, and advanced the concurrent-session contract from rev 114 to 115 while keeping Priority 19 `contested-territory-pressure` as the next Codex pickup.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels-rerun-master-refresh.md",
       "validation_gates": "all 10 green plus political state HUD smoke and player covenant-test dispatch smoke on refreshed merged master"
+    },
+    {
+      "lane": "world-contested-territory-pressure",
+      "date": "2026-04-23",
+      "branch": "codex/unity-contested-territory-pressure-rerun",
+      "status": "complete",
+      "description": "The contested-territory pressure rerun is now complete on branch. `TerritorialPressureComponent` and `TerritorialPressureEvaluationSystem` add a faction-root read-model for browser-faithful external contested territories, owned contested marches, weakest owned contested loyalty, and governance-blocking state without inventing a new world-pressure score source or direct loyalty-drain mechanic. `BloodlinesDebugCommandSurface.WorldPressure` now exposes `TryDebugGetTerritorialPressureState(...)` and widened contested / hold-ready governance fields, `BloodlinesContestedTerritoryPressureSmokeValidation` plus `scripts/Invoke-BloodlinesUnityContestedTerritoryPressureSmokeValidation.ps1` prove realm-condition counting, governance blocking, and contest-clear recovery, and the fresh automation worktree repaired a missing local `unity/Library` junction back to `D:\\ProjectsHome\\Bloodlines\\unity\\Library` so the governed `dotnet build` gates could resolve `Library\\ScriptAssemblies`. The full governed 10-gate chain plus the dedicated contested-territory pressure smoke are green with contract rev 115->116 pending landing.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-world-contested-territory-pressure.md",
+      "validation_gates": "all 10 green plus contested-territory pressure smoke"
     }
   ]
 }
