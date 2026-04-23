@@ -5,6 +5,7 @@ using Bloodlines.AI;
 using Bloodlines.Components;
 using Bloodlines.Debug;
 using Bloodlines.Dynasties;
+using Bloodlines.Faith;
 using Bloodlines.GameTime;
 using Bloodlines.PlayerDiplomacy;
 using Unity.Collections;
@@ -309,6 +310,7 @@ namespace Bloodlines.EditorTools
                 typeof(FactionKindComponent),
                 typeof(ResourceStockpileComponent),
                 typeof(FaithStateComponent),
+                typeof(CovenantTestStateComponent),
                 typeof(HostilityComponent));
             entityManager.SetComponentData(entity, new FactionComponent { FactionId = factionId });
             entityManager.SetComponentData(entity, new FactionKindComponent { Kind = FactionKind.Kingdom });
@@ -328,6 +330,14 @@ namespace Bloodlines.EditorTools
                 DoctrinePath = doctrinePath,
                 Intensity = intensity,
                 Level = level,
+            });
+            entityManager.SetComponentData(entity, new CovenantTestStateComponent
+            {
+                IntensityThresholdMetAtInWorldDays = 0f,
+                TestPhase = CovenantTestPhase.Complete,
+                TestStartedAtInWorldDays = 0f,
+                LastFailedAtInWorldDays = float.NaN,
+                SuccessCount = 1,
             });
 
             DynastyBootstrap.AttachDynasty(entityManager, entity, new FixedString32Bytes(factionId));

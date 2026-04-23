@@ -3707,3 +3707,43 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   events lane as landed with no branch in flight. The next additive pickup is
   the faith covenant-test follow-up that should consume the existing
   `CovenantTestCooldown` placeholder.
+
+## 2026-04-22 Faith Covenant Test Slice
+
+- Branch in flight: `codex/unity-faith-covenant-test`.
+- `unity/Assets/_Bloodlines/Code/Faith/CovenantTestStateComponent.cs`,
+  `PlayerCovenantTestRequestComponent.cs`,
+  `CovenantTestQualificationSystem.cs`,
+  and
+  `CovenantTestResolutionSystem.cs`
+  now port the covenant-test qualification/trigger loop into Unity ECS: faction
+  roots record the first in-world day they met intensity 80, advance to
+  `ReadyToTrigger` only after a true 180-day hold with no active cooldown,
+  resolve explicit player test requests, spend covenant costs, award success
+  legitimacy/intensity floors, and push the real `CovenantTestCooldown`
+  political event on failure.
+- `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Faith.cs`
+  now exposes `TryDebugTriggerCovenantTest(...)`,
+  `TryDebugGetCovenantTestState(...)`,
+  and
+  `TryDebugSetFaithIntensity(...)`.
+- `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerDivineRightDeclarationSystem.cs`
+  now requires `CovenantTestStateComponent.TestPhase == Complete` before the
+  player divine-right declaration path can proceed, and
+  `BloodlinesPlayerHolyWarDivineRightSmokeValidation.cs`
+  now seeds a completed covenant-test state so the pre-existing divine-right
+  validator stays green on its intended seam.
+- `unity/Assets/_Bloodlines/Code/Editor/BloodlinesCovenantTestSmokeValidation.cs`
+  plus
+  `scripts/Invoke-BloodlinesUnityCovenantTestSmokeValidation.ps1`
+  now prove qualification, success, failed-cost penalties plus cooldown push,
+  and retry blocking while cooldown is active.
+- Governed validation is green on the branch: dedicated covenant-test smoke,
+  runtime build, editor build, bootstrap runtime smoke, combat smoke, canonical
+  scene-shell validation, fortification smoke, siege smoke,
+  `node tests/data-validation.mjs`,
+  `node tests/runtime-bridge.mjs`,
+  and contract staleness.
+- Contract revision advanced `92 -> 93` and now records the active
+  `faith-covenant-test` lane with no branch in flight. The next additive pickup
+  from the directive stack is Priority 4 governor specialization.

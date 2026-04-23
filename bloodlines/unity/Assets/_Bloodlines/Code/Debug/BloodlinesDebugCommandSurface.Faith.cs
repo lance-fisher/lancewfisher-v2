@@ -2,6 +2,7 @@ using Bloodlines.Components;
 using Bloodlines.Faith;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 
 namespace Bloodlines.Debug
 {
@@ -85,6 +86,59 @@ namespace Bloodlines.Debug
             var result = FaithScoring.Commit(ref faithState, buffer, target, path);
             entityManager.SetComponentData(factionEntity, faithState);
             return result;
+        }
+
+        public bool TryDebugTriggerCovenantTest(string factionId)
+        {
+            var factionEntity = FindFactionEntityByFaith(factionId, out var entityManager);
+            if (factionEntity == Entity.Null)
+            {
+                return false;
+            }
+
+            var requestEntity = entityManager.CreateEntity(typeof(PlayerCovenantTestRequestComponent));
+            entityManager.SetComponentData(requestEntity, new PlayerCovenantTestRequestComponent
+            {
+                SourceFactionId = new FixedString32Bytes(factionId),
+            });
+            return true;
+        }
+
+        public bool TryDebugGetCovenantTestState(string factionId, out string readout)
+        {
+            readout = string.Empty;
+            var factionEntity = FindFactionEntityByFaith(factionId, out var entityManager);
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<CovenantTestStateComponent>(factionEntity))
+            {
+                return false;
+            }
+
+            var state = entityManager.GetComponentData<CovenantTestStateComponent>(factionEntity);
+            readout =
+                "CovenantTestState|FactionId=" + factionId +
+                "|Phase=" + state.TestPhase +
+                "|IntensityThresholdMetAtInWorldDays=" + state.IntensityThresholdMetAtInWorldDays +
+                "|TestStartedAtInWorldDays=" + state.TestStartedAtInWorldDays +
+                "|LastFailedAtInWorldDays=" + state.LastFailedAtInWorldDays +
+                "|SuccessCount=" + state.SuccessCount;
+            return true;
+        }
+
+        public bool TryDebugSetFaithIntensity(string factionId, float value)
+        {
+            var factionEntity = FindFactionEntityByFaith(factionId, out var entityManager);
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<FaithStateComponent>(factionEntity))
+            {
+                return false;
+            }
+
+            var faithState = entityManager.GetComponentData<FaithStateComponent>(factionEntity);
+            faithState.Intensity = math.clamp(value, 0f, FaithIntensityTiers.IntensityMax);
+            FaithScoring.SyncLevel(ref faithState);
+            entityManager.SetComponentData(factionEntity, faithState);
+            return true;
         }
 
         private static Entity FindFactionEntityByFaith(string factionId, out EntityManager entityManager)

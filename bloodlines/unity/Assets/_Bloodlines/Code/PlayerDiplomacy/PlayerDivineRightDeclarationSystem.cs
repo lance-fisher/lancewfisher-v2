@@ -1,6 +1,7 @@
 using Bloodlines.AI;
 using Bloodlines.Components;
 using Bloodlines.Dynasties;
+using Bloodlines.Faith;
 using Bloodlines.GameTime;
 using Unity.Collections;
 using Unity.Entities;
@@ -60,13 +61,16 @@ namespace Bloodlines.PlayerDiplomacy
             var sourceEntity = PlayerFaithDeclarationUtility.FindFactionEntity(entityManager, request.SourceFactionId);
             if (sourceEntity == Entity.Null ||
                 !PlayerFaithDeclarationUtility.IsKingdom(entityManager, sourceEntity) ||
-                !entityManager.HasComponent<FaithStateComponent>(sourceEntity))
+                !entityManager.HasComponent<FaithStateComponent>(sourceEntity) ||
+                !entityManager.HasComponent<CovenantTestStateComponent>(sourceEntity))
             {
                 return;
             }
 
             var sourceFaith = entityManager.GetComponentData<FaithStateComponent>(sourceEntity);
+            var covenantTestState = entityManager.GetComponentData<CovenantTestStateComponent>(sourceEntity);
             if (sourceFaith.SelectedFaith == CovenantId.None ||
+                covenantTestState.TestPhase != CovenantTestPhase.Complete ||
                 DynastyPoliticalEventUtility.HasActiveEvent(
                     entityManager,
                     sourceEntity,

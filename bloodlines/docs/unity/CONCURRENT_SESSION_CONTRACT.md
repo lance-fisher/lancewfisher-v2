@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 92
+- Revision: 93
 - Last Updated: 2026-04-22
-- Last Updated By: codex-dynasty-political-events-2026-04-22
-- Supersedes: revision 91 (Records the validated landing of `dynasty-political-events` onto canonical master, retires the branch-in-flight state for that lane, and points the next Codex pickup at the covenant-test follow-up that consumes the placeholder cooldown seam.)
+- Last Updated By: codex-faith-covenant-test-2026-04-22
+- Supersedes: revision 92 (Records the validated landing of the `faith-covenant-test` slice onto canonical master, retires the stale covenant-test placeholder seam, and points the next Codex pickup at Priority 4 governor specialization.)
 
 
 ## Purpose
@@ -292,7 +292,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - failed divine-right upkeep now writes a timed `DivineRightFailedCooldown` political event that blocks immediate redeclaration
   - resource trickle, attack damage, and control-point stabilization now consume the aggregate multipliers through narrow shared-file seams
   - `BloodlinesDynastyPoliticalEventsSmokeValidation` proves aggregate application, cooldown creation, and expiry reset
-  - next Codex pickup should be the faith covenant-test follow-up so the existing `CovenantTestCooldown` placeholder starts consuming real failure output
+  - the follow-on covenant-test slice has now landed and consumes `CovenantTestCooldown` as a real failure output rather than a placeholder
 
 ### Lane: faith-commitment
 
@@ -309,6 +309,47 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-17-unity-faith-commitment-and-intensity.md`
 - Current Branch In Flight: none
 - Follow-Up (later faith slices): sacred-site exposure walker, structure intensity regen, wayshrine amplification, covenant tests, holy wars, divine right, conviction event on commit.
+
+### Lane: faith-covenant-test
+
+- Status: active
+- Branch Prefix: `codex/unity-faith-covenant-test`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Faith/CovenantTestStateComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Faith/PlayerCovenantTestRequestComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Faith/CovenantTestQualificationSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Faith/CovenantTestResolutionSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesCovenantTestSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityCovenantTestSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Faith.cs` -- additive covenant-test trigger/readout and test-only intensity setter helpers only
+  - `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerDivineRightDeclarationSystem.cs` -- player divine-right declaration now requires `CovenantTestStateComponent.TestPhase == Complete`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerHolyWarDivineRightSmokeValidation.cs` -- validator seeding only so the pre-existing player divine-right smoke remains focused on its intended seam
+  - `unity/Assembly-CSharp.csproj` -- additive compile includes for the covenant-test runtime files and canonicalized Unity.Entities analyzer paths
+  - `unity/Assembly-CSharp-Editor.csproj` -- additive compile include for the covenant-test validator and canonicalized Unity.Entities analyzer paths
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyPoliticalEventComponent.cs` -- consume the landed political-event cooldown buffer shape only
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyPoliticalEventSystem.cs` -- reuse the existing timed cooldown seam without reopening that lane
+  - `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerFaithDeclarationUtility.cs` -- reuse faction-root lookup and kingdom gate helpers
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve faction roots by `FactionId`
+  - `unity/Assets/_Bloodlines/Code/Components/ResourceStockpileComponent.cs` -- read/write covenant-test resource costs only
+  - `unity/Assets/_Bloodlines/Code/Components/PopulationComponent.cs` -- read/write covenant-test population costs only
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyStateComponent.cs` -- apply covenant-test legitimacy gain/loss only
+  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- project the 180-day hold and retry cooldown onto in-world time
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-22-unity-faith-covenant-test.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` constants `COVENANT_TEST_INTENSITY_THRESHOLD`, `COVENANT_TEST_DURATION_IN_WORLD_DAYS`, `COVENANT_TEST_RETRY_COOLDOWN_IN_WORLD_DAYS`, the covenant-test cost block near lines 134-141, `performCovenantTestAction`, and `ensureFaithCovenantTestCompletionFromLegacyState`
+- Current Branch In Flight: none (validated implementation landed onto canonical `master` in this session)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-faith-covenant-test.md`
+- Last Slice State:
+  - faction roots now track covenant-test qualification windows, explicit trigger requests, success completion, and failed retry cooldown state
+  - covenant-test failure now pushes the previously placeholder `CovenantTestCooldown` political event through the landed dynasty-political-events surface
+  - player divine-right declarations now require a completed covenant test rather than intensity-only state
+  - `BloodlinesCovenantTestSmokeValidation` proves the 180-day hold, success path, failure penalties, and retry blocking
+  - next Codex pickup should move to Priority 4 `territory-governor-specialization`
 
 ### Lane: combat-group-movement-and-stances
 
