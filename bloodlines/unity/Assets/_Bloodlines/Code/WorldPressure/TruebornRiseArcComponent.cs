@@ -22,6 +22,17 @@ namespace Bloodlines.Components
         public ulong RecognizedFactionsBitmask;
         public int ChallengeLevel;
         public int UnchallengedCycles;
+
+        // Stage-4/5 match-pressure follow-up:
+        // once the late-match hegemon is clear, the Trueborn can issue a
+        // recognition ultimatum to that dynasty before escalating direct
+        // pressure on its weakest march.
+        public FixedString32Bytes UltimatumTargetFactionId;
+        public float UltimatumIssuedAtInWorldDays;
+        public float UltimatumDeadlineInWorldDays;
+        public float UltimatumLoyaltyPressurePerDay;
+        public float UltimatumLegitimacyPressurePerDay;
+        public byte UltimatumStageNumber;
     }
 
     /// <summary>

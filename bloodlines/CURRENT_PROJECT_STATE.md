@@ -4269,3 +4269,39 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   `world-trueborn-rise` lane on canonical `master`. The next additive pickup
   is Priority 16 Trueborn diplomatic escalation / ultimatum handling from
   `D:\ProjectsHome\Bloodlines\03_PROMPTS\CODEX_MULTI_DAY_DIRECTIVE_2026-04-24.md`.
+
+## 2026-04-23 Trueborn City Rise Arc (Sub-Slice 3)
+
+- Branch lane: `codex/unity-world-trueborn-rise-arc-3`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3.md`.
+- Completed in this slice:
+  - `TruebornRiseArcComponent` now carries active ultimatum target, timing,
+    pressure, and stage fields so the late-stage Trueborn diplomatic escalation
+    lives on the same singleton as the earlier rise-arc work
+  - `TruebornRecognitionUtility` plus the new
+    `TruebornDiplomaticEscalationSystem` now lift the stage-4/5 ultimatum
+    seam into `WorldPressure/**`: the dominant kingdom receives a timed
+    recognition ultimatum, pre-deadline recognition clears it, and expired
+    ultimatums apply extra loyalty pressure to the target's weakest march plus
+    dynasty legitimacy strain
+  - `BloodlinesDebugCommandSurface.WorldPressure` now exposes
+    `TryDebugGetTruebornUltimatumState(...)` and extends the existing
+    rise-arc readout with ultimatum target/stage/deadline visibility
+  - `BloodlinesTruebornDiplomaticEscalationSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityTruebornDiplomaticEscalationSmokeValidation.ps1`
+    now prove stage-4 issuance, pre-deadline recognition clearance, and
+    stage-5 expiry fallout
+  - the worktree-local `unity/Library` junction and stale
+    `Assembly-CSharp*.csproj` analyzer roots were repaired/canonicalized back
+    to `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache` so the
+    governed `dotnet build` gates resolve Unity assemblies again from this
+    checkout
+- Validation state:
+  - dedicated Trueborn diplomatic escalation smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green at contract revision `108`
+- Contract revision advanced `107 -> 108` and records the widened
+  `world-trueborn-rise` lane with sub-slice 3 validated on branch
+  `codex/unity-world-trueborn-rise-arc-3`. The next additive pickup after
+  landing is the next remaining non-AI Trueborn follow-up on a fresh branch.

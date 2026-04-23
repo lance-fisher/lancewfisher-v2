@@ -19,6 +19,9 @@ namespace Bloodlines.Systems
 
         public static bool HasActiveRise(in TruebornRiseArcComponent arc) => arc.CurrentStage >= 1;
 
+        public static bool HasActiveUltimatum(in TruebornRiseArcComponent arc) =>
+            arc.UltimatumTargetFactionId.Length > 0;
+
         public static int FindRecognitionSlot(
             DynamicBuffer<TruebornRiseFactionRecognitionSlotElement> recognitionSlots,
             FixedString32Bytes factionId)
@@ -100,6 +103,27 @@ namespace Bloodlines.Systems
             return count;
         }
 
+        public static bool ClearUltimatum(ref TruebornRiseArcComponent arc)
+        {
+            if (!HasActiveUltimatum(arc) &&
+                arc.UltimatumIssuedAtInWorldDays == 0f &&
+                arc.UltimatumDeadlineInWorldDays == 0f &&
+                arc.UltimatumLoyaltyPressurePerDay == 0f &&
+                arc.UltimatumLegitimacyPressurePerDay == 0f &&
+                arc.UltimatumStageNumber == 0)
+            {
+                return false;
+            }
+
+            arc.UltimatumTargetFactionId = default;
+            arc.UltimatumIssuedAtInWorldDays = 0f;
+            arc.UltimatumDeadlineInWorldDays = 0f;
+            arc.UltimatumLoyaltyPressurePerDay = 0f;
+            arc.UltimatumLegitimacyPressurePerDay = 0f;
+            arc.UltimatumStageNumber = 0;
+            return true;
+        }
+
         public static bool HasTruebornCity(EntityManager entityManager)
         {
             using var query = entityManager.CreateEntityQuery(
@@ -116,6 +140,32 @@ namespace Bloodlines.Systems
                 }
             }
 
+            return false;
+        }
+
+        public static bool TryFindKingdomFactionEntity(
+            EntityManager entityManager,
+            FixedString32Bytes factionId,
+            out Entity factionEntity)
+        {
+            using var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<FactionKindComponent>());
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var factionKinds = query.ToComponentDataArray<FactionKindComponent>(Allocator.Temp);
+
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (factionKinds[i].Kind == FactionKind.Kingdom &&
+                    factions[i].FactionId.Equals(factionId))
+                {
+                    factionEntity = entities[i];
+                    return true;
+                }
+            }
+
+            factionEntity = Entity.Null;
             return false;
         }
 

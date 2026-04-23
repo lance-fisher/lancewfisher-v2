@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 107
+- Revision: 108
 - Last Updated: 2026-04-23
 - Last Updated By: codex-world-trueborn-rise-2026-04-23
-- Supersedes: revision 106 (Records the validated Trueborn rise-arc recognition-dispatch sub-slice 2 on the current master line and extends the world-trueborn-rise lane ownership surface.)
+- Supersedes: revision 107 (Records the validated Trueborn rise-arc diplomatic-escalation sub-slice 3 on branch `codex/unity-world-trueborn-rise-arc-3` and widens the world-trueborn-rise lane ownership surface.)
 
 
 ## Purpose
@@ -687,8 +687,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: world-trueborn-rise
 
-- Status: active (validated Trueborn rise-arc sub-slices 1-2 landed on canonical `master`; no branch currently in flight)
-- Branch Prefix: `codex/unity-world-trueborn-rise-arc-2`
+- Status: active (validated Trueborn rise-arc sub-slices 1-2 landed on canonical `master`; sub-slice 3 is validated on branch `codex/unity-world-trueborn-rise-arc-3`)
+- Branch Prefix: `codex/unity-world-trueborn-rise-arc-1`, `codex/unity-world-trueborn-rise-arc-2`, `codex/unity-world-trueborn-rise-arc-3`
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/WorldPressure/TruebornRiseArcComponent.cs`
@@ -696,13 +696,16 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/WorldPressure/PlayerTruebornRecognitionRequestComponent.cs`
   - `unity/Assets/_Bloodlines/Code/WorldPressure/TruebornRecognitionUtility.cs`
   - `unity/Assets/_Bloodlines/Code/WorldPressure/TruebornRecognitionResolutionSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/TruebornDiplomaticEscalationSystem.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesTruebornRiseArcSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesTruebornDiplomaticEscalationSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityTruebornRiseArcSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityTruebornDiplomaticEscalationSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
-  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.WorldPressure.cs` -- additive `TryDebugGetTruebornRiseArc(...)`, `TryDebugSetTruebornRecognition(...)`, `TryDebugRecognizeTrueborn(...)`, and `TryDebugGetTruebornRecognitionState(...)` only
-  - `unity/Assembly-CSharp.csproj` -- compile includes retained for the Trueborn rise runtime files, plus recognition request / utility / resolution registrations
-  - `unity/Assembly-CSharp-Editor.csproj` -- compile include retained for the Trueborn rise validator
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.WorldPressure.cs` -- additive `TryDebugGetTruebornRiseArc(...)`, `TryDebugSetTruebornRecognition(...)`, `TryDebugRecognizeTrueborn(...)`, `TryDebugGetTruebornRecognitionState(...)`, and `TryDebugGetTruebornUltimatumState(...)` only
+  - `unity/Assembly-CSharp.csproj` -- compile includes retained for the Trueborn rise runtime files, recognition request / utility / resolution registrations, new diplomatic-escalation system registration, and canonicalized Unity analyzer roots at `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
+  - `unity/Assembly-CSharp-Editor.csproj` -- compile includes retained for the Trueborn rise validators, plus canonicalized Unity analyzer roots at `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve kingdom vs neutral faction roots and the `trueborn_city` singleton faction id
   - `unity/Assets/_Bloodlines/Code/Components/ControlPointComponent.cs` -- count kingdom territories and apply loyalty erosion to owned control points
@@ -711,15 +714,18 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyRenownComponent.cs` -- apply the browser standing bonus as a renown bump on recognition
   - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyPoliticalEventComponent.cs` -- clear recognition-linked cooldown events and rebuild the aggregate through the existing event utility
   - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- tick stage advancement on deterministic whole in-world days
+  - `unity/Assets/_Bloodlines/Code/Time/MatchProgressionComponent.cs` -- project the dominant-kingdom / Great Reckoning stage gate for ultimatum target selection without reopening the time lane
+  - `unity/Assets/_Bloodlines/Code/Time/MatchProgressionEvaluationSystem.cs` -- preserve intended ordering adjacency for late-stage ultimatum issuance only
   - `unity/Assets/_Bloodlines/Code/WorldPressure/GovernanceCoalitionPressureSystem.cs` -- align the rise arc alongside the existing world-pressure seam without reopening governance implementation
   - `unity/Assets/_Bloodlines/Code/WorldPressure/WorldPressureEscalationSystem.cs` -- preserve intended world-pressure ordering adjacency without widening the escalation score sources
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-1.md`
   - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-2.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3.md`
 - Browser Reference:
-  - `src/game/core/simulation.js` `tickTruebornRiseArc`, `getTruebornChallengeLevel`, `getTruebornRecognitionTerms`, `recognizeTruebornClaim`, and `TRUEBORN_RISE_STAGE_*` constants
-- Current Branch In Flight: none (validated slice landed onto canonical `master` in this session)
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-2.md`
+  - `src/game/core/simulation.js` `tickTruebornRiseArc`, `getTruebornChallengeLevel`, `getTruebornRecognitionTerms`, `recognizeTruebornClaim`, `recognizedPressureMultiplier`, and `TRUEBORN_RISE_STAGE_*` constants
+- Current Branch In Flight: `codex/unity-world-trueborn-rise-arc-3`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3.md`
 
 ### Lane: ai-strategic-layer
 

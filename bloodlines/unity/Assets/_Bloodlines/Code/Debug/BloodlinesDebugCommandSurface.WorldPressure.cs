@@ -127,8 +127,56 @@ namespace Bloodlines.Debug
                 $"|LoyaltyErosion={math.round(arc.LoyaltyErosionPerDay * 100f) / 100f}" +
                 $"|Challenge={arc.ChallengeLevel}" +
                 $"|UnchallengedCycles={arc.UnchallengedCycles}" +
+                $"|UltimatumTarget={(arc.UltimatumTargetFactionId.Length == 0 ? "-" : arc.UltimatumTargetFactionId)}" +
+                $"|UltimatumStage={arc.UltimatumStageNumber}" +
+                $"|UltimatumDeadline={math.round(arc.UltimatumDeadlineInWorldDays * 100f) / 100f}" +
                 $"|RecognizedCount={recognizedCount}" +
                 $"|RecognizedMask={arc.RecognizedFactionsBitmask}");
+            return true;
+        }
+
+        public bool TryDebugGetTruebornUltimatumState(
+            out Unity.Collections.FixedString512Bytes readout)
+        {
+            readout = default;
+            var world = World.DefaultGameObjectInjectionWorld;
+            if (world == null) return false;
+
+            var entityManager = world.EntityManager;
+            using var arcQuery = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<TruebornRiseArcComponent>());
+            if (arcQuery.IsEmpty)
+            {
+                return false;
+            }
+
+            Entity arcEntity = arcQuery.GetSingletonEntity();
+            TruebornRiseArcComponent arc = entityManager.GetComponentData<TruebornRiseArcComponent>(arcEntity);
+            float currentInWorldDays = 0f;
+            using (var clockQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<Bloodlines.GameTime.DualClockComponent>()))
+            {
+                if (!clockQuery.IsEmpty)
+                {
+                    currentInWorldDays = clockQuery.GetSingleton<Bloodlines.GameTime.DualClockComponent>().InWorldDays;
+                }
+            }
+
+            bool active = arc.UltimatumTargetFactionId.Length > 0;
+            bool expired = active && currentInWorldDays >= arc.UltimatumDeadlineInWorldDays;
+            float daysRemaining = active
+                ? math.max(0f, arc.UltimatumDeadlineInWorldDays - currentInWorldDays)
+                : 0f;
+
+            readout = new Unity.Collections.FixedString512Bytes(
+                $"TruebornUltimatum|Active={(active ? "true" : "false")}" +
+                $"|Target={(active ? arc.UltimatumTargetFactionId.ToString() : "-")}" +
+                $"|MatchStage={arc.UltimatumStageNumber}" +
+                $"|IssuedAt={math.round(arc.UltimatumIssuedAtInWorldDays * 100f) / 100f}" +
+                $"|Deadline={math.round(arc.UltimatumDeadlineInWorldDays * 100f) / 100f}" +
+                $"|DaysRemaining={math.round(daysRemaining * 100f) / 100f}" +
+                $"|Expired={(expired ? "true" : "false")}" +
+                $"|LoyaltyPressure={math.round(arc.UltimatumLoyaltyPressurePerDay * 100f) / 100f}" +
+                $"|LegitimacyPressure={math.round(arc.UltimatumLegitimacyPressurePerDay * 100f) / 100f}");
             return true;
         }
 

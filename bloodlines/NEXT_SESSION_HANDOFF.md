@@ -5154,3 +5154,41 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
     unstaged; Unity dirties it during validation and it is unrelated to this
     slice
+
+## 2026-04-23 Trueborn City Rise Arc (Sub-Slice 3)
+
+- Branch lane:
+  - `codex/unity-world-trueborn-rise-arc-3`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3.md`
+- Completed in this slice:
+  - `TruebornRiseArcComponent` now stores the active ultimatum target,
+    issuance/deadline timings, per-day pressure values, and stage number so
+    the stage-4/5 escalation seam lives on the existing Trueborn singleton
+  - `TruebornRecognitionUtility` plus
+    `TruebornDiplomaticEscalationSystem` now issue a timed recognition
+    ultimatum to the dominant kingdom, clear it on pre-deadline recognition,
+    and apply extra weakest-march loyalty pressure plus dynasty legitimacy
+    strain once the ultimatum expires
+  - `BloodlinesDebugCommandSurface.WorldPressure` now exposes
+    `TryDebugGetTruebornUltimatumState(...)`, and the dedicated escalation
+    smoke proves stage-4 issuance, pre-deadline recognition clearance, and
+    stage-5 expiry fallout
+  - the local worktree `unity/Library` junction and stale generated
+    `Assembly-CSharp*.csproj` analyzer roots were repaired back to
+    `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`, which restored
+    governed `dotnet build` resolution in this checkout
+- Validation state:
+  - dedicated Trueborn diplomatic escalation smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green at contract revision `108`
+- Immediate next action:
+  - commit and push `codex/unity-world-trueborn-rise-arc-3`
+  - merge the branch to canonical `master` with `git merge --no-ff`
+  - rerun the full governed 10-gate chain plus the dedicated Trueborn
+    diplomatic escalation smoke on merged `master`
+- Staging note:
+  - keep
+    `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+    unstaged; Unity dirties it during validation and it is unrelated to this
+    slice

@@ -2177,6 +2177,15 @@
       "description": "The Trueborn rise-arc sub-slice 2 is now complete on branch. `PlayerTruebornRecognitionRequestComponent`, `TruebornRecognitionUtility`, and `TruebornRecognitionResolutionSystem` now turn player-issued recognition requests into browser-aligned recognition state: eligible kingdoms spend 40 influence, 60 gold, and 5 legitimacy, set their recognition bit inside `TruebornRiseArcComponent`, gain a 6-renown standing bump, and clear the Covenant Test / Divine Right political cooldowns while duplicate requests remain no-ops. `TruebornRiseArcSystem` and `BloodlinesDebugCommandSurface.WorldPressure` now share the new utility for slot/bitmask bookkeeping, the debug surface exposes `TryDebugRecognizeTrueborn(...)` and `TryDebugGetTruebornRecognitionState(...)`, and `BloodlinesTruebornRiseArcSmokeValidation` proves recognition resolution, cooldown clearing, duplicate no-op behavior, and subsequent pressure immunity. The shared request component is AI-compatible, but actual AI request emission remains deferred to the `ai-strategic-layer` lane because `unity/Assets/_Bloodlines/Code/AI/**` stays forbidden here. The full governed 10-gate chain is green with contract rev 106->107.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-2.md",
       "validation_gates": "all 10 green plus Trueborn rise arc smoke"
+    },
+    {
+      "lane": "world-trueborn-rise-slice-3",
+      "date": "2026-04-23",
+      "branch": "codex/unity-world-trueborn-rise-arc-3",
+      "status": "complete",
+      "description": "The Trueborn rise-arc sub-slice 3 is now complete on branch. `TruebornRiseArcComponent` now stores the active ultimatum target, issued/deadline timings, per-day loyalty and legitimacy pressure values, and the issuing stage number so the late-stage escalation seam lives on the same singleton as the earlier rise-arc work. `TruebornRecognitionUtility` plus the new `TruebornDiplomaticEscalationSystem` now issue a timed recognition ultimatum to the dominant kingdom once the arc reaches stages 4-5, clear that ultimatum on pre-deadline recognition, and apply extra weakest-march loyalty pressure plus dynasty legitimacy strain after expiry without touching `unity/Assets/_Bloodlines/Code/AI/**`. `BloodlinesDebugCommandSurface.WorldPressure` now exposes `TryDebugGetTruebornUltimatumState(...)`, `BloodlinesTruebornDiplomaticEscalationSmokeValidation` plus its wrapper prove issuance, recognition clearance, and expiry fallout, and the worktree-local `unity/Library` / `Assembly-CSharp*.csproj` surfaces were repaired back to canonical `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache` analyzer roots so governed builds resolve Unity assemblies again. The full governed 10-gate chain is green with contract rev 107->108.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3.md",
+      "validation_gates": "all 10 green plus Trueborn diplomatic escalation smoke"
     }
   ]
 }
