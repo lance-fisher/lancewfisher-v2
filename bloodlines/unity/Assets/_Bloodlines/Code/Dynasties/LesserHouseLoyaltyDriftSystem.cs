@@ -664,6 +664,7 @@ namespace Bloodlines.Dynasties
                 RetinueCap = 1,
                 RetinueCount = 0,
                 LastLevyAtInWorldDays = UnsetInWorldDays,
+                LastLevyUnitId = default,
                 ParentPressureLevel = 0,
                 ParentPressureStatus = LesserHouseWorldPressureStatus.Quiet,
                 ParentPressureLevyTempo = 1f,

@@ -4735,6 +4735,50 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     unstaged; Unity dirties it during validation and it is unrelated to this
     slice
 
+## 2026-04-23 Trueborn City Rise Arc (Sub-Slice 2)
+
+- Branch lane:
+  - `codex/unity-world-trueborn-rise-arc-2`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-2.md`
+- Completed in this slice:
+  - `PlayerTruebornRecognitionRequestComponent`,
+    `TruebornRecognitionUtility`, and
+    `TruebornRecognitionResolutionSystem` now resolve Trueborn recognition
+    requests into the existing rise-arc singleton, spending `40` influence,
+    `60` gold, and `5` legitimacy, setting the recognition bit, granting the
+    `6`-renown standing bonus, and clearing Covenant Test / Divine Right
+    cooldown entries
+  - `BloodlinesDebugCommandSurface.WorldPressure` now exposes
+    `TryDebugRecognizeTrueborn(...)` and
+    `TryDebugGetTruebornRecognitionState(...)`, and the dedicated Trueborn
+    smoke now proves recognition resolution, duplicate-request no-op behavior,
+    and downstream pressure exemption
+  - the local worktree required a `unity/Library` junction back to
+    `D:\ProjectsHome\Bloodlines\unity\Library` before the governed
+    `.csproj` builds could resolve `Library\ScriptAssemblies`
+  - the request component is ready for future AI producers, but actual AI
+    request emission remains deferred to the `ai-strategic-layer` lane because
+    `unity/Assets/_Bloodlines/Code/AI/**` stays forbidden here
+- Validation state:
+  - dedicated Trueborn rise-arc smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green at contract revision `107`
+- Immediate next action:
+  - claim Priority 16 from
+    `D:\ProjectsHome\Bloodlines\03_PROMPTS\CODEX_MULTI_DAY_DIRECTIVE_2026-04-24.md`
+  - open a fresh `codex/unity-world-trueborn-rise-arc-3` branch from updated
+    canonical `master`
+  - add the stage-4 / stage-5 ultimatum fields and diplomatic-escalation
+    system, reuse the new recognition request / utility seam, and keep
+    `unity/Assets/_Bloodlines/Code/AI/**` untouched unless that lane
+    explicitly picks up AI request emission
+- Staging note:
+  - keep
+    `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+    unstaged; Unity dirties it during validation and it is unrelated to this
+    slice
+
 ## 2026-04-23 Faith Structure Regen
 
 - Branch lane:
@@ -4997,3 +5041,154 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
     unstaged; Unity dirties it during validation and it is unrelated to this
     follow-up
+
+## 2026-04-23 Governance Coalition Pressure
+
+- Branch lane:
+  - `codex/unity-governance-coalition-pressure`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-governance-coalition-pressure.md`
+- Completed in this slice:
+  - `TerritorialGovernanceRecognitionComponent` plus
+    `GovernanceCoalitionPressureSystem` now port the browser
+    territorial-governance recognition and alliance-threshold coalition
+    pressure seam into `WorldPressure/**`, including live acceptance
+    seed/target/rise/fall state, sustain/victory timers, weakest-march
+    tracking, and 90-second hostile-alliance loyalty / legitimacy / acceptance
+    drag cycles
+  - `WorldPressureComponent`, `WorldPressureEscalationSystem`, and
+    `VictoryConditionEvaluationSystem` now consume the live governance
+    recognition surface so territorial-governance progress contributes to world
+    pressure and victory resolution without reopening `AI/**`
+  - `BloodlinesDebugCommandSurface.WorldPressure` now exposes
+    `TryDebugGetGovernanceCoalitionState`, and the dedicated governance
+    coalition smoke proves bootstrap issuance, above-threshold pressure,
+    below-threshold non-triggering, and completed-recognition victory
+- Validation state:
+  - dedicated governance coalition pressure smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green at contract revision `104`
+- Immediate next action:
+  - claim Priority 13 from
+    `D:\ProjectsHome\Bloodlines\03_PROMPTS\CODEX_MULTI_DAY_DIRECTIVE_2026-04-23.md`
+  - open a fresh `codex/unity-dynasty-minor-house-levy-complete` branch from
+    updated canonical `master`
+  - verify the existing minor-house levy runtime against the browser decay,
+    claim-gate, and loyalty-tier profile rules, add any missing parity, and
+    rerun the full governed 10-gate chain
+- Staging note:
+  - keep
+    `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+    unstaged; Unity dirties it during validation and it is unrelated to this
+    slice
+
+## 2026-04-23 Dynasty Minor-House Levy Completion
+
+- Branch lane:
+  - `codex/unity-dynasty-minor-house-levy-complete`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-dynasty-minor-house-levy-completion.md`
+- Completed in this slice:
+  - the already-landed `MinorHouseLevySystem` was verified against the browser
+    decay, loyalty-gate, and unit-tier selection rules; the runtime itself did
+    not need another state-machine rewrite on the current master line
+  - `BloodlinesDebugCommandSurface.Dynasty` now exposes
+    `TryDebugGetMinorHouseLevyState` so the live claim id, levy status,
+    accumulator, unit profile, retinue state, last unit, and parent pressure
+    context are directly inspectable
+  - `BloodlinesMinorHouseLevyParitySmokeValidation` now includes a new
+    low-loyalty unsettled-claim phase proving that a stabilized claim at
+    loyalty `47` stays blocked, decays progress, and reports the same
+    `Status=Unsettled` state through the debug surface
+  - `LesserHouseLoyaltyDriftSystem` now explicitly initializes
+    `LastLevyUnitId` for spawned breakaway minor houses, and
+    `scripts/Invoke-BloodlinesUnityMinorHouseLevyParitySmokeValidation.ps1`
+    now waits for explicit PASS/FAIL markers and reruns once if Unity exits
+    before the log fully flushes
+- Validation state:
+  - dedicated minor-house levy parity smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green at contract revision `105`
+- Immediate next action:
+  - claim Priority 14 from
+    `D:\ProjectsHome\Bloodlines\03_PROMPTS\CODEX_MULTI_DAY_DIRECTIVE_2026-04-23.md`
+  - open a fresh `codex/unity-world-trueborn-rise-arc-1` branch from updated
+    canonical `master`
+  - implement `TruebornRiseArcComponent`, `TruebornRiseArcSystem`, and a
+    dedicated smoke validator before rerunning the full governed 10-gate chain
+
+## 2026-04-23 Trueborn City Rise Arc (Sub-Slice 1)
+
+- Branch lane:
+  - `codex/unity-world-trueborn-rise-arc-1`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-1.md`
+- Completed in this slice:
+  - `TruebornRiseArcComponent` plus
+    `TruebornRiseFactionRecognitionSlotElement` now hold the singleton
+    browser-aligned rise state, stage pressure values, challenge counters, and
+    a stable append-only kingdom-slot registry for the recognition bitmask
+  - `TruebornRiseArcSystem` now ports the base late-game arc into
+    `WorldPressure/**`: the Trueborn city activates after the canonical
+    8-year + 3-cycle threshold, advances again after the 2-year and 3-year
+    delay windows, and applies stage-scaled loyalty erosion plus legitimacy
+    strain to non-recognizing kingdoms
+  - `BloodlinesDebugCommandSurface.WorldPressure` now exposes
+    `TryDebugGetTruebornRiseArc(...)` and
+    `TryDebugSetTruebornRecognition(...)`, and the dedicated Trueborn smoke
+    now proves stage advancement plus recognition exemption while avoiding the
+    earlier batchmode artifact-lock warning
+- Validation state:
+  - dedicated Trueborn rise-arc smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green at contract revision `106`
+- Immediate next action:
+  - treat the current directive stack as complete through Priority 14
+  - if the next overnight directive opens the follow-up seam, start the
+    Trueborn recognition / legitimacy-cost slice on a fresh branch and reuse
+    the existing recognition-slot bitmask surface
+  - decide in that follow-up whether recognized kingdoms should remain fully
+    exempt or move toward the browser `0.25x` reduced-pressure rule
+- Staging note:
+  - keep
+    `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+    unstaged; Unity dirties it during validation and it is unrelated to this
+    slice
+
+## 2026-04-23 Trueborn City Rise Arc (Sub-Slice 3)
+
+- Branch lane:
+  - `codex/unity-world-trueborn-rise-arc-3`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3.md`
+- Completed in this slice:
+  - `TruebornRiseArcComponent` now stores the active ultimatum target,
+    issuance/deadline timings, per-day pressure values, and stage number so
+    the stage-4/5 escalation seam lives on the existing Trueborn singleton
+  - `TruebornRecognitionUtility` plus
+    `TruebornDiplomaticEscalationSystem` now issue a timed recognition
+    ultimatum to the dominant kingdom, clear it on pre-deadline recognition,
+    and apply extra weakest-march loyalty pressure plus dynasty legitimacy
+    strain once the ultimatum expires
+  - `BloodlinesDebugCommandSurface.WorldPressure` now exposes
+    `TryDebugGetTruebornUltimatumState(...)`, and the dedicated escalation
+    smoke proves stage-4 issuance, pre-deadline recognition clearance, and
+    stage-5 expiry fallout
+  - the local worktree `unity/Library` junction and stale generated
+    `Assembly-CSharp*.csproj` analyzer roots were repaired back to
+    `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`, which restored
+    governed `dotnet build` resolution in this checkout
+- Validation state:
+  - dedicated Trueborn diplomatic escalation smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green at contract revision `108`
+- Immediate next action:
+  - commit and push `codex/unity-world-trueborn-rise-arc-3`
+  - merge the branch to canonical `master` with `git merge --no-ff`
+  - rerun the full governed 10-gate chain plus the dedicated Trueborn
+    diplomatic escalation smoke on merged `master`
+- Staging note:
+  - keep
+    `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+    unstaged; Unity dirties it during validation and it is unrelated to this
+    slice

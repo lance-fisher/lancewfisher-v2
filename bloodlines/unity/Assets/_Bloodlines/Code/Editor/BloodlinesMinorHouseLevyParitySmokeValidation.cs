@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using Bloodlines.Components;
+using Bloodlines.Debug;
 using Bloodlines.Dynasties;
 using Bloodlines.GameTime;
 using Unity.Collections;
@@ -19,8 +20,10 @@ namespace Bloodlines.EditorTools
     ///
     /// Phase 1: defection spawns a live minor faction claim with levy provenance.
     /// Phase 2: landless minor houses decay levy progress instead of spawning.
-    /// Phase 3: pressured stabilized claims raise the correct levy profile and spend costs.
-    /// Phase 4: retinue cap blocks over-mustering and clears progress.
+    /// Phase 3: low-loyalty claims stay unsettled, decay progress, and surface the
+    ///          same status through the debug readout.
+    /// Phase 4: pressured stabilized claims raise the correct levy profile and spend costs.
+    /// Phase 5: retinue cap blocks over-mustering and clears progress.
     /// </summary>
     public static class BloodlinesMinorHouseLevyParitySmokeValidation
     {
@@ -69,6 +72,7 @@ namespace Bloodlines.EditorTools
             bool ok = true;
             ok &= RunPhaseDefectionClaimSpawn(sb);
             ok &= RunPhaseLandlessDecay(sb);
+            ok &= RunPhaseUnsettledClaimGate(sb);
             ok &= RunPhasePressuredBowmanRaise(sb);
             ok &= RunPhaseMusterCapBlock(sb);
             report = sb.ToString();
@@ -241,9 +245,76 @@ namespace Bloodlines.EditorTools
             return true;
         }
 
-        private static bool RunPhasePressuredBowmanRaise(System.Text.StringBuilder sb)
+        private static bool RunPhaseUnsettledClaimGate(System.Text.StringBuilder sb)
         {
             using var world = new World("minor-house-phase3");
+            var em = world.EntityManager;
+            var simulation = SetupSimGroup(world);
+            simulation.AddSystemToUpdateList(world.GetOrCreateSystem<MinorHouseLevySystem>());
+
+            var minor = CreateMinorFaction(
+                em,
+                factionId: "minor-unsettled",
+                originFactionId: "player",
+                claimId: "minor-unsettled-claim",
+                levyAccumulator: 4f,
+                levySecondsRequired: 22f,
+                food: 20f,
+                influence: 20f);
+
+            CreateClaim(
+                em,
+                controlPointId: "minor-unsettled-claim",
+                ownerFactionId: "minor-unsettled",
+                loyalty: 47f,
+                controlState: ControlState.Stabilized,
+                isContested: false,
+                position: new float3(44f, 0f, 44f));
+
+            world.Update();
+
+            var levy = em.GetComponentData<MinorHouseLevyComponent>(minor);
+            if (levy.LevyStatus != MinorHouseLevyStatus.Unsettled ||
+                !(levy.LevyAccumulator < 4f) ||
+                levy.LeviesIssued != 0)
+            {
+                sb.AppendLine(
+                    $"PhaseUnsettledClaimGate FAIL: status={levy.LevyStatus} accumulator={levy.LevyAccumulator} levies={levy.LeviesIssued}.");
+                return false;
+            }
+
+            World previousDefault = World.DefaultGameObjectInjectionWorld;
+            World.DefaultGameObjectInjectionWorld = world;
+            try
+            {
+                var surface = new BloodlinesDebugCommandSurface();
+                if (!surface.TryDebugGetMinorHouseLevyState("minor-unsettled", out var readout))
+                {
+                    sb.AppendLine("PhaseUnsettledClaimGate FAIL: debug surface did not resolve the unsettled minor-house levy state.");
+                    return false;
+                }
+
+                string summary = readout.ToString();
+                if (!summary.Contains("Status=Unsettled", StringComparison.Ordinal) ||
+                    !summary.Contains("Claim=minor-unsettled-claim", StringComparison.Ordinal))
+                {
+                    sb.AppendLine($"PhaseUnsettledClaimGate FAIL: debug summary mismatch '{summary}'.");
+                    return false;
+                }
+
+                sb.AppendLine(
+                    $"PhaseUnsettledClaimGate PASS: low-loyalty claim blocks levying and debug readout reports '{summary}'.");
+                return true;
+            }
+            finally
+            {
+                World.DefaultGameObjectInjectionWorld = previousDefault;
+            }
+        }
+
+        private static bool RunPhasePressuredBowmanRaise(System.Text.StringBuilder sb)
+        {
+            using var world = new World("minor-house-phase4");
             var em = world.EntityManager;
             var simulation = SetupSimGroup(world);
             simulation.AddSystemToUpdateList(world.GetOrCreateSystem<MinorHouseLevySystem>());
@@ -325,7 +396,7 @@ namespace Bloodlines.EditorTools
 
         private static bool RunPhaseMusterCapBlock(System.Text.StringBuilder sb)
         {
-            using var world = new World("minor-house-phase4");
+            using var world = new World("minor-house-phase5");
             var em = world.EntityManager;
             var simulation = SetupSimGroup(world);
             simulation.AddSystemToUpdateList(world.GetOrCreateSystem<MinorHouseLevySystem>());

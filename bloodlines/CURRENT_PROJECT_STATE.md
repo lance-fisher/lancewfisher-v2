@@ -4135,3 +4135,173 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Contract revision advanced `102 -> 103` and keeps the `player-covert-ops`
   lane clear on canonical `master`. The next additive pickup remains Priority
   12 Governance Coalition Pressure.
+
+## 2026-04-23 Governance Coalition Pressure Slice
+
+- Branch lane: `codex/unity-governance-coalition-pressure`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-governance-coalition-pressure.md`.
+- Completed in this slice:
+  - `TerritorialGovernanceRecognitionComponent` and
+    `GovernanceCoalitionPressureSystem` now port the browser
+    territorial-governance recognition / acceptance / alliance-threshold
+    coalition-pressure seam under `WorldPressure/**`: kingdom faction roots now
+    auto-seed recognition state, acceptance seed/target/rise/fall terms,
+    sustain/victory timers, weakest-march tracking, and 90-second alliance
+    cycles that erode frontier loyalty, legitimacy, and acceptance momentum
+    when hostile kingdoms coordinate above the 60% threshold
+  - `WorldPressureComponent` and `WorldPressureEscalationSystem` now carry the
+    governance recognition contribution, `VictoryConditionEvaluationSystem` now
+    resolves Territorial Governance from live recognition state first with the
+    older fallback preserved, and
+    `BloodlinesDebugCommandSurface.WorldPressure` now exposes
+    `TryDebugGetGovernanceCoalitionState`
+  - `BloodlinesGovernanceCoalitionPressureSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityGovernanceCoalitionPressureSmokeValidation.ps1`
+    now prove bootstrap recognition issuance, alliance-threshold
+    loyalty/legitimacy pressure, below-threshold non-triggering, and
+    completed-recognition victory plus enemy governance observability
+  - local `Assembly-CSharp*.csproj` metadata now explicitly includes the new
+    world-pressure runtime and editor files
+- Validation state:
+  - dedicated governance coalition pressure smoke green
+  - all 10 required governed gates green, with the post-append contract
+    staleness recheck green after revision `104`
+- Contract revision advanced `103 -> 104` and records the new
+  `world-governance-coalition` lane on canonical `master`. The next additive
+  pickup is Priority 13 Minor House Levy Validation and Completion.
+
+## 2026-04-23 Dynasty Minor-House Levy Completion Slice
+
+- Branch lane: `codex/unity-dynasty-minor-house-levy-complete`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-dynasty-minor-house-levy-completion.md`.
+- Completed in this slice:
+  - the already-landed `MinorHouseLevySystem` was revalidated against the
+    browser decay, loyalty-gate, and levy-tier profile rules and did not
+    require a state-machine rewrite on the current master line
+  - `BloodlinesDebugCommandSurface.Dynasty` now exposes
+    `TryDebugGetMinorHouseLevyState(...)` so live levy claim, status, progress,
+    retinue, last-unit, and parent-pressure context can be inspected directly
+  - `BloodlinesMinorHouseLevyParitySmokeValidation` now adds an explicit
+    low-loyalty unsettled-claim phase proving that a stabilized claim at
+    loyalty `47` decays progress, issues no levy, and reports the same blocked
+    state through the new debug readout
+  - `LesserHouseLoyaltyDriftSystem` now initializes `LastLevyUnitId` on spawned
+    minor houses, and
+    `scripts/Invoke-BloodlinesUnityMinorHouseLevyParitySmokeValidation.ps1`
+    now waits for explicit PASS/FAIL markers so Unity batchmode exit noise does
+    not false-red the dedicated validator
+- Validation state:
+  - dedicated minor-house levy parity smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green after contract revision `105`
+- Contract revision advanced `104 -> 105` and keeps the
+  `dynasty-house-parity` lane paused on canonical `master`. The next additive
+  pickup is Priority 14 Trueborn City Rise Arc (Sub-Slice 1 of 3).
+
+## 2026-04-23 Trueborn City Rise Arc (Sub-Slice 1)
+
+- Branch lane: `codex/unity-world-trueborn-rise-arc-1`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-1.md`.
+- Completed in this slice:
+  - `TruebornRiseArcComponent` plus
+    `TruebornRiseFactionRecognitionSlotElement` now provide the singleton
+    ECS state for the browser Trueborn-city rise arc, including staged
+    pressure fields, challenge/uncontested counters, and a stable
+    recognition-slot registry behind the `ulong` bitmask
+  - `TruebornRiseArcSystem` now ports the base late-game rise timing into
+    Unity ECS: the Trueborn city activates after the canonical 8-year dormant
+    window plus three unchallenged cycles, escalates again after the 2-year
+    and 3-year follow-up windows, and applies stage-scaled loyalty erosion
+    plus legitimacy strain to non-recognizing kingdoms on whole-day cadence
+  - `BloodlinesDebugCommandSurface.WorldPressure` now exposes
+    `TryDebugGetTruebornRiseArc(...)` and
+    `TryDebugSetTruebornRecognition(...)`, and the dedicated
+    `BloodlinesTruebornRiseArcSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityTruebornRiseArcSmokeValidation.ps1`
+    now prove stage advancement and recognition exemption while using a
+    GameObject-backed debug surface and a separate summary artifact path to
+    avoid batchmode log-lock noise
+- Validation state:
+  - dedicated Trueborn rise-arc smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green at contract revision `106`
+- Contract revision advanced `105 -> 106` and records the new
+  `world-trueborn-rise` lane on canonical `master`. The next additive pickup
+  is the follow-on Trueborn recognition / diplomatic exemption slice when the
+  next directive window opens.
+
+## 2026-04-23 Trueborn City Rise Arc (Sub-Slice 2)
+
+- Branch lane: `codex/unity-world-trueborn-rise-arc-2`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-2.md`.
+- Completed in this slice:
+  - `PlayerTruebornRecognitionRequestComponent`,
+    `TruebornRecognitionUtility`, and
+    `TruebornRecognitionResolutionSystem` now resolve player-facing Trueborn
+    recognition dispatch into the existing rise-arc singleton: eligible
+    kingdoms spend `40` influence, `60` gold, and `5` legitimacy, set their
+    recognition bit, gain a `6`-renown standing bonus, and clear Covenant Test
+    / Divine Right cooldown entries
+  - `TruebornRiseArcSystem` and
+    `BloodlinesDebugCommandSurface.WorldPressure` now share the recognition
+    utility for slot lookup and bitmask counting, and the debug surface now
+    exposes `TryDebugRecognizeTrueborn(...)` plus
+    `TryDebugGetTruebornRecognitionState(...)`
+  - `BloodlinesTruebornRiseArcSmokeValidation` now adds explicit recognition
+    resolution and duplicate-request/no-op phases proving the cost deduction,
+    renown bump, cooldown clearing, and subsequent pressure exemption on the
+    current master-compatible runtime
+  - the branch-local worktree required a local `unity/Library` junction to
+    `D:\ProjectsHome\Bloodlines\unity\Library` before the governed
+    `dotnet build` gates could resolve `Library\ScriptAssemblies`
+  - the shared request component is AI-compatible, but actual AI request
+    emission remains deferred to the `ai-strategic-layer` lane because
+    `unity/Assets/_Bloodlines/Code/AI/**` is still forbidden here
+- Validation state:
+  - dedicated Trueborn rise-arc smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green at contract revision `107`
+- Contract revision advanced `106 -> 107` and records the widened
+  `world-trueborn-rise` lane on canonical `master`. The next additive pickup
+  is Priority 16 Trueborn diplomatic escalation / ultimatum handling from
+  `D:\ProjectsHome\Bloodlines\03_PROMPTS\CODEX_MULTI_DAY_DIRECTIVE_2026-04-24.md`.
+
+## 2026-04-23 Trueborn City Rise Arc (Sub-Slice 3)
+
+- Branch lane: `codex/unity-world-trueborn-rise-arc-3`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3.md`.
+- Completed in this slice:
+  - `TruebornRiseArcComponent` now carries active ultimatum target, timing,
+    pressure, and stage fields so the late-stage Trueborn diplomatic escalation
+    lives on the same singleton as the earlier rise-arc work
+  - `TruebornRecognitionUtility` plus the new
+    `TruebornDiplomaticEscalationSystem` now lift the stage-4/5 ultimatum
+    seam into `WorldPressure/**`: the dominant kingdom receives a timed
+    recognition ultimatum, pre-deadline recognition clears it, and expired
+    ultimatums apply extra loyalty pressure to the target's weakest march plus
+    dynasty legitimacy strain
+  - `BloodlinesDebugCommandSurface.WorldPressure` now exposes
+    `TryDebugGetTruebornUltimatumState(...)` and extends the existing
+    rise-arc readout with ultimatum target/stage/deadline visibility
+  - `BloodlinesTruebornDiplomaticEscalationSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityTruebornDiplomaticEscalationSmokeValidation.ps1`
+    now prove stage-4 issuance, pre-deadline recognition clearance, and
+    stage-5 expiry fallout
+  - the worktree-local `unity/Library` junction and stale
+    `Assembly-CSharp*.csproj` analyzer roots were repaired/canonicalized back
+    to `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache` so the
+    governed `dotnet build` gates resolve Unity assemblies again from this
+    checkout
+- Validation state:
+  - dedicated Trueborn diplomatic escalation smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green at contract revision `108`
+- Contract revision advanced `107 -> 108` and records the widened
+  `world-trueborn-rise` lane with sub-slice 3 validated on branch
+  `codex/unity-world-trueborn-rise-arc-3`. The next additive pickup after
+  landing is the next remaining non-AI Trueborn follow-up on a fresh branch.

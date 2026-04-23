@@ -131,6 +131,58 @@ namespace Bloodlines.Debug
             return events.Length > 0;
         }
 
+        public bool TryDebugGetMinorHouseLevyState(
+            string factionId,
+            out FixedString512Bytes levySummary)
+        {
+            levySummary = default;
+            if (string.IsNullOrWhiteSpace(factionId))
+            {
+                return false;
+            }
+
+            var world = World.DefaultGameObjectInjectionWorld;
+            if (world == null || !world.IsCreated)
+            {
+                return false;
+            }
+
+            var entityManager = world.EntityManager;
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<MinorHouseLevyComponent>());
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var levies = query.ToComponentDataArray<MinorHouseLevyComponent>(Allocator.Temp);
+            query.Dispose();
+
+            var target = new FixedString32Bytes(factionId);
+            for (int i = 0; i < factions.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(target))
+                {
+                    continue;
+                }
+
+                MinorHouseLevyComponent levy = levies[i];
+                levySummary = new FixedString512Bytes(
+                    $"MinorHouseLevy|FactionId={factions[i].FactionId}" +
+                    $"|Claim={levy.ClaimControlPointId}" +
+                    $"|Status={levy.LevyStatus}" +
+                    $"|Progress={math.round(levy.LevyAccumulator * 100f) / 100f}" +
+                    $"|SecondsRequired={math.round(levy.LevyIntervalSeconds * 100f) / 100f}" +
+                    $"|Unit={levy.LevyUnitId}" +
+                    $"|Retinue={levy.RetinueCount}/{levy.RetinueCap}" +
+                    $"|Levies={levy.LeviesIssued}" +
+                    $"|LastUnit={levy.LastLevyUnitId}" +
+                    $"|PressureLevel={levy.ParentPressureLevel}" +
+                    $"|PressureStatus={levy.ParentPressureStatus}" +
+                    $"|LevyTempo={math.round(levy.ParentPressureLevyTempo * 100f) / 100f}");
+                return true;
+            }
+
+            return false;
+        }
+
         public bool TryDebugGetDynastyMember(
             string factionId,
             DynastyRole role,

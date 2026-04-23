@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 103
+- Revision: 108
 - Last Updated: 2026-04-23
-- Last Updated By: codex-player-covert-ops-followup-2026-04-23
-- Supersedes: revision 102 (Records the validated `player-covert-ops-resolution-effects` follow-up on the current master line and keeps the next clean Codex pickup at Priority 12 governance coalition pressure.)
+- Last Updated By: codex-world-trueborn-rise-2026-04-23
+- Supersedes: revision 107 (Records the validated Trueborn rise-arc diplomatic-escalation sub-slice 3 on branch `codex/unity-world-trueborn-rise-arc-3` and widens the world-trueborn-rise lane ownership surface.)
 
 
 ## Purpose
@@ -647,6 +647,86 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - Current Branch In Flight: none (merged into master)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-18-unity-world-pressure-escalation.md`
 
+### Lane: world-governance-coalition
+
+- Status: active (validated governance coalition-pressure slice landed on canonical `master`; no branch currently in flight)
+- Branch Prefix: `codex/unity-governance-coalition-pressure`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/TerritorialGovernanceRecognitionComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/GovernanceCoalitionPressureSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesGovernanceCoalitionPressureSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityGovernanceCoalitionPressureSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/WorldPressureComponent.cs` -- additive `TerritorialGovernanceRecognitionScore` read-model only
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/WorldPressureEscalationSystem.cs` -- consume governance recognition contribution without reopening the older escalation score sources
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.WorldPressure.cs` -- additive `TryDebugGetGovernanceCoalitionState` readout only
+  - `unity/Assets/_Bloodlines/Code/Victory/VictoryConditionEvaluationSystem.cs` -- consume the live recognition component first for Territorial Governance completion while preserving the prior fallback
+  - `unity/Assembly-CSharp.csproj` -- compile includes retained for the governance coalition runtime files
+  - `unity/Assembly-CSharp-Editor.csproj` -- compile include retained for the governance coalition validator
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve kingdom faction roots by `FactionId`
+  - `unity/Assets/_Bloodlines/Code/Components/FaithComponent.cs` -- reuse committed-faith selection/intensity for acceptance support without reopening the faith lane
+  - `unity/Assets/_Bloodlines/Code/Components/PopulationComponent.cs` -- scale prosperity support from live population against food/water stockpiles
+  - `unity/Assets/_Bloodlines/Code/Components/SettlementComponent.cs` -- verify dynastic primary-seat coverage and keep ownership for recognition readiness
+  - `unity/Assets/_Bloodlines/Code/Components/ControlPointComponent.cs` -- score territory share, loyal holdings, contested marches, and weakest-frontier loyalty
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyStateComponent.cs` -- reuse legitimacy and interregnum-adjacent dynasty state without reopening dynasty-owned source
+  - `unity/Assets/_Bloodlines/Code/Components/ConvictionComponent.cs` -- project conviction-band acceptance support without reopening the conviction lane
+  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- tick sustain/victory timers on deterministic in-world-day time
+  - `unity/Assets/_Bloodlines/Code/Time/MatchProgressionComponent.cs` -- enforce the stage-5 territorial-governance trigger floor
+  - `unity/Assets/_Bloodlines/Code/TerritoryGovernance/GovernorSeatAssignmentComponent.cs` -- verify governed territory and primary-seat coverage without widening the territory-governance lane
+  - `unity/Assets/_Bloodlines/Code/AI/DynastyOperationHolyWarComponent.cs` -- block recognition readiness while a faction is inside a live holy war window without touching `AI/**`
+  - `unity/Assets/_Bloodlines/Code/AI/AIStrategyComponent.cs` -- reuse the existing governance pressure booleans as AI-facing read-model outputs without editing Claude's AI-owned file
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-23-unity-governance-coalition-pressure.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `getTerritorialGovernanceAcceptanceProfile`, `shouldIssueTerritorialGovernanceRecognition`, `tickTerritorialGovernanceRecognition`, `getTerritorialGovernanceWorldPressureContribution`, governance-alliance pressure block inside `tickRealmConditionCycle`
+- Current Branch In Flight: none (validated slice landed onto canonical `master` in this session)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-governance-coalition-pressure.md`
+
+### Lane: world-trueborn-rise
+
+- Status: active (validated Trueborn rise-arc sub-slices 1-2 landed on canonical `master`; sub-slice 3 is validated on branch `codex/unity-world-trueborn-rise-arc-3`)
+- Branch Prefix: `codex/unity-world-trueborn-rise-arc-1`, `codex/unity-world-trueborn-rise-arc-2`, `codex/unity-world-trueborn-rise-arc-3`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/TruebornRiseArcComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/TruebornRiseArcSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/PlayerTruebornRecognitionRequestComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/TruebornRecognitionUtility.cs`
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/TruebornRecognitionResolutionSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/TruebornDiplomaticEscalationSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesTruebornRiseArcSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesTruebornDiplomaticEscalationSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityTruebornRiseArcSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityTruebornDiplomaticEscalationSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.WorldPressure.cs` -- additive `TryDebugGetTruebornRiseArc(...)`, `TryDebugSetTruebornRecognition(...)`, `TryDebugRecognizeTrueborn(...)`, `TryDebugGetTruebornRecognitionState(...)`, and `TryDebugGetTruebornUltimatumState(...)` only
+  - `unity/Assembly-CSharp.csproj` -- compile includes retained for the Trueborn rise runtime files, recognition request / utility / resolution registrations, new diplomatic-escalation system registration, and canonicalized Unity analyzer roots at `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
+  - `unity/Assembly-CSharp-Editor.csproj` -- compile includes retained for the Trueborn rise validators, plus canonicalized Unity analyzer roots at `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve kingdom vs neutral faction roots and the `trueborn_city` singleton faction id
+  - `unity/Assets/_Bloodlines/Code/Components/ControlPointComponent.cs` -- count kingdom territories and apply loyalty erosion to owned control points
+  - `unity/Assets/_Bloodlines/Code/Combat/HostilityComponent.cs` -- project the browser hostility-driven Trueborn challenge contribution without widening `AI/**`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyStateComponent.cs` -- reuse live kingdom legitimacy for recognition costs and stage-2/3 pressure
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyRenownComponent.cs` -- apply the browser standing bonus as a renown bump on recognition
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyPoliticalEventComponent.cs` -- clear recognition-linked cooldown events and rebuild the aggregate through the existing event utility
+  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- tick stage advancement on deterministic whole in-world days
+  - `unity/Assets/_Bloodlines/Code/Time/MatchProgressionComponent.cs` -- project the dominant-kingdom / Great Reckoning stage gate for ultimatum target selection without reopening the time lane
+  - `unity/Assets/_Bloodlines/Code/Time/MatchProgressionEvaluationSystem.cs` -- preserve intended ordering adjacency for late-stage ultimatum issuance only
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/GovernanceCoalitionPressureSystem.cs` -- align the rise arc alongside the existing world-pressure seam without reopening governance implementation
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/WorldPressureEscalationSystem.cs` -- preserve intended world-pressure ordering adjacency without widening the escalation score sources
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-1.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-2.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `tickTruebornRiseArc`, `getTruebornChallengeLevel`, `getTruebornRecognitionTerms`, `recognizeTruebornClaim`, `recognizedPressureMultiplier`, and `TRUEBORN_RISE_STAGE_*` constants
+- Current Branch In Flight: `codex/unity-world-trueborn-rise-arc-3`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3.md`
+
 ### Lane: ai-strategic-layer
 
 - Status: active
@@ -922,7 +1002,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: dynasty-house-parity
 
-- Status: paused (marriage, lesser-house, and minor-house parity stack landed cleanly)
+- Status: paused (minor-house levy completion follow-up landed on canonical `master`; no branch currently in flight)
 - Branch Prefix: `codex/unity-dynasty-*`
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -939,16 +1019,22 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnityMarriageParitySmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityLesserHouseLoyaltyParitySmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityMinorHouseLevyParitySmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Dynasty.cs` -- additive `TryDebugGetMinorHouseLevyState(...)` readout only
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-18-unity-tier2-batch-dynasty-systems.md`
   - `docs/unity/session-handoffs/2026-04-20-unity-dynasty-marriage-parity.md`
   - `docs/unity/session-handoffs/2026-04-20-unity-dynasty-lesser-house-loyalty-parity.md`
   - `docs/unity/session-handoffs/2026-04-20-unity-dynasty-minor-house-levy-parity.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-dynasty-minor-house-levy-completion.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `MARRIAGE_GESTATION_IN_WORLD_DAYS` (6088), `MARRIAGE_DISSOLUTION_LEGITIMACY_LOSS` (6089), `MARRIAGE_DISSOLUTION_OATHKEEPING_GAIN` (6090), `dissolveMarriageFromDeath` (6382), `tickLesserHouseLoyaltyDrift` (~6631), `spawnDefectedMinorTerritoryClaim` (~6801), `spawnDefectedMinorFaction` (~6851), `getMinorHouseClaim` (~6982), `ensureMinorHouseLevyState` (~6996), `getMinorHouseRetinueCap` (~7011), `pickMinorHouseLevyProfile` (~7024), `spawnMinorHouseRetinueUnit` (~7034), `tickMinorHouseTerritorialLevies` (~7060), `getMinorHousePressureOpportunityProfile` (~13913), `MARRIAGE_PROPOSAL_EXPIRATION_IN_WORLD_DAYS` (7272), `tickMarriageProposalExpiration` (7274), `tickMarriageDissolutionFromDeath` (7471), `tickMarriageGestation` (7496)
   - `tests/runtime-bridge.mjs` mixed-bloodline and death-dissolution assertions (3180-3229, 3270-3297)
-- Current Branch In Flight: none
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-20-unity-dynasty-minor-house-levy-parity.md`
+- Current Branch In Flight: none (validated follow-up landed onto canonical `master` in this session)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-dynasty-minor-house-levy-completion.md`
+- Last Slice State:
+  - the dedicated levy parity validator now proves the low-loyalty unsettled claim gate through both runtime state and the new debug surface readout
+  - breakaway minor-house levy state now explicitly initializes `LastLevyUnitId`, and the dedicated wrapper now honors explicit PASS markers plus delayed Unity log flushes
 
 ### Lane: scout-raids-logistics-interdiction
 
@@ -1200,7 +1286,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is Priority 12 `governance-coalition-pressure`.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is Priority 14 `world-trueborn-rise`.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 
