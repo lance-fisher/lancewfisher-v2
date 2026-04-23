@@ -176,6 +176,7 @@ namespace Bloodlines.Authoring
                 entityManager.AddBuffer<UnitCombatDefinitionElement>(bootstrapEntity);
                 entityManager.AddBuffer<MapResourceNodeSeedElement>(bootstrapEntity);
                 entityManager.AddBuffer<MapControlPointSeedElement>(bootstrapEntity);
+                entityManager.AddBuffer<MapSacredSiteSeedElement>(bootstrapEntity);
                 entityManager.AddBuffer<MapSettlementSeedElement>(bootstrapEntity);
 
                 var factionBuffer = entityManager.GetBuffer<MapFactionSeedElement>(bootstrapEntity);
@@ -185,6 +186,7 @@ namespace Bloodlines.Authoring
                 var unitCombatDefinitionBuffer = entityManager.GetBuffer<UnitCombatDefinitionElement>(bootstrapEntity);
                 var resourceNodeBuffer = entityManager.GetBuffer<MapResourceNodeSeedElement>(bootstrapEntity);
                 var controlPointBuffer = entityManager.GetBuffer<MapControlPointSeedElement>(bootstrapEntity);
+                var sacredSiteBuffer = entityManager.GetBuffer<MapSacredSiteSeedElement>(bootstrapEntity);
                 var settlementBuffer = entityManager.GetBuffer<MapSettlementSeedElement>(bootstrapEntity);
 
                 foreach (var unitDefinition in unitDefinitions ?? Array.Empty<UnitDefinition>())
@@ -239,6 +241,24 @@ namespace Bloodlines.Authoring
                         StoneTrickle = controlPoint.resourceTrickle?.stone ?? 0f,
                         IronTrickle = controlPoint.resourceTrickle?.iron ?? 0f,
                         InfluenceTrickle = controlPoint.resourceTrickle?.influence ?? 0f,
+                    });
+                }
+
+                foreach (var sacredSite in map.sacredSites ?? Array.Empty<SacredSiteData>())
+                {
+                    CovenantId covenantId = ResolveCovenantId(sacredSite.faithId);
+                    if (covenantId == CovenantId.None)
+                    {
+                        continue;
+                    }
+
+                    sacredSiteBuffer.Add(new MapSacredSiteSeedElement
+                    {
+                        RuntimeId = sacredSite.id ?? string.Empty,
+                        Faith = covenantId,
+                        Position = new float3(sacredSite.x, 0f, sacredSite.y),
+                        RadiusWorldUnits = math.max(0f, sacredSite.radiusTiles * math.max(1f, map.tileSize)),
+                        ExposureRate = math.max(0f, sacredSite.exposureRate),
                     });
                 }
 
@@ -496,6 +516,15 @@ namespace Bloodlines.Authoring
             if (string.Equals(fortificationRole, "gate", StringComparison.OrdinalIgnoreCase)) return FortificationRole.Gate;
             if (string.Equals(fortificationRole, "keep", StringComparison.OrdinalIgnoreCase)) return FortificationRole.Keep;
             return FortificationRole.None;
+        }
+
+        private static CovenantId ResolveCovenantId(string faithId)
+        {
+            if (string.Equals(faithId, "old_light", StringComparison.OrdinalIgnoreCase)) return CovenantId.OldLight;
+            if (string.Equals(faithId, "blood_dominion", StringComparison.OrdinalIgnoreCase)) return CovenantId.BloodDominion;
+            if (string.Equals(faithId, "the_order", StringComparison.OrdinalIgnoreCase)) return CovenantId.TheOrder;
+            if (string.Equals(faithId, "the_wild", StringComparison.OrdinalIgnoreCase)) return CovenantId.TheWild;
+            return CovenantId.None;
         }
     }
 }

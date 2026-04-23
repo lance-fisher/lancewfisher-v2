@@ -111,6 +111,15 @@ namespace Bloodlines.Components
         public float InfluenceTrickle;
     }
 
+    public struct MapSacredSiteSeedElement : IBufferElementData
+    {
+        public FixedString64Bytes RuntimeId;
+        public CovenantId Faith;
+        public float3 Position;
+        public float RadiusWorldUnits;
+        public float ExposureRate;
+    }
+
     public struct MapSettlementSeedElement : IBufferElementData
     {
         public FixedString64Bytes RuntimeId;

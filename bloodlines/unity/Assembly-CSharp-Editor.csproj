@@ -92,6 +92,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesBreachAssaultPressureSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPlayerCaptiveRescueSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesFaithSmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesFaithExposureWalkerSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesCaptiveRescueAndRansomExecutionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAIPactProposalExecutionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesFortificationHUDSmokeValidation.cs" />

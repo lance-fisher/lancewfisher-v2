@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 98
+- Revision: 99
 - Last Updated: 2026-04-23
-- Last Updated By: codex-faith-verdant-warden-2026-04-23
-- Supersedes: revision 97 (Records the validated `faith-verdant-warden` slice on the current master line and advances the next clean Codex pickup to Priority 8 sacred-site exposure plus wayshrine amplification.)
+- Last Updated By: codex-faith-exposure-walker-2026-04-23
+- Supersedes: revision 98 (Records the validated `faith-exposure-walker` slice on the current master line and advances the next clean Codex pickup to Priority 9 faith structure intensity regen.)
 
 
 ## Purpose
@@ -512,6 +512,46 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - control-point stabilization / loyalty protection, reserve healing / muster tempo, and frontline defender attack now consume cached Verdant Warden support through narrow additive hooks only
   - `BloodlinesDebugCommandSurface.Faith.VerdantWarden` and `BloodlinesVerdantWardenSmokeValidation` prove single-stack coverage, debug readout, reserve-heal uplift, and the canonical three-stack cap on stored multipliers and frontline damage
   - next Codex pickup should move to Priority 8 `faith-exposure-walker`
+
+### Lane: faith-exposure-walker
+
+- Status: active
+- Branch Prefix: `codex/unity-faith-exposure-walker`, `codex/unity-faith-exposure-walker-sacred-site`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Faith/FaithExposureWalkerComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Faith/FaithExposureWalkerSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Faith.ExposureWalker.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFaithExposureWalkerSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityFaithExposureWalkerSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Components/MapBootstrapComponents.cs` -- additive sacred-site seed buffer element only
+  - `unity/Assets/_Bloodlines/Code/Authoring/BloodlinesMapBootstrapAuthoring.cs` -- additive sacred-site seed ingestion and covenant-id resolution only
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMapBootstrapBaker.cs` -- additive sacred-site seed baking and covenant-id resolution only
+  - `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs` -- additive sacred-site entity spawn helper and seed buffer consumption only
+  - `unity/Assembly-CSharp.csproj` -- additive compile includes for the exposure walker runtime and debug files only
+  - `unity/Assembly-CSharp-Editor.csproj` -- additive compile include for the exposure walker validator only
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve faction roots and same-faction sacred-site/unit ownership only
+  - `unity/Assets/_Bloodlines/Code/Components/FactionKindComponent.cs` -- restrict exposure gain to kingdom factions only
+  - `unity/Assets/_Bloodlines/Code/Components/BuildingTypeComponent.cs` -- resolve wayshrine / covenant hall / grand sanctuary multiplier profiles from canonical type ids only
+  - `unity/Assets/_Bloodlines/Code/Components/ConstructionComponents.cs` -- ignore under-construction faith structures when projecting multipliers
+  - `unity/Assets/_Bloodlines/Code/Components/PositionComponent.cs` -- resolve sacred-site and faith-structure world radii only
+  - `unity/Assets/_Bloodlines/Code/Components/HealthComponent.cs` -- ignore dead units and dead structures only
+  - `unity/Assets/_Bloodlines/Code/Definitions/MapDefinition.cs` -- read `sacredSites` authoring data only
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-23-unity-faith-exposure-walker.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `updateFaithExposure` (~8174) and `getWayshrineExposureMultiplierAt` (~8246)
+- Current Branch In Flight: none (validated implementation landed onto canonical `master` in this session)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-faith-exposure-walker.md`
+- Last Slice State:
+  - sacred sites now bootstrap as ECS entities with covenant id, world-space radius, and exposure rate carried directly from `MapDefinition.sacredSites`
+  - kingdom factions with living units inside a sacred-site radius now gain browser-aligned exposure through `FaithScoring.RecordExposure`, which also discovers the faith on first exposure
+  - completed wayshrines, covenant halls, and grand sanctuaries now auto-tag into the multiplier seam and amplify same-faction sacred-site exposure up to the canonical `4.0x` / four-contributor cap
+  - `BloodlinesDebugCommandSurface.Faith.ExposureWalker` and `BloodlinesFaithExposureWalkerSmokeValidation` prove base gain, wayshrine amplification, under-construction ignore, kingdom-only filtering, and the stacked multiplier cap
+  - next Codex pickup should move to Priority 9 `faith-structure-regen`
 
 ### Lane: combat-group-movement-and-stances
 

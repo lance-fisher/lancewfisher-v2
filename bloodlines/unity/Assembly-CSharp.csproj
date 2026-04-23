@@ -111,6 +111,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Fortification\AdvanceFortificationTierSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\SaveLoad\BloodlinesSnapshotRestorer.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\PactBreakRequestComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Faith\FaithExposureWalkerComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Time\DualClockDeclarationBridgeSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Time\DualClockDeclarationSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\CombatStatsComponent.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Rendering\FactionTintAttachSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AICovertOpsComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Time\MatchProgressionComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Faith\FaithExposureWalkerSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\TerritoryGovernance\GovernorSpecializationCanon.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\DynastyOperationHolyWarComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AIMarriageStrategicProfileSystem.cs" />
@@ -301,6 +303,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Systems\ControlPointResourceTrickleSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Fortification\PlayerImminentEngagementPostureRequestComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\MoveCommandComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Faith.ExposureWalker.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\FortificationHUDComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Faith\FaithScoring.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Conviction\ConvictionBandEffects.cs" />

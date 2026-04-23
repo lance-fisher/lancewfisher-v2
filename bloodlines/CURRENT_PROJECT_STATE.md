@@ -3961,3 +3961,41 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
     `docs/unity/session-handoffs/2026-04-23-unity-faith-verdant-warden.md`;
     this rerun handoff records only the follow-up validation and metadata
     repairs landed after upstream merge
+
+## 2026-04-23 Faith Exposure Walker Slice
+
+- Branch lane: `codex/unity-faith-exposure-walker-sacred-site`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-faith-exposure-walker.md`.
+- Completed in this slice:
+  - `SacredSiteExposureSourceComponent`,
+    `FaithExposureStructureComponent`,
+    `FaithExposureWalkerRules`,
+    and
+    `FaithExposureWalkerSystem`
+    now seed sacred sites into ECS, auto-tag completed multiplier structures,
+    and apply browser-aligned kingdom-only sacred-site exposure through
+    `FaithScoring.RecordExposure`
+  - `MapBootstrapComponents`,
+    `BloodlinesMapBootstrapAuthoring`,
+    `BloodlinesMapBootstrapBaker`,
+    and
+    `SkirmishBootstrapSystem`
+    now carry `map.sacredSites` through the bootstrap path so sacred sites
+    materialize as ECS entities with covenant id, world-space radius, and
+    exposure rate
+  - `BloodlinesDebugCommandSurface.Faith.ExposureWalker` now exposes
+    `TryDebugGetSacredSiteExposureSnapshot`, and
+    `BloodlinesFaithExposureWalkerSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityFaithExposureWalkerSmokeValidation.ps1`
+    now prove base gain, wayshrine amplification, under-construction ignore,
+    kingdom-only filtering, and the canonical `4.0x` stacked multiplier cap
+  - local `Assembly-CSharp*.csproj` metadata now explicitly includes the new
+    faith exposure walker runtime, debug, and editor files
+- Validation state:
+  - dedicated faith exposure walker smoke green
+  - all 10 required governed gates green after contract revision `99`
+- Contract revision advanced `98 -> 99` and now records the active
+  `faith-exposure-walker` lane with no branch in flight. The next additive
+  pickup from the directive stack is Priority 9 Faith Structure Intensity
+  Regen.

@@ -4806,3 +4806,47 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
     unstaged; Unity dirties it during validation and it is unrelated to this
     slice
+
+## 2026-04-23 Faith Exposure Walker
+
+- Branch lane:
+  - `codex/unity-faith-exposure-walker-sacred-site`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-faith-exposure-walker.md`
+- Completed in this slice:
+  - `SacredSiteExposureSourceComponent`,
+    `FaithExposureStructureComponent`,
+    `FaithExposureWalkerRules`,
+    and
+    `FaithExposureWalkerSystem`
+    now seed sacred sites into ECS, discover living same-faction units inside
+    sacred-site radii, filter out non-kingdom factions, and apply
+    browser-aligned exposure plus discovery through `FaithScoring.RecordExposure`
+  - `MapBootstrapComponents`,
+    `BloodlinesMapBootstrapAuthoring`,
+    `BloodlinesMapBootstrapBaker`,
+    and
+    `SkirmishBootstrapSystem`
+    now carry `map.sacredSites` through the bootstrap seam so sacred sites
+    materialize with covenant id, radius, and exposure rate before the
+    simulation systems tick
+  - `BloodlinesDebugCommandSurface.Faith.ExposureWalker` now exposes
+    `TryDebugGetSacredSiteExposureSnapshot`, and
+    `BloodlinesFaithExposureWalkerSmokeValidation` plus its wrapper now prove
+    base gain, wayshrine amplification, under-construction ignore,
+    kingdom-only filtering, and the canonical `4.0x` stacked multiplier cap
+- Validation state:
+  - dedicated faith exposure walker smoke green
+  - all 10 required governed gates green after contract revision `99`
+- Immediate next action:
+  - claim Priority 9 from
+    `D:\\ProjectsHome\\Bloodlines\\03_PROMPTS\\CODEX_MULTI_DAY_DIRECTIVE_2026-04-24.md`
+  - open `codex/unity-faith-structure-regen` from updated `master` or extend
+    the faith lane if continuity pressure makes that cleaner
+  - port passive faith-structure intensity regeneration plus a dedicated smoke
+    validator
+- Staging note:
+  - keep
+    `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+    unstaged; Unity dirties it during validation and it is unrelated to this
+    slice
