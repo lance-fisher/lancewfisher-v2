@@ -1,4 +1,5 @@
 using Bloodlines.Components;
+using Bloodlines.TerritoryGovernance;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -64,6 +65,8 @@ namespace Bloodlines.Fortification
             {
                 var fortification = fortificationRw.ValueRO;
                 var reserve = reserveRw.ValueRO;
+                GovernorSpecializationComponent settlementGovernorProfile =
+                    GovernorSpecializationCanon.GetSettlementProfile(entityManager, settlementEntity);
                 float3 settlementCenter = settlementPosition.ValueRO.Value;
 
                 int hostileCount = CountHostiles(
@@ -113,7 +116,9 @@ namespace Bloodlines.Fortification
                             assignment.Duty = ReserveDutyState.Recovering;
                         }
 
-                        health.Current = math.min(health.Max, health.Current + reserve.ReserveHealPerSecond * dt);
+                        health.Current = math.min(
+                            health.Max,
+                            health.Current + reserve.ReserveHealPerSecond * settlementGovernorProfile.HealRegenMultiplier * dt);
                         healthRatio = health.Current / health.Max;
                         entityManager.SetComponentData(linkedEntities[i], health);
 
@@ -191,8 +196,10 @@ namespace Bloodlines.Fortification
                 {
                     int desiredFrontline = math.min(activeDefenderCount, math.max(1, 1 + fortification.Tier));
                     int neededReserves = math.max(0, desiredFrontline - engagedCount);
+                    float musterIntervalSeconds = reserve.MusterIntervalSeconds /
+                        math.max(0.1f, settlementGovernorProfile.ReserveRegenMultiplier);
                     if (neededReserves > 0 &&
-                        (elapsed - reserve.LastCommitAt) >= reserve.MusterIntervalSeconds)
+                        (elapsed - reserve.LastCommitAt) >= musterIntervalSeconds)
                     {
                         int committed = 0;
                         for (int i = 0; i < linkedEntities.Length && committed < neededReserves; i++)

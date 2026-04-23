@@ -4594,3 +4594,38 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     `master`
   - port governor specialization state + assignment/readout + dedicated smoke
     before moving deeper down the directive stack
+
+## 2026-04-22 Territory Governor Specialization
+
+- Branch lane:
+  - `codex/unity-territory-governor-specialization`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-22-unity-territory-governor-specialization.md`
+- Completed in this slice:
+  - `GovernorSeatAssignmentComponent`,
+    `GovernorSpecializationComponent`,
+    `GovernorSpecializationCanon`,
+    and
+    `GovernorSpecializationSystem`
+    now port the browser governor assignment and specialization seam into
+    Unity ECS on whole in-world days
+  - `ControlPointResourceTrickleSystem`,
+    `ControlPointCaptureSystem`,
+    and
+    `FortificationReserveSystem`
+    now consume governor trickle, stabilization, capture resistance,
+    loyalty-protection, and keep reserve-heal/muster bonuses through narrow
+    additive hooks
+  - `BloodlinesDebugCommandSurface.Governance` now exposes governor
+    specialization and assignment summaries, and
+    `BloodlinesGovernorSpecializationSmokeValidation` plus wrapper now prove
+    assignment, live consumer gains, and ungoverned cleanup
+- Validation state:
+  - dedicated governor specialization smoke green
+  - all 10 required governed gates green after the final rerun
+- Immediate next action:
+  - claim Priority 5 from
+    `D:\\ProjectsHome\\Bloodlines\\03_PROMPTS\\CODEX_MULTI_DAY_DIRECTIVE_2026-04-24.md`
+  - open `codex/unity-combat-commander-aura` from updated `master`
+  - port commander aura buffs, conviction scaling, debug readout, and
+    dedicated smoke validation

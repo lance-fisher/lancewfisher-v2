@@ -1,8 +1,10 @@
 using Bloodlines.Components;
 using Bloodlines.Dynasties;
+using Bloodlines.TerritoryGovernance;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 
 namespace Bloodlines.Systems
 {
@@ -45,7 +47,8 @@ namespace Bloodlines.Systems
             using var factionEntities = factionQuery.ToEntityArray(Allocator.Temp);
             using var factionIds = factionQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp);
 
-            foreach (var controlPoint in SystemAPI.Query<RefRO<ControlPointComponent>>())
+            foreach (var (controlPoint, controlPointEntity) in
+                SystemAPI.Query<RefRO<ControlPointComponent>>().WithEntityAccess())
             {
                 var ownerFactionId = controlPoint.ValueRO.OwnerFactionId;
                 if (ownerFactionId.Length == 0 || controlPoint.ValueRO.IsContested)
@@ -84,7 +87,15 @@ namespace Bloodlines.Systems
                     politicalYieldMultiplier *= politicalEvents.ResourceTrickleFactor;
                 }
 
-                float finalYield = territoryYield * politicalYieldMultiplier;
+                float governorYieldMultiplier =
+                    entityManager.HasComponent<GovernorSpecializationComponent>(controlPointEntity)
+                        ? GovernorSpecializationCanon.GovernorTrickleBaseBonus *
+                          math.max(
+                              1f,
+                              entityManager.GetComponentData<GovernorSpecializationComponent>(controlPointEntity)
+                                  .ResourceTrickleMultiplier)
+                        : 1f;
+                float finalYield = territoryYield * politicalYieldMultiplier * governorYieldMultiplier;
 
                 var resources = entityManager.GetComponentData<ResourceStockpileComponent>(factionEntity);
                 resources.Gold += controlPoint.ValueRO.GoldTrickle * dt * finalYield;

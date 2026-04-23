@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 93
+- Revision: 94
 - Last Updated: 2026-04-22
-- Last Updated By: codex-faith-covenant-test-2026-04-22
-- Supersedes: revision 92 (Records the validated landing of the `faith-covenant-test` slice onto canonical master, retires the stale covenant-test placeholder seam, and points the next Codex pickup at Priority 4 governor specialization.)
+- Last Updated By: codex-territory-governor-specialization-2026-04-22
+- Supersedes: revision 93 (Records the validated `territory-governor-specialization` slice, adds the governor-governance lane, and points the next Codex pickup at Priority 5 commander aura.)
 
 
 ## Purpose
@@ -350,6 +350,42 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - player divine-right declarations now require a completed covenant test rather than intensity-only state
   - `BloodlinesCovenantTestSmokeValidation` proves the 180-day hold, success path, failure penalties, and retry blocking
   - next Codex pickup should move to Priority 4 `territory-governor-specialization`
+
+### Lane: territory-governor-specialization
+
+- Status: active
+- Branch Prefix: `codex/unity-territory-governor-specialization`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/TerritoryGovernance/**`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Governance.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesGovernorSpecializationSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityGovernorSpecializationSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Systems/ControlPointResourceTrickleSystem.cs` -- additive governor trickle multiplier only
+  - `unity/Assets/_Bloodlines/Code/Systems/ControlPointCaptureSystem.cs` -- additive governor stabilization, capture resistance, and loyalty-protection hooks only
+  - `unity/Assets/_Bloodlines/Code/Fortification/FortificationReserveSystem.cs` -- additive settlement-governor reserve heal and muster tempo scaling only
+  - `unity/Assembly-CSharp.csproj` -- additive compile includes for the territory-governance runtime files plus governance debug partial
+  - `unity/Assembly-CSharp-Editor.csproj` -- additive compile include for the governor specialization validator
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/ControlPointComponent.cs` -- read owned territory state and settlement-class specialization keys only
+  - `unity/Assets/_Bloodlines/Code/Components/SettlementComponent.cs` -- read settlement class and fortification tier only
+  - `unity/Assets/_Bloodlines/Code/Components/DynastyMemberComponent.cs` -- resolve eligible governance members only
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve owning faction roots by `FactionId`
+  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- gate assignment refresh to in-world whole days
+  - `unity/Assets/_Bloodlines/Code/Components/FortificationReserveComponent.cs` -- scale reserve cadence on governed keeps only
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-22-unity-territory-governor-specialization.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `DEFAULT_GOVERNOR_SPECIALIZATION`, `GOVERNOR_SPECIALIZATION_PROFILES`, `getGovernorSpecializationIdForSettlementClass`, `getGovernanceSeatMembers`, `getGovernanceSeatMemberScore`, `syncGovernorAssignments`, and `getGovernorProfileForControlPoint`
+- Current Branch In Flight: none (validated implementation landed onto canonical `master` in this session)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-territory-governor-specialization.md`
+- Last Slice State:
+  - control points and settlements now receive daily governor seat assignments from eligible dynasty governance members using browser-aligned role priority plus specialization scoring
+  - governed control points now project trickle, stabilization, capture resistance, and loyalty protection; governed keeps now accelerate reserve healing and muster cadence
+  - `BloodlinesDebugCommandSurface.Governance` and `BloodlinesGovernorSpecializationSmokeValidation` prove assignment/readout, live consumer gains, and ungoverned cleanup
+  - next Codex pickup should move to Priority 5 `combat-commander-aura`
 
 ### Lane: combat-group-movement-and-stances
 

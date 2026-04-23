@@ -1,5 +1,6 @@
 using Bloodlines.Components;
 using Bloodlines.Dynasties;
+using Bloodlines.TerritoryGovernance;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -55,8 +56,9 @@ namespace Bloodlines.Systems
             using var unitTypes = unitQuery.ToComponentDataArray<UnitTypeComponent>(Allocator.Temp);
             using var unitHealth = unitQuery.ToComponentDataArray<HealthComponent>(Allocator.Temp);
 
-            foreach (var (controlPointRw, position) in
-                SystemAPI.Query<RefRW<ControlPointComponent>, RefRO<PositionComponent>>())
+            foreach (var (controlPointRw, position, controlPointEntity) in
+                SystemAPI.Query<RefRW<ControlPointComponent>, RefRO<PositionComponent>>()
+                    .WithEntityAccess())
             {
                 ref var controlPoint = ref controlPointRw.ValueRW;
 
@@ -96,7 +98,8 @@ namespace Bloodlines.Systems
                 if (controlPoint.OwnerFactionId.Length > 0 && !controlPoint.IsContested)
                 {
                     float passiveStabilization = PassiveStabilizationPerSecond *
-                        ResolveStabilizationMultiplier(entityManager, controlPoint.OwnerFactionId);
+                        ResolveStabilizationMultiplier(entityManager, controlPoint.OwnerFactionId) *
+                        ResolveGovernorStabilizationMultiplier(entityManager, controlPointRw.ValueRO, controlPointEntity);
                     controlPoint.Loyalty = math.min(100f, controlPoint.Loyalty + dt * passiveStabilization);
                     if (controlPoint.ControlState == ControlState.Occupied &&
                         controlPoint.Loyalty >= StabilizedLoyaltyThreshold)
@@ -121,7 +124,8 @@ namespace Bloodlines.Systems
                     controlPoint.CaptureFactionId = default;
                     controlPoint.CaptureProgress = 0f;
                     float activeStabilization = ActiveStabilizationPerSecond *
-                        ResolveStabilizationMultiplier(entityManager, claimantFactionId);
+                        ResolveStabilizationMultiplier(entityManager, claimantFactionId) *
+                        ResolveGovernorStabilizationMultiplier(entityManager, controlPointRw.ValueRO, controlPointEntity);
                     controlPoint.Loyalty = math.min(100f, controlPoint.Loyalty + dt * activeStabilization);
                     if (controlPoint.ControlState == ControlState.Occupied &&
                         controlPoint.Loyalty >= StabilizedLoyaltyThreshold)
@@ -134,7 +138,10 @@ namespace Bloodlines.Systems
 
                 if (controlPoint.CaptureFactionId.Length > 0 && !controlPoint.CaptureFactionId.Equals(claimantFactionId))
                 {
-                    controlPoint.CaptureProgress = math.max(0f, controlPoint.CaptureProgress - dt * OpposingCaptureResetPerSecond);
+                    controlPoint.CaptureProgress = math.max(
+                        0f,
+                        controlPoint.CaptureProgress -
+                        dt * OpposingCaptureResetPerSecond / ResolveCaptureResistanceMultiplier(entityManager, controlPointEntity));
                     if (controlPoint.CaptureProgress > 0f)
                     {
                         if (controlPoint.ControlState == ControlState.Stabilized &&
@@ -148,8 +155,13 @@ namespace Bloodlines.Systems
                 }
 
                 controlPoint.CaptureFactionId = claimantFactionId;
-                controlPoint.CaptureProgress += dt * ActiveCapturePerSecond;
-                controlPoint.Loyalty = math.max(0f, controlPoint.Loyalty - dt * LoyaltyDrainPerSecond);
+                controlPoint.CaptureProgress += dt * ActiveCapturePerSecond /
+                    ResolveCaptureResistanceMultiplier(entityManager, controlPointEntity);
+                float loyaltyDelta = ResolveGovernorLoyaltyDelta(
+                    entityManager,
+                    controlPointEntity,
+                    -dt * LoyaltyDrainPerSecond);
+                controlPoint.Loyalty = math.max(0f, controlPoint.Loyalty + loyaltyDelta);
 
                 if (controlPoint.ControlState == ControlState.Stabilized &&
                     controlPoint.Loyalty < StabilizedLoyaltyThreshold)
@@ -180,6 +192,52 @@ namespace Bloodlines.Systems
                 out var aggregate)
                 ? math.max(0.1f, aggregate.StabilizationMultiplier)
                 : 1f;
+        }
+
+        static float ResolveGovernorStabilizationMultiplier(
+            EntityManager entityManager,
+            in ControlPointComponent controlPoint,
+            Entity controlPointEntity)
+        {
+            if (controlPoint.OwnerFactionId.Length == 0 ||
+                !entityManager.HasComponent<GovernorSpecializationComponent>(controlPointEntity))
+            {
+                return 1f;
+            }
+
+            GovernorSpecializationComponent specialization =
+                entityManager.GetComponentData<GovernorSpecializationComponent>(controlPointEntity);
+            return GovernorSpecializationCanon.GovernorStabilizationBaseBonus *
+                math.max(1f, specialization.StabilizationMultiplier);
+        }
+
+        static float ResolveCaptureResistanceMultiplier(EntityManager entityManager, Entity controlPointEntity)
+        {
+            if (!entityManager.HasComponent<GovernorSpecializationComponent>(controlPointEntity))
+            {
+                return 1f;
+            }
+
+            GovernorSpecializationComponent specialization =
+                entityManager.GetComponentData<GovernorSpecializationComponent>(controlPointEntity);
+            return math.max(1f, specialization.CaptureResistanceBonus);
+        }
+
+        static float ResolveGovernorLoyaltyDelta(
+            EntityManager entityManager,
+            Entity controlPointEntity,
+            float loyaltyDelta)
+        {
+            if (!entityManager.HasComponent<GovernorSpecializationComponent>(controlPointEntity))
+            {
+                return loyaltyDelta;
+            }
+
+            GovernorSpecializationComponent specialization =
+                entityManager.GetComponentData<GovernorSpecializationComponent>(controlPointEntity);
+            return GovernorSpecializationCanon.ApplyLoyaltyProtection(
+                loyaltyDelta,
+                specialization.LoyaltyProtectionMultiplier);
         }
     }
 }
