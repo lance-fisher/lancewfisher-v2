@@ -4336,3 +4336,38 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   `world-trueborn-rise` lane active on canonical `master` with no branch in
   flight. The next additive pickup is the next remaining non-AI Trueborn
   follow-up on a fresh branch.
+
+## 2026-04-23 HUD Political State Panels
+
+- Branch lane:
+  - `codex/unity-hud-political-state-panels`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels.md`
+- Completed in this slice:
+  - added `SuccessionCrisisHUDComponent` / `SuccessionCrisisHUDSystem`,
+    `PoliticalEventsTrayHUDComponent` / `PoliticalEventsTrayHUDSystem`,
+    `CovenantTestProgressHUDComponent` / `CovenantTestProgressHUDSystem`, and
+    `TruebornRiseHUDComponent` / `TruebornRiseHUDSystem` under
+    `unity/Assets/_Bloodlines/Code/HUD/` so the player HUD can observe live
+    dynasty political-state, covenant-test, and Trueborn pressure seams
+  - extended
+    `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+    with parseable readouts for the new political-state panels and added
+    `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPoliticalStateHUDSmokeValidation.cs`
+    plus
+    `scripts/Invoke-BloodlinesUnityPoliticalStateHUDSmokeValidation.ps1`
+  - fixed a real invalidated-buffer bug in `TruebornRiseHUDSystem` after the
+    new smoke surfaced pre-playback recognition-buffer reads
+  - repaired this worktree's `unity/Library` junction and canonicalized stale
+    `unity/Assembly-CSharp*.csproj` analyzer roots back to
+    `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
+- Validation state:
+  - dedicated political-state HUD smoke green
+  - all 10 required governed gates green
+  - post-append contract staleness recheck green at revision `110`
+- Contract revision advanced `109 -> 110`.
+- Immediate next action:
+  - commit and push `codex/unity-hud-political-state-panels`, merge it to
+    canonical `master` with `git merge --no-ff`, rerun the full validation
+    chain plus the dedicated HUD smoke on the merged result, then move to
+    Priority 18 `codex/unity-player-covenant-test-dispatch`

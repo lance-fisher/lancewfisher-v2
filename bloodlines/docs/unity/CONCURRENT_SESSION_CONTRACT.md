@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 109
+- Revision: 110
 - Last Updated: 2026-04-23
-- Last Updated By: codex-world-trueborn-rise-2026-04-23
-- Supersedes: revision 108 (Records the merged Trueborn rise-arc diplomatic-escalation sub-slice 3 on canonical `master` and clears the world-trueborn-rise branch-in-flight marker.)
+- Last Updated By: codex-hud-legibility-2026-04-23
+- Supersedes: revision 109 (Records the validated HUD political-state panels branch slice, widens the active HUD lane inventory, and points the lane at the new dedicated smoke surface.)
 
 
 ## Purpose
@@ -1211,7 +1211,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 ### Lane: player-hud-realm-condition-legibility
 
 - Status: active
-- Branch Prefix: `codex/unity-player-hud-*`, `codex/unity-player-hud-realm-condition-legibility`
+- Branch Prefix: `codex/unity-player-hud-*`, `codex/unity-player-hud-realm-condition-legibility`, `codex/unity-hud-*`
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/HUD/**`
@@ -1221,6 +1221,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFortificationHUDSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesVictoryReadoutSmokeValidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesVictoryLeaderboardHUDSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPoliticalStateHUDSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityRealmConditionHUDSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityMatchProgressionHUDSmokeValidation.ps1`
@@ -1228,6 +1229,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnityVictoryReadoutSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityVictoryLeaderboardHUDSmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityBattlefieldCommandDeckSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityPoliticalStateHUDSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/RealmConditionHUDComponent.cs`, `Code/HUD/RealmConditionHUDSystem.cs`, and `Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesRealmConditionHUDSmokeValidation.cs`
@@ -1241,6 +1243,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesVictoryLeaderboardHUDSmokeValidation.cs`; stale analyzer/source-generator paths were corrected back to this worktree's `unity/Library/PackageCache`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.cs` -- additive battlefield command-deck summary rendering that consumes existing HUD read-models without widening runtime ownership beyond the player command shell
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesBattlefieldCommandDeckSmokeValidation.cs` -- dedicated validator for the unified command-deck summary seam
+  - `unity/Assembly-CSharp.csproj` -- compile includes added for `Code/HUD/SuccessionCrisisHUDComponent.cs`, `Code/HUD/SuccessionCrisisHUDSystem.cs`, `Code/HUD/PoliticalEventsTrayHUDComponent.cs`, `Code/HUD/PoliticalEventsTrayHUDSystem.cs`, `Code/HUD/CovenantTestProgressHUDComponent.cs`, `Code/HUD/CovenantTestProgressHUDSystem.cs`, `Code/HUD/TruebornRiseHUDComponent.cs`, and `Code/HUD/TruebornRiseHUDSystem.cs`; stale analyzer/source-generator paths were corrected back to canonical `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
+  - `unity/Assembly-CSharp-Editor.csproj` -- compile include added for `Code/Editor/BloodlinesPoliticalStateHUDSmokeValidation.cs`; stale analyzer/source-generator paths were corrected back to canonical `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve HUD snapshots by `FactionId`
   - `unity/Assets/_Bloodlines/Code/Components/RealmConditionComponent.cs` -- read realm cycle accumulator, cycle count, strain streaks, and realm legibility thresholds
@@ -1267,6 +1271,11 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Components/BuildingTypeComponent.cs` -- read command-hall identity for Command Hall Fall progress
   - `unity/Assets/_Bloodlines/Code/Components/HealthComponent.cs` -- read `DeadTag` on command halls for Command Hall Fall completion
   - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- read in-world-day cadence plus days-per-real-second for the HUD throttle and sovereignty ETA
+  - `unity/Assets/_Bloodlines/Code/Dynasty/SuccessionCrisisComponent.cs` -- read live succession severity, fallback timers, and recovery windows for the dynasty-political HUD state
+  - `unity/Assets/_Bloodlines/Code/Dynasty/DynastyPoliticalEventComponent.cs` -- read active event type, expiry, and target ordering for the political events tray
+  - `unity/Assets/_Bloodlines/Code/Faith/CovenantTestComponent.cs` -- read covenant-test stage, elapsed progress, and political cooldown windows for the covenant HUD panel
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/TruebornRiseArcComponent.cs` -- read recognition bitmask, ultimatum timings, and stage progression for the Trueborn HUD panel
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/TruebornRecognitionUtility.cs` -- reuse canonical recognition-slot counting rather than duplicating Trueborn state rules
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility.md`
   - `docs/unity/session-handoffs/2026-04-21-unity-player-hud-realm-condition-legibility-landing.md`
@@ -1277,17 +1286,23 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-distance-readout.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-victory-panel.md`
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `getRealmConditionSnapshot` (14291-14764), `getMatchProgressionSnapshot` (13650-13658)
   - `tests/runtime-bridge.mjs` realm-condition snapshot assertions (1344-1364), match-progression assertions (7521, 7773-7871, 7923-7975, 8133, 8185), fortification/readout assertions (1438-1444), hostile-post-repulse world-pressure assertions (1718-1733)
-- Current Branch In Flight: `codex/unity-player-hud-command-deck-summary-followup`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary.md`
+- `src/game/core/simulation.js` dynasty political-state helpers `getDynastyPoliticalEventState`, `getActiveSuccessionCrisis`, `getActiveCovenantTest`, and `tickTruebornRiseArc`
+- Current Branch In Flight: `codex/unity-hud-political-state-panels`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels.md`
+- Last Slice State:
+  - `SuccessionCrisisHUDSystem`, `PoliticalEventsTrayHUDSystem`, `CovenantTestProgressHUDSystem`, and `TruebornRiseHUDSystem` now project dynasty, faith, and late-game world-pressure state onto faction-root HUD entities without widening ownership into `AI/**`
+  - `BloodlinesDebugCommandSurface.HUD` now exposes parseable political-state snapshot helpers, and `BloodlinesPoliticalStateHUDSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPoliticalStateHUDSmokeValidation.ps1` prove succession, event-tray, covenant, and Trueborn panel behavior on branch
+  - this worktree's `unity/Library` junction plus stale `Assembly-CSharp*.csproj` analyzer roots were repaired back to canonical `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`, restoring governed `dotnet build` resolution before the full 10-gate rerun
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is Priority 14 `world-trueborn-rise`.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation, player covert ops, and non-AI Trueborn follow-up slices through diplomatic escalation are now landed on master. Under the current directive order, the next clean Codex pickup after the active HUD branch is Priority 18 `player-covenant-test-dispatch`.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 

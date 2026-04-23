@@ -5226,3 +5226,38 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     Trueborn behavior directly and pick the cleanest non-AI follow-up
   - keep `unity/Assets/_Bloodlines/Code/AI/**` untouched unless the
     `ai-strategic-layer` lane explicitly claims the next AI-facing piece
+
+## 2026-04-23 HUD Political State Panels
+
+- Branch lane:
+  - `codex/unity-hud-political-state-panels`
+- Slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels.md`
+- Completed in this slice:
+  - added four faction-root HUD read-model pairs for succession crisis,
+    political events, covenant-test progress, and Trueborn rise state under
+    `unity/Assets/_Bloodlines/Code/HUD/`
+  - extended
+    `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+    with new political-state snapshot helpers and added the dedicated Unity
+    smoke validator/wrapper pair
+  - fixed a `TruebornRiseHUDSystem` recognition-buffer invalidation bug that
+    only surfaced under the new smoke
+  - repaired the local `unity/Library` junction plus stale
+    `unity/Assembly-CSharp*.csproj` analyzer roots so governed builds resolve
+    Unity assemblies in this worktree again
+- Validation state:
+  - dedicated political-state HUD smoke green
+  - all 10 required governed gates green
+  - post-append contract staleness recheck green at revision `110`
+- Immediate next action:
+  - commit and push `codex/unity-hud-political-state-panels`
+  - merge the branch to canonical `master` with `git merge --no-ff`
+  - rerun the full governed 10-gate chain plus the dedicated political-state
+    HUD smoke on merged `master`
+  - move next to Priority 18 `codex/unity-player-covenant-test-dispatch`
+- Staging note:
+  - keep
+    `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+    unstaged; Unity dirties it during validation and it is unrelated to this
+    slice
