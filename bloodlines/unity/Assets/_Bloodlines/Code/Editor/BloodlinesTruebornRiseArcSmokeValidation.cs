@@ -24,9 +24,10 @@ namespace Bloodlines.EditorTools
     /// Phase 2: a recognition request deducts browser-aligned legitimacy and
     ///          resource costs, grants the standing-to-renown bonus, and clears
     ///          active political cooldowns.
-    /// Phase 3: a recognized kingdom receives no stage-2 pressure while an
-    ///          unrecognized rival still loses loyalty and legitimacy; duplicate
-    ///          recognition requests become no-ops.
+    /// Phase 3: a recognized kingdom receives the browser Session 95 reduced
+    ///          stage-2 pressure (`0.25x`) while an unrecognized rival still
+    ///          loses loyalty and legitimacy; duplicate recognition requests
+    ///          become no-ops.
     ///
     /// Browser reference:
     ///   - simulation.js tickTruebornRiseArc / getTruebornChallengeLevel
@@ -52,7 +53,7 @@ namespace Bloodlines.EditorTools
                 var report = new System.Text.StringBuilder();
                 report.Append(RunPhaseStageProgression()).Append("; ");
                 report.Append(RunPhaseRecognitionResolution()).Append("; ");
-                report.Append(RunPhaseRecognizedExemption());
+                report.Append(RunPhaseRecognizedReducedPressure());
                 string summary =
                     "BLOODLINES_TRUEBORN_RISE_ARC_SMOKE PASS " + report;
                 UnityDebug.Log(summary);
@@ -208,9 +209,9 @@ namespace Bloodlines.EditorTools
             }
         }
 
-        private static string RunPhaseRecognizedExemption()
+        private static string RunPhaseRecognizedReducedPressure()
         {
-            using var world = CreateValidationWorld("trueborn-recognition-exemption");
+            using var world = CreateValidationWorld("trueborn-recognition-reduced-pressure");
             var entityManager = world.EntityManager;
 
             SeedDualClock(entityManager, 4200f);
@@ -255,8 +256,8 @@ namespace Bloodlines.EditorTools
                 ResourceStockpileComponent playerResources =
                     entityManager.GetComponentData<ResourceStockpileComponent>(player);
 
-                if (math.abs(playerPoint.Loyalty - 90f) > 0.01f ||
-                    math.abs(playerDynasty.Legitimacy - 75f) > 0.01f ||
+                if (math.abs(playerPoint.Loyalty - 89.55f) > 0.02f ||
+                    math.abs(playerDynasty.Legitimacy - 74.85f) > 0.02f ||
                     math.abs(enemyPoint.Loyalty - 88.2f) > 0.02f ||
                     math.abs(enemyDynasty.Legitimacy - 79.4f) > 0.02f ||
                     math.abs(playerResources.Influence - 60f) > 0.01f ||
@@ -281,8 +282,8 @@ namespace Bloodlines.EditorTools
                 enemyDynasty = ReadDynasty(entityManager, "enemy");
                 playerResources = entityManager.GetComponentData<ResourceStockpileComponent>(player);
 
-                if (math.abs(playerPoint.Loyalty - 90f) > 0.01f ||
-                    math.abs(playerDynasty.Legitimacy - 75f) > 0.01f ||
+                if (math.abs(playerPoint.Loyalty - 89.10f) > 0.02f ||
+                    math.abs(playerDynasty.Legitimacy - 74.70f) > 0.02f ||
                     math.abs(playerResources.Influence - 60f) > 0.01f ||
                     math.abs(playerResources.Gold - 40f) > 0.01f ||
                     math.abs(enemyPoint.Loyalty - 86.4f) > 0.02f ||
@@ -293,7 +294,7 @@ namespace Bloodlines.EditorTools
                 }
 
                 return
-                    $"phase3PlayerLoyalty={playerPoint.Loyalty:0.0},enemyLoyalty={enemyPoint.Loyalty:0.0},enemyLegitimacy={enemyDynasty.Legitimacy:0.0}";
+                    $"phase3PlayerLoyalty={playerPoint.Loyalty:0.0},playerLegitimacy={playerDynasty.Legitimacy:0.0},enemyLoyalty={enemyPoint.Loyalty:0.0},enemyLegitimacy={enemyDynasty.Legitimacy:0.0}";
             }
             finally
             {

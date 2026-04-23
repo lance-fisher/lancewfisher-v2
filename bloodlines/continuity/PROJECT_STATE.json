@@ -2195,6 +2195,15 @@
       "description": "The Trueborn rise-arc sub-slice 3 has now been merged onto canonical `master` via merge commit `6b696259`. The landing pass was performed on a clean detached worktree because the existing local `master` checkout was already dirty with unrelated covert-ops follow-up files, but the merged result tree matches the validated branch tip and preserves the widened `world-trueborn-rise` lane state. The full governed 10-gate chain plus the dedicated Trueborn diplomatic escalation smoke reran green on the merged result, the landing handoff was recorded, and contract rev 108->109 cleared the branch-in-flight marker while leaving the lane ready for the next non-AI Trueborn follow-up.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3-landing.md",
       "validation_gates": "all 10 green plus Trueborn diplomatic escalation smoke on merged master"
+    },
+    {
+      "lane": "world-trueborn-rise-recognized-pressure",
+      "date": "2026-04-23",
+      "branch": "codex/unity-world-trueborn-recognized-pressure",
+      "status": "complete",
+      "description": "The Trueborn rise recognized-pressure follow-up is now complete on branch. `TruebornRiseArcSystem` now matches the browser Session 95 `recognizedPressureMultiplier` rule so recognized kingdoms keep taking only `0.25x` of the base Trueborn rise loyalty and legitimacy pressure instead of full exemption, while unrecognized kingdoms still take the full pressure values. `BloodlinesTruebornRiseArcSmokeValidation` now proves the reduced-pressure parity directly and keeps the duplicate-recognition no-op assertion intact. The full governed 10-gate chain plus the dedicated Trueborn rise smoke are green with contract rev 109->110.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-recognized-pressure.md",
+      "validation_gates": "all 10 green plus Trueborn rise smoke"
     }
   ]
 }

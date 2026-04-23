@@ -4336,3 +4336,26 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   `world-trueborn-rise` lane active on canonical `master` with no branch in
   flight. The next additive pickup is the next remaining non-AI Trueborn
   follow-up on a fresh branch.
+
+## 2026-04-23 Trueborn Rise Recognized Pressure Follow-Up
+
+- Branch lane: `codex/unity-world-trueborn-recognized-pressure`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-recognized-pressure.md`.
+- Completed in this slice:
+  - `TruebornRiseArcSystem` now matches the browser Session 95
+    `recognizedPressureMultiplier` rule: recognized kingdoms take reduced
+    `0.25x` rise pressure instead of full exemption while unrecognized
+    kingdoms still take the full loyalty and legitimacy strain
+  - `BloodlinesTruebornRiseArcSmokeValidation` now proves the reduced-pressure
+    parity directly, including the quarter-strength recognized pressure and
+    duplicate-recognition no-op behavior
+- Validation state:
+  - runtime build green
+  - editor build green
+  - all 10 required governed gates green
+  - dedicated Trueborn rise smoke green
+  - post-append staleness recheck green at contract revision `110`
+- Contract revision advanced `109 -> 110` and records the
+  `world-trueborn-rise` recognized-pressure follow-up as validated on branch
+  `codex/unity-world-trueborn-recognized-pressure`.
