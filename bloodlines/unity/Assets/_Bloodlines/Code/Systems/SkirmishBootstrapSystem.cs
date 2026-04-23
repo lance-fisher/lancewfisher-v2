@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Bloodlines.Components;
+using Bloodlines.Faith;
 using Bloodlines.Raids;
 using Unity.Collections;
 using Unity.Entities;
@@ -40,6 +41,7 @@ namespace Bloodlines.Systems
                 var resourceNodeSeeds = default(NativeArray<MapResourceNodeSeedElement>);
                 var buildingSeeds = default(NativeArray<MapBuildingSeedElement>);
                 var unitSeeds = default(NativeArray<MapUnitSeedElement>);
+                var sacredSiteSeeds = default(NativeArray<MapSacredSiteSeedElement>);
 
                 if (config.SpawnFactions)
                 {
@@ -70,6 +72,11 @@ namespace Bloodlines.Systems
                 if (config.SpawnUnits)
                 {
                     unitSeeds = entityManager.GetBuffer<MapUnitSeedElement>(bootstrapEntity).ToNativeArray(Allocator.Temp);
+                }
+
+                if (entityManager.HasBuffer<MapSacredSiteSeedElement>(bootstrapEntity))
+                {
+                    sacredSiteSeeds = entityManager.GetBuffer<MapSacredSiteSeedElement>(bootstrapEntity).ToNativeArray(Allocator.Temp);
                 }
 
                 try
@@ -121,6 +128,11 @@ namespace Bloodlines.Systems
                         }
                     }
 
+                    for (var i = 0; i < sacredSiteSeeds.Length; i++)
+                    {
+                        SpawnSacredSiteEntity(entityManager, sacredSiteSeeds[i]);
+                    }
+
                     if (config.SpawnResourceNodes)
                     {
                         for (var i = 0; i < resourceNodeSeeds.Length; i++)
@@ -156,6 +168,7 @@ namespace Bloodlines.Systems
                     if (resourceNodeSeeds.IsCreated) resourceNodeSeeds.Dispose();
                     if (buildingSeeds.IsCreated) buildingSeeds.Dispose();
                     if (unitSeeds.IsCreated) unitSeeds.Dispose();
+                    if (sacredSiteSeeds.IsCreated) sacredSiteSeeds.Dispose();
                 }
             }
         }
@@ -335,6 +348,25 @@ namespace Bloodlines.Systems
                 ResourceId = seed.ResourceId,
                 Amount = seed.Amount,
                 InitialAmount = seed.Amount,
+            });
+        }
+
+        static void SpawnSacredSiteEntity(EntityManager entityManager, MapSacredSiteSeedElement seed)
+        {
+            var entity = entityManager.CreateEntity();
+            entityManager.AddComponentData(entity, new PositionComponent { Value = seed.Position });
+            entityManager.AddComponentData(entity, new LocalTransform
+            {
+                Position = seed.Position,
+                Rotation = quaternion.identity,
+                Scale = 1f,
+            });
+            entityManager.AddComponentData(entity, new SacredSiteExposureSourceComponent
+            {
+                SiteId = seed.RuntimeId,
+                Faith = seed.Faith,
+                RadiusWorldUnits = seed.RadiusWorldUnits,
+                ExposureRate = seed.ExposureRate,
             });
         }
 

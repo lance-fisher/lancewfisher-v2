@@ -66,6 +66,7 @@ namespace Bloodlines.EditorTools
             var unitCombatDefinitionBuffer = AddBuffer<UnitCombatDefinitionElement>(entity);
             var resourceNodeBuffer = AddBuffer<MapResourceNodeSeedElement>(entity);
             var controlPointBuffer = AddBuffer<MapControlPointSeedElement>(entity);
+            var sacredSiteBuffer = AddBuffer<MapSacredSiteSeedElement>(entity);
             var settlementBuffer = AddBuffer<MapSettlementSeedElement>(entity);
 
             foreach (var unitDefinition in authoring.UnitDefinitions ?? Array.Empty<UnitDefinition>())
@@ -120,6 +121,24 @@ namespace Bloodlines.EditorTools
                     StoneTrickle = controlPoint.resourceTrickle?.stone ?? 0f,
                     IronTrickle = controlPoint.resourceTrickle?.iron ?? 0f,
                     InfluenceTrickle = controlPoint.resourceTrickle?.influence ?? 0f,
+                });
+            }
+
+            foreach (var sacredSite in authoring.Map.sacredSites ?? Array.Empty<SacredSiteData>())
+            {
+                CovenantId covenantId = ResolveCovenantId(sacredSite.faithId);
+                if (covenantId == CovenantId.None)
+                {
+                    continue;
+                }
+
+                sacredSiteBuffer.Add(new MapSacredSiteSeedElement
+                {
+                    RuntimeId = sacredSite.id ?? string.Empty,
+                    Faith = covenantId,
+                    Position = new float3(sacredSite.x, 0f, sacredSite.y),
+                    RadiusWorldUnits = math.max(0f, sacredSite.radiusTiles * math.max(1f, authoring.Map.tileSize)),
+                    ExposureRate = math.max(0f, sacredSite.exposureRate),
                 });
             }
 
@@ -352,6 +371,15 @@ namespace Bloodlines.EditorTools
             if (string.Equals(fortificationRole, "gate", StringComparison.OrdinalIgnoreCase)) return FortificationRole.Gate;
             if (string.Equals(fortificationRole, "keep", StringComparison.OrdinalIgnoreCase)) return FortificationRole.Keep;
             return FortificationRole.None;
+        }
+
+        static CovenantId ResolveCovenantId(string faithId)
+        {
+            if (string.Equals(faithId, "old_light", StringComparison.OrdinalIgnoreCase)) return CovenantId.OldLight;
+            if (string.Equals(faithId, "blood_dominion", StringComparison.OrdinalIgnoreCase)) return CovenantId.BloodDominion;
+            if (string.Equals(faithId, "the_order", StringComparison.OrdinalIgnoreCase)) return CovenantId.TheOrder;
+            if (string.Equals(faithId, "the_wild", StringComparison.OrdinalIgnoreCase)) return CovenantId.TheWild;
+            return CovenantId.None;
         }
     }
 }

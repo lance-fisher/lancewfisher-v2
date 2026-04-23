@@ -2090,6 +2090,15 @@
       "description": "A follow-up rerun verified the already-landed canonical Verdant Warden runtime after `origin/master` merged `codex/unity-faith-verdant-warden` during local validation. This session preserved the upstream runtime as the sole authority, hardened `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1` and `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1` so explicit PASS markers override Unity batchmode exit `-1`, normalized generated `Assembly-CSharp*.csproj` Unity.Entities analyzer roots to the canonical `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache` surface, and dropped the duplicate rerun-only Verdant debug-partial registration. The branch-local worktree still relied on a local `unity/Library` junction to the canonical root for `.csproj` build resolution. The full governed 10-gate chain plus the dedicated Verdant Warden smoke reran green.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-faith-verdant-warden-rerun.md",
       "validation_gates": "all 10 green plus Verdant Warden smoke rerun"
+    },
+    {
+      "lane": "faith-exposure-walker-slice-1",
+      "date": "2026-04-23",
+      "branch": "codex/unity-faith-exposure-walker-sacred-site",
+      "status": "active",
+      "description": "The faith exposure walker slice is now complete on branch. `SacredSiteExposureSourceComponent`, `FaithExposureStructureComponent`, `FaithExposureWalkerRules`, and `FaithExposureWalkerSystem` add a browser-aligned sacred-site exposure seam that seeds `map.sacredSites` into ECS, discovers living kingdom factions with units inside each site radius, amplifies exposure through completed `wayshrine`, `covenant_hall`, and `grand_sanctuary` buildings with the canonical four-contributor / `4.0x` cap, and records the result through `FaithScoring.RecordExposure` so first exposure also discovers the faith. `BloodlinesDebugCommandSurface.Faith.ExposureWalker` exposes `TryDebugGetSacredSiteExposureSnapshot(...)`, `BloodlinesFaithExposureWalkerSmokeValidation` plus `scripts/Invoke-BloodlinesUnityFaithExposureWalkerSmokeValidation.ps1` prove base gain, wayshrine amplification, under-construction ignore, kingdom-only filtering, and the stacked cap, and the full governed 10-gate chain is green with contract rev 98->99.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-faith-exposure-walker.md",
+      "validation_gates": "all 10 green plus faith exposure walker smoke"
     }
   ]
 }
