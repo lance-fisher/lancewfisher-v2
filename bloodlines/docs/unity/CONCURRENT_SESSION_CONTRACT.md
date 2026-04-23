@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 116
+- Revision: 117
 - Last Updated: 2026-04-23
-- Last Updated By: codex-world-contested-territory-pressure-2026-04-23
-- Supersedes: revision 115 (Claims the contested-territory pressure rerun branch from the current canonical master line and records its validated branch state.)
+- Last Updated By: codex-world-contested-territory-pressure-landing-2026-04-23
+- Supersedes: revision 116 (Records the contested-territory pressure landing on canonical `master` and clears the branch-in-flight marker.)
 
 
 ## Purpose
@@ -696,7 +696,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: world-contested-territory-pressure
 
-- Status: active (validated on branch; pending merge onto canonical `master`)
+- Status: active (validated slice landed on canonical `master`; no branch currently in flight)
 - Branch Prefix: `codex/unity-contested-territory-pressure`, `codex/unity-contested-territory-pressure-rerun`
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -718,16 +718,17 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/WorldPressure/WorldPressureComponent.cs` -- prove contested-territory counting does not create a new score source
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-23-unity-world-contested-territory-pressure.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-contested-territory-pressure-landing.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `getRealmConditionSnapshot`, `getTerritorialGovernanceAcceptanceProfile`, `getTerritorialGovernanceWorldPressureContribution`, and `getRivalContactProfile`
   - `tests/runtime-bridge.mjs` realm-condition snapshot assertions plus the contested territorial-governance stage-4 setup
-- Current Branch In Flight: `codex/unity-contested-territory-pressure-rerun`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-world-contested-territory-pressure.md`
+- Current Branch In Flight: none (merged onto canonical `master` via `ea359daf` on 2026-04-23)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-world-contested-territory-pressure-landing.md`
 - Last Slice State:
-  - kingdom faction roots now expose external contested-territory count, owned contested-territory count, weakest owned contested march, and a governance-blocking flag without reopening capture-resolution behavior
+  - kingdom faction roots on canonical `master` now expose external contested-territory count, owned contested-territory count, weakest owned contested march, and a governance-blocking flag without reopening capture-resolution behavior
   - `BloodlinesDebugCommandSurface.WorldPressure` now exposes `TryDebugGetTerritorialPressureState(...)`, and the governance readout now reports contested-count / hold-ready fields for smoke inspection
-  - `BloodlinesContestedTerritoryPressureSmokeValidation` plus `scripts/Invoke-BloodlinesUnityContestedTerritoryPressureSmokeValidation.ps1` prove realm-condition counting, governance blocking, and contest-clear recovery on the current master-derived branch
-  - the validated rerun also restored a missing local `unity/Library` junction to `D:\ProjectsHome\Bloodlines\unity\Library` so the governed `dotnet build` gates could resolve `Library\ScriptAssemblies` in this automation worktree
+  - `BloodlinesContestedTerritoryPressureSmokeValidation` plus `scripts/Invoke-BloodlinesUnityContestedTerritoryPressureSmokeValidation.ps1` prove realm-condition counting, governance blocking, and contest-clear recovery on the merged master-compatible line
+  - the merged result reran the full governed 10-gate chain plus the dedicated contested-territory pressure smoke green, and fresh automation worktrees may still need a local `unity/Library` junction to `D:\ProjectsHome\Bloodlines\unity\Library` before `dotnet build` can resolve `Library\ScriptAssemblies`
 
 ### Lane: world-trueborn-rise
 
@@ -1351,7 +1352,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation, player covert ops, non-AI Trueborn follow-up slices through recognized-pressure, the HUD political-state panels landing plus rerun refresh, and the player covenant-test dispatch landing are now on canonical `master`. Priority 19 `contested-territory-pressure` is currently in flight on `codex/unity-contested-territory-pressure-rerun`; after landing it, claim the next unblocked non-AI Codex lane from `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation, player covert ops, non-AI Trueborn follow-up slices through recognized-pressure, the HUD political-state panels landing plus rerun refresh, the player covenant-test dispatch landing, and the contested-territory pressure landing are now on canonical `master`. The next clean Codex pickup should claim the next unblocked non-AI lane from `docs/plans/2026-04-17-browser-to-unity-migration-plan.md` rather than reopening stale rerun branches.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 

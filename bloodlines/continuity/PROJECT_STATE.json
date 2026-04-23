@@ -2276,6 +2276,15 @@
       "description": "The contested-territory pressure rerun is now complete on branch. `TerritorialPressureComponent` and `TerritorialPressureEvaluationSystem` add a faction-root read-model for browser-faithful external contested territories, owned contested marches, weakest owned contested loyalty, and governance-blocking state without inventing a new world-pressure score source or direct loyalty-drain mechanic. `BloodlinesDebugCommandSurface.WorldPressure` now exposes `TryDebugGetTerritorialPressureState(...)` and widened contested / hold-ready governance fields, `BloodlinesContestedTerritoryPressureSmokeValidation` plus `scripts/Invoke-BloodlinesUnityContestedTerritoryPressureSmokeValidation.ps1` prove realm-condition counting, governance blocking, and contest-clear recovery, and the fresh automation worktree repaired a missing local `unity/Library` junction back to `D:\\ProjectsHome\\Bloodlines\\unity\\Library` so the governed `dotnet build` gates could resolve `Library\\ScriptAssemblies`. The full governed 10-gate chain plus the dedicated contested-territory pressure smoke are green with contract rev 115->116 pending landing.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-world-contested-territory-pressure.md",
       "validation_gates": "all 10 green plus contested-territory pressure smoke"
+    },
+    {
+      "lane": "world-contested-territory-pressure-landing",
+      "date": "2026-04-23",
+      "branch": "master",
+      "status": "landed",
+      "description": "The contested-territory pressure rerun has now been merged onto canonical `master` via merge commit `ea359daf`. `TerritorialPressureComponent`, `TerritorialPressureEvaluationSystem`, the widened `BloodlinesDebugCommandSurface.WorldPressure` contested readouts, and `BloodlinesContestedTerritoryPressureSmokeValidation` plus `Invoke-BloodlinesUnityContestedTerritoryPressureSmokeValidation.ps1` now live on the merged master-compatible line. The landing pass reran the full governed 10-gate chain and the dedicated contested-territory pressure smoke green on the merged result, and the landing worktree re-established a local `unity/Library` junction back to `D:\\ProjectsHome\\Bloodlines\\unity\\Library` so the governed build gates could resolve `Library\\ScriptAssemblies` cleanly.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-world-contested-territory-pressure-landing.md",
+      "validation_gates": "all 10 green plus contested-territory pressure smoke on merged master"
     }
   ]
 }

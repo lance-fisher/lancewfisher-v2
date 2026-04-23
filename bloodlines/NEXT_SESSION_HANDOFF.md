@@ -5454,6 +5454,32 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   - port the next additive non-AI slice with a dedicated smoke validator and
     matching PowerShell wrapper
 
+## 2026-04-23 World Contested Territory Pressure Landing
+
+- Landing state:
+  - merged `codex/unity-contested-territory-pressure-rerun` onto canonical
+    `master` via merge commit `ea359daf`
+- Landing handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-contested-territory-pressure-landing.md`
+- Completed in this landing pass:
+  - reran the full governed 10-gate chain on the merged result
+  - reran the dedicated contested-territory pressure smoke on the merged
+    result
+  - cleared the contested-territory branch-in-flight state in the concurrent
+    session contract
+  - preserved the note that fresh automation worktrees may need a local
+    `unity/Library` junction to `D:\ProjectsHome\Bloodlines\unity\Library`
+    before the governed build gates can resolve `Library\ScriptAssemblies`
+- Validation state:
+  - all 10 required governed gates green
+  - dedicated contested-territory pressure smoke green
+- Immediate next action:
+  - start from refreshed canonical `master`
+  - claim the next unblocked non-AI Codex lane from
+    `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`
+  - do not reopen the stale historical
+    `codex/unity-contested-territory-pressure` branch
+
 ## 2026-04-23 World Contested Territory Pressure
 
 - Branch lane:
