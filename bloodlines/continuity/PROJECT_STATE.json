@@ -2231,6 +2231,15 @@
       "description": "The HUD political-state panels slice has now been merged onto canonical `master`. `SuccessionCrisisHUDSystem`, `PoliticalEventsTrayHUDSystem`, `CovenantTestProgressHUDSystem`, and `TruebornRiseHUDSystem` now live on the merged master-compatible line together with the widened `BloodlinesDebugCommandSurface.HUD` political-state snapshots and the dedicated `BloodlinesPoliticalStateHUDSmokeValidation` / `Invoke-BloodlinesUnityPoliticalStateHUDSmokeValidation.ps1` proof surface. The landing pass was performed on a clean detached worktree because `origin/master` advanced during branch validation, all 10 governed validation gates reran green on the merged result, the dedicated political-state HUD smoke reran green there as well, and contract rev 111->112 cleared the HUD branch-in-flight marker while pointing the next Codex pickup at Priority 18 `player-covenant-test-dispatch`.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels-landing.md",
       "validation_gates": "all 10 green plus political state HUD smoke on merged master"
+    },
+    {
+      "lane": "hud-political-state-panels-rerun-landing",
+      "date": "2026-04-23",
+      "branch": "master",
+      "status": "landed",
+      "description": "The HUD political-state panels rerun landing is now complete on canonical `master` via merge commit `260fb666`. This pass did not introduce new HUD behavior; instead it forward-ported the already-landed political-state panel slice through `origin/codex/unity-hud-political-state-panels-rerun` so the HUD lane now shares ancestry with the newer Trueborn recognized-pressure line while preserving the original HUD landing history. The full governed 10-gate chain plus the dedicated political-state HUD smoke reran green on the merged result, and contract rev 112->113 records the rerun landing while keeping Priority 18 `player-covenant-test-dispatch` as the next Codex pickup.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels-rerun-landing.md",
+      "validation_gates": "all 10 green plus political state HUD smoke on merged master rerun"
     }
   ]
 }

@@ -4450,3 +4450,33 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Immediate next action:
   - start Priority 18 `codex/unity-player-covenant-test-dispatch` from the
     updated canonical `master`
+
+## 2026-04-23 HUD Political State Panels Rerun Landing
+
+- Landing branch: `codex/land-hud-political-state-panels-rerun`.
+- Merge commit: `260fb666`.
+- Completed in this landing pass:
+  - merged `origin/codex/unity-hud-political-state-panels-rerun` onto the
+    current canonical `master` as a no-behavior-regression forward-port so the
+    already-landed HUD political-state slice now shares ancestry with the
+    newer Trueborn recognized-pressure line
+  - reran the full governed 10-gate chain on the merged result
+  - reran the dedicated political-state HUD smoke on the merged result
+  - recorded a separate rerun landing handoff without overwriting the original
+    HUD landing history already preserved on `master`
+- Validation state:
+  - runtime build green
+  - editor build green with existing repo-wide warnings only
+  - bootstrap runtime smoke green
+  - combat smoke green
+  - canonical scene-shell validation green
+  - fortification smoke green
+  - siege smoke green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - dedicated political-state HUD smoke green
+  - final contract staleness recheck green at revision `113`
+- Contract revision advanced `112 -> 113` and keeps the
+  `player-hud-realm-condition-legibility` lane clear on canonical `master`.
+  The next additive pickup remains Priority 18
+  `codex/unity-player-covenant-test-dispatch`.

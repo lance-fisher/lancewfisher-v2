@@ -5348,3 +5348,39 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     plus the current Unity player-faith dispatch surfaces
   - port the next additive non-AI slice with a dedicated smoke validator and
     matching PowerShell wrapper
+
+## 2026-04-23 HUD Political State Panels Rerun Landing
+
+- Landing branch:
+  - `codex/land-hud-political-state-panels-rerun`
+- Merge commit:
+  - `260fb666`
+- Landing handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels-rerun-landing.md`
+- Completed in this landing pass:
+  - merged `origin/codex/unity-hud-political-state-panels-rerun` onto the
+    current canonical `master` as a no-behavior-regression forward-port on top
+    of the newer Trueborn recognized-pressure line
+  - reran the full governed 10-gate chain on the merged result
+  - reran the dedicated political-state HUD smoke on the merged result
+  - preserved the original HUD landing record and added this rerun landing as
+    a separate continuity note
+- Validation state:
+  - runtime build green
+  - editor build green with existing repo-wide warnings only
+  - bootstrap runtime smoke green
+  - combat smoke green
+  - canonical scene-shell validation green
+  - fortification smoke green
+  - siege smoke green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - dedicated political-state HUD smoke green
+  - final contract staleness recheck green at revision `113`
+- Immediate next action:
+  - open or refresh `codex/unity-player-covenant-test-dispatch` from updated
+    canonical `master`
+  - read the browser covenant dispatch seam in `src/game/core/simulation.js`
+    plus the existing Unity player-faith request surfaces
+  - port or land the next additive non-AI slice with a dedicated smoke
+    validator and matching PowerShell wrapper

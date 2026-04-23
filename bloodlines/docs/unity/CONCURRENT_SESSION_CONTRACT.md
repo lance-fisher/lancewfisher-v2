@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 112
+- Revision: 113
 - Last Updated: 2026-04-23
 - Last Updated By: codex-hud-legibility-2026-04-23
-- Supersedes: revision 111 (Records the merged HUD political-state panels landing on canonical `master` and clears the HUD branch-in-flight marker.)
+- Supersedes: revision 112 (Records the HUD political-state rerun landing on canonical `master` while preserving the original HUD landing history and keeping the lane clear for Priority 18.)
 
 
 ## Purpose
@@ -1290,22 +1290,23 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-22-unity-player-hud-command-deck-summary.md`
   - `docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels.md`
   - `docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels-landing.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels-rerun-landing.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `getRealmConditionSnapshot` (14291-14764), `getMatchProgressionSnapshot` (13650-13658)
   - `tests/runtime-bridge.mjs` realm-condition snapshot assertions (1344-1364), match-progression assertions (7521, 7773-7871, 7923-7975, 8133, 8185), fortification/readout assertions (1438-1444), hostile-post-repulse world-pressure assertions (1718-1733)
 - `src/game/core/simulation.js` dynasty political-state helpers `getDynastyPoliticalEventState`, `getActiveSuccessionCrisis`, `getActiveCovenantTest`, and `tickTruebornRiseArc`
 - Current Branch In Flight: none (merged onto canonical `master` in this session)
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels-landing.md`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels-rerun-landing.md`
 - Last Slice State:
-  - `SuccessionCrisisHUDSystem`, `PoliticalEventsTrayHUDSystem`, `CovenantTestProgressHUDSystem`, and `TruebornRiseHUDSystem` now live on canonical `master`, projecting dynasty, faith, and late-game world-pressure state onto faction-root HUD entities without widening ownership into `AI/**`
-  - `BloodlinesDebugCommandSurface.HUD` now exposes parseable political-state snapshot helpers, and `BloodlinesPoliticalStateHUDSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPoliticalStateHUDSmokeValidation.ps1` prove succession, event-tray, covenant, and Trueborn panel behavior on the merged result
-  - the merged result reran the full governed 10-gate chain plus the dedicated political-state HUD smoke green, and `unity/Assembly-CSharp*.csproj` retains the canonical `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache` analyzer roots needed for fresh automation worktrees
+  - the original HUD political-state panel landing remains preserved on canonical `master`, and the rerun landing now forward-ports that same behavior onto the newer Trueborn recognized-pressure ancestry without widening ownership into `AI/**`
+  - `BloodlinesDebugCommandSurface.HUD` still exposes the political-state snapshot helpers, and `BloodlinesPoliticalStateHUDSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPoliticalStateHUDSmokeValidation.ps1` reran green on the merged rerun result
+  - the merged rerun result reran the full governed 10-gate chain green, and the committed `unity/Assembly-CSharp*.csproj` files still preserve the canonical `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache` analyzer roots for fresh automation worktrees
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation, player covert ops, non-AI Trueborn follow-up slices through recognized-pressure, and the HUD political-state panels landing are now on canonical `master`. Under the current directive order, the next clean Codex pickup is Priority 18 `player-covenant-test-dispatch`.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation, player covert ops, non-AI Trueborn follow-up slices through recognized-pressure, and the HUD political-state panels plus rerun landing are now on canonical `master`. Under the current directive order, the next clean Codex pickup is Priority 18 `player-covenant-test-dispatch`.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 
