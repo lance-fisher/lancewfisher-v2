@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 90
+- Revision: 92
 - Last Updated: 2026-04-22
-- Last Updated By: codex-dynasty-succession-crisis-2026-04-22
-- Supersedes: revision 85 (Adds the new active `dynasty-succession-crisis` lane on branch `codex/unity-dynasty-succession-crisis`, records the dedicated succession-crisis validator/wrapper, and documents the narrow shared-file hooks into `ControlPointResourceTrickleSystem` and `BloodlinesDebugCommandSurface.Dynasty.cs`.)
+- Last Updated By: codex-dynasty-political-events-2026-04-22
+- Supersedes: revision 91 (Records the validated landing of `dynasty-political-events` onto canonical master, retires the branch-in-flight state for that lane, and points the next Codex pickup at the covenant-test follow-up that consumes the placeholder cooldown seam.)
 
 
 ## Purpose
@@ -229,7 +229,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: dynasty-succession-crisis
 
-- Status: active
+- Status: retired (validated slice complete; landed onto `codex/overnight-master-2026-04-22` pending human-coordinated canonical master merge)
 - Branch Prefix: `codex/unity-dynasty-succession-crisis`
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -252,8 +252,47 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-22-unity-dynasty-succession-crisis.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `SUCCESSION_CRISIS_SEVERITY_PROFILES`, `buildSuccessionCrisisTriggerProfile`, `startSuccessionCrisis`, `tickDynastyPoliticalEvents`, `getSuccessionCrisisTerms`, `consolidateSuccessionCrisis`
-- Current Branch In Flight: `codex/unity-dynasty-succession-crisis`
+- Current Branch In Flight: none (validated implementation merged onto `codex/overnight-master-2026-04-22` in this session)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-dynasty-succession-crisis.md`
+
+### Lane: dynasty-political-events
+
+- Status: active
+- Branch Prefix: `codex/unity-dynasty-political-events`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyPoliticalEventComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyPoliticalEventSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyPoliticalEventsSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityDynastyPoliticalEventsSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerDivineRightDeclarationSystem.cs` -- block only when `DivineRightFailedCooldown` is active for the source faction
+  - `unity/Assets/_Bloodlines/Code/Combat/AttackResolutionSystem.cs` -- multiply outgoing damage by `DynastyPoliticalEventAggregateComponent.AttackMultiplier` only
+  - `unity/Assets/_Bloodlines/Code/Economy/ResourceTrickleBuildingSystem.cs` -- multiply existing building trickle output by `DynastyPoliticalEventAggregateComponent.ResourceTrickleFactor` only
+  - `unity/Assets/_Bloodlines/Code/Systems/ControlPointResourceTrickleSystem.cs` -- multiply existing control-point trickle by the political-event resource factor only
+  - `unity/Assets/_Bloodlines/Code/Systems/ControlPointCaptureSystem.cs` -- multiply existing loyalty stabilization by `DynastyPoliticalEventAggregateComponent.StabilizationMultiplier` only
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Dynasty.cs` -- additive `TryDebugGetPoliticalEvents(...)` readout only
+  - `unity/Assembly-CSharp.csproj` -- additive compile includes for the dynasty political event runtime files, plus the already-validated succession-crisis runtime files still missing from the generated project
+  - `unity/Assembly-CSharp-Editor.csproj` -- additive compile includes for the dynasty political event editor validator, plus the already-validated succession-crisis validator file still missing from the generated project
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/AI/DynastyOperationComponent.cs` -- read active divine-right operations without touching the AI lane
+  - `unity/Assets/_Bloodlines/Code/AI/DynastyOperationDivineRightComponent.cs` -- read resolve windows and operation type metadata only
+  - `unity/Assets/_Bloodlines/Code/Faith/FaithStateComponent.cs` -- read committed covenant, intensity, and level thresholds for divine-right failure
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve faction-root entities by `FactionId`
+  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- project fixed-length cooldowns into in-world-day expiry timestamps
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-22-unity-dynasty-political-events.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `getDynastyPoliticalEventState`, `tickDynastyPoliticalEvents`, `getFactionPoliticalEventEffects`, `failDivineRightDeclaration`, and the covenant/divine-right cooldown constants block
+- Current Branch In Flight: none (validated implementation landed onto canonical `master` in this session)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-dynasty-political-events.md`
+- Last Slice State:
+  - faction roots now hold timed dynasty political event buffers and a computed aggregate multiplier snapshot
+  - failed divine-right upkeep now writes a timed `DivineRightFailedCooldown` political event that blocks immediate redeclaration
+  - resource trickle, attack damage, and control-point stabilization now consume the aggregate multipliers through narrow shared-file seams
+  - `BloodlinesDynastyPoliticalEventsSmokeValidation` proves aggregate application, cooldown creation, and expiry reset
+  - next Codex pickup should be the faith covenant-test follow-up so the existing `CovenantTestCooldown` placeholder starts consuming real failure output
 
 ### Lane: faith-commitment
 

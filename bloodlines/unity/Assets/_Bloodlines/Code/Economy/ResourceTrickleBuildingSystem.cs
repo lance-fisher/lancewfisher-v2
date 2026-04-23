@@ -1,4 +1,5 @@
 using Bloodlines.Components;
+using Bloodlines.Dynasties;
 using Bloodlines.Raids;
 using Unity.Burst;
 using Unity.Collections;
@@ -118,13 +119,19 @@ namespace Bloodlines.Systems
                 }
 
                 ref var stockpile = ref stockpileRw.ValueRW;
-                stockpile.Gold += delta.Gold;
-                stockpile.Food += delta.Food;
-                stockpile.Water += delta.Water;
-                stockpile.Wood += delta.Wood;
-                stockpile.Stone += delta.Stone;
-                stockpile.Iron += delta.Iron;
-                stockpile.Influence += delta.Influence;
+                float politicalFactor = DynastyPoliticalEventUtility.TryGetAggregate(
+                    entityManager,
+                    factionEntity,
+                    out var aggregate)
+                    ? aggregate.ResourceTrickleFactor
+                    : DynastyPoliticalEventUtility.DefaultResourceTrickleFactor;
+                stockpile.Gold += delta.Gold * politicalFactor;
+                stockpile.Food += delta.Food * politicalFactor;
+                stockpile.Water += delta.Water * politicalFactor;
+                stockpile.Wood += delta.Wood * politicalFactor;
+                stockpile.Stone += delta.Stone * politicalFactor;
+                stockpile.Iron += delta.Iron * politicalFactor;
+                stockpile.Influence += delta.Influence * politicalFactor;
             }
             }
             finally

@@ -2,6 +2,7 @@ using Bloodlines.Components;
 using Bloodlines.Dynasties;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 
 namespace Bloodlines.Debug
 {
@@ -90,6 +91,44 @@ namespace Bloodlines.Debug
 
             crisis = entityManager.GetComponentData<SuccessionCrisisComponent>(factionEntity);
             return true;
+        }
+
+        public bool TryDebugGetPoliticalEvents(string factionId, out FixedString512Bytes eventsSummary)
+        {
+            eventsSummary = default;
+            if (string.IsNullOrWhiteSpace(factionId))
+            {
+                return false;
+            }
+
+            var world = World.DefaultGameObjectInjectionWorld;
+            if (world == null || !world.IsCreated)
+            {
+                return false;
+            }
+
+            var entityManager = world.EntityManager;
+            var factionEntity = FindFactionEntityByDynasty(entityManager, factionId);
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasBuffer<DynastyPoliticalEventComponent>(factionEntity))
+            {
+                return false;
+            }
+
+            var events = entityManager.GetBuffer<DynastyPoliticalEventComponent>(factionEntity);
+            for (int i = 0; i < events.Length; i++)
+            {
+                if (i > 0)
+                {
+                    eventsSummary.Append("|");
+                }
+
+                eventsSummary.Append(events[i].EventType);
+                eventsSummary.Append("@");
+                eventsSummary.Append(math.round(events[i].ExpiresAtInWorldDays));
+            }
+
+            return events.Length > 0;
         }
 
         public bool TryDebugGetDynastyMember(
