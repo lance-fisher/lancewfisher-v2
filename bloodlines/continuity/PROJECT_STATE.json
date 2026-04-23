@@ -2231,6 +2231,15 @@
       "description": "The HUD political-state panels slice has now been merged onto canonical `master`. `SuccessionCrisisHUDSystem`, `PoliticalEventsTrayHUDSystem`, `CovenantTestProgressHUDSystem`, and `TruebornRiseHUDSystem` now live on the merged master-compatible line together with the widened `BloodlinesDebugCommandSurface.HUD` political-state snapshots and the dedicated `BloodlinesPoliticalStateHUDSmokeValidation` / `Invoke-BloodlinesUnityPoliticalStateHUDSmokeValidation.ps1` proof surface. The landing pass was performed on a clean detached worktree because `origin/master` advanced during branch validation, all 10 governed validation gates reran green on the merged result, the dedicated political-state HUD smoke reran green there as well, and contract rev 111->112 cleared the HUD branch-in-flight marker while pointing the next Codex pickup at Priority 18 `player-covenant-test-dispatch`.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels-landing.md",
       "validation_gates": "all 10 green plus political state HUD smoke on merged master"
+    },
+    {
+      "lane": "player-covenant-test-dispatch",
+      "date": "2026-04-23",
+      "branch": "codex/unity-player-covenant-test-dispatch",
+      "status": "complete",
+      "description": "The player covenant-test dispatch slice is now complete on branch. `PlayerCovenantTestDispatchStateComponent` and `PlayerCovenantTestDispatchSystem` now give the player faction root a real covenant-test action surface: Blood Dominion light/dark rites expose availability, affordability, action label/detail, queued state, pending request state, and covenant-specific costs before the existing `CovenantTestResolutionSystem` consumes the same `PlayerCovenantTestRequestComponent` request entity. `BloodlinesDebugCommandSurface.Faith` now exposes `TryDebugQueueCovenantTestDispatch(...)` and `TryDebugGetCovenantTestDispatchState(...)` while preserving the older direct trigger path for the legacy validator, and `BloodlinesPlayerCovenantTestDispatchSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPlayerCovenantTestDispatchSmokeValidation.ps1` prove ready-state availability/cost display, queued request emission, resolution consumption, and unaffordable blocking. The full governed 10-gate chain is green with contract rev 112->113.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-player-covenant-test-dispatch.md",
+      "validation_gates": "all 10 green plus player covenant-test dispatch smoke"
     }
   ]
 }

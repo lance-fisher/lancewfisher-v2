@@ -104,6 +104,57 @@ namespace Bloodlines.Debug
             return true;
         }
 
+        public bool TryDebugQueueCovenantTestDispatch(string factionId)
+        {
+            var factionEntity = FindFactionEntityByFaith(factionId, out var entityManager);
+            if (factionEntity == Entity.Null)
+            {
+                return false;
+            }
+
+            if (!entityManager.HasComponent<PlayerCovenantTestDispatchStateComponent>(factionEntity))
+            {
+                entityManager.AddComponentData(
+                    factionEntity,
+                    PlayerCovenantTestDispatchStateComponent.CreateDefault(new FixedString32Bytes(factionId)));
+            }
+
+            var dispatchState = entityManager.GetComponentData<PlayerCovenantTestDispatchStateComponent>(factionEntity);
+            dispatchState.RequestQueued = true;
+            entityManager.SetComponentData(factionEntity, dispatchState);
+            return true;
+        }
+
+        public bool TryDebugGetCovenantTestDispatchState(string factionId, out string readout)
+        {
+            readout = string.Empty;
+            var factionEntity = FindFactionEntityByFaith(factionId, out var entityManager);
+            if (factionEntity == Entity.Null ||
+                !entityManager.HasComponent<PlayerCovenantTestDispatchStateComponent>(factionEntity))
+            {
+                return false;
+            }
+
+            var state = entityManager.GetComponentData<PlayerCovenantTestDispatchStateComponent>(factionEntity);
+            readout =
+                "CovenantTestDispatch|FactionId=" + factionId +
+                "|FaithId=" + state.FaithId +
+                "|DoctrinePath=" + state.DoctrinePath +
+                "|Phase=" + state.TestPhase +
+                "|ActionAvailable=" + state.ActionAvailable +
+                "|CanAfford=" + state.CanAfford +
+                "|RequestQueued=" + state.RequestQueued +
+                "|RequestPending=" + state.RequestPending +
+                "|FoodCost=" + state.FoodCost +
+                "|InfluenceCost=" + state.InfluenceCost +
+                "|PopulationCost=" + state.PopulationCost +
+                "|LegitimacyCost=" + state.LegitimacyCost +
+                "|ActionLabel=" + state.ActionLabel +
+                "|ActionDetail=" + state.ActionDetail +
+                "|BlockReason=" + state.BlockReason;
+            return true;
+        }
+
         public bool TryDebugGetCovenantTestState(string factionId, out string readout)
         {
             readout = string.Empty;
