@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 105
+- Revision: 106
 - Last Updated: 2026-04-23
-- Last Updated By: codex-dynasty-minor-house-levy-2026-04-23
-- Supersedes: revision 104 (Records the validated dynasty minor-house levy completion follow-up on the current master line and advances the next clean Codex pickup to Priority 14 Trueborn rise arc.)
+- Last Updated By: codex-world-trueborn-rise-2026-04-23
+- Supersedes: revision 105 (Records the validated Trueborn rise-arc sub-slice 1 on the current master line and adds the new world-trueborn-rise lane.)
 
 
 ## Purpose
@@ -684,6 +684,36 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `src/game/core/simulation.js` `getTerritorialGovernanceAcceptanceProfile`, `shouldIssueTerritorialGovernanceRecognition`, `tickTerritorialGovernanceRecognition`, `getTerritorialGovernanceWorldPressureContribution`, governance-alliance pressure block inside `tickRealmConditionCycle`
 - Current Branch In Flight: none (validated slice landed onto canonical `master` in this session)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-governance-coalition-pressure.md`
+
+### Lane: world-trueborn-rise
+
+- Status: active (validated Trueborn rise-arc sub-slice 1 landed on canonical `master`; no branch currently in flight)
+- Branch Prefix: `codex/unity-world-trueborn-rise-arc-1`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/TruebornRiseArcComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/TruebornRiseArcSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesTruebornRiseArcSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityTruebornRiseArcSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.WorldPressure.cs` -- additive `TryDebugGetTruebornRiseArc(...)` and `TryDebugSetTruebornRecognition(...)` only
+  - `unity/Assembly-CSharp.csproj` -- compile includes retained for the Trueborn rise runtime files
+  - `unity/Assembly-CSharp-Editor.csproj` -- compile include retained for the Trueborn rise validator
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve kingdom vs neutral faction roots and the `trueborn_city` singleton faction id
+  - `unity/Assets/_Bloodlines/Code/Components/ControlPointComponent.cs` -- count kingdom territories and apply loyalty erosion to owned control points
+  - `unity/Assets/_Bloodlines/Code/Combat/HostilityComponent.cs` -- project the browser hostility-driven Trueborn challenge contribution without widening `AI/**`
+  - `unity/Assets/_Bloodlines/Code/Components/DynastyMemberComponent.cs` -- reuse `DynastyStateComponent.Legitimacy` on kingdom faction roots for stage-2/3 pressure
+  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- tick stage advancement on deterministic whole in-world days
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/GovernanceCoalitionPressureSystem.cs` -- align the rise arc alongside the existing world-pressure seam without reopening governance implementation
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/WorldPressureEscalationSystem.cs` -- preserve intended world-pressure ordering adjacency without widening the escalation score sources
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-1.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `tickTruebornRiseArc`, `getTruebornChallengeLevel`, `getTruebornRecognitionTerms`, `recognizeTruebornClaim`, and `TRUEBORN_RISE_STAGE_*` constants
+- Current Branch In Flight: none (validated slice landed onto canonical `master` in this session)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-1.md`
 
 ### Lane: ai-strategic-layer
 

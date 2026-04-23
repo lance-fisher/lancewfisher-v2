@@ -96,5 +96,106 @@ namespace Bloodlines.Debug
                 $"|WorldPressure={selected.WorldPressureContribution}");
             return true;
         }
+
+        public bool TryDebugGetTruebornRiseArc(out Unity.Collections.FixedString512Bytes readout)
+        {
+            readout = default;
+            var world = World.DefaultGameObjectInjectionWorld;
+            if (world == null) return false;
+
+            var entityManager = world.EntityManager;
+            using var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<TruebornRiseArcComponent>());
+            if (query.IsEmpty)
+            {
+                return false;
+            }
+
+            Entity arcEntity = query.GetSingletonEntity();
+            TruebornRiseArcComponent arc = entityManager.GetComponentData<TruebornRiseArcComponent>(arcEntity);
+            var recognitionSlots = entityManager.GetBuffer<TruebornRiseFactionRecognitionSlotElement>(arcEntity);
+
+            int recognizedCount = 0;
+            for (int i = 0; i < recognitionSlots.Length && i < 64; i++)
+            {
+                ulong slotMask = 1UL << i;
+                if ((arc.RecognizedFactionsBitmask & slotMask) != 0UL)
+                {
+                    recognizedCount++;
+                }
+            }
+
+            readout = new Unity.Collections.FixedString512Bytes(
+                $"Stage={arc.CurrentStage}" +
+                $"|StageStarted={math.round(arc.StageStartedAtInWorldDays * 100f) / 100f}" +
+                $"|GlobalPressure={math.round(arc.GlobalPressurePerDay * 100f) / 100f}" +
+                $"|LoyaltyErosion={math.round(arc.LoyaltyErosionPerDay * 100f) / 100f}" +
+                $"|Challenge={arc.ChallengeLevel}" +
+                $"|UnchallengedCycles={arc.UnchallengedCycles}" +
+                $"|RecognizedCount={recognizedCount}" +
+                $"|RecognizedMask={arc.RecognizedFactionsBitmask}");
+            return true;
+        }
+
+        public bool TryDebugSetTruebornRecognition(string factionId, bool recognized)
+        {
+            if (string.IsNullOrWhiteSpace(factionId))
+            {
+                return false;
+            }
+
+            var world = World.DefaultGameObjectInjectionWorld;
+            if (world == null) return false;
+
+            var entityManager = world.EntityManager;
+            using var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<TruebornRiseArcComponent>());
+            if (query.IsEmpty)
+            {
+                return false;
+            }
+
+            Entity arcEntity = query.GetSingletonEntity();
+            TruebornRiseArcComponent arc = entityManager.GetComponentData<TruebornRiseArcComponent>(arcEntity);
+            var recognitionSlots = entityManager.GetBuffer<TruebornRiseFactionRecognitionSlotElement>(arcEntity);
+            var targetFactionId = new Unity.Collections.FixedString32Bytes(factionId);
+
+            int slotIndex = -1;
+            for (int i = 0; i < recognitionSlots.Length; i++)
+            {
+                if (recognitionSlots[i].FactionId.Equals(targetFactionId))
+                {
+                    slotIndex = i;
+                    break;
+                }
+            }
+
+            if (slotIndex < 0)
+            {
+                if (recognitionSlots.Length >= 64)
+                {
+                    return false;
+                }
+
+                recognitionSlots.Add(new TruebornRiseFactionRecognitionSlotElement
+                {
+                    FactionId = targetFactionId,
+                });
+                slotIndex = recognitionSlots.Length - 1;
+            }
+
+            ulong slotMask = 1UL << slotIndex;
+            if (recognized)
+            {
+                arc.RecognizedFactionsBitmask |= slotMask;
+            }
+            else
+            {
+                arc.RecognizedFactionsBitmask &= ~slotMask;
+            }
+
+            entityManager.SetComponentData(arcEntity, arc);
+            return true;
+        }
     }
 }

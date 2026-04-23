@@ -5072,3 +5072,41 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     canonical `master`
   - implement `TruebornRiseArcComponent`, `TruebornRiseArcSystem`, and a
     dedicated smoke validator before rerunning the full governed 10-gate chain
+
+## 2026-04-23 Trueborn City Rise Arc (Sub-Slice 1)
+
+- Branch lane:
+  - `codex/unity-world-trueborn-rise-arc-1`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-1.md`
+- Completed in this slice:
+  - `TruebornRiseArcComponent` plus
+    `TruebornRiseFactionRecognitionSlotElement` now hold the singleton
+    browser-aligned rise state, stage pressure values, challenge counters, and
+    a stable append-only kingdom-slot registry for the recognition bitmask
+  - `TruebornRiseArcSystem` now ports the base late-game arc into
+    `WorldPressure/**`: the Trueborn city activates after the canonical
+    8-year + 3-cycle threshold, advances again after the 2-year and 3-year
+    delay windows, and applies stage-scaled loyalty erosion plus legitimacy
+    strain to non-recognizing kingdoms
+  - `BloodlinesDebugCommandSurface.WorldPressure` now exposes
+    `TryDebugGetTruebornRiseArc(...)` and
+    `TryDebugSetTruebornRecognition(...)`, and the dedicated Trueborn smoke
+    now proves stage advancement plus recognition exemption while avoiding the
+    earlier batchmode artifact-lock warning
+- Validation state:
+  - dedicated Trueborn rise-arc smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green at contract revision `106`
+- Immediate next action:
+  - treat the current directive stack as complete through Priority 14
+  - if the next overnight directive opens the follow-up seam, start the
+    Trueborn recognition / legitimacy-cost slice on a fresh branch and reuse
+    the existing recognition-slot bitmask surface
+  - decide in that follow-up whether recognized kingdoms should remain fully
+    exempt or move toward the browser `0.25x` reduced-pressure rule
+- Staging note:
+  - keep
+    `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+    unstaged; Unity dirties it during validation and it is unrelated to this
+    slice

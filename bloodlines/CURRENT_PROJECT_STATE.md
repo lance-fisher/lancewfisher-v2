@@ -4199,3 +4199,36 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Contract revision advanced `104 -> 105` and keeps the
   `dynasty-house-parity` lane paused on canonical `master`. The next additive
   pickup is Priority 14 Trueborn City Rise Arc (Sub-Slice 1 of 3).
+
+## 2026-04-23 Trueborn City Rise Arc (Sub-Slice 1)
+
+- Branch lane: `codex/unity-world-trueborn-rise-arc-1`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-1.md`.
+- Completed in this slice:
+  - `TruebornRiseArcComponent` plus
+    `TruebornRiseFactionRecognitionSlotElement` now provide the singleton
+    ECS state for the browser Trueborn-city rise arc, including staged
+    pressure fields, challenge/uncontested counters, and a stable
+    recognition-slot registry behind the `ulong` bitmask
+  - `TruebornRiseArcSystem` now ports the base late-game rise timing into
+    Unity ECS: the Trueborn city activates after the canonical 8-year dormant
+    window plus three unchallenged cycles, escalates again after the 2-year
+    and 3-year follow-up windows, and applies stage-scaled loyalty erosion
+    plus legitimacy strain to non-recognizing kingdoms on whole-day cadence
+  - `BloodlinesDebugCommandSurface.WorldPressure` now exposes
+    `TryDebugGetTruebornRiseArc(...)` and
+    `TryDebugSetTruebornRecognition(...)`, and the dedicated
+    `BloodlinesTruebornRiseArcSmokeValidation` plus
+    `scripts/Invoke-BloodlinesUnityTruebornRiseArcSmokeValidation.ps1`
+    now prove stage advancement and recognition exemption while using a
+    GameObject-backed debug surface and a separate summary artifact path to
+    avoid batchmode log-lock noise
+- Validation state:
+  - dedicated Trueborn rise-arc smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green at contract revision `106`
+- Contract revision advanced `105 -> 106` and records the new
+  `world-trueborn-rise` lane on canonical `master`. The next additive pickup
+  is the follow-on Trueborn recognition / diplomatic exemption slice when the
+  next directive window opens.
