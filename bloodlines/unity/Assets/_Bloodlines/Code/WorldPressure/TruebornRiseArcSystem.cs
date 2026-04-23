@@ -249,7 +249,7 @@ namespace Bloodlines.Systems
                 }
 
                 FixedString32Bytes factionId = factions[i].FactionId;
-                if (FindRecognitionSlot(recognitionSlots, factionId) >= 0)
+                if (TruebornRecognitionUtility.FindRecognitionSlot(recognitionSlots, factionId) >= 0)
                 {
                     continue;
                 }
@@ -341,7 +341,10 @@ namespace Bloodlines.Systems
                     ControlPointComponent controlPoint = controlPoints[i];
                     if (controlPoint.OwnerFactionId.Length == 0 ||
                         !kingdomLookup.ContainsKey(controlPoint.OwnerFactionId) ||
-                        IsRecognized(recognitionSlots, arc.RecognizedFactionsBitmask, controlPoint.OwnerFactionId))
+                        TruebornRecognitionUtility.IsRecognized(
+                            recognitionSlots,
+                            arc.RecognizedFactionsBitmask,
+                            controlPoint.OwnerFactionId))
                     {
                         continue;
                     }
@@ -361,7 +364,10 @@ namespace Bloodlines.Systems
                 for (int i = 0; i < factionEntities.Length; i++)
                 {
                     if (factionKinds[i].Kind != FactionKind.Kingdom ||
-                        IsRecognized(recognitionSlots, arc.RecognizedFactionsBitmask, factions[i].FactionId) ||
+                        TruebornRecognitionUtility.IsRecognized(
+                            recognitionSlots,
+                            arc.RecognizedFactionsBitmask,
+                            factions[i].FactionId) ||
                         !entityManager.HasComponent<DynastyStateComponent>(factionEntities[i]))
                     {
                         continue;
@@ -383,36 +389,6 @@ namespace Bloodlines.Systems
                     kingdomLookup.Dispose();
                 }
             }
-        }
-
-        private static bool IsRecognized(
-            DynamicBuffer<TruebornRiseFactionRecognitionSlotElement> recognitionSlots,
-            ulong recognizedFactionsBitmask,
-            FixedString32Bytes factionId)
-        {
-            int slotIndex = FindRecognitionSlot(recognitionSlots, factionId);
-            if (slotIndex < 0 || slotIndex >= 64)
-            {
-                return false;
-            }
-
-            ulong slotMask = 1UL << slotIndex;
-            return (recognizedFactionsBitmask & slotMask) != 0UL;
-        }
-
-        private static int FindRecognitionSlot(
-            DynamicBuffer<TruebornRiseFactionRecognitionSlotElement> recognitionSlots,
-            FixedString32Bytes factionId)
-        {
-            for (int i = 0; i < recognitionSlots.Length; i++)
-            {
-                if (recognitionSlots[i].FactionId.Equals(factionId))
-                {
-                    return i;
-                }
-            }
-
-            return -1;
         }
     }
 }

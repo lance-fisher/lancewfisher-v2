@@ -4735,6 +4735,50 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     unstaged; Unity dirties it during validation and it is unrelated to this
     slice
 
+## 2026-04-23 Trueborn City Rise Arc (Sub-Slice 2)
+
+- Branch lane:
+  - `codex/unity-world-trueborn-rise-arc-2`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-2.md`
+- Completed in this slice:
+  - `PlayerTruebornRecognitionRequestComponent`,
+    `TruebornRecognitionUtility`, and
+    `TruebornRecognitionResolutionSystem` now resolve Trueborn recognition
+    requests into the existing rise-arc singleton, spending `40` influence,
+    `60` gold, and `5` legitimacy, setting the recognition bit, granting the
+    `6`-renown standing bonus, and clearing Covenant Test / Divine Right
+    cooldown entries
+  - `BloodlinesDebugCommandSurface.WorldPressure` now exposes
+    `TryDebugRecognizeTrueborn(...)` and
+    `TryDebugGetTruebornRecognitionState(...)`, and the dedicated Trueborn
+    smoke now proves recognition resolution, duplicate-request no-op behavior,
+    and downstream pressure exemption
+  - the local worktree required a `unity/Library` junction back to
+    `D:\ProjectsHome\Bloodlines\unity\Library` before the governed
+    `.csproj` builds could resolve `Library\ScriptAssemblies`
+  - the request component is ready for future AI producers, but actual AI
+    request emission remains deferred to the `ai-strategic-layer` lane because
+    `unity/Assets/_Bloodlines/Code/AI/**` stays forbidden here
+- Validation state:
+  - dedicated Trueborn rise-arc smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green at contract revision `107`
+- Immediate next action:
+  - claim Priority 16 from
+    `D:\ProjectsHome\Bloodlines\03_PROMPTS\CODEX_MULTI_DAY_DIRECTIVE_2026-04-24.md`
+  - open a fresh `codex/unity-world-trueborn-rise-arc-3` branch from updated
+    canonical `master`
+  - add the stage-4 / stage-5 ultimatum fields and diplomatic-escalation
+    system, reuse the new recognition request / utility seam, and keep
+    `unity/Assets/_Bloodlines/Code/AI/**` untouched unless that lane
+    explicitly picks up AI request emission
+- Staging note:
+  - keep
+    `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
+    unstaged; Unity dirties it during validation and it is unrelated to this
+    slice
+
 ## 2026-04-23 Faith Structure Regen
 
 - Branch lane:

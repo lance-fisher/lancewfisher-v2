@@ -64,6 +64,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Definitions\HouseDefinition.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\SuccessionCrisisComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyRenownComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\WorldPressure\TruebornRecognitionResolutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerCovertOps\PlayerSabotageStatusComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.PlayerDiplomacy.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerCovertOps\EspionageResolutionSystem.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\MarriageComponents.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\MarriageAcceptEffectsPendingTag.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\UnitSeparationComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\WorldPressure\TruebornRecognitionUtility.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Pathing\UnitMovementSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerCovertOps\PlayerSabotageEffectComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\WorldPressure\TruebornRiseArcComponent.cs" />
@@ -239,6 +241,7 @@
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerMissionaryDispatchSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AISiegeOrchestrationComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AIStrategyComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\WorldPressure\PlayerTruebornRecognitionRequestComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Faith\CovenantTestQualificationSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Time\DualClockComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Systems\UnitProductionSystem.cs" />
