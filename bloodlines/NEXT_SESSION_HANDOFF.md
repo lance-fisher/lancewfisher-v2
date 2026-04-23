@@ -5454,6 +5454,35 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   - port the next additive non-AI slice with a dedicated smoke validator and
     matching PowerShell wrapper
 
+## 2026-04-23 World Contested Territory Pressure
+
+- Branch lane:
+  - `codex/unity-contested-territory-pressure-rerun`
+- Slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-contested-territory-pressure.md`
+- Completed in this slice:
+  - added `TerritorialPressureComponent` and
+    `TerritorialPressureEvaluationSystem` so kingdom faction roots now carry
+    browser-faithful contested-territory pressure read-model state without
+    turning the seam into a new direct loyalty-drain or world-pressure score
+    mechanic
+  - widened `BloodlinesDebugCommandSurface.WorldPressure` with a dedicated
+    territorial-pressure readout plus contested / hold-ready governance fields
+  - added the dedicated contested-territory pressure smoke validator/wrapper
+    pair and the required csproj compile includes
+  - restored a missing local `unity/Library` junction to
+    `D:\ProjectsHome\Bloodlines\unity\Library` so governed `dotnet build`
+    gates succeed in this worktree
+- Validation state:
+  - dedicated contested-territory pressure smoke green
+  - all 10 required governed gates green
+  - pre-landing contract staleness recheck green at revision `115`
+- Immediate next action:
+  - commit and push `codex/unity-contested-territory-pressure-rerun`
+  - merge the branch to canonical `master` with `git merge --no-ff`
+  - write the landing handoff and clear the branch-in-flight state in the
+    concurrent-session contract before claiming the next lane
+
 ## 2026-04-23 HUD Political State Panels Rerun Master Refresh
 
 - Landing branch:

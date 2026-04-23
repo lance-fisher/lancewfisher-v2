@@ -89,6 +89,8 @@ namespace Bloodlines.Debug
                 $"|Completed={(selected.Completed ? "true" : "false")}" +
                 $"|Acceptance={(int)math.round(selected.PopulationAcceptancePct)}" +
                 $"|Target={(int)math.round(selected.PopulationAcceptanceTargetPct)}" +
+                $"|Contested={selected.ContestedTerritoryCount}" +
+                $"|HoldReady={(selected.HoldReady ? "true" : "false")}" +
                 $"|AllianceReady={(selected.AllianceThresholdReady ? "true" : "false")}" +
                 $"|AlliancePressure={(selected.AlliancePressureActive ? "true" : "false")}" +
                 $"|Hostiles={selected.AlliancePressureHostileCount}" +
@@ -97,6 +99,63 @@ namespace Bloodlines.Debug
                 $"|WeakestLoyalty={(int)math.round(selected.WeakestControlPointLoyalty)}" +
                 $"|WorldPressure={selected.WorldPressureContribution}");
             return true;
+        }
+
+        public static bool TryDebugGetTerritorialPressureState(
+            string factionId,
+            out Unity.Collections.FixedString512Bytes readout)
+        {
+            readout = default;
+            if (string.IsNullOrWhiteSpace(factionId))
+            {
+                return false;
+            }
+
+            var world = World.DefaultGameObjectInjectionWorld;
+            if (world == null) return false;
+
+            var entityManager = world.EntityManager;
+            var targetFactionId = new Unity.Collections.FixedString32Bytes(factionId);
+            using var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<TerritorialPressureComponent>());
+            using var entities = query.ToEntityArray(Unity.Collections.Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Unity.Collections.Allocator.Temp);
+            using var pressures = query.ToComponentDataArray<TerritorialPressureComponent>(Unity.Collections.Allocator.Temp);
+
+            for (int i = 0; i < factions.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(targetFactionId))
+                {
+                    continue;
+                }
+
+                TerritorialGovernanceRecognitionComponent recognition = default;
+                bool hasRecognition =
+                    entityManager.HasComponent<TerritorialGovernanceRecognitionComponent>(entities[i]);
+                if (hasRecognition)
+                {
+                    recognition = entityManager.GetComponentData<TerritorialGovernanceRecognitionComponent>(
+                        entities[i]);
+                }
+
+                TerritorialPressureComponent pressure = pressures[i];
+                readout = new Unity.Collections.FixedString512Bytes(
+                    $"Faction={factions[i].FactionId}" +
+                    $"|ExternalContested={pressure.ExternalContestedTerritoryCount}" +
+                    $"|OwnedContested={pressure.OwnedContestedTerritoryCount}" +
+                    $"|WeakestOwnedContested={pressure.WeakestOwnedContestedControlPointId}" +
+                    $"|WeakestOwnedContestedLoyalty={(int)math.round(pressure.WeakestOwnedContestedLoyalty)}" +
+                    $"|GovernanceContestBlocking={(pressure.GovernanceContestBlockingActive ? "true" : "false")}" +
+                    $"|GovernanceContested={(hasRecognition ? recognition.ContestedTerritoryCount : 0)}" +
+                    $"|GovernanceHoldReady={(hasRecognition && recognition.HoldReady ? "true" : "false")}" +
+                    $"|GovernanceTriggerReady={(hasRecognition && recognition.TriggerReady ? "true" : "false")}" +
+                    $"|GovernanceShareReady={(hasRecognition && recognition.ShareReady ? "true" : "false")}" +
+                    $"|GovernanceStageReady={(hasRecognition && recognition.StageReady ? "true" : "false")}");
+                return true;
+            }
+
+            return false;
         }
 
         public bool TryDebugGetTruebornRiseArc(out Unity.Collections.FixedString512Bytes readout)

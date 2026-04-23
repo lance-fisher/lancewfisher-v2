@@ -4551,6 +4551,46 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   - start Priority 19 `codex/unity-contested-territory-pressure` from the
     updated canonical `master`
 
+## 2026-04-23 World Contested Territory Pressure
+
+- Branch lane:
+  - `codex/unity-contested-territory-pressure-rerun`
+- Slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-contested-territory-pressure.md`
+- Completed in this slice:
+  - added a new `TerritorialPressureComponent` faction-root read-model plus
+    `TerritorialPressureEvaluationSystem` so the Unity runtime now surfaces
+    browser-faithful external contested territories, owned contested marches,
+    weakest owned contested loyalty, and governance-blocking state without
+    inventing a new world-pressure score source
+  - extended `BloodlinesDebugCommandSurface.WorldPressure` with
+    `TryDebugGetTerritorialPressureState(...)` and widened the existing
+    governance readout with contested-count / hold-ready fields for smoke
+    inspection
+  - added the dedicated contested-territory pressure smoke validator/wrapper
+    pair and the required runtime/editor csproj compile includes
+  - restored a missing local `unity/Library` junction to
+    `D:\ProjectsHome\Bloodlines\unity\Library` so the governed `dotnet build`
+    gates could resolve `Library\ScriptAssemblies` inside this automation
+    worktree
+- Validation state:
+  - runtime build green
+  - editor build green with existing repo-wide warnings only
+  - bootstrap runtime smoke green
+  - combat smoke green
+  - canonical scene-shell validation green
+  - fortification smoke green
+  - siege smoke green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - dedicated contested-territory pressure smoke green
+  - pre-landing contract staleness recheck green at revision `115`
+- Immediate next action:
+  - commit and push `codex/unity-contested-territory-pressure-rerun`
+  - merge it to canonical `master` with `git merge --no-ff`
+  - record the landing handoff, clear the branch-in-flight marker, and then
+    claim the next unblocked non-AI Codex lane
+
 ## 2026-04-23 HUD Political State Panels Rerun Master Refresh
 
 - Landing branch:
