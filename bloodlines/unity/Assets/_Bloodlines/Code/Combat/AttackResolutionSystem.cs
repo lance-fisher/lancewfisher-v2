@@ -200,7 +200,13 @@ namespace Bloodlines.Systems
                         }
                     }
 
-                    combat.CooldownRemaining = math.max(0.1f, combat.AttackCooldown);
+                    float auraAttackMultiplier =
+                        entityManager.HasComponent<CommanderAuraRecipientComponent>(entity)
+                            ? math.max(
+                                1f,
+                                entityManager.GetComponentData<CommanderAuraRecipientComponent>(entity).AppliedAttackMultiplier)
+                            : 1f;
+                    combat.CooldownRemaining = math.max(0.1f, combat.AttackCooldown / auraAttackMultiplier);
                 }
 
                 combatRw.ValueRW = combat;

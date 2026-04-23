@@ -58,6 +58,11 @@ namespace Bloodlines.Systems
                         stance.LowHealthRetreatThreshold > 0f
                             ? stance.LowHealthRetreatThreshold
                             : CombatUnitRuntimeDefaults.DefaultLowHealthRetreatThreshold);
+                    if (entityManager.HasComponent<CommanderAuraRecipientComponent>(entity))
+                    {
+                        retreatThreshold = math.saturate(
+                            retreatThreshold - entityManager.GetComponentData<CommanderAuraRecipientComponent>(entity).MoraleBonus);
+                    }
                     float healthFraction = healthValues[i].Max > 0f
                         ? healthValues[i].Current / healthValues[i].Max
                         : 0f;

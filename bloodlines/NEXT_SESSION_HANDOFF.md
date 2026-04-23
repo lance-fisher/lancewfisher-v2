@@ -4629,3 +4629,37 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   - open `codex/unity-combat-commander-aura` from updated `master`
   - port commander aura buffs, conviction scaling, debug readout, and
     dedicated smoke validation
+
+## 2026-04-22 Combat Commander Aura
+
+- Branch lane:
+  - `codex/unity-combat-commander-aura`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-22-unity-combat-commander-aura.md`
+- Completed in this slice:
+  - `CommanderAuraComponent`,
+    `CommanderAuraRecipientComponent`,
+    `CommanderAuraCanon`,
+    and
+    `CommanderAuraSystem`
+    now project doctrine-aware, conviction-scaled commander aura profiles onto
+    nearby same-faction units each simulation frame
+  - `AttackResolutionSystem`
+    and
+    `CombatStanceResolutionSystem`
+    now consume commander aura attack-cadence and morale-retreat resistance on
+    narrow additive seams only
+  - `BloodlinesDebugCommandSurface.CommanderAura` now exposes aura readout by
+    unit/member id, and
+    `BloodlinesCommanderAuraSmokeValidation` plus wrapper now prove in-range
+    buffs, out-of-range non-application, debug visibility, and cleanup after
+    commander death
+- Validation state:
+  - dedicated commander aura smoke green
+  - all 10 required governed gates green after the final serial rerun
+- Immediate next action:
+  - claim Priority 6 from
+    `D:\\ProjectsHome\\Bloodlines\\03_PROMPTS\\CODEX_MULTI_DAY_DIRECTIVE_2026-04-24.md`
+  - open `codex/unity-fortification-postures` from updated `master`
+  - port imminent-engagement fortification postures plus dedicated smoke
+    validation

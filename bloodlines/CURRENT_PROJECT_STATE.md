@@ -3780,3 +3780,36 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Contract revision advanced `93 -> 94` and now records the active
   `territory-governor-specialization` lane with no branch in flight. The next
   additive pickup from the directive stack is Priority 5 commander aura.
+
+## 2026-04-22 Combat Commander Aura Slice
+
+- Branch lane: `codex/unity-combat-commander-aura`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-22-unity-combat-commander-aura.md`.
+- Completed in this slice:
+  - `CommanderAuraComponent`,
+    `CommanderAuraRecipientComponent`,
+    `CommanderAuraCanon`,
+    and
+    `CommanderAuraSystem`
+    now port the browser commander-aura seam into Unity ECS with doctrine-aware
+    radius, attack, and sight values plus directive-required speed and morale
+    bonuses scaled from conviction band
+  - `AttackResolutionSystem`
+    and
+    `CombatStanceResolutionSystem`
+    now consume the live aura on narrow approved seams only through
+    attack-cadence and retreat-resistance hooks
+  - `BloodlinesDebugCommandSurface.CommanderAura` now exposes commander aura
+    readouts by unit/member id, and
+    `BloodlinesCommanderAuraSmokeValidation` plus wrapper now prove in-range
+    buffing, out-of-range non-application, debug visibility, and cleanup on
+    commander death
+  - local `Assembly-CSharp*.csproj` metadata now includes the new commander
+    aura runtime, debug, and editor files explicitly
+- Validation state:
+  - dedicated commander aura smoke green
+  - all 10 required governed gates green after the final serial rerun
+- Contract revision advanced `94 -> 95` and now records the active
+  `combat-commander-aura` lane with no branch in flight. The next additive
+  pickup from the directive stack is Priority 6 fortification postures.
