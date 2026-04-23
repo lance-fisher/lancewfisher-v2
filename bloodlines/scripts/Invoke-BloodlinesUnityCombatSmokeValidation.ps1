@@ -68,9 +68,15 @@ if ($exitCode -eq 0 -and $outcome -eq 'unknown') {
     $outcome = Get-ValidationOutcome
 }
 
-if ($exitCode -eq 0 -and $outcome -ne 'passed') {
-    throw "Unity exited with code 0 but combat smoke validation did not report an explicit pass. See $logPath"
+if ($outcome -eq 'passed') {
+    Write-Host 'Combat smoke validation passed.'
+    exit 0
 }
 
-Write-Host "Unity exited with code $exitCode"
-exit $exitCode
+if ($outcome -eq 'failed') {
+    Write-Host "Unity exited with code $exitCode"
+    exit 1
+}
+
+Write-Host 'Combat smoke validation produced no pass/fail marker. Check the log.'
+exit 1

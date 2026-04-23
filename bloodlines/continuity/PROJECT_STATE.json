@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-23T01:43:46.9063505-06:00",
+  "updated_at": "2026-04-23T03:03:02.7135825-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -2081,6 +2081,15 @@
       "description": "The Verdant Warden faith-support slice is now complete on branch. `VerdantWardenComponent`, `VerdantWardenCoverageProfile`, `VerdantWardenRules`, and `VerdantWardenSupportSystem` add a browser-aligned mobile faith-support seam that auto-tags living `verdant_warden` units, resolves capped same-faction coverage around owned control points and fortified settlements, and caches the resulting loyalty, stabilization, reserve-heal, reserve-muster, and frontline-attack support fields directly onto the receiving ECS components each simulation tick. `ControlPointCaptureSystem`, `FortificationReserveSystem`, and `AttackResolutionSystem` now consume that cached support through narrow additive hooks only, `BloodlinesDebugCommandSurface.Faith.VerdantWarden` exposes `TryDebugGetVerdantWardenCoverage(...)`, and `BloodlinesVerdantWardenSmokeValidation` plus `scripts/Invoke-BloodlinesUnityVerdantWardenSmokeValidation.ps1` prove single-stack coverage, reserve-heal uplift, debug visibility, and the canonical three-stack cap on stored multipliers and frontline damage. Contract rev 97->98.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-faith-verdant-warden.md",
       "validation_gates": "all 10 green plus Verdant Warden smoke"
+    },
+    {
+      "lane": "faith-verdant-warden-rerun-followup",
+      "date": "2026-04-23",
+      "branch": "codex/unity-faith-verdant-warden-rerun",
+      "status": "complete",
+      "description": "A follow-up rerun verified the already-landed canonical Verdant Warden runtime after `origin/master` merged `codex/unity-faith-verdant-warden` during local validation. This session preserved the upstream runtime as the sole authority, hardened `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1` and `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1` so explicit PASS markers override Unity batchmode exit `-1`, normalized generated `Assembly-CSharp*.csproj` Unity.Entities analyzer roots to the canonical `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache` surface, and dropped the duplicate rerun-only Verdant debug-partial registration. The branch-local worktree still relied on a local `unity/Library` junction to the canonical root for `.csproj` build resolution. The full governed 10-gate chain plus the dedicated Verdant Warden smoke reran green.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-faith-verdant-warden-rerun.md",
+      "validation_gates": "all 10 green plus Verdant Warden smoke rerun"
     }
   ]
 }

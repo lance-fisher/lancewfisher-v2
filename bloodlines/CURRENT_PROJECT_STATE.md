@@ -3927,3 +3927,37 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   `faith-verdant-warden` lane with no branch in flight. The next additive
   pickup from the directive stack is Priority 8 sacred-site exposure walker +
   wayshrine amplification.
+
+## 2026-04-23 Faith Verdant Warden Rerun Follow-Up
+
+- Branch lane: `codex/unity-faith-verdant-warden-rerun`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-faith-verdant-warden-rerun.md`.
+- Completed in this follow-up:
+  - detected that `origin/master` had already merged the canonical
+    `codex/unity-faith-verdant-warden` runtime slice during local rerun
+    validation, so the upstream Verdant Warden runtime was preserved as-is
+    instead of being replaced by the local rerun variant
+  - hardened
+    `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`
+    and
+    `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`
+    so explicit PASS markers now override Unity batchmode exit `-1` after
+    successful validation runs
+  - normalized generated `Assembly-CSharp*.csproj` Unity.Entities analyzer
+    roots to the canonical
+    `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
+    surface and removed the duplicate rerun-only Verdant debug-partial
+    registration so the already-landed master runtime remains the single
+    authority
+  - this worktree still required a local `unity/Library` junction to the
+    canonical `D:\ProjectsHome\Bloodlines\unity\Library` surface so governed
+    `.csproj` builds could resolve `Library\ScriptAssemblies`
+- Validation state:
+  - dedicated Verdant Warden smoke green against the canonical landed runtime
+  - all 10 required governed gates green after the final serial rerun
+- Continuity note:
+  - the authoritative runtime handoff remains
+    `docs/unity/session-handoffs/2026-04-23-unity-faith-verdant-warden.md`;
+    this rerun handoff records only the follow-up validation and metadata
+    repairs landed after upstream merge
