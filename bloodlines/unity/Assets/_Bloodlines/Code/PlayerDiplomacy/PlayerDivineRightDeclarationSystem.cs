@@ -1,5 +1,6 @@
 using Bloodlines.AI;
 using Bloodlines.Components;
+using Bloodlines.Dynasties;
 using Bloodlines.GameTime;
 using Unity.Collections;
 using Unity.Entities;
@@ -66,6 +67,11 @@ namespace Bloodlines.PlayerDiplomacy
 
             var sourceFaith = entityManager.GetComponentData<FaithStateComponent>(sourceEntity);
             if (sourceFaith.SelectedFaith == CovenantId.None ||
+                DynastyPoliticalEventUtility.HasActiveEvent(
+                    entityManager,
+                    sourceEntity,
+                    DynastyPoliticalEventTypes.DivineRightFailedCooldown,
+                    inWorldDays) ||
                 sourceFaith.Intensity < DivineRightIntensityThreshold ||
                 sourceFaith.Level < DivineRightLevelThreshold ||
                 PlayerFaithDeclarationUtility.HasActiveOperation(

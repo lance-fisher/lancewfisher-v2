@@ -2009,6 +2009,15 @@
       "description": "The first Unity succession-crisis slice is now complete on branch. `SuccessionCrisisComponent`, `SuccessionCrisisEvaluationSystem`, and `SuccessionCrisisRecoverySystem` add a dynasty-owned crisis surface that watches ruler changes after `DynastySuccessionSystem`, resolves browser-style severity from the new ruler's maturity and rival-claim pressure, applies an opening loyalty shock to all owned control points, drains legitimacy and loyalty on whole in-world days, and advances conviction-aware recovery until the crisis is removed. `ControlPointResourceTrickleSystem` now consumes the crisis `ResourceTrickleFactor` as a narrow additive territorial income penalty, `BloodlinesDebugCommandSurface.Dynasty` exposes `TryDebugGetSuccessionCrisis(...)`, and `BloodlinesSuccessionCrisisSmokeValidation` plus its wrapper prove trigger, loyalty shock, recovery removal, and catastrophic-vs-minor legitimacy drain. The full governed 10-gate chain is green in this worktree after a Unity project refresh repaired stale generated `.csproj` metadata. Contract rev 85->90.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-dynasty-succession-crisis.md",
       "validation_gates": "all 10 green plus succession crisis smoke"
+    },
+    {
+      "lane": "dynasty-political-events-slice-1",
+      "date": "2026-04-22",
+      "branch": "codex/unity-dynasty-political-events",
+      "status": "active",
+      "description": "The first Unity dynasty political-events slice is now complete on branch. `DynastyPoliticalEventComponent`, `DynastyPoliticalEventAggregateComponent`, and `DynastyPoliticalEventSystem` add a faction-root timed political-event buffer plus a computed aggregate that ports the browser `getDynastyPoliticalEventState` / `tickDynastyPoliticalEvents` seam: expired events are removed on tick, composite resource trickle / attack / stabilization multipliers are recomputed, and failed divine-right upkeep now deactivates the active operation and writes a timed `DivineRightFailedCooldown` event. `PlayerDivineRightDeclarationSystem` blocks redeclaration while that cooldown is active, `AttackResolutionSystem`, `ResourceTrickleBuildingSystem`, `ControlPointResourceTrickleSystem`, and `ControlPointCaptureSystem` consume the aggregate through narrow additive hooks only, and `BloodlinesDebugCommandSurface.Dynasty` exposes `TryDebugGetPoliticalEvents(...)`. `BloodlinesDynastyPoliticalEventsSmokeValidation` plus `Invoke-BloodlinesUnityDynastyPoliticalEventsSmokeValidation.ps1` prove aggregate application, cooldown creation, and expiry reset. The full governed 10-gate chain is green in this worktree and contract revision advanced 90->91.",
+      "handoff": "docs/unity/session-handoffs/2026-04-22-unity-dynasty-political-events.md",
+      "validation_gates": "all 10 green plus dynasty political events smoke"
     }
   ]
 }

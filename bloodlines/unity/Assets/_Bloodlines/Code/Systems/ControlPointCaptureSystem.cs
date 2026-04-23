@@ -1,4 +1,5 @@
 using Bloodlines.Components;
+using Bloodlines.Dynasties;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -44,6 +45,7 @@ namespace Bloodlines.Systems
         public void OnUpdate(ref SystemState state)
         {
             float dt = SystemAPI.Time.DeltaTime;
+            var entityManager = state.EntityManager;
             var unitQuery = SystemAPI.QueryBuilder()
                 .WithAll<UnitTypeComponent, PositionComponent, FactionComponent, HealthComponent>()
                 .Build();
@@ -93,7 +95,9 @@ namespace Bloodlines.Systems
 
                 if (controlPoint.OwnerFactionId.Length > 0 && !controlPoint.IsContested)
                 {
-                    controlPoint.Loyalty = math.min(100f, controlPoint.Loyalty + dt * PassiveStabilizationPerSecond);
+                    float passiveStabilization = PassiveStabilizationPerSecond *
+                        ResolveStabilizationMultiplier(entityManager, controlPoint.OwnerFactionId);
+                    controlPoint.Loyalty = math.min(100f, controlPoint.Loyalty + dt * passiveStabilization);
                     if (controlPoint.ControlState == ControlState.Occupied &&
                         controlPoint.Loyalty >= StabilizedLoyaltyThreshold)
                     {
@@ -116,7 +120,9 @@ namespace Bloodlines.Systems
                 {
                     controlPoint.CaptureFactionId = default;
                     controlPoint.CaptureProgress = 0f;
-                    controlPoint.Loyalty = math.min(100f, controlPoint.Loyalty + dt * ActiveStabilizationPerSecond);
+                    float activeStabilization = ActiveStabilizationPerSecond *
+                        ResolveStabilizationMultiplier(entityManager, claimantFactionId);
+                    controlPoint.Loyalty = math.min(100f, controlPoint.Loyalty + dt * activeStabilization);
                     if (controlPoint.ControlState == ControlState.Occupied &&
                         controlPoint.Loyalty >= StabilizedLoyaltyThreshold)
                     {
@@ -164,6 +170,16 @@ namespace Bloodlines.Systems
                 controlPoint.ControlState = ControlState.Occupied;
                 controlPoint.IsContested = false;
             }
+        }
+
+        static float ResolveStabilizationMultiplier(EntityManager entityManager, FixedString32Bytes factionId)
+        {
+            return DynastyPoliticalEventUtility.TryGetAggregateByFactionId(
+                entityManager,
+                factionId,
+                out var aggregate)
+                ? math.max(0.1f, aggregate.StabilizationMultiplier)
+                : 1f;
         }
     }
 }

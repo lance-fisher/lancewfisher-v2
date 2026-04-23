@@ -76,6 +76,14 @@ namespace Bloodlines.Systems
                     entityManager.HasComponent<SuccessionCrisisComponent>(factionEntity)
                         ? entityManager.GetComponentData<SuccessionCrisisComponent>(factionEntity).ResourceTrickleFactor
                         : 1f;
+                if (DynastyPoliticalEventUtility.TryGetAggregate(
+                    entityManager,
+                    factionEntity,
+                    out var politicalEvents))
+                {
+                    politicalYieldMultiplier *= politicalEvents.ResourceTrickleFactor;
+                }
+
                 float finalYield = territoryYield * politicalYieldMultiplier;
 
                 var resources = entityManager.GetComponentData<ResourceStockpileComponent>(factionEntity);
