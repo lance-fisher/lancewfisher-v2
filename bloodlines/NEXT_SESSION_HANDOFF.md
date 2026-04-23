@@ -5037,3 +5037,38 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
     unstaged; Unity dirties it during validation and it is unrelated to this
     slice
+
+## 2026-04-23 Dynasty Minor-House Levy Completion
+
+- Branch lane:
+  - `codex/unity-dynasty-minor-house-levy-complete`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-dynasty-minor-house-levy-completion.md`
+- Completed in this slice:
+  - the already-landed `MinorHouseLevySystem` was verified against the browser
+    decay, loyalty-gate, and unit-tier selection rules; the runtime itself did
+    not need another state-machine rewrite on the current master line
+  - `BloodlinesDebugCommandSurface.Dynasty` now exposes
+    `TryDebugGetMinorHouseLevyState` so the live claim id, levy status,
+    accumulator, unit profile, retinue state, last unit, and parent pressure
+    context are directly inspectable
+  - `BloodlinesMinorHouseLevyParitySmokeValidation` now includes a new
+    low-loyalty unsettled-claim phase proving that a stabilized claim at
+    loyalty `47` stays blocked, decays progress, and reports the same
+    `Status=Unsettled` state through the debug surface
+  - `LesserHouseLoyaltyDriftSystem` now explicitly initializes
+    `LastLevyUnitId` for spawned breakaway minor houses, and
+    `scripts/Invoke-BloodlinesUnityMinorHouseLevyParitySmokeValidation.ps1`
+    now waits for explicit PASS/FAIL markers and reruns once if Unity exits
+    before the log fully flushes
+- Validation state:
+  - dedicated minor-house levy parity smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green at contract revision `105`
+- Immediate next action:
+  - claim Priority 14 from
+    `D:\ProjectsHome\Bloodlines\03_PROMPTS\CODEX_MULTI_DAY_DIRECTIVE_2026-04-23.md`
+  - open a fresh `codex/unity-world-trueborn-rise-arc-1` branch from updated
+    canonical `master`
+  - implement `TruebornRiseArcComponent`, `TruebornRiseArcSystem`, and a
+    dedicated smoke validator before rerunning the full governed 10-gate chain

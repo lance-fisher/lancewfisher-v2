@@ -4170,3 +4170,32 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Contract revision advanced `103 -> 104` and records the new
   `world-governance-coalition` lane on canonical `master`. The next additive
   pickup is Priority 13 Minor House Levy Validation and Completion.
+
+## 2026-04-23 Dynasty Minor-House Levy Completion Slice
+
+- Branch lane: `codex/unity-dynasty-minor-house-levy-complete`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-dynasty-minor-house-levy-completion.md`.
+- Completed in this slice:
+  - the already-landed `MinorHouseLevySystem` was revalidated against the
+    browser decay, loyalty-gate, and levy-tier profile rules and did not
+    require a state-machine rewrite on the current master line
+  - `BloodlinesDebugCommandSurface.Dynasty` now exposes
+    `TryDebugGetMinorHouseLevyState(...)` so live levy claim, status, progress,
+    retinue, last-unit, and parent-pressure context can be inspected directly
+  - `BloodlinesMinorHouseLevyParitySmokeValidation` now adds an explicit
+    low-loyalty unsettled-claim phase proving that a stabilized claim at
+    loyalty `47` decays progress, issues no levy, and reports the same blocked
+    state through the new debug readout
+  - `LesserHouseLoyaltyDriftSystem` now initializes `LastLevyUnitId` on spawned
+    minor houses, and
+    `scripts/Invoke-BloodlinesUnityMinorHouseLevyParitySmokeValidation.ps1`
+    now waits for explicit PASS/FAIL markers so Unity batchmode exit noise does
+    not false-red the dedicated validator
+- Validation state:
+  - dedicated minor-house levy parity smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green after contract revision `105`
+- Contract revision advanced `104 -> 105` and keeps the
+  `dynasty-house-parity` lane paused on canonical `master`. The next additive
+  pickup is Priority 14 Trueborn City Rise Arc (Sub-Slice 1 of 3).
