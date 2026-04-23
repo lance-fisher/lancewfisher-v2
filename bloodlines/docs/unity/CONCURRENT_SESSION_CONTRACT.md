@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 104
+- Revision: 105
 - Last Updated: 2026-04-23
-- Last Updated By: codex-world-governance-coalition-2026-04-23
-- Supersedes: revision 103 (Records the validated `world-governance-coalition` slice on the current master line and advances the next clean Codex pickup to Priority 13 minor-house levy validation.)
+- Last Updated By: codex-dynasty-minor-house-levy-2026-04-23
+- Supersedes: revision 104 (Records the validated dynasty minor-house levy completion follow-up on the current master line and advances the next clean Codex pickup to Priority 14 Trueborn rise arc.)
 
 
 ## Purpose
@@ -960,7 +960,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: dynasty-house-parity
 
-- Status: paused (marriage, lesser-house, and minor-house parity stack landed cleanly)
+- Status: paused (minor-house levy completion follow-up landed on canonical `master`; no branch currently in flight)
 - Branch Prefix: `codex/unity-dynasty-*`
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -977,16 +977,22 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnityMarriageParitySmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityLesserHouseLoyaltyParitySmokeValidation.ps1`
   - `scripts/Invoke-BloodlinesUnityMinorHouseLevyParitySmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Dynasty.cs` -- additive `TryDebugGetMinorHouseLevyState(...)` readout only
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-18-unity-tier2-batch-dynasty-systems.md`
   - `docs/unity/session-handoffs/2026-04-20-unity-dynasty-marriage-parity.md`
   - `docs/unity/session-handoffs/2026-04-20-unity-dynasty-lesser-house-loyalty-parity.md`
   - `docs/unity/session-handoffs/2026-04-20-unity-dynasty-minor-house-levy-parity.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-dynasty-minor-house-levy-completion.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `MARRIAGE_GESTATION_IN_WORLD_DAYS` (6088), `MARRIAGE_DISSOLUTION_LEGITIMACY_LOSS` (6089), `MARRIAGE_DISSOLUTION_OATHKEEPING_GAIN` (6090), `dissolveMarriageFromDeath` (6382), `tickLesserHouseLoyaltyDrift` (~6631), `spawnDefectedMinorTerritoryClaim` (~6801), `spawnDefectedMinorFaction` (~6851), `getMinorHouseClaim` (~6982), `ensureMinorHouseLevyState` (~6996), `getMinorHouseRetinueCap` (~7011), `pickMinorHouseLevyProfile` (~7024), `spawnMinorHouseRetinueUnit` (~7034), `tickMinorHouseTerritorialLevies` (~7060), `getMinorHousePressureOpportunityProfile` (~13913), `MARRIAGE_PROPOSAL_EXPIRATION_IN_WORLD_DAYS` (7272), `tickMarriageProposalExpiration` (7274), `tickMarriageDissolutionFromDeath` (7471), `tickMarriageGestation` (7496)
   - `tests/runtime-bridge.mjs` mixed-bloodline and death-dissolution assertions (3180-3229, 3270-3297)
-- Current Branch In Flight: none
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-20-unity-dynasty-minor-house-levy-parity.md`
+- Current Branch In Flight: none (validated follow-up landed onto canonical `master` in this session)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-dynasty-minor-house-levy-completion.md`
+- Last Slice State:
+  - the dedicated levy parity validator now proves the low-loyalty unsettled claim gate through both runtime state and the new debug surface readout
+  - breakaway minor-house levy state now explicitly initializes `LastLevyUnitId`, and the dedicated wrapper now honors explicit PASS markers plus delayed Unity log flushes
 
 ### Lane: scout-raids-logistics-interdiction
 
@@ -1238,7 +1244,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is Priority 13 `dynasty-minor-house-levy`.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation and player covert ops lanes are both now landed on master. Under the current directive order, the next clean Codex pickup is Priority 14 `world-trueborn-rise`.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 

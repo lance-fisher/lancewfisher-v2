@@ -2150,6 +2150,15 @@
       "description": "The governance coalition-pressure slice is now complete on branch. `TerritorialGovernanceRecognitionComponent` and `GovernanceCoalitionPressureSystem` add the browser territorial-governance recognition / acceptance / coalition-pressure seam under `WorldPressure/**`: kingdom faction roots now auto-seed live recognition state, acceptance seed/target/rise/fall terms, sustain and victory timers, weakest-march tracking, and 90-second hostile-alliance cycles that erode frontier loyalty, legitimacy, and acceptance momentum above the 60% alliance threshold. `WorldPressureComponent` plus `WorldPressureEscalationSystem` now carry the territorial-governance recognition contribution, `VictoryConditionEvaluationSystem` now resolves Territorial Governance from the live recognition surface first while preserving the prior fallback, and `BloodlinesDebugCommandSurface.WorldPressure` plus `BloodlinesGovernanceCoalitionPressureSmokeValidation` and its wrapper expose and prove bootstrap issuance, above-threshold pressure, below-threshold non-triggering, and completed-recognition victory. The full governed 10-gate chain is green with contract rev 103->104.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-governance-coalition-pressure.md",
       "validation_gates": "all 10 green plus governance coalition pressure smoke"
+    },
+    {
+      "lane": "dynasty-minor-house-levy-completion",
+      "date": "2026-04-23",
+      "branch": "codex/unity-dynasty-minor-house-levy-complete",
+      "status": "complete",
+      "description": "The dynasty minor-house levy completion follow-up is now complete on branch. The already-landed `MinorHouseLevySystem` was revalidated against the browser decay, loyalty gate, and levy-tier selection rules and required no core state-machine rewrite; this slice instead closes the remaining proof and observability gaps. `BloodlinesDebugCommandSurface.Dynasty` now exposes `TryDebugGetMinorHouseLevyState(...)`, `BloodlinesMinorHouseLevyParitySmokeValidation` now adds an explicit unsettled-claim phase proving loyalty-47 claims decay progress and stay blocked while surfacing the same status through the debug readout, `LesserHouseLoyaltyDriftSystem` now initializes `LastLevyUnitId` on spawned minor houses, and `scripts/Invoke-BloodlinesUnityMinorHouseLevyParitySmokeValidation.ps1` now treats explicit PASS markers as authoritative even when Unity batchmode exits before the log fully flushes. The full governed 10-gate chain is green with contract rev 104->105.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-dynasty-minor-house-levy-completion.md",
+      "validation_gates": "all 10 green plus minor-house levy parity smoke"
     }
   ]
 }
