@@ -4735,6 +4735,37 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     unstaged; Unity dirties it during validation and it is unrelated to this
     slice
 
+## 2026-04-23 Faith Verdant Warden Rerun Follow-Up
+
+- Branch lane:
+  - `codex/unity-faith-verdant-warden-rerun`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-faith-verdant-warden-rerun.md`
+- Completed in this follow-up:
+  - detected that `origin/master` had already landed the canonical
+    `codex/unity-faith-verdant-warden` runtime slice during local rerun
+    validation, so master's Verdant runtime was preserved instead of being
+    replaced
+  - hardened
+    `scripts/Invoke-BloodlinesUnityCombatSmokeValidation.ps1`
+    and
+    `scripts/Invoke-BloodlinesUnitySiegeSmokeValidation.ps1`
+    so explicit PASS markers now override Unity batchmode exit `-1`
+  - normalized generated `Assembly-CSharp*.csproj` Unity.Entities analyzer
+    roots to the canonical
+    `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache`
+    surface and removed the duplicate rerun-only Verdant debug-partial
+    registration
+- Validation state:
+  - dedicated Verdant Warden smoke green against the already-landed runtime
+  - all 10 required governed gates green after the final serial rerun
+- Immediate next action:
+  - claim Priority 8 from
+    `D:\\ProjectsHome\\Bloodlines\\03_PROMPTS\\CODEX_MULTI_DAY_DIRECTIVE_2026-04-24.md`
+  - open `codex/unity-faith-exposure-walker` from updated `master`
+  - port sacred-site exposure spread plus wayshrine amplification with a
+    dedicated smoke validator
+
 ## 2026-04-23 Faith Verdant Warden
 
 - Branch lane:
