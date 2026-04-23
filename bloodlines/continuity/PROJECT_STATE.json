@@ -2294,6 +2294,15 @@
       "description": "The player succession influence slice is now complete on branch. SuccessionPreferenceComponent, PlayerSuccessionPreferenceRequestComponent, and SuccessionPreferenceResolutionSystem add a player-diplomacy succession-planning seam that lets the player kingdom pay 50 gold and 4 legitimacy to designate a preferred eligible heir for up to 365 in-world days even though the browser reference has no direct succession-preference helper. DynastySuccessionSystem now consumes that live preference before its existing fallback succession chain, BloodlinesDebugCommandSurface.PlayerDiplomacy exposes TryDebugSetSuccessionPreference(...) plus TryDebugGetSuccessionPreferenceState(...), and BloodlinesPlayerSuccessionInfluenceSmokeValidation with scripts/Invoke-BloodlinesUnityPlayerSuccessionInfluenceSmokeValidation.ps1 prove designation cost deduction, preferred-heir promotion, and invalid-preference fallback. The full governed 10-gate chain plus the dedicated succession influence smoke are green and the contract staleness recheck passed at revision 118.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-player-succession-influence.md",
       "validation_gates": "all 10 green plus player succession influence smoke"
+    },
+    {
+      "lane": "player-succession-influence-landing",
+      "date": "2026-04-23",
+      "branch": "master",
+      "status": "landed",
+      "description": "The player succession influence slice has now been merged onto canonical master via merge commit fcfbc39c. SuccessionPreferenceComponent, PlayerSuccessionPreferenceRequestComponent, and SuccessionPreferenceResolutionSystem now live on the merged master-compatible line so the player kingdom can pay 50 gold and 4 legitimacy to designate a preferred eligible heir for up to 365 in-world days before the existing succession cascade executes. DynastySuccessionSystem now consumes that live preference before its normal fallback chain, BloodlinesDebugCommandSurface.PlayerDiplomacy exposes TryDebugSetSuccessionPreference(...) and TryDebugGetSuccessionPreferenceState(...), and BloodlinesPlayerSuccessionInfluenceSmokeValidation plus scripts/Invoke-BloodlinesUnityPlayerSuccessionInfluenceSmokeValidation.ps1 now prove designation cost deduction, preferred-heir promotion, and invalid-preference fallback on the merged result. The landing pass reran the full governed 10-gate chain and the dedicated player succession influence smoke green, re-established a local unity/Library junction in the detached landing worktree, and advanced the concurrent-session contract from rev 118 to 119 while clearing the player-diplomacy branch-in-flight marker.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-player-succession-influence-landing.md",
+      "validation_gates": "all 10 green plus player succession influence smoke on merged master"
     }
   ]
 }

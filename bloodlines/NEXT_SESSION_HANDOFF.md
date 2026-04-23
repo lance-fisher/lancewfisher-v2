@@ -5582,3 +5582,30 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
   - do not reopen the stale historical
     `codex/unity-contested-territory-pressure` branch after landing; the next
     non-AI Codex pickup is Priority 21 `siege-escalation-arc`
+
+## 2026-04-23 Player Succession Influence Landing
+
+- Landing state:
+  - merged `codex/unity-player-succession-influence` onto canonical `master`
+    via merge commit `fcfbc39c`
+- Landing handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-succession-influence-landing.md`
+- Completed in this landing pass:
+  - reran the full governed 10-gate chain on the merged result
+  - reran the dedicated player succession influence smoke on the merged result
+  - cleared the player-diplomacy branch-in-flight marker in the concurrent
+    session contract
+  - restored the local `unity/Library` junction to
+    `D:\ProjectsHome\Bloodlines\unity\Library` inside the detached landing
+    worktree so the governed build gates succeed there
+- Validation state:
+  - all 10 required governed gates green on the merged result
+  - dedicated player succession influence smoke green on the merged result
+  - contract staleness recheck green at revision `119`
+- Immediate next action:
+  - start the next fresh Priority 21 `codex/unity-siege-escalation-arc`
+    branch from the updated canonical `master`
+  - read the siege escalation seam in `src/game/core/simulation.js` plus the
+    current Unity `Siege/**` surfaces
+  - port the next additive non-AI slice with its own dedicated smoke
+    validator and matching PowerShell wrapper

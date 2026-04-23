@@ -4707,3 +4707,39 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   - merge the branch onto canonical `master` with `git merge --no-ff`
   - rerun the governed gate on the merged result and then move to Priority 21
     `siege-escalation-arc`
+
+## 2026-04-23 Player Succession Influence Landing
+
+- Landing state:
+  - merged `codex/unity-player-succession-influence` onto canonical `master`
+    via merge commit `fcfbc39c`
+- Landing handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-succession-influence-landing.md`
+- Completed in this landing pass:
+  - reran the full governed 10-gate chain on the merged result
+  - reran the dedicated player succession influence smoke on the merged result
+  - cleared the player-diplomacy branch-in-flight state in the concurrent
+    session contract
+  - re-established a local `unity/Library` junction to
+    `D:\ProjectsHome\Bloodlines\unity\Library` inside the detached landing
+    worktree so the governed build gates could resolve
+    `Library\ScriptAssemblies`
+- Validation state:
+  - runtime build green
+  - editor build green with existing repo-wide warnings only
+  - bootstrap runtime smoke green
+  - combat smoke green
+  - canonical scene-shell validation green
+  - fortification smoke green
+  - siege smoke green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - dedicated player succession influence smoke green
+  - final contract staleness recheck green at revision `119`
+- Immediate next action:
+  - start a fresh Priority 21 `codex/unity-siege-escalation-arc` branch from
+    updated canonical `master`
+  - read the siege escalation seam from the browser reference and the current
+    Unity `Siege/**` surfaces
+  - port the next additive non-AI slice with its own dedicated smoke
+    validator and wrapper

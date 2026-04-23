@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 118
+- Revision: 119
 - Last Updated: 2026-04-23
-- Last Updated By: codex-player-succession-influence-2026-04-23
-- Supersedes: revision 117 (Records the player succession influence slice and the narrow `DynastySuccessionSystem` override on the player-diplomacy lane.)
+- Last Updated By: codex-player-succession-influence-landing-2026-04-23
+- Supersedes: revision 118 (Records the player succession influence landing on canonical `master` and clears the branch-in-flight marker.)
 
 
 ## Purpose
@@ -1182,6 +1182,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-22-unity-player-captive-ransom.md`
   - `docs/unity/session-handoffs/2026-04-23-unity-player-captive-ransom-trickle.md`
   - `docs/unity/session-handoffs/2026-04-23-unity-player-succession-influence.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-succession-influence-landing.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `MARRIAGE_REGENCY_LEGITIMACY_COSTS` (6091), `getMarriageAuthorityProfile` (6134), `getMarriageEnvoyProfile` (6192), `buildMarriageGovernanceStatus` (6217), `applyMarriageGovernanceLegitimacyCost` (6232), `getMarriageProposalContext` (6247), `getMarriageProposalTerms` (6296), `getMarriageAcceptanceTerms` (6327), `memberHasActiveMarriage` (7260), `proposeMarriage` (7340), `acceptMarriage` (7388), `tickMarriageDissolutionFromDeath` (7471), `tickMarriageGestation` (7496)
   - `tests/runtime-bridge.mjs` marriage proposal and acceptance assertions (2072-2113, 2240-2308), death-driven dissolution assertions (3234-3298)
@@ -1192,13 +1193,14 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `src/game/core/simulation.js` `getCapturedMemberRansomTerms` (~11343-11431), `startCaptiveRansomOperation` (~11433-11532), `updateCaptiveRansomTrickle` (~4885-4903), `CAPTIVE_INFLUENCE_TRICKLE`, `CAPTIVE_RENOWN_WEIGHT`
   - `src/game/core/simulation.js` `applySuccessionRipple` (~4550-4608) and `backfillHeir` (~4612-4649); no direct browser `PlayerSuccessionPreference` helper exists, so this slice uses the directive-canon seam to pre-select an eligible successor before the landed succession cascade runs
   - `src/game/core/ai.js` captive recovery contest / operator selection logic (~2550-2760)
-- Current Branch In Flight: `codex/unity-player-succession-influence`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-player-succession-influence.md`
+- Current Branch In Flight: none (merged onto canonical `master` via `fcfbc39c` on 2026-04-23)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-player-succession-influence-landing.md`
 - Last Slice State:
-  - kingdom faction roots can now store a paid preferred-heir designation through `SuccessionPreferenceComponent`, and `SuccessionPreferenceResolutionSystem` consumes one-shot player requests while deducting 50 gold and 4 legitimacy
-  - `DynastySuccessionSystem` now checks for a live eligible preferred heir before falling back to default succession order, then clears the consumed or stale preference without widening the broader dynasty lane
-  - `BloodlinesDebugCommandSurface.PlayerDiplomacy` exposes `TryDebugSetSuccessionPreference(...)` and `TryDebugGetSuccessionPreferenceState(...)`, and `BloodlinesPlayerSuccessionInfluenceSmokeValidation` proves designation cost deduction, valid override, and invalid-preference fallback
-  - next Codex pickup should move to Priority 21 `siege-escalation-arc` after this branch lands on canonical `master`
+  - `SuccessionPreferenceComponent`, `PlayerSuccessionPreferenceRequestComponent`, and `SuccessionPreferenceResolutionSystem` now live on canonical `master`, so the player kingdom can pay 50 gold and 4 legitimacy to designate a preferred eligible heir for up to 365 in-world days before the existing succession cascade executes
+  - `DynastySuccessionSystem` now consumes that live preferred-heir designation before falling back to default succession order and clears the preference once it is spent or invalid without widening the broader dynasty lane
+  - `BloodlinesDebugCommandSurface.PlayerDiplomacy` exposes `TryDebugSetSuccessionPreference(...)` and `TryDebugGetSuccessionPreferenceState(...)`, and `BloodlinesPlayerSuccessionInfluenceSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPlayerSuccessionInfluenceSmokeValidation.ps1` now prove designation cost deduction, valid override, and invalid-preference fallback on the merged line
+  - the merged result reran the full governed 10-gate chain plus the dedicated player succession influence smoke green, and the detached landing worktree re-established a local `unity/Library` junction back to `D:\ProjectsHome\Bloodlines\unity\Library`
+  - next Codex pickup should move to Priority 21 `siege-escalation-arc`
 
 ### Lane: player-covert-ops
 
