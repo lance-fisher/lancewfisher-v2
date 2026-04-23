@@ -1,4 +1,6 @@
 using Bloodlines.Components;
+using Bloodlines.Dynasties;
+using Bloodlines.Systems;
 using Unity.Entities;
 using Unity.Mathematics;
 
@@ -114,16 +116,9 @@ namespace Bloodlines.Debug
             Entity arcEntity = query.GetSingletonEntity();
             TruebornRiseArcComponent arc = entityManager.GetComponentData<TruebornRiseArcComponent>(arcEntity);
             var recognitionSlots = entityManager.GetBuffer<TruebornRiseFactionRecognitionSlotElement>(arcEntity);
-
-            int recognizedCount = 0;
-            for (int i = 0; i < recognitionSlots.Length && i < 64; i++)
-            {
-                ulong slotMask = 1UL << i;
-                if ((arc.RecognizedFactionsBitmask & slotMask) != 0UL)
-                {
-                    recognizedCount++;
-                }
-            }
+            int recognizedCount = TruebornRecognitionUtility.CountRecognized(
+                recognitionSlots,
+                arc.RecognizedFactionsBitmask);
 
             readout = new Unity.Collections.FixedString512Bytes(
                 $"Stage={arc.CurrentStage}" +
@@ -159,42 +154,117 @@ namespace Bloodlines.Debug
             TruebornRiseArcComponent arc = entityManager.GetComponentData<TruebornRiseArcComponent>(arcEntity);
             var recognitionSlots = entityManager.GetBuffer<TruebornRiseFactionRecognitionSlotElement>(arcEntity);
             var targetFactionId = new Unity.Collections.FixedString32Bytes(factionId);
-
-            int slotIndex = -1;
-            for (int i = 0; i < recognitionSlots.Length; i++)
+            if (!TruebornRecognitionUtility.TrySetRecognition(
+                    ref arc,
+                    recognitionSlots,
+                    targetFactionId,
+                    recognized))
             {
-                if (recognitionSlots[i].FactionId.Equals(targetFactionId))
-                {
-                    slotIndex = i;
-                    break;
-                }
-            }
-
-            if (slotIndex < 0)
-            {
-                if (recognitionSlots.Length >= 64)
-                {
-                    return false;
-                }
-
-                recognitionSlots.Add(new TruebornRiseFactionRecognitionSlotElement
-                {
-                    FactionId = targetFactionId,
-                });
-                slotIndex = recognitionSlots.Length - 1;
-            }
-
-            ulong slotMask = 1UL << slotIndex;
-            if (recognized)
-            {
-                arc.RecognizedFactionsBitmask |= slotMask;
-            }
-            else
-            {
-                arc.RecognizedFactionsBitmask &= ~slotMask;
+                return false;
             }
 
             entityManager.SetComponentData(arcEntity, arc);
+            return true;
+        }
+
+        public bool TryDebugRecognizeTrueborn(string factionId)
+        {
+            if (string.IsNullOrWhiteSpace(factionId))
+            {
+                return false;
+            }
+
+            var world = World.DefaultGameObjectInjectionWorld;
+            if (world == null) return false;
+
+            var entityManager = world.EntityManager;
+            Entity requestEntity = entityManager.CreateEntity(typeof(PlayerTruebornRecognitionRequestComponent));
+            entityManager.SetComponentData(requestEntity, new PlayerTruebornRecognitionRequestComponent
+            {
+                SourceFactionId = new Unity.Collections.FixedString32Bytes(factionId),
+            });
+            return true;
+        }
+
+        public bool TryDebugGetTruebornRecognitionState(
+            string factionId,
+            out Unity.Collections.FixedString512Bytes readout)
+        {
+            readout = default;
+            if (string.IsNullOrWhiteSpace(factionId))
+            {
+                return false;
+            }
+
+            var world = World.DefaultGameObjectInjectionWorld;
+            if (world == null) return false;
+
+            var entityManager = world.EntityManager;
+            using var arcQuery = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<TruebornRiseArcComponent>());
+            if (arcQuery.IsEmpty)
+            {
+                return false;
+            }
+
+            var targetFactionId = new Unity.Collections.FixedString32Bytes(factionId);
+            Entity factionEntity = FindFactionEntity(entityManager, targetFactionId);
+            if (factionEntity == Entity.Null)
+            {
+                return false;
+            }
+
+            Entity arcEntity = arcQuery.GetSingletonEntity();
+            TruebornRiseArcComponent arc = entityManager.GetComponentData<TruebornRiseArcComponent>(arcEntity);
+            var recognitionSlots = entityManager.GetBuffer<TruebornRiseFactionRecognitionSlotElement>(arcEntity);
+            int slotIndex = TruebornRecognitionUtility.FindRecognitionSlot(recognitionSlots, targetFactionId);
+            bool recognized = TruebornRecognitionUtility.IsRecognized(
+                recognitionSlots,
+                arc.RecognizedFactionsBitmask,
+                targetFactionId);
+
+            float legitimacy = entityManager.HasComponent<DynastyStateComponent>(factionEntity)
+                ? entityManager.GetComponentData<DynastyStateComponent>(factionEntity).Legitimacy
+                : 0f;
+            float influence = 0f;
+            float gold = 0f;
+            if (entityManager.HasComponent<ResourceStockpileComponent>(factionEntity))
+            {
+                var resources = entityManager.GetComponentData<ResourceStockpileComponent>(factionEntity);
+                influence = resources.Influence;
+                gold = resources.Gold;
+            }
+
+            float renown = entityManager.HasComponent<DynastyRenownComponent>(factionEntity)
+                ? entityManager.GetComponentData<DynastyRenownComponent>(factionEntity).RenownScore
+                : 0f;
+
+            int activeCooldownCount = 0;
+            if (entityManager.HasBuffer<DynastyPoliticalEventComponent>(factionEntity))
+            {
+                var politicalEvents = entityManager.GetBuffer<DynastyPoliticalEventComponent>(factionEntity);
+                for (int i = 0; i < politicalEvents.Length; i++)
+                {
+                    var eventType = politicalEvents[i].EventType;
+                    if (eventType.Equals(DynastyPoliticalEventTypes.CovenantTestCooldown) ||
+                        eventType.Equals(DynastyPoliticalEventTypes.DivineRightFailedCooldown))
+                    {
+                        activeCooldownCount++;
+                    }
+                }
+            }
+
+            readout = new Unity.Collections.FixedString512Bytes(
+                $"TruebornRecognition|Faction={targetFactionId}" +
+                $"|Stage={arc.CurrentStage}" +
+                $"|Recognized={(recognized ? "true" : "false")}" +
+                $"|Slot={slotIndex}" +
+                $"|Mask={arc.RecognizedFactionsBitmask}" +
+                $"|Legitimacy={(int)math.round(legitimacy)}" +
+                $"|Influence={(int)math.round(influence)}" +
+                $"|Gold={(int)math.round(gold)}" +
+                $"|Renown={(int)math.round(renown)}" +
+                $"|Cooldowns={activeCooldownCount}");
             return true;
         }
     }

@@ -4232,3 +4232,40 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   `world-trueborn-rise` lane on canonical `master`. The next additive pickup
   is the follow-on Trueborn recognition / diplomatic exemption slice when the
   next directive window opens.
+
+## 2026-04-23 Trueborn City Rise Arc (Sub-Slice 2)
+
+- Branch lane: `codex/unity-world-trueborn-rise-arc-2`.
+- Dedicated slice handoff:
+  `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-2.md`.
+- Completed in this slice:
+  - `PlayerTruebornRecognitionRequestComponent`,
+    `TruebornRecognitionUtility`, and
+    `TruebornRecognitionResolutionSystem` now resolve player-facing Trueborn
+    recognition dispatch into the existing rise-arc singleton: eligible
+    kingdoms spend `40` influence, `60` gold, and `5` legitimacy, set their
+    recognition bit, gain a `6`-renown standing bonus, and clear Covenant Test
+    / Divine Right cooldown entries
+  - `TruebornRiseArcSystem` and
+    `BloodlinesDebugCommandSurface.WorldPressure` now share the recognition
+    utility for slot lookup and bitmask counting, and the debug surface now
+    exposes `TryDebugRecognizeTrueborn(...)` plus
+    `TryDebugGetTruebornRecognitionState(...)`
+  - `BloodlinesTruebornRiseArcSmokeValidation` now adds explicit recognition
+    resolution and duplicate-request/no-op phases proving the cost deduction,
+    renown bump, cooldown clearing, and subsequent pressure exemption on the
+    current master-compatible runtime
+  - the branch-local worktree required a local `unity/Library` junction to
+    `D:\ProjectsHome\Bloodlines\unity\Library` before the governed
+    `dotnet build` gates could resolve `Library\ScriptAssemblies`
+  - the shared request component is AI-compatible, but actual AI request
+    emission remains deferred to the `ai-strategic-layer` lane because
+    `unity/Assets/_Bloodlines/Code/AI/**` is still forbidden here
+- Validation state:
+  - dedicated Trueborn rise-arc smoke green
+  - all 10 required governed gates green
+  - post-append staleness recheck green at contract revision `107`
+- Contract revision advanced `106 -> 107` and records the widened
+  `world-trueborn-rise` lane on canonical `master`. The next additive pickup
+  is Priority 16 Trueborn diplomatic escalation / ultimatum handling from
+  `D:\ProjectsHome\Bloodlines\03_PROMPTS\CODEX_MULTI_DAY_DIRECTIVE_2026-04-24.md`.
