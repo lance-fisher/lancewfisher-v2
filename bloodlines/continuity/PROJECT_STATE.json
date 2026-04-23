@@ -1,6 +1,6 @@
 {
   "project": "Bloodlines",
-  "updated_at": "2026-04-22T10:52:00-06:00",
+  "updated_at": "2026-04-23T01:43:46.9063505-06:00",
   "canonical_root": "D:\\ProjectsHome\\Bloodlines",
   "physical_backing_path": "D:\\ProjectsHome\\FisherSovereign\\lancewfisher-v2\\bloodlines",
   "compatibility_paths": [
@@ -2054,6 +2054,15 @@
       "description": "The commander aura slice is now complete on branch. `CommanderAuraComponent`, `CommanderAuraRecipientComponent`, `CommanderAuraCanon`, and `CommanderAuraSystem` port the browser commander-aura seam into Unity ECS: commanders resolve doctrine-aware, conviction-scaled aura profiles from renown, faith doctrine, and conviction band, then apply the strongest nearby same-faction aura to friendly units each simulation frame while cleanly restoring attack, sight, and movement deltas when recipients leave range or the commander dies. `AttackResolutionSystem` and `CombatStanceResolutionSystem` now consume the live aura through narrow approved hooks only, `BloodlinesDebugCommandSurface.CommanderAura` exposes per-commander aura readout, and `BloodlinesCommanderAuraSmokeValidation` plus `scripts/Invoke-BloodlinesUnityCommanderAuraSmokeValidation.ps1` prove in-range buffs, out-of-range non-application, debug visibility, and death cleanup. Contract rev 94->95.",
       "handoff": "docs/unity/session-handoffs/2026-04-22-unity-combat-commander-aura.md",
       "validation_gates": "all 10 green plus commander aura smoke"
+    },
+    {
+      "lane": "dynasty-succession-crisis-rerun",
+      "date": "2026-04-23",
+      "branch": "codex/unity-dynasty-succession-crisis-rerun",
+      "status": "complete",
+      "description": "The succession-crisis slice has been replayed onto the current master-compatible line without merging the stale historical branch that carried unrelated backwards diffs. `SuccessionCrisisComponent`, `SuccessionCrisisEvaluationSystem`, and `SuccessionCrisisRecoverySystem` remain the dynasty-owned runtime seam for browser-aligned crisis severity, opening loyalty shock, legitimacy drain, territorial trickle throttling, and conviction-aware recovery; `BloodlinesSuccessionCrisisSmokeValidation` and its wrapper remain the dedicated proof surface, and the wrapper now waits for explicit Unity pass/fail markers and retries once if batchmode exits before the marker flushes. The local generated `Assembly-CSharp*.csproj` files were repaired so analyzer roots now point at the canonical `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache` surface, and this worktree required a local `unity/Library` junction to the canonical root before the governed `dotnet build` gates could resolve `Library\\ScriptAssemblies`. Contract rev 95->96.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-dynasty-succession-crisis-rerun.md",
+      "validation_gates": "all 10 green plus succession crisis smoke"
     }
   ]
 }

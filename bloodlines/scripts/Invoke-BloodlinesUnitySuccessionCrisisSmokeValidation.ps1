@@ -27,28 +27,58 @@ $arguments = @(
     '-executeMethod', 'Bloodlines.EditorTools.BloodlinesSuccessionCrisisSmokeValidation.RunBatchSuccessionCrisisSmokeValidation'
 )
 
+function Get-ValidationOutcome {
+    if (-not (Test-Path -LiteralPath $logPath)) { return 'unknown' }
+    $content = Get-Content -Path $logPath -Raw
+    if ($content -match 'BLOODLINES_SUCCESSION_CRISIS_SMOKE PASS') { return 'passed' }
+    if ($content -match 'BLOODLINES_SUCCESSION_CRISIS_SMOKE FAIL' -or
+        $content -match 'errored' -or $content -match 'timed out') { return 'failed' }
+    return 'unknown'
+}
+
+function Wait-ForValidationOutcome {
+    param([int]$TimeoutSeconds = 180, [int]$PollSeconds = 2)
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $deadline) {
+        $outcome = Get-ValidationOutcome
+        if ($outcome -ne 'unknown') { return $outcome }
+        Start-Sleep -Seconds $PollSeconds
+    }
+    return Get-ValidationOutcome
+}
+
+function Invoke-UnityValidationPass {
+    if (Test-Path -LiteralPath $logPath) { Remove-Item -LiteralPath $logPath -Force }
+    $process = Start-Process -FilePath $unityPath -ArgumentList $arguments -PassThru -NoNewWindow -Wait
+    return $process.ExitCode
+}
+
 Write-Host 'Running Bloodlines Unity succession crisis smoke validation...'
 Write-Host "Unity:   $unityPath"
 Write-Host "Project: $projectPath"
 Write-Host "Log:     $logPath"
 
-if (Test-Path -LiteralPath $logPath) {
-    Remove-Item -LiteralPath $logPath -Force
+$exitCode = Invoke-UnityValidationPass
+$outcome  = Get-ValidationOutcome
+
+if ($outcome -eq 'unknown') {
+    $outcome = Wait-ForValidationOutcome
 }
 
-$process = Start-Process -FilePath $unityPath -ArgumentList $arguments -PassThru -NoNewWindow -Wait
-$exitCode = $process.ExitCode
-
-if (-not (Test-Path -LiteralPath $logPath)) {
-    Write-Host "Succession crisis smoke log missing. Unity exit code $exitCode"
-    exit 1
+if ($outcome -eq 'unknown') {
+    $exitCode = Invoke-UnityValidationPass
+    $outcome  = Wait-ForValidationOutcome
 }
 
-$content = Get-Content -Path $logPath -Raw
-if ($content -match 'BLOODLINES_SUCCESSION_CRISIS_SMOKE PASS') {
+if ($outcome -eq 'passed') {
     Write-Host 'Succession crisis smoke validation passed.'
     exit 0
 }
 
-Write-Host "Succession crisis smoke validation failed. Unity exit code $exitCode"
+if ($outcome -eq 'failed') {
+    Write-Host "Succession crisis smoke validation FAILED. Unity exit code $exitCode"
+    exit 1
+}
+
+Write-Host 'Succession crisis smoke produced no pass/fail marker. Check the log.'
 exit 1
