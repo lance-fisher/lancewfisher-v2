@@ -2258,6 +2258,15 @@
       "description": "The player covenant-test dispatch slice has now been merged onto canonical `master` via merge commit `de39a803`. `PlayerCovenantTestDispatchStateComponent`, `PlayerCovenantTestDispatchSystem`, the widened `BloodlinesDebugCommandSurface.Faith` covenant-dispatch helpers, and `BloodlinesPlayerCovenantTestDispatchSmokeValidation` plus `Invoke-BloodlinesUnityPlayerCovenantTestDispatchSmokeValidation.ps1` now live on the merged master-compatible line. The landing pass reran the full governed 10-gate chain and the dedicated player covenant-test dispatch smoke green on the merged result, re-canonicalized `unity/Assembly-CSharp*.csproj` analyzer roots back to `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache` after the landing builds rewrote them, and contract rev 113->114 cleared the faith-covenant-test branch-in-flight marker while pointing the next Codex pickup at Priority 19 `contested-territory-pressure`.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-player-covenant-test-dispatch-landing.md",
       "validation_gates": "all 10 green plus player covenant-test dispatch smoke on merged master"
+    },
+    {
+      "lane": "hud-political-state-panels-rerun-master-refresh",
+      "date": "2026-04-23",
+      "branch": "master",
+      "status": "landed",
+      "description": "The HUD political-state panels rerun has now been refreshed over the current canonical `master` lineage by merging `origin/master` into the landing branch via `db79f248`, preserving the original HUD landing history while proving the same HUD systems still validate on top of the already-landed player covenant-test dispatch line. No new HUD behavior was introduced; the refresh reran the full governed 10-gate chain plus the dedicated political-state HUD smoke and the dedicated player covenant-test dispatch smoke green on the merged result, re-preserved canonical `unity/Assembly-CSharp*.csproj` analyzer roots at `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache`, and advanced the concurrent-session contract from rev 114 to 115 while keeping Priority 19 `contested-territory-pressure` as the next Codex pickup.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels-rerun-master-refresh.md",
+      "validation_gates": "all 10 green plus political state HUD smoke and player covenant-test dispatch smoke on refreshed merged master"
     }
   ]
 }

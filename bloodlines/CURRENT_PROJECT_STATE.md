@@ -4550,3 +4550,42 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
 - Immediate next action:
   - start Priority 19 `codex/unity-contested-territory-pressure` from the
     updated canonical `master`
+
+## 2026-04-23 HUD Political State Panels Rerun Master Refresh
+
+- Landing branch:
+  - `codex/land-hud-political-state-panels-rerun`
+- Merge chain:
+  - merged current `origin/master` (including the landed
+    `player-covenant-test-dispatch` slice) into the HUD rerun landing branch
+    via `db79f248`
+- Dedicated refresh handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels-rerun-master-refresh.md`
+- Completed in this refresh pass:
+  - revalidated the already-landed HUD political-state panel slice on top of
+    the newer canonical `master` ancestry without introducing any new HUD
+    behavior or touching `unity/Assets/_Bloodlines/Code/AI/**`
+  - reran the full governed 10-gate chain on the merged result
+  - reran the dedicated political-state HUD smoke and the dedicated player
+    covenant-test dispatch smoke on the merged result
+  - preserved the canonical
+    `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache` analyzer roots in
+    committed `unity/Assembly-CSharp*.csproj` after the detached worktree
+    builds rewrote the local copies
+- Validation state:
+  - runtime build green
+  - editor build green with existing repo-wide warnings only
+  - bootstrap runtime smoke green
+  - combat smoke green
+  - canonical scene-shell validation green
+  - fortification smoke green
+  - siege smoke green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - dedicated political-state HUD smoke green
+  - dedicated player covenant-test dispatch smoke green
+  - final contract staleness recheck green at revision `115`
+- Contract revision advanced `114 -> 115`.
+- Immediate next action:
+  - start Priority 19 `codex/unity-contested-territory-pressure` from the
+    updated canonical `master`

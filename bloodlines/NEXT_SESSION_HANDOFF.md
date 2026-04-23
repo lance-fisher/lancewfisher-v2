@@ -5453,3 +5453,44 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     surfaces
   - port the next additive non-AI slice with a dedicated smoke validator and
     matching PowerShell wrapper
+
+## 2026-04-23 HUD Political State Panels Rerun Master Refresh
+
+- Landing branch:
+  - `codex/land-hud-political-state-panels-rerun`
+- Merge commit:
+  - `db79f248`
+- Refresh handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels-rerun-master-refresh.md`
+- Completed in this refresh pass:
+  - merged the already-landed HUD rerun branch forward over the current
+    canonical `master` line, which now also includes the player
+    covenant-test dispatch landing
+  - reran the full governed 10-gate chain on the refreshed merged result
+  - reran the dedicated political-state HUD smoke and the dedicated player
+    covenant-test dispatch smoke on the refreshed merged result
+  - preserved the canonical
+    `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache` analyzer roots in
+    committed `unity/Assembly-CSharp*.csproj` after the detached worktree
+    builds rewrote the local copies
+- Validation state:
+  - runtime build green
+  - editor build green with existing repo-wide warnings only
+  - bootstrap runtime smoke green
+  - combat smoke green
+  - canonical scene-shell validation green
+  - fortification smoke green
+  - siege smoke green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - dedicated political-state HUD smoke green
+  - dedicated player covenant-test dispatch smoke green
+  - final contract staleness recheck green at revision `115`
+- Immediate next action:
+  - open a fresh `codex/unity-contested-territory-pressure` branch from
+    updated canonical `master`
+  - read the browser territorial pressure seam in
+    `src/game/core/simulation.js` plus the current Unity `WorldPressure/**`
+    surfaces
+  - port the next additive non-AI slice with a dedicated smoke validator and
+    matching PowerShell wrapper
