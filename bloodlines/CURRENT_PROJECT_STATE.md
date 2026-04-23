@@ -4305,3 +4305,34 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   `world-trueborn-rise` lane with sub-slice 3 validated on branch
   `codex/unity-world-trueborn-rise-arc-3`. The next additive pickup after
   landing is the next remaining non-AI Trueborn follow-up on a fresh branch.
+
+## 2026-04-23 Trueborn City Rise Arc (Sub-Slice 3) Landing
+
+- Landing commit: `6b696259`.
+- Completed in this landing pass:
+  - merged `codex/unity-world-trueborn-rise-arc-3` onto canonical `master`
+    on a clean detached landing worktree because the existing local `master`
+    checkout contained unrelated dirty covert-ops follow-up files that could
+    not be safely reused for this merge
+  - reran the full governed 10-gate chain on the merged result
+  - reran the dedicated Trueborn diplomatic escalation smoke on the merged
+    result
+  - created the landing handoff document and cleared the
+    `world-trueborn-rise` branch-in-flight marker in the concurrent-session
+    contract
+- Validation state:
+  - runtime build green
+  - editor build green
+  - bootstrap runtime smoke green
+  - combat smoke green
+  - canonical scene-shell validation green
+  - fortification smoke green
+  - siege smoke green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - contract staleness green at revision `109`
+  - dedicated Trueborn diplomatic escalation smoke green
+- Contract revision advanced `108 -> 109` and keeps the
+  `world-trueborn-rise` lane active on canonical `master` with no branch in
+  flight. The next additive pickup is the next remaining non-AI Trueborn
+  follow-up on a fresh branch.

@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 108
+- Revision: 109
 - Last Updated: 2026-04-23
 - Last Updated By: codex-world-trueborn-rise-2026-04-23
-- Supersedes: revision 107 (Records the validated Trueborn rise-arc diplomatic-escalation sub-slice 3 on branch `codex/unity-world-trueborn-rise-arc-3` and widens the world-trueborn-rise lane ownership surface.)
+- Supersedes: revision 108 (Records the merged Trueborn rise-arc diplomatic-escalation sub-slice 3 on canonical `master` and clears the world-trueborn-rise branch-in-flight marker.)
 
 
 ## Purpose
@@ -687,7 +687,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: world-trueborn-rise
 
-- Status: active (validated Trueborn rise-arc sub-slices 1-2 landed on canonical `master`; sub-slice 3 is validated on branch `codex/unity-world-trueborn-rise-arc-3`)
+- Status: active (validated Trueborn rise-arc sub-slices 1-3 are now landed on canonical `master`; no branch currently in flight)
 - Branch Prefix: `codex/unity-world-trueborn-rise-arc-1`, `codex/unity-world-trueborn-rise-arc-2`, `codex/unity-world-trueborn-rise-arc-3`
 - Owner Agent: codex
 - Owned Paths (exclusive):
@@ -722,10 +722,11 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-1.md`
   - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-2.md`
   - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3-landing.md`
 - Browser Reference:
   - `src/game/core/simulation.js` `tickTruebornRiseArc`, `getTruebornChallengeLevel`, `getTruebornRecognitionTerms`, `recognizeTruebornClaim`, `recognizedPressureMultiplier`, and `TRUEBORN_RISE_STAGE_*` constants
-- Current Branch In Flight: `codex/unity-world-trueborn-rise-arc-3`
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3.md`
+- Current Branch In Flight: none (merged to canonical `master` via `6b696259` on 2026-04-23)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3-landing.md`
 
 ### Lane: ai-strategic-layer
 

@@ -2186,6 +2186,15 @@
       "description": "The Trueborn rise-arc sub-slice 3 is now complete on branch. `TruebornRiseArcComponent` now stores the active ultimatum target, issued/deadline timings, per-day loyalty and legitimacy pressure values, and the issuing stage number so the late-stage escalation seam lives on the same singleton as the earlier rise-arc work. `TruebornRecognitionUtility` plus the new `TruebornDiplomaticEscalationSystem` now issue a timed recognition ultimatum to the dominant kingdom once the arc reaches stages 4-5, clear that ultimatum on pre-deadline recognition, and apply extra weakest-march loyalty pressure plus dynasty legitimacy strain after expiry without touching `unity/Assets/_Bloodlines/Code/AI/**`. `BloodlinesDebugCommandSurface.WorldPressure` now exposes `TryDebugGetTruebornUltimatumState(...)`, `BloodlinesTruebornDiplomaticEscalationSmokeValidation` plus its wrapper prove issuance, recognition clearance, and expiry fallout, and the worktree-local `unity/Library` / `Assembly-CSharp*.csproj` surfaces were repaired back to canonical `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache` analyzer roots so governed builds resolve Unity assemblies again. The full governed 10-gate chain is green with contract rev 107->108.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3.md",
       "validation_gates": "all 10 green plus Trueborn diplomatic escalation smoke"
+    },
+    {
+      "lane": "world-trueborn-rise-slice-3-landing",
+      "date": "2026-04-23",
+      "branch": "master",
+      "status": "landed",
+      "description": "The Trueborn rise-arc sub-slice 3 has now been merged onto canonical `master` via merge commit `6b696259`. The landing pass was performed on a clean detached worktree because the existing local `master` checkout was already dirty with unrelated covert-ops follow-up files, but the merged result tree matches the validated branch tip and preserves the widened `world-trueborn-rise` lane state. The full governed 10-gate chain plus the dedicated Trueborn diplomatic escalation smoke reran green on the merged result, the landing handoff was recorded, and contract rev 108->109 cleared the branch-in-flight marker while leaving the lane ready for the next non-AI Trueborn follow-up.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-world-trueborn-rise-arc-3-landing.md",
+      "validation_gates": "all 10 green plus Trueborn diplomatic escalation smoke on merged master"
     }
   ]
 }

@@ -5192,3 +5192,37 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     `unity/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json`
     unstaged; Unity dirties it during validation and it is unrelated to this
     slice
+
+## 2026-04-23 Trueborn City Rise Arc (Sub-Slice 3) Landing
+
+- Landing commit:
+  - `6b696259`
+- Completed in this landing pass:
+  - merged `codex/unity-world-trueborn-rise-arc-3` onto canonical `master`
+    on a clean detached landing worktree because the local `master` checkout
+    was already dirty with unrelated covert-ops follow-up files
+  - reran the full governed 10-gate chain on the merged result
+  - reran the dedicated Trueborn diplomatic escalation smoke on the merged
+    result
+  - recorded the landing handoff and cleared the
+    `world-trueborn-rise` branch-in-flight marker in the contract
+- Validation state:
+  - runtime build green
+  - editor build green
+  - bootstrap runtime smoke green
+  - combat smoke green
+  - canonical scene-shell validation green
+  - fortification smoke green
+  - siege smoke green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - contract staleness green at revision `109`
+  - dedicated Trueborn diplomatic escalation smoke green
+- Immediate next action:
+  - open a fresh `codex/unity-world-trueborn-rise-*` branch from updated
+    canonical `master`
+  - `D:\ProjectsHome\Bloodlines\03_PROMPTS\CODEX_MULTI_DAY_DIRECTIVE_2026-04-24.md`
+    is not present in this root, so inspect the remaining browser/canon
+    Trueborn behavior directly and pick the cleanest non-AI follow-up
+  - keep `unity/Assets/_Bloodlines/Code/AI/**` untouched unless the
+    `ai-strategic-layer` lane explicitly claims the next AI-facing piece
