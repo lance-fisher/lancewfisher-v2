@@ -148,6 +148,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Definitions\BuildingDefinition.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\CombatStanceComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Definitions\VictoryConditionDefinition.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Combat\CommanderAuraComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AIDivineRightExecutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\FactionTintComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Siege\FieldWaterStrainSystem.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Assets\_Bloodlines\Code\AI\AIMarriageStrategicProfileSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\DynastyRenownLeaderboardHUDComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\RenownAwardRequestComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Combat\CommanderAuraCanon.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\LesserHouseLoyaltyDriftSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\ProjectileFactoryComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Economy\ResourceTrickleBuildingSystem.cs" />
@@ -262,6 +264,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Fortification.BreachReadout.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerMarriageProposalSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\RealmConditionHUDComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.CommanderAura.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Siege\SiegeSupplyInterdictionCanon.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Definitions\UnitDefinition.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\FortificationHUDSystem.cs" />
@@ -275,6 +278,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Components\ControlPointComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Fortification\FortificationCombatantTag.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Conviction\ConvictionScoring.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Combat\CommanderAuraSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerFaithDeclarationUtility.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Stances.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\ProjectileImpactSystem.cs" />

@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 94
+- Revision: 95
 - Last Updated: 2026-04-22
-- Last Updated By: codex-territory-governor-specialization-2026-04-22
-- Supersedes: revision 93 (Records the validated `territory-governor-specialization` slice, adds the governor-governance lane, and points the next Codex pickup at Priority 5 commander aura.)
+- Last Updated By: codex-combat-commander-aura-2026-04-22
+- Supersedes: revision 94 (Records the validated `combat-commander-aura` slice, adds the commander-aura lane, and points the next Codex pickup at Priority 6 fortification postures.)
 
 
 ## Purpose
@@ -386,6 +386,45 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - governed control points now project trickle, stabilization, capture resistance, and loyalty protection; governed keeps now accelerate reserve healing and muster cadence
   - `BloodlinesDebugCommandSurface.Governance` and `BloodlinesGovernorSpecializationSmokeValidation` prove assignment/readout, live consumer gains, and ungoverned cleanup
   - next Codex pickup should move to Priority 5 `combat-commander-aura`
+
+### Lane: combat-commander-aura
+
+- Status: active
+- Branch Prefix: `codex/unity-combat-commander-aura`
+- Owner Agent: codex
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Combat/CommanderAuraComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Combat/CommanderAuraCanon.cs`
+  - `unity/Assets/_Bloodlines/Code/Combat/CommanderAuraSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.CommanderAura.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesCommanderAuraSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityCommanderAuraSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Combat/AttackResolutionSystem.cs` -- additive commander aura attack-cadence hook only
+  - `unity/Assets/_Bloodlines/Code/Combat/CombatStanceResolutionSystem.cs` -- additive commander aura morale-retreat resistance hook only
+  - `unity/Assembly-CSharp.csproj` -- additive compile includes for commander aura runtime and debug files only
+  - `unity/Assembly-CSharp-Editor.csproj` -- additive compile include for the commander aura validator only
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Combat/CommanderComponent.cs` -- read commander member identity and renown only
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- resolve same-faction recipients and faction roots by `FactionId`
+  - `unity/Assets/_Bloodlines/Code/Components/ConvictionComponent.cs` -- read the current conviction band for aura scaling only
+  - `unity/Assets/_Bloodlines/Code/Faith/FaithStateComponent.cs` -- read selected covenant and doctrine path for doctrine aura bonuses only
+  - `unity/Assets/_Bloodlines/Code/Components/PositionComponent.cs` -- resolve commander-to-unit distance only
+  - `unity/Assets/_Bloodlines/Code/Combat/CombatStatsComponent.cs` -- apply and restore runtime attack and sight deltas only
+  - `unity/Assets/_Bloodlines/Code/Pathing/MovementStatsComponent.cs` -- apply and restore runtime speed deltas only
+  - `unity/Assets/_Bloodlines/Code/Components/HealthComponent.cs` -- remove aura state when commanders or recipients are dead only
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-22-unity-combat-commander-aura.md`
+- Browser Reference:
+  - `src/game/core/simulation.js` `COMMANDER_BASE_AURA_RADIUS`, `getCommanderAuraProfile`, `CONVICTION_BAND_EFFECTS`, and `getConvictionBandEffects`
+- Current Branch In Flight: none (validated implementation landed onto canonical `master` in this session)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-combat-commander-aura.md`
+- Last Slice State:
+  - commanders now resolve doctrine-aware, conviction-scaled aura profiles and apply the strongest nearby same-faction aura to friendly units each simulation frame
+  - in-range allies now receive live attack, sight, speed, and morale-retreat buffs that cleanly restore when they leave range or the commander dies
+  - `BloodlinesDebugCommandSurface.CommanderAura` and `BloodlinesCommanderAuraSmokeValidation` prove readout, in-range buffing, out-of-range non-application, and death cleanup
+  - next Codex pickup should move to Priority 6 `fortification-postures`
 
 ### Lane: combat-group-movement-and-stances
 
