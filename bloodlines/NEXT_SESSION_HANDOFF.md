@@ -4555,3 +4555,42 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     `codex/unity-faith-covenant-test`
   - port the browser covenant-test qualification and resolution loop, then wire
     `DynastyPoliticalEventTypes.CovenantTestCooldown` to the real failure path
+
+## 2026-04-22 Faith Covenant Test
+
+- Branch lane:
+  - `codex/unity-faith-covenant-test`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-22-unity-faith-covenant-test.md`
+- Completed in this slice:
+  - `CovenantTestStateComponent`,
+    `PlayerCovenantTestRequestComponent`,
+    `CovenantTestQualificationSystem`,
+    and
+    `CovenantTestResolutionSystem`
+    now port the real covenant-test hold/trigger/resolution seam into Unity ECS
+  - covenant-test failure now writes the previously placeholder
+    `DynastyPoliticalEventTypes.CovenantTestCooldown` event through the landed
+    dynasty political-event surface
+  - `BloodlinesDebugCommandSurface.Faith` now exposes trigger/readout helpers
+    plus a test-only intensity setter for validator coverage
+  - `PlayerDivineRightDeclarationSystem` now requires completed covenant-test
+    state, and `BloodlinesPlayerHolyWarDivineRightSmokeValidation` now seeds
+    that prerequisite so the older smoke remains focused on the declaration
+    seam
+  - `BloodlinesCovenantTestSmokeValidation` plus wrapper now prove the
+    180-day hold, success path, failure penalties, and retry blocking
+  - local generated `Assembly-CSharp*.csproj` metadata was repaired so stale
+    Unity.Entities analyzer paths no longer point at a dead outside checkout
+    and now resolve through the canonical
+    `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache` root
+- Validation state:
+  - dedicated covenant-test smoke green
+  - all 10 required governed gates green in this worktree after final
+    post-fix rerun
+- Immediate next action:
+  - claim Priority 4 from `03_PROMPTS/CODEX_MULTI_DAY_DIRECTIVE_2026-04-23.md`
+  - open `codex/unity-territory-governor-specialization` from updated
+    `master`
+  - port governor specialization state + assignment/readout + dedicated smoke
+    before moving deeper down the directive stack
