@@ -4464,6 +4464,7 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   - reran the dedicated political-state HUD smoke on the merged result
   - recorded a separate rerun landing handoff without overwriting the original
     HUD landing history already preserved on `master`
+
 - Validation state:
   - runtime build green
   - editor build green with existing repo-wide warnings only
@@ -4478,5 +4479,74 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   - final contract staleness recheck green at revision `113`
 - Contract revision advanced `112 -> 113` and keeps the
   `player-hud-realm-condition-legibility` lane clear on canonical `master`.
-  The next additive pickup remains Priority 18
+  The next additive pickup remained Priority 18
   `codex/unity-player-covenant-test-dispatch`.
+
+## 2026-04-23 Player Covenant Test Dispatch
+
+- Branch lane:
+  - `codex/unity-player-covenant-test-dispatch`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-covenant-test-dispatch.md`
+- Completed in this slice:
+  - added `PlayerCovenantTestDispatchStateComponent` and
+    `PlayerCovenantTestDispatchSystem` under
+    `unity/Assets/_Bloodlines/Code/Faith/` so the player faction root now
+    exposes covenant-test rite availability, affordability, queued/pending
+    state, and covenant-specific cost display without changing the existing
+    resolution request shape
+  - extended
+    `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Faith.cs`
+    with queue/readout helpers for the real dispatch path while preserving the
+    older force-trigger helper used by the legacy covenant-test smoke
+  - added
+    `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCovenantTestDispatchSmokeValidation.cs`
+    plus
+    `scripts/Invoke-BloodlinesUnityPlayerCovenantTestDispatchSmokeValidation.ps1`
+    to prove availability/cost display, request emission, resolution
+    consumption, and unaffordable blocking
+  - added the required `unity/Assembly-CSharp*.csproj` compile includes for
+    the new runtime/editor files
+- Validation state:
+  - dedicated player covenant-test dispatch smoke green
+  - all 10 required governed gates green
+  - post-append contract staleness recheck green at revision `113`
+- Contract revision advanced `112 -> 113`.
+- Immediate next action:
+  - commit and push `codex/unity-player-covenant-test-dispatch`, merge it to
+    canonical `master` with `git merge --no-ff`, rerun the full validation
+    chain plus the dedicated dispatch smoke on the merged result, then move to
+    Priority 19 `codex/unity-contested-territory-pressure`
+
+## 2026-04-23 Player Covenant Test Dispatch Landing
+
+- Landing state:
+  - merged `codex/unity-player-covenant-test-dispatch` onto canonical
+    `master` via merge commit `de39a803` on a clean detached landing worktree
+- Landing handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-covenant-test-dispatch-landing.md`
+- Completed in this landing pass:
+  - reran the full governed 10-gate chain on the merged result
+  - reran the dedicated player covenant-test dispatch smoke on the merged
+    result
+  - re-canonicalized `unity/Assembly-CSharp*.csproj` analyzer roots back to
+    `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache` after the landing
+    builds rewrote them to the detached worktree path
+  - recorded the landing handoff and cleared the faith-covenant-test
+    branch-in-flight marker in the concurrent-session contract
+- Validation state:
+  - runtime build green
+  - editor build green with existing repo-wide warnings only
+  - bootstrap runtime smoke green
+  - combat smoke green
+  - canonical scene-shell validation green
+  - fortification smoke green
+  - siege smoke green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - dedicated player covenant-test dispatch smoke green
+  - final contract staleness recheck green at revision `114`
+- Contract revision advanced `113 -> 114`.
+- Immediate next action:
+  - start Priority 19 `codex/unity-contested-territory-pressure` from the
+    updated canonical `master`

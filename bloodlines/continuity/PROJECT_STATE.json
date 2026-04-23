@@ -2240,6 +2240,24 @@
       "description": "The HUD political-state panels rerun landing is now complete on canonical `master` via merge commit `260fb666`. This pass did not introduce new HUD behavior; instead it forward-ported the already-landed political-state panel slice through `origin/codex/unity-hud-political-state-panels-rerun` so the HUD lane now shares ancestry with the newer Trueborn recognized-pressure line while preserving the original HUD landing history. The full governed 10-gate chain plus the dedicated political-state HUD smoke reran green on the merged result, and contract rev 112->113 records the rerun landing while keeping Priority 18 `player-covenant-test-dispatch` as the next Codex pickup.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels-rerun-landing.md",
       "validation_gates": "all 10 green plus political state HUD smoke on merged master rerun"
+    },
+    {
+      "lane": "player-covenant-test-dispatch",
+      "date": "2026-04-23",
+      "branch": "codex/unity-player-covenant-test-dispatch",
+      "status": "complete",
+      "description": "The player covenant-test dispatch slice is now complete on branch. `PlayerCovenantTestDispatchStateComponent` and `PlayerCovenantTestDispatchSystem` now give the player faction root a real covenant-test action surface: Blood Dominion light/dark rites expose availability, affordability, action label/detail, queued state, pending request state, and covenant-specific costs before the existing `CovenantTestResolutionSystem` consumes the same `PlayerCovenantTestRequestComponent` request entity. `BloodlinesDebugCommandSurface.Faith` now exposes `TryDebugQueueCovenantTestDispatch(...)` and `TryDebugGetCovenantTestDispatchState(...)` while preserving the older direct trigger path for the legacy validator, and `BloodlinesPlayerCovenantTestDispatchSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPlayerCovenantTestDispatchSmokeValidation.ps1` prove ready-state availability/cost display, queued request emission, resolution consumption, and unaffordable blocking. The full governed 10-gate chain is green with contract rev 112->113.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-player-covenant-test-dispatch.md",
+      "validation_gates": "all 10 green plus player covenant-test dispatch smoke"
+    },
+    {
+      "lane": "player-covenant-test-dispatch-landing",
+      "date": "2026-04-23",
+      "branch": "master",
+      "status": "landed",
+      "description": "The player covenant-test dispatch slice has now been merged onto canonical `master` via merge commit `de39a803`. `PlayerCovenantTestDispatchStateComponent`, `PlayerCovenantTestDispatchSystem`, the widened `BloodlinesDebugCommandSurface.Faith` covenant-dispatch helpers, and `BloodlinesPlayerCovenantTestDispatchSmokeValidation` plus `Invoke-BloodlinesUnityPlayerCovenantTestDispatchSmokeValidation.ps1` now live on the merged master-compatible line. The landing pass reran the full governed 10-gate chain and the dedicated player covenant-test dispatch smoke green on the merged result, re-canonicalized `unity/Assembly-CSharp*.csproj` analyzer roots back to `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache` after the landing builds rewrote them, and contract rev 113->114 cleared the faith-covenant-test branch-in-flight marker while pointing the next Codex pickup at Priority 19 `contested-territory-pressure`.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-player-covenant-test-dispatch-landing.md",
+      "validation_gates": "all 10 green plus player covenant-test dispatch smoke on merged master"
     }
   ]
 }

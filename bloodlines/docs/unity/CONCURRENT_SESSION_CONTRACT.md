@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 113
+- Revision: 114
 - Last Updated: 2026-04-23
-- Last Updated By: codex-hud-legibility-2026-04-23
-- Supersedes: revision 112 (Records the HUD political-state rerun landing on canonical `master` while preserving the original HUD landing history and keeping the lane clear for Priority 18.)
+- Last Updated By: codex-faith-covenant-test-2026-04-23
+- Supersedes: revision 113 (Records the landed player covenant-test dispatch slice on canonical `master` and clears the faith-covenant-test branch-in-flight marker.)
 
 
 ## Purpose
@@ -320,23 +320,30 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 ### Lane: faith-covenant-test
 
-- Status: active
-- Branch Prefix: `codex/unity-faith-covenant-test`
+- Status: active (validated implementation landed on canonical `master`; no branch currently in flight)
+- Branch Prefix: `codex/unity-faith-covenant-test`, `codex/unity-player-covenant-test-dispatch`
 - Owner Agent: codex
 - Owned Paths (exclusive):
   - `unity/Assets/_Bloodlines/Code/Faith/CovenantTestStateComponent.cs`
   - `unity/Assets/_Bloodlines/Code/Faith/PlayerCovenantTestRequestComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Faith/PlayerCovenantTestDispatchStateComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Faith/PlayerCovenantTestDispatchSystem.cs`
   - `unity/Assets/_Bloodlines/Code/Faith/CovenantTestQualificationSystem.cs`
   - `unity/Assets/_Bloodlines/Code/Faith/CovenantTestResolutionSystem.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesCovenantTestSmokeValidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerCovenantTestDispatchSmokeValidation.cs`
 - Owned Scripts:
   - `scripts/Invoke-BloodlinesUnityCovenantTestSmokeValidation.ps1`
+  - `scripts/Invoke-BloodlinesUnityPlayerCovenantTestDispatchSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Faith.cs` -- additive covenant-test trigger/readout and test-only intensity setter helpers only
   - `unity/Assets/_Bloodlines/Code/PlayerDiplomacy/PlayerDivineRightDeclarationSystem.cs` -- player divine-right declaration now requires `CovenantTestStateComponent.TestPhase == Complete`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPlayerHolyWarDivineRightSmokeValidation.cs` -- validator seeding only so the pre-existing player divine-right smoke remains focused on its intended seam
   - `unity/Assembly-CSharp.csproj` -- additive compile includes for the covenant-test runtime files and canonicalized Unity.Entities analyzer paths
   - `unity/Assembly-CSharp-Editor.csproj` -- additive compile include for the covenant-test validator and canonicalized Unity.Entities analyzer paths
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Faith.cs` -- additive covenant-test dispatch queue/readout helpers while preserving the older direct trigger path for legacy smoke coverage
+  - `unity/Assembly-CSharp.csproj` -- additive compile includes for `PlayerCovenantTestDispatchStateComponent.cs` and `PlayerCovenantTestDispatchSystem.cs`; stale analyzer paths were rewritten back to canonical `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
+  - `unity/Assembly-CSharp-Editor.csproj` -- additive compile include for `BloodlinesPlayerCovenantTestDispatchSmokeValidation.cs`; stale analyzer paths were rewritten back to canonical `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
 - Cross-Lane Reads (no writes):
   - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyPoliticalEventComponent.cs` -- consume the landed political-event cooldown buffer shape only
   - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyPoliticalEventSystem.cs` -- reuse the existing timed cooldown seam without reopening that lane
@@ -348,16 +355,18 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- project the 180-day hold and retry cooldown onto in-world time
 - Lane Authority Documents:
   - `docs/unity/session-handoffs/2026-04-22-unity-faith-covenant-test.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-covenant-test-dispatch.md`
+  - `docs/unity/session-handoffs/2026-04-23-unity-player-covenant-test-dispatch-landing.md`
 - Browser Reference:
   - `src/game/core/simulation.js` constants `COVENANT_TEST_INTENSITY_THRESHOLD`, `COVENANT_TEST_DURATION_IN_WORLD_DAYS`, `COVENANT_TEST_RETRY_COOLDOWN_IN_WORLD_DAYS`, the covenant-test cost block near lines 134-141, `performCovenantTestAction`, and `ensureFaithCovenantTestCompletionFromLegacyState`
-- Current Branch In Flight: none (validated implementation landed onto canonical `master` in this session)
-- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-22-unity-faith-covenant-test.md`
+- Current Branch In Flight: none (merged onto canonical `master` via `de39a803` on 2026-04-23)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-player-covenant-test-dispatch-landing.md`
 - Last Slice State:
-  - faction roots now track covenant-test qualification windows, explicit trigger requests, success completion, and failed retry cooldown state
-  - covenant-test failure now pushes the previously placeholder `CovenantTestCooldown` political event through the landed dynasty-political-events surface
-  - player divine-right declarations now require a completed covenant test rather than intensity-only state
-  - `BloodlinesCovenantTestSmokeValidation` proves the 180-day hold, success path, failure penalties, and retry blocking
-  - next Codex pickup should move to Priority 4 `territory-governor-specialization`
+  - `PlayerCovenantTestDispatchStateComponent` and `PlayerCovenantTestDispatchSystem` now live on canonical `master`, so the player faction root exposes real covenant-test availability, affordability, cost, queued, and pending-request state before the existing resolution seam consumes the request
+  - `BloodlinesDebugCommandSurface.Faith` now exposes `TryDebugQueueCovenantTestDispatch(...)` and `TryDebugGetCovenantTestDispatchState(...)`, and the older direct trigger path remains intact for the legacy covenant-test validator
+  - `BloodlinesPlayerCovenantTestDispatchSmokeValidation` plus `scripts/Invoke-BloodlinesUnityPlayerCovenantTestDispatchSmokeValidation.ps1` now prove availability/cost display, queued request emission, resolution consumption, and unaffordable rite blocking on the merged master-compatible line
+  - the merged result reran the full governed 10-gate chain plus the dedicated player covenant-test dispatch smoke green, and `unity/Assembly-CSharp*.csproj` analyzer roots were re-canonicalized back to `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
+  - next Codex pickup should move to Priority 19 `contested-territory-pressure`
 
 ### Lane: territory-governor-specialization
 
@@ -1306,7 +1315,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
 
-Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation, player covert ops, non-AI Trueborn follow-up slices through recognized-pressure, and the HUD political-state panels plus rerun landing are now on canonical `master`. Under the current directive order, the next clean Codex pickup is Priority 18 `player-covenant-test-dispatch`.
+Note: the fortification queue is now closed cleanly through sub-slice 13 and the older `fortification-siege-imminent-engagement` lane remains paused outside fresh claims like `fortification-postures`. The repo already contains the retired `tier2-batch-dynasty-systems` lane and Codex's follow-up `dynasty-house-parity` hardening work, so do not duplicate marriages, lesser houses, or minor houses under a fresh zero-code lane. The scout-raids foundation, player covert ops, non-AI Trueborn follow-up slices through recognized-pressure, the HUD political-state panels landing, and the player covenant-test dispatch landing are now on canonical `master`. Under the current directive order, the next clean Codex pickup is Priority 19 `contested-territory-pressure`.
 
 ### Next Lane Candidate: ai-strategic-layer-sub-slice-5-siege-staging
 
