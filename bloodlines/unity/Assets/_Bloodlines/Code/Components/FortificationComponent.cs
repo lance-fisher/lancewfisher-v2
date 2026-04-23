@@ -31,5 +31,11 @@ namespace Bloodlines.Components
         public float FaithWardLoyaltyProtectionMultiplier;
         public float FaithWardEnemySpeedMultiplier;
         public bool FaithWardSurgeActive;
+        public int VerdantWardenCount;
+        public int VerdantWardenCappedCount;
+        public int VerdantWardenDesiredFrontlineBonus;
+        public float VerdantWardenDefenderAttackMultiplier;
+        public float VerdantWardenReserveHealMultiplier;
+        public float VerdantWardenReserveMusterMultiplier;
     }
 }

@@ -2072,6 +2072,15 @@
       "description": "The succession-crisis slice has been replayed onto the current master-compatible line without merging the stale historical branch that carried unrelated backwards diffs. `SuccessionCrisisComponent`, `SuccessionCrisisEvaluationSystem`, and `SuccessionCrisisRecoverySystem` remain the dynasty-owned runtime seam for browser-aligned crisis severity, opening loyalty shock, legitimacy drain, territorial trickle throttling, and conviction-aware recovery; `BloodlinesSuccessionCrisisSmokeValidation` and its wrapper remain the dedicated proof surface, and the wrapper now waits for explicit Unity pass/fail markers and retries once if batchmode exits before the marker flushes. The local generated `Assembly-CSharp*.csproj` files were repaired so analyzer roots now point at the canonical `D:\\ProjectsHome\\Bloodlines\\unity\\Library\\PackageCache` surface, and this worktree required a local `unity/Library` junction to the canonical root before the governed `dotnet build` gates could resolve `Library\\ScriptAssemblies`. Contract rev 96->97 on merge with the already-landed fortification posture slice preserved.",
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-dynasty-succession-crisis-rerun.md",
       "validation_gates": "all 10 green plus succession crisis smoke"
+    },
+    {
+      "lane": "faith-verdant-warden-slice-1",
+      "date": "2026-04-23",
+      "branch": "codex/unity-faith-verdant-warden",
+      "status": "active",
+      "description": "The Verdant Warden faith-support slice is now complete on branch. `VerdantWardenComponent`, `VerdantWardenCoverageProfile`, `VerdantWardenRules`, and `VerdantWardenSupportSystem` add a browser-aligned mobile faith-support seam that auto-tags living `verdant_warden` units, resolves capped same-faction coverage around owned control points and fortified settlements, and caches the resulting loyalty, stabilization, reserve-heal, reserve-muster, and frontline-attack support fields directly onto the receiving ECS components each simulation tick. `ControlPointCaptureSystem`, `FortificationReserveSystem`, and `AttackResolutionSystem` now consume that cached support through narrow additive hooks only, `BloodlinesDebugCommandSurface.Faith.VerdantWarden` exposes `TryDebugGetVerdantWardenCoverage(...)`, and `BloodlinesVerdantWardenSmokeValidation` plus `scripts/Invoke-BloodlinesUnityVerdantWardenSmokeValidation.ps1` prove single-stack coverage, reserve-heal uplift, debug visibility, and the canonical three-stack cap on stored multipliers and frontline damage. Contract rev 97->98.",
+      "handoff": "docs/unity/session-handoffs/2026-04-23-unity-faith-verdant-warden.md",
+      "validation_gates": "all 10 green plus Verdant Warden smoke"
     }
   ]
 }

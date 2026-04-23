@@ -211,6 +211,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Definitions\ResourceDefinition.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Systems\PopulationGrowthSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerHolyWarDeclarationRequestComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Faith\VerdantWardenComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\CapturedMemberElement.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\RecentImpactComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\AttackOrderSystem.cs" />
@@ -268,7 +269,9 @@
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerMarriageProposalSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\RealmConditionHUDComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.CommanderAura.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Faith\VerdantWardenSupportSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Siege\SiegeSupplyInterdictionCanon.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Faith.VerdantWarden.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Definitions\UnitDefinition.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\FortificationHUDSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\SettlementComponent.cs" />

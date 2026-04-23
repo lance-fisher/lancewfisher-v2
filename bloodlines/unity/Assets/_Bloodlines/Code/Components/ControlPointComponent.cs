@@ -35,6 +35,12 @@ namespace Bloodlines.Components
         public float StoneTrickle;
         public float IronTrickle;
         public float InfluenceTrickle;
+        public int VerdantWardenCount;
+        public int VerdantWardenCappedCount;
+        public float VerdantWardenLoyaltyBonusPerTick;
+        public float VerdantWardenLoyaltyGainMultiplier;
+        public float VerdantWardenLoyaltyProtectionMultiplier;
+        public float VerdantWardenStabilizationMultiplier;
     }
 
     public enum ControlState : byte
