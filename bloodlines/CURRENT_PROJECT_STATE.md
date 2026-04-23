@@ -4386,3 +4386,67 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
   `world-trueborn-rise` lane active on canonical `master` with no branch in
   flight. The next additive pickup is the next remaining non-AI Trueborn
   follow-up from a fresh branch.
+
+## 2026-04-23 HUD Political State Panels
+
+- Branch lane:
+  - `codex/unity-hud-political-state-panels`
+- Dedicated slice handoff:
+  - `docs/unity/session-handoffs/2026-04-23-unity-hud-political-state-panels.md`
+- Completed in this slice:
+  - added `SuccessionCrisisHUDComponent` / `SuccessionCrisisHUDSystem`,
+    `PoliticalEventsTrayHUDComponent` / `PoliticalEventsTrayHUDSystem`,
+    `CovenantTestProgressHUDComponent` / `CovenantTestProgressHUDSystem`, and
+    `TruebornRiseHUDComponent` / `TruebornRiseHUDSystem` under
+    `unity/Assets/_Bloodlines/Code/HUD/` so the player HUD can observe live
+    dynasty political-state, covenant-test, and Trueborn pressure seams
+  - extended
+    `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HUD.cs`
+    with parseable readouts for the new political-state panels and added
+    `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPoliticalStateHUDSmokeValidation.cs`
+    plus
+    `scripts/Invoke-BloodlinesUnityPoliticalStateHUDSmokeValidation.ps1`
+  - fixed a real invalidated-buffer bug in `TruebornRiseHUDSystem` after the
+    new smoke surfaced pre-playback recognition-buffer reads
+  - repaired this worktree's `unity/Library` junction and canonicalized stale
+    `unity/Assembly-CSharp*.csproj` analyzer roots back to
+    `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache`
+- Validation state:
+  - dedicated political-state HUD smoke green
+  - all 10 required governed gates green
+  - post-append contract staleness recheck green at revision `110`
+- Contract revision advanced `109 -> 110`.
+- Immediate next action:
+  - commit and push `codex/unity-hud-political-state-panels`, merge it to
+    canonical `master` with `git merge --no-ff`, rerun the full validation
+    chain plus the dedicated HUD smoke on the merged result, then move to
+    Priority 18 `codex/unity-player-covenant-test-dispatch`
+
+## 2026-04-23 HUD Political State Panels Landing
+
+- Landing state:
+  - merged `codex/unity-hud-political-state-panels` onto canonical `master`
+    on a clean detached landing worktree because `origin/master` advanced
+    during branch validation and the existing local `master` surfaces were not
+    safe to reuse
+- Completed in this landing pass:
+  - reran the full governed 10-gate chain on the merged result
+  - reran the dedicated political-state HUD smoke on the merged result
+  - recorded the landing handoff and cleared the HUD branch-in-flight marker
+    in the concurrent-session contract
+- Validation state:
+  - runtime build green
+  - editor build green with existing repo-wide warnings only
+  - bootstrap runtime smoke green
+  - combat smoke green
+  - canonical scene-shell validation green
+  - fortification smoke green
+  - siege smoke green
+  - `node tests/data-validation.mjs` green
+  - `node tests/runtime-bridge.mjs` green
+  - dedicated political-state HUD smoke green
+  - final contract staleness recheck green at revision `112`
+- Contract revision advanced `111 -> 112`.
+- Immediate next action:
+  - start Priority 18 `codex/unity-player-covenant-test-dispatch` from the
+    updated canonical `master`
