@@ -5632,3 +5632,9 @@ Next: Claim next unclaimed lane -- skirmish game mode manager, audio dispatch fo
 Latest sub-slice: 1 (faith doctrine territorial wiring). Status: Complete.
 Handoff: docs/unity/session-handoffs/2026-04-24-unity-faith-combat-doctrine.md
 Next: Skirmish game mode manager or dynasty prestige (renown decay + prestige drift).
+
+## skirmish-game-mode (as of 2026-04-24)
+
+Latest sub-slice: 1 (skirmish game mode manager). Status: Complete.
+Handoff: docs/unity/session-handoffs/2026-04-24-unity-skirmish-game-mode.md
+Next: Dynasty prestige (renown decay + prestige drift distinct from the already-implemented renown accumulation system) or audio dispatch foundation (Wwise scaffolding).

@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 129
+- Revision: 130
 - Last Updated: 2026-04-24
-- Last Updated By: claude-faith-combat-doctrine-2026-04-24
-- Supersedes: revision 128 (Records the match-end sequence landing on canonical `master`.)
+- Last Updated By: claude-skirmish-game-mode-2026-04-24
+- Supersedes: revision 129 (Records the faith-combat-doctrine lane landing on canonical `master`.)
 
 
 ## Purpose
@@ -1654,6 +1654,40 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `MatchEndSequenceSystem` fires once when VictoryStateComponent.Status != Playing, creates MatchEndStateComponent singleton, places DynastyXPAwardRequestComponent on all faction entities (winner 150 XP placement=1, runner-up 75 XP placement=2, others 25 XP placement=3), pushes narrative message via NarrativeMessageBridge
   - `MatchEndHUDSystem` reads MatchEndStateComponent and writes MatchEndHUDComponent singleton for display-ready match result data
   - `BloodlinesMatchEndSequenceSmokeValidation` proves 3 phases: state initialization, XP ordering, narrative message. PS1 wrapper in place.
+  - All 10 validation gates passed (0 errors; Unity batch-mode runtime smokes SKIP-env per established environment condition; lane smoke PASS)
+
+### Lane: skirmish-game-mode
+
+- Status: complete (merged to master via `claude/unity-skirmish-game-mode`)
+- Branch Prefix: `claude/unity-skirmish-game-mode`
+- Owner Agent: claude
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Skirmish/SkirmishGameModeComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Systems/SkirmishGameModeManagerSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.SkirmishGameMode.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSkirmishGameModeSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnitySkirmishGameModeSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assembly-CSharp.csproj` -- added Compile entries for SkirmishGameModeComponent.cs, SkirmishGameModeManagerSystem.cs, BloodlinesDebugCommandSurface.SkirmishGameMode.cs
+  - `unity/Assembly-CSharp-Editor.csproj` -- added Compile entry for BloodlinesSkirmishGameModeSmokeValidation.cs
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/MapBootstrapComponents.cs` -- read MapBootstrapPendingTag to detect bootstrap completion
+  - `unity/Assets/_Bloodlines/Code/Victory/VictoryComponents.cs` -- read VictoryStateComponent presence as secondary bootstrap-complete signal
+  - `unity/Assets/_Bloodlines/Code/Victory/MatchEndStateComponent.cs` -- read IsMatchEnded and MatchEndTimeInWorldDays for PostMatch transition
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- enumerate Kingdom factions for FactionCount and PlayerFactionId
+  - `unity/Assets/_Bloodlines/Code/AI/AIEconomyControllerComponent.cs` -- detect AI-controlled factions for IsPlayerVsAI flag
+  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- read InWorldDays for MatchStartInWorldDays
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-24-unity-skirmish-game-mode.md`
+- Browser Reference:
+  - Absent -- match-phase lifecycle is implicit in simulation.js initialization and victory state; this system makes it explicit for Unity HUD and persistence
+- Current Branch In Flight: none (merged onto canonical `master`)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-24-unity-skirmish-game-mode.md`
+- Last Slice State:
+  - `SkirmishGameModeComponent` singleton (SkirmishPhase enum Setup/Playing/PostMatch, FactionCount, IsPlayerVsAI, PlayerFactionId, MatchStartInWorldDays, MatchEndInWorldDays) now on canonical `master`
+  - `SkirmishGameModeManagerSystem` drives Setup→Playing (bootstrap complete + VictoryStateComponent seeded) and Playing→PostMatch (MatchEndStateComponent.IsMatchEnded) transitions; records faction count and player-vs-AI flag on transition to Playing
+  - `BloodlinesSkirmishGameModeSmokeValidation` proves 3 phases: default Setup init, Setup→Playing field population, Playing→PostMatch MatchEndInWorldDays carry. PS1 wrapper in place.
   - All 10 validation gates passed (0 errors; Unity batch-mode runtime smokes SKIP-env per established environment condition; lane smoke PASS)
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)

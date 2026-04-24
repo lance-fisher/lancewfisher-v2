@@ -73,6 +73,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesScoutRaidAndInterdictionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAIMarriageAcceptEffectsSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesVictoryConditionsSmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesSkirmishGameModeSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesGameplaySceneBootstrap.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPlayerCounterIntelligenceSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesGraphicsRuntimeValidation.cs" />

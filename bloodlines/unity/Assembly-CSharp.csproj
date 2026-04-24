@@ -77,6 +77,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Economy\CapPressureResponseSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Economy\StabilitySurplusResponseSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\PactBreakSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Systems\SkirmishGameModeManagerSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\FortificationComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\FortificationReserveComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Time\DualClockTickSystem.cs" />
@@ -314,6 +315,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Definitions\FaithDefinition.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\NarrativeMessageComponents.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.CommandDeckOverlay.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Skirmish\SkirmishGameModeComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\MinorHouseLevySystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\WorkerGatherOrderComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\RallyPointSetSystem.cs" />
@@ -402,6 +404,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyUnlockSlotElement.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\DynastyOperationComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\PlayerCommandDeckHUDComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.SkirmishGameMode.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\ResourceNodeComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Fortification\DestroyedCounterRecoverySystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Siege.cs" />
