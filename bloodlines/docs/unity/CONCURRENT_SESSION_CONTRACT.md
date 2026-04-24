@@ -2,9 +2,9 @@
 
 ## Contract Metadata
 
-- Revision: 126
+- Revision: 127
 - Last Updated: 2026-04-23
-- Last Updated By: claude-faction-visual-assignment-2026-04-23
+- Last Updated By: claude-netcode-foundation-2026-04-23
 - Supersedes: revision 118 (Records the player succession influence landing on canonical `master` and clears the branch-in-flight marker.)
 
 
@@ -1566,6 +1566,35 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `FactionVisualComponent` (per-faction: PrimaryTint, EmblemId, IsAssigned) and `UnitFactionColorComponent` (per-unit: FactionId, Tint) now live on canonical `master`
   - `FactionVisualAssignmentSystem` lazily attaches `FactionVisualComponent` to faction entities at startup (resolving from FactionTintPalette; EmblemId = "emblem_" + factionId) and propagates `UnitFactionColorComponent` to newly spawned unit entities on each update
   - `BloodlinesFactionVisualAssignmentSmokeValidation` proves palette tint resolution, emblem ID convention, and UnitFactionColorComponent struct initialization across 3 phases; PS1 wrapper and csproj entries in place
+  - All 10 validation gates passed (0 errors; Unity batch-mode smoke SKIP-env per established environment condition)
+
+### Lane: multiplayer-foundation
+
+- Status: complete (merged to master via `claude/unity-netcode-foundation`)
+- Branch Prefix: `claude/unity-netcode-foundation`
+- Owner Agent: claude
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Multiplayer/NetworkGameModeComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Multiplayer/NetworkBootstrapSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Multiplayer/GhostCollectionSetupSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.NetworkState.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesNetworkFoundationSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityNetworkFoundationSmokeValidation.ps1`
+- Shared-File Narrow Edits:
+  - `unity/Assembly-CSharp.csproj` -- added Compile entries for NetworkGameModeComponent.cs, NetworkBootstrapSystem.cs, GhostCollectionSetupSystem.cs, and debug surface partial
+  - `unity/Assembly-CSharp-Editor.csproj` -- added Compile entry for BloodlinesNetworkFoundationSmokeValidation.cs
+- Cross-Lane Reads (no writes):
+  - None (foundation defines its own types only)
+- Browser Reference: absent (multiplayer foundation not in simulation.js; implemented from canonical Netcode for Entities design)
+- Note: Netcode for Entities package (com.unity.netcode) is NOT yet installed. This foundation slice defines the data model (NetworkGameModeComponent, GhostPrefabArchetypeElement buffer) and the offline bootstrap defaults. NfE integration code is deferred to a follow-up slice when the package is added to Packages/manifest.json.
+- Current Branch In Flight: none (merged to master)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-netcode-foundation.md`
+- Last Slice State:
+  - `NetworkGameModeComponent` (singleton: IsServer, IsClient, IsLocalGame, MaxPlayers, NetworkSessionId) and `GhostPrefabArchetypeElement` (buffer element: ArchetypeId, IsRegistered) now live on canonical `master`
+  - `NetworkBootstrapSystem` creates the singleton in local mode (IsLocalGame=true, IsServer=true, MaxPlayers=2) during InitializationSystemGroup on first update
+  - `GhostCollectionSetupSystem` registers three ghost prefab archetypes (archetype_faction, archetype_control_point, archetype_unit) to the buffer after bootstrap
+  - `BloodlinesNetworkFoundationSmokeValidation` proves offline local mode defaults and ghost collection registration across 2 phases; PS1 wrapper and csproj entries in place
   - All 10 validation gates passed (0 errors; Unity batch-mode smoke SKIP-env per established environment condition)
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
