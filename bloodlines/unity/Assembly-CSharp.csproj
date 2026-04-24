@@ -132,6 +132,7 @@
     <Compile Include="Assets\_Bloodlines\Code\HUD\DynastyRenownHUDComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\CommanderComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\MatchProgressionHUDComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.HolyWarResolution.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Siege\SiegeSupportRefreshSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.SaveLoad.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyPoliticalEventComponent.cs" />
@@ -339,6 +340,7 @@
     <Compile Include="Assets\_Bloodlines\Code\AI\AIMarriageProposalExecutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Economy\ResourceTrickleBuildingComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\DestroyedCounterRecoveryProgressComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\AI\ActiveHolyWarElement.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\SpecialUnitSwapApplicatorSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\CombatUnitRuntimeDefaults.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\ControlPointComponent.cs" />
@@ -420,6 +422,7 @@
     <Compile Include="Assets\_Bloodlines\Code\AI\AITerritoryDispatchSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\ImminentEngagementComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Governance.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\AI\AIHolyWarResolutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\CaptiveRansomTrickleSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AICaptiveRansomExecutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Economy\StarvationResponseSystem.cs" />

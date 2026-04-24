@@ -5644,3 +5644,9 @@ Next: Dynasty prestige (renown decay + prestige drift distinct from the already-
 Latest sub-slice: 1 (prestige decay modulation). Status: Complete.
 Handoff: docs/unity/session-handoffs/2026-04-24-unity-dynasty-prestige.md
 Next: Audio dispatch foundation (Wwise scaffolding) or dynasty persistence (save/load for cross-match dynasty state).
+
+## ai-strategic-layer (as of 2026-04-24)
+
+Latest sub-slice: 26 (holy war resolution). Status: Complete.
+Handoff: docs/unity/session-handoffs/2026-04-24-unity-ai-holy-war-resolution.md
+Next: Sub-slice 27 (divine right resolution effects) -- fires at DynastyOperationDivineRightComponent.ResolveAtInWorldDays; on success apex faith claim; on failure failDivineRightDeclaration with cooldown + legitimacy penalty; conviction events (oathkeeping/desecration +3).
