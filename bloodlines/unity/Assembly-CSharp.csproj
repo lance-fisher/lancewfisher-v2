@@ -269,6 +269,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.FactionVisual.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Faith\FaithIntensityResolveSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\CovenantTestProgressHUDSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\AI\AIDivineRightResolutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyPrestigeDecayModulatorSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.WorldPressure.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Fortification.cs" />
@@ -287,6 +288,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Combat\GroupMovementOrderComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\PendingCommanderCaptureComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Fortification\FortificationStructureResolutionSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.DivineRightResolution.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\CovenantTestProgressHUDComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\TruebornRiseHUDComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Definitions\ConvictionStateDefinition.cs" />

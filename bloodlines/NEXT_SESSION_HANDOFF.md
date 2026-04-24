@@ -5650,3 +5650,9 @@ Next: Audio dispatch foundation (Wwise scaffolding) or dynasty persistence (save
 Latest sub-slice: 26 (holy war resolution). Status: Complete.
 Handoff: docs/unity/session-handoffs/2026-04-24-unity-ai-holy-war-resolution.md
 Next: Sub-slice 27 (divine right resolution effects) -- fires at DynastyOperationDivineRightComponent.ResolveAtInWorldDays; on success apex faith claim; on failure failDivineRightDeclaration with cooldown + legitimacy penalty; conviction events (oathkeeping/desecration +3).
+
+## ai-strategic-layer (as of 2026-04-24)
+
+Latest sub-slice: 27 (divine right resolution). Status: Complete.
+Handoff: docs/unity/session-handoffs/2026-04-24-unity-ai-divine-right-resolution.md
+Next: Sub-slice 28 (missionary resolution effects) -- fires at DynastyOperationMissionaryComponent.ResolveAtInWorldDays; on success applies faith exposure gain to target; on failure applies intensity erosion; conviction events per browser tickDynastyOperations missionary branch (~5520-5590).
