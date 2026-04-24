@@ -299,6 +299,9 @@
     <Compile Include="Assets\_Bloodlines\Code\Combat\PatrolOrderSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\PatrolMovementSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Patrol.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Economy\TradeRouteComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Economy\TradeRouteEvaluationSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.TradeRoutes.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Fortification\FortificationReserveSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\VictoryLeaderboardHUDComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Fortification.BreachReadout.cs" />

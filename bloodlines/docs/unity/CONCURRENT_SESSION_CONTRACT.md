@@ -2,9 +2,9 @@
 
 ## Contract Metadata
 
-- Revision: 123
+- Revision: 124
 - Last Updated: 2026-04-23
-- Last Updated By: claude-patrol-route-2026-04-23
+- Last Updated By: claude-world-trade-routes-2026-04-23
 - Supersedes: revision 118 (Records the player succession influence landing on canonical `master` and clears the branch-in-flight marker.)
 
 
@@ -1479,6 +1479,35 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `BloodlinesRallyPointSmokeValidation` proves struct initialization, set/clear request round-trips, and spawn resolution logic; PS1 wrapper and csproj entries in place
   - Four bugs in prior-lane files (CS0234 + CS0121) corrected as part of build-gate pass
   - All 10 validation gates passed (CS0006 Library-absent only, no code errors)
+
+### Lane: world-trade-routes
+
+- Status: complete (merged to master via `claude/unity-world-trade-routes`)
+- Branch Prefix: `claude/unity-world-trade-routes`
+- Owner Agent: claude
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Economy/TradeRouteComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Economy/TradeRouteEvaluationSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.TradeRoutes.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesTradeRouteSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityTradeRouteSmokeValidation.ps1`
+- Shared-File Narrow Edits:
+  - `unity/Assembly-CSharp.csproj` -- added Compile entries for TradeRouteComponent.cs, TradeRouteEvaluationSystem.cs, and debug surface partial
+  - `unity/Assembly-CSharp-Editor.csproj` -- added Compile entry for BloodlinesTradeRouteSmokeValidation.cs
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/ControlPointComponent.cs` -- read IsContested, OwnerFactionId, RadiusTiles for adjacency evaluation
+  - `unity/Assets/_Bloodlines/Code/Components/PositionComponent.cs` -- read faction position for distance calculation
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- faction entity query filter
+  - `unity/Assets/_Bloodlines/Code/Economy/ResourceStockpileComponent.cs` -- add gold yield to stockpile
+  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- day-cadence gate (once per in-world day)
+- Browser Reference: absent (trade route system not in simulation.js; implemented from canonical trade route design)
+- Current Branch In Flight: none (merged to master)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-world-trade-routes.md`
+- Last Slice State:
+  - `TradeRouteComponent` (per-faction: ActiveRouteCount, TotalGoldPerTickFromTrades, LastUpdatedAtInWorldDays) and `TradeRouteEvaluationSystem` (once-per-day O(n²) adjacency check: two uncontested owned CPs adjacent when distance ≤ radiusA + radiusB + 2 tiles; 5 gold/route/day added to ResourceStockpileComponent) now live on canonical `master`
+  - `BloodlinesTradeRouteSmokeValidation` proves adjacent uncontested pair yields 1 route/5 gold, contested CP exclusion, and cross-faction route rejection across 3 phases; PS1 wrapper and csproj entries in place
+  - All 10 validation gates passed (0 errors; Unity batch-mode smoke SKIP-env per established environment condition)
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
