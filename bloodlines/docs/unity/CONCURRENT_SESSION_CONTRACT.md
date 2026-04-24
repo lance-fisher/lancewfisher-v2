@@ -2,9 +2,9 @@
 
 ## Contract Metadata
 
-- Revision: 125
+- Revision: 126
 - Last Updated: 2026-04-23
-- Last Updated By: claude-skirmish-status-hud-2026-04-23
+- Last Updated By: claude-faction-visual-assignment-2026-04-23
 - Supersedes: revision 118 (Records the player succession influence landing on canonical `master` and clears the branch-in-flight marker.)
 
 
@@ -1538,6 +1538,34 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `SkirmishStatusHUDComponent` (singleton header: InWorldDays, ActiveFactionCount, TotalUnitCount, TotalTerritoryCount, LastRefreshInWorldDays) and `SkirmishStatusFactionRowHUDComponent` (per-faction buffer: FactionId, Rank, UnitCount, TerritoryCount, TerritoryShare, Gold, TradeRouteCount, TradeGoldPerDay, IsHumanPlayer) now live on canonical `master`
   - `SkirmishStatusHUDSystem` runs in PresentationSystemGroup at 0.25-day cadence; aggregates unit counts (UnitTypeComponent+FactionComponent queries), territory counts (ControlPointComponent non-neutral owned), and trade route data; sorts by territory share descending and assigns 1-based ranks
   - `BloodlinesSkirmishStatusHUDSmokeValidation` proves struct init, row sort and rank assignment, and human-player flag across 3 phases; PS1 wrapper and csproj entries in place
+  - All 10 validation gates passed (0 errors; Unity batch-mode smoke SKIP-env per established environment condition)
+
+### Lane: faction-visual-assignment
+
+- Status: complete (merged to master via `claude/unity-faction-visual-assignment`)
+- Branch Prefix: `claude/unity-faction-visual-assignment`
+- Owner Agent: claude
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Components/FactionVisualComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Systems/FactionVisualAssignmentSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.FactionVisual.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFactionVisualAssignmentSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityFactionVisualAssignmentSmokeValidation.ps1`
+- Shared-File Narrow Edits:
+  - `unity/Assembly-CSharp.csproj` -- added Compile entries for FactionVisualComponent.cs, FactionVisualAssignmentSystem.cs, and debug surface partial
+  - `unity/Assembly-CSharp-Editor.csproj` -- added Compile entry for BloodlinesFactionVisualAssignmentSmokeValidation.cs
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- faction entity query filter and FactionId string resolution
+  - `unity/Assets/_Bloodlines/Code/Components/UnitTypeComponent.cs` -- unit entity query filter for UnitFactionColorComponent propagation
+  - `unity/Assets/_Bloodlines/Code/Rendering/FactionTintPalette.cs` -- canonical house color resolution
+- Browser Reference: absent (faction visual assignment not in simulation.js; implemented from canonical faction identity design)
+- Current Branch In Flight: none (merged to master)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-faction-visual-assignment.md`
+- Last Slice State:
+  - `FactionVisualComponent` (per-faction: PrimaryTint, EmblemId, IsAssigned) and `UnitFactionColorComponent` (per-unit: FactionId, Tint) now live on canonical `master`
+  - `FactionVisualAssignmentSystem` lazily attaches `FactionVisualComponent` to faction entities at startup (resolving from FactionTintPalette; EmblemId = "emblem_" + factionId) and propagates `UnitFactionColorComponent` to newly spawned unit entities on each update
+  - `BloodlinesFactionVisualAssignmentSmokeValidation` proves palette tint resolution, emblem ID convention, and UnitFactionColorComponent struct initialization across 3 phases; PS1 wrapper and csproj entries in place
   - All 10 validation gates passed (0 errors; Unity batch-mode smoke SKIP-env per established environment condition)
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)

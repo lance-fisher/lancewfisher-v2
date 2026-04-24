@@ -305,6 +305,9 @@
     <Compile Include="Assets\_Bloodlines\Code\HUD\SkirmishStatusHUDComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\SkirmishStatusHUDSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.SkirmishStatus.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Components\FactionVisualComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Systems\FactionVisualAssignmentSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.FactionVisual.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Fortification\FortificationReserveSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\VictoryLeaderboardHUDComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Fortification.BreachReadout.cs" />

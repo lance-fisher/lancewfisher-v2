@@ -2314,5 +2314,7 @@
   "latest_trade_route_handoff": "docs/unity/session-handoffs/2026-04-23-unity-world-trade-routes.md",
   "trade_route_lane_status": "complete",
   "latest_skirmish_status_hud_handoff": "docs/unity/session-handoffs/2026-04-23-unity-skirmish-status-hud.md",
-  "skirmish_status_hud_lane_status": "complete"
+  "skirmish_status_hud_lane_status": "complete",
+  "latest_faction_visual_handoff": "docs/unity/session-handoffs/2026-04-23-unity-faction-visual-assignment.md",
+  "faction_visual_lane_status": "complete"
 }
