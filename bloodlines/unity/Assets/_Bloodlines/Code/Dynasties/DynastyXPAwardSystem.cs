@@ -29,8 +29,8 @@ namespace Bloodlines.Dynasties
             var em = state.EntityManager;
 
             var requestQuery = em.CreateEntityQuery(
-                Unity.Collections.ComponentType.ReadOnly<FactionComponent>(),
-                Unity.Collections.ComponentType.ReadOnly<DynastyXPAwardRequestComponent>());
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<DynastyXPAwardRequestComponent>());
             using var requestEntities = requestQuery.ToEntityArray(Unity.Collections.Allocator.Temp);
             using var factionIds = requestQuery.ToComponentDataArray<FactionComponent>(Unity.Collections.Allocator.Temp);
             using var requests = requestQuery.ToComponentDataArray<DynastyXPAwardRequestComponent>(Unity.Collections.Allocator.Temp);
@@ -58,7 +58,7 @@ namespace Bloodlines.Dynasties
                 byte oldTier = progression.CurrentTier;
                 float newXP = progression.AccumulatedXP + awardAmount;
                 byte newTier = DynastyProgressionCanon.TierForXP(newXP);
-                newTier = (byte)math.min(newTier, DynastyProgressionCanon.MaxTier);
+                newTier = (byte)math.min((int)newTier, (int)DynastyProgressionCanon.MaxTier);
 
                 progression.AccumulatedXP = newXP;
                 progression.LastMatchXPAward = awardAmount;

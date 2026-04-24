@@ -46,7 +46,7 @@ namespace Bloodlines.Dynasties
                 }
             }
 
-            return math.min(tier, MaxTier);
+            return (byte)math.min((int)tier, (int)MaxTier);
         }
 
         /// Returns the XP threshold to reach the next tier, or float.MaxValue if at cap.

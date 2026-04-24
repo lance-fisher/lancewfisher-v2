@@ -57,8 +57,8 @@ namespace Bloodlines.Debug
             }
 
             var query = entityManager.CreateEntityQuery(
-                Unity.Collections.ComponentType.ReadOnly<FactionComponent>(),
-                Unity.Collections.ComponentType.ReadOnly<FactionSiegeEscalationStateComponent>());
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<FactionSiegeEscalationStateComponent>());
             using var factionEntities = query.ToEntityArray(Unity.Collections.Allocator.Temp);
             using var factionComponents = query.ToComponentDataArray<FactionComponent>(Unity.Collections.Allocator.Temp);
             using var escalationStates = query.ToComponentDataArray<FactionSiegeEscalationStateComponent>(Unity.Collections.Allocator.Temp);

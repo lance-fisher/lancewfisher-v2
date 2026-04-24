@@ -30,9 +30,9 @@ namespace Bloodlines.Dynasties
             var em = state.EntityManager;
 
             var notifyQuery = em.CreateEntityQuery(
-                Unity.Collections.ComponentType.ReadOnly<FactionComponent>(),
-                Unity.Collections.ComponentType.ReadOnly<TierUnlockNotificationComponent>(),
-                Unity.Collections.ComponentType.ReadOnly<DynastyProgressionComponent>());
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<TierUnlockNotificationComponent>(),
+                ComponentType.ReadOnly<DynastyProgressionComponent>());
             using var notifyEntities = notifyQuery.ToEntityArray(Unity.Collections.Allocator.Temp);
             using var notifications = notifyQuery.ToComponentDataArray<TierUnlockNotificationComponent>(Unity.Collections.Allocator.Temp);
             using var progressions = notifyQuery.ToComponentDataArray<DynastyProgressionComponent>(Unity.Collections.Allocator.Temp);

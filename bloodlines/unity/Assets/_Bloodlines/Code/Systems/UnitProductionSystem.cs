@@ -1,3 +1,4 @@
+using Bloodlines.Combat;
 using Bloodlines.Components;
 using Unity.Collections;
 using Unity.Entities;
@@ -57,6 +58,18 @@ namespace Bloodlines.Systems
                     continue;
                 }
 
+                bool hasActiveRallyPoint = false;
+                float3 rallyPosition = float3.zero;
+                if (entityManager.HasComponent<RallyPointComponent>(buildingEntity))
+                {
+                    var rally = entityManager.GetComponentData<RallyPointComponent>(buildingEntity);
+                    if (rally.IsActive)
+                    {
+                        hasActiveRallyPoint = true;
+                        rallyPosition = rally.TargetPosition;
+                    }
+                }
+
                 SpawnQueuedUnit(
                     entityManager,
                     ecb,
@@ -64,7 +77,9 @@ namespace Bloodlines.Systems
                     buildingPosition.ValueRO.Value,
                     buildingFaction.ValueRO.FactionId,
                     facilityRw.ValueRO.SpawnSequence,
-                    queueItem);
+                    queueItem,
+                    hasActiveRallyPoint,
+                    rallyPosition);
 
                 facilityRw.ValueRW = new ProductionFacilityComponent
                 {
@@ -116,7 +131,9 @@ namespace Bloodlines.Systems
             float3 buildingPosition,
             FixedString32Bytes factionId,
             int spawnSequence,
-            in ProductionQueueItemElement queueItem)
+            in ProductionQueueItemElement queueItem,
+            bool hasActiveRallyPoint = false,
+            float3 rallyPosition = default)
         {
             var entity = ecb.CreateEntity();
             float3 spawnPosition = ResolveSpawnPosition(buildingPosition, spawnSequence);
@@ -165,9 +182,9 @@ namespace Bloodlines.Systems
             ecb.AddComponent(entity, new RecentImpactComponent());
             ecb.AddComponent(entity, new MoveCommandComponent
             {
-                Destination = spawnPosition,
-                StoppingDistance = 0.2f,
-                IsActive = false,
+                Destination = hasActiveRallyPoint ? rallyPosition : spawnPosition,
+                StoppingDistance = hasActiveRallyPoint ? 0.5f : 0.2f,
+                IsActive = hasActiveRallyPoint,
             });
 
             if (TryResolveProjectileFactory(entityManager, combatDefinitionsEntity, queueItem.UnitId, out var projectileFactory))

@@ -171,6 +171,9 @@
     <Compile Include="Assets\_Bloodlines\Code\Components\FactionTintComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Siege\FieldWaterStrainSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\GroupMovementResolutionSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Combat\RallyPointComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Combat\RallyPointSetSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.RallyPoint.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\SiegeSupportComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.HUD.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AIWorkerCommandSystem.cs" />

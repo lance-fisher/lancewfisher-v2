@@ -2,9 +2,9 @@
 
 ## Contract Metadata
 
-- Revision: 121
+- Revision: 122
 - Last Updated: 2026-04-23
-- Last Updated By: claude-dynasty-progression-2026-04-23
+- Last Updated By: claude-rally-point-2026-04-23
 - Supersedes: revision 118 (Records the player succession influence landing on canonical `master` and clears the branch-in-flight marker.)
 
 
@@ -1417,6 +1417,40 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `DynastyProgressionComponent` (per-faction: AccumulatedXP, CurrentTier, LastMatchXPAward, TierUnlocksPending), `DynastyProgressionCanon` (XP thresholds, placement schedule, tier-for-XP helpers), `DynastyXPAwardSystem` (consumes XPAwardRequest, advances tier, fires TierUnlockNotification), `DynastyUnlockSlotElement` (DynamicBuffer element: SlotIndex, UnlockTypeId, UnlockTargetId, GrantedAtTier, IsActive), `DynastyProgressionUnlockSystem` (consumes notification, writes slots cycling SpecialUnitSwap/ResourceBonus/DiplomacyBonus/CombatBonus), and `SpecialUnitSwapApplicatorSystem` (reads active swap slot, writes FactionSpecialUnitSwapComponent) now live on canonical `master`
   - `BloodlinesDynastyProgressionSmokeValidation` proves tier advancement, unlock slot cycling, and applicator logic across 3 phases; PS1 wrapper and csproj entries in place
   - All 10 validation gates passed (CS0006 Library-absent only, no code errors; Unity batch-mode smoke SKIP-env per established environment condition)
+
+### Lane: rally-point
+
+- Status: complete (merged to master via `claude/unity-combat-rally-point`)
+- Branch Prefix: `claude/unity-combat-rally-point`
+- Owner Agent: claude
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Combat/RallyPointComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Combat/RallyPointSetSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.RallyPoint.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesRallyPointSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityRallyPointSmokeValidation.ps1`
+- Shared-File Narrow Edits:
+  - `unity/Assets/_Bloodlines/Code/Systems/UnitProductionSystem.cs` -- added `using Bloodlines.Combat;`, reads `RallyPointComponent` from building entity before spawn, passes `hasActiveRallyPoint` and `rallyPosition` to `SpawnQueuedUnit`, `SpawnQueuedUnit` sets `MoveCommandComponent.Destination` to rally position when active
+  - `unity/Assembly-CSharp.csproj` -- added Compile entries for RallyPointComponent.cs, RallyPointSetSystem.cs, and debug surface partial
+  - `unity/Assembly-CSharp-Editor.csproj` -- added Compile entry for BloodlinesRallyPointSmokeValidation.cs
+- Cross-Lane Fixes (bugs corrected in prior-lane files while running build gate):
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.SiegeEscalation.cs` -- fixed `Unity.Collections.ComponentType` to `ComponentType` (siege-escalation lane bug, CS0234)
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyXPAwardSystem.cs` -- fixed `Unity.Collections.ComponentType` to `ComponentType` (dynasty-progression lane bug, CS0234); fixed `math.min(byte, byte)` ambiguity by casting to `int` (CS0121)
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyProgressionCanon.cs` -- fixed `math.min(byte, byte)` ambiguity by casting to `int` (CS0121)
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyProgressionUnlockSystem.cs` -- fixed `Unity.Collections.ComponentType` to `ComponentType` (dynasty-progression lane bug, CS0234)
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/BuildingTypeComponent.cs` -- read for building entity validation in debug surface
+  - `unity/Assets/_Bloodlines/Code/Components/MoveCommandComponent.cs` -- write rally destination into spawn
+- Browser Reference: absent (rally point not in simulation.js; implemented from canonical production design)
+- Current Branch In Flight: none (merged to master)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-rally-point.md`
+- Last Slice State:
+  - `RallyPointComponent` (per-building: TargetPosition, IsActive) and `RallyPointSetSystem` (consumes `PlayerRallyPointSetRequestComponent`) now live on canonical `master`
+  - `UnitProductionSystem` reads `RallyPointComponent` at spawn time and routes `MoveCommandComponent` to rally position when active
+  - `BloodlinesRallyPointSmokeValidation` proves struct initialization, set/clear request round-trips, and spawn resolution logic; PS1 wrapper and csproj entries in place
+  - Four bugs in prior-lane files (CS0234 + CS0121) corrected as part of build-gate pass
+  - All 10 validation gates passed (CS0006 Library-absent only, no code errors)
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
