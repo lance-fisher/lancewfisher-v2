@@ -5620,3 +5620,9 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
 Latest sub-slice: 1 (arc). Status: Complete.
 Handoff: docs/unity/session-handoffs/2026-04-23-unity-siege-escalation.md
 Next: Continue from directive Priority 1 (multiplayer-foundation) or Priority 2 (dynasty-progression-unlocks) -- siege escalation arc is fully merged to master.
+
+## match-end-sequence (as of 2026-04-24)
+
+Latest sub-slice: 1 (match end sequence). Status: Complete.
+Handoff: docs/unity/session-handoffs/2026-04-24-unity-match-end-sequence.md
+Next: Claim next unclaimed lane -- skirmish game mode manager, audio dispatch foundation, dynasty prestige (renown decay + prestige drift), or faith doctrine combat wiring.

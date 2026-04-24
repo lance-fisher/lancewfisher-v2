@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 127
-- Last Updated: 2026-04-23
-- Last Updated By: claude-netcode-foundation-2026-04-23
-- Supersedes: revision 118 (Records the player succession influence landing on canonical `master` and clears the branch-in-flight marker.)
+- Revision: 128
+- Last Updated: 2026-04-24
+- Last Updated By: claude-match-end-sequence-2026-04-24
+- Supersedes: revision 127 (Records the multiplayer network foundation landing on canonical `master`.)
 
 
 ## Purpose
@@ -1596,6 +1596,36 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `GhostCollectionSetupSystem` registers three ghost prefab archetypes (archetype_faction, archetype_control_point, archetype_unit) to the buffer after bootstrap
   - `BloodlinesNetworkFoundationSmokeValidation` proves offline local mode defaults and ghost collection registration across 2 phases; PS1 wrapper and csproj entries in place
   - All 10 validation gates passed (0 errors; Unity batch-mode smoke SKIP-env per established environment condition)
+
+### Lane: match-end-sequence
+
+- Status: complete (merged to master via `claude/unity-match-end-sequence`)
+- Branch Prefix: `claude/unity-match-end-sequence`
+- Owner Agent: claude
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Victory/MatchEndStateComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Victory/MatchEndSequenceSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/HUD/MatchEndHUDComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/HUD/MatchEndHUDSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.MatchEnd.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMatchEndSequenceSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityMatchEndSequenceSmokeValidation.ps1`
+- Shared-File Narrow Edits:
+  - `unity/Assembly-CSharp.csproj` -- added Compile entries for MatchEndStateComponent.cs, MatchEndSequenceSystem.cs, MatchEndHUDComponent.cs, MatchEndHUDSystem.cs, BloodlinesDebugCommandSurface.MatchEnd.cs
+  - `unity/Assembly-CSharp-Editor.csproj` -- added Compile entry for BloodlinesMatchEndSequenceSmokeValidation.cs
+- Cross-Lane Reads (no writes):
+  - `Bloodlines.AI.NarrativeMessageBridge.Push()` (ai-strategic-layer lane, public static method -- cross-lane read)
+  - `Bloodlines.Dynasties.DynastyXPAwardRequestComponent` (dynasty-progression lane, places one-shot components consumed by DynastyXPAwardSystem)
+  - `Bloodlines.Victory.VictoryStateComponent` (victory-conditions lane, read-only)
+- Browser Reference: absent (match-end result screen not in simulation.js)
+- Current Branch In Flight: none (merged to master)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-24-unity-match-end-sequence.md`
+- Last Slice State:
+  - `MatchEndSequenceSystem` fires once when VictoryStateComponent.Status != Playing, creates MatchEndStateComponent singleton, places DynastyXPAwardRequestComponent on all faction entities (winner 150 XP placement=1, runner-up 75 XP placement=2, others 25 XP placement=3), pushes narrative message via NarrativeMessageBridge
+  - `MatchEndHUDSystem` reads MatchEndStateComponent and writes MatchEndHUDComponent singleton for display-ready match result data
+  - `BloodlinesMatchEndSequenceSmokeValidation` proves 3 phases: state initialization, XP ordering, narrative message. PS1 wrapper in place.
+  - All 10 validation gates passed (0 errors; Unity batch-mode runtime smokes SKIP-env per established environment condition; lane smoke PASS)
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
