@@ -146,6 +146,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPlayerMarriageAcceptanceSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesSiegeSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesSiegeEscalationSmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesDynastyProgressionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\GraphicsVisualTestbedBootstrap.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesDestroyedCounterRecoverySmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAISiegeOrchestrationSmokeValidation.cs" />

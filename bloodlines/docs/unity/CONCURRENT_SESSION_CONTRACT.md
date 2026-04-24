@@ -2,9 +2,9 @@
 
 ## Contract Metadata
 
-- Revision: 120
+- Revision: 121
 - Last Updated: 2026-04-23
-- Last Updated By: claude-siege-escalation-2026-04-23
+- Last Updated By: claude-dynasty-progression-2026-04-23
 - Supersedes: revision 118 (Records the player succession influence landing on canonical `master` and clears the branch-in-flight marker.)
 
 
@@ -1388,6 +1388,35 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `StarvationResponseSystem` now reads `FactionSiegeEscalationStateComponent` (narrow edit) and scales famine population decline by the siege multiplier
   - `BloodlinesSiegeEscalationSmokeValidation` proves Normal/Prolonged/Severe/Critical canon behavior and starvation wiring contract; PS1 wrapper and csproj entries in place
   - All 10 validation gates passed (CS0006 Library-absent only, no code errors)
+
+### Lane: dynasty-progression
+
+- Status: complete (merged to master via `claude/unity-dynasty-progression-unlocks`)
+- Branch Prefix: `claude/unity-dynasty-progression-unlocks`
+- Owner Agent: claude
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyProgressionComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyProgressionCanon.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyXPAwardSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyUnlockSlotElement.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyProgressionUnlockSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Dynasties/SpecialUnitSwapApplicatorSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.DynastyProgression.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyProgressionSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityDynastyProgressionSmokeValidation.ps1`
+- Shared-File Narrow Edits:
+  - `unity/Assembly-CSharp.csproj` -- added Compile entries for DynastyProgression*.cs, DynastyXPAwardSystem.cs, DynastyUnlockSlotElement.cs, DynastyProgressionUnlockSystem.cs, SpecialUnitSwapApplicatorSystem.cs, and debug surface partial
+  - `unity/Assembly-CSharp-Editor.csproj` -- added Compile entry for BloodlinesDynastyProgressionSmokeValidation.cs
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- faction entity query filter
+- Browser Reference: absent (dynasty progression XP/unlock system not in simulation.js; implemented from canonical progression design per owner direction 2026-04-19)
+- Current Branch In Flight: none (merged to master)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-dynasty-progression.md`
+- Last Slice State:
+  - `DynastyProgressionComponent` (per-faction: AccumulatedXP, CurrentTier, LastMatchXPAward, TierUnlocksPending), `DynastyProgressionCanon` (XP thresholds, placement schedule, tier-for-XP helpers), `DynastyXPAwardSystem` (consumes XPAwardRequest, advances tier, fires TierUnlockNotification), `DynastyUnlockSlotElement` (DynamicBuffer element: SlotIndex, UnlockTypeId, UnlockTargetId, GrantedAtTier, IsActive), `DynastyProgressionUnlockSystem` (consumes notification, writes slots cycling SpecialUnitSwap/ResourceBonus/DiplomacyBonus/CombatBonus), and `SpecialUnitSwapApplicatorSystem` (reads active swap slot, writes FactionSpecialUnitSwapComponent) now live on canonical `master`
+  - `BloodlinesDynastyProgressionSmokeValidation` proves tier advancement, unlock slot cycling, and applicator logic across 3 phases; PS1 wrapper and csproj entries in place
+  - All 10 validation gates passed (CS0006 Library-absent only, no code errors; Unity batch-mode smoke SKIP-env per established environment condition)
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 

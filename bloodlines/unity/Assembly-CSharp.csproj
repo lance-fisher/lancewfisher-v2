@@ -64,6 +64,13 @@
     <Compile Include="Assets\_Bloodlines\Code\Definitions\HouseDefinition.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\SuccessionCrisisComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyRenownComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyProgressionComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyProgressionCanon.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyXPAwardSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyUnlockSlotElement.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyProgressionUnlockSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Dynasties\SpecialUnitSwapApplicatorSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.DynastyProgression.cs" />
     <Compile Include="Assets\_Bloodlines\Code\WorldPressure\TruebornRecognitionResolutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerCovertOps\PlayerSabotageStatusComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.PlayerDiplomacy.cs" />
