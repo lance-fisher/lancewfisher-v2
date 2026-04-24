@@ -2,9 +2,9 @@
 
 ## Contract Metadata
 
-- Revision: 124
+- Revision: 125
 - Last Updated: 2026-04-23
-- Last Updated By: claude-world-trade-routes-2026-04-23
+- Last Updated By: claude-skirmish-status-hud-2026-04-23
 - Supersedes: revision 118 (Records the player succession influence landing on canonical `master` and clears the branch-in-flight marker.)
 
 
@@ -1507,6 +1507,37 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - Last Slice State:
   - `TradeRouteComponent` (per-faction: ActiveRouteCount, TotalGoldPerTickFromTrades, LastUpdatedAtInWorldDays) and `TradeRouteEvaluationSystem` (once-per-day O(n²) adjacency check: two uncontested owned CPs adjacent when distance ≤ radiusA + radiusB + 2 tiles; 5 gold/route/day added to ResourceStockpileComponent) now live on canonical `master`
   - `BloodlinesTradeRouteSmokeValidation` proves adjacent uncontested pair yields 1 route/5 gold, contested CP exclusion, and cross-faction route rejection across 3 phases; PS1 wrapper and csproj entries in place
+  - All 10 validation gates passed (0 errors; Unity batch-mode smoke SKIP-env per established environment condition)
+
+### Lane: skirmish-status-hud
+
+- Status: complete (merged to master via `claude/unity-hud-skirmish-match-status`)
+- Branch Prefix: `claude/unity-hud-skirmish-match-status`
+- Owner Agent: claude
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/HUD/SkirmishStatusHUDComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/HUD/SkirmishStatusHUDSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.SkirmishStatus.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSkirmishStatusHUDSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnitySkirmishStatusHUDSmokeValidation.ps1`
+- Shared-File Narrow Edits:
+  - `unity/Assembly-CSharp.csproj` -- added Compile entries for SkirmishStatusHUDComponent.cs, SkirmishStatusHUDSystem.cs, and debug surface partial
+  - `unity/Assembly-CSharp-Editor.csproj` -- added Compile entry for BloodlinesSkirmishStatusHUDSmokeValidation.cs
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- faction entity query filter
+  - `unity/Assets/_Bloodlines/Code/Components/UnitTypeComponent.cs` -- unit count per faction
+  - `unity/Assets/_Bloodlines/Code/Components/ControlPointComponent.cs` -- territory count per faction
+  - `unity/Assets/_Bloodlines/Code/Economy/ResourceStockpileComponent.cs` -- gold per faction
+  - `unity/Assets/_Bloodlines/Code/Economy/TradeRouteComponent.cs` -- trade route count and gold/day per faction
+  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- match time and 0.25-day refresh cadence
+- Browser Reference: absent (skirmish match status HUD not in simulation.js; implemented from canonical skirmish design)
+- Current Branch In Flight: none (merged to master)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-skirmish-status-hud.md`
+- Last Slice State:
+  - `SkirmishStatusHUDComponent` (singleton header: InWorldDays, ActiveFactionCount, TotalUnitCount, TotalTerritoryCount, LastRefreshInWorldDays) and `SkirmishStatusFactionRowHUDComponent` (per-faction buffer: FactionId, Rank, UnitCount, TerritoryCount, TerritoryShare, Gold, TradeRouteCount, TradeGoldPerDay, IsHumanPlayer) now live on canonical `master`
+  - `SkirmishStatusHUDSystem` runs in PresentationSystemGroup at 0.25-day cadence; aggregates unit counts (UnitTypeComponent+FactionComponent queries), territory counts (ControlPointComponent non-neutral owned), and trade route data; sorts by territory share descending and assigns 1-based ranks
+  - `BloodlinesSkirmishStatusHUDSmokeValidation` proves struct init, row sort and rank assignment, and human-player flag across 3 phases; PS1 wrapper and csproj entries in place
   - All 10 validation gates passed (0 errors; Unity batch-mode smoke SKIP-env per established environment condition)
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)

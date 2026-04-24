@@ -302,6 +302,9 @@
     <Compile Include="Assets\_Bloodlines\Code\Economy\TradeRouteComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Economy\TradeRouteEvaluationSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.TradeRoutes.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\HUD\SkirmishStatusHUDComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\HUD\SkirmishStatusHUDSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.SkirmishStatus.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Fortification\FortificationReserveSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\VictoryLeaderboardHUDComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Fortification.BreachReadout.cs" />
