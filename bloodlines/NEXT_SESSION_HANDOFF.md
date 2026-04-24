@@ -5609,3 +5609,9 @@ Branch landed: `codex/unity-scout-raids-logistics-interdiction`
     current Unity `Siege/**` surfaces
   - port the next additive non-AI slice with its own dedicated smoke
     validator and matching PowerShell wrapper
+
+## siege-escalation (as of 2026-04-23)
+
+Latest sub-slice: 1 (arc). Status: Complete.
+Handoff: docs/unity/session-handoffs/2026-04-23-unity-siege-escalation.md
+Next: Continue from directive Priority 1 (multiplayer-foundation) or Priority 2 (dynasty-progression-unlocks) -- siege escalation arc is fully merged to master.

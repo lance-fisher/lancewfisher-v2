@@ -355,6 +355,10 @@
     <Compile Include="Assets\_Bloodlines\Code\TerritoryGovernance\GovernorSeatAssignmentComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\DynastyOperationLimits.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Siege\SiegeSupplyCampComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Siege\SiegeEscalationComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Siege\SiegeEscalationCanon.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Siege\SiegeEscalationSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.SiegeEscalation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Systems\BloodlinesBootstrap.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerCovertOps\PlayerCovertOpsResolutionComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\HealthComponent.cs" />

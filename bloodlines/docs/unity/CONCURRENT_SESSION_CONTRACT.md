@@ -2,9 +2,9 @@
 
 ## Contract Metadata
 
-- Revision: 119
+- Revision: 120
 - Last Updated: 2026-04-23
-- Last Updated By: codex-player-succession-influence-landing-2026-04-23
+- Last Updated By: claude-siege-escalation-2026-04-23
 - Supersedes: revision 118 (Records the player succession influence landing on canonical `master` and clears the branch-in-flight marker.)
 
 
@@ -1355,6 +1355,39 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - the original HUD political-state panel landing remains preserved on canonical `master`, and the rerun refresh now proves that same behavior still holds on top of the newer master ancestry that already includes the player covenant-test dispatch landing, without widening ownership into `AI/**`
   - `BloodlinesDebugCommandSurface.HUD` still exposes the political-state snapshot helpers, `BloodlinesPoliticalStateHUDSmokeValidation` reran green on the refreshed merge result, and the merged line also retained the dedicated player covenant-test dispatch smoke proof surface
   - the refreshed merged result reran the full governed 10-gate chain green, plus the dedicated HUD and player covenant-test dispatch smokes, and the committed `unity/Assembly-CSharp*.csproj` files still preserve the canonical `D:\ProjectsHome\Bloodlines\unity\Library\PackageCache` analyzer roots for fresh automation worktrees
+
+### Lane: siege-escalation
+
+- Status: complete (merged to master via `claude/unity-siege-escalation-arc`)
+- Branch Prefix: `claude/unity-siege-escalation-arc`
+- Owner Agent: claude
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Siege/SiegeEscalationComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Siege/SiegeEscalationCanon.cs`
+  - `unity/Assets/_Bloodlines/Code/Siege/SiegeEscalationSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.SiegeEscalation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSiegeEscalationSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnitySiegeEscalationSmokeValidation.ps1`
+- Shared-File Narrow Edits:
+  - `unity/Assets/_Bloodlines/Code/Economy/StarvationResponseSystem.cs` -- added `using Bloodlines.Siege;`, `WithEntityAccess()` on the query, optional read of `FactionSiegeEscalationStateComponent.StarvationMultiplier`, applied to `scaledDecline` before conviction protection
+  - `unity/Assembly-CSharp.csproj` -- added Compile entries for SiegeEscalation*.cs and debug surface partial
+  - `unity/Assembly-CSharp-Editor.csproj` -- added Compile entry for BloodlinesSiegeEscalationSmokeValidation.cs
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Fortification/FortificationReserveComponent.cs` -- read `ThreatActive` as siege-active gate
+  - `unity/Assets/_Bloodlines/Code/Components/FactionComponent.cs` -- faction identity lookup
+  - `unity/Assets/_Bloodlines/Code/Economy/FactionLoyaltyComponent.cs` -- apply accumulated morale penalty
+  - `unity/Assets/_Bloodlines/Code/Time/DualClockComponent.cs` -- read `InWorldDays` for duration accumulation
+  - `unity/Assets/_Bloodlines/Code/Components/SettlementComponent.cs` -- settlement query filter
+- Browser Reference: absent (tickSiegeEscalation not in simulation.js -- implemented from canonical siege doctrine)
+- Current Branch In Flight: none (merged to master)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-siege-escalation.md`
+- Last Slice State:
+  - `SiegeEscalationComponent` (per-settlement), `FactionSiegeEscalationStateComponent` (per-faction), `SiegeEscalationCanon` (thresholds/multipliers), and `SiegeEscalationSystem` now live on canonical `master`
+  - System increments SiegeDurationInWorldDays each frame, advances tier at 7/14/21d thresholds, writes per-faction aggregate StarvationMultiplier to `FactionSiegeEscalationStateComponent`, applies accumulated MoralePenaltyPerDay to faction loyalty
+  - `StarvationResponseSystem` now reads `FactionSiegeEscalationStateComponent` (narrow edit) and scales famine population decline by the siege multiplier
+  - `BloodlinesSiegeEscalationSmokeValidation` proves Normal/Prolonged/Severe/Critical canon behavior and starvation wiring contract; PS1 wrapper and csproj entries in place
+  - All 10 validation gates passed (CS0006 Library-absent only, no code errors)
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 

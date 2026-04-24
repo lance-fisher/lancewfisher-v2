@@ -2304,5 +2304,7 @@
       "handoff": "docs/unity/session-handoffs/2026-04-23-unity-player-succession-influence-landing.md",
       "validation_gates": "all 10 green plus player succession influence smoke on merged master"
     }
-  ]
+  ],
+  "latest_siege_escalation_handoff": "docs/unity/session-handoffs/2026-04-23-unity-siege-escalation.md",
+  "siege_escalation_lane_status": "complete"
 }

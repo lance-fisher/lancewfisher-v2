@@ -1,5 +1,6 @@
 using Bloodlines.Components;
 using Bloodlines.Conviction;
+using Bloodlines.Siege;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -48,14 +49,18 @@ namespace Bloodlines.Systems
             float famineLoyaltyDelta = cfg.FamineLoyaltyDeltaPerCycle;
             float waterCrisisLoyaltyDelta = cfg.WaterCrisisLoyaltyDeltaPerCycle;
 
-            foreach (var (realmRw, populationRw, loyaltyRw, conviction) in
+            foreach (var (realmRw, populationRw, loyaltyRw, conviction, entity) in
                 SystemAPI.Query<
                     RefRW<RealmConditionComponent>,
                     RefRW<PopulationComponent>,
                     RefRW<FactionLoyaltyComponent>,
-                    RefRO<ConvictionComponent>>())
+                    RefRO<ConvictionComponent>>()
+                .WithEntityAccess())
             {
                 ref var realm = ref realmRw.ValueRW;
+                float siegeStarvationMultiplier = SystemAPI.HasComponent<FactionSiegeEscalationStateComponent>(entity)
+                    ? SystemAPI.GetComponent<FactionSiegeEscalationStateComponent>(entity).StarvationMultiplier
+                    : 1.0f;
 
                 if (realm.CycleCount <= realm.LastStarvationResponseCycle)
                 {
@@ -85,8 +90,9 @@ namespace Bloodlines.Systems
                 if (totalPopulationDecline > 0)
                 {
                     ref var population = ref populationRw.ValueRW;
+                    int scaledDecline = (int)math.ceil(totalPopulationDecline * siegeStarvationMultiplier);
                     int adjustedDecline = ApplyPopulationProtection(
-                        totalPopulationDecline,
+                        scaledDecline,
                         conviction.ValueRO.Band);
                     int newTotal = math.max(0, population.Total - adjustedDecline);
                     int appliedDecline = population.Total - newTotal;
