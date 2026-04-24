@@ -2325,5 +2325,7 @@
   "latest_faith_combat_doctrine_handoff": "docs/unity/session-handoffs/2026-04-24-unity-faith-combat-doctrine.md",
   "faith_combat_doctrine_lane_status": "complete",
   "latest_skirmish_game_mode_handoff": "docs/unity/session-handoffs/2026-04-24-unity-skirmish-game-mode.md",
-  "skirmish_game_mode_lane_status": "complete"
+  "skirmish_game_mode_lane_status": "complete",
+  "latest_dynasty_prestige_handoff": "docs/unity/session-handoffs/2026-04-24-unity-dynasty-prestige.md",
+  "dynasty_prestige_lane_status": "complete"
 }

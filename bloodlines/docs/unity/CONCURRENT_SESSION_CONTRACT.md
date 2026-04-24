@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 130
+- Revision: 131
 - Last Updated: 2026-04-24
-- Last Updated By: claude-skirmish-game-mode-2026-04-24
-- Supersedes: revision 129 (Records the faith-combat-doctrine lane landing on canonical `master`.)
+- Last Updated By: claude-dynasty-prestige-2026-04-24
+- Supersedes: revision 130 (Records the skirmish-game-mode lane landing on canonical `master`.)
 
 
 ## Purpose
@@ -1688,6 +1688,37 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `SkirmishGameModeComponent` singleton (SkirmishPhase enum Setup/Playing/PostMatch, FactionCount, IsPlayerVsAI, PlayerFactionId, MatchStartInWorldDays, MatchEndInWorldDays) now on canonical `master`
   - `SkirmishGameModeManagerSystem` drives Setup→Playing (bootstrap complete + VictoryStateComponent seeded) and Playing→PostMatch (MatchEndStateComponent.IsMatchEnded) transitions; records faction count and player-vs-AI flag on transition to Playing
   - `BloodlinesSkirmishGameModeSmokeValidation` proves 3 phases: default Setup init, Setup→Playing field population, Playing→PostMatch MatchEndInWorldDays carry. PS1 wrapper in place.
+  - All 10 validation gates passed (0 errors; Unity batch-mode runtime smokes SKIP-env per established environment condition; lane smoke PASS)
+
+### Lane: dynasty-prestige
+
+- Status: complete (merged to master via `claude/unity-dynasty-prestige`)
+- Branch Prefix: `claude/unity-dynasty-prestige`
+- Owner Agent: claude
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyPrestigeDecayModulatorSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.DynastyPrestige.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesDynastyPrestigeDriftSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityDynastyPrestigeDriftSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assembly-CSharp.csproj` -- added Compile entries for DynastyPrestigeDecayModulatorSystem.cs and BloodlinesDebugCommandSurface.DynastyPrestige.cs
+  - `unity/Assembly-CSharp-Editor.csproj` -- added Compile entry for BloodlinesDynastyPrestigeDriftSmokeValidation.cs
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyRenownComponent.cs` -- writes RenownDecayRate field; reads/writes via SetComponentData
+  - `unity/Assets/_Bloodlines/Code/Dynasties/DynastyRenownAccumulationSystem.cs` -- runs before this system via UpdateBefore ordering; reads the decay rate as written
+  - `unity/Assets/_Bloodlines/Code/Components/DynastyMemberComponent.cs` -- reads DynastyStateComponent.Interregnum for penalty application
+  - `unity/Assets/_Bloodlines/Code/Dynasties/SuccessionCrisisComponent.cs` -- reads RecoveryProgressPct to detect active crisis
+  - `unity/Assets/_Bloodlines/Code/Components/ConvictionComponent.cs` -- reads ConvictionBand for moral modulation of decay
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-24-unity-dynasty-prestige.md`
+- Browser Reference:
+  - Absent -- no dynasty-level prestige decay system in simulation.js; browser tracks per-member renown only
+- Current Branch In Flight: none (merged onto canonical `master`)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-24-unity-dynasty-prestige.md`
+- Last Slice State:
+  - `DynastyPrestigeDecayModulatorSystem` runs `[UpdateBefore(DynastyRenownAccumulationSystem)]`; adjusts `RenownDecayRate` per faction entity each tick based on political health: base 0.45, +0.225 interregnum, +0.1125 active crisis, +0.0675 ApexCruel, -0.0675 ApexMoral, floored at 0.10
+  - `BloodlinesDynastyPrestigeDriftSmokeValidation` proves 3 phases: base rate vs interregnum penalty, crisis stacking, conviction modulation with floor. PS1 wrapper in place.
   - All 10 validation gates passed (0 errors; Unity batch-mode runtime smokes SKIP-env per established environment condition; lane smoke PASS)
 
 ## Next Unblocked Tier 1 Lanes (Unclaimed)

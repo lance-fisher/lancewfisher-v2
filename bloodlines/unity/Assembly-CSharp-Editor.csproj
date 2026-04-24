@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesMatchProgressionHUDSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesWorldPressureSmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesDynastyPrestigeDriftSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\GraphicsVisualTestbedPopulate.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesFaithDoctrineCombatWiringSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesBattlefieldCommandDeckSmokeValidation.cs" />

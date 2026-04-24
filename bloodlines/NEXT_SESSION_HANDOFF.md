@@ -5638,3 +5638,9 @@ Next: Skirmish game mode manager or dynasty prestige (renown decay + prestige dr
 Latest sub-slice: 1 (skirmish game mode manager). Status: Complete.
 Handoff: docs/unity/session-handoffs/2026-04-24-unity-skirmish-game-mode.md
 Next: Dynasty prestige (renown decay + prestige drift distinct from the already-implemented renown accumulation system) or audio dispatch foundation (Wwise scaffolding).
+
+## dynasty-prestige (as of 2026-04-24)
+
+Latest sub-slice: 1 (prestige decay modulation). Status: Complete.
+Handoff: docs/unity/session-handoffs/2026-04-24-unity-dynasty-prestige.md
+Next: Audio dispatch foundation (Wwise scaffolding) or dynasty persistence (save/load for cross-match dynasty state).
