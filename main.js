@@ -116,10 +116,10 @@
   // ===== BOOKING FORM SUBMISSION =====
   (function() {
     var form = document.getElementById('bookingForm');
-    var wrap = document.getElementById('bookingFormWrap');
     var success = document.getElementById('bookingSuccess');
     var submitBtn = document.getElementById('bookingSubmit');
     if (!form) return;
+    var defaultLabel = submitBtn ? submitBtn.textContent : 'Send Inquiry';
     form.addEventListener('submit', function(e) {
       e.preventDefault();
       submitBtn.disabled = true;
@@ -130,23 +130,91 @@
         body: formData,
         headers: { 'Accept': 'application/json' }
       }).then(function(response) {
-        return response.json().then(function(data) {
+        return response.text().then(function(text) {
+          var data = {};
+          try {
+            data = text ? JSON.parse(text) : {};
+          } catch (err) {}
           if (response.ok && data.ok) {
             form.style.display = 'none';
             success.classList.add('visible');
           } else {
             var msg = data.error || (data.errors ? data.errors.join(' ') : 'Something went wrong.');
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Send Request';
+            submitBtn.textContent = defaultLabel;
             alert(msg + ' You can also email lance@lancewfisher.com directly.');
           }
         });
       }).catch(function() {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Request';
+        submitBtn.textContent = defaultLabel;
         alert('Something went wrong. Please email lance@lancewfisher.com directly.');
       });
     });
+  })();
+
+  // ===== ABOUT IMPACT TITLE =====
+  (function() {
+    var title = document.getElementById('aboutImpactTitle');
+    if (!title) return;
+    var words = Array.prototype.slice.call(title.querySelectorAll('.about-impact-word'));
+    if (words.length !== 2) return;
+
+    var phrases = (title.getAttribute('data-phrases') || '')
+      .split(';')
+      .map(function(item) {
+        return item.split('|').map(function(part) {
+          return part.trim();
+        }).filter(Boolean);
+      })
+      .filter(function(parts) {
+        return parts.length === 2;
+      });
+
+    if (phrases.length < 2) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var index = 0;
+    var cycleDelay = 5600;
+    var exitDelay = 320;
+    var enterDelay = 720;
+
+    function setWords(phrase) {
+      words.forEach(function(word, wordIndex) {
+        word.textContent = phrase[wordIndex];
+      });
+      title.setAttribute('aria-label', 'Built ' + phrase.join(' '));
+    }
+
+    setWords(phrases[0]);
+
+    function scheduleNext() {
+      setTimeout(runCycle, cycleDelay);
+    }
+
+    function runCycle() {
+      var nextIndex = (index + 1) % phrases.length;
+      title.classList.add('is-exiting');
+
+      setTimeout(function() {
+        setWords(phrases[nextIndex]);
+        title.classList.remove('is-exiting');
+        title.classList.add('is-entering');
+
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() {
+            title.classList.remove('is-entering');
+          });
+        });
+      }, exitDelay);
+
+      setTimeout(function() {
+        index = nextIndex;
+        scheduleNext();
+      }, enterDelay);
+    }
+
+    scheduleNext();
   })();
 
   // ===== THEME TOGGLE =====
@@ -212,7 +280,7 @@
 
   // ===== SCROLL INDICATOR =====
   var scrollInd = document.getElementById('scrollIndicator');
-  window.addEventListener('scroll', function() {
+  if (scrollInd) window.addEventListener('scroll', function() {
     if (window.scrollY > 120) scrollInd.classList.add('hidden');
     else scrollInd.classList.remove('hidden');
   }, { passive: true });
@@ -1179,7 +1247,7 @@
     ctx.beginPath(); ctx.moveTo(0, 22*s); ctx.lineTo(w, 22*s); ctx.stroke();
     ctx.fillStyle = aClr(p,0.5); ctx.fillRect(0, 0, 3*s, 22*s);
     ctx.fillStyle = tClr(p,0.7); ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
-    ctx.fillText('Sovereign Signal', 14*s, 14*s);
+    ctx.fillText('Secure Signal Messenger', 14*s, 14*s);
     // Lock badge (encrypted)
     ctx.fillStyle = aClr(p,0.45); ctx.font = (6*s)+'px Inter, sans-serif';
     ctx.textAlign = 'right'; ctx.fillText('\uD83D\uDD12 E2EE', w-12*s, 14*s);
@@ -1886,7 +1954,7 @@
     ctx.beginPath(); ctx.moveTo(0, 28*s); ctx.lineTo(w, 28*s); ctx.stroke();
     ctx.fillStyle = aClr(p,0.6); ctx.fillRect(0, 0, 3*s, 28*s);
     ctx.fillStyle = tClr(p,0.75); ctx.font = '500 '+(9*s)+'px Inter, sans-serif';
-    ctx.textAlign = 'left'; ctx.fillText('Sovereign Hub', 14*s, 18*s);
+    ctx.textAlign = 'left'; ctx.fillText('Sovereignty Hub', 14*s, 18*s);
 
     // Sync status
     ctx.beginPath(); ctx.arc(w-14*s, 14*s, 3*s, 0, Math.PI*2);
@@ -2575,7 +2643,7 @@
 
     // Service health grid (4 columns x 3 rows)
     var services = [
-      {name:'Sovereign Hub', st:'online', up:'99.9%', c:'0,200,120'},
+      {name:'Sovereignty Hub', st:'online', up:'99.9%', c:'0,200,120'},
       {name:'Open-WebUI', st:'online', up:'99.7%', c:'0,200,120'},
       {name:'Session Atlas', st:'online', up:'98.4%', c:'0,200,120'},
       {name:'Home Hub', st:'online', up:'97.1%', c:'0,200,120'},
@@ -2832,6 +2900,155 @@
     drawCorners(ctx, w, h, 14*s, aClr(p, 0.15));
   }
 
+  // ---- PRIVATE NOTES: Notes list + serif editor ----
+  function drawPrivateNotes(canvas) {
+    var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
+    var p = pal(197, 165, 114);
+    drawBg(ctx, w, h, 197, 165, 114);
+
+    // Window chrome header
+    var hGrad = ctx.createLinearGradient(0, 0, w, 0);
+    hGrad.addColorStop(0, aClr(p, 0.07)); hGrad.addColorStop(1, aClr(p, 0.01));
+    ctx.fillStyle = hGrad; ctx.fillRect(0, 0, w, 24*s);
+    ctx.strokeStyle = aClr(p, 0.09); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
+    ctx.fillStyle = aClr(p, 0.55); ctx.fillRect(0, 0, 3*s, 24*s);
+
+    ctx.fillStyle = tClr(p, 0.68); ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
+    ctx.fillText('Private Notes', 14*s, 16*s);
+    ctx.fillStyle = aClr(p, 0.5); ctx.font = (5.5*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText('\uD83D\uDD12 Encrypted', w-14*s, 16*s); ctx.textAlign = 'left';
+
+    // ----- Left sidebar: notes list -----
+    var sideW = w * 0.36;
+    ctx.fillStyle = aClr(p, 0.025); ctx.fillRect(0, 24*s, sideW, h-24*s);
+    ctx.strokeStyle = aClr(p, 0.06); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(sideW, 24*s); ctx.lineTo(sideW, h); ctx.stroke();
+
+    // Search box
+    var searchY = 32*s;
+    roundRect(ctx, 6*s, searchY, sideW-12*s, 14*s, 4*s);
+    ctx.fillStyle = aClr(p, 0.04); ctx.fill();
+    ctx.strokeStyle = aClr(p, 0.07); ctx.lineWidth = 0.5*s; ctx.stroke();
+    ctx.fillStyle = tClr(p, 0.2); ctx.font = '300 '+(5*s)+'px Inter, sans-serif';
+    ctx.fillText('Search notes...', 12*s, searchY+9.5*s);
+
+    // "New note" pill
+    roundRect(ctx, 6*s, searchY+18*s, sideW-12*s, 13*s, 4*s);
+    ctx.fillStyle = aClr(p, 0.12); ctx.fill();
+    ctx.fillStyle = aClr(p, 0.65); ctx.font = '500 '+(5*s)+'px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('+ New note', sideW/2, searchY+27*s); ctx.textAlign = 'left';
+
+    // Notes list
+    var notes = [
+      { title: 'Tuesday morning',             preview: 'The things that matter most...', time: 'Now',  protected: false, active: true  },
+      { title: 'Signal architecture',         preview: 'Policy gates, promotion flow, k', time: '9:14', protected: true,  active: false },
+      { title: 'Family trip planning',        preview: 'Flights on the 12th, car pickup', time: '8:02', protected: false, active: false },
+      { title: 'Boarding pass',               preview: 'Row 14, seat D. Gate posts at 0', time: 'Yest', protected: true,  active: false },
+      { title: 'Reading list Q2',             preview: 'The Crisis of Islam, The Bed of',  time: 'Mon',  protected: false, active: false },
+      { title: 'Medical records',             preview: '——— ——— ——— ——— ——— ——',            time: 'Sun',  protected: true,  active: false }
+    ];
+    var listStartY = searchY + 38*s;
+    var rowH = Math.min((h - listStartY - 8*s) / notes.length, 26*s);
+    for (var ni = 0; ni < notes.length; ni++) {
+      var n = notes[ni];
+      var ry = listStartY + ni*rowH;
+
+      if (n.active) {
+        ctx.fillStyle = aClr(p, 0.08); ctx.fillRect(0, ry, sideW, rowH);
+        ctx.fillStyle = aClr(p, 0.55); ctx.fillRect(0, ry, 2*s, rowH);
+      }
+
+      // Title
+      ctx.fillStyle = tClr(p, n.active ? 0.72 : 0.52);
+      ctx.font = (n.active ? '500 ' : '400 ')+(5.6*s)+'px Inter, sans-serif';
+      var titleX = 8*s;
+      if (n.protected) {
+        ctx.fillStyle = aClr(p, 0.6); ctx.font = (4.8*s)+'px Inter, sans-serif';
+        ctx.fillText('\uD83D\uDD12', titleX, ry+rowH/2-1*s);
+        titleX += 8*s;
+        ctx.fillStyle = tClr(p, n.active ? 0.72 : 0.52);
+        ctx.font = (n.active ? '500 ' : '400 ')+(5.6*s)+'px Inter, sans-serif';
+      }
+      ctx.fillText(n.title, titleX, ry+rowH/2-1*s);
+
+      // Preview (dim, redacted if protected)
+      ctx.fillStyle = tClr(p, 0.22); ctx.font = '300 '+(4.5*s)+'px Inter, sans-serif';
+      var prev = n.preview.length > 28 ? n.preview.substring(0,27)+'\u2026' : n.preview;
+      ctx.fillText(prev, 8*s, ry+rowH/2+8*s);
+
+      // Time
+      ctx.fillStyle = tClr(p, 0.2); ctx.font = (4*s)+'px monospace';
+      ctx.textAlign = 'right'; ctx.fillText(n.time, sideW-6*s, ry+rowH/2-1*s); ctx.textAlign = 'left';
+    }
+
+    // ----- Right: editor -----
+    var edX = sideW, edY = 24*s, edW = w - edX, edH = h - edY;
+
+    // Editor thin toolbar
+    ctx.fillStyle = aClr(p, 0.02); ctx.fillRect(edX, edY, edW, 18*s);
+    ctx.strokeStyle = aClr(p, 0.05); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(edX, edY+18*s); ctx.lineTo(w, edY+18*s); ctx.stroke();
+
+    // Breadcrumb: folder path + saved indicator
+    ctx.fillStyle = tClr(p, 0.32); ctx.font = '300 '+(4.5*s)+'px Inter, sans-serif';
+    ctx.fillText('Personal  \u203A  Journal', edX+10*s, edY+11*s);
+    // Saved dot
+    ctx.fillStyle = 'rgba(110,180,120,0.55)';
+    ctx.beginPath(); ctx.arc(w-48*s, edY+9*s, 1.8*s, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = tClr(p, 0.28); ctx.font = (4*s)+'px monospace';
+    ctx.fillText('saved', w-42*s, edY+11*s);
+
+    // Title (serif, Cormorant-like treatment)
+    var titleY = edY + 34*s;
+    ctx.fillStyle = tClr(p, 0.82);
+    ctx.font = '500 '+(14*s)+'px Georgia, "Cormorant Garamond", serif';
+    ctx.fillText('Tuesday morning', edX+14*s, titleY);
+
+    // Date line
+    ctx.fillStyle = tClr(p, 0.28); ctx.font = '300 '+(4.5*s)+'px Inter, sans-serif';
+    ctx.fillText('April 15  \u00B7  312 words', edX+14*s, titleY+10*s);
+
+    // Body paragraphs (dim serif)
+    ctx.fillStyle = tClr(p, 0.55);
+    ctx.font = (5.5*s)+'px Georgia, "Cormorant Garamond", serif';
+    var bodyX = edX + 14*s, bodyY = titleY + 22*s, lineH = 8.4*s, maxY = h - 26*s;
+    var lines = [
+      'The things that matter most should not',
+      'live inside systems that quietly read them.',
+      '',
+      'I want a notebook that starts with me,',
+      'stays with me, and answers to me alone.',
+      'Fast capture in the morning. Encryption',
+      'for the parts that deserve it. Search that',
+      'actually finds the thought from last March.',
+      '',
+      'Everything synced between the laptop and',
+      'the phone, nothing handed to a company'
+    ];
+    for (var li = 0; li < lines.length; li++) {
+      if (bodyY > maxY) break;
+      ctx.fillText(lines[li], bodyX, bodyY);
+      bodyY += lineH;
+    }
+
+    // Cursor caret
+    ctx.fillStyle = aClr(p, 0.7);
+    ctx.fillRect(bodyX + ctx.measureText('the phone, nothing handed to a company').width + 1*s, bodyY - lineH - 6*s, 1*s, 7*s);
+
+    // Bottom status bar
+    var barY = h - 18*s;
+    ctx.fillStyle = aClr(p, 0.04); ctx.fillRect(0, barY, w, 18*s);
+    ctx.strokeStyle = aClr(p, 0.07); ctx.lineWidth = 0.5*s;
+    ctx.beginPath(); ctx.moveTo(0, barY); ctx.lineTo(w, barY); ctx.stroke();
+    ctx.fillStyle = aClr(p, 0.4); ctx.font = (4.5*s)+'px monospace';
+    ctx.fillText('XChaCha20', 10*s, barY+12*s);
+    ctx.textAlign = 'center'; ctx.fillStyle = tClr(p, 0.3); ctx.fillText('offline-first', w/2, barY+12*s);
+    ctx.textAlign = 'right'; ctx.fillStyle = aClr(p, 0.4); ctx.fillText('no telemetry', w-10*s, barY+12*s); ctx.textAlign = 'left';
+
+    drawCorners(ctx, w, h, 14*s, aClr(p, 0.15));
+  }
+
   // ---- LLM ENCLAVE: Zero-trust AI isolation visual ----
   function drawLLMEnclave(canvas) {
     var o = setupCanvas(canvas), ctx = o.ctx, w = o.w, h = o.h, s = o.s;
@@ -2941,7 +3158,7 @@
     ctx.beginPath(); ctx.moveTo(0, 24*s); ctx.lineTo(w, 24*s); ctx.stroke();
     ctx.fillStyle = aClr(p, 0.5); ctx.fillRect(0, 0, 3*s, 24*s);
     ctx.fillStyle = tClr(p, 0.65); ctx.font = '500 '+(8*s)+'px Inter, sans-serif';
-    ctx.fillText('Sovereign Trade Engine', 14*s, 16*s);
+    ctx.fillText('Private Trading Protocols', 14*s, 16*s);
     ctx.fillStyle = 'rgba(220,80,60,0.45)'; ctx.font = '600 '+(5.5*s)+'px monospace';
     ctx.textAlign = 'right'; ctx.fillText('DRY RUN', w-14*s, 16*s); ctx.textAlign = 'left';
 
@@ -3513,6 +3730,7 @@ ctx.fillText('ORDER BOOK - YES', bookX+4*s, bookY+8*s);
     'operator-console': drawOperatorConsole,
     'session-atlas': drawSessionAtlas,
     'private-intelligence': drawPrivateIntelligence,
+    'private-notes': drawPrivateNotes,
     'llm-enclave': drawLLMEnclave,
     'sovereign-trade-engine': drawSovereignTradeEngine,
     'private-tax': drawPrivateTax,

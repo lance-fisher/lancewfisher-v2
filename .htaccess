@@ -4,6 +4,7 @@
 RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteRule "(^|/)\.(?!well-known(?:/|$))" - [F]
 
 # Remove www
 RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
@@ -14,9 +15,10 @@ Header set X-Content-Type-Options "nosniff"
 Header set X-Frame-Options "SAMEORIGIN"
 Header set Referrer-Policy "strict-origin-when-cross-origin"
 Header set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
-Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-src 'self';"
+Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-src 'self'; frame-ancestors 'self';"
 Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
 Header set X-Permitted-Cross-Domain-Policies "none"
+Header set X-XSS-Protection "1; mode=block"
 
 # Cache static assets (images, fonts)
 <IfModule mod_expires.c>
@@ -44,9 +46,20 @@ Header set X-Permitted-Cross-Domain-Policies "none"
 # Disable directory listing
 Options -Indexes
 
+# Explicitly allow indexing for public-facing pages (overrides any server-level noindex default)
+<IfModule mod_headers.c>
+  <FilesMatch "^(index|home|one-pager)\.html$">
+    Header unset X-Robots-Tag
+    Header always set X-Robots-Tag "index, follow"
+  </FilesMatch>
+</IfModule>
+
 # Block search indexing of private artifacts at the HTTP layer (belt-and-suspenders beside <meta robots>)
 <IfModule mod_headers.c>
   <FilesMatch "^resume\.html$">
+    Header set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet"
+  </FilesMatch>
+  <FilesMatch "^home-preview\.html$">
     Header set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet"
   </FilesMatch>
   <LocationMatch "^/ftda/">
@@ -55,7 +68,13 @@ Options -Indexes
   <LocationMatch "^/playbook/">
     Header set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet"
   </LocationMatch>
+  <LocationMatch "^/concepts/">
+    Header set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet"
+  </LocationMatch>
 </IfModule>
+
+# Block bloodlines Unity submodule directory (2GB git history, no web content)
+RewriteRule ^bloodlines/unity(/.*)?$ - [F,L]
 
 # Custom 404 page
 ErrorDocument 404 /404.html

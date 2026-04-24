@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fisher Sovereign Systems | Lance W. Fisher</title>
-<meta name="description" content="Lance Fisher - Owner of Fisher Sovereign Systems, LLC. Building the Architecture for Independence lancewfisher.com | fishersovereign.com">
+<meta name="description" content="Lance W. Fisher | Technical operations leader, culture architect, and full-stack builder. Founder, Fisher Sovereign Systems. 25+ production systems shipped across trading, AI, encrypted messaging, and games.">
 <meta name="author" content="Lance W. Fisher">
 <meta name="keywords" content="Lance W. Fisher, Lance Fisher, Fisher Sovereign Systems, technical operations, full-stack developer, trading systems, AI, software engineer, leadership">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
-<link rel="canonical" href="https://lancewfisher.com/home.html">
+<link rel="canonical" href="https://lancewfisher.com/">
 <!-- Open Graph -->
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://lancewfisher.com/home.html">
+<meta property="og:url" content="https://lancewfisher.com/">
 <meta property="og:title" content="Fisher Sovereign Systems | Lance W. Fisher">
 <meta property="og:description" content="Technical operations leader and full-stack builder. Founder, Fisher Sovereign Systems. 25+ production systems shipped across trading, AI, encrypted messaging, and games.">
 <meta property="og:image" content="https://lancewfisher.com/img/og-image.jpg">
@@ -46,8 +46,256 @@
   if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
 })();
 </script>
+<style id="home-preview-overrides">
+body.preview-background-v1 {
+  position: relative;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(244, 247, 250, 0.012), transparent 28%),
+    linear-gradient(180deg, #050608 0%, #080a0d 44%, #050709 100%);
+  overflow-x: hidden;
+}
+
+.preview-bg-plane {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.preview-bg-vignette {
+  background:
+    linear-gradient(90deg, rgba(5, 6, 8, 0.94) 0%, rgba(8, 10, 13, 0.2) 16%, rgba(8, 10, 13, 0) 31%, rgba(8, 10, 13, 0) 69%, rgba(8, 10, 13, 0.2) 84%, rgba(5, 6, 8, 0.94) 100%),
+    linear-gradient(180deg, rgba(5, 6, 8, 0.84) 0%, rgba(5, 6, 8, 0.05) 16%, rgba(5, 6, 8, 0.05) 84%, rgba(5, 6, 8, 0.84) 100%);
+}
+
+.preview-bg-texture {
+  background:
+    radial-gradient(circle at 10% 24%, rgba(212, 219, 229, 0.04), transparent 18%),
+    radial-gradient(circle at 90% 26%, rgba(212, 219, 229, 0.032), transparent 17%),
+    radial-gradient(circle at 14% 76%, rgba(96, 106, 120, 0.028), transparent 22%),
+    radial-gradient(circle at 86% 80%, rgba(96, 106, 120, 0.024), transparent 22%);
+  filter: blur(54px);
+  opacity: 0.46;
+  animation: previewTextureDrift 34s ease-in-out infinite alternate;
+}
+
+.preview-bg-lines {
+  background:
+    radial-gradient(circle at 50% 52%, transparent 0 22%, rgba(180, 191, 208, 0.028) 22.35%, transparent 22.7%),
+    linear-gradient(60deg, transparent 49.72%, rgba(180, 191, 208, 0.03) 50%, transparent 50.28%),
+    linear-gradient(120deg, transparent 49.72%, rgba(180, 191, 208, 0.03) 50%, transparent 50.28%);
+  background-size: 720px 720px, 720px 720px, 720px 720px;
+  background-position: center 38%, center 38%, center 38%;
+  opacity: 0.22;
+  animation: previewLineFloat 42s linear infinite;
+}
+
+body.preview-background-v1 .ship-watermark {
+  top: 55%;
+  left: -12vw;
+  width: min(30vw, 500px);
+  opacity: 0.034;
+  transform: translateY(-50%);
+  filter: grayscale(1) brightness(0.64) contrast(1.14);
+  mix-blend-mode: screen;
+  clip-path: inset(2% 34% 2% 0);
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.9) 14%, #000 34%, rgba(0, 0, 0, 0.72) 62%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.92) 12%, rgba(0, 0, 0, 0.92) 88%, transparent 100%);
+  mask-image:
+    linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.9) 14%, #000 34%, rgba(0, 0, 0, 0.72) 62%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.92) 12%, rgba(0, 0, 0, 0.92) 88%, transparent 100%);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation: previewEdgeDriftLeft 42s ease-in-out infinite;
+}
+
+body.preview-background-v1 .statue-watermark {
+  display: block;
+  position: fixed;
+  top: 53%;
+  right: -24vw;
+  left: auto;
+  transform: translateY(-50%);
+  width: min(31vw, 540px);
+  opacity: 0.038;
+  filter: grayscale(1) brightness(0.62) contrast(1.18);
+  mix-blend-mode: screen;
+  clip-path: inset(2% 0 2% 42%);
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent 0%, transparent 22%, rgba(0, 0, 0, 0.58) 46%, #000 68%, rgba(0, 0, 0, 0.86) 84%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.92) 12%, rgba(0, 0, 0, 0.92) 88%, transparent 100%);
+  mask-image:
+    linear-gradient(90deg, transparent 0%, transparent 22%, rgba(0, 0, 0, 0.58) 46%, #000 68%, rgba(0, 0, 0, 0.86) 84%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.92) 12%, rgba(0, 0, 0, 0.92) 88%, transparent 100%);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  z-index: 0;
+  animation: previewEdgeDriftRight 46s ease-in-out infinite;
+}
+
+body.preview-background-v1 .page {
+  position: relative;
+  z-index: 1;
+}
+
+body.preview-background-v1 .about-card,
+body.preview-background-v1 .booking-form-wrap,
+body.preview-background-v1 .ecosystem-stage,
+body.preview-background-v1 .fs-sovereignty-block {
+  box-shadow:
+    0 0 0 1px rgba(216, 223, 233, 0.02),
+    0 20px 56px rgba(0, 0, 0, 0.22);
+}
+
+body.preview-background-v1 .section-label,
+body.preview-background-v1 .section-title,
+body.preview-background-v1 .hero-tagline,
+body.preview-background-v1 .hero-subtitle,
+body.preview-background-v1 .hero-motto-text {
+  text-shadow: 0 0 22px rgba(0, 0, 0, 0.18);
+}
+
+body.preview-background-v1 .glitch-statue-left,
+body.preview-background-v1 .glitch-statue-right,
+body.preview-background-v1 .glitch-statue-left *,
+body.preview-background-v1 .glitch-statue-right * {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  animation: none !important;
+}
+
+@keyframes previewTextureDrift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(0, -18px, 0) scale(1.05);
+  }
+}
+
+@keyframes previewLineFloat {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(1.2deg) scale(1.02);
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+@keyframes previewEdgeDriftLeft {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.024;
+  }
+  50% {
+    transform: translate(-48%, -49%) scale(1.03);
+    opacity: 0.034;
+  }
+}
+
+@keyframes previewEdgeDriftRight {
+  0%, 100% {
+    transform: translateY(-50%) scale(1);
+    opacity: 0.07;
+  }
+  50% {
+    transform: translateY(-48%) scale(1.035);
+    opacity: 0.096;
+  }
+}
+
+html[data-theme="light"] body.preview-background-v1 {
+  background:
+    radial-gradient(circle at 50% 14%, rgba(255, 255, 255, 0.14), transparent 26%),
+    linear-gradient(180deg, #ddd9d1 0%, #e4e0d9 44%, #dbd6ce 100%);
+}
+
+html[data-theme="light"] body.preview-background-v1 .preview-bg-vignette {
+  background:
+    linear-gradient(90deg, rgba(150, 152, 156, 0.18) 0%, rgba(214, 215, 218, 0.04) 16%, rgba(234, 235, 238, 0) 31%, rgba(234, 235, 238, 0) 69%, rgba(214, 215, 218, 0.04) 84%, rgba(150, 152, 156, 0.18) 100%),
+    linear-gradient(180deg, rgba(158, 160, 164, 0.12) 0%, rgba(238, 238, 238, 0.02) 16%, rgba(238, 238, 238, 0.02) 84%, rgba(158, 160, 164, 0.12) 100%);
+}
+
+html[data-theme="light"] body.preview-background-v1 .preview-bg-texture {
+  background:
+    radial-gradient(circle at 12% 24%, rgba(124, 132, 146, 0.028), transparent 19%),
+    radial-gradient(circle at 88% 28%, rgba(124, 132, 146, 0.026), transparent 19%),
+    radial-gradient(circle at 16% 76%, rgba(148, 153, 162, 0.022), transparent 24%),
+    radial-gradient(circle at 84% 80%, rgba(148, 153, 162, 0.02), transparent 24%);
+  opacity: 0.2;
+}
+
+html[data-theme="light"] body.preview-background-v1 .preview-bg-lines {
+  opacity: 0.06;
+}
+
+html[data-theme="light"] body.preview-background-v1 .ship-watermark {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+html[data-theme="light"] body.preview-background-v1 .statue-watermark {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+html[data-theme="light"] body.preview-background-v1 .section-label,
+html[data-theme="light"] body.preview-background-v1 .section-title,
+html[data-theme="light"] body.preview-background-v1 .hero-tagline,
+html[data-theme="light"] body.preview-background-v1 .hero-subtitle,
+html[data-theme="light"] body.preview-background-v1 .hero-motto-text {
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.26);
+}
+
+html[data-theme="light"] body.preview-background-v1 .fs-business-line1,
+html[data-theme="light"] body.preview-background-v1 .hero-name-last {
+  color: rgba(42, 39, 36, 0.82);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+html[data-theme="light"] body.preview-background-v1 .fs-business-line2,
+html[data-theme="light"] body.preview-background-v1 .hero-tagline,
+html[data-theme="light"] body.preview-background-v1 .hero-for-line,
+html[data-theme="light"] body.preview-background-v1 .hero-name-first,
+html[data-theme="light"] body.preview-background-v1 .hero-subtitle,
+html[data-theme="light"] body.preview-background-v1 .hero-motto-text,
+html[data-theme="light"] body.preview-background-v1 .hero-domains span,
+html[data-theme="light"] body.preview-background-v1 .hero-domains a::before,
+html[data-theme="light"] body.preview-background-v1 .hero-domains a::after {
+  color: rgba(66, 62, 58, 0.68);
+}
+
+@media (max-width: 900px) {
+  .preview-bg-lines {
+    background-size: 520px 520px, 520px 520px, 520px 520px;
+    opacity: 0.18;
+  }
+
+  body.preview-background-v1 .preview-bg-texture {
+    opacity: 0.3;
+  }
+
+  body.preview-background-v1 .ship-watermark,
+  body.preview-background-v1 .statue-watermark {
+    display: none !important;
+    opacity: 0 !important;
+  }
+}
+</style>
 </head>
-<body>
+<body class="preview-background-v1">
+<div class="preview-bg-plane preview-bg-vignette" aria-hidden="true"></div>
+<div class="preview-bg-plane preview-bg-texture" aria-hidden="true"></div>
+<div class="preview-bg-plane preview-bg-lines" aria-hidden="true"></div>
 
 <!-- Theme Toggle -->
 <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">
@@ -109,13 +357,13 @@
     <p class="hero-subtitle">Leader &middot; Builder &middot; Father &middot; Husband</p>
     <div class="hero-domains">
       <a href="https://lancewfisher.com" target="_blank" rel="noopener noreferrer"><span>lancewfisher.com</span></a>
-      <a href="one-three/brand.html" target="_blank" rel="noopener noreferrer"><span>one-three.net</span></a>
+      <a href="one-three/brand.html" rel="noopener noreferrer"><span>one-three.net</span></a>
       <a href="https://fishersovereign.com" target="_blank" rel="noopener noreferrer"><span>fishersovereign.com</span></a>
       <a href="https://f1sh3r.net" target="_blank" rel="noopener noreferrer"><span>f1sh3r.net</span></a>
     </div>
     <div class="hero-ctas">
-      <a href="#sec-projects" class="hero-cta hero-cta-primary">See the Work</a>
-      <a href="#sec-engagement" class="hero-cta hero-cta-ghost">Begin an Engagement</a>
+      <a href="#sec-engagement" class="hero-cta hero-cta-primary">Begin an Engagement</a>
+      <a href="#sec-projects" class="hero-cta hero-cta-ghost">See the Work</a>
     </div>
     <div class="scroll-indicator" id="scrollIndicator">
       <div class="scroll-line"></div>
@@ -134,15 +382,14 @@
           <img class="portrait-secondary" src="img/photo-family2.jpg" alt="Lance outdoors" loading="lazy">
           <img class="portrait-secondary" src="img/photo-family3.jpg" alt="Lance at a formal event" loading="lazy">
           <img class="portrait-secondary" src="img/photo-portrait1.jpg" alt="Lance W. Fisher in a suit" loading="lazy">
-          <img class="portrait-secondary" src="img/photo-family4.jpg" alt="Lance and his son outdoors" loading="lazy">
           <div class="portrait-scanline"></div>
         </div>
           <div class="about-copy">
             <div class="about-intro-row">
               <div class="about-standard">
                 <div class="about-impact-kicker">Operating Standard</div>
-                <div class="about-impact-title" id="aboutImpactTitle" data-phrases="to|Last;for|consequence;for|permanence;with|discipline;on|conviction;to|outlast;to|withstand;to|endure" aria-label="Built to Last">
-                  <span class="about-impact-static">Built</span>
+                <div class="about-impact-title" id="aboutImpactTitle" data-phrases="Built|to|Last;Made|to|Endure;Held|to|Standard;Quiet|Under|Pressure;Calm|in|Chaos;Set|with|Intent" aria-label="Built to Last">
+                  <span class="about-impact-word">Built</span>
                   <span class="about-impact-word">to</span>
                   <span class="about-impact-word">Last</span>
                 </div>
@@ -280,7 +527,7 @@
   <!-- Device Experience Showcase -->
   <section class="section ecosystem-stage" id="sec-showcase" data-reveal style="max-width:1100px;">
     <div class="section-label">The Ecosystem</div>
-    <div class="section-title" style="margin-bottom:12px;">Your private system.<br>Every surface you need.</div>
+    <div class="section-title" style="margin-bottom:12px;">One sovereign system.<br>Every surface you need.</div>
     <p class="projects-intro" style="margin-bottom:32px;">Three product surfaces, one operating estate. Branded business apps, private AI, and encrypted communications all live inside the same controlled world.</p>
 
     <!-- Ecosystem composition: center laptop is the command hub, flanking devices are client surfaces -->
@@ -740,18 +987,18 @@
               <div class="bl-sigil-mark">B</div>
               <div class="bl-brand-text">
                 <div class="bl-brand-title">Bloodlines</div>
-                <div class="bl-brand-sub">Design Archive: Phase 2</div>
+                <div class="bl-brand-sub">Design Archive: Session 9</div>
               </div>
               <div class="bl-stats">
-                <div class="bl-stat"><span class="bl-stat-val">80+</span><span class="bl-stat-label">Sections</span></div>
+                <div class="bl-stat"><span class="bl-stat-val">62</span><span class="bl-stat-label">Sections</span></div>
                 <div class="bl-stat-div"></div>
-                <div class="bl-stat"><span class="bl-stat-val">28k+</span><span class="bl-stat-label">Lines</span></div>
+                <div class="bl-stat"><span class="bl-stat-val">15k+</span><span class="bl-stat-label">Lines</span></div>
                 <div class="bl-stat-div"></div>
                 <div class="bl-stat"><span class="bl-stat-val">9</span><span class="bl-stat-label">Houses</span></div>
                 <div class="bl-stat-div"></div>
                 <div class="bl-stat"><span class="bl-stat-val">7</span><span class="bl-stat-label">Systems</span></div>
               </div>
-              <div class="bl-phase">Unity: Phase 2</div>
+              <div class="bl-phase">Phase 1 Complete</div>
             </div>
             <div class="bl-sidebar-strip">
               <div class="bl-nav-section">
@@ -788,7 +1035,7 @@
               <div class="bl-overview-title">Bloodlines</div>
               <div class="bl-overview-tagline">"What it costs to build something that outlasts you."</div>
               <div class="bl-mini-stats">
-                <div class="bl-mini-stat"><div class="bl-mini-stat-val">28k+</div><div class="bl-mini-stat-label">Doc Lines</div></div>
+                <div class="bl-mini-stat"><div class="bl-mini-stat-val">2,813</div><div class="bl-mini-stat-label">Bible Lines</div></div>
                 <div class="bl-mini-stat"><div class="bl-mini-stat-val">9</div><div class="bl-mini-stat-label">Houses</div></div>
                 <div class="bl-mini-stat"><div class="bl-mini-stat-val">28+</div><div class="bl-mini-stat-label">Events</div></div>
                 <div class="bl-mini-stat"><div class="bl-mini-stat-val">6</div><div class="bl-mini-stat-label">Victory Paths</div></div>
@@ -811,7 +1058,7 @@
                 <li><em>28+ political events</em>: named world events with triggers, effects, counter-play, and resolution mechanics</li>
                 <li><em>Born of Sacrifice</em>: elite army forging through genuine sacrifice, the moral core of the game</li>
                 <li><em>Six victory paths</em>: Military Conquest, Economic Dominance, Dynastic Prestige, Faith Divine Right, Alliance Victory, Trueborn Rise</li>
-                <li><em>80+ section Design Archive</em>: complete design foundation across all systems, houses, and mechanics</li>
+                <li><em>62-section Design Bible</em>: complete design foundation across all systems, houses, and mechanics</li>
               </ul>
             </div>
             <div class="detail-col">
@@ -824,7 +1071,7 @@
                 <li><em>A* pathfinding</em> with terrain costs and collision avoidance for large-scale unit movement</li>
                 <li>Isometric projection: tile W=64, H=32, elevation offset 16px per level</li>
                 <li><em>Procedural world generation</em>: biome distribution, resource placement, terrain features</li>
-                <li><em>28,000+ lines</em> of design documentation across 20 structured directories</li>
+                <li><em>15,000+ lines</em> of design documentation across 20 structured directories</li>
               </ul>
             </div>
             <div class="bl-detail-links">
@@ -849,7 +1096,7 @@
                 <div class="bl-scope-item">
                   <div class="bl-scope-label">Design Bible</div>
                   <div class="bl-scope-bar-track"><div class="bl-scope-bar-fill" style="width:100%; background:linear-gradient(90deg, var(--gold-1776), rgba(201,168,76,0.3));"></div></div>
-                  <div class="bl-scope-val">80+ sections &middot; 28,000+ lines</div>
+                  <div class="bl-scope-val">62 sections &middot; 2,813 lines</div>
                 </div>
                 <div class="bl-scope-item">
                   <div class="bl-scope-label">Core Systems</div>
@@ -864,7 +1111,7 @@
                 <div class="bl-scope-item">
                   <div class="bl-scope-label">Documentation</div>
                   <div class="bl-scope-bar-track"><div class="bl-scope-bar-fill" style="width:95%; background:linear-gradient(90deg, rgba(var(--fg),0.4), rgba(var(--fg),0.1));"></div></div>
-                  <div class="bl-scope-val">28,000+ lines &middot; 20 directories</div>
+                  <div class="bl-scope-val">15,000+ lines &middot; 20 directories</div>
                 </div>
               </div>
             </div>
@@ -2103,10 +2350,6 @@
         <div class="build-method-label">Direct</div>
         <div class="build-method-text">LLMs as force multipliers under disciplined guidance. The human sets the standard. The tooling executes.</div>
       </div>
-      <div class="build-method-item">
-        <div class="build-method-label">Ship</div>
-        <div class="build-method-text">Velocity is a discipline. Deploy, iterate, learn. Twenty-five systems in production and accelerating.</div>
-      </div>
     </div>
   </section>
 
@@ -2181,7 +2424,7 @@
     <div class="commission-note">Each build is scoped to your environment, delivered to infrastructure you control, and handed off with full operational ownership.</div>
 
     <div style="text-align:center; padding:8px 0;">
-      <a href="#sec-engagement" class="hero-cta hero-cta-primary" style="font-size:13px; letter-spacing:4px; padding:16px 40px;">How Engagements Work</a>
+      <a href="#sec-contact" class="hero-cta hero-cta-primary" style="font-size:13px; letter-spacing:4px; padding:16px 40px;">Request a Custom Build</a>
     </div>
 
     <div class="capability-disclaimer">Capabilities shown may vary by client environment, deployment scope, and approved integration path.</div>
@@ -2403,10 +2646,7 @@
   <div class="nav-dot" data-target="sec-fisher-sovereign"></div>
   <div class="nav-dot" data-target="sec-showcase"></div>
   <div class="nav-dot" data-target="sec-projects"></div>
-  <div class="nav-dot" data-target="sec-ventures"></div>
-  <div class="nav-dot" data-target="sec-principles"></div>
   <div class="nav-dot" data-target="sec-commission"></div>
-  <div class="nav-dot" data-target="sec-engagement"></div>
   <div class="nav-dot" data-target="sec-contact"></div>
 </nav>
 
