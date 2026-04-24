@@ -5626,3 +5626,9 @@ Next: Continue from directive Priority 1 (multiplayer-foundation) or Priority 2 
 Latest sub-slice: 1 (match end sequence). Status: Complete.
 Handoff: docs/unity/session-handoffs/2026-04-24-unity-match-end-sequence.md
 Next: Claim next unclaimed lane -- skirmish game mode manager, audio dispatch foundation, dynasty prestige (renown decay + prestige drift), or faith doctrine combat wiring.
+
+## faith-combat-doctrine (as of 2026-04-24)
+
+Latest sub-slice: 1 (faith doctrine territorial wiring). Status: Complete.
+Handoff: docs/unity/session-handoffs/2026-04-24-unity-faith-combat-doctrine.md
+Next: Skirmish game mode manager or dynasty prestige (renown decay + prestige drift).

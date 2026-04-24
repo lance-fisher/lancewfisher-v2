@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 128
+- Revision: 129
 - Last Updated: 2026-04-24
-- Last Updated By: claude-match-end-sequence-2026-04-24
-- Supersedes: revision 127 (Records the multiplayer network foundation landing on canonical `master`.)
+- Last Updated By: claude-faith-combat-doctrine-2026-04-24
+- Supersedes: revision 128 (Records the match-end sequence landing on canonical `master`.)
 
 
 ## Purpose
@@ -1596,6 +1596,35 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `GhostCollectionSetupSystem` registers three ghost prefab archetypes (archetype_faction, archetype_control_point, archetype_unit) to the buffer after bootstrap
   - `BloodlinesNetworkFoundationSmokeValidation` proves offline local mode defaults and ghost collection registration across 2 phases; PS1 wrapper and csproj entries in place
   - All 10 validation gates passed (0 errors; Unity batch-mode smoke SKIP-env per established environment condition)
+
+### Lane: faith-combat-doctrine
+
+- Status: complete (merged to master via `claude/unity-faith-combat-doctrine`)
+- Branch Prefix: `claude/unity-faith-combat-doctrine`
+- Owner Agent: claude
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Faith/FaithDoctrineEffectsComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Faith/FaithDoctrineCanon.cs`
+  - `unity/Assets/_Bloodlines/Code/Faith/FaithDoctrineSyncSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.FaithDoctrine.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFaithDoctrineCombatWiringSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityFaithDoctrineCombatWiringSmokeValidation.ps1`
+- Shared-File Narrow Edits:
+  - `unity/Assembly-CSharp.csproj` -- added Compile entries for FaithDoctrineEffectsComponent.cs, FaithDoctrineCanon.cs, FaithDoctrineSyncSystem.cs, BloodlinesDebugCommandSurface.FaithDoctrine.cs
+  - `unity/Assembly-CSharp-Editor.csproj` -- added Compile entry for BloodlinesFaithDoctrineCombatWiringSmokeValidation.cs
+  - `unity/Assets/_Bloodlines/Code/Systems/ControlPointCaptureSystem.cs` -- narrow edits to wire faith doctrine stabilizationMultiplier and captureMultiplier into stabilization and capture rate calculations; added ResolveFaithDoctrineStabilizationMultiplier and ResolveFaithDoctrineCaptureMultiplier static helpers
+- Cross-Lane Reads (no writes):
+  - `Bloodlines.Components.FaithStateComponent` (faith lane, read-only on faction entities)
+- Browser Reference: DOCTRINE_DEFAULTS / getFaithDoctrineEffects (simulation.js ~170, ~581); faiths.json prototypeEffects
+- Current Branch In Flight: none (merged to master)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-24-unity-faith-combat-doctrine.md`
+- Last Slice State:
+  - `FaithDoctrineCanon` static lookup matches all 4 covenants × 2 paths from faiths.json prototypeEffects
+  - `FaithDoctrineSyncSystem` runs before ControlPointCaptureSystem; writes FaithDoctrineEffectsComponent per faction; lazy-creates on first update
+  - `ControlPointCaptureSystem` now multiplies passive and active stabilization by faith doctrine StabilizationMultiplier, and capture rate by CaptureMultiplier
+  - Commander aura faith wiring was already present (CommanderAuraCanon); this slice adds the territorial effects
+  - 3-phase smoke PASS; all 10 gates green
 
 ### Lane: match-end-sequence
 

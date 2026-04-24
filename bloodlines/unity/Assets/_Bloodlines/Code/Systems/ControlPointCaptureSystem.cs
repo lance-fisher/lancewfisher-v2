@@ -6,6 +6,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using FaithDoctrineEffectsComponent = Bloodlines.Faith.FaithDoctrineEffectsComponent;
 
 namespace Bloodlines.Systems
 {
@@ -104,7 +105,8 @@ namespace Bloodlines.Systems
                         ResolveStabilizationMultiplier(entityManager, controlPoint.OwnerFactionId) *
                         ResolveGovernorStabilizationMultiplier(entityManager, controlPointRw.ValueRO, controlPointEntity) *
                         math.max(1f, verdantWardenSupport.StabilizationMultiplier) *
-                        math.max(1f, verdantWardenSupport.LoyaltyGainMultiplier);
+                        math.max(1f, verdantWardenSupport.LoyaltyGainMultiplier) *
+                        ResolveFaithDoctrineStabilizationMultiplier(entityManager, controlPoint.OwnerFactionId);
                     controlPoint.Loyalty = math.min(100f, controlPoint.Loyalty + dt * passiveStabilization);
                     if (controlPoint.ControlState == ControlState.Occupied &&
                         controlPoint.Loyalty >= StabilizedLoyaltyThreshold)
@@ -134,7 +136,8 @@ namespace Bloodlines.Systems
                         ResolveStabilizationMultiplier(entityManager, claimantFactionId) *
                         ResolveGovernorStabilizationMultiplier(entityManager, controlPointRw.ValueRO, controlPointEntity) *
                         math.max(1f, verdantWardenSupport.StabilizationMultiplier) *
-                        math.max(1f, verdantWardenSupport.LoyaltyGainMultiplier);
+                        math.max(1f, verdantWardenSupport.LoyaltyGainMultiplier) *
+                        ResolveFaithDoctrineStabilizationMultiplier(entityManager, claimantFactionId);
                     controlPoint.Loyalty = math.min(100f, controlPoint.Loyalty + dt * activeStabilization);
                     if (controlPoint.ControlState == ControlState.Occupied &&
                         controlPoint.Loyalty >= StabilizedLoyaltyThreshold)
@@ -164,7 +167,8 @@ namespace Bloodlines.Systems
                 }
 
                 controlPoint.CaptureFactionId = claimantFactionId;
-                controlPoint.CaptureProgress += dt * ActiveCapturePerSecond /
+                controlPoint.CaptureProgress += dt * ActiveCapturePerSecond *
+                    ResolveFaithDoctrineCaptureMultiplier(entityManager, claimantFactionId) /
                     ResolveCaptureResistanceMultiplier(entityManager, controlPointEntity);
                 float loyaltyDelta = ResolveGovernorLoyaltyDelta(
                     entityManager,
@@ -261,6 +265,42 @@ namespace Bloodlines.Systems
             }
 
             return loyaltyDelta / support.LoyaltyProtectionMultiplier;
+        }
+
+        static float ResolveFaithDoctrineStabilizationMultiplier(EntityManager entityManager, FixedString32Bytes factionId)
+        {
+            using var factionQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<FactionComponent>());
+            using var factionEntities = factionQuery.ToEntityArray(Allocator.Temp);
+            using var factionComponents = factionQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+
+            for (int i = 0; i < factionComponents.Length; i++)
+            {
+                if (!factionComponents[i].FactionId.Equals(factionId))
+                    continue;
+                if (!entityManager.HasComponent<FaithDoctrineEffectsComponent>(factionEntities[i]))
+                    return 1f;
+                return math.max(0.1f, entityManager.GetComponentData<FaithDoctrineEffectsComponent>(factionEntities[i]).StabilizationMultiplier);
+            }
+
+            return 1f;
+        }
+
+        static float ResolveFaithDoctrineCaptureMultiplier(EntityManager entityManager, FixedString32Bytes factionId)
+        {
+            using var factionQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<FactionComponent>());
+            using var factionEntities = factionQuery.ToEntityArray(Allocator.Temp);
+            using var factionComponents = factionQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+
+            for (int i = 0; i < factionComponents.Length; i++)
+            {
+                if (!factionComponents[i].FactionId.Equals(factionId))
+                    continue;
+                if (!entityManager.HasComponent<FaithDoctrineEffectsComponent>(factionEntities[i]))
+                    return 1f;
+                return math.max(0.1f, entityManager.GetComponentData<FaithDoctrineEffectsComponent>(factionEntities[i]).CaptureMultiplier);
+            }
+
+            return 1f;
         }
     }
 }

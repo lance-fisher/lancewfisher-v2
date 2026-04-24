@@ -110,6 +110,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Siege\SiegeSupportCanon.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Definitions\BloodlineRoleDefinition.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.MatchProgression.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Faith\FaithDoctrineCanon.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Combat.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Time\MatchProgressionEvaluationSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Economy\TradeRouteComponent.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Rendering\FactionTintPalette.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Faith.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.AttackOrders.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.FaithDoctrine.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerPactBreakRequestComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Fortification.Posture.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\MarriageProposalExpirationSystem.cs" />
@@ -285,6 +287,7 @@
     <Compile Include="Assets\_Bloodlines\Code\HUD\CovenantTestProgressHUDComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\TruebornRiseHUDComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Definitions\ConvictionStateDefinition.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Faith\FaithDoctrineEffectsComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Fortification\FortificationSettlementLinkComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AIPactProposalExecutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerMarriageAuthorityEvaluator.cs" />
@@ -295,6 +298,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Combat\PatrolMovementSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Faith\CovenantTestStateComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyPoliticalEventSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Faith\FaithDoctrineSyncSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Raids\ScoutRaidComponents.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Definitions\BloodlinesDefinitions.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Systems\FactionVisualAssignmentSystem.cs" />

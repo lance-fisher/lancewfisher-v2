@@ -2321,5 +2321,7 @@
   "netcode_foundation_lane_status": "complete",
   "netcode_package_installed": false,
   "latest_match_end_sequence_handoff": "docs/unity/session-handoffs/2026-04-24-unity-match-end-sequence.md",
-  "match_end_sequence_lane_status": "complete"
+  "match_end_sequence_lane_status": "complete",
+  "latest_faith_combat_doctrine_handoff": "docs/unity/session-handoffs/2026-04-24-unity-faith-combat-doctrine.md",
+  "faith_combat_doctrine_lane_status": "complete"
 }
