@@ -3,7 +3,7 @@ You are continuing unattended development work on Bloodlines, a grand dynastic c
 MANDATORY FIRST STEPS (do these before writing any code):
 1. Read D:\ProjectsHome\Bloodlines\NEXT_SESSION_HANDOFF.md (first 80 lines minimum). The "Last updated" line and "Immediate next action" line tell you exactly where to resume.
 2. Read D:\ProjectsHome\Bloodlines\docs\unity\CONCURRENT_SESSION_CONTRACT.md in full. This tells you which files you own, which files are forbidden, and the exact 10-step validation gate you must run before every commit.
-3. Read D:\ProjectsHome\Bloodlines\03_PROMPTS\CODEX_MULTI_DAY_DIRECTIVE_2026-04-23.md in full. This is the priority stack for this development window.
+3. Read D:\ProjectsHome\Bloodlines\03_PROMPTS\CODEX_MULTI_DAY_DIRECTIVE_2026-04-25.md in full. This is the priority stack for this development window.
 
 EXECUTION LOOP (repeat until session capacity runs out):
 1. Find the next incomplete item in the priority stack from the directive. If the handoff says "immediate next action: X", do X first.
@@ -19,11 +19,12 @@ EXECUTION LOOP (repeat until session capacity runs out):
 11. Immediately begin the next sub-slice from the priority stack. Do not stop and wait. Chain as many sub-slices as session capacity allows.
 
 HARD RULES:
-- Do not touch files under unity/Assets/_Bloodlines/Code/AI/** -- that path is exclusively owned by the Claude Code ai-strategic-layer lane.
+- Do not touch files under unity/Assets/_Bloodlines/Code/AI/** unless you are explicitly assigned to that lane. The ai-strategic-layer lane (all 25 AI sub-slices) is complete. New work belongs in new lanes -- see the directive for lane names to claim.
 - Do not edit src/, data/, tests/, or play.html -- these are frozen behavioral specification files.
 - Every sub-slice must pass all 10 validation gates before committing. Never commit on a red gate.
 - Every new .cs file must be added to the appropriate csproj (runtime vs Editor). Verify with: Select-String -Path unity/Assembly-CSharp.csproj -Pattern <NewFileName>. Missing csproj entries break the Assembly-CSharp build even if files exist on disk.
 - Append-only on CURRENT_PROJECT_STATE.md, NEXT_SESSION_HANDOFF.md, continuity/PROJECT_STATE.json -- never overwrite another lane's entries.
 - If a validation gate fails, fix the failure before moving on. Do not skip gates or commit broken code.
+- If dotnet build errors are ONLY CS0006 "Metadata file not found" for Unity PackageCache DLLs, this is a missing Unity Library issue (Library/PackageCache not present at path). This is an environment condition, not a code error. Treat the build as structurally clean if no other CS errors exist. Document the Library status in the handoff and proceed. Fix actual CS compile errors before committing.
 - After pushing your branch, merge it to master with git merge --no-ff and push master. Leaving a branch unmerged means the next session branches from stale master and may duplicate your work.
 - If you run out of session capacity mid-slice, commit the WIP, push it, and update the handoff with exactly where you stopped and what the next action is.
