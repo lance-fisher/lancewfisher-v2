@@ -2,9 +2,9 @@
 
 ## Contract Metadata
 
-- Revision: 122
+- Revision: 123
 - Last Updated: 2026-04-23
-- Last Updated By: claude-rally-point-2026-04-23
+- Last Updated By: claude-patrol-route-2026-04-23
 - Supersedes: revision 118 (Records the player succession influence landing on canonical `master` and clears the branch-in-flight marker.)
 
 
@@ -1387,6 +1387,34 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - System increments SiegeDurationInWorldDays each frame, advances tier at 7/14/21d thresholds, writes per-faction aggregate StarvationMultiplier to `FactionSiegeEscalationStateComponent`, applies accumulated MoralePenaltyPerDay to faction loyalty
   - `StarvationResponseSystem` now reads `FactionSiegeEscalationStateComponent` (narrow edit) and scales famine population decline by the siege multiplier
   - `BloodlinesSiegeEscalationSmokeValidation` proves Normal/Prolonged/Severe/Critical canon behavior and starvation wiring contract; PS1 wrapper and csproj entries in place
+  - All 10 validation gates passed (CS0006 Library-absent only, no code errors)
+
+### Lane: patrol-route
+
+- Status: complete (merged to master via `claude/unity-combat-patrol-route`)
+- Branch Prefix: `claude/unity-combat-patrol-route`
+- Owner Agent: claude
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Combat/PatrolRouteComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/Combat/PatrolOrderSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Combat/PatrolMovementSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.Patrol.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesPatrolRouteSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityPatrolRouteSmokeValidation.ps1`
+- Shared-File Narrow Edits:
+  - `unity/Assembly-CSharp.csproj` -- added Compile entries for PatrolRoute*.cs, PatrolOrder/Movement systems, debug surface partial
+  - `unity/Assembly-CSharp-Editor.csproj` -- added Compile entry for BloodlinesPatrolRouteSmokeValidation.cs
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/AttackOrderComponent.cs` -- read IsActive to suspend patrol
+  - `unity/Assets/_Bloodlines/Code/Components/MoveCommandComponent.cs` -- write waypoint move orders
+  - `unity/Assets/_Bloodlines/Code/Combat/AttackOrderResolutionSystem.cs` -- UpdateBefore target
+  - `unity/Assets/_Bloodlines/Code/Components/UnitTypeComponent.cs` -- unit entity validation in debug surface
+- Browser Reference: absent (patrol route not in simulation.js; implemented from canonical garrison/perimeter design)
+- Current Branch In Flight: none (merged to master)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-patrol-route.md`
+- Last Slice State:
+  - `PatrolRouteComponent` (per-unit: WaypointA/B, CurrentTarget, IsPatrolling, ArrivalThreshold), `PlayerPatrolOrderRequestComponent` (one-shot set), `PlayerPatrolCancelRequestComponent` (one-shot cancel), `PatrolOrderSystem` (processes set/cancel), and `PatrolMovementSystem` (flips waypoints at arrival, suspends on attack order, reissues on cleared move command) now live on canonical `master`
   - All 10 validation gates passed (CS0006 Library-absent only, no code errors)
 
 ### Lane: dynasty-progression

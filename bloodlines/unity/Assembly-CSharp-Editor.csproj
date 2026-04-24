@@ -89,6 +89,8 @@
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPlayerCovertOpsResolutionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesTruebornRiseArcSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesDynastyRenownHUDSmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesRallyPointSmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPatrolRouteSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesTier2BatchSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPoliticalStateHUDSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesContestedTerritoryPressureSmokeValidation.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPlayerMissionaryDispatchSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesDynastySmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesBreachSealingWorkerLocalitySmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesDynastyProgressionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesMatchProgressionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAINarrativeBackWireSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAIBuildOrderSmokeValidation.cs" />
@@ -143,11 +146,9 @@
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesDynastyRenownLeaderboardHUDSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesDynastyOperationsSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesCommanderAuraSmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesSiegeEscalationSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPlayerMarriageAcceptanceSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesSiegeSmokeValidation.cs" />
-    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesSiegeEscalationSmokeValidation.cs" />
-    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesDynastyProgressionSmokeValidation.cs" />
-    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesRallyPointSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\GraphicsVisualTestbedBootstrap.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesDestroyedCounterRecoverySmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAISiegeOrchestrationSmokeValidation.cs" />
