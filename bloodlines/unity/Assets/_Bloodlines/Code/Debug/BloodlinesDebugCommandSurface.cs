@@ -229,6 +229,11 @@ namespace Bloodlines.Debug
 
             if (TryGetEntityManager(out var entityManager))
             {
+                if (showBattlefieldHud)
+                {
+                    DrawPlayerCommandDeckPanel(entityManager);
+                }
+
                 if (showProductionPanel)
                 {
                     DrawProductionPanel(entityManager);
