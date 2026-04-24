@@ -2306,5 +2306,9 @@
     }
   ],
   "latest_siege_escalation_handoff": "docs/unity/session-handoffs/2026-04-23-unity-siege-escalation.md",
-  "siege_escalation_lane_status": "complete"
+  "siege_escalation_lane_status": "complete",
+  "latest_dynasty_progression_handoff": "docs/unity/session-handoffs/2026-04-23-unity-dynasty-progression.md",
+  "dynasty_progression_lane_status": "complete",
+  "latest_rally_point_handoff": "docs/unity/session-handoffs/2026-04-23-unity-rally-point.md",
+  "rally_point_lane_status": "complete"
 }
