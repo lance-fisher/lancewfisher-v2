@@ -5656,3 +5656,9 @@ Next: Sub-slice 27 (divine right resolution effects) -- fires at DynastyOperatio
 Latest sub-slice: 27 (divine right resolution). Status: Complete.
 Handoff: docs/unity/session-handoffs/2026-04-24-unity-ai-divine-right-resolution.md
 Next: Sub-slice 28 (missionary resolution effects) -- fires at DynastyOperationMissionaryComponent.ResolveAtInWorldDays; on success applies faith exposure gain to target; on failure applies intensity erosion; conviction events per browser tickDynastyOperations missionary branch (~5520-5590).
+
+## ai-strategic-layer (as of 2026-04-24)
+
+Latest sub-slice: Bundle 5 (captive rescue resolution sub-slice 28 + captive ransom resolution sub-slice 29). Status: Complete pending bootstrap smoke gate.
+Handoff: docs/unity/session-handoffs/2026-04-24-unity-ai-captive-rescue-and-ransom-resolution.md
+Next: Investigate and resolve bootstrap smoke regression (ComponentSystemSorter IndexOutOfRangeException preventing SkirmishBootstrapSystem from seeding faction entities). Once resolved, merge this branch and proceed to next ai-strategic-layer sub-slice.

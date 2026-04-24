@@ -77,6 +77,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesSkirmishGameModeSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesGameplaySceneBootstrap.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPlayerCounterIntelligenceSmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesCaptiveRansomResolutionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesGraphicsRuntimeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesFortificationSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\GraphicsConceptSheetSync.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesSaveLoadSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAIMarriageAcceptanceTermsSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAIGovernancePressureSmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesCaptiveRescueResolutionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesBreachLegibilityReadoutSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesWallSegmentDestructionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesMinorHouseLevyParitySmokeValidation.cs" />

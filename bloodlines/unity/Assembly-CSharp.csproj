@@ -112,6 +112,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Definitions\BloodlineRoleDefinition.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.MatchProgression.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Faith\FaithDoctrineCanon.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\AI\AICaptiveRansomResolutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Combat.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Time\MatchProgressionEvaluationSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Economy\TradeRouteComponent.cs" />
@@ -175,6 +176,7 @@
     <Compile Include="Assets\_Bloodlines\Code\AI\AIDivineRightExecutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\FactionTintComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Siege\FieldWaterStrainSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\AI\AICaptiveRescueResolutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Combat\GroupMovementResolutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\SiegeSupportComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.HUD.cs" />
@@ -186,6 +188,7 @@
     <Compile Include="Assets\_Bloodlines\Code\AI\CapturedMemberHelpers.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\UnitTypeComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\TruebornRiseHUDSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.CaptiveRescueResolution.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\SkirmishStatusHUDSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\SnapshotVersionComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Victory\MatchEndStateComponent.cs" />
@@ -273,6 +276,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyPrestigeDecayModulatorSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.WorldPressure.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Fortification.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.CaptiveRansomResolution.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerMissionaryDispatchSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AISiegeOrchestrationComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AIStrategyComponent.cs" />
