@@ -121,6 +121,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAIMarriageStrategicProfileSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesVictoryLeaderboardHUDSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesLesserHouseLoyaltyParitySmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesHolyWarResolutionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPlayerCommandDeckHUDSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAIMarriageInboxAcceptSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesCaptiveStateAndMissionaryExecutionSmokeValidation.cs" />
