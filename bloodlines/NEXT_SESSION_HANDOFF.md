@@ -5746,3 +5746,20 @@ Next priorities from docs/migration/unity_port_backlog.md:
 - P3 Victory Conditions 4-6 (requires owner spec).
 - P3 Neutral Faction AI verification.
 - Hoist 21 "Match (inline)" constants into named canon classes (CovenantTestCanon, GovernanceCanon, etc) per recommendations in constant_parity_audit.md.
+
+
+## Session continuation (as of 2026-04-25, late)
+
+After the initial P1 + P2 wave, the same session continued with:
+
+- D3-3 stage-gate military combat-only filter (commit 921f9314): MatchProgressionEvaluationSystem now requires UnitTypeComponent on the military query and filters out Worker / Support / EngineerSpecialist roles. Mirrors browser getAliveCombatUnits. Closes the Stage 3 auto-unlock-on-villager-saturation hole opened by the early-game-foundation worker-slot economy.
+
+- GovernanceCanon hoist (commit d57ab8f3): 17 territorial-governance + alliance-pressure constants pulled from GovernanceCoalitionPressureSystem private const into unity/Assets/_Bloodlines/Code/WorldPressure/GovernanceCanon.cs. Behavior unchanged. GovernanceAllianceLegitimacyPressurePerCycle pre-declared for the dynasty-core lane.
+
+- MatchProgressionCanon hoist (commit 2ceee99b): Great Reckoning trigger/release shares + GreatReckoningPressureScore + MaxStageNumber + CommitmentPhaseStageThreeReadinessThreshold pulled into unity/Assets/_Bloodlines/Code/Time/MatchProgressionCanon.cs. Behavior unchanged.
+
+- Editor csproj re-canonicalization (commit a28ff9cb): Assembly-CSharp-Editor.csproj analyzer paths reverted from D:\ProjectsHome\FisherSovereign\lancewfisher-v2\bloodlines back to D:\ProjectsHome\Bloodlines\unity\Library\PackageCache (Bloodlines junction) per the established protocol.
+
+Match progression smoke validator remains intentionally untouched: the wrapper script signature mismatch + Phase 4/5/6 expectations need a coordinated repair slice. Bootstrap and combat smokes remain authoritative for stage-gate regression detection.
+
+Outstanding hoist candidates (low priority; pure refactor): CaptiveOpsCanon (RansomBase/RescueBase already public const but in their respective execution systems; could be unified), CaptiveCanon (CAPTIVE_INFLUENCE_TRICKLE, CAPTIVE_RENOWN_WEIGHT). SuccessionCrisis age constants (AdultAge=18, MatureAge=21, ClaimGapThreshold=4) are only consumed inside SuccessionCrisisEvaluationSystem and don't justify hoisting.
