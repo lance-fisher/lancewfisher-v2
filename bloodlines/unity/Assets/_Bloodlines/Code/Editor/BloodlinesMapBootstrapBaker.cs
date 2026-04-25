@@ -219,6 +219,8 @@ namespace Bloodlines.EditorTools
                         WorkerFoodOutputPerSecond = buildingDefinition.workerOutputPerSecond?.food ?? 0f,
                         WorkerWoodOutputPerSecond = buildingDefinition.workerOutputPerSecond?.wood ?? 0f,
                         WaterPopulationSupport = buildingDefinition.waterPopulationSupport,
+                        SmeltingFuelResourceId = buildingDefinition.smeltingFuelResource ?? string.Empty,
+                        SmeltingFuelRatio = buildingDefinition.smeltingFuelRatio,
                     });
                 }
 

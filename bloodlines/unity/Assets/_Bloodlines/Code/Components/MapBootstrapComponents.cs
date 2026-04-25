@@ -66,6 +66,8 @@ namespace Bloodlines.Components
         public float WorkerFoodOutputPerSecond;
         public float WorkerWoodOutputPerSecond;
         public int WaterPopulationSupport;
+        public FixedString32Bytes SmeltingFuelResourceId;
+        public float SmeltingFuelRatio;
     }
 
     public struct MapUnitSeedElement : IBufferElementData

@@ -390,6 +390,7 @@
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerMarriageProposalRequestComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\PositionComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AIMarriageProposalExecutionSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Components\SmeltingComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Economy\ResourceTrickleBuildingComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\DestroyedCounterRecoveryProgressComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\ActiveHolyWarElement.cs" />

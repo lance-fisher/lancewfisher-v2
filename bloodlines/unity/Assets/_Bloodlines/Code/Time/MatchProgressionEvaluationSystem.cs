@@ -1,3 +1,4 @@
+using Bloodlines.AI;
 using Bloodlines.Components;
 using Bloodlines.GameTime;
 using Unity.Collections;
@@ -15,13 +16,22 @@ namespace Bloodlines.Systems
     ///
     /// Stage evaluation (canonical browser spec):
     ///   Stage 1 (founding) -- default.
-    ///   Stage 2 (expansion_identity) -- food stable, water stable, defended seat, 4+ buildings.
-    ///   Stage 3 (encounter_establishment) -- faith committed, 2+ territories, 6+ military.
-    ///   Stage 4 (war_turning_of_tides) -- rival contact + contested border + sustained war.
-    ///     [Stage 4 war signals remain false until the declaration-seam sub-slice is ported.]
-    ///   Stage 5 (final_convergence) -- convergence active OR dominant share >= 0.75,
-    ///     highest faith level >= 5, in-world years >= 12.
-    ///     Convergence active = player WorldPressureComponent.Targeted && Level >= 3.
+    ///   Stage 2 (expansion_identity) -- food stable, water stable, defended seat
+    ///     (live: HealthComponent.Current > 0), 4+ buildings.
+    ///   Stage 3 (encounter_establishment) -- faith committed, 2+ territories,
+    ///     6+ military (count includes any movement-capable unit; canonical filter
+    ///     to combat-only is deferred to its own slice; see
+    ///     reports/2026-04-25_match_progression_stage_gate_cross_audit.md D3-3).
+    ///   Stage 4 (war_turning_of_tides) -- rival contact (direct front contact OR
+    ///     contested border), contested border (active CP capture OR
+    ///     WorldPressure.Level > 0 for player/enemy), sustained war (active siege
+    ///     engine OR active holy war OR active divine-right declaration OR
+    ///     active dynasty operation).
+    ///   Stage 5 (final_convergence) -- 3 separate requirements per browser:
+    ///     (1) convergence: any kingdom WorldPressure.Targeted && Level >= 3
+    ///         (player or enemy) OR active divine-right declaration.
+    ///     (2) sovereignty: dominantTerritoryShare >= 0.75 OR highestFaithLevel >= 5.
+    ///     (3) late dynastic time: inWorldYears >= 12.
     ///
     /// Great Reckoning: triggers when dominant kingdom holds >= 70% of all kingdom
     /// territories. Releases when share falls below 66%.
@@ -163,10 +173,14 @@ namespace Bloodlines.Systems
             }
 
             // --- Player completed buildings (no ConstructionStateComponent) ---
+            // Browser parity: defended seat requires building.completed AND building.health > 0.
+            // The Exclude<ConstructionStateComponent> filter handles the completed gate;
+            // the HealthComponent.Current > 0 gate handles the health gate.
             var completedBuildingQuery = em.CreateEntityQuery(
                 ComponentType.ReadOnly<FactionComponent>(),
                 ComponentType.ReadOnly<BuildingTypeComponent>(),
                 ComponentType.Exclude<ConstructionStateComponent>());
+            var completedBuildingEntities = completedBuildingQuery.ToEntityArray(Allocator.Temp);
             var completedBuildingFactions = completedBuildingQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp);
             var completedBuildingTypes = completedBuildingQuery.ToComponentDataArray<BuildingTypeComponent>(Allocator.Temp);
             completedBuildingQuery.Dispose();
@@ -178,15 +192,18 @@ namespace Bloodlines.Systems
                 if (completedBuildingFactions[i].FactionId != playerFactionId) continue;
                 playerCompletedBuildings++;
                 var typeId = completedBuildingTypes[i].TypeId;
-                if (typeId == new FixedString64Bytes("command_hall") ||
+                bool isSeatType = typeId == new FixedString64Bytes("command_hall") ||
                     typeId == new FixedString64Bytes("barracks") ||
                     typeId == new FixedString64Bytes("watch_tower") ||
                     typeId == new FixedString64Bytes("keep_tier_1") ||
-                    typeId == new FixedString64Bytes("gatehouse"))
-                {
-                    playerHasDefendedSeat = true;
-                }
+                    typeId == new FixedString64Bytes("gatehouse");
+                if (!isSeatType) continue;
+                var seatEntity = completedBuildingEntities[i];
+                bool seatAlive = !em.HasComponent<HealthComponent>(seatEntity) ||
+                    em.GetComponentData<HealthComponent>(seatEntity).Current > 0f;
+                if (seatAlive) playerHasDefendedSeat = true;
             }
+            completedBuildingEntities.Dispose();
             completedBuildingFactions.Dispose();
             completedBuildingTypes.Dispose();
 
@@ -204,9 +221,14 @@ namespace Bloodlines.Systems
                 if (militaryFactions[i].FactionId == playerFactionId) playerMilitaryCount++;
             militaryFactions.Dispose();
 
-            // --- Stage 5 world-pressure convergence signal (browser getWorldPressureConvergenceProfile) ---
-            // Active when the player faction has Targeted=true and Level >= 3.
-            bool playerWorldPressureConvergence = false;
+            // --- World pressure signals (browser getWorldPressureTargetProfile + getWorldPressureConvergenceProfile) ---
+            // Stage 4 contestedBorder fallback: playerWorldPressure.level > 0 OR enemyWorldPressure.level > 0.
+            // Stage 5 convergence signal: any kingdom with Targeted=true AND Level >= 3 satisfies playerConvergence
+            // OR enemyConvergence (browser checks both factions' convergence profiles).
+            bool playerWorldPressureLevelOver0 = false;
+            bool enemyWorldPressureLevelOver0 = false;
+            bool anyWorldPressureConvergence = false;
+            var enemyFactionIdForPressure = new FixedString32Bytes("enemy");
             {
                 var wpQ = em.CreateEntityQuery(
                     ComponentType.ReadOnly<FactionComponent>(),
@@ -215,22 +237,36 @@ namespace Bloodlines.Systems
                 var wpComps = wpQ.ToComponentDataArray<WorldPressureComponent>(Allocator.Temp);
                 wpQ.Dispose();
                 for (int i = 0; i < wpFactions.Length; i++)
-                    if (wpFactions[i].FactionId == playerFactionId && wpComps[i].Targeted && wpComps[i].Level >= 3)
-                        playerWorldPressureConvergence = true;
+                {
+                    var fid = wpFactions[i].FactionId;
+                    var wp = wpComps[i];
+                    if (fid == playerFactionId && wp.Targeted && wp.Level > 0) playerWorldPressureLevelOver0 = true;
+                    if (fid == enemyFactionIdForPressure && wp.Targeted && wp.Level > 0) enemyWorldPressureLevelOver0 = true;
+                    if (wp.Targeted && wp.Level >= 3) anyWorldPressureConvergence = true;
+                }
                 wpFactions.Dispose();
                 wpComps.Dispose();
             }
 
             // --- Stage 4 rival contact signals (browser getRivalContactProfile) ---
             // directFrontContact: player unit within 220 units of any enemy unit.
-            // contestedBorder: any CP owned by one faction and being captured by the other.
-            // sustainedWarActive: contestedBorder active AND in-world years >= 1 (proxy;
-            //   browser checks active siege engines + holy wars + dynasty ops -- those
-            //   systems port in later slices; this proxy is removed when siege is live).
+            // contestedBorder: any CP owned by one faction and being captured by the other,
+            //                  OR (per browser fallback) playerWorldPressure.level > 0,
+            //                  OR enemyWorldPressure.level > 0.
+            // sustainedWarActive: any active siege engine (entity with SiegeEngineStateComponent)
+            //                     OR any kingdom with at least one ActiveHolyWarElement
+            //                     OR any active divine-right declaration
+            //                     (DynastyOperationDivineRightComponent on an Active operation)
+            //                     OR any active dynasty operation
+            //                     (DynastyOperationComponent.Active==true).
+            //                     Replaces the old 1-in-world-year proxy now that the
+            //                     supporting systems (siege, holy war, divine right,
+            //                     dynasty ops) are live in the runtime.
 
             bool stageFourRivalContact;
             bool stageFourContestedBorder;
             bool stageFourSustainedWar;
+            bool stageFiveConvergenceFromDivineRight = false;
             {
                 var enemyFactionId = new FixedString32Bytes("enemy");
                 const float ContactDistanceSq = 220f * 220f;
@@ -277,11 +313,51 @@ namespace Bloodlines.Systems
                 }
                 cpContestedData.Dispose();
 
+                // sustainedWarActive: union of canonical signals (siege engines, holy wars,
+                // divine right, dynasty ops). Each is a per-entity tag/buffer presence check.
+                bool sustainedSiegeActive = false;
+                {
+                    var siegeQ = em.CreateEntityQuery(ComponentType.ReadOnly<SiegeEngineStateComponent>());
+                    if (siegeQ.CalculateEntityCount() > 0) sustainedSiegeActive = true;
+                    siegeQ.Dispose();
+                }
+                bool sustainedHolyWarActive = false;
+                {
+                    var hwQ = em.CreateEntityQuery(ComponentType.ReadOnly<ActiveHolyWarElement>());
+                    using var hwEntities = hwQ.ToEntityArray(Allocator.Temp);
+                    for (int i = 0; i < hwEntities.Length; i++)
+                    {
+                        var buf = em.GetBuffer<ActiveHolyWarElement>(hwEntities[i]);
+                        if (buf.Length > 0) { sustainedHolyWarActive = true; break; }
+                    }
+                    hwQ.Dispose();
+                }
+                bool sustainedDivineRightActive = false;
+                bool sustainedDynastyOpActive = false;
+                {
+                    var opQ = em.CreateEntityQuery(ComponentType.ReadOnly<DynastyOperationComponent>());
+                    using var opData = opQ.ToComponentDataArray<DynastyOperationComponent>(Allocator.Temp);
+                    using var opEntities = opQ.ToEntityArray(Allocator.Temp);
+                    for (int i = 0; i < opData.Length; i++)
+                    {
+                        if (!opData[i].Active) continue;
+                        sustainedDynastyOpActive = true;
+                        if (em.HasComponent<DynastyOperationDivineRightComponent>(opEntities[i]))
+                            sustainedDivineRightActive = true;
+                    }
+                    opQ.Dispose();
+                }
+
                 stageFourRivalContact = directFrontContact || contestedBorderFound;
-                stageFourContestedBorder = contestedBorderFound;
-                // sustainedWarActive proxy: contested border present AND enough in-world time
-                // has elapsed to represent a prolonged conflict (>= 1 in-world year).
-                stageFourSustainedWar = contestedBorderFound && inWorldYears >= 1f;
+                stageFourContestedBorder = contestedBorderFound ||
+                    playerWorldPressureLevelOver0 || enemyWorldPressureLevelOver0;
+                stageFourSustainedWar = sustainedSiegeActive || sustainedHolyWarActive ||
+                    sustainedDivineRightActive || sustainedDynastyOpActive;
+
+                // Track active divine-right declarations separately for the Stage 5
+                // convergence requirement. Browser includes activeDivineRightDeclarations > 0
+                // as a convergence signal in addition to player/enemy world pressure.
+                stageFiveConvergenceFromDivineRight = sustainedDivineRightActive;
             }
 
             // --- Stage requirement evaluation (browser computeMatchProgressionState) ---
@@ -305,10 +381,19 @@ namespace Bloodlines.Systems
             bool stageFourReady = stageThreeReady && stageFourRivalContact &&
                                   stageFourContestedBorder && stageFourSustainedWar;
 
-            // Stage 5: dominant share >= 0.75 OR highest faith >= 5 OR world pressure convergence active.
-            bool stageFiveConvergence = dominantTerritoryShare >= 0.75f || highestFaithLevel >= 5 || playerWorldPressureConvergence;
+            // Stage 5 (browser computeMatchProgressionState canonical 3-req split):
+            //   1. drive the world toward final convergence: any kingdom with WorldPressure
+            //      Targeted && Level >= 3 (player or enemy) OR any active divine-right
+            //      declaration.
+            //   2. create a true sovereignty contender: dominant share >= 0.75 OR highest
+            //      faith level >= 5.
+            //   3. carry the war into late dynastic time: inWorldYears >= 12.
+            // All three must be true. Browser does not collapse convergence into sovereignty.
+            bool stageFiveConvergence = anyWorldPressureConvergence || stageFiveConvergenceFromDivineRight;
+            bool stageFiveSovereignty = dominantTerritoryShare >= 0.75f || highestFaithLevel >= 5;
             bool stageFiveYears = inWorldYears >= 12f;
-            bool stageFiveReady = stageFourReady && stageFiveConvergence && stageFiveYears;
+            bool stageFiveReady = stageFourReady && stageFiveConvergence &&
+                stageFiveSovereignty && stageFiveYears;
 
             int stageNumber = stageFiveReady ? 5
                 : stageFourReady ? 4
@@ -338,8 +423,9 @@ namespace Bloodlines.Systems
             }
             else if (stageNumber == 4)
             {
-                int met = BoolToInt(stageFiveConvergence) + BoolToInt(stageFiveYears);
-                stageReadiness = met / 2f;
+                int met = BoolToInt(stageFiveConvergence) + BoolToInt(stageFiveSovereignty) +
+                    BoolToInt(stageFiveYears);
+                stageReadiness = met / 3f;
             }
             else
             {

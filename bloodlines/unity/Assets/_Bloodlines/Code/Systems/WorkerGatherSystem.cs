@@ -94,7 +94,7 @@ namespace Bloodlines.Systems
                         AdvanceReturning(entityManager, workerEntity, workerPosition, workerFaction, elapsed, ref gather);
                         break;
                     case WorkerGatherPhase.Depositing:
-                        AdvanceDepositing(entityManager, workerEntity, workerPosition, workerFaction, ref gather);
+                        AdvanceDepositing(entityManager, workerEntity, workerPosition, workerFaction, elapsed, ref gather);
                         break;
                 }
 
@@ -185,7 +185,7 @@ namespace Bloodlines.Systems
                 ? gather.CarryResourceId
                 : gather.AssignedResourceId;
 
-            if (!TryFindNearestDropOff(entityManager, workerFaction, resourceId, workerPosition, elapsed, out var dropOffPosition))
+            if (!TryFindNearestDropOff(entityManager, workerFaction, resourceId, workerPosition, elapsed, out var dropOffPosition, out _))
             {
                 return;
             }
@@ -207,9 +207,54 @@ namespace Bloodlines.Systems
             Entity workerEntity,
             float3 workerPosition,
             FixedString32Bytes workerFaction,
+            double elapsed,
             ref WorkerGatherComponent gather)
         {
-            if (gather.CarryAmount > 0f &&
+            FixedString32Bytes resourceId = gather.CarryResourceId.Length > 0
+                ? gather.CarryResourceId
+                : gather.AssignedResourceId;
+
+            // Re-find the nearest drop-off (the worker may have moved relative to
+            // alternatives, but for the smelting fuel check we only need the
+            // currently-targeted building's smelting params). Returns the entity
+            // so we can read SmeltingComponent if present.
+            Entity dropOffEntity = Entity.Null;
+            if (gather.CarryAmount > 0f)
+            {
+                TryFindNearestDropOff(entityManager, workerFaction, resourceId, workerPosition, elapsed, out _, out dropOffEntity);
+            }
+
+            // Browser parity (simulation.js ~8454-8481): if the drop-off building has
+            // a smelting fuel requirement, deduct fuel from the faction stockpile or
+            // return the carried ore to the source node and stall.
+            bool smeltingStalled = false;
+            if (gather.CarryAmount > 0f && dropOffEntity != Entity.Null &&
+                entityManager.HasComponent<SmeltingComponent>(dropOffEntity))
+            {
+                var smelting = entityManager.GetComponentData<SmeltingComponent>(dropOffEntity);
+                if (smelting.FuelRatio > 0f && smelting.FuelResourceId.Length > 0)
+                {
+                    float fuelNeeded = gather.CarryAmount * smelting.FuelRatio;
+                    if (!TryConsumeFactionResource(entityManager, workerFaction, smelting.FuelResourceId, fuelNeeded))
+                    {
+                        // Insufficient fuel: return ore to source node, drop carry,
+                        // re-seek so the worker re-attempts after fuel arrives.
+                        if (gather.AssignedNode != Entity.Null &&
+                            entityManager.Exists(gather.AssignedNode) &&
+                            entityManager.HasComponent<ResourceNodeComponent>(gather.AssignedNode))
+                        {
+                            var node = entityManager.GetComponentData<ResourceNodeComponent>(gather.AssignedNode);
+                            node.Amount += gather.CarryAmount;
+                            entityManager.SetComponentData(gather.AssignedNode, node);
+                        }
+                        gather.CarryAmount = 0f;
+                        gather.CarryResourceId = default;
+                        smeltingStalled = true;
+                    }
+                }
+            }
+
+            if (!smeltingStalled && gather.CarryAmount > 0f &&
                 TryDepositCarry(entityManager, workerFaction, gather.CarryResourceId, gather.CarryAmount))
             {
                 gather.CarryAmount = 0f;
@@ -275,9 +320,11 @@ namespace Bloodlines.Systems
             FixedString32Bytes resourceId,
             float3 workerPosition,
             double elapsed,
-            out float3 dropOffPosition)
+            out float3 dropOffPosition,
+            out Entity dropOffEntity)
         {
             dropOffPosition = default;
+            dropOffEntity = Entity.Null;
             float bestDistanceSq = float.MaxValue;
             bool found = false;
 
@@ -320,11 +367,75 @@ namespace Bloodlines.Systems
                 {
                     bestDistanceSq = distanceSq;
                     dropOffPosition = positions[i].Value;
+                    dropOffEntity = entities[i];
                     found = true;
                 }
             }
 
             return found;
+        }
+
+        private static bool TryConsumeFactionResource(
+            EntityManager entityManager,
+            FixedString32Bytes factionId,
+            FixedString32Bytes resourceId,
+            float amount)
+        {
+            if (amount <= 0f)
+            {
+                return true;
+            }
+
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                typeof(ResourceStockpileComponent));
+
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var stockpiles = query.ToComponentDataArray<ResourceStockpileComponent>(Allocator.Temp);
+
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (!factions[i].FactionId.Equals(factionId))
+                {
+                    continue;
+                }
+
+                var stockpile = stockpiles[i];
+                float available = ReadStockpile(in stockpile, resourceId);
+                if (available < amount)
+                {
+                    return false;
+                }
+                WriteStockpile(ref stockpile, resourceId, available - amount);
+                entityManager.SetComponentData(entities[i], stockpile);
+                return true;
+            }
+
+            return false;
+        }
+
+        private static float ReadStockpile(in ResourceStockpileComponent stockpile, FixedString32Bytes resourceId)
+        {
+            if (resourceId.Equals(new FixedString32Bytes("gold"))) return stockpile.Gold;
+            if (resourceId.Equals(new FixedString32Bytes("wood"))) return stockpile.Wood;
+            if (resourceId.Equals(new FixedString32Bytes("stone"))) return stockpile.Stone;
+            if (resourceId.Equals(new FixedString32Bytes("iron"))) return stockpile.Iron;
+            if (resourceId.Equals(new FixedString32Bytes("food"))) return stockpile.Food;
+            if (resourceId.Equals(new FixedString32Bytes("water"))) return stockpile.Water;
+            if (resourceId.Equals(new FixedString32Bytes("influence"))) return stockpile.Influence;
+            return 0f;
+        }
+
+        private static void WriteStockpile(ref ResourceStockpileComponent stockpile, FixedString32Bytes resourceId, float value)
+        {
+            if (resourceId.Equals(new FixedString32Bytes("gold"))) { stockpile.Gold = value; return; }
+            if (resourceId.Equals(new FixedString32Bytes("wood"))) { stockpile.Wood = value; return; }
+            if (resourceId.Equals(new FixedString32Bytes("stone"))) { stockpile.Stone = value; return; }
+            if (resourceId.Equals(new FixedString32Bytes("iron"))) { stockpile.Iron = value; return; }
+            if (resourceId.Equals(new FixedString32Bytes("food"))) { stockpile.Food = value; return; }
+            if (resourceId.Equals(new FixedString32Bytes("water"))) { stockpile.Water = value; return; }
+            if (resourceId.Equals(new FixedString32Bytes("influence"))) { stockpile.Influence = value; return; }
         }
 
         private static bool TryDepositCarry(

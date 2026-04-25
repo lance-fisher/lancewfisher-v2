@@ -483,6 +483,15 @@ namespace Bloodlines.Systems
                     FillRatio = 0f,
                 });
             }
+
+            if (seed.SmeltingFuelRatio > 0f && seed.SmeltingFuelResourceId.Length > 0)
+            {
+                entityManager.AddComponentData(entity, new SmeltingComponent
+                {
+                    FuelResourceId = seed.SmeltingFuelResourceId,
+                    FuelRatio = seed.SmeltingFuelRatio,
+                });
+            }
         }
 
         static void SpawnUnitEntity(EntityManager entityManager, MapUnitSeedElement seed)
