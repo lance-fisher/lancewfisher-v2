@@ -21,6 +21,9 @@ namespace Bloodlines.DataDefinitions
         public float sight;
         public float projectileSpeed;
         public string movementDomain;
+        public string vesselClass;
+        public int transportCapacity;
+        public bool oneUseSacrifice;
         public float carryCapacity;
         public float gatherRate;
         public float buildRate;

@@ -33,6 +33,7 @@ namespace Bloodlines.Components
         SiegeSupport = 7,
         EngineerSpecialist = 8,
         Support = 9,
+        Vessel = 10,
         Unknown = 255,
     }
 

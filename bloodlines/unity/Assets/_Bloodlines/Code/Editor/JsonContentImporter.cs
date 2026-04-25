@@ -154,6 +154,9 @@ namespace Bloodlines.EditorTools
                 asset.sight = item.sight;
                 asset.projectileSpeed = item.projectileSpeed;
                 asset.movementDomain = item.movementDomain;
+                asset.vesselClass = item.vesselClass;
+                asset.transportCapacity = item.transportCapacity;
+                asset.oneUseSacrifice = item.oneUseSacrifice;
                 asset.carryCapacity = item.carryCapacity;
                 asset.gatherRate = item.gatherRate;
                 asset.buildRate = item.buildRate;
@@ -570,6 +573,9 @@ namespace Bloodlines.EditorTools
             public float sight;
             public float projectileSpeed;
             public string movementDomain;
+            public string vesselClass;
+            public int transportCapacity;
+            public bool oneUseSacrifice;
             public float carryCapacity;
             public float gatherRate;
             public float buildRate;
@@ -774,6 +780,11 @@ namespace Bloodlines.EditorTools
             if (string.Equals(role, "support", StringComparison.OrdinalIgnoreCase))
             {
                 return UnitRole.Support;
+            }
+
+            if (string.Equals(role, "vessel", StringComparison.OrdinalIgnoreCase))
+            {
+                return UnitRole.Vessel;
             }
 
             return UnitRole.Unknown;

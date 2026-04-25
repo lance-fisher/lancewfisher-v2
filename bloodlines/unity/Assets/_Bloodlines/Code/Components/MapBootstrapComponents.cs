@@ -88,6 +88,9 @@ namespace Bloodlines.Components
         public SiegeClass SiegeClass;
         public int PopulationCost;
         public int Stage;
+        public FixedString32Bytes VesselClassId;
+        public int TransportCapacity;
+        public bool OneUseSacrifice;
     }
 
     public struct MapResourceNodeSeedElement : IBufferElementData

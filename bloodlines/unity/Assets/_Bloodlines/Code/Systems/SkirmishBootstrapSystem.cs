@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Bloodlines.Components;
 using Bloodlines.Faith;
+using Bloodlines.Naval;
 using Bloodlines.Raids;
 using Unity.Collections;
 using Unity.Entities;
@@ -547,6 +548,34 @@ namespace Bloodlines.Systems
                     ProjectileArrivalRadius = math.max(0.05f, seed.ProjectileArrivalRadius),
                 });
             }
+
+            if (seed.Role == UnitRole.Vessel)
+            {
+                entityManager.AddComponentData(entity, new NavalVesselComponent
+                {
+                    Class = ResolveVesselClass(seed.VesselClassId),
+                    TransportCapacity = math.max(0, seed.TransportCapacity),
+                    OneUseSacrifice = seed.OneUseSacrifice,
+                });
+
+                if (seed.TransportCapacity > 0)
+                {
+                    entityManager.AddBuffer<PassengerBufferElement>(entity);
+                }
+            }
+        }
+
+        static VesselClass ResolveVesselClass(FixedString32Bytes vesselClassId)
+        {
+            var id = vesselClassId.ToString();
+            if (string.IsNullOrEmpty(id)) return VesselClass.None;
+            if (id.Equals("fishing", System.StringComparison.OrdinalIgnoreCase)) return VesselClass.Fishing;
+            if (id.Equals("scout", System.StringComparison.OrdinalIgnoreCase)) return VesselClass.Scout;
+            if (id.Equals("war_galley", System.StringComparison.OrdinalIgnoreCase)) return VesselClass.WarGalley;
+            if (id.Equals("transport", System.StringComparison.OrdinalIgnoreCase)) return VesselClass.Transport;
+            if (id.Equals("fire_ship", System.StringComparison.OrdinalIgnoreCase)) return VesselClass.FireShip;
+            if (id.Equals("capital_ship", System.StringComparison.OrdinalIgnoreCase)) return VesselClass.CapitalShip;
+            return VesselClass.None;
         }
     }
 }

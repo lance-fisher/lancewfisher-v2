@@ -248,6 +248,9 @@ namespace Bloodlines.EditorTools
                         SiegeClass = ResolveSiegeClass(unitDefinition.siegeClass),
                         PopulationCost = unitDefinition.populationCost,
                         Stage = unitDefinition.stage,
+                        VesselClassId = unitDefinition.vesselClass ?? string.Empty,
+                        TransportCapacity = unitDefinition.transportCapacity,
+                        OneUseSacrifice = unitDefinition.oneUseSacrifice,
                     });
                 }
             }
@@ -355,6 +358,7 @@ namespace Bloodlines.EditorTools
             if (string.Equals(role, "siege-support", StringComparison.OrdinalIgnoreCase)) return UnitRole.SiegeSupport;
             if (string.Equals(role, "engineer-specialist", StringComparison.OrdinalIgnoreCase)) return UnitRole.EngineerSpecialist;
             if (string.Equals(role, "support", StringComparison.OrdinalIgnoreCase)) return UnitRole.Support;
+            if (string.Equals(role, "vessel", StringComparison.OrdinalIgnoreCase)) return UnitRole.Vessel;
             return UnitRole.Unknown;
         }
 

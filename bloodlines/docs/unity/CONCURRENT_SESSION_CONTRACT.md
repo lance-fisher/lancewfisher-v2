@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 145
+- Revision: 146
 - Last Updated: 2026-04-25
-- Last Updated By: claude-multiplayer-nfe-integration-2026-04-25
-- Supersedes: revision 144 (NfE integration smoke gates + runtime bug fixes)
+- Last Updated By: claude-naval-2026-04-25
+- Supersedes: revision 145 (multiplayer NfE integration smoke gates + runtime bug fixes)
 
 
 ## Purpose
@@ -1835,6 +1835,49 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `BloodlinesDynastyPrestigeDriftSmokeValidation` proves 3 phases: base rate vs interregnum penalty, crisis stacking, conviction modulation with floor. PS1 wrapper in place.
   - All 10 validation gates passed (0 errors; Unity batch-mode runtime smokes SKIP-env per established environment condition; lane smoke PASS)
 
+### Lane: naval-layer
+
+- Status: in-flight (S1 embark slice landed on lane branch; S2-S6 pending)
+- Branch Prefix: `claude/unity-naval-layer`
+- Owner Agent: claude-code
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Naval/**`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesNavalSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityNavalSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Components/UnitTypeComponent.cs` -- appended `Vessel = 10` enum value to `UnitRole`. No existing values renamed or reordered.
+  - `unity/Assets/_Bloodlines/Code/Components/MapBootstrapComponents.cs` -- appended `VesselClassId`, `TransportCapacity`, `OneUseSacrifice` fields to `MapUnitSeedElement`. Additive; no field removed or renamed.
+  - `unity/Assets/_Bloodlines/Code/Definitions/UnitDefinition.cs` -- appended `vesselClass`, `transportCapacity`, `oneUseSacrifice` fields. Additive.
+  - `unity/Assets/_Bloodlines/Code/Editor/JsonContentImporter.cs` -- appended same fields to `UnitRecord` and importer assignment, plus `"vessel" -> UnitRole.Vessel` mapping in `ResolveUnitRole`. Additive.
+  - `unity/Assets/_Bloodlines/Code/Authoring/BloodlinesMapBootstrapAuthoring.cs` -- appended `"vessel"` mapping in `ResolveUnitRole`. Additive.
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMapBootstrapBaker.cs` -- appended `"vessel"` mapping; baker emits `VesselClassId`, `TransportCapacity`, `OneUseSacrifice` into `MapUnitSeedElement`. Additive.
+  - `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs` -- after the existing projectile-factory branch, attach `NavalVesselComponent` and `PassengerBufferElement` buffer when seed.Role == UnitRole.Vessel. No existing spawn behavior removed.
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.cs` -- appended `"vessel"` mapping in `ResolveUnitRole`. Additive.
+  - `unity/Assembly-CSharp.csproj` -- added Compile entries for the eight new Naval/*.cs files.
+  - `unity/Assembly-CSharp-Editor.csproj` -- added Compile entry for BloodlinesNavalSmokeValidation.cs.
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/MoveCommandComponent.cs` -- EmbarkSystem flips `IsActive=false` on embarked passengers.
+  - `unity/Assets/_Bloodlines/Code/Components/WorkerGatherOrderComponent.cs` -- EmbarkSystem removes the order on embarked passengers.
+  - `unity/Assets/_Bloodlines/Code/Components/MapBootstrapComponents.cs` -- EmbarkSystem reads `MapBootstrapConfigComponent.TileSize` to compute embark radius; falls back to validation default when absent.
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-25-unity-naval-S1-embark.md`
+  - Canon: `11_MATCHFLOW/NAVAL_SYSTEM.md`, design bible section 36.
+- Browser Reference:
+  - `src/game/core/simulation.js` `embarkUnitsOnTransport` (~7539-7574)
+  - `src/game/core/simulation.js` `disembarkTransport` (~7576-7623) [S2 target]
+  - `src/game/core/simulation.js` `isWaterTileAt` (~7627-7636) [S2 target]
+  - `src/game/core/simulation.js` `updateVessel` (~8781-8864) [S3-S5 target]
+- Current Branch In Flight: `claude/unity-naval-layer`
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-25-unity-naval-S1-embark.md`
+- Slice Roadmap:
+  - S1 embark (this slice): EmbarkOrderComponent, EmbarkSystem, PassengerBufferElement, EmbarkedPassengerTag, PassengerTransportLinkComponent, NavalVesselComponent, VesselClass, NavalCanon, plus the smoke validator embark phase.
+  - S2 disembark: DisembarkOrderComponent, DisembarkSystem, water-tile adjacency detection (terrain patch baking added separately).
+  - S3 fire-ship detonation: FireShipDetonationSystem (consumes OneUseSacrifice flag, applies area damage, self-destroys).
+  - S4 vessel-vs-vessel naval combat: separate from land combat lane, vessel-only acquisition and damage tables.
+  - S5 fishing gather: FishingGatherSystem (vessel as worker analog over water tiles).
+  - S6 (if scope allows): AI naval dispatch lane.
+
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
@@ -1947,6 +1990,15 @@ The following files may be edited by any lane, but only via narrow, additive cha
 
 - `unity/Assets/_Bloodlines/Code/Editor/JsonContentImporter.cs`
   Rule: add new field mappings in importer record types only. No removing existing field mappings. No changing existing import logic.
+
+- `unity/Assets/_Bloodlines/Code/Components/UnitTypeComponent.cs`
+  Rule: add new `UnitRole` or `SiegeClass` enum values only. Append at the end of each enum, never insert into the middle and never reorder existing values; persisted save data and importer mappings depend on the byte ordinal. Do not change the existing struct layout. Naval lane added `Vessel = 10` in revision 146.
+
+- `unity/Assets/_Bloodlines/Code/Components/MapBootstrapComponents.cs`
+  Rule: add new fields to seed element structs only. No removing or renaming existing fields. No restructuring the seed element layout. Already governed under the existing rule, listed again here so the naval lane's `MapUnitSeedElement` extension is auditable.
+
+- `unity/Assets/_Bloodlines/Code/Definitions/UnitDefinition.cs`
+  Rule: add new authored fields only. No removing existing fields. JsonContentImporter writes into these fields; field name and type must match the JSON field. New fields land here in lockstep with their `UnitRecord` counterpart in `JsonContentImporter.cs`.
 
 - `unity/Assembly-CSharp.csproj`
   Rule: add new `<Compile Include="..." />` entries for new `.cs` files only. Do not remove existing references. Do not change project structure, target framework, or preprocessor defines.
