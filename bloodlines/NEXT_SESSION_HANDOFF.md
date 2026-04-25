@@ -5689,11 +5689,12 @@ proceed to the next unclaimed lane from CODEX_MULTI_DAY_DIRECTIVE_2026-04-25.md.
 
 ## early-game-foundation (as of 2026-04-25)
 
-Latest slice: Early-game foundation mechanics — Keep deployment, first build tier, water model, productivity states, draft slider, five-person squads, worker slots, reserve/active duty. Status: Complete, all 8 validation gates PASS. Pending commit on branch claude/unity-multiplayer-nfe-integration.
+Latest slice: Early-game foundation mechanics + authoring pipeline wiring. Status: COMPLETE. Committed and pushed on branch claude/unity-multiplayer-nfe-integration (commits 04c638eb, e7d6ad9d, c43db00a).
 Handoff: docs/unity/session-handoffs/2026-04-25-unity-early-game-foundation.md
+Canon docs updated: 04_SYSTEMS/RESOURCE_SYSTEM.md, 04_SYSTEMS/POPULATION_SYSTEM.md, 04_SYSTEMS/SYSTEM_INDEX.md (canon-locked 2026-04-25). BLOODLINES_BIBLE_LATEST.md on Desktop updated.
+All 7 validation gates green at c43db00a: dotnet builds (0 errors), bootstrap smoke, combat smoke, scene shells, data-validation, runtime-bridge, contract (revision 145).
 Next:
-- Commit this slice to the branch (or a dedicated early-game-foundation branch)
-- Wire DrawEarlyGamePanel() into BloodlinesDebugCommandSurface.cs OnGUI so it appears in the debug surface at runtime
-- Add JsonContentImporter handling for new buildings.json fields (buildTier, maxWorkerSlots, workerOutputPerSecond, waterPopulationSupport) so they populate BuildingDefinition at import
-- Add WorkerSlotBuildingComponent authoring to the four new worker-slot buildings (woodcutter_camp, forager_camp, small_farm; lumber_camp already exists)
-- Player input bridge: UI for assigning workers to buildings, setting squad orders
+- Keep deployment UI: debug-surface only (DeployPlayerKeep()); no in-game HUD trigger yet
+- Squad order UI: debug-surface only (SetFirstSquadAssignment()); no in-game HUD panel yet
+- Worker slot assignment panel: backend done (WorkerSlotHUDSystem + WorkerSlotAssignmentSystem); no in-game click UI wired yet
+- Water/productivity HUD panel: EarlyGameHUDComponent carries all values; no non-debug HUD renders them yet
