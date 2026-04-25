@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 138
+- Revision: 139
 - Last Updated: 2026-04-24
-- Last Updated By: claude-ai-espionage-dispatch-2026-04-24
-- Supersedes: revision 137 (sub-slice 32: AI counter-intelligence dispatch and resolution.)
+- Last Updated By: claude-ai-succession-crisis-consolidation-2026-04-24
+- Supersedes: revision 138 (sub-slice 33: AI espionage dispatch and resolution.)
 
 
 ## Purpose
@@ -849,6 +849,11 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.EspionageResolution.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesEspionageResolutionSmokeValidation.cs`
   - `scripts/Invoke-BloodlinesUnityEspionageResolutionSmokeValidation.ps1`
+  - `unity/Assets/_Bloodlines/Code/AI/AISuccessionCrisisConsolidationComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/AI/AISuccessionCrisisConsolidationSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.SuccessionCrisisConsolidation.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSuccessionCrisisConsolidationSmokeValidation.cs`
+  - `scripts/Invoke-BloodlinesUnitySuccessionCrisisConsolidationSmokeValidation.ps1`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HolyWarResolution.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.DivineRightResolution.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.CaptiveRescueResolution.cs`
@@ -953,6 +958,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-24-unity-ai-captive-rescue-and-ransom-resolution.md`
   - `docs/unity/session-handoffs/2026-04-24-unity-ai-counter-intelligence-dispatch.md`
   - `docs/unity/session-handoffs/2026-04-24-unity-ai-espionage-dispatch.md`
+  - `docs/unity/session-handoffs/2026-04-24-unity-ai-succession-crisis-consolidation.md`
 - Browser Reference:
   - Sub-slice 1: `src/game/core/ai.js` `pickTerritoryTarget` (~747), `pickScoutHarassTarget` (~412), `getWorldPressureRaidTarget` (~817)
   - Sub-slice 2: `src/game/core/ai.js` timer clamp/floor block lines 1127-1241
