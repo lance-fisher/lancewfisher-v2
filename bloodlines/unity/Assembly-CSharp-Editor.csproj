@@ -153,6 +153,8 @@
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAILesserHousePromotionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesSabotageResolutionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesDynastyPoliticalEventsSmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesNavalSmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesTribesRaidSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesPlayerCaptiveRansomSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesAICovertOpsSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\JsonContentImporter.cs" />

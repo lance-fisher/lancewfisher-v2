@@ -25,6 +25,7 @@ namespace Bloodlines.EditorTools
         const string BuildingDefinitionsFolder = "Assets/_Bloodlines/Data/BuildingDefinitions";
         const string UnitDefinitionsFolder = "Assets/_Bloodlines/Data/UnitDefinitions";
         const string SettlementDefinitionsFolder = "Assets/_Bloodlines/Data/SettlementClassDefinitions";
+        const string HouseDefinitionsFolder = "Assets/_Bloodlines/Data/FactionDefinitions";
 
         public override void Bake(BloodlinesMapBootstrapAuthoring authoring)
         {
@@ -39,6 +40,7 @@ namespace Bloodlines.EditorTools
             var buildingDefinitions = LoadDefinitions(BuildingDefinitionsFolder, (BuildingDefinition definition) => definition.id);
             var unitDefinitions = LoadDefinitions(UnitDefinitionsFolder, (UnitDefinition definition) => definition.id);
             var settlementDefinitions = LoadDefinitions(SettlementDefinitionsFolder, (SettlementClassDefinition definition) => definition.id);
+            var houseDefinitions = LoadDefinitions(HouseDefinitionsFolder, (HouseDefinition definition) => definition.id);
             float combatDistanceScale = math.max(1f, authoring.Map.tileSize > 0 ? authoring.Map.tileSize : 32f);
 
             var entity = GetEntity(TransformUsageFlags.None);
@@ -68,6 +70,24 @@ namespace Bloodlines.EditorTools
             var controlPointBuffer = AddBuffer<MapControlPointSeedElement>(entity);
             var sacredSiteBuffer = AddBuffer<MapSacredSiteSeedElement>(entity);
             var settlementBuffer = AddBuffer<MapSettlementSeedElement>(entity);
+            var waterTilePatchBuffer = AddBuffer<MapWaterTilePatchSeedElement>(entity);
+
+            foreach (var patch in authoring.Map.terrainPatches ?? Array.Empty<TerrainPatchData>())
+            {
+                if (patch == null) continue;
+                if (!string.Equals(patch.type, "water", StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(patch.type, "river", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+                waterTilePatchBuffer.Add(new MapWaterTilePatchSeedElement
+                {
+                    X = patch.x,
+                    Y = patch.y,
+                    Width = patch.w,
+                    Height = patch.h,
+                });
+            }
 
             foreach (var unitDefinition in authoring.UnitDefinitions ?? Array.Empty<UnitDefinition>())
             {
@@ -160,6 +180,7 @@ namespace Bloodlines.EditorTools
 
             foreach (var faction in authoring.Map.factions ?? Array.Empty<FactionSeedData>())
             {
+                var houseDefinition = ResolveHouseDefinition(houseDefinitions, faction.houseId);
                 factionBuffer.Add(new MapFactionSeedElement
                 {
                     FactionId = faction.id ?? string.Empty,
@@ -175,6 +196,8 @@ namespace Bloodlines.EditorTools
                     PopulationTotal = faction.population?.total ?? 0,
                     PopulationCap = faction.population?.cap ?? 0,
                     PopulationReserved = faction.population?.reserved ?? 0,
+                    FortificationCostMultiplier = ResolveFortMultiplier(houseDefinition, m => m.fortificationCostMultiplier),
+                    FortificationBuildSpeedMultiplier = ResolveFortMultiplier(houseDefinition, m => m.fortificationBuildSpeedMultiplier),
                 });
 
                 foreach (var hostileFactionId in faction.hostileTo ?? Array.Empty<string>())
@@ -215,6 +238,12 @@ namespace Bloodlines.EditorTools
                         StoneTrickle = buildingDefinition.resourceTrickle?.stone ?? 0f,
                         IronTrickle = buildingDefinition.resourceTrickle?.iron ?? 0f,
                         InfluenceTrickle = buildingDefinition.resourceTrickle?.influence ?? 0f,
+                        MaxWorkerSlots = buildingDefinition.maxWorkerSlots,
+                        WorkerFoodOutputPerSecond = buildingDefinition.workerOutputPerSecond?.food ?? 0f,
+                        WorkerWoodOutputPerSecond = buildingDefinition.workerOutputPerSecond?.wood ?? 0f,
+                        WaterPopulationSupport = buildingDefinition.waterPopulationSupport,
+                        SmeltingFuelResourceId = buildingDefinition.smeltingFuelResource ?? string.Empty,
+                        SmeltingFuelRatio = buildingDefinition.smeltingFuelRatio,
                     });
                 }
 
@@ -244,6 +273,10 @@ namespace Bloodlines.EditorTools
                         SiegeClass = ResolveSiegeClass(unitDefinition.siegeClass),
                         PopulationCost = unitDefinition.populationCost,
                         Stage = unitDefinition.stage,
+                        VesselClassId = unitDefinition.vesselClass ?? string.Empty,
+                        TransportCapacity = unitDefinition.transportCapacity,
+                        OneUseSacrifice = unitDefinition.oneUseSacrifice,
+                        VesselGatherRate = unitDefinition.gatherRate,
                     });
                 }
             }
@@ -323,6 +356,19 @@ namespace Bloodlines.EditorTools
             throw new InvalidOperationException($"Bloodlines map bootstrap could not resolve {label} definition '{id}'.");
         }
 
+        static HouseDefinition ResolveHouseDefinition(IReadOnlyDictionary<string, HouseDefinition> definitions, string id)
+        {
+            if (string.IsNullOrWhiteSpace(id)) return null;
+            return definitions.TryGetValue(id, out var definition) ? definition : null;
+        }
+
+        static float ResolveFortMultiplier(HouseDefinition definition, Func<HouseDefinition, float> selector)
+        {
+            if (definition == null) return 1f;
+            float value = selector(definition);
+            return value > 0f ? value : 1f;
+        }
+
         static FactionKind ResolveFactionKind(string kind)
         {
             if (string.Equals(kind, "tribe", StringComparison.OrdinalIgnoreCase) ||
@@ -351,6 +397,7 @@ namespace Bloodlines.EditorTools
             if (string.Equals(role, "siege-support", StringComparison.OrdinalIgnoreCase)) return UnitRole.SiegeSupport;
             if (string.Equals(role, "engineer-specialist", StringComparison.OrdinalIgnoreCase)) return UnitRole.EngineerSpecialist;
             if (string.Equals(role, "support", StringComparison.OrdinalIgnoreCase)) return UnitRole.Support;
+            if (string.Equals(role, "vessel", StringComparison.OrdinalIgnoreCase)) return UnitRole.Vessel;
             return UnitRole.Unknown;
         }
 

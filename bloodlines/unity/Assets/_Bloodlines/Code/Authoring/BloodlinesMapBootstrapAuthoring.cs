@@ -496,6 +496,7 @@ namespace Bloodlines.Authoring
             if (string.Equals(role, "siege-support", StringComparison.OrdinalIgnoreCase)) return UnitRole.SiegeSupport;
             if (string.Equals(role, "engineer-specialist", StringComparison.OrdinalIgnoreCase)) return UnitRole.EngineerSpecialist;
             if (string.Equals(role, "support", StringComparison.OrdinalIgnoreCase)) return UnitRole.Support;
+            if (string.Equals(role, "vessel", StringComparison.OrdinalIgnoreCase)) return UnitRole.Vessel;
             return UnitRole.Unknown;
         }
 

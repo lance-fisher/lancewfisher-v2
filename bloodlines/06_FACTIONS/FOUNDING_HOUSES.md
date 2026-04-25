@@ -370,3 +370,31 @@ This naming convention ensures lesser houses are immediately recognizable as ext
 
 **House starting relationships — LOCKED 2026-04-07:** Seven canonical starting relationships between houses at match start are settled. See Design Bible Part IX Addendum (Section 62.1) for the full table.
 
+---
+
+### Status Update — 2026-04-25 (Seventeenth Session Canon — Core Ground Unit Progression)
+
+**All-house canonical unit ladder:** All nine founding houses have access to the full core ground unit ladder established in the Seventeenth Session Canon. This is the base layer available to all dynasties, independent of faith tier. See `10_UNITS/UNIT_INDEX.md` and `01_CANON/CANONICAL_RULES.md` (Seventeenth Session Canon section) for the full ladder with Off/Def ratings.
+
+**Confirmed unique units:**
+
+| House | Unique Unit | Off | Def | Notes |
+|---|---|---|---|---|
+| Ironmark | Axeman | 5 | 2 | Ferocity Under Loss, anti-armor bonus, blood cost loop. Full spec: Ninth Ingestion Canon (2026-03-19), Off/Def updated 2026-04-25. |
+| Hartvale | Verdant Warden | 4 | 5 | Hybrid guardian, settlement defense + population loyalty bonus. Locked 2026-04-07. |
+| Goldgrave | Pending | — | — | Unique unit design pending. |
+| Trueborn | Pending | — | — | Unique unit design pending. |
+| Highborne | Pending | — | — | Unique unit design pending. |
+| Stonehelm | Pending | — | — | Unique unit design pending. |
+| Westland | Pending | — | — | Unique unit design pending. |
+| Whitehall | Pending | — | — | Unique unit design pending. |
+| Oldcrest | Pending | — | — | Unique unit design pending. |
+
+**Iron and forge note:** Iron is available from game start per the Seventeenth Session Canon. The prior framing of iron as low-significance in the early game is superseded. All houses must build Forge/Settlement Forge from the beginning to access iron-dependent units and upgrades.
+
+**Canonical unit name changes affecting house profiles:** Prior names used in CB004 house profiles and older design material are superseded. Bowmen → Archers; Crossbowmen → Boltmen; Pike Square → Pikeguard; Shield Wall → Bulwark Guard; Men-at-Arms → Heavy Swordsmen line. CB004 content using old names is preserved as historical record per additive-only rules.
+
+**Per-house unit design implications:** Each house's identity, faith, and resource tendencies will shape which units they favor. Specific house-unit affinity profiles are pending dedicated design sessions for the seven non-Ironmark, non-Hartvale houses.
+
+**Cavalry infrastructure:** All cavalry access requires Stable. Full horse/stable build tree design is pending `data/buildings.json` work.
+

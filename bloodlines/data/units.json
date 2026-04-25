@@ -24,6 +24,8 @@
     "name": "Militia",
     "stage": 1,
     "role": "melee",
+    "offenseRating": 2,
+    "defenseRating": 2,
     "prototypeEnabled": true,
     "populationCost": 1,
     "health": 80,
@@ -35,13 +37,18 @@
     "cost": {
       "gold": 55,
       "wood": 15
-    }
+    },
+    "notes": [
+      "Off 2/Def 2 per Seventeenth Session Canon (2026-04-25). Basic universal troop — not primitive, world has basic ironworking from start."
+    ]
   },
   {
     "id": "swordsman",
     "name": "Swordsman",
     "stage": 1,
     "role": "melee-recon",
+    "offenseRating": 4,
+    "defenseRating": 2,
     "prototypeEnabled": true,
     "populationCost": 1,
     "health": 100,
@@ -55,15 +62,18 @@
       "wood": 20
     },
     "notes": [
-      "Carries the early reconnaissance role in active canon",
-      "Separate Scout unit was removed from early roster canon"
+      "Off 4/Def 2 per Seventeenth Session Canon (2026-04-25). Basic offensive infantry. Requires basic iron capability.",
+      "Carries the early reconnaissance role in active canon.",
+      "Separate Scout unit was removed from early roster canon."
     ]
   },
   {
     "id": "bowman",
-    "name": "Bowman",
+    "name": "Archer",
     "stage": 1,
     "role": "ranged",
+    "offenseRating": 3,
+    "defenseRating": 2,
     "prototypeEnabled": true,
     "populationCost": 1,
     "health": 70,
@@ -76,13 +86,379 @@
     "cost": {
       "gold": 65,
       "wood": 30
-    }
+    },
+    "notes": [
+      "Canonical name updated 2026-04-25: Archers (Off 3/Def 2). Prior name 'Bowman' is deprecated as primary name, retained as ID for backward compatibility.",
+      "Longer range than Boltmen. Less armor-piercing than Boltmen. Standard ranged pressure, anti-light infantry."
+    ]
+  },
+  {
+    "id": "spearman",
+    "name": "Spearmen",
+    "stage": 1,
+    "role": "melee-defensive",
+    "offenseRating": 2,
+    "defenseRating": 4,
+    "prototypeEnabled": false,
+    "populationCost": 1,
+    "health": 110,
+    "speed": 60,
+    "attackDamage": 8,
+    "attackRange": 22,
+    "attackCooldown": 1.05,
+    "sight": 118,
+    "antiCavalryBonus": 1.5,
+    "cost": {
+      "gold": 60,
+      "wood": 25
+    },
+    "notes": [
+      "Canonical Seventeenth Session unit (2026-04-25). Off 2/Def 4. Basic defensive infantry and early anti-cavalry unit.",
+      "Defense-first but can attack when needed. Critical for preventing cavalry dominance.",
+      "antiCavalryBonus applies against mounted units in formed defensive stance."
+    ]
+  },
+  {
+    "id": "shieldbearer_swordsman",
+    "name": "Shieldbearer Swordsmen",
+    "stage": 1,
+    "role": "melee",
+    "offenseRating": 5,
+    "defenseRating": 3,
+    "prototypeEnabled": false,
+    "populationCost": 1,
+    "health": 120,
+    "speed": 66,
+    "attackDamage": 14,
+    "attackRange": 18,
+    "attackCooldown": 0.95,
+    "sight": 125,
+    "cost": {
+      "gold": 80,
+      "wood": 20,
+      "iron": 10
+    },
+    "notes": [
+      "Canonical Seventeenth Session unit (2026-04-25). Off 5/Def 3. Swordsmen upgraded with shields.",
+      "Offense-leaning, more survivable than basic Swordsmen. First major improvement in the offensive infantry line.",
+      "Upgrade path from Swordsmen. Requires shield equipment and basic armory access."
+    ]
+  },
+  {
+    "id": "heavy_swordsman",
+    "name": "Heavy Swordsmen",
+    "stage": 2,
+    "role": "melee",
+    "offenseRating": 6,
+    "defenseRating": 4,
+    "prototypeEnabled": false,
+    "populationCost": 1,
+    "health": 140,
+    "speed": 62,
+    "attackDamage": 17,
+    "attackRange": 18,
+    "attackCooldown": 0.95,
+    "sight": 120,
+    "cost": {
+      "gold": 90,
+      "wood": 20,
+      "iron": 20
+    },
+    "notes": [
+      "Canonical Seventeenth Session unit (2026-04-25). Off 6/Def 4. Armored sword infantry.",
+      "Better armor, larger swords, more disciplined fighting. Serious core unit. Not yet elite.",
+      "Upgrade path from Shieldbearer Swordsmen. Requires armory (upgraded), iron supply."
+    ]
+  },
+  {
+    "id": "greatsword_knight",
+    "name": "Greatsword Knight",
+    "stage": 3,
+    "role": "melee-elite-offensive",
+    "offenseRating": 8,
+    "defenseRating": 3,
+    "prototypeEnabled": false,
+    "populationCost": 2,
+    "health": 155,
+    "speed": 64,
+    "attackDamage": 22,
+    "attackRange": 20,
+    "attackCooldown": 0.9,
+    "sight": 130,
+    "cost": {
+      "gold": 130,
+      "wood": 25,
+      "iron": 55
+    },
+    "notes": [
+      "Canonical Seventeenth Session unit (2026-04-25). Off 8/Def 3. Elite offensive foot unit without horseback.",
+      "Line-breaking, high damage, offense-dominant. More vulnerable than Bulwark Guard. Less balanced than Knight.",
+      "Requires advanced armory and trained melee specialists. Not the best defensive elite."
+    ]
+  },
+  {
+    "id": "spear_guard",
+    "name": "Spear Guard",
+    "stage": 2,
+    "role": "melee-defensive",
+    "offenseRating": 3,
+    "defenseRating": 5,
+    "prototypeEnabled": false,
+    "populationCost": 1,
+    "health": 130,
+    "speed": 58,
+    "attackDamage": 10,
+    "attackRange": 22,
+    "attackCooldown": 1.05,
+    "sight": 120,
+    "antiCavalryBonus": 1.6,
+    "cost": {
+      "gold": 75,
+      "wood": 20,
+      "iron": 12
+    },
+    "notes": [
+      "Canonical Seventeenth Session unit (2026-04-25). Off 3/Def 5. Improved version of Spearmen.",
+      "Shielded or better-equipped. Stronger line-holding. Better defensive reliability. Prior name 'Shielded Spearmen' is superseded.",
+      "Upgrade path from Spearmen. Requires training grounds and shield equipment."
+    ]
+  },
+  {
+    "id": "pikeguard",
+    "name": "Pikeguard",
+    "stage": 2,
+    "role": "melee-defensive",
+    "offenseRating": 4,
+    "defenseRating": 6,
+    "prototypeEnabled": false,
+    "populationCost": 1,
+    "health": 150,
+    "speed": 54,
+    "attackDamage": 13,
+    "attackRange": 26,
+    "attackCooldown": 1.1,
+    "sight": 118,
+    "antiCavalryBonus": 1.8,
+    "cost": {
+      "gold": 90,
+      "wood": 25,
+      "iron": 20
+    },
+    "notes": [
+      "Canonical Seventeenth Session unit (2026-04-25). Off 4/Def 6. Advanced defensive polearm unit.",
+      "Improved long weapons, better formation discipline. Strong against cavalry. Prior names 'Armored Pikemen' and 'Pike Square' are superseded.",
+      "Upgrade path from Spear Guard. Requires armory and formation training."
+    ]
+  },
+  {
+    "id": "bulwark_guard",
+    "name": "Bulwark Guard",
+    "stage": 3,
+    "role": "melee-elite-defensive",
+    "offenseRating": 3,
+    "defenseRating": 8,
+    "prototypeEnabled": false,
+    "populationCost": 2,
+    "health": 175,
+    "speed": 50,
+    "attackDamage": 10,
+    "attackRange": 20,
+    "attackCooldown": 1.15,
+    "sight": 120,
+    "cost": {
+      "gold": 120,
+      "wood": 25,
+      "iron": 45
+    },
+    "notes": [
+      "Canonical Seventeenth Session unit (2026-04-25). Off 3/Def 8. Elite defensive foot unit.",
+      "Holds ground, protects lines, resists formation-breaking pressure. Not meant to kill quickly — value is staying power.",
+      "Protects archers, siege units, bloodline members, and vulnerable troops. Prior name 'Shield Wall' is superseded.",
+      "Requires advanced armory and defensive training specialization."
+    ]
+  },
+  {
+    "id": "boltman",
+    "name": "Boltmen",
+    "stage": 2,
+    "role": "ranged",
+    "offenseRating": 5,
+    "defenseRating": 2,
+    "prototypeEnabled": false,
+    "populationCost": 1,
+    "health": 80,
+    "speed": 58,
+    "attackDamage": 15,
+    "attackRange": 90,
+    "attackCooldown": 1.0,
+    "sight": 140,
+    "projectileSpeed": 310,
+    "armorPiercingBonus": 1.5,
+    "cost": {
+      "gold": 80,
+      "wood": 25,
+      "iron": 18
+    },
+    "notes": [
+      "Canonical Seventeenth Session unit (2026-04-25). Off 5/Def 2. Crossbow unit. Canonical name: Boltmen.",
+      "Shorter range than Archers (90 vs 122). Stronger armor-piercing (armorPiercingBonus 1.5). Faster reload than historical heavy crossbow.",
+      "Anti-armored infantry, anti-shielded units. 'Crossbowmen' is acceptable as descriptive alias only.",
+      "Upgrade path from Archers. Requires armory and crossbow training."
+    ]
+  },
+  {
+    "id": "mounted_swordsman",
+    "name": "Mounted Swordsmen",
+    "stage": 2,
+    "role": "cavalry",
+    "offenseRating": 5,
+    "defenseRating": 2,
+    "prototypeEnabled": false,
+    "populationCost": 1,
+    "health": 105,
+    "speed": 108,
+    "attackDamage": 12,
+    "attackRange": 18,
+    "attackCooldown": 0.85,
+    "sight": 160,
+    "cost": {
+      "gold": 90,
+      "wood": 20,
+      "iron": 15
+    },
+    "notes": [
+      "Canonical Seventeenth Session unit (2026-04-25). Off 5/Def 2. Early cavalry.",
+      "Men with swords on horseback. Fast, offense-oriented, not heavily protected. Not a Knight.",
+      "Speed, harassment, pursuit, flanking, open-field pressure.",
+      "Requires horse/stable branch or equivalent early cavalry infrastructure.",
+      "Do not confuse with Scout Rider (existing stage 2 recon/raid cavalry unit)."
+    ]
+  },
+  {
+    "id": "mounted_heavy_swordsman",
+    "name": "Mounted Heavy Swordsmen",
+    "stage": 2,
+    "role": "cavalry",
+    "offenseRating": 6,
+    "defenseRating": 3,
+    "prototypeEnabled": false,
+    "populationCost": 1,
+    "health": 125,
+    "speed": 102,
+    "attackDamage": 15,
+    "attackRange": 18,
+    "attackCooldown": 0.88,
+    "sight": 155,
+    "cost": {
+      "gold": 105,
+      "wood": 20,
+      "iron": 25
+    },
+    "notes": [
+      "Canonical Seventeenth Session unit (2026-04-25). Off 6/Def 3. Upgraded mounted swordsmen.",
+      "Shields and better equipment make the difference. More survivable than Mounted Swordsmen. Still not a Knight.",
+      "Prior name 'Shielded Mounted Swordsmen' is superseded.",
+      "Requires improved cavalry infrastructure, shields, and better mounted equipment."
+    ]
+  },
+  {
+    "id": "horse_archer",
+    "name": "Horse Archer",
+    "stage": 2,
+    "role": "cavalry-ranged",
+    "offenseRating": 3,
+    "defenseRating": 2,
+    "prototypeEnabled": false,
+    "populationCost": 1,
+    "health": 80,
+    "speed": 112,
+    "attackDamage": 9,
+    "attackRange": 78,
+    "attackCooldown": 1.2,
+    "sight": 165,
+    "projectileSpeed": 265,
+    "cost": {
+      "gold": 85,
+      "wood": 25,
+      "iron": 10
+    },
+    "notes": [
+      "Canonical Seventeenth Session unit (2026-04-25). Off 3/Def 2. Mounted ranged harassment unit.",
+      "Limited range (78 vs Archers 122) — shooting from horseback is harder. High mobility, weak if caught.",
+      "Mobile harassment, raiding, skirmishing, pursuit. Should not replace foot Archers.",
+      "Prior names 'Mounted Bowman' and 'Mounted Bowmen' are deprecated.",
+      "Requires horse/stable branch plus ranged training."
+    ]
+  },
+  {
+    "id": "mounted_knight",
+    "name": "Mounted Knight",
+    "stage": 3,
+    "role": "cavalry-heavy",
+    "offenseRating": 7,
+    "defenseRating": 5,
+    "prototypeEnabled": false,
+    "populationCost": 2,
+    "health": 180,
+    "speed": 96,
+    "attackDamage": 20,
+    "attackRange": 22,
+    "attackCooldown": 0.85,
+    "sight": 168,
+    "lanceChargeEnabled": true,
+    "lanceChargeRequiresGrouped": true,
+    "canDismount": true,
+    "cost": {
+      "gold": 150,
+      "wood": 25,
+      "iron": 65
+    },
+    "notes": [
+      "Canonical Seventeenth Session unit (2026-04-25). Off 7/Def 5. Heavy mounted cavalry. Canonical name: Mounted Knight.",
+      "Horse, armor, shield, sword, and lance. Not spammable. Major power from grouped lance charge / break-formation, not just base stats.",
+      "lanceChargeEnabled: grouped formation charge attack pending full formation system implementation.",
+      "lanceChargeRequiresGrouped: charge most powerful when Mounted Knights are grouped and properly formed.",
+      "Countered by braced Spearmen, Spear Guard, Pikeguard. Poor in forests, tight ruins, steep terrain, cramped urban spaces.",
+      "canDismount: may dismount into Knight unit. Remounting requires controlled/friendly conditions (pending implementation).",
+      "Requires advanced cavalry infrastructure, warhorses, advanced armor/iron, shields, swords, lance training."
+    ]
+  },
+  {
+    "id": "knight",
+    "name": "Knight",
+    "stage": 3,
+    "role": "melee-elite",
+    "offenseRating": 6,
+    "defenseRating": 6,
+    "prototypeEnabled": false,
+    "populationCost": 2,
+    "health": 165,
+    "speed": 68,
+    "attackDamage": 17,
+    "attackRange": 20,
+    "attackCooldown": 0.9,
+    "sight": 148,
+    "dismountedForm": true,
+    "canRemount": true,
+    "cost": {
+      "gold": 0
+    },
+    "notes": [
+      "Knight is produced by dismounting a Mounted Knight, not recruited independently. cost.gold=0 reflects the no-direct-recruitment path.",
+      "Canonical Seventeenth Session unit (2026-04-25). Off 6/Def 6. Dismounted form of Mounted Knight. Canonical name: Knight.",
+      "Versatile armored elite infantry. Slower, no mounted charge. 'Dismounted Knight' is acceptable as explanatory text only.",
+      "Does not outperform Greatsword Knight offensively. Does not outperform Bulwark Guard defensively.",
+      "Balanced, durable, useful in terrain where mounted combat is poor (sieges, rough terrain, cramped spaces).",
+      "canRemount: remounting requires controlled/friendly conditions, timer, and preserved horse. Not instant. Pending full implementation."
+    ]
   },
   {
     "id": "axeman",
     "name": "Axeman",
     "stage": 1,
     "role": "unique-melee",
+    "offenseRating": 5,
+    "defenseRating": 2,
     "prototypeEnabled": true,
     "populationCost": 1,
     "health": 110,
@@ -99,8 +475,10 @@
     "ironmarkBloodPrice": 2,
     "bloodProductionLoadDelta": 3,
     "notes": [
+      "Off 5/Def 2 per Seventeenth Session Canon (2026-04-25). Updated from Ninth Ingestion Canon (Off 6/Def 4). Only Off/Def values revised — all other Ironmark identity (Ferocity Under Loss, blood cost, axe symbol, anti-armor bonus, weakness to fast units) remains intact.",
       "Session 69 enables Axeman as the first live Ironmark unique unit.",
-      "Axeman carries a heavier blood levy and blood-production load than standard Ironmark infantry, tying house identity back into Ironmark's civilizational cost lane."
+      "Axeman carries a heavier blood levy and blood-production load than standard Ironmark infantry, tying house identity back into Ironmark's civilizational cost lane.",
+      "Ironmark specialized offensive variation on the swordsman/offensive infantry line. More offense-focused, less defensively reliable than shielded/armored sword troops."
     ]
   },
   {

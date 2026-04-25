@@ -636,7 +636,7 @@ Each Bloodline is defined by a unified identity system consisting of:
 
 SUBSECTION 4.1: HAIR COLOR SYSTEM (LOCKED)
 
-Each founding bloodline has a fixed hair color identity:
+Prior assignments (committed 2026-03-18, Sixteenth Session Canon pass conducted 2026-04-25 — specific updated assignments not committed before context expired; re-confirmation pending from Lance):
 
 * Trueborn: Silver
 * Highborne: Dark Gold (with highlights)
@@ -666,7 +666,9 @@ These are applied across:
 * Selection indicators
 * Ability visuals (subtle use)
 
-SUBSECTION 4.3: SYMBOL FAMILY SYSTEM (LOCKED)
+SUBSECTION 4.3: SYMBOL FAMILY SYSTEM
+
+Note (2026-04-25, Sixteenth Session Canon pass): The LOCKED designation on this subsection was suspended pending further design work. Symbol families remain a design requirement but are not yet binding canon for all houses. Ironmark's axe symbol remains locked as that house's full profile is locked per the Ninth Ingestion Canon.
 
 Each bloodline must have:
 
@@ -684,6 +686,53 @@ They must support variation across:
 * Rank indicators
 
 Unused symbol variants may be assigned to lesser houses.
+
+---
+
+SUBSECTION 4.4: UNIT VISUAL IDENTITY
+
+Unit visual identity carries house silhouette and color language onto the battlefield. Units must be recognizable by house at a glance. See `13_AUDIO_VISUAL/GRAPHICS_PIPELINE/UNIT_VISUAL_DIRECTION_PACKS_2026-04-16.md` for the active visual direction pipeline.
+
+---
+
+SECTION 4.5: CORE GROUND UNIT PROGRESSION — LOCKED 2026-04-25 (Seventeenth Session Canon)
+
+The canonical base unit ladder available to all dynasties. Off/Def values are absolute role-based ratings, not deviations from a neutral baseline.
+
+OFFENSIVE INFANTRY LINE:
+* Militia: Off 2 / Def 2 — All-purpose starter
+* Swordsmen: Off 4 / Def 2 — Versatile frontline
+* Shieldbearer Swordsmen: Off 5 / Def 3 — Offensive frontline with shield
+* Heavy Swordsmen: Off 6 / Def 4 — Armored heavy frontline
+* Greatsword Knight: Off 8 / Def 3 — Apex offensive infantry
+
+DEFENSIVE INFANTRY LINE:
+* Militia: Off 2 / Def 2 — Shared root
+* Spearmen: Off 2 / Def 4 — Anti-cavalry defensive line (x1.5 anti-cavalry)
+* Spear Guard: Off 3 / Def 5 — Upgraded spear line (x1.6 anti-cavalry)
+* Pikeguard: Off 4 / Def 6 — Heavy polearm anchor (x1.8 anti-cavalry)
+* Bulwark Guard: Off 3 / Def 8 — Immovable defensive wall
+
+RANGED LINE:
+* Archers: Off 3 / Def 2 — Standard ranged (canonical name: Archers, not Bowmen)
+* Boltmen: Off 5 / Def 2 — Armor-piercing ranged (canonical name: Boltmen, not Crossbowmen)
+
+CAVALRY LINE:
+* Mounted Swordsmen: Off 5 / Def 2 — Light offensive cavalry
+* Mounted Heavy Swordsmen: Off 6 / Def 3 — Armored offensive cavalry
+* Mounted Knight: Off 7 / Def 5 — Heavy shock cavalry with grouped lance charge; can dismount
+* Knight: Off 6 / Def 6 — Dismounted form of Mounted Knight; can remount
+* Horse Archer: Off 3 / Def 2 — Cavalry ranged harassment variant
+
+IRONMARK UNIQUE:
+* Axeman: Off 5 / Def 2 — Ferocity Under Loss, anti-armor bonus, blood cost loop (Off/Def revised 2026-04-25 from Off 6/Def 4)
+
+MOUNTED KNIGHT MECHANICS (preliminary):
+Lance charge is a grouped formation ability requiring multiple Mounted Knight units in formation. Countered by braced Spearmen, Spear Guard, Pikeguard. Ineffective in forest/tight terrain. Dismounting to Knight requires conditions and a timer; remounting is not instant. Full mechanics pending.
+
+IRON AND FORGE: Iron is available from game start. Forge/Settlement Forge required from the beginning. The prior "early game low significance" iron framing is superseded.
+
+SCRAPPED: War Wagon — deferred. Siege Tower as a unit — deferred. Light transport vehicles — scrapped entirely.
 
 ---
 

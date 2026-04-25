@@ -114,6 +114,8 @@ namespace Bloodlines.EditorTools
                 asset.requiredDisadvantage = item.requiredDisadvantage;
                 asset.prototypePlayable = item.prototypePlayable;
                 asset.notes = item.notes ?? Array.Empty<string>();
+                asset.fortificationCostMultiplier = item.mechanics?.fortificationCostMultiplier ?? 1f;
+                asset.fortificationBuildSpeedMultiplier = item.mechanics?.fortificationBuildSpeedMultiplier ?? 1f;
                 EditorUtility.SetDirty(asset);
             }
         }
@@ -154,6 +156,9 @@ namespace Bloodlines.EditorTools
                 asset.sight = item.sight;
                 asset.projectileSpeed = item.projectileSpeed;
                 asset.movementDomain = item.movementDomain;
+                asset.vesselClass = item.vesselClass;
+                asset.transportCapacity = item.transportCapacity;
+                asset.oneUseSacrifice = item.oneUseSacrifice;
                 asset.carryCapacity = item.carryCapacity;
                 asset.gatherRate = item.gatherRate;
                 asset.buildRate = item.buildRate;
@@ -198,6 +203,10 @@ namespace Bloodlines.EditorTools
                 asset.auraRadius = item.auraRadius;
                 asset.smeltingFuelResource = item.smeltingFuelResource;
                 asset.smeltingFuelRatio = item.smeltingFuelRatio;
+                asset.buildTier = item.buildTier;
+                asset.maxWorkerSlots = item.maxWorkerSlots;
+                asset.workerOutputPerSecond = item.workerOutputPerSecond ?? new ResourceTrickleFields();
+                asset.waterPopulationSupport = item.waterPopulationSupport;
                 EditorUtility.SetDirty(asset);
             }
         }
@@ -536,6 +545,14 @@ namespace Bloodlines.EditorTools
             public string requiredDisadvantage;
             public bool prototypePlayable;
             public string[] notes;
+            public HouseMechanicsRecord mechanics;
+        }
+
+        [Serializable]
+        private class HouseMechanicsRecord
+        {
+            public float fortificationCostMultiplier;
+            public float fortificationBuildSpeedMultiplier;
         }
 
         [Serializable]
@@ -566,6 +583,9 @@ namespace Bloodlines.EditorTools
             public float sight;
             public float projectileSpeed;
             public string movementDomain;
+            public string vesselClass;
+            public int transportCapacity;
+            public bool oneUseSacrifice;
             public float carryCapacity;
             public float gatherRate;
             public float buildRate;
@@ -605,6 +625,10 @@ namespace Bloodlines.EditorTools
             public float auraRadius;
             public string smeltingFuelResource;
             public float smeltingFuelRatio;
+            public int buildTier;
+            public int maxWorkerSlots;
+            public ResourceTrickleFields workerOutputPerSecond;
+            public int waterPopulationSupport;
         }
 
         [Serializable]
@@ -766,6 +790,11 @@ namespace Bloodlines.EditorTools
             if (string.Equals(role, "support", StringComparison.OrdinalIgnoreCase))
             {
                 return UnitRole.Support;
+            }
+
+            if (string.Equals(role, "vessel", StringComparison.OrdinalIgnoreCase))
+            {
+                return UnitRole.Vessel;
             }
 
             return UnitRole.Unknown;

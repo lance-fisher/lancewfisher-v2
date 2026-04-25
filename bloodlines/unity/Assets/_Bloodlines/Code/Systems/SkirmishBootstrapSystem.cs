@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Bloodlines.AI;
 using Bloodlines.Components;
 using Bloodlines.Faith;
+using Bloodlines.Naval;
 using Bloodlines.Raids;
 using Unity.Collections;
 using Unity.Entities;
@@ -178,6 +180,11 @@ namespace Bloodlines.Systems
             var entity = entityManager.CreateEntity();
             entityManager.AddComponentData(entity, new FactionComponent { FactionId = seed.FactionId });
             entityManager.AddComponentData(entity, new FactionHouseComponent { HouseId = seed.HouseId });
+            entityManager.AddComponentData(entity, new HouseMechanicsComponent
+            {
+                FortificationCostMultiplier = seed.FortificationCostMultiplier > 0f ? seed.FortificationCostMultiplier : 1f,
+                FortificationBuildSpeedMultiplier = seed.FortificationBuildSpeedMultiplier > 0f ? seed.FortificationBuildSpeedMultiplier : 1f,
+            });
             entityManager.AddComponentData(entity, new FactionKindComponent { Kind = seed.Kind });
             entityManager.AddComponentData(entity, new PopulationComponent
             {
@@ -294,6 +301,19 @@ namespace Bloodlines.Systems
                     WorldPressureResponseIntervalSeconds = 15f,
                     ReinforcementIntervalSeconds         = 10f,
                     CurrentPosture                       = AIStrategicPosture.Expand,
+                });
+            }
+
+            // Browser parity ai.js:updateNeutralAi (~3044). Tribes faction gets
+            // a dedicated raid timer instead of the kingdom AI economy/strategy
+            // surface. The TribesRaidSystem ticks this state and dispatches
+            // raiders to the nearest non-tribes-owned control point.
+            if (seed.Kind == FactionKind.Tribes)
+            {
+                entityManager.AddComponentData(entity, new TribesRaidStateComponent
+                {
+                    RaidTimerSeconds = 30f,
+                    BaseRaidIntervalSeconds = 30f,
                 });
             }
 
@@ -470,6 +490,27 @@ namespace Bloodlines.Systems
                     InfluencePerSecond = seed.InfluenceTrickle,
                 });
             }
+
+            if (seed.MaxWorkerSlots > 0)
+            {
+                entityManager.AddComponentData(entity, new WorkerSlotBuildingComponent
+                {
+                    MaxWorkerSlots = seed.MaxWorkerSlots,
+                    AssignedWorkers = 0,
+                    FoodOutputPerWorkerPerSecond = seed.WorkerFoodOutputPerSecond,
+                    WoodOutputPerWorkerPerSecond = seed.WorkerWoodOutputPerSecond,
+                    FillRatio = 0f,
+                });
+            }
+
+            if (seed.SmeltingFuelRatio > 0f && seed.SmeltingFuelResourceId.Length > 0)
+            {
+                entityManager.AddComponentData(entity, new SmeltingComponent
+                {
+                    FuelResourceId = seed.SmeltingFuelResourceId,
+                    FuelRatio = seed.SmeltingFuelRatio,
+                });
+            }
         }
 
         static void SpawnUnitEntity(EntityManager entityManager, MapUnitSeedElement seed)
@@ -535,6 +576,46 @@ namespace Bloodlines.Systems
                     ProjectileArrivalRadius = math.max(0.05f, seed.ProjectileArrivalRadius),
                 });
             }
+
+            if (seed.Role == UnitRole.Vessel)
+            {
+                var resolvedClass = ResolveVesselClass(seed.VesselClassId);
+                entityManager.AddComponentData(entity, new NavalVesselComponent
+                {
+                    Class = resolvedClass,
+                    TransportCapacity = math.max(0, seed.TransportCapacity),
+                    OneUseSacrifice = seed.OneUseSacrifice,
+                });
+
+                if (seed.TransportCapacity > 0)
+                {
+                    entityManager.AddBuffer<PassengerBufferElement>(entity);
+                }
+
+                // Browser parity simulation.js updateVessel: fishing-class vessels
+                // auto-gather food while idle on water. Carry the canonical food yield
+                // (UnitDefinition.gatherRate) on the per-entity FishingVesselComponent.
+                if (resolvedClass == VesselClass.Fishing && seed.VesselGatherRate > 0f)
+                {
+                    entityManager.AddComponentData(entity, new FishingVesselComponent
+                    {
+                        FoodPerSecond = seed.VesselGatherRate,
+                    });
+                }
+            }
+        }
+
+        static VesselClass ResolveVesselClass(FixedString32Bytes vesselClassId)
+        {
+            var id = vesselClassId.ToString();
+            if (string.IsNullOrEmpty(id)) return VesselClass.None;
+            if (id.Equals("fishing", System.StringComparison.OrdinalIgnoreCase)) return VesselClass.Fishing;
+            if (id.Equals("scout", System.StringComparison.OrdinalIgnoreCase)) return VesselClass.Scout;
+            if (id.Equals("war_galley", System.StringComparison.OrdinalIgnoreCase)) return VesselClass.WarGalley;
+            if (id.Equals("transport", System.StringComparison.OrdinalIgnoreCase)) return VesselClass.Transport;
+            if (id.Equals("fire_ship", System.StringComparison.OrdinalIgnoreCase)) return VesselClass.FireShip;
+            if (id.Equals("capital_ship", System.StringComparison.OrdinalIgnoreCase)) return VesselClass.CapitalShip;
+            return VesselClass.None;
         }
     }
 }

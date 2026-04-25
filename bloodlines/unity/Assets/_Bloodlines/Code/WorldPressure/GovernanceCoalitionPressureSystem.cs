@@ -3,6 +3,7 @@ using Bloodlines.Components;
 using Bloodlines.Dynasties;
 using Bloodlines.GameTime;
 using Bloodlines.TerritoryGovernance;
+using Bloodlines.WorldPressure;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -24,23 +25,26 @@ namespace Bloodlines.Systems
     [UpdateBefore(typeof(Bloodlines.Victory.VictoryConditionEvaluationSystem))]
     public partial struct GovernanceCoalitionPressureSystem : ISystem
     {
-        private const int TerritorialGovernanceMinStage = 5;
-        private const float TerritorialGovernanceMinTerritoryShare = 0.35f;
-        private const float TerritorialGovernanceLoyaltyThreshold = 80f;
-        private const float TerritorialGovernanceVictoryLoyaltyThreshold = 90f;
-        private const float TerritorialGovernanceBreakLoyaltyThreshold = 65f;
-        private const float TerritorialGovernanceSustainSeconds = 90f;
-        private const float TerritorialGovernanceVictorySeconds = 120f;
-        private const float TerritorialGovernanceAcceptanceThresholdPct = 65f;
-        private const float TerritorialGovernanceAcceptanceAllianceThresholdPct = 60f;
-        private const float GovernanceAllianceLoyaltyPressureBase = -1.5f;
-        private const float GovernanceAllianceLegitimacyPressurePerCycle = 0.8f;
-        private const float GovernanceAllianceAcceptanceDragPerHostile = 0.04f;
-        private const float GovernanceAllianceCycleSeconds = 90f;
-        private const int TerritorialGovernanceWorldPressureScore = 3;
-        private const int TerritorialGovernanceRecognizedWorldPressureScore = 5;
-        private const int TerritorialGovernanceThresholdWorldPressureScore = 6;
-        private const int TerritorialGovernanceVictoryWorldPressureScore = 7;
+        // Constants hoisted to GovernanceCanon (per constant_parity_audit.md
+        // recommendation 2026-04-25). All values are unchanged from the
+        // browser canonical (simulation.js:143-169).
+        private const int TerritorialGovernanceMinStage = GovernanceCanon.TerritorialGovernanceMinStage;
+        private const float TerritorialGovernanceMinTerritoryShare = GovernanceCanon.TerritorialGovernanceMinTerritoryShare;
+        private const float TerritorialGovernanceLoyaltyThreshold = GovernanceCanon.TerritorialGovernanceLoyaltyThreshold;
+        private const float TerritorialGovernanceVictoryLoyaltyThreshold = GovernanceCanon.TerritorialGovernanceVictoryLoyaltyThreshold;
+        private const float TerritorialGovernanceBreakLoyaltyThreshold = GovernanceCanon.TerritorialGovernanceBreakLoyaltyThreshold;
+        private const float TerritorialGovernanceSustainSeconds = GovernanceCanon.TerritorialGovernanceSustainSeconds;
+        private const float TerritorialGovernanceVictorySeconds = GovernanceCanon.TerritorialGovernanceVictorySeconds;
+        private const float TerritorialGovernanceAcceptanceThresholdPct = GovernanceCanon.TerritorialGovernanceAcceptanceThresholdPct;
+        private const float TerritorialGovernanceAcceptanceAllianceThresholdPct = GovernanceCanon.TerritorialGovernanceAcceptanceAllianceThresholdPct;
+        private const float GovernanceAllianceLoyaltyPressureBase = GovernanceCanon.GovernanceAllianceLoyaltyPressureBase;
+        private const float GovernanceAllianceLegitimacyPressurePerCycle = GovernanceCanon.GovernanceAllianceLegitimacyPressurePerCycle;
+        private const float GovernanceAllianceAcceptanceDragPerHostile = GovernanceCanon.GovernanceAllianceAcceptanceDragPerHostile;
+        private const float GovernanceAllianceCycleSeconds = GovernanceCanon.GovernanceAllianceCycleSeconds;
+        private const int TerritorialGovernanceWorldPressureScore = GovernanceCanon.TerritorialGovernanceWorldPressureScore;
+        private const int TerritorialGovernanceRecognizedWorldPressureScore = GovernanceCanon.TerritorialGovernanceRecognizedWorldPressureScore;
+        private const int TerritorialGovernanceThresholdWorldPressureScore = GovernanceCanon.TerritorialGovernanceThresholdWorldPressureScore;
+        private const int TerritorialGovernanceVictoryWorldPressureScore = GovernanceCanon.TerritorialGovernanceVictoryWorldPressureScore;
 
         private static readonly FixedString32Bytes PlayerFactionId = new FixedString32Bytes("player");
         private static readonly FixedString32Bytes PrimaryDynasticKeepClassId =

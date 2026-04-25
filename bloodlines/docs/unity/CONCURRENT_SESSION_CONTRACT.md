@@ -2,10 +2,11 @@
 
 ## Contract Metadata
 
-- Revision: 145
+- Revision: 147
 - Last Updated: 2026-04-25
-- Last Updated By: claude-multiplayer-nfe-integration-2026-04-25
-- Supersedes: revision 144 (NfE integration smoke gates + runtime bug fixes)
+- Last Updated By: claude-naval-and-tribes-2026-04-25
+- Supersedes: revision 146 (naval S1 only)
+- Supersedes: revision 145 (multiplayer NfE integration smoke gates + runtime bug fixes)
 
 
 ## Purpose
@@ -1835,6 +1836,86 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `BloodlinesDynastyPrestigeDriftSmokeValidation` proves 3 phases: base rate vs interregnum penalty, crisis stacking, conviction modulation with floor. PS1 wrapper in place.
   - All 10 validation gates passed (0 errors; Unity batch-mode runtime smokes SKIP-env per established environment condition; lane smoke PASS)
 
+### Lane: naval-layer
+
+- Status: 5/6 slices landed on `claude/unity-multiplayer-nfe-integration` (S1+S2+S3+S4+S5 complete; S6 AI naval dispatch optional and unstarted)
+- Branch Prefix: `claude/unity-naval-layer` (canonical reservation; this session's slices landed on `claude/unity-multiplayer-nfe-integration` with parity contract acknowledgement here)
+- Owner Agent: claude-code
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Naval/**`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesNavalSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityNavalSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Components/UnitTypeComponent.cs` -- appended `Vessel = 10` enum value to `UnitRole`. No existing values renamed or reordered.
+  - `unity/Assets/_Bloodlines/Code/Components/MapBootstrapComponents.cs` -- appended `VesselClassId`, `TransportCapacity`, `OneUseSacrifice`, `VesselGatherRate` fields to `MapUnitSeedElement`. Also appended `MapWaterTilePatchSeedElement` IBufferElementData (X, Y, Width, Height) baked from terrainPatches type=water/river. Additive.
+  - `unity/Assets/_Bloodlines/Code/Definitions/UnitDefinition.cs` -- appended `vesselClass`, `transportCapacity`, `oneUseSacrifice` fields. Additive.
+  - `unity/Assets/_Bloodlines/Code/Editor/JsonContentImporter.cs` -- appended same fields to `UnitRecord` and importer assignment, plus `"vessel" -> UnitRole.Vessel` mapping in `ResolveUnitRole`. Additive.
+  - `unity/Assets/_Bloodlines/Code/Authoring/BloodlinesMapBootstrapAuthoring.cs` -- appended `"vessel"` mapping in `ResolveUnitRole`. Additive.
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesMapBootstrapBaker.cs` -- appended `"vessel"` mapping; baker emits `VesselClassId`, `TransportCapacity`, `OneUseSacrifice`, `VesselGatherRate` into `MapUnitSeedElement`; baker also fills `MapWaterTilePatchSeedElement` from water/river terrain patches. Additive.
+  - `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs` -- after the existing projectile-factory branch, attach `NavalVesselComponent` and `PassengerBufferElement` buffer when seed.Role == UnitRole.Vessel; attach `FishingVesselComponent` when vessel class is Fishing. No existing spawn behavior removed.
+  - `unity/Assets/_Bloodlines/Code/Combat/AttackResolutionSystem.cs` -- after damage application, queue `FireShipDetonationPendingTag` when attacker has `NavalVesselComponent.OneUseSacrifice == true`. Strictly additive; no change to existing damage paths.
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.cs` -- appended `"vessel"` mapping in `ResolveUnitRole`. Additive.
+  - `unity/Assembly-CSharp.csproj` -- added Compile entries for the new Naval/*.cs files (S1: 8 files; S2: DisembarkOrderComponent + DisembarkSystem; S3: FireShipDetonationPendingTag + FireShipDetonationSystem; S5: FishingVesselComponent + FishingGatherSystem).
+  - `unity/Assembly-CSharp-Editor.csproj` -- added Compile entry for BloodlinesNavalSmokeValidation.cs.
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/MoveCommandComponent.cs` -- EmbarkSystem flips `IsActive=false` on embarked passengers.
+  - `unity/Assets/_Bloodlines/Code/Components/WorkerGatherOrderComponent.cs` -- EmbarkSystem removes the order on embarked passengers.
+  - `unity/Assets/_Bloodlines/Code/Components/MapBootstrapComponents.cs` -- EmbarkSystem reads `MapBootstrapConfigComponent.TileSize` to compute embark radius; falls back to validation default when absent.
+- Lane Authority Documents:
+  - `docs/unity/session-handoffs/2026-04-25-unity-naval-S1-embark.md`
+  - Canon: `11_MATCHFLOW/NAVAL_SYSTEM.md`, design bible section 36.
+- Browser Reference:
+  - `src/game/core/simulation.js` `embarkUnitsOnTransport` (~7539-7574)
+  - `src/game/core/simulation.js` `disembarkTransport` (~7576-7623) [S2 target]
+  - `src/game/core/simulation.js` `isWaterTileAt` (~7627-7636) [S2 target]
+  - `src/game/core/simulation.js` `updateVessel` (~8781-8864) [S3-S5 target]
+- Current Branch In Flight: none (all S1-S5 commits landed on `claude/unity-multiplayer-nfe-integration` and merged to master with this contract update; S6 unstarted)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-25-unity-naval-S1-embark.md` (S1); subsequent slices used per-commit handoff text and continuity-file appends rather than per-slice handoff docs.
+- Slice Roadmap:
+  - S1 embark COMPLETE (commit d3657660): EmbarkOrderComponent, EmbarkSystem, PassengerBufferElement, EmbarkedPassengerTag, PassengerTransportLinkComponent, NavalVesselComponent, VesselClass, NavalCanon, plus the smoke validator embark phase.
+  - S2 disembark + water-tile detection COMPLETE (commit f41c820d): DisembarkOrderComponent, DisembarkSystem, MapWaterTilePatchSeedElement bake (water+river), 3x3 drop grid + fail-case smoke phase.
+  - S3 fire-ship detonation COMPLETE (commit 38463327): FireShipDetonationPendingTag, FireShipDetonationSystem, AttackResolutionSystem queue-tag-after-damage, smoke phase covering one-use sacrifice destruction + non-sacrifice negative case.
+  - S4 vessel-vs-vessel naval combat COMPLETE (commit 208b8fc3): smoke validator phase only -- the existing AutoAcquireTargetSystem + AttackResolutionSystem pipeline handles vessel-vs-vessel without a separate naval combat system. War galley vs war galley smoke proves damage delivery + no false fire-ship trigger.
+  - S5 fishing gather COMPLETE (commit 60e58e4d): FishingVesselComponent, FishingGatherSystem, gatherRate bake into MapUnitSeedElement, smoke phase covering idle-on-water gain + active-move + off-water negative cases.
+  - S6 AI naval dispatch: UNSTARTED. Optional. Would let the AI build harbors and train vessels.
+
+### Lane: tribes-raid-ai
+
+- Status: COMPLETE (browser ai.js:updateNeutralAi raid loop ported; commit ba63dbce). Trueborn-City-style true-neutral negotiation-only driver still pending in a future lane.
+- Branch Prefix: shared with `claude/unity-multiplayer-nfe-integration` for this slice; future expansion lands under `claude/unity-tribes-ai-*`.
+- Owner Agent: claude-code
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/AI/TribesRaidStateComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/AI/TribesRaidSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesTribesRaidSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityTribesRaidSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Systems/SkirmishBootstrapSystem.cs` -- attach `TribesRaidStateComponent` when seed.Kind == FactionKind.Tribes (RaidTimerSeconds=30, BaseRaidIntervalSeconds=30).
+  - `unity/Assembly-CSharp.csproj` -- add Compile entries for the two new AI/Tribes*.cs files.
+  - `unity/Assembly-CSharp-Editor.csproj` -- add Compile entry for BloodlinesTribesRaidSmokeValidation.cs.
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Components/ControlPointComponent.cs` -- TribesRaidSystem reads OwnerFactionId to pick non-tribes-owned CPs.
+  - `unity/Assets/_Bloodlines/Code/Components/WorldPressureComponent.cs` -- TribesRaidSystem reads Targeted + Level to compute raid-interval multiplier.
+  - `unity/Assets/_Bloodlines/Code/Time/MatchProgressionComponent.cs` -- TribesRaidSystem reads GreatReckoningActive for raid-interval multiplier.
+- Lane Authority Documents:
+  - Browser reference: `src/game/core/ai.js` `updateNeutralAi` (~3044-3141).
+- Slice Roadmap:
+  - S1 raid-loop port COMPLETE: timer countdown + raider dispatch + nearest non-tribes CP target + WorldPressure / Great Reckoning multipliers + smoke validator.
+  - Deferred: dark-extremes Apex Cruel multiplier (0.6x) -- requires dynasty conviction-band aggregate query.
+  - Deferred: world-pressure-leader-targeted raid prioritization -- currently picks nearest non-tribes CP regardless of which faction is under pressure.
+  - Deferred: true-neutral (Trueborn City, trade hub) negotiation-only AI driver -- separate lane.
+
+### Lane: canon-class-hoists (housekeeping)
+
+- Status: ROLLING. Two new public canon classes landed this session: GovernanceCanon (commit d57ab8f3) and MatchProgressionCanon (commit 2ceee99b). Future hoists per docs/migration/constant_parity_audit.md (CaptiveOpsCanon, CaptiveCanon, additional sub-systems) remain pending.
+- Owner Agent: claude-code
+- Owned Paths:
+  - `unity/Assets/_Bloodlines/Code/WorldPressure/GovernanceCanon.cs`
+  - `unity/Assets/_Bloodlines/Code/Time/MatchProgressionCanon.cs`
+- Behavior unchanged: every hoisted constant value matches the prior private const inside its consumer system. The hoists prepare for downstream consumers (e.g. dynasty-core lane will read GovernanceCanon.GovernanceAllianceLegitimacyPressurePerCycle when the faction-Legitimacy field lands).
+
 ## Next Unblocked Tier 1 Lanes (Unclaimed)
 
 Forward work is prioritized in the browser-to-Unity migration plan at `docs/plans/2026-04-17-browser-to-unity-migration-plan.md`. The items below are unblocked and unclaimed. Any agent resuming a session may claim one by adding an entry under Active Lanes above, bumping Revision, and proceeding.
@@ -1947,6 +2028,15 @@ The following files may be edited by any lane, but only via narrow, additive cha
 
 - `unity/Assets/_Bloodlines/Code/Editor/JsonContentImporter.cs`
   Rule: add new field mappings in importer record types only. No removing existing field mappings. No changing existing import logic.
+
+- `unity/Assets/_Bloodlines/Code/Components/UnitTypeComponent.cs`
+  Rule: add new `UnitRole` or `SiegeClass` enum values only. Append at the end of each enum, never insert into the middle and never reorder existing values; persisted save data and importer mappings depend on the byte ordinal. Do not change the existing struct layout. Naval lane added `Vessel = 10` in revision 146.
+
+- `unity/Assets/_Bloodlines/Code/Components/MapBootstrapComponents.cs`
+  Rule: add new fields to seed element structs only. No removing or renaming existing fields. No restructuring the seed element layout. Already governed under the existing rule, listed again here so the naval lane's `MapUnitSeedElement` extension is auditable.
+
+- `unity/Assets/_Bloodlines/Code/Definitions/UnitDefinition.cs`
+  Rule: add new authored fields only. No removing existing fields. JsonContentImporter writes into these fields; field name and type must match the JSON field. New fields land here in lockstep with their `UnitRecord` counterpart in `JsonContentImporter.cs`.
 
 - `unity/Assembly-CSharp.csproj`
   Rule: add new `<Compile Include="..." />` entries for new `.cs` files only. Do not remove existing references. Do not change project structure, target framework, or preprocessor defines.

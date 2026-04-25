@@ -262,7 +262,7 @@ Located in Master Memory under Army Structure — Level 1 Units:
 - Swordsmen (also serve as reconnaissance; scouts intentionally removed)
 - Spearmen
 - Hunters
-- Bowmen (offensive and defensive specialization)
+- Bowmen *(prior name — canonical: Archers as of Seventeenth Session Canon 2026-04-25)* (offensive and defensive specialization)
 
 ---
 

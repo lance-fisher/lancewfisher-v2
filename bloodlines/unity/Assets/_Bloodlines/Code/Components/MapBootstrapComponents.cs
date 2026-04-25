@@ -39,6 +39,8 @@ namespace Bloodlines.Components
         public int PopulationTotal;
         public int PopulationCap;
         public int PopulationReserved;
+        public float FortificationCostMultiplier;
+        public float FortificationBuildSpeedMultiplier;
     }
 
     public struct MapBuildingSeedElement : IBufferElementData
@@ -62,6 +64,12 @@ namespace Bloodlines.Components
         public float StoneTrickle;
         public float IronTrickle;
         public float InfluenceTrickle;
+        public int MaxWorkerSlots;
+        public float WorkerFoodOutputPerSecond;
+        public float WorkerWoodOutputPerSecond;
+        public int WaterPopulationSupport;
+        public FixedString32Bytes SmeltingFuelResourceId;
+        public float SmeltingFuelRatio;
     }
 
     public struct MapUnitSeedElement : IBufferElementData
@@ -84,6 +92,10 @@ namespace Bloodlines.Components
         public SiegeClass SiegeClass;
         public int PopulationCost;
         public int Stage;
+        public FixedString32Bytes VesselClassId;
+        public int TransportCapacity;
+        public bool OneUseSacrifice;
+        public float VesselGatherRate;
     }
 
     public struct MapResourceNodeSeedElement : IBufferElementData
@@ -130,5 +142,25 @@ namespace Bloodlines.Components
         public int FortificationTier;
         public int FortificationCeiling;
         public bool IsPrimaryKeep;
+    }
+
+    /// <summary>
+    /// Water/river terrain patch baked from MapDefinition.terrainPatches. Stored as a
+    /// dynamic buffer on the bootstrap singleton entity so naval systems can answer
+    /// "is tile (X,Y) water?" without re-walking the authoring asset every frame.
+    ///
+    /// Browser parity: simulation.js isWaterTileAt (~7627-7636), which scans
+    /// state.world.terrainPatches for a patch with type=="water" or type=="river"
+    /// containing (tileX, tileY).
+    ///
+    /// X / Y are tile-space integer coordinates; Width / Height are tile counts.
+    /// A tile (tx, ty) is in this patch when X &lt;= tx &lt; X+Width and Y &lt;= ty &lt; Y+Height.
+    /// </summary>
+    public struct MapWaterTilePatchSeedElement : IBufferElementData
+    {
+        public int X;
+        public int Y;
+        public int Width;
+        public int Height;
     }
 }

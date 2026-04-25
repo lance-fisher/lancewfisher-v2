@@ -635,7 +635,7 @@ namespace Bloodlines.Debug
                     continue;
                 }
 
-                options.Add(EvaluateConstructionOption(in factionSnapshot, buildingDefinition));
+                options.Add(EvaluateConstructionOption(entityManager, in factionSnapshot, buildingDefinition));
             }
 
             return options;
@@ -785,7 +785,7 @@ namespace Bloodlines.Debug
             };
         }
 
-        private ConstructionCommandOption EvaluateConstructionOption(in FactionRuntimeSnapshot factionSnapshot, BuildingDefinition buildingDefinition)
+        private ConstructionCommandOption EvaluateConstructionOption(EntityManager entityManager, in FactionRuntimeSnapshot factionSnapshot, BuildingDefinition buildingDefinition)
         {
             string buildingId = buildingDefinition.id ?? string.Empty;
             string displayName = string.IsNullOrWhiteSpace(buildingDefinition.displayName) ? buildingId : buildingDefinition.displayName;
@@ -802,10 +802,14 @@ namespace Bloodlines.Debug
                 enabled = false;
                 reason = "This building is not yet wired into the Unity construction shell.";
             }
-            else if (!CanAffordCost(factionSnapshot.Resources, buildingDefinition.cost))
+            else
             {
-                enabled = false;
-                reason = "Not enough resources.";
+                float costMultiplier = ResolveFortCostMultiplier(entityManager, factionSnapshot.FactionId, buildingDefinition);
+                if (!CanAffordCost(factionSnapshot.Resources, buildingDefinition.cost, costMultiplier))
+                {
+                    enabled = false;
+                    reason = "Not enough resources.";
+                }
             }
 
             var detailBuilder = new StringBuilder(160);
@@ -1031,7 +1035,7 @@ namespace Bloodlines.Debug
                 return false;
             }
 
-            var option = EvaluateConstructionOption(in factionSnapshot, buildingDefinition);
+            var option = EvaluateConstructionOption(entityManager, in factionSnapshot, buildingDefinition);
             if (!option.Enabled)
             {
                 message = option.Detail;
@@ -1099,7 +1103,7 @@ namespace Bloodlines.Debug
                 return false;
             }
 
-            var option = EvaluateConstructionOption(in factionSnapshot, buildingDefinition);
+            var option = EvaluateConstructionOption(entityManager, in factionSnapshot, buildingDefinition);
             if (!option.Enabled)
             {
                 message = option.Detail;
@@ -1113,7 +1117,8 @@ namespace Bloodlines.Debug
             }
 
             var resources = factionSnapshot.Resources;
-            SpendCost(ref resources, buildingDefinition.cost);
+            float costMultiplier = ResolveFortCostMultiplier(entityManager, factionSnapshot.FactionId, buildingDefinition);
+            SpendCost(ref resources, buildingDefinition.cost, costMultiplier);
             entityManager.SetComponentData(factionSnapshot.Entity, resources);
 
             float maxHealth = math.max(1f, buildingDefinition.health);
@@ -1591,35 +1596,81 @@ namespace Bloodlines.Debug
         }
 
         private static bool CanAffordCost(ResourceStockpileComponent resources, ResourceAmountFields cost)
+            => CanAffordCost(resources, cost, 1f);
+
+        private static bool CanAffordCost(ResourceStockpileComponent resources, ResourceAmountFields cost, float multiplier)
         {
             if (cost == null)
             {
                 return true;
             }
 
-            return resources.Gold >= cost.gold &&
-                   resources.Food >= cost.food &&
-                   resources.Water >= cost.water &&
-                   resources.Wood >= cost.wood &&
-                   resources.Stone >= cost.stone &&
-                   resources.Iron >= cost.iron &&
-                   resources.Influence >= cost.influence;
+            int gold = ScaleCost(cost.gold, multiplier);
+            int food = ScaleCost(cost.food, multiplier);
+            int water = ScaleCost(cost.water, multiplier);
+            int wood = ScaleCost(cost.wood, multiplier);
+            int stone = ScaleCost(cost.stone, multiplier);
+            int iron = ScaleCost(cost.iron, multiplier);
+            int influence = ScaleCost(cost.influence, multiplier);
+
+            return resources.Gold >= gold &&
+                   resources.Food >= food &&
+                   resources.Water >= water &&
+                   resources.Wood >= wood &&
+                   resources.Stone >= stone &&
+                   resources.Iron >= iron &&
+                   resources.Influence >= influence;
         }
 
         private static void SpendCost(ref ResourceStockpileComponent resources, ResourceAmountFields cost)
+            => SpendCost(ref resources, cost, 1f);
+
+        private static void SpendCost(ref ResourceStockpileComponent resources, ResourceAmountFields cost, float multiplier)
         {
             if (cost == null)
             {
                 return;
             }
 
-            resources.Gold -= cost.gold;
-            resources.Food -= cost.food;
-            resources.Water -= cost.water;
-            resources.Wood -= cost.wood;
-            resources.Stone -= cost.stone;
-            resources.Iron -= cost.iron;
-            resources.Influence -= cost.influence;
+            resources.Gold -= ScaleCost(cost.gold, multiplier);
+            resources.Food -= ScaleCost(cost.food, multiplier);
+            resources.Water -= ScaleCost(cost.water, multiplier);
+            resources.Wood -= ScaleCost(cost.wood, multiplier);
+            resources.Stone -= ScaleCost(cost.stone, multiplier);
+            resources.Iron -= ScaleCost(cost.iron, multiplier);
+            resources.Influence -= ScaleCost(cost.influence, multiplier);
+        }
+
+        private static int ScaleCost(int baseCost, float multiplier)
+        {
+            if (baseCost <= 0 || multiplier == 1f) return baseCost;
+            return (int)math.round(baseCost * multiplier);
+        }
+
+        private static float ResolveFortCostMultiplier(EntityManager entityManager, FixedString32Bytes factionId, BuildingDefinition buildingDefinition)
+        {
+            if (buildingDefinition == null) return 1f;
+            // Apply only to fortification buildings.
+            if (string.IsNullOrEmpty(buildingDefinition.fortificationRole) ||
+                string.Equals(buildingDefinition.fortificationRole, "none", StringComparison.OrdinalIgnoreCase))
+            {
+                return 1f;
+            }
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<HouseMechanicsComponent>());
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var mechanics = query.ToComponentDataArray<HouseMechanicsComponent>(Allocator.Temp);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (factions[i].FactionId.Equals(factionId))
+                {
+                    float m = mechanics[i].FortificationCostMultiplier;
+                    return m > 0f ? m : 1f;
+                }
+            }
+            return 1f;
         }
 
         private static void RefundQueuedCost(ref ResourceStockpileComponent resources, in ProductionQueueItemElement queueItem)
@@ -1753,6 +1804,7 @@ namespace Bloodlines.Debug
             if (string.Equals(role, "siege-support", StringComparison.OrdinalIgnoreCase)) return UnitRole.SiegeSupport;
             if (string.Equals(role, "engineer-specialist", StringComparison.OrdinalIgnoreCase)) return UnitRole.EngineerSpecialist;
             if (string.Equals(role, "support", StringComparison.OrdinalIgnoreCase)) return UnitRole.Support;
+            if (string.Equals(role, "vessel", StringComparison.OrdinalIgnoreCase)) return UnitRole.Vessel;
             return UnitRole.Unknown;
         }
 

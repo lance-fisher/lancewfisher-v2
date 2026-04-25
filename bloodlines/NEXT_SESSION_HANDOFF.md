@@ -5689,11 +5689,77 @@ proceed to the next unclaimed lane from CODEX_MULTI_DAY_DIRECTIVE_2026-04-25.md.
 
 ## early-game-foundation (as of 2026-04-25)
 
-Latest slice: Early-game foundation mechanics — Keep deployment, first build tier, water model, productivity states, draft slider, five-person squads, worker slots, reserve/active duty. Status: Complete, all 8 validation gates PASS. Pending commit on branch claude/unity-multiplayer-nfe-integration.
+Latest slice: Early-game foundation mechanics + authoring pipeline wiring. Status: COMPLETE. Committed and pushed on branch claude/unity-multiplayer-nfe-integration (commits 04c638eb, e7d6ad9d, c43db00a).
 Handoff: docs/unity/session-handoffs/2026-04-25-unity-early-game-foundation.md
+Canon docs updated: 04_SYSTEMS/RESOURCE_SYSTEM.md, 04_SYSTEMS/POPULATION_SYSTEM.md, 04_SYSTEMS/SYSTEM_INDEX.md (canon-locked 2026-04-25). BLOODLINES_BIBLE_LATEST.md on Desktop updated.
+All 7 validation gates green at c43db00a: dotnet builds (0 errors), bootstrap smoke, combat smoke, scene shells, data-validation, runtime-bridge, contract (revision 145).
 Next:
-- Commit this slice to the branch (or a dedicated early-game-foundation branch)
-- Wire DrawEarlyGamePanel() into BloodlinesDebugCommandSurface.cs OnGUI so it appears in the debug surface at runtime
-- Add JsonContentImporter handling for new buildings.json fields (buildTier, maxWorkerSlots, workerOutputPerSecond, waterPopulationSupport) so they populate BuildingDefinition at import
-- Add WorkerSlotBuildingComponent authoring to the four new worker-slot buildings (woodcutter_camp, forager_camp, small_farm; lumber_camp already exists)
-- Player input bridge: UI for assigning workers to buildings, setting squad orders
+- Keep deployment UI: debug-surface only (DeployPlayerKeep()); no in-game HUD trigger yet
+- Squad order UI: debug-surface only (SetFirstSquadAssignment()); no in-game HUD panel yet
+- Worker slot assignment panel: backend done (WorkerSlotHUDSystem + WorkerSlotAssignmentSystem); no in-game click UI wired yet
+- Water/productivity HUD panel: EarlyGameHUDComponent carries all values; no non-debug HUD renders them yet
+
+
+## naval-layer (as of 2026-04-25)
+
+Latest slice: S1 embark. Status: COMPLETE. Committed on claude/unity-multiplayer-nfe-integration as d3657660.
+Handoff: docs/unity/session-handoffs/2026-04-25-unity-naval-S1-embark.md
+Contract: revision 145 -> 146; lane reserves branch prefix `claude/unity-naval-layer` for future slices.
+- Added Naval/ folder with VesselClass, NavalCanon, NavalVesselComponent, PassengerBufferElement, EmbarkedPassengerTag, PassengerTransportLinkComponent, EmbarkOrderComponent, EmbarkSystem.
+- Mirrors browser embarkUnitsOnTransport (simulation.js:7539-7574) with silent-rejection parity.
+- UnitRole.Vessel=10 appended; authoring/baker/importer/bootstrap/debug-surface flow vessel definitions through the spawn pipeline.
+- Smoke validator proves capacity clamp at 6, cross-faction reject, out-of-range reject, embarked-tag movement suppression.
+- All 10 governed gates plus dedicated naval smoke green at d3657660.
+Next:
+- S2 disembark: bake `MapDefinition.terrainPatches` into a `MapWaterTileSeedElement` buffer (shared-file narrow edit to MapBootstrapComponents + baker), add DisembarkOrderComponent + DisembarkSystem with shoreline detection ring around the transport (browser parity simulation.js:7587-7615), append disembark phase to the naval smoke validator.
+- S3 fire-ship detonation: consume OneUseSacrifice, area damage on hostile collision, vessel + passengers destroyed.
+- S4 vessel-vs-vessel naval combat (separate acquisition/damage tables from land combat).
+- S5 fishing gather (vessel as worker analog over water tiles).
+- S6 (optional) AI naval dispatch lane.
+
+
+## naval-layer (as of 2026-04-25, refreshed)
+
+Latest slices: S1 embark + S2 disembark + S3 fire-ship detonation + S5 fishing gather. All COMPLETE. Committed on claude/unity-multiplayer-nfe-integration through 60e58e4d.
+- S1 commit d3657660: VesselClass + NavalCanon + EmbarkSystem + smoke phase 1.
+- S2 commit f41c820d: MapWaterTilePatchSeedElement bake + DisembarkSystem + smoke phase 2.
+- S3 commit 38463327: FireShipDetonationPendingTag + FireShipDetonationSystem + AttackResolutionSystem hook + smoke phase 3.
+- S5 commit 60e58e4d: FishingVesselComponent + FishingGatherSystem + smoke phase 4.
+Remaining naval slices: S4 vessel-vs-vessel naval combat (separate acquisition + damage tables from land combat), S6 (optional) AI naval dispatch lane.
+Smoke validator runs all 4 phases green; bootstrap, combat, scene shells, contract staleness, data-validation, runtime-bridge all pass at 60e58e4d.
+
+## P2 + P1 backlog wave (as of 2026-04-25)
+
+Completed this session:
+- Stonehelm faction bonuses wired (afd64bba): fortification cost discount (-20%) + build speed bonus (+20%) for fortification buildings only.
+- Match progression stage-gate cross-audit + fixes (b755d8c8): see reports/2026-04-25_match_progression_stage_gate_cross_audit.md.
+- UNITY_CANONICAL_ADVANCEMENTS_2026-04-25.md (b755d8c8) declares 5 mechanics canonical to Unity but absent from browser.
+- Iron-mine smelting fuel (b755d8c8): wood consumption per iron deposited.
+- Holy-war runtime effects verification (b755d8c8): no code change, system already implemented.
+- Balance constant parity audit (65c9e729): 122 constants, 0 drift detected.
+
+Next priorities from docs/migration/unity_port_backlog.md:
+- P1 Worker Slot Assignment HUD (UI work; needs in-game click panel).
+- P1 Multiplayer NfE Ghost prefab population (after one-time interactive Unity open to download com.unity.netcode@1.4.3).
+- P3 Naval S4 vessel-vs-vessel combat / S6 AI naval dispatch (continue naval lane).
+- P3 Born of Sacrifice (requires owner spec lock first).
+- P3 Victory Conditions 4-6 (requires owner spec).
+- P3 Neutral Faction AI verification.
+- Hoist 21 "Match (inline)" constants into named canon classes (CovenantTestCanon, GovernanceCanon, etc) per recommendations in constant_parity_audit.md.
+
+
+## Session continuation (as of 2026-04-25, late)
+
+After the initial P1 + P2 wave, the same session continued with:
+
+- D3-3 stage-gate military combat-only filter (commit 921f9314): MatchProgressionEvaluationSystem now requires UnitTypeComponent on the military query and filters out Worker / Support / EngineerSpecialist roles. Mirrors browser getAliveCombatUnits. Closes the Stage 3 auto-unlock-on-villager-saturation hole opened by the early-game-foundation worker-slot economy.
+
+- GovernanceCanon hoist (commit d57ab8f3): 17 territorial-governance + alliance-pressure constants pulled from GovernanceCoalitionPressureSystem private const into unity/Assets/_Bloodlines/Code/WorldPressure/GovernanceCanon.cs. Behavior unchanged. GovernanceAllianceLegitimacyPressurePerCycle pre-declared for the dynasty-core lane.
+
+- MatchProgressionCanon hoist (commit 2ceee99b): Great Reckoning trigger/release shares + GreatReckoningPressureScore + MaxStageNumber + CommitmentPhaseStageThreeReadinessThreshold pulled into unity/Assets/_Bloodlines/Code/Time/MatchProgressionCanon.cs. Behavior unchanged.
+
+- Editor csproj re-canonicalization (commit a28ff9cb): Assembly-CSharp-Editor.csproj analyzer paths reverted from D:\ProjectsHome\FisherSovereign\lancewfisher-v2\bloodlines back to D:\ProjectsHome\Bloodlines\unity\Library\PackageCache (Bloodlines junction) per the established protocol.
+
+Match progression smoke validator remains intentionally untouched: the wrapper script signature mismatch + Phase 4/5/6 expectations need a coordinated repair slice. Bootstrap and combat smokes remain authoritative for stage-gate regression detection.
+
+Outstanding hoist candidates (low priority; pure refactor): CaptiveOpsCanon (RansomBase/RescueBase already public const but in their respective execution systems; could be unified), CaptiveCanon (CAPTIVE_INFLUENCE_TRICKLE, CAPTIVE_RENOWN_WEIGHT). SuccessionCrisis age constants (AdultAge=18, MatureAge=21, ClaimGapThreshold=4) are only consumed inside SuccessionCrisisEvaluationSystem and don't justify hoisting.

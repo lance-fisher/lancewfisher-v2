@@ -1,5 +1,37 @@
 # CURRENT_PROJECT_STATE
 
+## naval-layer S1+S2+S3+S5 (as of 2026-04-25)
+
+Latest slice: Fishing gather (S5). Status: COMPLETE. Committed on claude/unity-multiplayer-nfe-integration as 60e58e4d.
+Handoff: docs/unity/session-handoffs/2026-04-25-unity-naval-S1-embark.md (S1) + commits d3657660 (S1), naval S2 disembark + naval S3 fire-ship + naval S5 fishing.
+- S1 embark (d3657660): VesselClass enum + NavalCanon + NavalVesselComponent + PassengerBufferElement + EmbarkOrderComponent + EmbarkSystem + smoke phase 1.
+- S2 disembark (f41c820d): MapWaterTilePatchSeedElement bake + DisembarkOrderComponent + DisembarkSystem + smoke phase 2 (8-tile ring scan, 3x3 drop grid, fail-case for transport surrounded by water).
+- S3 fire-ship (38463327): FireShipDetonationPendingTag + FireShipDetonationSystem + AttackResolutionSystem queue-tag-after-damage + smoke phase 3 (one-use sacrifice destruction + non-sacrifice negative case).
+- S5 fishing (60e58e4d): FishingVesselComponent + FishingGatherSystem + bake gatherRate into MapUnitSeedElement + SkirmishBootstrap auto-attach for fishing class + smoke phase 4 (idle-on-water gathers food, active-move skips, off-water skips).
+- Naval lane is paused at S5; S4 vessel-vs-vessel combat and S6 AI naval dispatch remain unstarted.
+- All validation gates green at 60e58e4d.
+
+## P2 + P1 backlog wave (as of 2026-04-25)
+
+- Stonehelm faction bonuses (afd64bba): HouseDefinition mechanics fields + JsonContentImporter + HouseMechanicsComponent + ConstructionSystem build-speed scale (only when FortificationRole != None) + DebugCommandSurface cost-discount scale via integer rounding.
+- Match progression stage-gate cross-audit (b755d8c8 + reports/2026-04-25_match_progression_stage_gate_cross_audit.md): replaced 1-year sustainedWar proxy with canonical signals (siege engines, holy wars, divine right, dynasty ops); contestedBorder world-pressure fallback; Stage 5 split into convergence + sovereignty + late-time; defended-seat health gate.
+- UNITY_CANONICAL_ADVANCEMENTS_2026-04-25.md (b755d8c8): canon entries for 5%-active-duty labor, draft slider, cross-match XP, worker slots, trade routes.
+- Iron-mine smelting fuel (b755d8c8): SmeltingComponent + bake smelting fields + WorkerGatherSystem deposit-time wood deduction with stall-and-return-ore on insufficient fuel.
+- Holy-war runtime effects (b755d8c8 + reports/2026-04-25_holy_war_runtime_effects_verification.md): verified existing AIHolyWarResolutionSystem.TickActiveHolyWars implementation matches browser tickFaithHolyWars; legitimacy drain canonically deferred.
+- Balance constant parity audit (65c9e729 + docs/migration/constant_parity_audit.md): 122 constants surveyed across 14 domains. 64 Match (in canon class), 21 Match (inline), 0 Drift, 14 Missing (clustered around faction Legitimacy field, naval S4/S5, scout node harass, ledger history limits), 23 N/A.
+
+## naval-layer S1 embark (as of 2026-04-25)
+
+Latest slice: S1 embark. Status: COMPLETE. Committed on branch claude/unity-multiplayer-nfe-integration as d3657660 (the naval-layer lane was opened from this branch; the contract reserves `claude/unity-naval-layer` for future slices).
+Handoff: docs/unity/session-handoffs/2026-04-25-unity-naval-S1-embark.md
+Contract: revision 145 -> 146, last-updated-by claude-naval-2026-04-25.
+- New components under unity/Assets/_Bloodlines/Code/Naval/: VesselClass enum (Fishing, Scout, WarGalley, Transport, FireShip, CapitalShip), NavalCanon constants (EmbarkRadiusTileMultiplier=2.5, DefaultTransportCapacity=6), NavalVesselComponent, PassengerBufferElement buffer, EmbarkedPassengerTag, PassengerTransportLinkComponent, EmbarkOrderComponent.
+- New runtime system: EmbarkSystem in SimulationSystemGroup. Resolves embark orders against capacity, faction, adjacency (2.5 * tileSize), vessel-vs-land guard, dead/null targets. Mirrors browser embarkUnitsOnTransport (simulation.js:7539-7574) with silent-rejection parity. Removes EmbarkOrderComponent every tick (one-shot), suppresses MoveCommand (IsActive=false) and clears WorkerGatherOrderComponent on accept.
+- Shared-file additive edits (lane-narrow per CONCURRENT_SESSION_CONTRACT): UnitTypeComponent.cs (UnitRole.Vessel=10 appended), MapBootstrapComponents.cs (VesselClassId/TransportCapacity/OneUseSacrifice fields appended to MapUnitSeedElement), UnitDefinition.cs (vesselClass/transportCapacity/oneUseSacrifice fields), JsonContentImporter.cs (UnitRecord fields + "vessel" role mapping), BloodlinesMapBootstrapAuthoring.cs ("vessel" role mapping), BloodlinesMapBootstrapBaker.cs ("vessel" mapping + seed emission), SkirmishBootstrapSystem.cs (attaches NavalVesselComponent + PassengerBufferElement when seed.Role==Vessel), BloodlinesDebugCommandSurface.cs ("vessel" role mapping), Assembly-CSharp.csproj (8 Naval/*.cs Compile entries), Assembly-CSharp-Editor.csproj (BloodlinesNavalSmokeValidation.cs Compile entry).
+- Smoke validator: BloodlinesNavalSmokeValidation embark phase proves capacity clamp at 6 (1 over-capacity rejected from 7 friendly candidates), cross-faction reject, out-of-range reject (50 units away), embarked link points to right transport, and embarked-tag movement suppression survives across ticks (drift <= 0.01 world units after 5 ticks of active move command).
+- All 10 governed validation gates green plus dedicated naval smoke green: dotnet build runtime (0 errors), editor (0 errors, 123 pre-existing warnings), bootstrap runtime smoke, combat smoke, scene shells (bootstrap + gameplay), data-validation, runtime-bridge, contract staleness (revision 146).
+- Slice roadmap: S1 embark (this slice), S2 disembark + water-tile detection, S3 fire-ship detonation, S4 vessel-vs-vessel naval combat, S5 fishing gather, S6 (optional) AI naval dispatch.
+
 ## multiplayer-nfe-integration runtime fixes (as of 2026-04-25)
 
 Latest slice: NfE integration runtime bug fixes. Status: Complete, branch claude/unity-multiplayer-nfe-integration (pending commit).
@@ -13,8 +45,9 @@ Handoff: docs/unity/session-handoffs/2026-04-25-unity-multiplayer-nfe-integratio
 
 ## early-game-foundation (as of 2026-04-25)
 
-Latest slice: Early-game foundation mechanics. Status: Complete, branch claude/unity-multiplayer-nfe-integration (pending commit).
+Latest slice: Early-game foundation mechanics + authoring pipeline wiring. Status: COMPLETE. Committed and pushed on branch claude/unity-multiplayer-nfe-integration (commits 04c638eb, e7d6ad9d, c43db00a, e0d1531e).
 Handoff: docs/unity/session-handoffs/2026-04-25-unity-early-game-foundation.md
+Canon docs updated: 04_SYSTEMS/RESOURCE_SYSTEM.md, 04_SYSTEMS/POPULATION_SYSTEM.md, 04_SYSTEMS/SYSTEM_INDEX.md (canon-locked 2026-04-25). BLOODLINES_BIBLE_LATEST.md on Desktop updated.
 - Keep deployment (FoundingRetinueComponent, BuildTierComponent): Kingdoms start undeployed tier 0; non-Kingdoms start deployed tier 2
 - BuildTierGatingSystem: bitmask scan per faction, gates housing/water/food/trainingyard prerequisites for tier 1->2 transition
 - WaterCapacitySystem: well counting per faction, MaxSupportedByWater = 15 base + wellCount*50
@@ -23,10 +56,12 @@ Handoff: docs/unity/session-handoffs/2026-04-25-unity-early-game-foundation.md
 - MilitaryDraftSystem: Utopia-style 0-100% step-5 slider, derives DraftPool/TrainedMilitary/ReserveMilitary/ActiveDutyMilitary/UntrainedDrafted
 - SquadDutySystem: AssignmentType.None -> Reserve, any other -> ActiveDuty; 9 canonical assignment types
 - EarlyGameHUDComponent/System: singleton snapshot for player faction; two-pass query design (stays within Unity ECS 8-param limit)
-- BloodlinesDebugCommandSurface.EarlyGame: full read/write debug panel (deploy keep, set draft rate, spawn squad, set assignment)
-- data/buildings.json: buildTier field added to all buildings; housing/forager_camp/training_yard/small_farm added; lumber_camp worker-slotted
-- Assembly-CSharp.csproj: 12 new Compile Include entries
-- All 8 validation gates PASS: dotnet builds (0 errors), bootstrap runtime smoke, combat smoke, scene shells, data-validation, runtime-bridge, contract (revision 144)
+- BloodlinesDebugCommandSurface.EarlyGame: full read/write debug panel wired into OnGUI
+- WorkerSlotHUDSystem + WorkerSlotAssignmentSystem: player worker slot assignment backend complete
+- JsonContentImporter: reads buildTier, maxWorkerSlots, workerOutputPerSecond, waterPopulationSupport from buildings.json
+- MapBuildingSeedElement: carries worker slot + water support fields through baker to SpawnBuildingEntity
+- SpawnBuildingEntity: conditionally attaches WorkerSlotBuildingComponent when MaxWorkerSlots > 0
+- All 7 validation gates PASS at e0d1531e: dotnet builds (0 errors), bootstrap smoke, combat smoke, scene shells, data-validation, runtime-bridge, contract (revision 145)
 
 Last updated: 2026-04-22 (player pact proposal and break are now merged onto canonical `master` via `10ec1e2a`: `PlayerPactProposalRequestComponent`, `PlayerPactBreakRequestComponent`, `PlayerPactUtility`, `PlayerPactProposalSystem`, and `PlayerPactBreakSystem` now canonically port browser non-aggression pact proposal/break semantics under `PlayerDiplomacy/**`, `BloodlinesDebugCommandSurface.PlayerDiplomacy` now exposes pact issue/readout hooks on master, `BloodlinesPlayerPactSmokeValidation` plus wrapper remain green, and the full 10-gate chain plus dedicated pact smoke reran green on the merged result in this worktree after a local Unity project refresh regenerated stale `.csproj` metadata; contract revision 76 -> 77 and the player-marriage-diplomacy lane now has no branch in flight.)
 Previous entry: Last updated: 2026-04-21 (scout raids and logistics interdiction landed on `master` via merge commit `dda7c25e`: `ScoutRaidCommandComponent`, `BuildingRaidStateComponent`, `ScoutRaidCanon`, and `ScoutRaidResolutionSystem` now port building raids plus supply-wagon interdiction; trickle, worker drop-off, field-water, and siege-support consumers now respect active raid state; dedicated 4-phase scout smoke PASS; full governed validation chain rerun green on detached merged `master` in `D:\BLAICD\bloodlines`; contract revision 50 -> 51)
