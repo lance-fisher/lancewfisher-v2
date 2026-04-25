@@ -13,8 +13,9 @@ Handoff: docs/unity/session-handoffs/2026-04-25-unity-multiplayer-nfe-integratio
 
 ## early-game-foundation (as of 2026-04-25)
 
-Latest slice: Early-game foundation mechanics. Status: Complete, branch claude/unity-multiplayer-nfe-integration (pending commit).
+Latest slice: Early-game foundation mechanics + authoring pipeline wiring. Status: COMPLETE. Committed and pushed on branch claude/unity-multiplayer-nfe-integration (commits 04c638eb, e7d6ad9d, c43db00a, e0d1531e).
 Handoff: docs/unity/session-handoffs/2026-04-25-unity-early-game-foundation.md
+Canon docs updated: 04_SYSTEMS/RESOURCE_SYSTEM.md, 04_SYSTEMS/POPULATION_SYSTEM.md, 04_SYSTEMS/SYSTEM_INDEX.md (canon-locked 2026-04-25). BLOODLINES_BIBLE_LATEST.md on Desktop updated.
 - Keep deployment (FoundingRetinueComponent, BuildTierComponent): Kingdoms start undeployed tier 0; non-Kingdoms start deployed tier 2
 - BuildTierGatingSystem: bitmask scan per faction, gates housing/water/food/trainingyard prerequisites for tier 1->2 transition
 - WaterCapacitySystem: well counting per faction, MaxSupportedByWater = 15 base + wellCount*50
@@ -23,10 +24,12 @@ Handoff: docs/unity/session-handoffs/2026-04-25-unity-early-game-foundation.md
 - MilitaryDraftSystem: Utopia-style 0-100% step-5 slider, derives DraftPool/TrainedMilitary/ReserveMilitary/ActiveDutyMilitary/UntrainedDrafted
 - SquadDutySystem: AssignmentType.None -> Reserve, any other -> ActiveDuty; 9 canonical assignment types
 - EarlyGameHUDComponent/System: singleton snapshot for player faction; two-pass query design (stays within Unity ECS 8-param limit)
-- BloodlinesDebugCommandSurface.EarlyGame: full read/write debug panel (deploy keep, set draft rate, spawn squad, set assignment)
-- data/buildings.json: buildTier field added to all buildings; housing/forager_camp/training_yard/small_farm added; lumber_camp worker-slotted
-- Assembly-CSharp.csproj: 12 new Compile Include entries
-- All 8 validation gates PASS: dotnet builds (0 errors), bootstrap runtime smoke, combat smoke, scene shells, data-validation, runtime-bridge, contract (revision 144)
+- BloodlinesDebugCommandSurface.EarlyGame: full read/write debug panel wired into OnGUI
+- WorkerSlotHUDSystem + WorkerSlotAssignmentSystem: player worker slot assignment backend complete
+- JsonContentImporter: reads buildTier, maxWorkerSlots, workerOutputPerSecond, waterPopulationSupport from buildings.json
+- MapBuildingSeedElement: carries worker slot + water support fields through baker to SpawnBuildingEntity
+- SpawnBuildingEntity: conditionally attaches WorkerSlotBuildingComponent when MaxWorkerSlots > 0
+- All 7 validation gates PASS at e0d1531e: dotnet builds (0 errors), bootstrap smoke, combat smoke, scene shells, data-validation, runtime-bridge, contract (revision 145)
 
 Last updated: 2026-04-22 (player pact proposal and break are now merged onto canonical `master` via `10ec1e2a`: `PlayerPactProposalRequestComponent`, `PlayerPactBreakRequestComponent`, `PlayerPactUtility`, `PlayerPactProposalSystem`, and `PlayerPactBreakSystem` now canonically port browser non-aggression pact proposal/break semantics under `PlayerDiplomacy/**`, `BloodlinesDebugCommandSurface.PlayerDiplomacy` now exposes pact issue/readout hooks on master, `BloodlinesPlayerPactSmokeValidation` plus wrapper remain green, and the full 10-gate chain plus dedicated pact smoke reran green on the merged result in this worktree after a local Unity project refresh regenerated stale `.csproj` metadata; contract revision 76 -> 77 and the player-marriage-diplomacy lane now has no branch in flight.)
 Previous entry: Last updated: 2026-04-21 (scout raids and logistics interdiction landed on `master` via merge commit `dda7c25e`: `ScoutRaidCommandComponent`, `BuildingRaidStateComponent`, `ScoutRaidCanon`, and `ScoutRaidResolutionSystem` now port building raids plus supply-wagon interdiction; trickle, worker drop-off, field-water, and siege-support consumers now respect active raid state; dedicated 4-phase scout smoke PASS; full governed validation chain rerun green on detached merged `master` in `D:\BLAICD\bloodlines`; contract revision 50 -> 51)
