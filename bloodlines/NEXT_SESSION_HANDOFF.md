@@ -5716,3 +5716,33 @@ Next:
 - S4 vessel-vs-vessel naval combat (separate acquisition/damage tables from land combat).
 - S5 fishing gather (vessel as worker analog over water tiles).
 - S6 (optional) AI naval dispatch lane.
+
+
+## naval-layer (as of 2026-04-25, refreshed)
+
+Latest slices: S1 embark + S2 disembark + S3 fire-ship detonation + S5 fishing gather. All COMPLETE. Committed on claude/unity-multiplayer-nfe-integration through 60e58e4d.
+- S1 commit d3657660: VesselClass + NavalCanon + EmbarkSystem + smoke phase 1.
+- S2 commit f41c820d: MapWaterTilePatchSeedElement bake + DisembarkSystem + smoke phase 2.
+- S3 commit 38463327: FireShipDetonationPendingTag + FireShipDetonationSystem + AttackResolutionSystem hook + smoke phase 3.
+- S5 commit 60e58e4d: FishingVesselComponent + FishingGatherSystem + smoke phase 4.
+Remaining naval slices: S4 vessel-vs-vessel naval combat (separate acquisition + damage tables from land combat), S6 (optional) AI naval dispatch lane.
+Smoke validator runs all 4 phases green; bootstrap, combat, scene shells, contract staleness, data-validation, runtime-bridge all pass at 60e58e4d.
+
+## P2 + P1 backlog wave (as of 2026-04-25)
+
+Completed this session:
+- Stonehelm faction bonuses wired (afd64bba): fortification cost discount (-20%) + build speed bonus (+20%) for fortification buildings only.
+- Match progression stage-gate cross-audit + fixes (b755d8c8): see reports/2026-04-25_match_progression_stage_gate_cross_audit.md.
+- UNITY_CANONICAL_ADVANCEMENTS_2026-04-25.md (b755d8c8) declares 5 mechanics canonical to Unity but absent from browser.
+- Iron-mine smelting fuel (b755d8c8): wood consumption per iron deposited.
+- Holy-war runtime effects verification (b755d8c8): no code change, system already implemented.
+- Balance constant parity audit (65c9e729): 122 constants, 0 drift detected.
+
+Next priorities from docs/migration/unity_port_backlog.md:
+- P1 Worker Slot Assignment HUD (UI work; needs in-game click panel).
+- P1 Multiplayer NfE Ghost prefab population (after one-time interactive Unity open to download com.unity.netcode@1.4.3).
+- P3 Naval S4 vessel-vs-vessel combat / S6 AI naval dispatch (continue naval lane).
+- P3 Born of Sacrifice (requires owner spec lock first).
+- P3 Victory Conditions 4-6 (requires owner spec).
+- P3 Neutral Faction AI verification.
+- Hoist 21 "Match (inline)" constants into named canon classes (CovenantTestCanon, GovernanceCanon, etc) per recommendations in constant_parity_audit.md.

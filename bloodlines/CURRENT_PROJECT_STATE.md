@@ -1,5 +1,25 @@
 # CURRENT_PROJECT_STATE
 
+## naval-layer S1+S2+S3+S5 (as of 2026-04-25)
+
+Latest slice: Fishing gather (S5). Status: COMPLETE. Committed on claude/unity-multiplayer-nfe-integration as 60e58e4d.
+Handoff: docs/unity/session-handoffs/2026-04-25-unity-naval-S1-embark.md (S1) + commits d3657660 (S1), naval S2 disembark + naval S3 fire-ship + naval S5 fishing.
+- S1 embark (d3657660): VesselClass enum + NavalCanon + NavalVesselComponent + PassengerBufferElement + EmbarkOrderComponent + EmbarkSystem + smoke phase 1.
+- S2 disembark (f41c820d): MapWaterTilePatchSeedElement bake + DisembarkOrderComponent + DisembarkSystem + smoke phase 2 (8-tile ring scan, 3x3 drop grid, fail-case for transport surrounded by water).
+- S3 fire-ship (38463327): FireShipDetonationPendingTag + FireShipDetonationSystem + AttackResolutionSystem queue-tag-after-damage + smoke phase 3 (one-use sacrifice destruction + non-sacrifice negative case).
+- S5 fishing (60e58e4d): FishingVesselComponent + FishingGatherSystem + bake gatherRate into MapUnitSeedElement + SkirmishBootstrap auto-attach for fishing class + smoke phase 4 (idle-on-water gathers food, active-move skips, off-water skips).
+- Naval lane is paused at S5; S4 vessel-vs-vessel combat and S6 AI naval dispatch remain unstarted.
+- All validation gates green at 60e58e4d.
+
+## P2 + P1 backlog wave (as of 2026-04-25)
+
+- Stonehelm faction bonuses (afd64bba): HouseDefinition mechanics fields + JsonContentImporter + HouseMechanicsComponent + ConstructionSystem build-speed scale (only when FortificationRole != None) + DebugCommandSurface cost-discount scale via integer rounding.
+- Match progression stage-gate cross-audit (b755d8c8 + reports/2026-04-25_match_progression_stage_gate_cross_audit.md): replaced 1-year sustainedWar proxy with canonical signals (siege engines, holy wars, divine right, dynasty ops); contestedBorder world-pressure fallback; Stage 5 split into convergence + sovereignty + late-time; defended-seat health gate.
+- UNITY_CANONICAL_ADVANCEMENTS_2026-04-25.md (b755d8c8): canon entries for 5%-active-duty labor, draft slider, cross-match XP, worker slots, trade routes.
+- Iron-mine smelting fuel (b755d8c8): SmeltingComponent + bake smelting fields + WorkerGatherSystem deposit-time wood deduction with stall-and-return-ore on insufficient fuel.
+- Holy-war runtime effects (b755d8c8 + reports/2026-04-25_holy_war_runtime_effects_verification.md): verified existing AIHolyWarResolutionSystem.TickActiveHolyWars implementation matches browser tickFaithHolyWars; legitimacy drain canonically deferred.
+- Balance constant parity audit (65c9e729 + docs/migration/constant_parity_audit.md): 122 constants surveyed across 14 domains. 64 Match (in canon class), 21 Match (inline), 0 Drift, 14 Missing (clustered around faction Legitimacy field, naval S4/S5, scout node harass, ledger history limits), 23 N/A.
+
 ## naval-layer S1 embark (as of 2026-04-25)
 
 Latest slice: S1 embark. Status: COMPLETE. Committed on branch claude/unity-multiplayer-nfe-integration as d3657660 (the naval-layer lane was opened from this branch; the contract reserves `claude/unity-naval-layer` for future slices).
