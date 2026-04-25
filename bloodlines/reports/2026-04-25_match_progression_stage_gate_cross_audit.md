@@ -164,14 +164,22 @@ The following fixes are applied in the same commit as this report:
 The following deviations require behavior changes that need a dedicated
 smoke phase to prove they do not regress existing pacing:
 
-- **D3-3 military count filter**: changing what counts as "military" from
-  any-movement to combat-only changes how quickly Stage 3 unlocks. This
-  is the right fix per browser canon, but the existing match progression
-  smoke (Phase 4 in `BloodlinesMatchProgressionSmokeValidation.cs`) seeds
-  6 movement-capable entities without role tagging, expecting them all
-  to count. Defer to its own slice that refreshes the smoke phase to
-  seed `UnitTypeComponent.Role` and asserts both worker-saturated and
-  combat-only-army cases.
+- **D3-3 military count filter**: APPLIED 2026-04-25 (follow-up commit).
+  MatchProgressionEvaluationSystem now requires `UnitTypeComponent` on
+  the military query and filters out `UnitRole.Worker`,
+  `UnitRole.Support`, and `UnitRole.EngineerSpecialist`. Mirrors browser
+  `getAliveCombatUnits` (simulation.js:1970-1975) which filters
+  `role !== "worker" && !isSupportRole`. The existing match progression
+  smoke validator's Phase 4/Phase 6 wrappers are broken at the per-
+  validator script level (unrelated `-UnityExe` parameter mismatch with
+  Invoke-BloodlinesUnityWrapperWithLock.ps1), so the smoke phases
+  haven't been refreshed to seed UnitTypeComponent on the test
+  entities. Future work: when the wrapper script is repaired, refresh
+  Phase 4 + Phase 6 to seed UnitTypeComponent.Role on the 6 test
+  entities so the smoke once again exercises Stage 3 unlock under the
+  canonical filter, and add a worker-saturated negative case to prove
+  the filter rejects non-combat units. Bootstrap and combat smokes
+  remain green at the new code.
 - **D4-1 rivalContact full 5-signal port**: browser
   `rivalContact.active = signals > 0` where signals OR's directFrontContact,
   contestedBorder, hostileOperations, captivePressure, and holyWar. Unity

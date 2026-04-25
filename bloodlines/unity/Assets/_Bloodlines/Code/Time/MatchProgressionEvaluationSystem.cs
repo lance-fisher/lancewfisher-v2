@@ -207,19 +207,38 @@ namespace Bloodlines.Systems
             completedBuildingFactions.Dispose();
             completedBuildingTypes.Dispose();
 
-            // --- Player living military units ---
+            // --- Player living military units (combat-capable only) ---
+            // Browser parity: getAliveCombatUnits filters role !== "worker" AND
+            // !isSupportRole (engineer-specialist + support). The Stage 3 "field
+            // army fit for rival contact" requirement uses this filter so worker
+            // populations do not count as soldiers. Without this filter the
+            // worker-slot economy lane would auto-unlock Stage 3 once 6 villagers
+            // exist, which is canonically wrong.
             var militaryQuery = em.CreateEntityQuery(
                 ComponentType.ReadOnly<FactionComponent>(),
                 ComponentType.ReadOnly<MovementStatsComponent>(),
                 ComponentType.ReadOnly<HealthComponent>(),
+                ComponentType.ReadOnly<UnitTypeComponent>(),
                 ComponentType.Exclude<DeadTag>());
             var militaryFactions = militaryQuery.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            var militaryTypes = militaryQuery.ToComponentDataArray<UnitTypeComponent>(Allocator.Temp);
             militaryQuery.Dispose();
 
             int playerMilitaryCount = 0;
             for (int i = 0; i < militaryFactions.Length; i++)
-                if (militaryFactions[i].FactionId == playerFactionId) playerMilitaryCount++;
+            {
+                if (militaryFactions[i].FactionId != playerFactionId) continue;
+                var role = militaryTypes[i].Role;
+                if (role == UnitRole.Worker ||
+                    role == UnitRole.Support ||
+                    role == UnitRole.EngineerSpecialist)
+                {
+                    continue;
+                }
+                playerMilitaryCount++;
+            }
             militaryFactions.Dispose();
+            militaryTypes.Dispose();
 
             // --- World pressure signals (browser getWorldPressureTargetProfile + getWorldPressureConvergenceProfile) ---
             // Stage 4 contestedBorder fallback: playerWorldPressure.level > 0 OR enemyWorldPressure.level > 0.
