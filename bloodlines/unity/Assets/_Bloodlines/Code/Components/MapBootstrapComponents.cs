@@ -62,6 +62,10 @@ namespace Bloodlines.Components
         public float StoneTrickle;
         public float IronTrickle;
         public float InfluenceTrickle;
+        public int MaxWorkerSlots;
+        public float WorkerFoodOutputPerSecond;
+        public float WorkerWoodOutputPerSecond;
+        public int WaterPopulationSupport;
     }
 
     public struct MapUnitSeedElement : IBufferElementData

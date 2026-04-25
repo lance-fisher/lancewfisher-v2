@@ -470,6 +470,18 @@ namespace Bloodlines.Systems
                     InfluencePerSecond = seed.InfluenceTrickle,
                 });
             }
+
+            if (seed.MaxWorkerSlots > 0)
+            {
+                entityManager.AddComponentData(entity, new WorkerSlotBuildingComponent
+                {
+                    MaxWorkerSlots = seed.MaxWorkerSlots,
+                    AssignedWorkers = 0,
+                    FoodOutputPerWorkerPerSecond = seed.WorkerFoodOutputPerSecond,
+                    WoodOutputPerWorkerPerSecond = seed.WorkerWoodOutputPerSecond,
+                    FillRatio = 0f,
+                });
+            }
         }
 
         static void SpawnUnitEntity(EntityManager entityManager, MapUnitSeedElement seed)

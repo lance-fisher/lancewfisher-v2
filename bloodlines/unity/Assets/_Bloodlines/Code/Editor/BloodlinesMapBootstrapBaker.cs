@@ -215,6 +215,10 @@ namespace Bloodlines.EditorTools
                         StoneTrickle = buildingDefinition.resourceTrickle?.stone ?? 0f,
                         IronTrickle = buildingDefinition.resourceTrickle?.iron ?? 0f,
                         InfluenceTrickle = buildingDefinition.resourceTrickle?.influence ?? 0f,
+                        MaxWorkerSlots = buildingDefinition.maxWorkerSlots,
+                        WorkerFoodOutputPerSecond = buildingDefinition.workerOutputPerSecond?.food ?? 0f,
+                        WorkerWoodOutputPerSecond = buildingDefinition.workerOutputPerSecond?.wood ?? 0f,
+                        WaterPopulationSupport = buildingDefinition.waterPopulationSupport,
                     });
                 }
 

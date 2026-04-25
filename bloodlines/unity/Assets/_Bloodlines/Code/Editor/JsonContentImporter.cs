@@ -198,6 +198,10 @@ namespace Bloodlines.EditorTools
                 asset.auraRadius = item.auraRadius;
                 asset.smeltingFuelResource = item.smeltingFuelResource;
                 asset.smeltingFuelRatio = item.smeltingFuelRatio;
+                asset.buildTier = item.buildTier;
+                asset.maxWorkerSlots = item.maxWorkerSlots;
+                asset.workerOutputPerSecond = item.workerOutputPerSecond ?? new ResourceTrickleFields();
+                asset.waterPopulationSupport = item.waterPopulationSupport;
                 EditorUtility.SetDirty(asset);
             }
         }
@@ -605,6 +609,10 @@ namespace Bloodlines.EditorTools
             public float auraRadius;
             public string smeltingFuelResource;
             public float smeltingFuelRatio;
+            public int buildTier;
+            public int maxWorkerSlots;
+            public ResourceTrickleFields workerOutputPerSecond;
+            public int waterPopulationSupport;
         }
 
         [Serializable]
