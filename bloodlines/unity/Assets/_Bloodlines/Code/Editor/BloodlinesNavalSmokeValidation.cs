@@ -90,8 +90,110 @@ namespace Bloodlines.EditorTools
             }
             UnityDebug.Log(fireShipMessage);
 
+            if (!RunFishingGatherPhase(out string fishingMessage))
+            {
+                message = fishingMessage;
+                return false;
+            }
+            UnityDebug.Log(fishingMessage);
+
             message =
-                "Naval smoke validation passed: embarkPhase=True, disembarkPhase=True, fireShipPhase=True.";
+                "Naval smoke validation passed: embarkPhase=True, disembarkPhase=True, fireShipPhase=True, fishingPhase=True.";
+            return true;
+        }
+
+        private static bool RunFishingGatherPhase(out string message)
+        {
+            using var world = new World("BloodlinesNavalSmokeValidation_Fishing");
+            world.GetOrCreateSystemManaged<InitializationSystemGroup>();
+            var simGroup = world.GetOrCreateSystemManaged<SimulationSystemGroup>();
+            world.GetOrCreateSystemManaged<PresentationSystemGroup>();
+            simGroup.AddSystemToUpdateList(world.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>());
+            simGroup.AddSystemToUpdateList(world.GetOrCreateSystem<Bloodlines.Naval.FishingGatherSystem>());
+            simGroup.SortSystems();
+            var em = world.EntityManager;
+
+            // Player faction with stockpile.
+            var faction = em.CreateEntity(
+                typeof(FactionComponent),
+                typeof(ResourceStockpileComponent));
+            em.SetComponentData(faction, new FactionComponent { FactionId = "player" });
+            em.SetComponentData(faction, new ResourceStockpileComponent { Food = 100f });
+
+            // Bootstrap singleton with one water patch covering tile (10,10..14,14).
+            CreateMapBootstrapEntity(em, 1, (10, 10, 5, 5));
+
+            // Idle fishing vessel ON water tile.
+            var fishingBoat = em.CreateEntity(
+                typeof(FactionComponent),
+                typeof(PositionComponent),
+                typeof(NavalVesselComponent),
+                typeof(FishingVesselComponent),
+                typeof(MoveCommandComponent));
+            em.SetComponentData(fishingBoat, new FactionComponent { FactionId = "player" });
+            em.SetComponentData(fishingBoat, new PositionComponent { Value = new float3(10.5f, 0f, 10.5f) });
+            em.SetComponentData(fishingBoat, new NavalVesselComponent
+            {
+                Class = VesselClass.Fishing,
+                TransportCapacity = 0,
+                OneUseSacrifice = false,
+            });
+            em.SetComponentData(fishingBoat, new FishingVesselComponent { FoodPerSecond = 1.2f });
+            em.SetComponentData(fishingBoat, new MoveCommandComponent
+            {
+                Destination = new float3(10.5f, 0f, 10.5f),
+                IsActive = false,
+            });
+
+            // Active-move fishing vessel on water (should NOT fish).
+            var movingBoat = em.CreateEntity(
+                typeof(FactionComponent),
+                typeof(PositionComponent),
+                typeof(NavalVesselComponent),
+                typeof(FishingVesselComponent),
+                typeof(MoveCommandComponent));
+            em.SetComponentData(movingBoat, new FactionComponent { FactionId = "player" });
+            em.SetComponentData(movingBoat, new PositionComponent { Value = new float3(11.5f, 0f, 11.5f) });
+            em.SetComponentData(movingBoat, new NavalVesselComponent { Class = VesselClass.Fishing });
+            em.SetComponentData(movingBoat, new FishingVesselComponent { FoodPerSecond = 1.2f });
+            em.SetComponentData(movingBoat, new MoveCommandComponent { IsActive = true });
+
+            // Idle fishing vessel OFF water (should NOT fish).
+            var landBoat = em.CreateEntity(
+                typeof(FactionComponent),
+                typeof(PositionComponent),
+                typeof(NavalVesselComponent),
+                typeof(FishingVesselComponent),
+                typeof(MoveCommandComponent));
+            em.SetComponentData(landBoat, new FactionComponent { FactionId = "player" });
+            em.SetComponentData(landBoat, new PositionComponent { Value = new float3(0.5f, 0f, 0.5f) });
+            em.SetComponentData(landBoat, new NavalVesselComponent { Class = VesselClass.Fishing });
+            em.SetComponentData(landBoat, new FishingVesselComponent { FoodPerSecond = 1.2f });
+            em.SetComponentData(landBoat, new MoveCommandComponent { IsActive = false });
+
+            // Tick 10 times at 1-second dt.
+            const int Ticks = 10;
+            const float DtSeconds = 1f;
+            for (int t = 0; t < Ticks; t++)
+            {
+                world.SetTime(new TimeData(t * DtSeconds, DtSeconds));
+                world.Update();
+            }
+
+            float foodAfter = em.GetComponentData<ResourceStockpileComponent>(faction).Food;
+            // Expected: only the idle-on-water boat fishes. 1.2/sec * 10s = 12 food.
+            // Tolerance accounts for any tick-boundary drift.
+            if (foodAfter < 100f + 11.5f || foodAfter > 100f + 12.5f)
+            {
+                message = "Naval smoke validation failed: fishing phase expected ~12 food gain, got " +
+                    (foodAfter - 100f).ToString("0.##") + ".";
+                return false;
+            }
+
+            message =
+                "Naval smoke validation fishing phase passed: idleOnWaterFood=" +
+                (foodAfter - 100f).ToString("0.##") +
+                " activeMoveFood=0 landFood=0 expectedRange=11.5..12.5.";
             return true;
         }
 

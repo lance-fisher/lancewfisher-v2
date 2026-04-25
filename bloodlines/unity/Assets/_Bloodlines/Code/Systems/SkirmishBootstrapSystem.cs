@@ -565,9 +565,10 @@ namespace Bloodlines.Systems
 
             if (seed.Role == UnitRole.Vessel)
             {
+                var resolvedClass = ResolveVesselClass(seed.VesselClassId);
                 entityManager.AddComponentData(entity, new NavalVesselComponent
                 {
-                    Class = ResolveVesselClass(seed.VesselClassId),
+                    Class = resolvedClass,
                     TransportCapacity = math.max(0, seed.TransportCapacity),
                     OneUseSacrifice = seed.OneUseSacrifice,
                 });
@@ -575,6 +576,17 @@ namespace Bloodlines.Systems
                 if (seed.TransportCapacity > 0)
                 {
                     entityManager.AddBuffer<PassengerBufferElement>(entity);
+                }
+
+                // Browser parity simulation.js updateVessel: fishing-class vessels
+                // auto-gather food while idle on water. Carry the canonical food yield
+                // (UnitDefinition.gatherRate) on the per-entity FishingVesselComponent.
+                if (resolvedClass == VesselClass.Fishing && seed.VesselGatherRate > 0f)
+                {
+                    entityManager.AddComponentData(entity, new FishingVesselComponent
+                    {
+                        FoodPerSecond = seed.VesselGatherRate,
+                    });
                 }
             }
         }

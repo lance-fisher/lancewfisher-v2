@@ -95,6 +95,7 @@ namespace Bloodlines.Components
         public FixedString32Bytes VesselClassId;
         public int TransportCapacity;
         public bool OneUseSacrifice;
+        public float VesselGatherRate;
     }
 
     public struct MapResourceNodeSeedElement : IBufferElementData

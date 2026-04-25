@@ -276,6 +276,7 @@ namespace Bloodlines.EditorTools
                         VesselClassId = unitDefinition.vesselClass ?? string.Empty,
                         TransportCapacity = unitDefinition.transportCapacity,
                         OneUseSacrifice = unitDefinition.oneUseSacrifice,
+                        VesselGatherRate = unitDefinition.gatherRate,
                     });
                 }
             }

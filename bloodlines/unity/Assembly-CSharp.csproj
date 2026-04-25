@@ -306,6 +306,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Faith\FaithIntensityResolveSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\CovenantTestProgressHUDSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AIDivineRightResolutionSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Naval\FishingGatherSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyPrestigeDecayModulatorSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Naval\FireShipDetonationPendingTag.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Naval\PassengerTransportLinkComponent.cs" />
@@ -318,6 +319,7 @@
     <Compile Include="Assets\_Bloodlines\Code\AI\AIStrategyComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\WorldPressure\PlayerTruebornRecognitionRequestComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Faith\CovenantTestQualificationSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Naval\FishingVesselComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Time\DualClockComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Systems\UnitProductionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerCaptiveRescueRequestComponent.cs" />
