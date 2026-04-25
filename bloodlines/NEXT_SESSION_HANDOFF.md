@@ -5763,3 +5763,31 @@ After the initial P1 + P2 wave, the same session continued with:
 Match progression smoke validator remains intentionally untouched: the wrapper script signature mismatch + Phase 4/5/6 expectations need a coordinated repair slice. Bootstrap and combat smokes remain authoritative for stage-gate regression detection.
 
 Outstanding hoist candidates (low priority; pure refactor): CaptiveOpsCanon (RansomBase/RescueBase already public const but in their respective execution systems; could be unified), CaptiveCanon (CAPTIVE_INFLUENCE_TRICKLE, CAPTIVE_RENOWN_WEIGHT). SuccessionCrisis age constants (AdultAge=18, MatureAge=21, ClaimGapThreshold=4) are only consumed inside SuccessionCrisisEvaluationSystem and don't justify hoisting.
+
+---
+
+## Canon Handoff — 2026-04-25 (Seventeenth Session Canon, commit eac86da1)
+
+### Completed this session
+
+Seventeenth Session Canon locked and committed. Core ground unit progression for all dynasties: 17 units across 4 progression lines, absolute Off/Def ratings, canonical unit names finalized, Axeman Off/Def revised, iron-from-start framing corrected, Mounted Knight lance charge mechanics locked, dismounting principles locked.
+
+Documentation surface fully updated: CANONICAL_RULES.md, BLOODLINES_DESIGN_BIBLE.md (Section 26), BLOODLINES_MASTER_MEMORY.md, FOUNDING_HOUSES.md, UNIT_INDEX.md, memory/Bloodlines_Canonical_Design_Memory.md, RESOURCE_SYSTEM.md, FOUR_ANCIENT_FAITHS.md, DIRECTORY_MAP.md, BLOODLINES_STRUCTURE_INDEX.md, DESIGN_GUIDE.md, BLOODLINES_APPEND_ONLY_LOG.md, CURRENT_PROJECT_STATE.md.
+
+Data layer: `data/units.json` has all 13 new units with `prototypeEnabled: false` and `offenseRating`/`defenseRating` fields (committed in `208b8fc3`).
+
+### Open canon items (pending next session)
+
+**Sixteenth Session Canon hair/color values:** The 2026-04-25 hair/color pass assignments were not recovered. Prior 2026-03-18 assignments remain committed. Ask Lance for the updated values and apply to `06_FACTIONS/FOUNDING_HOUSES.md`, `memory/Bloodlines_Canonical_Design_Memory.md`, and `01_CANON/CANONICAL_RULES.md` (Sixteenth Session Canon section already has the marker).
+
+**Unique units for 7 houses:** Ironmark (Axeman) and Hartvale (Verdant Warden) confirmed only. Other 7 houses are pending dedicated design sessions.
+
+**Horse/stable build tree:** `data/buildings.json` needs the cavalry infrastructure chain. Pending dedicated design session.
+
+**Formation ability system:** Mounted Knight lance charge is the first instance; full system design for other formation types is pending.
+
+**Dismount/remount full implementation:** Design principles locked; Unity mechanics pending.
+
+### Next Unity implementation priorities (unchanged from prior handoff)
+
+See the full Unity lane priority list above. Canon work does not change Unity priorities; the 13 new units are all `prototypeEnabled: false` and do not need Unity bindings yet.

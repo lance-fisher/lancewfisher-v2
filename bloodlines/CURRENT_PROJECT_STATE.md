@@ -4823,3 +4823,33 @@ Handoff: docs/unity/session-handoffs/2026-04-25-unity-multiplayer-nfe-integratio
 - dotnet build 0 errors; node tests PASS; contract revision=144; Unity smokes SKIP-env
 - SKIP-env reason: com.unity.netcode@1.4.3 not yet in Library/PackageCache; one-time
   interactive Unity open required to download and cache the package
+
+---
+
+## Canon Layer State — 2026-04-25
+
+### Seventeenth Session Canon — Core Ground Unit Progression (commit eac86da1)
+
+Canonical base unit ladder locked for all dynasties. All elements are SETTLED and LOCKED.
+
+**Unit data:** `data/units.json` — 13 new unit entries added (all `prototypeEnabled: false`), 4 existing entries updated with `offenseRating`/`defenseRating` fields. Committed in `208b8fc3`.
+
+**Documentation updated:** `01_CANON/CANONICAL_RULES.md`, `01_CANON/BLOODLINES_DESIGN_BIBLE.md` (Section 26), `01_CANON/BLOODLINES_MASTER_MEMORY.md`, `06_FACTIONS/FOUNDING_HOUSES.md`, `10_UNITS/UNIT_INDEX.md`, `memory/Bloodlines_Canonical_Design_Memory.md`, plus secondary annotations in `04_SYSTEMS/RESOURCE_SYSTEM.md`, `07_FAITHS/FOUR_ANCIENT_FAITHS.md`, `00_ADMIN/DIRECTORY_MAP.md`, `01_CANON/BLOODLINES_STRUCTURE_INDEX.md`, `01_CANON/DESIGN_GUIDE.md`, `01_CANON/BLOODLINES_APPEND_ONLY_LOG.md`.
+
+**Key changes from prior state:**
+- Off/Def is now absolute (not relative to 5/5 neutral)
+- Axeman revised from Off 6/Def 4 to Off 5/Def 2
+- Iron available from game start (Forge required from start)
+- Bowmen → Archers; Crossbowmen → Boltmen; Pike Square → Pikeguard; Shield Wall → Bulwark Guard
+- Mounted Knight (mounted, lance charge) / Knight (dismounted) naming distinction locked
+
+**Pending (canon complete, implementation pending):**
+- Unity `.asset` files for 13 new units (none created; `prototypeEnabled: false`)
+- Horse/stable build tree (`data/buildings.json`)
+- Full dismount/remount mechanic implementation
+- Group formation ability system design
+- Unique units for 7 of 9 houses (Ironmark Axeman and Hartvale Verdant Warden confirmed only)
+
+### Sixteenth Session Canon — House Color/Hair Pass (marker only)
+
+Hair/color pass conducted 2026-04-25 but specific updated assignments were not committed before context expired. Prior 2026-03-18 assignments remain the last committed state. Pending re-confirmation from Lance.

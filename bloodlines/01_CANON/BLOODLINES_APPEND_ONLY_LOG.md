@@ -1960,3 +1960,37 @@ No major design contradiction was found. The doctrine's "determined time system"
 **Disposition:** COMPLETE. No information from the supplied doctrine set was intentionally excluded. The doctrine now exists as preserved source, raw ingestion appendix, integrated bible content, supporting-system addenda, and continuity-layer guidance.
 
 ---
+
+## Seventeenth Session Canon — Core Ground Unit Progression — 2026-04-25
+
+**Designation:** Seventeenth Session Canon
+
+**Source:** Owner direction supplied 2026-04-25.
+
+**Scope:** Canonical base unit ladder for all dynasties. Off/Def rating system reclarified as absolute role-based values (not a 5/5 neutral baseline). 17 units locked across four progression lines. Canonical unit names finalized. Iron infrastructure framing corrected.
+
+**Canonical unit ladder locked:**
+
+Offensive infantry: Militia (2/2) → Swordsmen (4/2) → Shieldbearer Swordsmen (5/3) → Heavy Swordsmen (6/4) → Greatsword Knight (8/3)
+
+Defensive infantry: Militia (2/2) → Spearmen (2/4) → Spear Guard (3/5) → Pikeguard (4/6) → Bulwark Guard (3/8)
+
+Ranged: Archers (3/2) → Boltmen (5/2)
+
+Cavalry: Mounted Swordsmen (5/2) → Mounted Heavy Swordsmen (6/3) → Mounted Knight (7/5) ⇄ Knight (6/6 dismounted); Horse Archer (3/2) cavalry ranged variant
+
+**Canonical unit name locks:** Archers (not Bowmen), Boltmen (not Crossbowmen), Shieldbearer Swordsmen, Spear Guard, Pikeguard (not Pike Square), Bulwark Guard (not Shield Wall), Mounted Knight (mounted), Knight (dismounted), Mounted Heavy Swordsmen, Horse Archer (not Mounted Bowman).
+
+**Axeman revision:** Ironmark Axeman Off/Def revised from Off 6/Def 4 to Off 5/Def 2. All other Axeman identity (Ferocity Under Loss, anti-armor bonus, blood cost loop, axe symbol) preserved.
+
+**Iron framing corrected:** Iron available from game start. Forge/Settlement Forge required from beginning. Prior "early game low significance" framing superseded.
+
+**Mounted Knight mechanics (preliminary):** Lance charge is a grouped formation ability (requires multiple Mounted Knight units in formation). Countered by braced Spearmen/Spear Guard/Pikeguard. Ineffective in forest/tight terrain. Dismounting to Knight requires conditions and timer; remounting is not instant. Full implementation pending.
+
+**Scrapped:** Light transport vehicles removed from game. War Wagon deferred. Siege Tower as a unit deferred.
+
+**Files updated:** `01_CANON/CANONICAL_RULES.md`, `01_CANON/BLOODLINES_DESIGN_BIBLE.md` (Section 26), `01_CANON/BLOODLINES_MASTER_MEMORY.md`, `01_CANON/BLOODLINES_STRUCTURE_INDEX.md`, `01_CANON/DESIGN_GUIDE.md`, `06_FACTIONS/FOUNDING_HOUSES.md`, `10_UNITS/UNIT_INDEX.md`, `04_SYSTEMS/RESOURCE_SYSTEM.md`, `07_FAITHS/FOUR_ANCIENT_FAITHS.md`, `00_ADMIN/DIRECTORY_MAP.md`, `memory/Bloodlines_Canonical_Design_Memory.md`. Data layer: `data/units.json` (committed separately in `208b8fc3`).
+
+**Commit:** `eac86da1` on `claude/unity-multiplayer-nfe-integration`.
+
+---
