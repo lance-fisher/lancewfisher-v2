@@ -603,7 +603,7 @@ span.hero-domain-dot {
 
 .portrait-frame {
   width: 240px;
-  height: 300px;
+  height: 360px;
   flex-shrink: 0;
   position: relative;
   border-radius: 50%;
@@ -619,7 +619,7 @@ span.hero-domain-dot {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 8%;
+  object-position: center 5%;
   filter: grayscale(0.16) contrast(1.08) brightness(0.88);
   opacity: 0.82;
 }
@@ -2001,7 +2001,7 @@ span.hero-domain-dot {
 
   .portrait-frame {
     width: 200px;
-    height: 250px;
+    height: 300px;
   }
 
   .stats-row {
@@ -2127,7 +2127,7 @@ span.hero-domain-dot {
 
   .portrait-frame {
     width: 160px;
-    height: 200px;
+    height: 240px;
   }
 
   .contact-row {
@@ -2614,8 +2614,10 @@ span.hero-domain-dot {
   gap: 8px;
   margin-top: 24px;
   padding: 12px 24px;
-  background: var(--gold-1776);
-  color: var(--bg);
+  background: transparent;
+  color: rgba(248, 246, 240, 0.90);
+  border: 1px solid rgba(248, 246, 240, 0.38);
+  box-shadow: 0 0 18px rgba(248, 246, 240, 0.06), inset 0 0 16px rgba(248, 246, 240, 0.03);
   font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 400;
@@ -2625,8 +2627,10 @@ span.hero-domain-dot {
   transition: all 0.35s;
 }
 .noco-cta-link:hover {
-  background: #ddb868;
-  box-shadow: 0 4px 24px rgba(248,246,240,0.15);
+  background: rgba(248, 246, 240, 0.05);
+  color: rgba(248, 246, 240, 1);
+  border-color: rgba(248, 246, 240, 0.68);
+  box-shadow: 0 0 28px rgba(248, 246, 240, 0.13), inset 0 0 22px rgba(248, 246, 240, 0.05);
 }
 
 /* ===== BRAND TEASER ===== */
@@ -2730,8 +2734,10 @@ span.hero-domain-dot {
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  background: var(--gold-1776);
-  color: var(--bg);
+  background: transparent;
+  color: rgba(248, 246, 240, 0.90);
+  border: 1px solid rgba(248, 246, 240, 0.38);
+  box-shadow: 0 0 18px rgba(248, 246, 240, 0.06), inset 0 0 16px rgba(248, 246, 240, 0.03);
   font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 400;
@@ -2741,8 +2747,22 @@ span.hero-domain-dot {
   transition: all 0.35s;
 }
 .brand-link-primary:hover {
-  background: #ddb868;
-  box-shadow: 0 4px 24px rgba(248,246,240,0.15);
+  background: rgba(248, 246, 240, 0.05);
+  color: rgba(248, 246, 240, 1);
+  border-color: rgba(248, 246, 240, 0.68);
+  box-shadow: 0 0 28px rgba(248, 246, 240, 0.13), inset 0 0 22px rgba(248, 246, 240, 0.05);
+}
+[data-theme="light"] .brand-link-primary {
+  background: transparent;
+  color: rgba(26, 26, 28, 0.85);
+  border-color: rgba(26, 26, 28, 0.30);
+  box-shadow: none;
+}
+[data-theme="light"] .brand-link-primary:hover {
+  background: rgba(26, 26, 28, 0.05);
+  border-color: rgba(26, 26, 28, 0.70);
+  color: rgba(26, 26, 28, 1);
+  box-shadow: none;
 }
 .brand-link-ghost {
   display: inline-flex;
@@ -2859,16 +2879,19 @@ span.hero-domain-dot {
   font-weight: 400;
   letter-spacing: 2.5px;
   text-transform: uppercase;
-  background: var(--gold-1776);
-  color: var(--bg);
-  border: none;
+  background: transparent;
+  color: rgba(248, 246, 240, 0.90);
+  border: 1px solid rgba(248, 246, 240, 0.38);
+  box-shadow: 0 0 18px rgba(248, 246, 240, 0.06), inset 0 0 16px rgba(248, 246, 240, 0.03);
   cursor: pointer;
   transition: all 0.35s;
   margin-top: 8px;
 }
 .booking-submit:hover {
-  background: #ddb868;
-  box-shadow: 0 4px 24px rgba(248,246,240,0.2);
+  background: rgba(248, 246, 240, 0.05);
+  color: rgba(248, 246, 240, 1);
+  border-color: rgba(248, 246, 240, 0.68);
+  box-shadow: 0 0 28px rgba(248, 246, 240, 0.13), inset 0 0 22px rgba(248, 246, 240, 0.05);
 }
 .booking-submit:disabled {
   opacity: 0.5;
@@ -3013,17 +3036,18 @@ span.hero-domain-dot {
   filter: grayscale(1);
   will-change: opacity, transform, filter;
 }
-/* Suit portrait — raise framing to show face/chest; color with green enhancement */
+/* Suit portrait — framing to center face; color with green enhancement */
 .portrait-frame img[src*="photo-portrait1"] {
-  object-position: center 0%;
+  object-position: center 72%;
   transform: scale(2.2);
-  transform-origin: center top;
+  transform-origin: center 72%;
   filter: grayscale(0) saturate(1.5) brightness(1.05);
 }
 /* Override glitch-hold's forced grayscale for the suit portrait */
 .portrait-frame img[src*="photo-portrait1"].glitch-hold {
   filter: grayscale(0) saturate(1.5) brightness(1.05);
 }
+
 
 /* Scanline overlay */
 .portrait-scanline {
@@ -3535,8 +3559,8 @@ span.hero-domain-dot {
   color: #1c1a18;
 }
 [data-theme="light"] .booking-label { color: rgba(28,26,24,0.65); }
-[data-theme="light"] .booking-submit { background: #2e2e30; color: #d0d1d3; }
-[data-theme="light"] .booking-submit:hover { background: #3a3a3c; }
+[data-theme="light"] .booking-submit { background: transparent; color: rgba(26,26,28,0.85); border-color: rgba(26,26,28,0.30); }
+[data-theme="light"] .booking-submit:hover { background: rgba(26,26,28,0.05); border-color: rgba(26,26,28,0.70); color: rgba(26,26,28,1); box-shadow: none; }
 
 /* ---- LINKS ---- */
 [data-theme="light"] a { color: #3a3a3c; }
