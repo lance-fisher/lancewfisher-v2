@@ -88,6 +88,15 @@ namespace Bloodlines.AI
         public bool  CounterIntelHighInterceptCount;
         public float ConvergenceSabotageTimerCap;    // playerConvergencePressure.sabotageTimerCap
 
+        // ------------------------------------------------------------------ timer: counter-intelligence (ai.js ~2372-2397; default 40s)
+        public float CounterIntelligenceTimer;      // default 40s
+
+        // ------------------------------------------------------------------ context flags: counter-intelligence (ai.js ~2859-2878)
+        // True when AI faction already has an active counter-intelligence watch on any target.
+        public bool  HasActiveCounterIntelligenceWatch;
+        // True when the player has an active covert op targeting this AI faction.
+        public bool  PlayerHasCovertOpsTargetingEnemy;
+
         // ------------------------------------------------------------------ dispatch result (written by system)
         public CovertOpKind LastFiredOp;
         public float        LastFiredOpTime;    // elapsed seconds at last fire
@@ -110,5 +119,6 @@ namespace Bloodlines.AI
         PactProposal           = 9,
         LesserHousePromotion   = 10,
         Sabotage               = 11,
+        CounterIntelligence    = 12,
     }
 }

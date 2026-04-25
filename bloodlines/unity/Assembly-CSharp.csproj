@@ -121,6 +121,11 @@
     <Compile Include="Assets\_Bloodlines\Code\AI\AISabotageExecutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AISabotageResolutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.SabotageResolution.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\AI\DynastyCounterIntelligenceWatchElement.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\AI\DynastyOperationCounterIntelligenceComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\AI\AICounterIntelligenceExecutionSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\AI\AICounterIntelligenceResolutionSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.CounterIntelligenceResolution.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Combat.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Time\MatchProgressionEvaluationSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Economy\TradeRouteComponent.cs" />

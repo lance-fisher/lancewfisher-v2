@@ -50,6 +50,7 @@ namespace Bloodlines.AI
         LesserHousePromotion = 6,
         Assassination        = 7,
         Sabotage             = 8,
+        CounterIntelligence  = 9,
     }
 
     /// <summary>

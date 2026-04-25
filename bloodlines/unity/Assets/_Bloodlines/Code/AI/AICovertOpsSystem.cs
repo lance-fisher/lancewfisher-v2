@@ -58,6 +58,7 @@ namespace Bloodlines.AI
             o.PactProposalTimer         -= dt;
             o.LesserHousePromotionTimer -= dt;
             o.SabotageTimer             -= dt;
+            o.CounterIntelligenceTimer  -= dt;
         }
 
         // ------------------------------------------------------------------ apply pressure caps
@@ -114,6 +115,10 @@ namespace Bloodlines.AI
             if (o.LiveCounterIntelOnPlayer)
                 o.SabotageTimer = math.min(o.SabotageTimer,
                     o.CounterIntelHighInterceptCount ? 4f : 6f);
+
+            // --- counter-intelligence caps (ai.js 2372-2397) ---
+            if (o.HostileOperationsSourceFocused)
+                o.CounterIntelligenceTimer = math.min(o.CounterIntelligenceTimer, 4f);
         }
 
         // ------------------------------------------------------------------ fire operations (in ai.js sequence order)
@@ -263,6 +268,15 @@ namespace Bloodlines.AI
                 o.LastFiredOp     = CovertOpKind.Sabotage;
                 o.LastFiredOpTime = elapsed;
                 o.SabotageTimer   = 85f;
+            }
+
+            // --- counter-intelligence (ai.js 2372-2397): suppress when watch already active.
+            //     execution system validates budget (gold>=60, influence>=18) and capacity. ---
+            if (o.CounterIntelligenceTimer <= 0f && !o.HasActiveCounterIntelligenceWatch)
+            {
+                o.LastFiredOp              = CovertOpKind.CounterIntelligence;
+                o.LastFiredOpTime          = elapsed;
+                o.CounterIntelligenceTimer = 190f;
             }
         }
     }
