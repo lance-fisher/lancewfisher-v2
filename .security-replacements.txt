@@ -1,0 +1,60 @@
+literal:Harmony Skin &amp; Wellness==>Serenity Medspa Demo
+literal:Harmony Skin & Wellness==>Serenity Medspa Demo
+literal:Harmony MedSpa==>Serenity Medspa Demo
+literal:Harmony Medspa==>Serenity Medspa Demo
+literal:harmonyskinandwellness==>example-medspa
+literal:2032 Caribou Drive, Suite 101==>123 Demo Avenue, Suite 100
+literal:2032 Caribou Drive==>123 Demo Avenue
+literal:Fort Collins, CO 80525==>Example City, ST 00000
+literal:Fort Collins, CO 80526==>Example City, ST 00000
+literal:Fort Collins, CO 80524==>Example City, ST 00000
+literal:Fort Collins==>Example City
+literal:(970) 615-9133==>(555) 555-0100
+literal:970-615-9133==>555-555-0100
+literal:9706159133==>5555550100
+literal:+19706159133==>+15555550100
+literal:Dr. Clint Flanagan==>Dr. Alex Morgan
+literal:Clint Flanagan==>Alex Morgan
+literal:Dr. Flanagan==>Dr. Morgan
+literal:Anna Wuest==>Taylor Reed
+literal:Amber Tobler==>Sam Chen
+literal:Jody Lodice==>Morgan Lee
+literal:Lindsay White==>Casey Park
+literal:Lisa White==>Avery Stone
+literal:Data Center Technician Manager==>Senior Operations Lead
+literal:the Metro Area, Primary Campus==>Mission-Critical Site
+literal:data center operations, broadcast, telecommunications, and retail technology==>mission-critical infrastructure and operations leadership
+literal:DISH TECHNOLOGIES, LLC==>Confidential Prior Employer
+literal:DISH TECHNOLOGIES==>Confidential Prior Employer
+literal:DISH Technologies==>Confidential Prior Employer
+literal:FTC GROUP, LLC==>Independent Consulting
+literal:FTC GROUP==>Independent Consulting
+literal:FTC Group==>Independent Consulting
+literal:APPLE, INC.==>Confidential Prior Employer
+literal:APPLE, INC==>Confidential Prior Employer
+literal:AT&amp;T MOBILITY, LLC.==>Confidential Prior Employer
+literal:AT&amp;T MOBILITY==>Confidential Prior Employer
+literal:AT&T MOBILITY==>Confidential Prior Employer
+literal:Cheyenne, WY==>Confidential Location
+literal:Loveland, CO==>Confidential Location
+literal:Tulsa, OK &amp; Greeley, CO==>Confidential Locations
+literal:Tulsa, OK & Greeley, CO==>Confidential Locations
+literal:photo-jamison==>photo-family
+literal:harmony-gallery==>medspa-gallery
+literal:harmony-logo==>medspa-logo
+literal:harmony-promo==>medspa-promo
+literal:harmony-provider==>medspa-provider
+literal:thumb-harmony==>thumb-medspa
+literal:Renew Beauty Med Spa==>Demo Medspa
+literal:Nail Bar Fort Collins==>Demo Nail Bar
+literal:Nail Bar==>Demo Nail Bar
+literal:Studio Be Salon & Spa==>Demo Salon & Spa
+literal:Studio Be Salon &amp; Spa==>Demo Salon &amp; Spa
+literal:The Parlour Barber Shop==>Demo Barber Shop
+literal:Muv Fitness Fort Collins==>Demo Fitness Studio
+literal:Muv Fitness==>Demo Fitness Studio
+literal:2608 S Timberline Rd==>123 Demo Avenue
+literal:2842 Council Tree Ave==>234 Demo Boulevard
+literal:1015 W Horsetooth Rd==>345 Demo Lane
+literal:232 Walnut St==>456 Demo Street
+literal:225 N Lemay Ave==>567 Demo Way
