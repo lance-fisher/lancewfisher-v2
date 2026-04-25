@@ -5,6 +5,22 @@
 **Purpose:** Prioritized backlog of Unity implementation items recovered from browser work and gap analysis. Each item is derived from browser-era design intelligence, canon documents, or gaps identified in the feature map.
 **Status as of:** Branch `claude/unity-multiplayer-nfe-integration`
 
+## 2026-04-25 Session Closure Summary
+
+This session closed the following backlog items:
+
+- P1 Balance Constant Parity Audit (commit 65c9e729) — 122 constants surveyed, 0 drift found.
+- P2 Stonehelm Faction Bonuses Wired (commit afd64bba) — fortification cost discount + build speed bonus.
+- P2 Stage Gate Cross-Audit (commits b755d8c8 + 921f9314) — D2-1 + D4-1 + D5-1 + D5-2 applied; D3-3 deferred fix also applied.
+- P2 Unity-Canonical Advancements Canon Doc (commit b755d8c8).
+- P2 Iron Mine Smelting Fuel Consumption (commit b755d8c8).
+- P2 Holy War Runtime Effects (commit b755d8c8) — verified existing implementation, no code change.
+- P3 Naval Layer slices S1, S2, S3, S5 (commits d3657660, f41c820d, 38463327, 60e58e4d).
+
+Remaining P1: Worker Slot Assignment HUD (UI work; needs in-game click panel), Multiplayer NfE Ghost prefabs (needs interactive Unity open).
+Remaining naval slices: S4 vessel-vs-vessel naval combat, S6 (optional) AI naval dispatch.
+Remaining P3 spec-blocked: Born of Sacrifice, Victory Conditions 4-6, Neutral Faction AI.
+
 ---
 
 ## Priority Definitions
@@ -201,7 +217,7 @@ Status: AIHolyWarResolutionSystem.TickActiveHolyWars (Phase B) confirmed canonic
 | **Suggested Implementation Path (when spec arrives)** | `NavalEmbarkRequestComponent` → `NavalEmbarkSystem` (load up to capacity=6) → `NavalDisembarkSystem` (on shoreline) → `FireShipDetonationSystem` → extend `Combat/` for naval vs. naval. |
 | **Dependencies** | Owner spec on embark/disembark UX model. |
 | **Risk** | Medium. New sub-system. |
-| **Status** | Pending UX spec |
+| **Status** | PARTIALLY COMPLETE 2026-04-25. S1 embark (d3657660), S2 disembark + water-tile detection (f41c820d), S3 fire-ship detonation (38463327), S5 fishing gather (60e58e4d) all landed. Smoke validator runs 4 phases green. Remaining: S4 vessel-vs-vessel naval combat (separate acquisition + damage tables), S6 (optional) AI naval dispatch. |
 
 ---
 
