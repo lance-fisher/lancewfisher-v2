@@ -179,6 +179,11 @@ namespace Bloodlines.Systems
             var entity = entityManager.CreateEntity();
             entityManager.AddComponentData(entity, new FactionComponent { FactionId = seed.FactionId });
             entityManager.AddComponentData(entity, new FactionHouseComponent { HouseId = seed.HouseId });
+            entityManager.AddComponentData(entity, new HouseMechanicsComponent
+            {
+                FortificationCostMultiplier = seed.FortificationCostMultiplier > 0f ? seed.FortificationCostMultiplier : 1f,
+                FortificationBuildSpeedMultiplier = seed.FortificationBuildSpeedMultiplier > 0f ? seed.FortificationBuildSpeedMultiplier : 1f,
+            });
             entityManager.AddComponentData(entity, new FactionKindComponent { Kind = seed.Kind });
             entityManager.AddComponentData(entity, new PopulationComponent
             {

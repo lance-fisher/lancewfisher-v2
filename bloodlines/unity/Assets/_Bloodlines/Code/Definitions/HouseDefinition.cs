@@ -17,5 +17,9 @@ namespace Bloodlines.DataDefinitions
         public string requiredDisadvantage;
         public bool prototypePlayable;
         public string[] notes;
+
+        [Header("House Mechanics (browser data/houses.json mechanics block)")]
+        public float fortificationCostMultiplier;
+        public float fortificationBuildSpeedMultiplier;
     }
 }

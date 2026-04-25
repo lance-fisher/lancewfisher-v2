@@ -161,6 +161,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Combat\AutoAcquireTargetSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Siege\SiegeEscalationComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AICounterIntelligenceResolutionSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Components\HouseMechanicsComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AIAssassinationExecutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\AudioEventDispatchComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\SuccessionCrisisRecoverySystem.cs" />

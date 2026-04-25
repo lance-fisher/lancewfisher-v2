@@ -114,6 +114,8 @@ namespace Bloodlines.EditorTools
                 asset.requiredDisadvantage = item.requiredDisadvantage;
                 asset.prototypePlayable = item.prototypePlayable;
                 asset.notes = item.notes ?? Array.Empty<string>();
+                asset.fortificationCostMultiplier = item.mechanics?.fortificationCostMultiplier ?? 1f;
+                asset.fortificationBuildSpeedMultiplier = item.mechanics?.fortificationBuildSpeedMultiplier ?? 1f;
                 EditorUtility.SetDirty(asset);
             }
         }
@@ -543,6 +545,14 @@ namespace Bloodlines.EditorTools
             public string requiredDisadvantage;
             public bool prototypePlayable;
             public string[] notes;
+            public HouseMechanicsRecord mechanics;
+        }
+
+        [Serializable]
+        private class HouseMechanicsRecord
+        {
+            public float fortificationCostMultiplier;
+            public float fortificationBuildSpeedMultiplier;
         }
 
         [Serializable]

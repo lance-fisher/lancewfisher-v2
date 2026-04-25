@@ -39,6 +39,8 @@ namespace Bloodlines.Components
         public int PopulationTotal;
         public int PopulationCap;
         public int PopulationReserved;
+        public float FortificationCostMultiplier;
+        public float FortificationBuildSpeedMultiplier;
     }
 
     public struct MapBuildingSeedElement : IBufferElementData

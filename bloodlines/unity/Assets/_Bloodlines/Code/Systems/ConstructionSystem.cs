@@ -35,7 +35,17 @@ namespace Bloodlines.Systems
                 .WithEntityAccess())
             {
                 var construction = constructionRw.ValueRO;
-                construction.RemainingSeconds = math.max(0f, construction.RemainingSeconds - dt);
+                // Browser parity (data/houses.json mechanics block + advanceFortificationTier
+                // call sites): apply HouseMechanics.FortificationBuildSpeedMultiplier when the
+                // building under construction is a fortification (Wall/Tower/Gate/Keep).
+                // Stonehelm = 1.2; all other houses = 1.0 by default.
+                float effectiveDt = dt;
+                if (buildingType.ValueRO.FortificationRole != FortificationRole.None)
+                {
+                    float speedMultiplier = ResolveFortBuildSpeedMultiplier(entityManager, faction.ValueRO.FactionId);
+                    effectiveDt = dt * speedMultiplier;
+                }
+                construction.RemainingSeconds = math.max(0f, construction.RemainingSeconds - effectiveDt);
 
                 float totalSeconds = math.max(0.1f, construction.TotalSeconds);
                 float progress = math.saturate(1f - (construction.RemainingSeconds / totalSeconds));
@@ -64,6 +74,25 @@ namespace Bloodlines.Systems
 
                 ecb.RemoveComponent<ConstructionStateComponent>(entity);
             }
+        }
+
+        private static float ResolveFortBuildSpeedMultiplier(EntityManager entityManager, FixedString32Bytes factionId)
+        {
+            var query = entityManager.CreateEntityQuery(
+                ComponentType.ReadOnly<FactionComponent>(),
+                ComponentType.ReadOnly<HouseMechanicsComponent>());
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            using var factions = query.ToComponentDataArray<FactionComponent>(Allocator.Temp);
+            using var mechanics = query.ToComponentDataArray<HouseMechanicsComponent>(Allocator.Temp);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (factions[i].FactionId.Equals(factionId))
+                {
+                    float m = mechanics[i].FortificationBuildSpeedMultiplier;
+                    return m > 0f ? m : 1f;
+                }
+            }
+            return 1f;
         }
 
         private static bool TryFindFactionPopulation(
