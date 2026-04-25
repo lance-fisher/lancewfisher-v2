@@ -5662,3 +5662,9 @@ Next: Sub-slice 28 (missionary resolution effects) -- fires at DynastyOperationM
 Latest sub-slice: Bundle 5 (captive rescue resolution sub-slice 28 + captive ransom resolution sub-slice 29). Status: Complete pending bootstrap smoke gate.
 Handoff: docs/unity/session-handoffs/2026-04-24-unity-ai-captive-rescue-and-ransom-resolution.md
 Next: Investigate and resolve bootstrap smoke regression (ComponentSystemSorter IndexOutOfRangeException preventing SkirmishBootstrapSystem from seeding faction entities). Once resolved, merge this branch and proceed to next ai-strategic-layer sub-slice.
+
+## ai-strategic-layer (as of 2026-04-24)
+
+Latest sub-slice: 30 (AI assassination dispatch + resolution). Status: Complete, merged to origin/master at 5b26ba3c.
+Handoff: docs/unity/session-handoffs/2026-04-24-unity-ai-assassination-dispatch-resolution.md
+Next: Remaining AI lane gaps are hardening passes (legitimacy field once dynasty-core lane lands, applySuccessionRipple, tickMarriageDissolutionFromDeath, counter-intel/ward bonuses). Forward-moving sub-slices could be AI garrison defense response or AI counter-attack dispatch if those are in scope. Alternatively, contribute to Codex lanes or advance multiplayer/audio systems.
