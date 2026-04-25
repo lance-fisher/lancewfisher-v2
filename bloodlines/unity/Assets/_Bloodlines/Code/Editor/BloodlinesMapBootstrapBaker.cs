@@ -70,6 +70,24 @@ namespace Bloodlines.EditorTools
             var controlPointBuffer = AddBuffer<MapControlPointSeedElement>(entity);
             var sacredSiteBuffer = AddBuffer<MapSacredSiteSeedElement>(entity);
             var settlementBuffer = AddBuffer<MapSettlementSeedElement>(entity);
+            var waterTilePatchBuffer = AddBuffer<MapWaterTilePatchSeedElement>(entity);
+
+            foreach (var patch in authoring.Map.terrainPatches ?? Array.Empty<TerrainPatchData>())
+            {
+                if (patch == null) continue;
+                if (!string.Equals(patch.type, "water", StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(patch.type, "river", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+                waterTilePatchBuffer.Add(new MapWaterTilePatchSeedElement
+                {
+                    X = patch.x,
+                    Y = patch.y,
+                    Width = patch.w,
+                    Height = patch.h,
+                });
+            }
 
             foreach (var unitDefinition in authoring.UnitDefinitions ?? Array.Empty<UnitDefinition>())
             {

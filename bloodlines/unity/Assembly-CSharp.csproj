@@ -389,6 +389,7 @@
     <Compile Include="Assets\_Bloodlines\Code\HUD\FortificationHUDSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\SettlementComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerMarriageProposalRequestComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Naval\DisembarkOrderComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\PositionComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AIMarriageProposalExecutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\SmeltingComponent.cs" />
@@ -409,6 +410,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Combat\ProjectileImpactSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\PlayerCommandDeckOverlayPresenter.cs" />
     <Compile Include="Assets\_Bloodlines\Code\WorldPressure\TerritorialPressureEvaluationSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Naval\DisembarkSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AIEspionageExecutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.AIStrategy.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.RallyPoint.cs" />

@@ -74,11 +74,17 @@ namespace Bloodlines.EditorTools
                 message = embarkMessage;
                 return false;
             }
-
             UnityDebug.Log(embarkMessage);
 
+            if (!RunDisembarkPhase(out string disembarkMessage))
+            {
+                message = disembarkMessage;
+                return false;
+            }
+            UnityDebug.Log(disembarkMessage);
+
             message =
-                "Naval smoke validation passed: embarkPhase=True.";
+                "Naval smoke validation passed: embarkPhase=True, disembarkPhase=True.";
             return true;
         }
 
@@ -300,6 +306,188 @@ namespace Bloodlines.EditorTools
             simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<EmbarkSystem>());
             simulationGroup.SortSystems();
             return world;
+        }
+
+        private static World CreateDisembarkValidationWorld(string worldName)
+        {
+            var world = new World(worldName);
+            world.GetOrCreateSystemManaged<InitializationSystemGroup>();
+            var simulationGroup = world.GetOrCreateSystemManaged<SimulationSystemGroup>();
+            world.GetOrCreateSystemManaged<PresentationSystemGroup>();
+
+            var endSimulation = world.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>();
+            simulationGroup.AddSystemToUpdateList(endSimulation);
+            simulationGroup.AddSystemToUpdateList(world.GetOrCreateSystem<DisembarkSystem>());
+            simulationGroup.SortSystems();
+            return world;
+        }
+
+        private static Entity CreateMapBootstrapEntity(
+            EntityManager entityManager,
+            int tileSize,
+            params (int x, int y, int w, int h)[] waterPatches)
+        {
+            var entity = entityManager.CreateEntity();
+            entityManager.AddComponentData(entity, new MapBootstrapConfigComponent
+            {
+                TileSize = tileSize,
+                Width = 100,
+                Height = 100,
+            });
+            var buf = entityManager.AddBuffer<MapWaterTilePatchSeedElement>(entity);
+            for (int i = 0; i < waterPatches.Length; i++)
+            {
+                var p = waterPatches[i];
+                buf.Add(new MapWaterTilePatchSeedElement { X = p.x, Y = p.y, Width = p.w, Height = p.h });
+            }
+            return entity;
+        }
+
+        private static bool RunDisembarkPhase(out string message)
+        {
+            using var world = CreateDisembarkValidationWorld("BloodlinesNavalSmokeValidation_Disembark");
+            var entityManager = world.EntityManager;
+
+            CreateFaction(entityManager, "player");
+
+            // Tile size = 1, water patch covers (10,10) to (11,11) inclusive.
+            // Transport tile (10,10) -> NW neighbor (9,9) is land.
+            CreateMapBootstrapEntity(entityManager, 1, (10, 10, 2, 2));
+
+            // Transport at (10.5, 0, 10.5) -> floor(10.5/1) = 10 in both axes.
+            Entity transport = CreateTransportVessel(
+                entityManager, "player", "transport_ship",
+                new float3(10.5f, 0f, 10.5f),
+                transportCapacity: NavalCanon.DefaultTransportCapacity);
+
+            // Pre-seed 6 embarked passengers. Create the entities and add their
+            // tag/link components first; only then re-fetch the transport buffer
+            // and append, since AddComponentData invalidates buffer handles.
+            Entity[] passengers = new Entity[6];
+            for (int i = 0; i < 6; i++)
+            {
+                passengers[i] = CreateLandUnit(entityManager, "player", "villager", new float3(10.5f, 0f, 10.5f));
+                entityManager.AddComponentData(passengers[i], new EmbarkedPassengerTag());
+                entityManager.AddComponentData(passengers[i], new PassengerTransportLinkComponent { Transport = transport });
+            }
+            {
+                var passengerBuffer = entityManager.GetBuffer<PassengerBufferElement>(transport);
+                for (int i = 0; i < 6; i++)
+                {
+                    passengerBuffer.Add(new PassengerBufferElement
+                    {
+                        Passenger = passengers[i],
+                        PassengerTypeId = new FixedString64Bytes("villager"),
+                    });
+                }
+            }
+
+            // Issue disembark order on transport.
+            entityManager.AddComponentData(transport, new DisembarkOrderComponent());
+
+            double elapsed = 0d;
+            for (int t = 0; t < 4 && entityManager.HasComponent<DisembarkOrderComponent>(transport); t++)
+            {
+                world.SetTime(new TimeData(elapsed, StepSeconds));
+                world.Update();
+                elapsed += StepSeconds;
+            }
+
+            if (entityManager.HasComponent<DisembarkOrderComponent>(transport))
+            {
+                message = "Naval smoke validation failed: disembark phase did not consume the order.";
+                return false;
+            }
+
+            int remaining = entityManager.GetBuffer<PassengerBufferElement>(transport).Length;
+            if (remaining != 0)
+            {
+                message = "Naval smoke validation failed: disembark phase left " + remaining + " passengers on transport.";
+                return false;
+            }
+
+            // First non-water tile is (9,9). Land world center: (9.5, 0, 9.5).
+            // Passengers placed in 3x3 offset grid (10-unit spacing).
+            for (int i = 0; i < passengers.Length; i++)
+            {
+                if (entityManager.HasComponent<EmbarkedPassengerTag>(passengers[i]))
+                {
+                    message = "Naval smoke validation failed: disembarked passenger still has EmbarkedPassengerTag.";
+                    return false;
+                }
+                if (entityManager.HasComponent<PassengerTransportLinkComponent>(passengers[i]))
+                {
+                    message = "Naval smoke validation failed: disembarked passenger still has PassengerTransportLinkComponent.";
+                    return false;
+                }
+
+                float expectedX = 9.5f + ((i % 3) - 1) * 10f;
+                float expectedZ = 9.5f + (math.floor(i / 3f) - 1f) * 10f;
+                var pos = entityManager.GetComponentData<PositionComponent>(passengers[i]).Value;
+                if (math.abs(pos.x - expectedX) > 0.01f || math.abs(pos.z - expectedZ) > 0.01f)
+                {
+                    message = "Naval smoke validation failed: passenger " + i + " expected (" +
+                        expectedX + ", " + expectedZ + ") got (" + pos.x + ", " + pos.z + ").";
+                    return false;
+                }
+
+                var move = entityManager.GetComponentData<MoveCommandComponent>(passengers[i]);
+                if (move.IsActive)
+                {
+                    message = "Naval smoke validation failed: disembarked passenger has active MoveCommand.";
+                    return false;
+                }
+            }
+
+            // Failure case: order on a transport with all-water surroundings.
+            using var failWorld = CreateDisembarkValidationWorld("BloodlinesNavalSmokeValidation_DisembarkFail");
+            var failEm = failWorld.EntityManager;
+            CreateFaction(failEm, "player");
+            // Water patch covers (5,5) to (24,24); transport at tile (10,10) is fully surrounded.
+            CreateMapBootstrapEntity(failEm, 1, (5, 5, 20, 20));
+            Entity failTransport = CreateTransportVessel(
+                failEm, "player", "transport_ship",
+                new float3(10.5f, 0f, 10.5f), transportCapacity: NavalCanon.DefaultTransportCapacity);
+            Entity failPassenger = CreateLandUnit(failEm, "player", "villager", new float3(10.5f, 0f, 10.5f));
+            failEm.AddComponentData(failPassenger, new EmbarkedPassengerTag());
+            failEm.AddComponentData(failPassenger, new PassengerTransportLinkComponent { Transport = failTransport });
+            {
+                var failPassengerBuffer = failEm.GetBuffer<PassengerBufferElement>(failTransport);
+                failPassengerBuffer.Add(new PassengerBufferElement
+                {
+                    Passenger = failPassenger,
+                    PassengerTypeId = new FixedString64Bytes("villager"),
+                });
+            }
+            failEm.AddComponentData(failTransport, new DisembarkOrderComponent());
+
+            double failElapsed = 0d;
+            for (int t = 0; t < 4 && failEm.HasComponent<DisembarkOrderComponent>(failTransport); t++)
+            {
+                failWorld.SetTime(new TimeData(failElapsed, StepSeconds));
+                failWorld.Update();
+                failElapsed += StepSeconds;
+            }
+
+            if (failEm.HasComponent<DisembarkOrderComponent>(failTransport))
+            {
+                message = "Naval smoke validation failed: disembark fail-case did not drop the order.";
+                return false;
+            }
+            if (failEm.GetBuffer<PassengerBufferElement>(failTransport).Length != 1)
+            {
+                message = "Naval smoke validation failed: disembark fail-case unexpectedly drained passenger buffer.";
+                return false;
+            }
+            if (!failEm.HasComponent<EmbarkedPassengerTag>(failPassenger))
+            {
+                message = "Naval smoke validation failed: disembark fail-case removed EmbarkedPassengerTag without dropping passenger.";
+                return false;
+            }
+
+            message =
+                "Naval smoke validation disembark phase passed: dropTileX=9 dropTileY=9 droppedCount=6 failCaseRetained=True.";
+            return true;
         }
 
         private static void CreateFaction(EntityManager entityManager, string factionId, params string[] hostileFactionIds)

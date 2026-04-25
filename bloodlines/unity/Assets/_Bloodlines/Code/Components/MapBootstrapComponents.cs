@@ -142,4 +142,24 @@ namespace Bloodlines.Components
         public int FortificationCeiling;
         public bool IsPrimaryKeep;
     }
+
+    /// <summary>
+    /// Water/river terrain patch baked from MapDefinition.terrainPatches. Stored as a
+    /// dynamic buffer on the bootstrap singleton entity so naval systems can answer
+    /// "is tile (X,Y) water?" without re-walking the authoring asset every frame.
+    ///
+    /// Browser parity: simulation.js isWaterTileAt (~7627-7636), which scans
+    /// state.world.terrainPatches for a patch with type=="water" or type=="river"
+    /// containing (tileX, tileY).
+    ///
+    /// X / Y are tile-space integer coordinates; Width / Height are tile counts.
+    /// A tile (tx, ty) is in this patch when X &lt;= tx &lt; X+Width and Y &lt;= ty &lt; Y+Height.
+    /// </summary>
+    public struct MapWaterTilePatchSeedElement : IBufferElementData
+    {
+        public int X;
+        public int Y;
+        public int Width;
+        public int Height;
+    }
 }
