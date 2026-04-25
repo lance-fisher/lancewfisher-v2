@@ -307,6 +307,7 @@
     <Compile Include="Assets\_Bloodlines\Code\HUD\CovenantTestProgressHUDSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AIDivineRightResolutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyPrestigeDecayModulatorSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Naval\FireShipDetonationPendingTag.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Naval\PassengerTransportLinkComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.WorldPressure.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Fortification.cs" />
@@ -378,6 +379,7 @@
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerMarriageProposalSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\RealmConditionHUDComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.EspionageResolution.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Naval\FireShipDetonationSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.CommanderAura.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Faith\VerdantWardenSupportSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Siege\SiegeSupplyInterdictionCanon.cs" />

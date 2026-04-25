@@ -83,8 +83,108 @@ namespace Bloodlines.EditorTools
             }
             UnityDebug.Log(disembarkMessage);
 
+            if (!RunFireShipDetonationPhase(out string fireShipMessage))
+            {
+                message = fireShipMessage;
+                return false;
+            }
+            UnityDebug.Log(fireShipMessage);
+
             message =
-                "Naval smoke validation passed: embarkPhase=True, disembarkPhase=True.";
+                "Naval smoke validation passed: embarkPhase=True, disembarkPhase=True, fireShipPhase=True.";
+            return true;
+        }
+
+        private static bool RunFireShipDetonationPhase(out string message)
+        {
+            using var world = new World("BloodlinesNavalSmokeValidation_FireShip");
+            world.GetOrCreateSystemManaged<InitializationSystemGroup>();
+            var simGroup = world.GetOrCreateSystemManaged<SimulationSystemGroup>();
+            world.GetOrCreateSystemManaged<PresentationSystemGroup>();
+            simGroup.AddSystemToUpdateList(world.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>());
+            simGroup.AddSystemToUpdateList(world.GetOrCreateSystem<Bloodlines.Naval.FireShipDetonationSystem>());
+            simGroup.SortSystems();
+            var em = world.EntityManager;
+
+            // Fire-ship vessel with OneUseSacrifice=true and full health.
+            var fireShip = em.CreateEntity(
+                typeof(NavalVesselComponent),
+                typeof(HealthComponent));
+            em.SetComponentData(fireShip, new NavalVesselComponent
+            {
+                Class = VesselClass.FireShip,
+                TransportCapacity = 0,
+                OneUseSacrifice = true,
+            });
+            em.SetComponentData(fireShip, new HealthComponent { Current = 80f, Max = 80f });
+
+            // Simulate the AttackResolutionSystem path: queue a pending detonation tag.
+            em.AddComponent<FireShipDetonationPendingTag>(fireShip);
+
+            // Tick until the tag is consumed (single tick should suffice since the
+            // detonation system runs in SimulationSystemGroup).
+            for (int t = 0; t < 4 && em.HasComponent<FireShipDetonationPendingTag>(fireShip); t++)
+            {
+                world.SetTime(new TimeData(t * StepSeconds, StepSeconds));
+                world.Update();
+            }
+
+            if (em.HasComponent<FireShipDetonationPendingTag>(fireShip))
+            {
+                message = "Naval smoke validation failed: fire-ship detonation tag not consumed.";
+                return false;
+            }
+            var health = em.GetComponentData<HealthComponent>(fireShip);
+            if (health.Current > 0f)
+            {
+                message = "Naval smoke validation failed: fire-ship detonation expected health=0, got " +
+                    health.Current + ".";
+                return false;
+            }
+            if (!em.HasComponent<DeadTag>(fireShip))
+            {
+                message = "Naval smoke validation failed: fire-ship detonation expected DeadTag but missing.";
+                return false;
+            }
+
+            // Negative case: a non-sacrifice vessel with the pending tag should NOT
+            // be destroyed. The detonation system silently consumes the tag.
+            var warGalley = em.CreateEntity(
+                typeof(NavalVesselComponent),
+                typeof(HealthComponent));
+            em.SetComponentData(warGalley, new NavalVesselComponent
+            {
+                Class = VesselClass.WarGalley,
+                TransportCapacity = 0,
+                OneUseSacrifice = false,
+            });
+            em.SetComponentData(warGalley, new HealthComponent { Current = 200f, Max = 200f });
+            em.AddComponent<FireShipDetonationPendingTag>(warGalley);
+
+            for (int t = 0; t < 4 && em.HasComponent<FireShipDetonationPendingTag>(warGalley); t++)
+            {
+                world.SetTime(new TimeData(10d + t * StepSeconds, StepSeconds));
+                world.Update();
+            }
+            if (em.HasComponent<FireShipDetonationPendingTag>(warGalley))
+            {
+                message = "Naval smoke validation failed: fire-ship detonation negative tag not consumed.";
+                return false;
+            }
+            var galleyHealth = em.GetComponentData<HealthComponent>(warGalley);
+            if (galleyHealth.Current <= 0f)
+            {
+                message = "Naval smoke validation failed: non-sacrifice vessel destroyed by fire-ship system.";
+                return false;
+            }
+            if (em.HasComponent<DeadTag>(warGalley))
+            {
+                message = "Naval smoke validation failed: non-sacrifice vessel marked dead by fire-ship system.";
+                return false;
+            }
+
+            message =
+                "Naval smoke validation fire-ship phase passed: detonatedHealth=0 detonatedDeadTag=True nonSacrificeUntouched=True.";
             return true;
         }
 

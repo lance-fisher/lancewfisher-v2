@@ -3,6 +3,7 @@ using Bloodlines.Conviction;
 using Bloodlines.Dynasties;
 using Bloodlines.Faith;
 using Bloodlines.Fortification;
+using Bloodlines.Naval;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -217,6 +218,20 @@ namespace Bloodlines.Systems
                             {
                                 SecondsRemaining = 0.1f,
                             });
+                        }
+                    }
+
+                    // Browser parity: simulation.js updateVessel (~8836-8840).
+                    // A fire-ship vessel (OneUseSacrifice=true) self-destroys on
+                    // the same tick it deals strike damage. The pending tag is
+                    // consumed by FireShipDetonationSystem.
+                    if (entityManager.HasComponent<NavalVesselComponent>(entity))
+                    {
+                        var vessel = entityManager.GetComponentData<NavalVesselComponent>(entity);
+                        if (vessel.OneUseSacrifice &&
+                            !entityManager.HasComponent<FireShipDetonationPendingTag>(entity))
+                        {
+                            ecb.AddComponent<FireShipDetonationPendingTag>(entity);
                         }
                     }
 
