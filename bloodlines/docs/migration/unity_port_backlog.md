@@ -62,7 +62,7 @@
 | **Suggested Implementation Path** | Create `docs/migration/constant_parity_audit.md`. For each browser constant, list: browser value, Unity canon file, Unity value, status (Match/Drift/Missing). Prioritize fortification constants, faith constants, legitimacy deltas. |
 | **Dependencies** | None. Research task. |
 | **Risk** | Low (research only). Drift found will be fixed in a follow-up. |
-| **Status** | Not started |
+| **Status** | COMPLETE (2026-04-25). See `docs/migration/constant_parity_audit.md`. 122 constants surveyed across 14 domains. 64 Match (in canon class), 21 Match (inline), 0 Drift, 14 Missing (clustered around faction Legitimacy field deferred to dynasty-core lane, naval S4/S5, scout node harass, ledger history limits), 23 N/A. |
 
 ---
 
@@ -77,7 +77,7 @@
 | **Suggested Implementation Path** | In `AdvanceFortificationTierSystem`, read `FactionHouseComponent.HouseId` → look up `HouseDefinition` via `BloodlinesDefinitions.Instance.GetHouseDefinition(houseId)` → multiply cost by `fortificationCostMultiplier` and build progress rate by `fortificationBuildSpeedMultiplier`. |
 | **Dependencies** | `BloodlinesDefinitions` registry must be accessible from `AdvanceFortificationTierSystem`. Pattern exists in other systems. |
 | **Risk** | Low. Additive. |
-| **Status** | Not started |
+| **Status** | COMPLETE (2026-04-25, commit afd64bba). HouseDefinition fields + HouseMechanicsRecord JSON import + HouseMechanicsComponent + ConstructionSystem build-speed scale + DebugCommandSurface cost-discount scale all landed. Build speed applied per dt when BuildingTypeComponent.FortificationRole != None. Cost scaled at affordability check + SpendCost via integer round. |
 
 ---
 
@@ -92,7 +92,7 @@
 | **Suggested Implementation Path** | Side-by-side read of `simulation.js:updateMatchProgressionState` and `Time/MatchProgressionEvaluationSystem.cs`. Document any deviations. Fix deviations if found. |
 | **Dependencies** | None. Diagnostic first, code only if deviation found. |
 | **Risk** | Low (diagnostic). |
-| **Status** | Not started |
+| **Status** | COMPLETE (2026-04-25, commit b755d8c8). Audit at reports/2026-04-25_match_progression_stage_gate_cross_audit.md. Applied: D2-1 defended-seat health gate, D4-1 sustainedWar canonical signals, contestedBorder world-pressure fallback, D5-1 split convergence/sovereignty, D5-2 enemy convergence + divine right. Deferred: D3-3 military combat-only filter, D4-1 rivalContact full 5-signal port, D4-2 perf rework. |
 
 ---
 
@@ -107,11 +107,13 @@
 | **Suggested Implementation Path** | Create `01_CANON/UNITY_CANONICAL_ADVANCEMENTS_2026-04-25.md` listing: mechanic name, canon owner direction citation, Unity file location, what the browser says (nothing), confirmed status. |
 | **Dependencies** | None. |
 | **Risk** | None. Documentation only. |
-| **Status** | Not started |
+| **Status** | COMPLETE (2026-04-25, commit b755d8c8). 01_CANON/UNITY_CANONICAL_ADVANCEMENTS_2026-04-25.md documents 5 mechanics with canon citations, Unity implementation pointers, and rationale. |
 
 ---
 
-### P2: Iron Mine Smelting Fuel Consumption
+### P2: Iron Mine Smelting Fuel Consumption (COMPLETE 2026-04-25, commit b755d8c8)
+
+Status: SmeltingComponent + MapBuildingSeedElement extension + WorkerGatherSystem deposit-time fuel deduction implemented.
 
 | Field | Value |
 |---|---|
@@ -126,7 +128,9 @@
 
 ---
 
-### P2: Holy War Runtime Economic/Combat Effects
+### P2: Holy War Runtime Economic/Combat Effects (VERIFIED 2026-04-25, commit b755d8c8 — already implemented)
+
+Status: AIHolyWarResolutionSystem.TickActiveHolyWars (Phase B) confirmed canonical. Verification at reports/2026-04-25_holy_war_runtime_effects_verification.md.
 
 | Field | Value |
 |---|---|
