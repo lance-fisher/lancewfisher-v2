@@ -83,6 +83,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesCounterIntelligenceResolutionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesEspionageResolutionSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesSuccessionCrisisConsolidationSmokeValidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesFaithCommitmentSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesGraphicsRuntimeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\BloodlinesFortificationSmokeValidation.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Editor\GraphicsConceptSheetSync.cs" />

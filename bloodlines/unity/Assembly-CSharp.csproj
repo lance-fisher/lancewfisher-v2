@@ -133,6 +133,8 @@
     <Compile Include="Assets\_Bloodlines\Code\AI\AISuccessionCrisisConsolidationComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AISuccessionCrisisConsolidationSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.SuccessionCrisisConsolidation.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\AI\AIFaithCommitmentSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.FaithCommitment.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Combat.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Time\MatchProgressionEvaluationSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Economy\TradeRouteComponent.cs" />

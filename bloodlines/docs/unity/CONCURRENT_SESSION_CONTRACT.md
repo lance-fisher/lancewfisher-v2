@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 139
-- Last Updated: 2026-04-24
-- Last Updated By: claude-ai-succession-crisis-consolidation-2026-04-24
-- Supersedes: revision 138 (sub-slice 33: AI espionage dispatch and resolution.)
+- Revision: 140
+- Last Updated: 2026-04-25
+- Last Updated By: claude-ai-faith-commitment-2026-04-25
+- Supersedes: revision 139 (sub-slice 34: AI succession crisis consolidation.)
 
 
 ## Purpose
@@ -854,6 +854,10 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.SuccessionCrisisConsolidation.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSuccessionCrisisConsolidationSmokeValidation.cs`
   - `scripts/Invoke-BloodlinesUnitySuccessionCrisisConsolidationSmokeValidation.ps1`
+  - `unity/Assets/_Bloodlines/Code/AI/AIFaithCommitmentSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.FaithCommitment.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesFaithCommitmentSmokeValidation.cs`
+  - `scripts/Invoke-BloodlinesUnityFaithCommitmentSmokeValidation.ps1`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HolyWarResolution.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.DivineRightResolution.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.CaptiveRescueResolution.cs`
@@ -959,6 +963,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-24-unity-ai-counter-intelligence-dispatch.md`
   - `docs/unity/session-handoffs/2026-04-24-unity-ai-espionage-dispatch.md`
   - `docs/unity/session-handoffs/2026-04-24-unity-ai-succession-crisis-consolidation.md`
+  - `docs/unity/session-handoffs/2026-04-25-unity-ai-faith-commitment.md`
 - Browser Reference:
   - Sub-slice 1: `src/game/core/ai.js` `pickTerritoryTarget` (~747), `pickScoutHarassTarget` (~412), `getWorldPressureRaidTarget` (~817)
   - Sub-slice 2: `src/game/core/ai.js` timer clamp/floor block lines 1127-1241
