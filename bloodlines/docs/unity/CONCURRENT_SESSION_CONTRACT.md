@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 144
+- Revision: 145
 - Last Updated: 2026-04-25
 - Last Updated By: claude-multiplayer-nfe-integration-2026-04-25
-- Supersedes: revision 143 (AI player divine right context system sub-slice 38)
+- Supersedes: revision 144 (NfE integration smoke gates + runtime bug fixes)
 
 
 ## Purpose
@@ -1690,7 +1690,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `scripts/Invoke-BloodlinesUnityNfEIntegrationSmokeValidation.ps1`
 - Shared-File Narrow Edits Applied:
   - `unity/Assets/_Bloodlines/Code/Multiplayer/GhostCollectionSetupSystem.cs` -- additive `#if UNITY_NETCODE` block: `ConfirmNfECollectionActive` verifies `GhostCollection` singleton and reads `GhostCollectionPrefabs` buffer liveness when in networked mode; no changes to offline path
-  - `unity/Assembly-CSharp.csproj` -- additive Compile entries for GhostPrefabAuthoring.cs, NetworkAuthoritySystem.cs, BloodlinesDebugCommandSurface.NetworkAuthority.cs
+  - `unity/Assembly-CSharp.csproj` -- additive Compile entries for GhostPrefabAuthoring.cs, NetworkAuthoritySystem.cs, BloodlinesDebugCommandSurface.NetworkAuthority.cs; subsequently converted to glob `Assets\_Bloodlines\**\*.cs` (revision 145) to capture all 550 _Bloodlines scripts including new NfE files
   - `unity/Assembly-CSharp-Editor.csproj` -- additive Compile entry for BloodlinesNfEIntegrationSmokeValidation.cs
   - `unity/Packages/manifest.json` -- added `com.unity.netcode` 1.4.3 (compatible with com.unity.entities 1.4.3 and the existing 1.4.x package family)
   - `unity/Packages/packages-lock.json` -- added resolved entries for `com.unity.netcode` 1.4.3 and its transport dependency `com.unity.transport` 2.4.0
@@ -1702,13 +1702,14 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - Current Branch In Flight: none (merged to master 2026-04-25)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-25-unity-multiplayer-nfe-integration.md`
 - Last Slice State:
-  - `com.unity.netcode` 1.4.3 added to manifest.json and packages-lock.json; Unity batch-mode smokes are SKIP-env pending first interactive open to resolve package cache
+  - `com.unity.netcode` 1.4.1 in manifest.json/packages-lock.json; NfE package present in Library/PackageCache as com.unity.netcode@30f2ac451a68 (version 1.4.1); first Unity batch pass may trigger package resolution, second pass uses compiled cache — all smokes PASS (revision 145)
   - `GhostPrefabAuthoring` MonoBehaviour configures ghost replication modes: OwnerPredicted for units, Interpolated for factions and control points; syncs to GhostAuthoringComponent under `#if UNITY_NETCODE`
   - `NetworkAuthoritySystem` maintains IsServer/IsClient flags each frame; offline path holds IsServer=true, IsClient=false; networked path gates on NetworkStreamInGame singleton under `#if UNITY_NETCODE`
   - `GhostCollectionSetupSystem` extended with `#if UNITY_NETCODE` block that confirms GhostCollection liveness and reads GhostCollectionPrefabs in networked sessions
   - `BloodlinesDebugCommandSurface.NetworkAuthority` exposes TryDebugGetNetworkAuthority (IsServer, IsClient, IsLocalGame)
   - `BloodlinesNfEIntegrationSmokeValidation` proves OfflineDefaultsStable, GhostArchetypesRegistered, AuthoritySystemPresent across 3 phases
-  - dotnet build 0 errors; node tests PASS; contract staleness check PASS (revision=144); Unity batch-mode smokes SKIP-env (NfE package not yet in PackageCache)
+  - Runtime fixes (revision 145): CS1654 in BuildTierGatingSystem (Remove+Add instead of indexer); ECB structural-change fix in DynastyPoliticalEventSystem (AddComponentData during iteration replaced by ecb.AddComponent); circular dependency cut in CommanderAuraSystem (removed UpdateAfter(FieldWaterStrainSystem)); cross-group ordering removed from DynastyRenownLeaderboardHUDSystem
+  - All 9 validation gates PASS: dotnet build 0 errors, Editor build 0 errors, bootstrap smoke PASS (factions=3/3 buildings=13/11 units=19/18), combat smoke PASS, scene shells PASS, NfE integration smoke PASS, data-validation PASS, runtime-bridge PASS, contract staleness PASS (revision=145)
 
 ### Lane: faith-combat-doctrine
 

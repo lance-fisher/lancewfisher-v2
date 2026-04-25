@@ -76,6 +76,7 @@ namespace Bloodlines.Debug
         [SerializeField] private float constructionPanelSpacing = 12f;
         [SerializeField] private float constructionButtonHeight = 42f;
         [SerializeField] private bool showConstructionProgressPanel = true;
+        [SerializeField] private bool showEarlyGamePanel = true;
         [SerializeField] private float constructionProgressPanelSpacing = 12f;
         [SerializeField] private Color constructionProgressFillColor = new Color(0.82f, 0.76f, 0.54f, 0.95f);
         [SerializeField] private Color constructionProgressTrackColor = new Color(0.12f, 0.14f, 0.17f, 0.78f);
@@ -244,6 +245,11 @@ namespace Bloodlines.Debug
                 if (showConstructionProgressPanel)
                 {
                     DrawConstructionProgressPanel(entityManager);
+                }
+
+                if (showEarlyGamePanel)
+                {
+                    DrawEarlyGamePanel();
                 }
             }
 

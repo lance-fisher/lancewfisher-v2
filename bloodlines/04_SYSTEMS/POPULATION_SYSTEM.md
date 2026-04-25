@@ -124,3 +124,103 @@ The Dark Extremes world pressure mechanic fires when extreme Cruel conviction go
 **Whitehall:** No specific population bonus. Their 5/5 neutral unit values and "competence ceiling" disadvantage apply here too — they manage population better than average but cannot spike in any category.
 
 **Goldgrave:** Military recruitment hard-capped by active trade route count. This is the Network Dependency disadvantage expressed at the population level — Goldgrave's population is economically oriented, and military conscription without an economic basis for supporting soldiers produces resistance.
+
+---
+
+### Early-Game Foundation — Population Productivity States and Military Draft System (Canon Locked 2026-04-25)
+
+## Population Productivity States
+
+Every person in the population exists in one of four productivity states. These states determine their contribution to economic output. The aggregate weighted average of all population states produces the faction's Base Productivity each frame.
+
+**Civilian (not drafted): 100% productivity**
+The default state. Civilians are available for worker slot assignment, agricultural labor, craft work, and governance. A faction that has not drafted any military maintains full productivity on its entire population pool.
+
+**Drafted but Untrained: 75% productivity**
+Population that has been called up under the draft but has not yet been formed into trained squads. Untrained draftees are less economically productive than pure civilians because they have been pulled from normal economic roles into military preparation without yet achieving full military effectiveness. UntrainedDrafted = max(0, DraftPool - TrainedMilitary).
+
+**Trained Reserve: 50% productivity**
+Militia squads in Reserve duty state. Reserve squads are trained fighters standing down from active assignment. They remain available for rapid deployment but have returned to partial civic life — maintaining equipment, performing local guard functions, and doing limited productive work. Productivity is significantly reduced from civilian baseline because military readiness imposes a constant overhead even in peacetime.
+
+**Trained Active Duty: 5% productivity**
+Militia squads actively assigned to an operational role (Patrol, Guard, Scout, Attack, Escort, HoldPosition, DefendKeep, DefendWoodcutterCamp, DefendForagerCamp). Active-duty soldiers produce almost nothing economically. They are fully committed to their operational role. A faction that puts its entire military on active duty simultaneously experiences near-total economic output collapse. This is the design mechanism that makes sustained offensive operations economically costly and forces the player to cycle units between duty states.
+
+## Base and Effective Productivity Calculation
+
+**Base Productivity** is calculated each frame as a weighted average:
+
+```
+BaseProductivity = (
+    civilians    * 1.00 +
+    untrainedDrafted * 0.75 +
+    reserveMilitary  * 0.50 +
+    activeDutyMilitary * 0.05
+) / totalPopulation
+```
+
+**Effective Productivity** applies settlement condition modifiers to Base Productivity:
+
+```
+EffectiveProductivity = BaseProductivity
+    × (food shortage?    0.70 : 1.0)
+    × (water shortage?   0.65 : 1.0)
+    × (housing at cap?   0.85 : 1.0)
+```
+
+Modifiers are multiplicative and stack. A faction experiencing simultaneous food shortage, water shortage, and at-housing-cap conditions operates at 0.70 × 0.65 × 0.85 ≈ 38.7% of its Base Productivity. This represents the combined effect of malnutrition, dehydration, and crowded living conditions on worker output.
+
+Shortage duration is tracked via accumulators (FoodShortageAccumulator, WaterShortageAccumulator). These are reserved for future escalation hooks: prolonged food shortage triggers sickness events; prolonged water shortage triggers desertion and population outmigration beyond simple productivity penalty.
+
+## Military Draft System
+
+The draft slider allows the player to designate what fraction of the total population is committed to military service. The system is inspired by classic 4X draft mechanics (Utopia/Master of Orion style) adapted to Bloodlines' squad-based unit model.
+
+**Draft Rate:** 0% to 100%, adjustable in increments of 5%.
+
+**Draft Pool:** `floor(TotalPopulation × DraftRatePct / 100)`. This is the number of people the player has committed to military readiness.
+
+**Trained Military:** Active militia squads × 5 (canonical squad size). Each squad represents exactly five people drawn from the population.
+
+**Trained Reserve:** Squads in Reserve duty state × 5.
+
+**Trained Active Duty:** Squads in Active Duty state × 5.
+
+**Untrained Drafted:** `max(0, DraftPool - TrainedMilitary)`. People the player has committed to military service who have not yet been formed into trained squads. They are drafted but unorganized — less productive than civilians, not yet militarily effective.
+
+**Over-Drafted Flag:** Set when TrainedMilitary > DraftPool. This indicates the player has more soldiers trained than their current draft rate authorizes. It does not force immediate squad disbanding — it is a warning state that future escalation systems can act on (reduced squad morale, loyalty events, economic pressure).
+
+The draft rate does not automatically recruit squads. It creates the population commitment headroom that the unit production system fills. A 40% draft rate on a population of 50 creates a DraftPool of 20 — room for four squads of five. The player must still recruit squads through Training Yard production.
+
+## Squad System
+
+The canonical squad is a five-person military unit. This scale was chosen because it is large enough to represent a coherent tactical element but small enough that individual squad losses are felt — losing one squad is losing five people from an already-committed population.
+
+**Duty States:**
+- Reserve: Squad standing down from active assignment. Contributes 50% productivity. Immediately available for deployment.
+- Active Duty: Squad assigned to an operational role. Contributes 5% productivity. Committed to their current order.
+
+**Assignment Types (9 canonical types):**
+- None (triggers Reserve state)
+- Guard (stationary post defense)
+- Scout (reconnaissance of territory beyond the settlement perimeter)
+- Patrol (mobile perimeter coverage)
+- Attack (offensive engagement order)
+- Escort (protection of a moving asset: caravan, Bloodline Member, supply column)
+- HoldPosition (static defensive hold at a specific map point)
+- DefendKeep (priority defense of the Keep structure)
+- DefendWoodcutterCamp (escort/guard of wood production infrastructure)
+- DefendForagerCamp (escort/guard of food production infrastructure)
+
+The distinction between Guard, Patrol, HoldPosition, and Defend variants matters for AI interpretation and future behavior system wiring. Guard and Patrol are general-purpose defensive postures; DefendKeep/DefendWoodcutterCamp/DefendForagerCamp are structure-specific assignments that bind the squad to a building's survival.
+
+Scouting is performed by a militia squad assigned to Scout duty — there is no separate dedicated Scout unit. The scout assignment type is intentionally placed on the general-purpose militia squad because Bloodlines' design does not support a fragile expendable-unit economy of specialized scouts. A squad scouting is a squad not defending.
+
+## The Productivity-Military Tradeoff
+
+The productivity state system is the primary mechanism through which military buildup creates economic cost. In most RTS games, military cost is paid once at recruitment. In Bloodlines, military cost is paid continuously in reduced economic output for as long as those soldiers exist in an active state.
+
+A fully mobilized faction — all squads on active duty — is running at 5% of its baseline productivity on the military population segment. This is near-zero economic contribution from those people. The faction must win quickly or it will exhaust its resources before the military can achieve its objective.
+
+A partially mobilized faction with squads in Reserve maintains 50% productivity on the military segment — still a significant reduction from civilian baseline, but sustainable over longer campaigns. The design pressure this creates: putting squads "on standby" in Reserve is not free. It is cheaper than Active Duty but still a meaningful economic sacrifice compared to returning them to civilian status entirely.
+
+This tradeoff — between military readiness, economic output, and the speed at which military commitment must translate into victory — is the design intent behind the productivity state system.

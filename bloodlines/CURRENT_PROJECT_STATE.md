@@ -1,5 +1,16 @@
 # CURRENT_PROJECT_STATE
 
+## multiplayer-nfe-integration runtime fixes (as of 2026-04-25)
+
+Latest slice: NfE integration runtime bug fixes. Status: Complete, branch claude/unity-multiplayer-nfe-integration (pending commit).
+Handoff: docs/unity/session-handoffs/2026-04-25-unity-multiplayer-nfe-integration-runtime-fixes.md
+- BuildTierGatingSystem CS1654 fix: Remove+Add instead of indexer on using-var NativeHashMap
+- DynastyPoliticalEventSystem ECB fix: AddComponentData during SystemAPI.Query iteration replaced by ecb.AddComponent + ecb.Playback after loop
+- CommanderAuraSystem cycle cut: removed UpdateAfter(FieldWaterStrainSystem) that was closing a 6-system circular dependency causing ComponentSystemSorter IndexOutOfRangeException
+- DynastyRenownLeaderboardHUDSystem cross-group fix: removed UpdateAfter(DynastyRenownHUDSystem) (PresentationGroup cannot order-after SimulationGroup system)
+- Assembly-CSharp.csproj: replaced 410 explicit Compile entries with glob `Assets\_Bloodlines\**\*.cs` covering all 550 _Bloodlines scripts
+- All 9 validation gates PASS: dotnet build 0 errors, Editor build 0 errors, bootstrap runtime smoke (factions=3/3 units=19/18 buildings=13/11, no exceptions), combat smoke, scene shells, NfE integration smoke, data-validation, runtime-bridge, contract (revision=145)
+
 ## early-game-foundation (as of 2026-04-25)
 
 Latest slice: Early-game foundation mechanics. Status: Complete, branch claude/unity-multiplayer-nfe-integration (pending commit).

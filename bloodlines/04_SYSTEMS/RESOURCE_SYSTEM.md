@@ -226,3 +226,68 @@ The Grand Trade Exchange and Grand War Foundry are the highest-tier economic and
 ---
 
 *Resource system entries are appended as design sessions develop this system. All entries conform to additive-only archival standards.*
+
+---
+
+### Early-Game Foundation — Build Tier System and Worker Slot Production (Canon Locked 2026-04-25)
+
+## Build Tier System
+
+The build tree is gated by a deployment event and incremental prerequisite conditions rather than by raw time or a single unlock. Tiers are per-faction, not global.
+
+**Tier 0 — Pre-Deployment (Keep Not Yet Placed)**
+No production buildings are constructable. The founding faction exists as a mobile retinue with no fixed economic base. The sole available action is the Deploy command, which places the Keep and locks the faction's starting position.
+
+**Tier 1 — First Settlement (Keep Deployed)**
+The Keep deployment unlocks the initial building set:
+- Housing (population cap +8 per building; required for growth)
+- Well (water capacity +50 per well; required for sustained population)
+- Woodcutter Camp (6 worker slots; wood 0.18 per worker per second)
+- Forager Camp (6 worker slots; food 0.15 per worker per second)
+- Training Yard (enables militia squad recruitment)
+
+**Tier 2 — Established Settlement (All Four Tier-1 Prerequisites Present)**
+Tier 2 unlocks when the faction has at least one active instance of all four prerequisite building types: housing, well (water source), food source (Forager Camp or any food-producing building), and Training Yard. When all four are present simultaneously, Tier 2 becomes available:
+- Small Farm (5 worker slots; food 0.22 per worker per second; superior per-worker yield vs. Forager Camp)
+
+**Tier 3+ — Full Build Tree**
+Subsequent tiers unlock the complete Bloodlines building roster. Design detail for tier 3+ conditions is reserved for the settlement advancement design session.
+
+The four prerequisites for the Tier 1→Tier 2 transition encode the game's design intent: a sustainable settlement is not just an army camp. It requires shelter, water, food production, and the capacity to train defenders. A faction that has a Training Yard and soldiers but no Housing is not a settlement — it is a military encampment. All four conditions are required, and the transition does not occur until all four are satisfied simultaneously.
+
+## Three Production Models
+
+Bloodlines operates three distinct resource production models that coexist and complement each other:
+
+**Passive Trickle Model**
+Certain buildings produce resources continuously at a flat rate per game second without requiring assigned population. Example: the Well produces water trickle at a fixed rate. Passive trickle is a floor — it ensures the most basic supply continues even during population crisis. The trickle model is the legacy production model and handles infrastructure buildings whose primary value is capacity rather than throughput.
+
+**Active Gather Model**
+Units are assigned to resource nodes and physically travel to gather resources, then return to deposit them. Resource nodes run down as they are harvested. Miners, woodcutters, and foragers using the active gather model are visible on the battlefield and can be attacked, disrupted, or killed. Their output scales with unit count and travel efficiency.
+
+**Worker Slot Model (Canon Locked 2026-04-25)**
+Slot-based buildings have a fixed maximum worker capacity (MaxWorkerSlots) and a per-worker-per-second production rate. The player assigns workers from their available population pool to these buildings. Workers are not individual units — they represent the productive capacity of a defined number of people. Output scales with assigned workers multiplied by the faction's current Effective Productivity.
+
+Production formula: `output = BaseRatePerWorker × AssignedWorkers × EffectiveProductivity × deltaTime`
+
+Worker slot buildings in the initial Tier 1-2 roster:
+- Woodcutter Camp: 6 slots maximum, wood 0.18 per worker per second
+- Forager Camp: 6 slots maximum, food 0.15 per worker per second
+- Small Farm: 5 slots maximum, food 0.22 per worker per second
+
+The worker slot model is the primary mid-game production scaling mechanism. A faction that fills its worker slots and maintains high effective productivity outproduces one with more buildings but fewer assigned workers.
+
+## Water Capacity Infrastructure
+
+Water is not simply a trickle resource. It is a hard capacity constraint on population growth and productivity.
+
+**Water Infrastructure Support Model:**
+Every faction has a MaxSupportedByWater value calculated each frame from its water infrastructure:
+- Keep base reserve: 15 (the founding encampment has a small built-in water supply)
+- Each Well building: +50 population supported
+
+A faction's population cannot grow beyond MaxSupportedByWater. When Total Population >= MaxSupportedByWater, the PopulationGrowthSystem will not increase population regardless of food or housing availability. When Total Population > MaxSupportedByWater (which can occur if water infrastructure is destroyed or water-supported population was inherited), a water shortage productivity penalty applies.
+
+The Keep base reserve of 15 supports a small founding encampment but is insufficient for a functioning settlement at scale. Building the first Well is a Day 1 mandatory priority — without it, population growth stalls at 15.
+
+**Water shortage severity:** When water supply is inadequate, Effective Productivity is multiplied by 0.65 — a 35% productivity penalty, the harshest of the three shortage modifiers (food: 0.70, housing: 0.85). This reflects the fact that water scarcity impairs nearly every productive activity: agriculture, construction, craft work, and basic health all decline rapidly in water shortage conditions.

@@ -238,9 +238,11 @@
     <Compile Include="Assets\_Bloodlines\Code\PlayerCovertOps\PlayerSabotageEffectComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\WorldPressure\TruebornRiseArcComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AICovertOpsSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\HUD\WorkerSlotHUDSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.PlayerCovertOps.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Rendering\FactionTintAttachSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.NetworkState.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Systems\WorkerSlotAssignmentSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AICovertOpsComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.NetworkAuthority.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Time\MatchProgressionComponent.cs" />
@@ -421,6 +423,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Faith\FaithScoring.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Multiplayer\NetworkBootstrapSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Conviction\ConvictionBandEffects.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\HUD\WorkerSlotHUDComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\DynastyOperationAssassinationComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerCovertOps\IntelligenceReportElement.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AIFaithCommitmentSystem.cs" />
@@ -461,6 +464,7 @@
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyUnlockSlotElement.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\DynastyOperationComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\PlayerCommandDeckHUDComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\HUD\WorkerSlotAssignmentRequestComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.SkirmishGameMode.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\ResourceNodeComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Fortification\DestroyedCounterRecoverySystem.cs" />

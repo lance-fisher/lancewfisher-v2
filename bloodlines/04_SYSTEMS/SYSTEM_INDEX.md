@@ -80,3 +80,22 @@ The seven systems form a closed loop. No system operates independently of the ot
 ---
 
 *This index is updated at the end of each major design session. System files are append-only and grow continuously.*
+
+---
+
+### System Depth Update (2026-04-25 — Early-Game Foundation Session)
+
+| System | File | Previous Lines | Current Lines | New Additions |
+|--------|------|---------------|--------------|---------------|
+| Population | `POPULATION_SYSTEM.md` | 126 | ~250 | Population productivity states (Civilian 100%/Untrained 75%/Reserve 50%/ActiveDuty 5%), effective productivity calculation (shortage modifiers: food 0.70, water 0.65, housing 0.85), military draft system (0-100% step-5, DraftPool/TrainedMilitary/UntrainedDrafted), squad system (5-person canonical squads, Reserve/ActiveDuty duty states, 9 assignment types), productivity-military tradeoff design intent |
+| Resource | `RESOURCE_SYSTEM.md` | 228 | ~310 | Build tier system (Tier 0 pre-deploy / Tier 1 Keep placed / Tier 2 four prerequisites met / Tier 3+ full tree), three production models (passive trickle / active gather / worker slot), worker slot formula (baseRate × assignedWorkers × effectiveProductivity × dt), worker slot building roster with capacities and rates, water capacity infrastructure model (Keep 15 base + Well 50 per building = MaxSupportedByWater hard population cap) |
+
+**New inter-system wiring documented in this session:**
+
+- Population productivity states wire directly into the worker slot production output — EffectiveProductivity is a per-faction multiplier applied to all slot-based building output. An army in the field is not just a military fact; it is an economic penalty on every active worker slot.
+
+- Water capacity creates a hard population growth gate separate from the housing cap. Both housing cap (PopCap) and water cap (MaxSupportedByWater) must be above Total Population for growth to occur. Water infrastructure (Well buildings) must be built proportionally to population target — one Well supports 50 people beyond the Keep's 15-person base.
+
+- The draft slider interacts with both systems simultaneously: higher draft rates increase UntrainedDrafted (reducing BaseProductivity) while the resulting squads in Reserve further reduce it (50%), and squads on Active Duty nearly eliminate it (5%). Economic cost of military is continuous, not one-time.
+
+- Build tier prerequisites enforce the design intent that a sustainable settlement requires all four infrastructure pillars (housing, water, food, training) before advancing. Factions that rush military (Training Yard first) without investing in housing and water will hit the Tier 2 gate incomplete and cannot access Small Farm food scaling.
