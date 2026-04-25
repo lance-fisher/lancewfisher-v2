@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 137
+- Revision: 138
 - Last Updated: 2026-04-24
-- Last Updated By: claude-ai-counter-intelligence-dispatch-2026-04-24
-- Supersedes: revision 135 (sub-slice 30: AI assassination dispatch and resolution.)
+- Last Updated By: claude-ai-espionage-dispatch-2026-04-24
+- Supersedes: revision 137 (sub-slice 32: AI counter-intelligence dispatch and resolution.)
 
 
 ## Purpose
@@ -843,6 +843,12 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.CounterIntelligenceResolution.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesCounterIntelligenceResolutionSmokeValidation.cs`
   - `scripts/Invoke-BloodlinesUnityCounterIntelligenceResolutionSmokeValidation.ps1`
+  - `unity/Assets/_Bloodlines/Code/AI/DynastyOperationEspionageComponent.cs`
+  - `unity/Assets/_Bloodlines/Code/AI/AIEspionageExecutionSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/AI/AIEspionageResolutionSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.EspionageResolution.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesEspionageResolutionSmokeValidation.cs`
+  - `scripts/Invoke-BloodlinesUnityEspionageResolutionSmokeValidation.ps1`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HolyWarResolution.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.DivineRightResolution.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.CaptiveRescueResolution.cs`
@@ -945,6 +951,8 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-24-unity-ai-holy-war-resolution.md`
   - `docs/unity/session-handoffs/2026-04-24-unity-ai-divine-right-resolution.md`
   - `docs/unity/session-handoffs/2026-04-24-unity-ai-captive-rescue-and-ransom-resolution.md`
+  - `docs/unity/session-handoffs/2026-04-24-unity-ai-counter-intelligence-dispatch.md`
+  - `docs/unity/session-handoffs/2026-04-24-unity-ai-espionage-dispatch.md`
 - Browser Reference:
   - Sub-slice 1: `src/game/core/ai.js` `pickTerritoryTarget` (~747), `pickScoutHarassTarget` (~412), `getWorldPressureRaidTarget` (~817)
   - Sub-slice 2: `src/game/core/ai.js` timer clamp/floor block lines 1127-1241

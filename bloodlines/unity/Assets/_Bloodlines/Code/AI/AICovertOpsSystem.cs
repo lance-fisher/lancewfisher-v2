@@ -58,6 +58,7 @@ namespace Bloodlines.AI
             o.PactProposalTimer         -= dt;
             o.LesserHousePromotionTimer -= dt;
             o.SabotageTimer             -= dt;
+            o.EspionageTimer            -= dt;
             o.CounterIntelligenceTimer  -= dt;
         }
 
@@ -102,6 +103,14 @@ namespace Bloodlines.AI
             // --- captive recovery cap (ai.js 2568) ---
             if (o.CaptivesSourceFocused)
                 o.CaptiveRecoveryTimer = math.min(o.CaptiveRecoveryTimer, 6f);
+
+            // --- espionage caps (ai.js 2400-2405) ---
+            if (o.PlayerWorldPressureLevel >= 2)
+                o.EspionageTimer = math.min(o.EspionageTimer, 10f);
+            else if (o.PlayerWorldPressureLevel > 0)
+                o.EspionageTimer = math.min(o.EspionageTimer, 18f);
+            if (o.ConvergencePressureActive && o.ConvergenceEspionageTimerCap > 0f)
+                o.EspionageTimer = math.min(o.EspionageTimer, o.ConvergenceEspionageTimerCap);
 
             // --- sabotage caps (ai.js 2326-2340) ---
             if (o.HostileOperationsSourceFocused)
@@ -268,6 +277,23 @@ namespace Bloodlines.AI
                 o.LastFiredOp     = CovertOpKind.Sabotage;
                 o.LastFiredOpTime = elapsed;
                 o.SabotageTimer   = 85f;
+            }
+
+            // --- espionage (ai.js 2406-2417): gate on !liveIntelOnPlayer && !liveEspionage.
+            //     on gate-blocked: retry at 90s (liveIntel) or 30s (default).
+            //     execution system validates budget (gold>=45, influence>=16) and capacity. ---
+            if (o.EspionageTimer <= 0f)
+            {
+                if (!o.LiveIntelOnPlayer && !o.HasActiveEspionageOnPlayer)
+                {
+                    o.LastFiredOp     = CovertOpKind.Espionage;
+                    o.LastFiredOpTime = elapsed;
+                    o.EspionageTimer  = 150f;
+                }
+                else
+                {
+                    o.EspionageTimer = o.LiveIntelOnPlayer ? 90f : 30f;
+                }
             }
 
             // --- counter-intelligence (ai.js 2372-2397): suppress when watch already active.

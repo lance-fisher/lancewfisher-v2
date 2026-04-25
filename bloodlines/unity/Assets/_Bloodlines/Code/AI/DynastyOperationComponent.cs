@@ -51,6 +51,7 @@ namespace Bloodlines.AI
         Assassination        = 7,
         Sabotage             = 8,
         CounterIntelligence  = 9,
+        Espionage            = 10,
     }
 
     /// <summary>

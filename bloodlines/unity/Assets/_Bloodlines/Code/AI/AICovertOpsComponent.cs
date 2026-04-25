@@ -88,6 +88,15 @@ namespace Bloodlines.AI
         public bool  CounterIntelHighInterceptCount;
         public float ConvergenceSabotageTimerCap;    // playerConvergencePressure.sabotageTimerCap
 
+        // ------------------------------------------------------------------ timer: espionage (ai.js ~2399-2417; default 55s)
+        public float EspionageTimer;                // default 55s
+
+        // ------------------------------------------------------------------ context flags: espionage (2399-2417)
+        // True when a DynastyOperation of kind Espionage is already active on player.
+        public bool  HasActiveEspionageOnPlayer;
+        // ConvergenceEspionageTimerCap: playerConvergencePressure.espionageTimerCap
+        public float ConvergenceEspionageTimerCap;
+
         // ------------------------------------------------------------------ timer: counter-intelligence (ai.js ~2372-2397; default 40s)
         public float CounterIntelligenceTimer;      // default 40s
 
@@ -120,5 +129,6 @@ namespace Bloodlines.AI
         LesserHousePromotion   = 10,
         Sabotage               = 11,
         CounterIntelligence    = 12,
+        Espionage              = 13,
     }
 }
