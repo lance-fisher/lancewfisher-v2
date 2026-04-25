@@ -49,6 +49,7 @@ namespace Bloodlines.AI
         CaptiveRansom        = 5,
         LesserHousePromotion = 6,
         Assassination        = 7,
+        Sabotage             = 8,
     }
 
     /// <summary>

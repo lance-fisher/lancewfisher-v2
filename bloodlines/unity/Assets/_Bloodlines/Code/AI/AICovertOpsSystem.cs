@@ -57,6 +57,7 @@ namespace Bloodlines.AI
             o.MarriageInboxTimer        -= dt;
             o.PactProposalTimer         -= dt;
             o.LesserHousePromotionTimer -= dt;
+            o.SabotageTimer             -= dt;
         }
 
         // ------------------------------------------------------------------ apply pressure caps
@@ -100,6 +101,19 @@ namespace Bloodlines.AI
             // --- captive recovery cap (ai.js 2568) ---
             if (o.CaptivesSourceFocused)
                 o.CaptiveRecoveryTimer = math.min(o.CaptiveRecoveryTimer, 6f);
+
+            // --- sabotage caps (ai.js 2326-2340) ---
+            if (o.HostileOperationsSourceFocused)
+                o.SabotageTimer = math.min(o.SabotageTimer, 6f);
+            if (o.PlayerWorldPressureLevel >= 2)
+                o.SabotageTimer = math.min(o.SabotageTimer, 8f);
+            else if (o.PlayerWorldPressureLevel > 0)
+                o.SabotageTimer = math.min(o.SabotageTimer, 16f);
+            if (o.ConvergencePressureActive && o.ConvergenceSabotageTimerCap > 0f)
+                o.SabotageTimer = math.min(o.SabotageTimer, o.ConvergenceSabotageTimerCap);
+            if (o.LiveCounterIntelOnPlayer)
+                o.SabotageTimer = math.min(o.SabotageTimer,
+                    o.CounterIntelHighInterceptCount ? 4f : 6f);
         }
 
         // ------------------------------------------------------------------ fire operations (in ai.js sequence order)
@@ -240,6 +254,15 @@ namespace Bloodlines.AI
                     return;
                 }
                 o.LesserHousePromotionTimer = 45f;
+            }
+
+            // --- sabotage (ai.js 2341-2370): fire unconditionally; execution system
+            //     checks budget (gold>=60, influence>=12) and available target. ---
+            if (o.SabotageTimer <= 0f)
+            {
+                o.LastFiredOp     = CovertOpKind.Sabotage;
+                o.LastFiredOpTime = elapsed;
+                o.SabotageTimer   = 85f;
             }
         }
     }

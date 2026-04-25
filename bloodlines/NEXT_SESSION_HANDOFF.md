@@ -5668,3 +5668,9 @@ Next: Investigate and resolve bootstrap smoke regression (ComponentSystemSorter 
 Latest sub-slice: 30 (AI assassination dispatch + resolution). Status: Complete, merged to origin/master at 5b26ba3c.
 Handoff: docs/unity/session-handoffs/2026-04-24-unity-ai-assassination-dispatch-resolution.md
 Next: Remaining AI lane gaps are hardening passes (legitimacy field once dynasty-core lane lands, applySuccessionRipple, tickMarriageDissolutionFromDeath, counter-intel/ward bonuses). Forward-moving sub-slices could be AI garrison defense response or AI counter-attack dispatch if those are in scope. Alternatively, contribute to Codex lanes or advance multiplayer/audio systems.
+
+## ai-strategic-layer (as of 2026-04-24)
+
+Latest sub-slice: 31 (AI sabotage dispatch + resolution). Status: Complete, branch claude/unity-ai-sabotage-dispatch-resolution ready to merge.
+Handoff: docs/unity/session-handoffs/2026-04-24-unity-ai-sabotage-dispatch-resolution.md
+Next: AI counter-intelligence dispatch (ai.js ~2372-2415 -- `startCounterIntelligenceOperation`) is the next natural sub-slice in the covert-ops block. Beyond that: remaining hardening passes (legitimacy, succession ripple, intel-report integration, ward defense bonus, fire_raising burn damage in AI lane).

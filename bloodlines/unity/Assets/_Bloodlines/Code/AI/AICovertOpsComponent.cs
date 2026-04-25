@@ -78,6 +78,16 @@ namespace Bloodlines.AI
         // ------------------------------------------------------------------ context flags: lesser-house promotion (2674-2677)
         public bool  LesserHousePromotionAvailable;
 
+        // ------------------------------------------------------------------ timer: sabotage (2325; default 45s; ai.js ~2321-2370)
+        public float SabotageTimer;                // default 45s
+
+        // ------------------------------------------------------------------ context flags: sabotage (2321-2370)
+        // playerWorldPressure.topSourceId === "hostileOperations" (distinct from darkExtremesSourceFocused)
+        public bool  HostileOperationsSourceFocused;
+        // liveCounterIntelDossierOnPlayer.interceptCount >= 2 (caps to 4s; <2 caps to 6s)
+        public bool  CounterIntelHighInterceptCount;
+        public float ConvergenceSabotageTimerCap;    // playerConvergencePressure.sabotageTimerCap
+
         // ------------------------------------------------------------------ dispatch result (written by system)
         public CovertOpKind LastFiredOp;
         public float        LastFiredOpTime;    // elapsed seconds at last fire
@@ -99,5 +109,6 @@ namespace Bloodlines.AI
         MarriageInboxAccept    = 8,
         PactProposal           = 9,
         LesserHousePromotion   = 10,
+        Sabotage               = 11,
     }
 }
