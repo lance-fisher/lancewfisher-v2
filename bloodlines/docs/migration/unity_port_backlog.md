@@ -15,11 +15,19 @@ This session closed the following backlog items:
 - P2 Unity-Canonical Advancements Canon Doc (commit b755d8c8).
 - P2 Iron Mine Smelting Fuel Consumption (commit b755d8c8).
 - P2 Holy War Runtime Effects (commit b755d8c8) — verified existing implementation, no code change.
-- P3 Naval Layer slices S1, S2, S3, S5 (commits d3657660, f41c820d, 38463327, 60e58e4d).
+- P3 Naval Layer slices S1, S2, S3, S4, S5 (commits d3657660, f41c820d, 38463327, 60e58e4d, 208b8fc3).
+- P3 Neutral Faction AI — Tribes raid driver (commit ba63dbce). Browser ai.js:updateNeutralAi raid loop ported with world-pressure + Great Reckoning multipliers. Trueborn-City-style true-neutral driver still pending.
+
+Refactor + housekeeping:
+- GovernanceCanon hoist (d57ab8f3) — 17 territorial-governance constants.
+- MatchProgressionCanon hoist (2ceee99b) — Great Reckoning + phase thresholds.
+- Editor csproj re-canonicalization (a28ff9cb).
+- Continuity files refreshed multiple times.
 
 Remaining P1: Worker Slot Assignment HUD (UI work; needs in-game click panel), Multiplayer NfE Ghost prefabs (needs interactive Unity open).
-Remaining naval slices: S4 vessel-vs-vessel naval combat, S6 (optional) AI naval dispatch.
-Remaining P3 spec-blocked: Born of Sacrifice, Victory Conditions 4-6, Neutral Faction AI.
+Remaining naval slices: S6 (optional) AI naval dispatch.
+Remaining P3 spec-blocked: Born of Sacrifice, Victory Conditions 4-6.
+Remaining AI: dark-extremes Apex Cruel raid multiplier (depends on conviction-band aggregate); true-neutral negotiation-only driver.
 
 ---
 
@@ -202,7 +210,7 @@ Status: AIHolyWarResolutionSystem.TickActiveHolyWars (Phase B) confirmed canonic
 | **Suggested Implementation Path** | Add `AIFactionPostureComponent` (Neutral/Hostile/Coalition). `EnemyAIStrategySystem` reads posture to gate attack logic. Neutral posture: only governance pressure response, marriage proposals, pact acceptance. |
 | **Dependencies** | Verify whether Unity currently has neutral posture gating in `EnemyAIStrategySystem`. |
 | **Risk** | Medium. Behavior testing required. |
-| **Status** | Verify gap, then implement |
+| **Status** | PARTIAL 2026-04-25 (commit ba63dbce). Tribes raid driver ported (TribesRaidStateComponent + TribesRaidSystem + smoke validator). Browser ai.js:updateNeutralAi raid loop landed: 30s timer, raiders dispatched to nearest non-tribes-owned CP, world-pressure + Great Reckoning multipliers. Deferred: dark-extremes multiplier (needs dynasty conviction-band aggregate), Trueborn-City-style true-neutral (negotiation-only) AI, world-pressure-leader-targeted raid prioritization. |
 
 ---
 
