@@ -1,5 +1,17 @@
 # CURRENT_PROJECT_STATE
 
+## naval-layer S1 embark (as of 2026-04-25)
+
+Latest slice: S1 embark. Status: COMPLETE. Committed on branch claude/unity-multiplayer-nfe-integration as d3657660 (the naval-layer lane was opened from this branch; the contract reserves `claude/unity-naval-layer` for future slices).
+Handoff: docs/unity/session-handoffs/2026-04-25-unity-naval-S1-embark.md
+Contract: revision 145 -> 146, last-updated-by claude-naval-2026-04-25.
+- New components under unity/Assets/_Bloodlines/Code/Naval/: VesselClass enum (Fishing, Scout, WarGalley, Transport, FireShip, CapitalShip), NavalCanon constants (EmbarkRadiusTileMultiplier=2.5, DefaultTransportCapacity=6), NavalVesselComponent, PassengerBufferElement buffer, EmbarkedPassengerTag, PassengerTransportLinkComponent, EmbarkOrderComponent.
+- New runtime system: EmbarkSystem in SimulationSystemGroup. Resolves embark orders against capacity, faction, adjacency (2.5 * tileSize), vessel-vs-land guard, dead/null targets. Mirrors browser embarkUnitsOnTransport (simulation.js:7539-7574) with silent-rejection parity. Removes EmbarkOrderComponent every tick (one-shot), suppresses MoveCommand (IsActive=false) and clears WorkerGatherOrderComponent on accept.
+- Shared-file additive edits (lane-narrow per CONCURRENT_SESSION_CONTRACT): UnitTypeComponent.cs (UnitRole.Vessel=10 appended), MapBootstrapComponents.cs (VesselClassId/TransportCapacity/OneUseSacrifice fields appended to MapUnitSeedElement), UnitDefinition.cs (vesselClass/transportCapacity/oneUseSacrifice fields), JsonContentImporter.cs (UnitRecord fields + "vessel" role mapping), BloodlinesMapBootstrapAuthoring.cs ("vessel" role mapping), BloodlinesMapBootstrapBaker.cs ("vessel" mapping + seed emission), SkirmishBootstrapSystem.cs (attaches NavalVesselComponent + PassengerBufferElement when seed.Role==Vessel), BloodlinesDebugCommandSurface.cs ("vessel" role mapping), Assembly-CSharp.csproj (8 Naval/*.cs Compile entries), Assembly-CSharp-Editor.csproj (BloodlinesNavalSmokeValidation.cs Compile entry).
+- Smoke validator: BloodlinesNavalSmokeValidation embark phase proves capacity clamp at 6 (1 over-capacity rejected from 7 friendly candidates), cross-faction reject, out-of-range reject (50 units away), embarked link points to right transport, and embarked-tag movement suppression survives across ticks (drift <= 0.01 world units after 5 ticks of active move command).
+- All 10 governed validation gates green plus dedicated naval smoke green: dotnet build runtime (0 errors), editor (0 errors, 123 pre-existing warnings), bootstrap runtime smoke, combat smoke, scene shells (bootstrap + gameplay), data-validation, runtime-bridge, contract staleness (revision 146).
+- Slice roadmap: S1 embark (this slice), S2 disembark + water-tile detection, S3 fire-ship detonation, S4 vessel-vs-vessel naval combat, S5 fishing gather, S6 (optional) AI naval dispatch.
+
 ## multiplayer-nfe-integration runtime fixes (as of 2026-04-25)
 
 Latest slice: NfE integration runtime bug fixes. Status: Complete, branch claude/unity-multiplayer-nfe-integration (pending commit).

@@ -5698,3 +5698,21 @@ Next:
 - Squad order UI: debug-surface only (SetFirstSquadAssignment()); no in-game HUD panel yet
 - Worker slot assignment panel: backend done (WorkerSlotHUDSystem + WorkerSlotAssignmentSystem); no in-game click UI wired yet
 - Water/productivity HUD panel: EarlyGameHUDComponent carries all values; no non-debug HUD renders them yet
+
+
+## naval-layer (as of 2026-04-25)
+
+Latest slice: S1 embark. Status: COMPLETE. Committed on claude/unity-multiplayer-nfe-integration as d3657660.
+Handoff: docs/unity/session-handoffs/2026-04-25-unity-naval-S1-embark.md
+Contract: revision 145 -> 146; lane reserves branch prefix `claude/unity-naval-layer` for future slices.
+- Added Naval/ folder with VesselClass, NavalCanon, NavalVesselComponent, PassengerBufferElement, EmbarkedPassengerTag, PassengerTransportLinkComponent, EmbarkOrderComponent, EmbarkSystem.
+- Mirrors browser embarkUnitsOnTransport (simulation.js:7539-7574) with silent-rejection parity.
+- UnitRole.Vessel=10 appended; authoring/baker/importer/bootstrap/debug-surface flow vessel definitions through the spawn pipeline.
+- Smoke validator proves capacity clamp at 6, cross-faction reject, out-of-range reject, embarked-tag movement suppression.
+- All 10 governed gates plus dedicated naval smoke green at d3657660.
+Next:
+- S2 disembark: bake `MapDefinition.terrainPatches` into a `MapWaterTileSeedElement` buffer (shared-file narrow edit to MapBootstrapComponents + baker), add DisembarkOrderComponent + DisembarkSystem with shoreline detection ring around the transport (browser parity simulation.js:7587-7615), append disembark phase to the naval smoke validator.
+- S3 fire-ship detonation: consume OneUseSacrifice, area damage on hostile collision, vessel + passengers destroyed.
+- S4 vessel-vs-vessel naval combat (separate acquisition/damage tables from land combat).
+- S5 fishing gather (vessel as worker analog over water tiles).
+- S6 (optional) AI naval dispatch lane.
