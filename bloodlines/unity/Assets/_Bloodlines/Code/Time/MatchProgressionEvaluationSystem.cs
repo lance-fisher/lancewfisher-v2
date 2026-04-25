@@ -40,8 +40,11 @@ namespace Bloodlines.Systems
     [UpdateAfter(typeof(DualClockTickSystem))]
     public partial struct MatchProgressionEvaluationSystem : ISystem
     {
-        private const float GreatReckoningTriggerShare = 0.7f;
-        private const float GreatReckoningReleaseShare = 0.66f;
+        // Constants hoisted to MatchProgressionCanon (see
+        // docs/migration/constant_parity_audit.md 2026-04-25). Values unchanged
+        // from browser canonical (simulation.js:404-405).
+        private const float GreatReckoningTriggerShare = MatchProgressionCanon.GreatReckoningTriggerShare;
+        private const float GreatReckoningReleaseShare = MatchProgressionCanon.GreatReckoningReleaseShare;
 
         public void OnCreate(ref SystemState state)
         {
@@ -457,7 +460,7 @@ namespace Bloodlines.Systems
             FixedString32Bytes phaseId;
             FixedString32Bytes phaseLabel;
             if (stageNumber >= 5) { phaseId = new FixedString32Bytes("resolution"); phaseLabel = new FixedString32Bytes("Resolution"); }
-            else if (stageNumber >= 3 || (stageNumber == 2 && stageThreeReadiness >= 0.67f))
+            else if (stageNumber >= 3 || (stageNumber == 2 && stageThreeReadiness >= MatchProgressionCanon.CommitmentPhaseStageThreeReadinessThreshold))
             { phaseId = new FixedString32Bytes("commitment"); phaseLabel = new FixedString32Bytes("Commitment"); }
             else { phaseId = new FixedString32Bytes("emergence"); phaseLabel = new FixedString32Bytes("Emergence"); }
 

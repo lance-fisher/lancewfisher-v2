@@ -466,6 +466,7 @@
     <Compile Include="Assets\_Bloodlines\Code\AI\AIHolyWarContextSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\PlayerDiplomacy\PlayerPactBreakSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\PoliticalEventsTrayHUDSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Time\MatchProgressionCanon.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Raids\ScoutRaidResolutionSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Faith\FaithStructureRegenSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Components\FaithComponent.cs" />
