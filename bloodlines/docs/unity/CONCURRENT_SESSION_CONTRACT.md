@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 141
+- Revision: 142
 - Last Updated: 2026-04-25
-- Last Updated By: claude-ai-succession-crisis-context-2026-04-25
-- Supersedes: revision 140 (sub-slice 35: AI faith commitment auto-selection.)
+- Last Updated By: claude-ai-holy-war-context-2026-04-25
+- Supersedes: revision 141 (sub-slice 36: AI succession crisis context flag refresher.)
 
 
 ## Purpose
@@ -862,6 +862,10 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.SuccessionCrisisContext.cs`
   - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesSuccessionCrisisContextSmokeValidation.cs`
   - `scripts/Invoke-BloodlinesUnitySuccessionCrisisContextSmokeValidation.ps1`
+  - `unity/Assets/_Bloodlines/Code/AI/AIHolyWarContextSystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HolyWarContext.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesHolyWarContextSmokeValidation.cs`
+  - `scripts/Invoke-BloodlinesUnityHolyWarContextSmokeValidation.ps1`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.HolyWarResolution.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.DivineRightResolution.cs`
   - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.CaptiveRescueResolution.cs`
@@ -969,6 +973,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `docs/unity/session-handoffs/2026-04-24-unity-ai-succession-crisis-consolidation.md`
   - `docs/unity/session-handoffs/2026-04-25-unity-ai-faith-commitment.md`
   - `docs/unity/session-handoffs/2026-04-25-unity-ai-succession-crisis-context.md`
+  - `docs/unity/session-handoffs/2026-04-25-unity-ai-holy-war-context.md`
 - Browser Reference:
   - Sub-slice 1: `src/game/core/ai.js` `pickTerritoryTarget` (~747), `pickScoutHarassTarget` (~412), `getWorldPressureRaidTarget` (~817)
   - Sub-slice 2: `src/game/core/ai.js` timer clamp/floor block lines 1127-1241

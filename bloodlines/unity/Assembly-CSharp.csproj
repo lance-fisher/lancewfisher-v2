@@ -137,6 +137,8 @@
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.FaithCommitment.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AISuccessionCrisisContextSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.SuccessionCrisisContext.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\AI\AIHolyWarContextSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.HolyWarContext.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Combat.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Time\MatchProgressionEvaluationSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Economy\TradeRouteComponent.cs" />
