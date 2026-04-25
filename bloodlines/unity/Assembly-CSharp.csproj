@@ -113,6 +113,10 @@
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.MatchProgression.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Faith\FaithDoctrineCanon.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AICaptiveRansomResolutionSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\AI\DynastyOperationAssassinationComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\AI\AIAssassinationExecutionSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\AI\AIAssassinationResolutionSystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.AssassinationResolution.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.Combat.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Time\MatchProgressionEvaluationSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Economy\TradeRouteComponent.cs" />

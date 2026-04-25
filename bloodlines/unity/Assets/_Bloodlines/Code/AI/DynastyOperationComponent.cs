@@ -22,6 +22,10 @@ namespace Bloodlines.AI
     ///                     (ai.js dynasty/covert ops dispatch ~2566-2608)
     ///   - CaptiveRansom:  startCaptiveRansomOperation dispatch site
     ///                     (ai.js dynasty/covert ops dispatch ~2566-2608)
+    ///   - Assassination: startAssassinationOperation (~10912);
+    ///                    ai.js dispatch at ~2435-2457 (source "enemy",
+    ///                    target "player", target member selected via
+    ///                    pickAiAssassinationTarget priority order).
     ///   - LesserHousePromotion: included for enum completeness so later
     ///                           slices can reuse the operation slot
     ///                           surface if they choose. The sub-slice 13
@@ -44,6 +48,7 @@ namespace Bloodlines.AI
         CaptiveRescue        = 4,
         CaptiveRansom        = 5,
         LesserHousePromotion = 6,
+        Assassination        = 7,
     }
 
     /// <summary>
