@@ -28,20 +28,26 @@ namespace Bloodlines.Systems
         {
             float dt = SystemAPI.Time.DeltaTime;
 
-            foreach (var (populationRw, resourcesRw) in
+            foreach (var (populationRw, resourcesRw, waterCapRo) in
                 SystemAPI.Query<
                     RefRW<PopulationComponent>,
-                    RefRW<ResourceStockpileComponent>>())
+                    RefRW<ResourceStockpileComponent>,
+                    RefRO<WaterCapacityComponent>>())
             {
                 ref var population = ref populationRw.ValueRW;
                 ref var resources = ref resourcesRw.ValueRW;
 
                 // Can the faction support another head?
-                bool hasHousing = population.Total < population.Cap;
-                bool hasFood = resources.Food >= FoodPerGrowth;
-                bool hasWater = resources.Water >= WaterPerGrowth;
+                // Three independent gates per canon (food-water-population triangle):
+                //   housing cap, food stockpile, water stockpile, water infrastructure.
+                bool hasHousing   = population.Total < population.Cap;
+                bool hasFood      = resources.Food >= FoodPerGrowth;
+                bool hasWater     = resources.Water >= WaterPerGrowth;
+                // Water infrastructure gate: population cannot exceed what the settlement's
+                // wells and keep can supply. Canon: RESOURCE_SYSTEM.md, Water Crisis section.
+                bool withinWaterCap = population.Total < waterCapRo.ValueRO.MaxSupportedByWater;
 
-                if (!hasHousing || !hasFood || !hasWater)
+                if (!hasHousing || !hasFood || !hasWater || !withinWaterCap)
                 {
                     continue;
                 }

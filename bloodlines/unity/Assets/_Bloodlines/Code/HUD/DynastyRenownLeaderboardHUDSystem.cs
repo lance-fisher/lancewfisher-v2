@@ -12,7 +12,6 @@ namespace Bloodlines.HUD
     /// </summary>
     [BurstCompile]
     [UpdateInGroup(typeof(PresentationSystemGroup))]
-    [UpdateAfter(typeof(DynastyRenownHUDSystem))]
     public partial struct DynastyRenownLeaderboardHUDSystem : ISystem
     {
         private const float RefreshCadenceInWorldDays = 0.25f;

@@ -13,7 +13,6 @@ namespace Bloodlines.Combat
     /// </summary>
     [BurstCompile]
     [UpdateInGroup(typeof(SimulationSystemGroup))]
-    [UpdateAfter(typeof(Bloodlines.Siege.FieldWaterStrainSystem))]
     [UpdateBefore(typeof(Bloodlines.Systems.CombatStanceResolutionSystem))]
     [UpdateBefore(typeof(Bloodlines.Systems.AutoAcquireTargetSystem))]
     [UpdateBefore(typeof(Bloodlines.Pathing.UnitMovementSystem))]

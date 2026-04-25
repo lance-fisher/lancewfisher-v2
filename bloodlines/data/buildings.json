@@ -3,31 +3,170 @@
     "id": "command_hall",
     "name": "Command Hall",
     "prototypeEnabled": true,
+    "buildTier": 0,
     "footprint": { "w": 3, "h": 3 },
     "health": 1400,
     "buildTime": 0,
     "populationCapBonus": 12,
     "dropoffResources": ["gold", "wood", "stone", "iron"],
     "trainableUnits": ["villager"],
-    "cost": {}
+    "cost": {},
+    "notes": [
+      "The founding Keep / command hall. Deployed via FoundingRetinueComponent.IsDeployed.",
+      "buildTier 0 means it is the pre-tier structure — it unlocks tier 1 on placement.",
+      "Acts as early general storage, drop-off, and population anchor (populationCapBonus 12).",
+      "Storehouse is NOT in the first-tier build menu; this building absorbs early drop-off duties."
+    ]
   },
   {
-    "id": "dwelling",
-    "name": "Dwelling",
+    "id": "housing",
+    "name": "Housing",
     "prototypeEnabled": true,
+    "buildTier": 1,
     "footprint": { "w": 2, "h": 2 },
     "health": 320,
     "buildTime": 12,
-    "populationCapBonus": 6,
+    "populationCapBonus": 8,
     "cost": {
       "gold": 30,
       "wood": 50
-    }
+    },
+    "notes": [
+      "First-tier population support structure. Canonical C&C power-plant equivalent.",
+      "Increases population cap. Population is the foundation of labor, military draft, and growth.",
+      "Tooltip: 'Housing increases supported population. Population is the foundation of labor, military draft, and settlement growth.'",
+      "Player-facing name is 'Housing', not 'Shelter' or 'Dwelling' (owner direction 2026-04-25).",
+      "Alias: legacy id 'dwelling' maps to this building during migration."
+    ]
+  },
+  {
+    "id": "dwelling",
+    "name": "Housing",
+    "prototypeEnabled": true,
+    "buildTier": 1,
+    "footprint": { "w": 2, "h": 2 },
+    "health": 320,
+    "buildTime": 12,
+    "populationCapBonus": 8,
+    "cost": {
+      "gold": 30,
+      "wood": 50
+    },
+    "notes": [
+      "Legacy id for compatibility. Canonical name and entry is 'housing'.",
+      "Both ids are recognized by BuildTierGatingSystem (HasHousing check)."
+    ]
+  },
+  {
+    "id": "well",
+    "name": "Well",
+    "prototypeEnabled": true,
+    "buildTier": 1,
+    "footprint": { "w": 2, "h": 2 },
+    "health": 260,
+    "buildTime": 10,
+    "scoutRaidable": true,
+    "raidLoss": {
+      "water": 12,
+      "influence": 2
+    },
+    "armyWaterSupportRadius": 180,
+    "armyWaterSupportDurationSeconds": 16,
+    "waterPopulationSupport": 50,
+    "resourceTrickle": {
+      "water": 0.45
+    },
+    "cost": {
+      "gold": 20,
+      "wood": 35
+    },
+    "notes": [
+      "First-tier water infrastructure. Supports up to waterPopulationSupport population.",
+      "One Well does NOT solve water forever. Additional population requires additional Wells.",
+      "WaterCapacitySystem sums waterPopulationSupport across all live Wells per faction.",
+      "Tooltip: 'Provides clean water support for a limited amount of population. Additional population requires additional water capacity.'"
+    ]
+  },
+  {
+    "id": "lumber_camp",
+    "name": "Woodcutter Camp",
+    "prototypeEnabled": true,
+    "buildTier": 1,
+    "footprint": { "w": 2, "h": 2 },
+    "health": 340,
+    "buildTime": 10,
+    "scoutRaidable": true,
+    "raidLoss": {
+      "wood": 14,
+      "influence": 2
+    },
+    "dropoffResources": ["wood"],
+    "maxWorkerSlots": 6,
+    "workerOutputPerSecond": { "wood": 0.18 },
+    "cost": {
+      "gold": 35,
+      "wood": 45
+    },
+    "notes": [
+      "First-tier wood production. Local drop-off — workers do not return to the Keep.",
+      "Uses assigned worker slots (maxWorkerSlots). Output = workerOutputPerSecond × assignedWorkers × effectiveProductivity.",
+      "Tooltip: 'Assign workers to gather wood. Wood is essential for early construction.'",
+      "Player-facing name is 'Woodcutter Camp'. Internal id stays lumber_camp for compatibility."
+    ]
+  },
+  {
+    "id": "forager_camp",
+    "name": "Forager Camp",
+    "prototypeEnabled": true,
+    "buildTier": 1,
+    "footprint": { "w": 2, "h": 2 },
+    "health": 280,
+    "buildTime": 9,
+    "scoutRaidable": true,
+    "raidLoss": {
+      "food": 10,
+      "influence": 2
+    },
+    "dropoffResources": ["food"],
+    "maxWorkerSlots": 6,
+    "workerOutputPerSecond": { "food": 0.15 },
+    "cost": {
+      "gold": 25,
+      "wood": 40
+    },
+    "notes": [
+      "First-tier food source. Local drop-off — reduces return travel vs Keep.",
+      "Represents early gathering, hunting, foraging before formal agriculture.",
+      "Does NOT scale forever. Small Farm is the next food progression step (tier 2).",
+      "Uses assigned worker slots. Output = workerOutputPerSecond × assignedWorkers × effectiveProductivity.",
+      "Tooltip: 'Assign workers to gather early food. Foraging supports the settlement before stable farms are established.'"
+    ]
+  },
+  {
+    "id": "training_yard",
+    "name": "Training Yard",
+    "prototypeEnabled": true,
+    "buildTier": 1,
+    "footprint": { "w": 3, "h": 2 },
+    "health": 600,
+    "buildTime": 14,
+    "trainableUnits": ["militia"],
+    "cost": {
+      "gold": 60,
+      "wood": 70
+    },
+    "notes": [
+      "First-tier military structure. Lighter than the full Barracks.",
+      "Trains militia squads (five-person) from the drafted population pool.",
+      "Does NOT train swordsmen, cavalry, archers, or advanced units — those remain Barracks-gated.",
+      "Tooltip: 'Trains drafted population into five-person military squads.'"
+    ]
   },
   {
     "id": "farm",
     "name": "Farm",
     "prototypeEnabled": true,
+    "buildTier": 3,
     "footprint": { "w": 2, "h": 2 },
     "health": 300,
     "buildTime": 11,
@@ -42,52 +181,47 @@
     "cost": {
       "gold": 30,
       "wood": 45
-    }
+    },
+    "notes": [
+      "Established agriculture. Higher tier than Small Farm.",
+      "Trickle-based (no worker slots required beyond initial placement).",
+      "Available after tier-2 prerequisites are met and the settlement is established."
+    ]
   },
   {
-    "id": "well",
-    "name": "Well",
+    "id": "small_farm",
+    "name": "Small Farm",
     "prototypeEnabled": true,
+    "buildTier": 2,
     "footprint": { "w": 2, "h": 2 },
-    "health": 260,
+    "health": 290,
     "buildTime": 10,
     "scoutRaidable": true,
     "raidLoss": {
-      "water": 12,
+      "food": 10,
       "influence": 2
     },
-    "armyWaterSupportRadius": 180,
-    "armyWaterSupportDurationSeconds": 16,
-    "resourceTrickle": {
-      "water": 0.45
-    },
+    "dropoffResources": ["food"],
+    "maxWorkerSlots": 5,
+    "workerOutputPerSecond": { "food": 0.22 },
     "cost": {
-      "gold": 20,
-      "wood": 35
-    }
-  },
-  {
-    "id": "lumber_camp",
-    "name": "Lumber Camp",
-    "prototypeEnabled": true,
-    "footprint": { "w": 2, "h": 2 },
-    "health": 340,
-    "buildTime": 10,
-    "scoutRaidable": true,
-    "raidLoss": {
-      "wood": 14,
-      "influence": 2
+      "gold": 30,
+      "wood": 42
     },
-    "dropoffResources": ["wood"],
-    "cost": {
-      "gold": 35,
-      "wood": 45
-    }
+    "notes": [
+      "Next food progression after Forager Camp. Unlocks at tier 2.",
+      "Transition from gathering what the land provides to deliberately producing food.",
+      "More stable and higher-output than Forager Camp with same workers.",
+      "Still depends on adequate water and housing to realize full productivity.",
+      "Uses assigned worker slots. Output = workerOutputPerSecond × assignedWorkers × effectiveProductivity.",
+      "Tooltip: 'Assign workers to tend small farms. More stable than foraging; the foundation of a productive settlement.'"
+    ]
   },
   {
     "id": "mine_works",
     "name": "Mine Works",
     "prototypeEnabled": true,
+    "buildTier": 2,
     "footprint": { "w": 2, "h": 2 },
     "health": 340,
     "buildTime": 10,
@@ -106,6 +240,7 @@
     "id": "quarry",
     "name": "Quarry",
     "prototypeEnabled": true,
+    "buildTier": 2,
     "footprint": { "w": 2, "h": 2 },
     "health": 360,
     "buildTime": 12,
@@ -127,6 +262,7 @@
     "id": "iron_mine",
     "name": "Iron Mine",
     "prototypeEnabled": true,
+    "buildTier": 3,
     "footprint": { "w": 2, "h": 2 },
     "health": 360,
     "buildTime": 14,
@@ -153,6 +289,7 @@
     "id": "barracks",
     "name": "Barracks",
     "prototypeEnabled": true,
+    "buildTier": 2,
     "footprint": { "w": 3, "h": 2 },
     "health": 850,
     "buildTime": 16,
@@ -166,6 +303,7 @@
     "id": "stable",
     "name": "Stable",
     "prototypeEnabled": true,
+    "buildTier": 3,
     "footprint": { "w": 3, "h": 2 },
     "health": 780,
     "buildTime": 18,
@@ -184,6 +322,7 @@
     "id": "siege_workshop",
     "name": "Siege Workshop",
     "prototypeEnabled": true,
+    "buildTier": 4,
     "footprint": { "w": 3, "h": 3 },
     "health": 980,
     "buildTime": 22,
@@ -204,6 +343,7 @@
     "id": "supply_camp",
     "name": "Supply Camp",
     "prototypeEnabled": true,
+    "buildTier": 3,
     "footprint": { "w": 3, "h": 2 },
     "health": 520,
     "buildTime": 16,
@@ -233,6 +373,7 @@
     "id": "wall_segment",
     "name": "Wall Segment",
     "prototypeEnabled": true,
+    "buildTier": 2,
     "fortificationRole": "wall",
     "fortificationTierContribution": 1,
     "footprint": { "w": 2, "h": 1 },
@@ -254,6 +395,7 @@
     "id": "watch_tower",
     "name": "Watch Tower",
     "prototypeEnabled": true,
+    "buildTier": 2,
     "fortificationRole": "tower",
     "fortificationTierContribution": 1,
     "footprint": { "w": 2, "h": 2 },
@@ -277,6 +419,7 @@
     "id": "gatehouse",
     "name": "Gatehouse",
     "prototypeEnabled": true,
+    "buildTier": 3,
     "fortificationRole": "gate",
     "fortificationTierContribution": 2,
     "footprint": { "w": 3, "h": 2 },
@@ -299,6 +442,7 @@
     "id": "keep_tier_1",
     "name": "Inner Keep",
     "prototypeEnabled": true,
+    "buildTier": 3,
     "fortificationRole": "keep",
     "fortificationTierContribution": 2,
     "footprint": { "w": 4, "h": 4 },
@@ -322,6 +466,7 @@
     "id": "tribal_camp",
     "name": "Tribal Camp",
     "prototypeEnabled": true,
+    "buildTier": 0,
     "footprint": { "w": 2, "h": 2 },
     "health": 620,
     "buildTime": 0,
@@ -331,6 +476,7 @@
     "id": "wayshrine",
     "name": "Wayshrine",
     "prototypeEnabled": true,
+    "buildTier": 2,
     "faithRole": "shrine",
     "faithTier": 1,
     "footprint": { "w": 2, "h": 2 },
@@ -356,6 +502,7 @@
     "id": "covenant_hall",
     "name": "Covenant Hall",
     "prototypeEnabled": true,
+    "buildTier": 3,
     "faithRole": "hall",
     "faithTier": 2,
     "requiresFaithCommitment": true,
@@ -393,6 +540,7 @@
     "id": "grand_sanctuary",
     "name": "Grand Sanctuary",
     "prototypeEnabled": true,
+    "buildTier": 4,
     "faithRole": "sanctuary",
     "faithTier": 3,
     "requiresFaithCommitment": true,
@@ -428,6 +576,7 @@
     "id": "harbor_tier_1",
     "name": "Harbor",
     "prototypeEnabled": true,
+    "buildTier": 3,
     "navalRole": "harbor",
     "navalTier": 1,
     "requiresCoastalAdjacency": true,
@@ -454,6 +603,7 @@
     "id": "harbor_tier_2",
     "name": "Great Harbor",
     "prototypeEnabled": true,
+    "buildTier": 4,
     "navalRole": "harbor",
     "navalTier": 2,
     "requiresCoastalAdjacency": true,
@@ -479,6 +629,7 @@
     "id": "apex_covenant",
     "name": "Apex Covenant",
     "prototypeEnabled": true,
+    "buildTier": 5,
     "faithRole": "apex",
     "faithTier": 4,
     "requiresFaithCommitment": true,

@@ -15,7 +15,6 @@ namespace Bloodlines.Faith
     /// </summary>
     [BurstCompile]
     [UpdateInGroup(typeof(SimulationSystemGroup))]
-    [UpdateAfter(typeof(Bloodlines.Systems.SkirmishBootstrapSystem))]
     [UpdateBefore(typeof(FaithIntensityResolveSystem))]
     public partial struct FaithStructureRegenSystem : ISystem
     {

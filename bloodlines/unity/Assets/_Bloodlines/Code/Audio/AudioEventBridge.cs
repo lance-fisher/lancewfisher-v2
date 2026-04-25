@@ -1,5 +1,6 @@
 using Bloodlines.Components;
 using Bloodlines.GameTime;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 

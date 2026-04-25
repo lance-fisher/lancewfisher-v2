@@ -39,12 +39,14 @@ namespace Bloodlines.Dynasties
 
             ProcessDivineRightFailures(entityManager, dualClock, inWorldDays);
 
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+
             foreach (var (faction, entity) in
                 SystemAPI.Query<RefRO<FactionComponent>>().WithEntityAccess())
             {
                 if (!entityManager.HasBuffer<DynastyPoliticalEventComponent>(entity))
                 {
-                    EnsureAggregate(entityManager, entity, DynastyPoliticalEventUtility.CreateDefaultAggregate());
+                    EnsureAggregate(entityManager, ref ecb, entity, DynastyPoliticalEventUtility.CreateDefaultAggregate());
                     continue;
                 }
 
@@ -58,8 +60,11 @@ namespace Bloodlines.Dynasties
                 }
 
                 var aggregate = DynastyPoliticalEventUtility.BuildAggregate(buffer, inWorldDays);
-                EnsureAggregate(entityManager, entity, aggregate);
+                EnsureAggregate(entityManager, ref ecb, entity, aggregate);
             }
+
+            ecb.Playback(entityManager);
+            ecb.Dispose();
         }
 
         static void ProcessDivineRightFailures(
@@ -120,6 +125,7 @@ namespace Bloodlines.Dynasties
 
         static void EnsureAggregate(
             EntityManager entityManager,
+            ref EntityCommandBuffer ecb,
             Entity factionEntity,
             DynastyPoliticalEventAggregateComponent aggregate)
         {
@@ -129,7 +135,7 @@ namespace Bloodlines.Dynasties
             }
             else
             {
-                entityManager.AddComponentData(factionEntity, aggregate);
+                ecb.AddComponent(factionEntity, aggregate);
             }
         }
 

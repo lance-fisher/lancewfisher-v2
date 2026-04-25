@@ -216,6 +216,54 @@ namespace Bloodlines.Systems
             entityManager.AddBuffer<FaithExposureElement>(entity);
             entityManager.AddBuffer<HostilityComponent>(entity);
 
+            // Early game foundation (2026-04-25): founding retinue, build tier, draft, productivity, water.
+            // Kingdom factions start undeployed; tribal/neutral factions start at tier 1 (already established).
+            if (seed.Kind == FactionKind.Kingdom)
+            {
+                entityManager.AddComponentData(entity, new FoundingRetinueComponent
+                {
+                    IsDeployed         = false,
+                    DeployPosition     = default,
+                    RelocationEligible = true,
+                    MobileElapsedSeconds = 0f,
+                });
+                entityManager.AddComponentData(entity, new BuildTierComponent { CurrentTier = 0 });
+            }
+            else
+            {
+                // Tribes and neutral factions are pre-established — no founding retinue.
+                entityManager.AddComponentData(entity, new FoundingRetinueComponent
+                {
+                    IsDeployed         = true,
+                    RelocationEligible = false,
+                });
+                entityManager.AddComponentData(entity, new BuildTierComponent { CurrentTier = 2 });
+            }
+
+            entityManager.AddComponentData(entity, new MilitaryDraftComponent
+            {
+                DraftRatePct       = 0,
+                DraftPool          = 0,
+                TrainedMilitary    = 0,
+                UntrainedDrafted   = 0,
+                ReserveMilitary    = 0,
+                ActiveDutyMilitary = 0,
+            });
+
+            entityManager.AddComponentData(entity, new PopulationProductivityComponent
+            {
+                BaseProductivity      = 1f,
+                EffectiveProductivity = 1f,
+                FoodAdequate          = true,
+                WaterAdequate         = true,
+                HousingAdequate       = true,
+            });
+
+            entityManager.AddComponentData(entity, new WaterCapacityComponent
+            {
+                MaxSupportedByWater = EarlyGameConstants.KeepBaseWaterSupport,
+            });
+
             if (ShouldAttachAIEconomyController(seed))
             {
                 entityManager.AddComponentData(entity, new AIEconomyControllerComponent

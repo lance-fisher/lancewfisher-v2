@@ -1,5 +1,22 @@
 # CURRENT_PROJECT_STATE
 
+## early-game-foundation (as of 2026-04-25)
+
+Latest slice: Early-game foundation mechanics. Status: Complete, branch claude/unity-multiplayer-nfe-integration (pending commit).
+Handoff: docs/unity/session-handoffs/2026-04-25-unity-early-game-foundation.md
+- Keep deployment (FoundingRetinueComponent, BuildTierComponent): Kingdoms start undeployed tier 0; non-Kingdoms start deployed tier 2
+- BuildTierGatingSystem: bitmask scan per faction, gates housing/water/food/trainingyard prerequisites for tier 1->2 transition
+- WaterCapacitySystem: well counting per faction, MaxSupportedByWater = 15 base + wellCount*50
+- PopulationProductivitySystem: two-stage (BaseProductivity weighted average over population states; EffectiveProductivity *= shortage modifiers)
+- WorkerSlotProductionSystem: output = baseRate * assignedWorkers * effectiveProductivity * dt
+- MilitaryDraftSystem: Utopia-style 0-100% step-5 slider, derives DraftPool/TrainedMilitary/ReserveMilitary/ActiveDutyMilitary/UntrainedDrafted
+- SquadDutySystem: AssignmentType.None -> Reserve, any other -> ActiveDuty; 9 canonical assignment types
+- EarlyGameHUDComponent/System: singleton snapshot for player faction; two-pass query design (stays within Unity ECS 8-param limit)
+- BloodlinesDebugCommandSurface.EarlyGame: full read/write debug panel (deploy keep, set draft rate, spawn squad, set assignment)
+- data/buildings.json: buildTier field added to all buildings; housing/forager_camp/training_yard/small_farm added; lumber_camp worker-slotted
+- Assembly-CSharp.csproj: 12 new Compile Include entries
+- All 8 validation gates PASS: dotnet builds (0 errors), bootstrap runtime smoke, combat smoke, scene shells, data-validation, runtime-bridge, contract (revision 144)
+
 Last updated: 2026-04-22 (player pact proposal and break are now merged onto canonical `master` via `10ec1e2a`: `PlayerPactProposalRequestComponent`, `PlayerPactBreakRequestComponent`, `PlayerPactUtility`, `PlayerPactProposalSystem`, and `PlayerPactBreakSystem` now canonically port browser non-aggression pact proposal/break semantics under `PlayerDiplomacy/**`, `BloodlinesDebugCommandSurface.PlayerDiplomacy` now exposes pact issue/readout hooks on master, `BloodlinesPlayerPactSmokeValidation` plus wrapper remain green, and the full 10-gate chain plus dedicated pact smoke reran green on the merged result in this worktree after a local Unity project refresh regenerated stale `.csproj` metadata; contract revision 76 -> 77 and the player-marriage-diplomacy lane now has no branch in flight.)
 Previous entry: Last updated: 2026-04-21 (scout raids and logistics interdiction landed on `master` via merge commit `dda7c25e`: `ScoutRaidCommandComponent`, `BuildingRaidStateComponent`, `ScoutRaidCanon`, and `ScoutRaidResolutionSystem` now port building raids plus supply-wagon interdiction; trickle, worker drop-off, field-water, and siege-support consumers now respect active raid state; dedicated 4-phase scout smoke PASS; full governed validation chain rerun green on detached merged `master` in `D:\BLAICD\bloodlines`; contract revision 50 -> 51)
 Previous entry: Last updated: 2026-04-19 (fortification-siege sub-slice 5 wall-segment destruction resolution complete on branch `codex/unity-fortification-wall-segment-destruction`: live fortification-role buildings now auto-link to their nearest same-faction settlement, destroyed wall/tower/gate/keep counts plus `OpenBreachCount` now resolve onto `FortificationComponent`, `FortificationReserveSystem` now runs after destruction accounting so breached walls reduce reserve frontage immediately, dedicated 4-phase wall-destruction smoke PASS, full governed gate chain rerun green on the rebased `origin/master` `0a0e122f` base, contract revision 30 -> 31)

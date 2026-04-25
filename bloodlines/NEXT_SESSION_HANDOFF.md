@@ -5684,3 +5684,15 @@ Next: Before running Unity batch-mode smokes, open the Unity project interactive
 Library/PackageCache. After that one-time step, all batch-mode smokes will pass again.
 Then: add GhostAuthoringComponent-baked prefab GameObjects to Bootstrap/Gameplay scenes, and
 proceed to the next unclaimed lane from CODEX_MULTI_DAY_DIRECTIVE_2026-04-25.md.
+
+
+## early-game-foundation (as of 2026-04-25)
+
+Latest slice: Early-game foundation mechanics — Keep deployment, first build tier, water model, productivity states, draft slider, five-person squads, worker slots, reserve/active duty. Status: Complete, all 8 validation gates PASS. Pending commit on branch claude/unity-multiplayer-nfe-integration.
+Handoff: docs/unity/session-handoffs/2026-04-25-unity-early-game-foundation.md
+Next:
+- Commit this slice to the branch (or a dedicated early-game-foundation branch)
+- Wire DrawEarlyGamePanel() into BloodlinesDebugCommandSurface.cs OnGUI so it appears in the debug surface at runtime
+- Add JsonContentImporter handling for new buildings.json fields (buildTier, maxWorkerSlots, workerOutputPerSecond, waterPopulationSupport) so they populate BuildingDefinition at import
+- Add WorkerSlotBuildingComponent authoring to the four new worker-slot buildings (woodcutter_camp, forager_camp, small_farm; lumber_camp already exists)
+- Player input bridge: UI for assigning workers to buildings, setting squad orders
