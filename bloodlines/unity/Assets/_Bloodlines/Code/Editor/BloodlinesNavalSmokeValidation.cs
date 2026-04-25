@@ -2,6 +2,7 @@
 using System;
 using Bloodlines.Components;
 using Bloodlines.Naval;
+using Bloodlines.Systems;
 using Unity.Collections;
 using Unity.Core;
 using Unity.Entities;
@@ -97,9 +98,159 @@ namespace Bloodlines.EditorTools
             }
             UnityDebug.Log(fishingMessage);
 
+            if (!RunVesselCombatPhase(out string vesselCombatMessage))
+            {
+                message = vesselCombatMessage;
+                return false;
+            }
+            UnityDebug.Log(vesselCombatMessage);
+
             message =
-                "Naval smoke validation passed: embarkPhase=True, disembarkPhase=True, fireShipPhase=True, fishingPhase=True.";
+                "Naval smoke validation passed: embarkPhase=True, disembarkPhase=True, fireShipPhase=True, fishingPhase=True, vesselCombatPhase=True.";
             return true;
+        }
+
+        private static bool RunVesselCombatPhase(out string message)
+        {
+            // S4: vessel-vs-vessel naval combat. Browser parity: simulation.js
+            // updateVessel attack branch (~8814-8863). The browser allows any
+            // unit with attack > 0 to engage hostile units in attackRange*1.2.
+            // Unity inherits this via the existing AutoAcquireTargetSystem +
+            // AttackResolutionSystem pipeline, which reads CombatStatsComponent
+            // without filtering by domain. This phase proves a war-galley vs
+            // war-galley engagement resolves through the standard pipeline,
+            // does NOT spuriously trigger fire-ship detonation, and produces
+            // damage on the target.
+            using var world = new World("BloodlinesNavalSmokeValidation_VesselCombat");
+            world.GetOrCreateSystemManaged<InitializationSystemGroup>();
+            var simGroup = world.GetOrCreateSystemManaged<SimulationSystemGroup>();
+            world.GetOrCreateSystemManaged<PresentationSystemGroup>();
+            simGroup.AddSystemToUpdateList(world.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>());
+            simGroup.AddSystemToUpdateList(world.GetOrCreateSystem<AutoAcquireTargetSystem>());
+            simGroup.AddSystemToUpdateList(world.GetOrCreateSystem<AttackResolutionSystem>());
+            simGroup.AddSystemToUpdateList(world.GetOrCreateSystem<ProjectileMovementSystem>());
+            simGroup.AddSystemToUpdateList(world.GetOrCreateSystem<ProjectileImpactSystem>());
+            simGroup.AddSystemToUpdateList(world.GetOrCreateSystem<DeathResolutionSystem>());
+            simGroup.AddSystemToUpdateList(world.GetOrCreateSystem<FireShipDetonationSystem>());
+            simGroup.SortSystems();
+            var em = world.EntityManager;
+
+            CreateFaction(em, "player", "rival");
+            CreateFaction(em, "rival", "player");
+
+            // Player war galley (ranged combatant) at origin.
+            Entity playerGalley = CreateWarGalley(em, "player", new float3(0f, 0f, 0f));
+
+            // Enemy war galley within attack range (130) and sight (180).
+            Entity enemyGalley = CreateWarGalley(em, "rival", new float3(0f, 0f, 50f));
+
+            float startEnemyHealth = em.GetComponentData<HealthComponent>(enemyGalley).Current;
+
+            // Tick long enough for AutoAcquireTargetSystem to lock the target
+            // and for at least one attack-cooldown cycle (1.3s) plus projectile
+            // travel (50/240 = ~0.21s) to land a strike.
+            const float DtSeconds = 0.2f;
+            const int MaxTicks = 30;
+            int impactTicks = 0;
+            for (int t = 0; t < MaxTicks; t++)
+            {
+                world.SetTime(new TimeData(t * DtSeconds, DtSeconds));
+                world.Update();
+                impactTicks = t + 1;
+                if (em.HasComponent<DeadTag>(enemyGalley)) break;
+                var hp = em.GetComponentData<HealthComponent>(enemyGalley);
+                if (hp.Current < startEnemyHealth) break;
+            }
+
+            float endEnemyHealth = em.GetComponentData<HealthComponent>(enemyGalley).Current;
+            if (endEnemyHealth >= startEnemyHealth)
+            {
+                message = "Naval smoke validation failed: vessel combat phase expected enemy galley to take damage; got " +
+                    endEnemyHealth + "/" + startEnemyHealth + " after " + impactTicks + " ticks.";
+                return false;
+            }
+
+            // Negative case: the player war galley should NOT have queued a
+            // FireShipDetonationPendingTag because OneUseSacrifice=false.
+            if (em.HasComponent<FireShipDetonationPendingTag>(playerGalley))
+            {
+                message = "Naval smoke validation failed: vessel combat phase queued a fire-ship detonation tag on a non-sacrifice vessel.";
+                return false;
+            }
+
+            // The player galley itself should still be alive (enemy didn't have
+            // a chance to retaliate through projectile travel time yet, and
+            // even if it did, both should still be standing).
+            if (em.HasComponent<DeadTag>(playerGalley))
+            {
+                var playerHp = em.GetComponentData<HealthComponent>(playerGalley);
+                message = "Naval smoke validation failed: vessel combat phase killed the player galley unexpectedly. health=" + playerHp.Current;
+                return false;
+            }
+
+            message =
+                "Naval smoke validation vessel combat phase passed: enemyHealthDelta=" +
+                (startEnemyHealth - endEnemyHealth).ToString("0.##") +
+                " ticksToImpact=" + impactTicks +
+                " fireShipFalsePositive=False" +
+                " playerGalleyAlive=True.";
+            return true;
+        }
+
+        private static Entity CreateWarGalley(EntityManager em, string factionId, float3 position)
+        {
+            var entity = em.CreateEntity();
+            em.AddComponentData(entity, new FactionComponent { FactionId = factionId });
+            em.AddComponentData(entity, new PositionComponent { Value = position });
+            em.AddComponentData(entity, new LocalTransform
+            {
+                Position = position,
+                Rotation = quaternion.identity,
+                Scale = 1f,
+            });
+            em.AddComponentData(entity, new HealthComponent
+            {
+                Current = 360f,
+                Max = 360f,
+            });
+            em.AddComponentData(entity, new UnitTypeComponent
+            {
+                TypeId = "war_galley",
+                Role = UnitRole.Vessel,
+                SiegeClass = SiegeClass.None,
+                PopulationCost = 2,
+                Stage = 2,
+            });
+            em.AddComponentData(entity, new MovementStatsComponent { MaxSpeed = 60f });
+            em.AddComponentData(entity, new CombatStatsComponent
+            {
+                AttackDamage = 22f,
+                AttackRange = 130f,
+                AttackCooldown = 1.3f,
+                Sight = 180f,
+                CooldownRemaining = 0f,
+                AcquireCooldownRemaining = 0f,
+            });
+            em.AddComponentData(entity, new MoveCommandComponent
+            {
+                Destination = position,
+                StoppingDistance = 0.2f,
+                IsActive = false,
+            });
+            em.AddComponentData(entity, new RecentImpactComponent());
+            em.AddComponentData(entity, new NavalVesselComponent
+            {
+                Class = VesselClass.WarGalley,
+                TransportCapacity = 0,
+                OneUseSacrifice = false,
+            });
+            em.AddComponentData(entity, new ProjectileFactoryComponent
+            {
+                ProjectileSpeed = 240f,
+                ProjectileMaxLifetimeSeconds = 4f,
+                ProjectileArrivalRadius = 0.2f,
+            });
+            return entity;
         }
 
         private static bool RunFishingGatherPhase(out string message)
