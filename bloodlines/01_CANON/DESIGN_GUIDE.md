@@ -584,7 +584,7 @@ Level 1 represents the earliest military stage. Armies are small and drawn from 
 | **Swordsmen** | Frontline infantry + reconnaissance | Moderate attack/defense, faster movement, increased sight, replaces scouts |
 | **Spearmen** | Defensive infantry | Higher defense, slower movement, holds the line, strong vs cavalry |
 | **Hunters** | Harassment and ambush | Light ranged, drawn from population, weak in melee |
-| **Bowmen** | Ranged support | Upgraded from hunters, specializes as Offensive (higher damage) or Defensive (increased range/accuracy), weak in close combat |
+| **Bowmen** *(canonical name: Archers — updated 2026-04-25, Seventeenth Session Canon)* | Ranged support | Upgraded from hunters, specializes as Offensive (higher damage) or Defensive (increased range/accuracy), weak in close combat |
 
 **Design Decision:** Scouts are intentionally removed as a unit type. Swordsmen serve as both frontline infantry and reconnaissance units.
 

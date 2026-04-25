@@ -849,14 +849,42 @@ Defensive infantry with higher defense than swordsmen. Slower movement. Effectiv
 **Hunters**
 Light ranged units drawn from the population. Used for harassment and ambush. Weak in melee combat.
 
-**Bowmen**
+**Bowmen** *(Prior name — canonical name is Archers as of Seventeenth Session Canon 2026-04-25)*
 Upgraded ranged units trained from hunters. Bowmen can specialize in two roles:
 - **Offensive Bowmen** — Higher attack damage
 - **Defensive Bowmen** — Increased range and improved defensive accuracy
 Bowmen remain weak in close combat.
 
 **Early Army Composition:**
-Typical Level 1 army may include militia providing numbers, swordsmen providing mobility and scouting, spearmen holding defensive formations, and hunters or bowmen providing ranged support.
+Typical Level 1 army may include militia providing numbers, swordsmen providing mobility and scouting, spearmen holding defensive formations, and hunters or Archers (formerly Bowmen) providing ranged support.
+
+---
+
+## Core Ground Unit Progression — Locked 2026-04-25 (Seventeenth Session Canon)
+
+The canonical base unit ladder available to all dynasties. Off/Def values are absolute role-based ratings, independent of the faith-tier progression in Levels 1-5.
+
+**Offensive Infantry:** Militia (2/2) → Swordsmen (4/2) → Shieldbearer Swordsmen (5/3) → Heavy Swordsmen (6/4) → Greatsword Knight (8/3)
+
+**Defensive Infantry:** Militia (2/2) → Spearmen (2/4, anti-cav x1.5) → Spear Guard (3/5, anti-cav x1.6) → Pikeguard (4/6, anti-cav x1.8) → Bulwark Guard (3/8)
+
+**Ranged:** Archers (3/2) → Boltmen (5/2, armor-piercing x1.5)
+
+**Cavalry:** Mounted Swordsmen (5/2) → Mounted Heavy Swordsmen (6/3) → Mounted Knight (7/5, grouped lance charge, can dismount) ⇄ Knight (6/6, dismounted form, can remount). Horse Archer (3/2) is a cavalry ranged variant, not on the main upgrade line.
+
+**Ironmark unique:** Axeman (5/2) — Off/Def revised 2026-04-25 from Off 6/Def 4. All other Axeman identity preserved.
+
+**Hartvale unique:** Verdant Warden (4/5). Locked 2026-04-07.
+
+**Iron and forge:** Iron available from game start. Forge/Settlement Forge required from the beginning. Prior "early game low significance" framing is superseded.
+
+**Cavalry infrastructure:** All cavalry requires Stable.
+
+**Mounted Knight lance charge:** Grouped formation ability — requires multiple Mounted Knight units in formation. Countered by braced Spearmen/Spear Guard/Pikeguard. Ineffective in forest/tight terrain. Full mounted mechanics pending.
+
+**Scrapped:** War Wagon (deferred), Siege Tower as a unit (deferred), light transport vehicles (scrapped entirely).
+
+See `10_UNITS/UNIT_INDEX.md` (Core Ground Unit Progression section), `01_CANON/CANONICAL_RULES.md` (Seventeenth Session Canon), and `data/units.json` for full specifications and implementation data.
 
 ---
 
@@ -1927,8 +1955,8 @@ Updated canonical resource list: gold, food, water, wood, stone, iron.
 The prior five-resource count is superseded. Iron is now settled canon alongside the original five.
 
 Iron timeline:
-- Early game: low significance. Wood and stone dominate early construction. Initial army composition (militia, spearmen, bowmen) requires minimal iron.
-- Mid game: iron demand rises sharply as swordsmen become the primary military force. Swordsmen require iron for blades, armor, and maintenance. Mid-game iron node control begins to create compounding military advantage.
+- Early game: **Updated per Seventeenth Session Canon 2026-04-25.** Iron is available from game start. Forge/Settlement Forge is required from the beginning. The prior framing below ("low significance in early game") is superseded. ~~Early game: low significance. Wood and stone dominate early construction. Initial army composition (militia, spearmen, bowmen) requires minimal iron.~~ Correct canon: iron access is available from game start; early armies may be iron-light by player choice but iron is not gated to mid-game. Wood and stone still dominate early construction but Forge is a required building from the start.
+- Mid game: iron demand rises sharply as swordsmen and cavalry become the primary military force. Iron node control creates compounding military advantage.
 - Late game: iron is critical. Advanced armaments, cavalry equipment (horseshoes, barding, stirrups), siege equipment, fortification ironwork, and naval construction all require iron at scale.
 
 Production: Iron Mine building (added to Economic category). Location-dependent on fixed iron deposit terrain features. Smelting Furnace required at higher production volumes. Wood fuels smelting — creating a wood-to-iron dependency chain.
@@ -2101,10 +2129,10 @@ Chronology table documented from Year -200 (pre-Frost) through Year 80 of Reclam
 All unit tiers designed and appended to UNIT_INDEX.md.
 
 **Level 2 — Iron Age Transition:**
-Men-at-Arms, Pike Square, Scout Rider, Crossbowmen, Siege Engineer. All faith-neutral.
+Men-at-Arms *(prior name — canonical: Heavy Swordsmen line per Seventeenth Session Canon 2026-04-25)*, Pike Square *(prior name — canonical: Pikeguard)*, Scout Rider, Crossbowmen *(prior name — canonical: Boltmen)*, Siege Engineer. All faith-neutral.
 
 **Level 3 — Ideological Expansion Era:**
-Base units: Knight, Longbowmen, Shield Wall, Siege Ballista.
+Base units: Knight *(naming distinction 2026-04-25: "Knight" now = dismounted form; "Mounted Knight" = mounted form)*, Longbowmen, Shield Wall *(prior name — canonical: Bulwark Guard)*, Siege Ballista.
 Faith units (8 total, 2 per faith):
 - Old Light: Flame Warden (light), Inquisitor (dark)
 - Blood Dominion: Blood Rider (dark), Covenant Priest (light)
@@ -2660,19 +2688,19 @@ Ironmark squads do not simply degrade as members fall. As squad size decreases f
 
 ### 88.6 — Unit Values (Locked)
 
-**Standard baseline (all bloodlines):** Swordsman Off 5 / Def 5
+**Standard baseline (all bloodlines):** *(Prior framing — Off/Def is now absolute, not relative to a 5/5 neutral. Seventeenth Session Canon 2026-04-25 supersedes the 5/5 neutral baseline framing.)* Swordsman Off 5/Def 5 was the prior "neutral" reference point.
 
-**Ironmark unit values:**
-- Militia: 6/5 (forge-culture physical conditioning provides slight offensive edge)
-- Swordsmen: 5/5 (locked at neutral — prior CB002 exploration of 6/5 superseded. The Swordsman is baseline for Ironmark; asymmetry comes from the Axeman)
-- Spearmen: 5/5
-- Hunters: 5/5
-- Bowmen: 5/5
-- **Axeman (Ironmark exclusive): Off 6 / Def 4**
+**Ironmark unit values** *(Ninth Ingestion Canon values below; Axeman Off/Def revised per Seventeenth Session Canon 2026-04-25)*:
+- Militia: 6/5 (pending absolute-scale data-layer tuning)
+- Swordsmen: 5/5 (locked at neutral)
+- Spearmen: 5/5 (pending tuning)
+- Hunters: 5/5 (pending tuning)
+- Bowmen: 5/5 *(prior name — canonical: Archers)* (pending tuning)
+- **Axeman (Ironmark exclusive): Off 5 / Def 2** *(Updated 2026-04-25 from Off 6/Def 4)*
 
-**Axeman specifics:**
+**Axeman specifics** *(updated Off/Def 2026-04-25; all other identity preserved)*:
 - Category: Heavy infantry / structure-breaker
-- Off 6 / Def 4: Higher offensive output, lower defensive rating. In a head-on engagement, the Axeman hits harder than a Swordsman but takes more punishment if the formation breaks and the Axeman is flanked.
+- Off 5 / Def 2: High offensive output, low defensive rating. The Axeman hits hard but is fragile if flanked or caught by fast units.
 - Special application: Exceptional against armored units and structures. Axemen deal bonus damage to fortifications, siege equipment, and heavily armored infantry. Against light, fast units (cavalry, skirmishers), their effectiveness drops significantly.
 - Interaction with Ferocity Under Loss: The Axeman ferocity bonus is the most pronounced of any Ironmark unit type. A single remaining Axeman is genuinely dangerous in a way that a single remaining Swordsman is not.
 

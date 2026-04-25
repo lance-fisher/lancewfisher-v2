@@ -4,6 +4,87 @@ Registry of all unit types, army composition rules, and elite unit specification
 
 ### Content Added 2026-03-15
 
+---
+
+## Core Ground Unit Progression — Locked 2026-04-25 (Seventeenth Session Canon)
+
+Canonical base unit ladder available to all dynasties, independent of the faith-tier progression in Levels 1–5 below. Off/Def ratings are absolute role-based values, not a 5/5 neutral baseline.
+
+### Offensive Infantry Line
+
+| Unit | Off | Def | Role | Notes |
+|---|---|---|---|---|
+| Militia | 2 | 2 | All-purpose starter | Available from game start |
+| Swordsmen | 4 | 2 | Versatile frontline | First professional infantry |
+| Shieldbearer Swordsmen | 5 | 3 | Offensive frontline with shield | Upgrade from Swordsmen |
+| Heavy Swordsmen | 6 | 4 | Armored heavy frontline | Iron required |
+| Greatsword Knight | 8 | 3 | Elite two-handed assault | Apex offensive infantry |
+
+**Progression:** Militia → Swordsmen → Shieldbearer Swordsmen → Heavy Swordsmen → Greatsword Knight
+
+---
+
+### Defensive Infantry Line
+
+| Unit | Off | Def | Role | Notes |
+|---|---|---|---|---|
+| Militia | 2 | 2 | All-purpose starter | Shared root with offensive line |
+| Spearmen | 2 | 4 | Anti-cavalry defensive line | Anti-cavalry bonus x1.5 |
+| Spear Guard | 3 | 5 | Upgraded spear defensive line | Anti-cavalry bonus x1.6 |
+| Pikeguard | 4 | 6 | Heavy polearm defensive anchor | Anti-cavalry bonus x1.8 |
+| Bulwark Guard | 3 | 8 | Immovable defensive wall | Maximum defense value |
+
+**Progression:** Militia → Spearmen → Spear Guard → Pikeguard → Bulwark Guard
+
+---
+
+### Ranged Line
+
+| Unit | Off | Def | Role | Notes |
+|---|---|---|---|---|
+| Archers | 3 | 2 | Standard ranged suppression | Canonical name: Archers (not Bowmen) |
+| Boltmen | 5 | 2 | Armor-piercing ranged | Canonical name: Boltmen (not Crossbowmen); armor-piercing bonus x1.5 |
+
+**Progression:** Archers → Boltmen
+
+---
+
+### Cavalry Line
+
+| Unit | Off | Def | Role | Notes |
+|---|---|---|---|---|
+| Mounted Swordsmen | 5 | 2 | Light offensive cavalry | Requires Stable + iron |
+| Mounted Heavy Swordsmen | 6 | 3 | Armored offensive cavalry | Iron-heavy |
+| Mounted Knight | 7 | 5 | Heavy shock cavalry with lance charge | Lance charge requires grouped formation |
+| Knight | 6 | 6 | Dismounted form of Mounted Knight | Canonical "Knight" = dismounted; "Mounted Knight" = mounted |
+| Horse Archer | 3 | 2 | Cavalry ranged harassment | Ranged variant; not on the main cavalry upgrade line |
+
+**Progression:** Mounted Swordsmen → Mounted Heavy Swordsmen → Mounted Knight (⇄ Knight via dismount/remount)
+
+---
+
+### Mounted Knight Mechanics (Preliminary — 2026-04-25)
+
+**Lance Charge:** Grouped formation ability. Requires multiple Mounted Knight units in formation. Not always-on raw stats. Countered by braced Spearmen, Spear Guard, and Pikeguard. Ineffective in forest and tight terrain. Transitions from lance to sword after the charge.
+
+**Dismounting/Remounting:** Mounted Knight dismounts to become Knight. Remounting requires controlled or friendly conditions plus a timer — not instant. Full mechanics pending.
+
+**Group Formation Abilities:** The Mounted Knight lance charge is the first confirmed instance of a group formation ability system. Full system design is pending.
+
+---
+
+### Canonical Unit Names — Locked 2026-04-25
+
+Prior names superseded: Bowmen → **Archers**; Crossbowmen → **Boltmen**; Shielded Swordsmen → **Shieldbearer Swordsmen**; Shielded Spearmen → **Spear Guard**; Armored Pikemen / Pike Square → **Pikeguard**; Shield Wall → **Bulwark Guard**; Shielded Mounted Swordsmen → **Mounted Heavy Swordsmen**; Mounted Bowman → **Horse Archer**.
+
+---
+
+### Scrapped Units (Seventeenth Session Canon)
+
+**War Wagon** — deferred. **Siege Tower (as a unit)** — deferred. **Light transport vehicles** — scrapped entirely; not part of the canonical game.
+
+---
+
 ## Standard Units — Level 1 (Earliest Military Stage)
 
 Level 1 represents the earliest military stage. Armies are small and drawn from the population.
@@ -20,9 +101,13 @@ The first organized professional soldiers. Moderate attack and defense. Faster m
 Defensive infantry with higher defense than swordsmen. Slower movement. Effective at holding the line. Strong against cavalry.
 
 ### Hunters
+> **Note (2026-04-25, Seventeenth Session Canon):** Hunters are not part of the core canonical unit progression. They remain here as original Level 1 design material.
+
 Light ranged units drawn from the population. Used for harassment and ambush. Weak in melee combat.
 
 ### Bowmen
+> **Canonical name updated 2026-04-25 (Seventeenth Session Canon):** This unit is now called **Archers**. "Bowmen" is the prior name and is superseded. The Archers entry in the Core Ground Unit Progression section above is the authoritative reference.
+
 Upgraded ranged units trained from hunters. Bowmen can specialize in two roles:
 - **Offensive Bowmen** — Higher attack damage
 - **Defensive Bowmen** — Increased range and improved defensive accuracy
@@ -42,6 +127,8 @@ Level 2 represents the shift from survival to consolidation. Iron begins flowing
 ---
 
 #### Men-at-Arms
+> **Superseded 2026-04-25 (Seventeenth Session Canon):** The heavy frontline infantry role is now filled by the **Shieldbearer Swordsmen → Heavy Swordsmen** upgrade line in the Core Ground Unit Progression section above. "Men-at-Arms" is prior design material; the canonical upgrade names are Shieldbearer Swordsmen (Off 5/Def 3) and Heavy Swordsmen (Off 6/Def 4).
+
 Full iron armor on the body of a Swordsman. Slower movement, dramatically more durable. The backbone of mid-game army formations. Where Swordsmen are versatile and mobile, Men-at-Arms are immovable anchors.
 
 **Role:** Heavy frontline infantry
@@ -53,6 +140,8 @@ Full iron armor on the body of a Swordsman. Slower movement, dramatically more d
 ---
 
 #### Pike Square
+> **Superseded 2026-04-25 (Seventeenth Session Canon):** The canonical name for the upgraded defensive polearm unit is **Pikeguard** (Off 4/Def 6, anti-cavalry bonus x1.8). "Pike Square" is the prior name and is superseded. The Pikeguard entry in the Core Ground Unit Progression section above is the authoritative reference.
+
 An upgraded formation of Spearmen reorganized into a disciplined pike formation. Devastating against cavalry charges. Largely immobile — they hold a position, not advance on one.
 
 **Role:** Anti-cavalry anchor, defensive line
@@ -77,6 +166,8 @@ The first cavalry unit. Light, fast, built for harassment and intelligence gathe
 ---
 
 #### Crossbowmen
+> **Canonical name updated 2026-04-25 (Seventeenth Session Canon):** This unit is now called **Boltmen**. "Crossbowmen" is the prior name and is superseded. Canonical stats: Off 5/Def 2, armor-piercing bonus x1.5. The Boltmen entry in the Core Ground Unit Progression section above is the authoritative reference.
+
 The most important ranged upgrade of the mid-game. Slower rate of fire than Bowmen but dramatically more effective against armored targets. Changes how siege and battle formations work.
 
 **Role:** Armor-piercing ranged suppression
@@ -111,6 +202,8 @@ Level 3 is where faith begins reshaping the military. All dynasties retain acces
 ---
 
 ##### Knight
+> **Naming distinction locked 2026-04-25 (Seventeenth Session Canon):** "Knight" now refers specifically to the **dismounted form** of Mounted Knight (Off 6/Def 6). The mounted heavy cavalry unit is canonically **Mounted Knight** (Off 7/Def 5, lance charge). This Level 3 entry describes the heavy cavalry role that Mounted Knight now fills; the Charge mechanic described below maps to the new lance charge grouped formation ability. See the Core Ground Unit Progression section above for current canonical stats and mechanics.
+
 The defining cavalry unit of the mid-game. Full iron barding on horse and rider. The terror of open-field engagements against unformed infantry. Expensive in iron, expensive in population, and countered hard by terrain and pike formations — but worth it when conditions align.
 
 **Role:** Heavy cavalry, shock weapon
@@ -135,6 +228,8 @@ Range and accuracy that changes siege dynamics. A trained Longbowman unit at ele
 ---
 
 ##### Shield Wall
+> **Superseded 2026-04-25 (Seventeenth Session Canon):** The canonical name for the apex defensive infantry unit is **Bulwark Guard** (Off 3/Def 8). "Shield Wall" is the prior name and is superseded. The Bulwark Guard entry in the Core Ground Unit Progression section above is the authoritative reference.
+
 A unit built entirely around defense. A Shield Wall unit that holds a position and is not flanked is among the most durable infantry formations in the game. It does not advance. It absorbs.
 
 **Role:** Defensive anchor, morale anchor
@@ -433,6 +528,8 @@ Including daughters in the army may produce a negative attack buffer but a posit
 - **Barracks** — Trains infantry
 - **Training Grounds** — Improves soldier training
 - **Armory** — Provides equipment upgrades
+- **Forge / Settlement Forge** — Required for iron-dependent units from game start (Seventeenth Session Canon: iron is available from the beginning of the game, not mid-game)
+- **Stable** — Required for all cavalry units (horses, horseshoes, cavalry equipment)
 - **Fortified Keep** — Major defensive stronghold
 - **Watchtower** — Provides early warning of enemy approach
 

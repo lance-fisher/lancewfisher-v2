@@ -455,3 +455,104 @@ See also:
 - `01_CANON/BLOODLINES_MASTER_DESIGN_DOCTRINE_2026-04-14.md`
 - `docs/BLOODLINES_SYSTEM_CROSSWALK_2026-04-14_DOCTRINE_INGESTION.md`
 - `docs/BLOODLINES_CANON_CONFLICT_NOTES_2026-04-14_DOCTRINE_INGESTION.md`
+
+---
+
+## 26. Core Ground Unit Progression — Locked 2026-04-25 (Seventeenth Session Canon)
+
+*Added 2026-04-25. Source: owner direction. All elements are LOCKED unless marked otherwise.*
+
+### World Context
+
+Every founding house sends armies into the field composed of the same base unit types. Faith reshapes the military at higher tiers but does not override the foundational unit ladder. Iron is available from game start; early armies are smaller and cheaper but not iron-free. The unit ladder is designed for Command and Conquer-style role clarity: each unit has a defined role, a counter, and a cost-appropriate power level.
+
+### Offensive Infantry Line
+
+| Unit | Off | Def | Role |
+|---|---|---|---|
+| Militia | 2 | 2 | All-purpose starter, available from game start |
+| Swordsmen | 4 | 2 | Versatile frontline, first professional infantry |
+| Shieldbearer Swordsmen | 5 | 3 | Offensive frontline with shield, upgrade from Swordsmen |
+| Heavy Swordsmen | 6 | 4 | Armored heavy frontline, iron required |
+| Greatsword Knight | 8 | 3 | Elite two-handed assault, apex offensive infantry |
+
+**Progression:** Militia → Swordsmen → Shieldbearer Swordsmen → Heavy Swordsmen → Greatsword Knight
+
+The offensive infantry line prioritizes attack. Greatsword Knight at Off 8/Def 3 is a glass-cannon apex unit: devastating against any infantry it reaches, fragile when caught in a bad position or surrounded.
+
+### Defensive Infantry Line
+
+| Unit | Off | Def | Role |
+|---|---|---|---|
+| Militia | 2 | 2 | All-purpose starter |
+| Spearmen | 2 | 4 | Anti-cavalry defensive line, anti-cavalry bonus x1.5 |
+| Spear Guard | 3 | 5 | Upgraded spear defensive line, anti-cavalry bonus x1.6 |
+| Pikeguard | 4 | 6 | Heavy polearm defensive anchor, anti-cavalry bonus x1.8 |
+| Bulwark Guard | 3 | 8 | Immovable defensive wall, maximum defensive value in the game |
+
+**Progression:** Militia → Spearmen → Spear Guard → Pikeguard → Bulwark Guard
+
+The defensive infantry line anchors formations and counters cavalry. Pikeguard is the primary counter to Mounted Knight lance charges. Bulwark Guard at Off 3/Def 8 does not advance — it holds and absorbs.
+
+### Ranged Line
+
+| Unit | Off | Def | Role |
+|---|---|---|---|
+| Archers | 3 | 2 | Standard ranged suppression |
+| Boltmen | 5 | 2 | Armor-piercing ranged, armor-piercing bonus x1.5 |
+
+**Progression:** Archers → Boltmen
+
+Archers provide ranged harassment and suppression. Boltmen provide the armor-piercing ranged role that keeps heavy infantry from being unkillable. The Boltmen upgrade is the canonical name for the unit previously called Crossbowmen.
+
+### Cavalry Line
+
+| Unit | Off | Def | Role |
+|---|---|---|---|
+| Mounted Swordsmen | 5 | 2 | Light offensive cavalry, requires Stable + iron |
+| Mounted Heavy Swordsmen | 6 | 3 | Armored offensive cavalry, iron-heavy |
+| Mounted Knight | 7 | 5 | Heavy shock cavalry with grouped lance charge, can dismount |
+| Knight | 6 | 6 | Dismounted form of Mounted Knight, can remount |
+| Horse Archer | 3 | 2 | Cavalry ranged harassment variant, not on main upgrade line |
+
+**Progression:** Mounted Swordsmen → Mounted Heavy Swordsmen → Mounted Knight (⇄ Knight via dismount/remount)
+
+All cavalry requires Stable. The Horse Archer is a ranged cavalry variant, not an upgrade to Mounted Swordsmen.
+
+### Mounted Knight Mechanics (Preliminary)
+
+**Lance Charge:** A grouped formation ability, not always-on raw stats. Multiple Mounted Knight units must be in formation for the charge to trigger. The lance charge delivers a high-momentum strike that devastates unbraced infantry. After the charge is spent, the unit transitions to sword combat. Countered by: Spearmen, Spear Guard, and Pikeguard when braced. Ineffective in forest and tight terrain.
+
+**Dismounting:** The Mounted Knight can dismount to become Knight (Off 6/Def 6 — more balanced and durable). Remounting requires controlled or friendly conditions and a timer. It is not instant. Full implementation mechanics are pending.
+
+**Group formation system:** The Mounted Knight lance charge is the first confirmed instance of a group formation ability. Other formation abilities for other unit types are pending design.
+
+### Canonical Unit Names — Locked 2026-04-25
+
+The following names are canonical. Prior names are superseded but preserved as historical record in older design material:
+
+- **Archers** (not Bowmen)
+- **Boltmen** (not Crossbowmen)
+- **Shieldbearer Swordsmen** (not Shielded Swordsmen)
+- **Spear Guard** (not Shielded Spearmen)
+- **Pikeguard** (not Armored Pikemen, not Pike Square)
+- **Bulwark Guard** (not Shield Wall)
+- **Mounted Knight** (the mounted form)
+- **Knight** (the dismounted form — not "Dismounted Knight")
+- **Mounted Heavy Swordsmen** (not Shielded Mounted Swordsmen)
+- **Horse Archer** (not Mounted Bowman)
+
+### Iron and Forge
+
+Iron is available from game start. The Forge/Settlement Forge is a required building from the beginning. Prior design text stating iron is "low significance in early game" is superseded. Early armies can be iron-light but iron access is not locked to mid-game.
+
+### Scrapped Units
+
+**War Wagon** — deferred to future design. **Siege Tower (as a unit)** — deferred. **Light transport vehicles** — scrapped entirely; not part of the canonical game.
+
+### Balance Principles
+
+- Off/Def values are absolute role descriptors, not deviations from a 5/5 neutral baseline
+- Counter relationships must be clear and teachable: braced spears beat mounted charges; armor-piercing beats heavy armor; cavalry beats unformed infantry in the open
+- No unit is dominant in every context; every apex unit has a terrain, formation, or unit counter
+- House-specific units (Axeman, Verdant Warden) are variations on the base ladder, not replacements for it

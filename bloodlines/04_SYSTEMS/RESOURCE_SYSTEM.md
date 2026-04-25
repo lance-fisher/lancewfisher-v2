@@ -81,10 +81,12 @@ The prior resource count of five is superseded. The canonical count is now six. 
 
 **Iron — Role and Design Intent:**
 
-Iron is a mid-to-late game resource with low strategic significance in the early game but critical military and economic importance from mid-game onward.
+> **Updated per Seventeenth Session Canon 2026-04-25:** The "mid-to-late game resource" and "low significance in early game" framing below is superseded. Iron is available from game start. Forge/Settlement Forge is required from the beginning. Early armies may be iron-light by player choice but iron access is not gated to mid-game. The early game text below is preserved as historical record.
+
+Iron is a mid-to-late game resource with low strategic significance in the early game but critical military and economic importance from mid-game onward. *(Prior framing — see note above.)*
 
 **Early Game:**
-Wood and stone dominate the early game. Initial army composition — militia, spearmen, bowmen — requires minimal iron. Iron infrastructure is not a first-build priority. Players who invest heavily in iron production early sacrifice more urgent early-game needs.
+*(Prior framing — superseded 2026-04-25.)* Wood and stone dominate the early game. Initial army composition — militia, spearmen, Archers (formerly bowmen) — requires minimal iron. Iron infrastructure is not a first-build priority. Players who invest heavily in iron production early sacrifice more urgent early-game needs.
 
 **Mid Game:**
 As swordsmen become the primary military force, iron demand rises sharply. Swordsmen require iron for blades, armor, and maintenance. The transition from early spear-and-bow armies to iron-equipped swordsmen is one of the key mid-game economic pressure points. Players who secured iron nodes early now have a compounding advantage. Players who ignored iron face a bottleneck in army modernization.

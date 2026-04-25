@@ -419,3 +419,77 @@ Source: externally supplied doctrine preserved at `01_CANON/BLOODLINES_MASTER_DE
 | Faith and conviction separation reaffirmed | SETTLED | Faith remains covenantal and civilizational. Conviction remains behavioral morality expressed through action. The two systems remain distinct and mutually influential rather than merged into one axis. LOCKED. | 2026-04-14 |
 | Irreversible divergence posture | SETTLED | Late-game strategic divergence and apex commitments must remain meaningful enough that dynasties cannot become everything at once. Identity-preserving lock-in remains canonical. LOCKED. | 2026-04-14 |
 | Anti-reduction continuity rule | SETTLED | Future sessions may stage implementation, but they may not shrink Bloodlines into a smaller substitute because of practicality pressure. The full intended scale remains the governing design posture unless Lance explicitly directs otherwise. LOCKED. | 2026-04-14 |
+
+---
+
+## Sixteenth Session Canon — House Color and Hair Canon Pass — 2026-04-25
+
+A canonical pass over house color and hair identity was conducted 2026-04-25. The specific updated assignments and root house color table from that session were not committed before context expired and require re-confirmation from Lance. The prior 2026-03-18 hair assignments in `06_FACTIONS/FOUNDING_HOUSES.md` and `memory/Bloodlines_Canonical_Design_Memory.md` remain the last committed state. The symbol family system LOCKED designation was suspended pending further design work per that session — symbol families remain in design but are not yet binding canon for all houses.
+
+---
+
+## Seventeenth Session Canon — Core Ground Unit Progression — 2026-04-25
+
+Source: owner direction supplied 2026-04-25. All elements below are LOCKED unless marked otherwise.
+
+### Off/Def Rating System Framing — Updated
+
+| Element | Status | Decision | Date |
+|---------|--------|----------|------|
+| Off/Def rating scale reclarified | SETTLED | Off/Def values are absolute role-based ratings, not deviations from a 5/5 neutral baseline. The earlier Sixth Ingestion Canon framing of 5/5 as a universal neutral is superseded. Values below are independent role descriptors, not modifiers. LOCKED. | 2026-04-25 |
+| Axeman Off/Def values updated | SETTLED | Axeman (Ironmark exclusive) values revised from Off 6/Def 4 (Ninth Ingestion Canon, 2026-03-19) to Off 5/Def 2. Only the Off/Def ratings are revised. All other Ironmark Axeman identity is preserved: Ferocity Under Loss bonus, blood cost loop, axe symbol, anti-armor bonus, weakness to fast units. Historical values in the Ninth Ingestion Canon section are preserved as record. LOCKED. | 2026-04-25 |
+| Ironmark Militia and Swordsman values | SETTLED | Ironmark Militia: 6/5 and Swordsman: 5/5 entries from Ninth Ingestion Canon are noted as pending data-layer tuning now that Off/Def is absolute. Ironmark unit identity remains the same; specific deviation values are subject to balance pass. | 2026-04-25 |
+
+### Core Unit Ladder
+
+| Unit | Off | Def | Role | Status | Date |
+|---|---|---|---|---|---|
+| Militia | 2 | 2 | All-purpose starter, available from game start | SETTLED, LOCKED | 2026-04-25 |
+| Swordsmen | 4 | 2 | Versatile frontline, first professional infantry | SETTLED, LOCKED | 2026-04-25 |
+| Shieldbearer Swordsmen | 5 | 3 | Offensive frontline with shield, upgrade from Swordsmen | SETTLED, LOCKED | 2026-04-25 |
+| Heavy Swordsmen | 6 | 4 | Armored heavy frontline, iron required | SETTLED, LOCKED | 2026-04-25 |
+| Greatsword Knight | 8 | 3 | Elite two-handed assault, apex offensive infantry | SETTLED, LOCKED | 2026-04-25 |
+| Spearmen | 2 | 4 | Anti-cavalry defensive line, anti-cavalry bonus x1.5 | SETTLED, LOCKED | 2026-04-25 |
+| Spear Guard | 3 | 5 | Upgraded spear defensive line, anti-cavalry bonus x1.6 | SETTLED, LOCKED | 2026-04-25 |
+| Pikeguard | 4 | 6 | Heavy polearm defensive anchor, anti-cavalry bonus x1.8 | SETTLED, LOCKED | 2026-04-25 |
+| Bulwark Guard | 3 | 8 | Immovable defensive wall, maximum defensive value | SETTLED, LOCKED | 2026-04-25 |
+| Archers | 3 | 2 | Standard ranged suppression | SETTLED, LOCKED | 2026-04-25 |
+| Boltmen | 5 | 2 | Armor-piercing ranged, armor-piercing bonus x1.5 | SETTLED, LOCKED | 2026-04-25 |
+| Mounted Swordsmen | 5 | 2 | Light offensive cavalry, requires Stable + iron | SETTLED, LOCKED | 2026-04-25 |
+| Mounted Heavy Swordsmen | 6 | 3 | Armored offensive cavalry, iron-heavy | SETTLED, LOCKED | 2026-04-25 |
+| Mounted Knight | 7 | 5 | Heavy shock cavalry, grouped lance charge, can dismount | SETTLED, LOCKED | 2026-04-25 |
+| Knight | 6 | 6 | Dismounted form of Mounted Knight, can remount | SETTLED, LOCKED | 2026-04-25 |
+| Horse Archer | 3 | 2 | Cavalry ranged harassment, not on main cavalry upgrade line | SETTLED, LOCKED | 2026-04-25 |
+| Axeman (Ironmark exclusive) | 5 | 2 | Ironmark unique, anti-armor bonus, Ferocity Under Loss | SETTLED, LOCKED | 2026-04-25 |
+
+### Unit Progression Lines
+
+| Line | Progression | Status | Date |
+|---|---|---|---|
+| Offensive infantry | Militia → Swordsmen → Shieldbearer Swordsmen → Heavy Swordsmen → Greatsword Knight | SETTLED, LOCKED | 2026-04-25 |
+| Defensive infantry | Militia → Spearmen → Spear Guard → Pikeguard → Bulwark Guard | SETTLED, LOCKED | 2026-04-25 |
+| Ranged | Archers → Boltmen | SETTLED, LOCKED | 2026-04-25 |
+| Cavalry | Mounted Swordsmen → Mounted Heavy Swordsmen → Mounted Knight (⇄ Knight via dismount/remount) | SETTLED, LOCKED | 2026-04-25 |
+
+### Cavalry, Horse, and Iron Infrastructure
+
+| Element | Status | Decision | Date |
+|---|---|---|---|
+| Iron availability from game start | SETTLED | Iron is available from game start. Forge/Settlement Forge is required from the beginning of the game. Prior framing of iron as "low significance in early game" is superseded. Wood and stone still dominate early construction but iron access is not gated to mid-game. LOCKED. | 2026-04-25 |
+| Stable requirement for cavalry | SETTLED | All cavalry units require a Stable. Horses, horseshoes, and cavalry equipment are Stable outputs. LOCKED. | 2026-04-25 |
+| Cavalry infrastructure chain design pending | NOTE | The full horse/stable build tree and progression chain is pending a dedicated design session targeting `data/buildings.json`. | 2026-04-25 |
+
+### Mounted Knight Mechanics (Preliminary)
+
+| Element | Status | Decision | Date |
+|---|---|---|---|
+| Lance charge — grouped formation ability | SETTLED | The Mounted Knight lance charge is a grouped formation ability requiring multiple Mounted Knight units in formation. It is not always-on raw stats. Countered by braced Spearmen, Spear Guard, and Pikeguard. Ineffective in forest and tight terrain. Unit transitions from lance to sword after the charge. LOCKED. | 2026-04-25 |
+| Dismounting and remounting | SETTLED (design principles) | Mounted Knight dismounts to become Knight. Remounting requires controlled or friendly conditions plus a timer — not instant. Full implementation mechanics pending. LOCKED as design principles. | 2026-04-25 |
+| Group formation system | NOTE | The Mounted Knight lance charge is the first confirmed example of a group formation ability system. Full system design for other formation types is pending. | 2026-04-25 |
+
+### Naming Canon
+
+| Element | Status | Decision | Date |
+|---|---|---|---|
+| Canonical unit names locked | SETTLED | Archers (not Bowmen), Boltmen (not Crossbowmen), Shieldbearer Swordsmen (not Shielded Swordsmen), Spear Guard (not Shielded Spearmen), Pikeguard (not Armored Pikemen or Pike Square), Bulwark Guard (not Shield Wall), Mounted Knight (mounted form), Knight (dismounted — not "Dismounted Knight"), Mounted Heavy Swordsmen (not Shielded Mounted Swordsmen), Horse Archer (not Mounted Bowman). LOCKED. | 2026-04-25 |
+| Scrapped units | SETTLED | War Wagon — deferred. Siege Tower as a unit — deferred. Light transport vehicles — scrapped entirely; not part of the canonical game. LOCKED. | 2026-04-25 |

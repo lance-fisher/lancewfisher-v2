@@ -152,7 +152,7 @@ Unit definitions and army rules.
 
 | File | Purpose |
 |------|---------|
-| `UNIT_INDEX.md` | Level 1 unit definitions (Militia, Swordsmen, Spearmen, Hunters, Bowmen), army composition, recruitment, military buildings, troop promotion, champion emergence, Born of Sacrifice creation. |
+| `UNIT_INDEX.md` | Core Ground Unit Progression (Locked 2026-04-25, Seventeenth Session Canon) — full 17-unit canonical ladder with Off/Def ratings, all four progression lines, Mounted Knight mechanics; Level 1-5 faith-tier unit definitions; army composition, recruitment, military buildings, troop promotion, champion emergence, Born of Sacrifice creation. Canonical unit names: Archers (not Bowmen), Boltmen (not Crossbowmen), Pikeguard (not Pike Square), Bulwark Guard (not Shield Wall). |
 
 ---
 
