@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Bloodlines.AI;
 using Bloodlines.Components;
 using Bloodlines.Faith;
 using Bloodlines.Naval;
@@ -300,6 +301,19 @@ namespace Bloodlines.Systems
                     WorldPressureResponseIntervalSeconds = 15f,
                     ReinforcementIntervalSeconds         = 10f,
                     CurrentPosture                       = AIStrategicPosture.Expand,
+                });
+            }
+
+            // Browser parity ai.js:updateNeutralAi (~3044). Tribes faction gets
+            // a dedicated raid timer instead of the kingdom AI economy/strategy
+            // surface. The TribesRaidSystem ticks this state and dispatches
+            // raiders to the nearest non-tribes-owned control point.
+            if (seed.Kind == FactionKind.Tribes)
+            {
+                entityManager.AddComponentData(entity, new TribesRaidStateComponent
+                {
+                    RaidTimerSeconds = 30f,
+                    BaseRaidIntervalSeconds = 30f,
                 });
             }
 
