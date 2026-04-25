@@ -186,6 +186,9 @@
     <Compile Include="Assets\_Bloodlines\Code\AI\DynastyOperationCaptiveRansomComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.DynastyRenown.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Multiplayer\NetworkGameModeComponent.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Multiplayer\GhostPrefabAuthoring.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Multiplayer\NetworkAuthoritySystem.cs" />
+    <Compile Include="Assets\_Bloodlines\Code\Debug\BloodlinesDebugCommandSurface.NetworkAuthority.cs" />
     <Compile Include="Assets\_Bloodlines\Code\HUD\SuccessionCrisisHUDComponent.cs" />
     <Compile Include="Assets\_Bloodlines\Code\AI\AIWorkerGatherSystem.cs" />
     <Compile Include="Assets\_Bloodlines\Code\Dynasties\DynastyTemplates.cs" />

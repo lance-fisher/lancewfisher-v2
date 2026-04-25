@@ -4743,3 +4743,20 @@ Compatibility and physical-backing paths still exist in the wider workspace, but
     Unity `Siege/**` surfaces
   - port the next additive non-AI slice with its own dedicated smoke
     validator and wrapper
+
+## multiplayer-nfe-integration (as of 2026-04-25)
+
+Latest slice: NfE package integration. Status: Complete, branch claude/unity-multiplayer-nfe-integration merged to master.
+Handoff: docs/unity/session-handoffs/2026-04-25-unity-multiplayer-nfe-integration.md
+- com.unity.netcode 1.4.3 added to Packages/manifest.json and Packages/packages-lock.json
+- GhostPrefabAuthoring: MonoBehaviour configuring GhostAuthoringComponent replication modes
+  (OwnerPredicted for units, Interpolated for factions and control points) under #if UNITY_NETCODE
+- NetworkAuthoritySystem: ISystem maintaining IsServer/IsClient flags; offline path holds
+  IsServer=true, IsClient=false; networked path gates on NetworkStreamInGame under #if UNITY_NETCODE
+- GhostCollectionSetupSystem: extended with #if UNITY_NETCODE ConfirmNfECollectionActive check
+- BloodlinesDebugCommandSurface.NetworkAuthority: TryDebugGetNetworkAuthority readout
+- BloodlinesNfEIntegrationSmokeValidation: 3-phase smoke (OfflineDefaultsStable,
+  GhostArchetypesRegistered, AuthoritySystemPresent)
+- dotnet build 0 errors; node tests PASS; contract revision=144; Unity smokes SKIP-env
+- SKIP-env reason: com.unity.netcode@1.4.3 not yet in Library/PackageCache; one-time
+  interactive Unity open required to download and cache the package

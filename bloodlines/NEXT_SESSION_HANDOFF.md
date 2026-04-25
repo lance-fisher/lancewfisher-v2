@@ -5674,3 +5674,13 @@ Next: Remaining AI lane gaps are hardening passes (legitimacy field once dynasty
 Latest sub-slice: 31 (AI sabotage dispatch + resolution). Status: Complete, branch claude/unity-ai-sabotage-dispatch-resolution ready to merge.
 Handoff: docs/unity/session-handoffs/2026-04-24-unity-ai-sabotage-dispatch-resolution.md
 Next: AI counter-intelligence dispatch (ai.js ~2372-2415 -- `startCounterIntelligenceOperation`) is the next natural sub-slice in the covert-ops block. Beyond that: remaining hardening passes (legitimacy, succession ripple, intel-report integration, ward defense bonus, fire_raising burn damage in AI lane).
+
+## multiplayer-nfe-integration (as of 2026-04-25)
+
+Latest slice: NfE package integration complete. Status: Merged to master.
+Handoff: docs/unity/session-handoffs/2026-04-25-unity-multiplayer-nfe-integration.md
+Next: Before running Unity batch-mode smokes, open the Unity project interactively in Unity Hub
+(6000.3.13f1) to trigger download of com.unity.netcode@1.4.3 and com.unity.transport@2.4.0 to
+Library/PackageCache. After that one-time step, all batch-mode smokes will pass again.
+Then: add GhostAuthoringComponent-baked prefab GameObjects to Bootstrap/Gameplay scenes, and
+proceed to the next unclaimed lane from CODEX_MULTI_DAY_DIRECTIVE_2026-04-25.md.

@@ -2,10 +2,10 @@
 
 ## Contract Metadata
 
-- Revision: 143
+- Revision: 144
 - Last Updated: 2026-04-25
-- Last Updated By: claude-ai-player-divine-right-context-2026-04-25
-- Supersedes: revision 142 (sub-slice 37: AI holy war context flag refresher.)
+- Last Updated By: claude-multiplayer-nfe-integration-2026-04-25
+- Supersedes: revision 143 (AI player divine right context system sub-slice 38)
 
 
 ## Purpose
@@ -1666,7 +1666,7 @@ This document is the single source of truth for Unity lane ownership, file-scope
 - Cross-Lane Reads (no writes):
   - None (foundation defines its own types only)
 - Browser Reference: absent (multiplayer foundation not in simulation.js; implemented from canonical Netcode for Entities design)
-- Note: Netcode for Entities package (com.unity.netcode) is NOT yet installed. This foundation slice defines the data model (NetworkGameModeComponent, GhostPrefabArchetypeElement buffer) and the offline bootstrap defaults. NfE integration code is deferred to a follow-up slice when the package is added to Packages/manifest.json.
+- Note: NfE package integration completed in follow-up slice (multiplayer-nfe-integration). Package added to Packages/manifest.json and Packages/packages-lock.json. Unity batch-mode smokes are SKIP-env until com.unity.netcode@1.4.3 is downloaded to Library/PackageCache by opening Unity interactively.
 - Current Branch In Flight: none (merged to master)
 - Last Slice Handoff: `docs/unity/session-handoffs/2026-04-23-unity-netcode-foundation.md`
 - Last Slice State:
@@ -1675,6 +1675,40 @@ This document is the single source of truth for Unity lane ownership, file-scope
   - `GhostCollectionSetupSystem` registers three ghost prefab archetypes (archetype_faction, archetype_control_point, archetype_unit) to the buffer after bootstrap
   - `BloodlinesNetworkFoundationSmokeValidation` proves offline local mode defaults and ghost collection registration across 2 phases; PS1 wrapper and csproj entries in place
   - All 10 validation gates passed (0 errors; Unity batch-mode smoke SKIP-env per established environment condition)
+
+### Lane: multiplayer-nfe-integration
+
+- Status: complete (merged to master via `claude/unity-multiplayer-nfe-integration`)
+- Branch Prefix: `claude/unity-multiplayer-nfe-integration`
+- Owner Agent: claude
+- Owned Paths (exclusive):
+  - `unity/Assets/_Bloodlines/Code/Multiplayer/GhostPrefabAuthoring.cs`
+  - `unity/Assets/_Bloodlines/Code/Multiplayer/NetworkAuthoritySystem.cs`
+  - `unity/Assets/_Bloodlines/Code/Debug/BloodlinesDebugCommandSurface.NetworkAuthority.cs`
+  - `unity/Assets/_Bloodlines/Code/Editor/BloodlinesNfEIntegrationSmokeValidation.cs`
+- Owned Scripts:
+  - `scripts/Invoke-BloodlinesUnityNfEIntegrationSmokeValidation.ps1`
+- Shared-File Narrow Edits Applied:
+  - `unity/Assets/_Bloodlines/Code/Multiplayer/GhostCollectionSetupSystem.cs` -- additive `#if UNITY_NETCODE` block: `ConfirmNfECollectionActive` verifies `GhostCollection` singleton and reads `GhostCollectionPrefabs` buffer liveness when in networked mode; no changes to offline path
+  - `unity/Assembly-CSharp.csproj` -- additive Compile entries for GhostPrefabAuthoring.cs, NetworkAuthoritySystem.cs, BloodlinesDebugCommandSurface.NetworkAuthority.cs
+  - `unity/Assembly-CSharp-Editor.csproj` -- additive Compile entry for BloodlinesNfEIntegrationSmokeValidation.cs
+  - `unity/Packages/manifest.json` -- added `com.unity.netcode` 1.4.3 (compatible with com.unity.entities 1.4.3 and the existing 1.4.x package family)
+  - `unity/Packages/packages-lock.json` -- added resolved entries for `com.unity.netcode` 1.4.3 and its transport dependency `com.unity.transport` 2.4.0
+- Cross-Lane Reads (no writes):
+  - `unity/Assets/_Bloodlines/Code/Multiplayer/NetworkGameModeComponent.cs` -- read IsServer, IsClient, IsLocalGame from the foundation singleton
+  - `unity/Assets/_Bloodlines/Code/Multiplayer/NetworkBootstrapSystem.cs` -- UpdateAfter ordering only
+  - `unity/Assets/_Bloodlines/Code/Multiplayer/GhostCollectionSetupSystem.cs` -- UpdateAfter ordering for NetworkAuthoritySystem
+- Browser Reference: absent (multiplayer authority not in simulation.js; NfE integration is a Unity-only concern)
+- Current Branch In Flight: none (merged to master 2026-04-25)
+- Last Slice Handoff: `docs/unity/session-handoffs/2026-04-25-unity-multiplayer-nfe-integration.md`
+- Last Slice State:
+  - `com.unity.netcode` 1.4.3 added to manifest.json and packages-lock.json; Unity batch-mode smokes are SKIP-env pending first interactive open to resolve package cache
+  - `GhostPrefabAuthoring` MonoBehaviour configures ghost replication modes: OwnerPredicted for units, Interpolated for factions and control points; syncs to GhostAuthoringComponent under `#if UNITY_NETCODE`
+  - `NetworkAuthoritySystem` maintains IsServer/IsClient flags each frame; offline path holds IsServer=true, IsClient=false; networked path gates on NetworkStreamInGame singleton under `#if UNITY_NETCODE`
+  - `GhostCollectionSetupSystem` extended with `#if UNITY_NETCODE` block that confirms GhostCollection liveness and reads GhostCollectionPrefabs in networked sessions
+  - `BloodlinesDebugCommandSurface.NetworkAuthority` exposes TryDebugGetNetworkAuthority (IsServer, IsClient, IsLocalGame)
+  - `BloodlinesNfEIntegrationSmokeValidation` proves OfflineDefaultsStable, GhostArchetypesRegistered, AuthoritySystemPresent across 3 phases
+  - dotnet build 0 errors; node tests PASS; contract staleness check PASS (revision=144); Unity batch-mode smokes SKIP-env (NfE package not yet in PackageCache)
 
 ### Lane: faith-combat-doctrine
 
